@@ -49,6 +49,8 @@ export async function exportVideoClientSide(
     throw new Error("No video track found");
   }
 
+  const audioTracks = tracks.filter((t) => t.type === "audio");
+
   const dimensions = videoSizeMap[aspectRatio] || videoSizeMap["16:9"];
   const { width, height } = dimensions;
 
@@ -175,6 +177,157 @@ export async function exportVideoClientSide(
     "copy",
     "output.mp4",
   ]);
+
+  if (audioTracks.length > 0) {
+    const audioInputs: string[] = [];
+
+    for (let trackIdx = 0; trackIdx < audioTracks.length; trackIdx++) {
+      const audioTrack = audioTracks[trackIdx];
+      const audioKeyframes = [...audioTrack.keyframes].sort(
+        (a, b) => a.timestamp - b.timestamp,
+      );
+
+      const audioSegments: Array<{
+        type: "sound" | "silence";
+        start: number;
+        duration: number;
+        keyframe?: ExportKeyframe;
+      }> = [];
+
+      let currentTime = 0;
+      for (const keyframe of audioKeyframes) {
+        if (keyframe.timestamp > currentTime) {
+          audioSegments.push({
+            type: "silence",
+            start: currentTime,
+            duration: keyframe.timestamp - currentTime,
+          });
+        }
+
+        audioSegments.push({
+          type: "sound",
+          start: keyframe.timestamp,
+          duration: keyframe.duration,
+          keyframe,
+        });
+
+        currentTime = keyframe.timestamp + keyframe.duration;
+      }
+
+      if (currentTime < totalDuration) {
+        audioSegments.push({
+          type: "silence",
+          start: currentTime,
+          duration: totalDuration - currentTime,
+        });
+      }
+
+      const trackAudioClips: string[] = [];
+      let audioClipIndex = 0;
+
+      for (const segment of audioSegments) {
+        const durationSeconds = segment.duration / 1000;
+        const outputFilename = `audio_track${trackIdx}_clip${audioClipIndex}.wav`;
+
+        if (segment.type === "silence") {
+          await ffmpeg.exec([
+            "-f",
+            "lavfi",
+            "-i",
+            `anullsrc=channel_layout=stereo:sample_rate=44100:duration=${durationSeconds}`,
+            outputFilename,
+          ]);
+        } else {
+          const { keyframe } = segment;
+          if (!keyframe || !keyframe.url) continue;
+
+          const url = keyframe.url;
+          const audioData = await fetchFile(url);
+          const inputFilename = `audio_track${trackIdx}_input${audioClipIndex}.${getExtension(url)}`;
+          await ffmpeg.writeFile(inputFilename, audioData);
+
+          await ffmpeg.exec([
+            "-i",
+            inputFilename,
+            "-t",
+            durationSeconds.toString(),
+            "-ar",
+            "44100",
+            "-ac",
+            "2",
+            outputFilename,
+          ]);
+        }
+
+        trackAudioClips.push(outputFilename);
+        audioClipIndex++;
+      }
+
+      const trackConcatContent = trackAudioClips
+        .map((clip) => `file '${clip}'`)
+        .join("\n");
+      const trackConcatFilename = `audio_track${trackIdx}_concat.txt`;
+      await ffmpeg.writeFile(
+        trackConcatFilename,
+        new TextEncoder().encode(trackConcatContent),
+      );
+
+      const trackOutputFilename = `audio_track${trackIdx}_final.wav`;
+      await ffmpeg.exec([
+        "-f",
+        "concat",
+        "-safe",
+        "0",
+        "-i",
+        trackConcatFilename,
+        "-c",
+        "copy",
+        trackOutputFilename,
+      ]);
+
+      audioInputs.push(trackOutputFilename);
+    }
+
+    let mixedAudioFilename = "audio_mixed.wav";
+    if (audioInputs.length === 1) {
+      mixedAudioFilename = audioInputs[0];
+    } else {
+      const amixInputs = audioInputs.map((_, idx) => `[${idx}:a]`).join("");
+      const amixFilter = `${amixInputs}amix=inputs=${audioInputs.length}:duration=longest[aout]`;
+
+      const ffmpegArgs = [];
+      for (const input of audioInputs) {
+        ffmpegArgs.push("-i", input);
+      }
+      ffmpegArgs.push(
+        "-filter_complex",
+        amixFilter,
+        "-map",
+        "[aout]",
+        mixedAudioFilename,
+      );
+
+      await ffmpeg.exec(ffmpegArgs);
+    }
+
+    await ffmpeg.exec([
+      "-i",
+      "output.mp4",
+      "-i",
+      mixedAudioFilename,
+      "-c:v",
+      "copy",
+      "-c:a",
+      "aac",
+      "-b:a",
+      "192k",
+      "-shortest",
+      "output_with_audio.mp4",
+    ]);
+
+    const finalData = await ffmpeg.readFile("output_with_audio.mp4");
+    await ffmpeg.writeFile("output.mp4", finalData);
+  }
 
   const data = await ffmpeg.readFile("output.mp4");
 
