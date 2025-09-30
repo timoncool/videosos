@@ -43,7 +43,7 @@ export function ExportDialog({ onOpenChange, ...props }: ExportDialogProps) {
   const exportVideo = useMutation({
     mutationFn: async () => {
       const mediaItems = composition.mediaItems;
-      
+
       let maxEnd = 0;
       for (const trackFrames of Object.values(composition.frames)) {
         for (const frame of trackFrames) {
@@ -53,7 +53,7 @@ export function ExportDialog({ onOpenChange, ...props }: ExportDialogProps) {
         }
       }
       const totalDuration = maxEnd / 1000;
-      
+
       const videoData = composition.tracks.map((track) => ({
         id: track.id,
         type: track.type === "video" ? "video" : "audio",
@@ -68,11 +68,11 @@ export function ExportDialog({ onOpenChange, ...props }: ExportDialogProps) {
           };
         }),
       }));
-      
+
       if (videoData.length === 0) {
         throw new Error("No tracks to export");
       }
-      
+
       const { data } = await fal.subscribe("fal-ai/ffmpeg-api/compose", {
         input: {
           tracks: videoData,
