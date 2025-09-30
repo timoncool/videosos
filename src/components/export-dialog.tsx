@@ -52,7 +52,7 @@ export function ExportDialog({ onOpenChange, ...props }: ExportDialogProps) {
           maxEnd = Math.max(maxEnd, frame.timestamp + duration);
         }
       }
-      const totalDuration = maxEnd / 1000;
+      const totalDuration = maxEnd;
 
       const videoData = composition.tracks.map((track) => ({
         id: track.id,
@@ -61,10 +61,9 @@ export function ExportDialog({ onOpenChange, ...props }: ExportDialogProps) {
           const media = mediaItems[frame.data.mediaId];
           const duration = frame.duration || resolveDuration(media) || 5000;
           return {
-            timestamp: frame.timestamp / 1000,
-            duration: duration / 1000,
+            timestamp: frame.timestamp,
+            duration: duration,
             url: resolveMediaUrl(media),
-            type: media?.mediaType === "image" ? "image" : "video",
           };
         }),
       }));
