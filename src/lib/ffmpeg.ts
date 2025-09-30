@@ -122,8 +122,7 @@ export async function exportVideoClientSide(
 
       const media = mediaItems[keyframe.mediaId];
       const isImage =
-        media?.mediaType === "image" ||
-        /\.(jpg|jpeg|png|gif|webp)$/i.test(url);
+        media?.mediaType === "image" || /\.(jpg|jpeg|png|gif|webp)$/i.test(url);
 
       if (isImage) {
         await ffmpeg.exec([
