@@ -353,8 +353,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
   {
     endpointId: "fal-ai/topaz/upscale/image",
     label: "Topaz Image Upscale",
-    description:
-      "Professional-grade image upscaling using Topaz technology",
+    description: "Professional-grade image upscaling using Topaz technology",
     cost: "",
     category: "image",
     prompt: false,
