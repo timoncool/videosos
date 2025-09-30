@@ -22,6 +22,7 @@ import {
 } from "react";
 import { WithTooltip } from "../ui/tooltip";
 import { useProjectId, useVideoProjectStore } from "@/data/store";
+import { fal } from "@/lib/fal";
 
 type VideoTrackRowProps = {
   data: VideoTrack;
@@ -74,48 +75,25 @@ function AudioWaveform({ data }: AudioWaveformProps) {
       if (data.metadata?.waveform && Array.isArray(data.metadata.waveform)) {
         return data.metadata.waveform;
       }
-      
-      const audioUrl = resolveMediaUrl(data);
-      if (!audioUrl) {
-        throw new Error("No media URL found");
-      }
-      const proxyUrl = `/api/download?url=${encodeURIComponent(audioUrl)}`;
-      const response = await fetch(proxyUrl);
-      const arrayBuffer = await response.arrayBuffer();
-      
-      const audioContext = new AudioContext();
-      const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-      
-      const pointsPerSecond = 5;
-      const precision = 3;
-      const channelData = audioBuffer.getChannelData(0); // Use first channel
-      const sampleRate = audioBuffer.sampleRate;
-      const duration = audioBuffer.duration;
-      const totalPoints = Math.floor(duration * pointsPerSecond);
-      const samplesPerPoint = Math.floor(channelData.length / totalPoints);
-      
-      const waveformData: number[] = [];
-      for (let i = 0; i < totalPoints; i++) {
-        const start = i * samplesPerPoint;
-        const end = Math.min(start + samplesPerPoint, channelData.length);
-        
-        let sum = 0;
-        for (let j = start; j < end; j++) {
-          sum += channelData[j] * channelData[j];
-        }
-        const rms = Math.sqrt(sum / (end - start));
-        waveformData.push(Number(rms.toFixed(precision)));
-      }
+      const { data: waveformInfo } = await fal.subscribe(
+        "fal-ai/ffmpeg-api/waveform",
+        {
+          input: {
+            media_url: resolveMediaUrl(data),
+            points_per_second: 5,
+            precision: 3,
+          },
+        },
+      );
 
       await db.media.update(data.id, {
         ...data,
         metadata: {
           ...data.metadata,
-          waveform: waveformData,
+          waveform: waveformInfo.waveform,
         },
       });
-      
-      return waveformData;
+      return waveformInfo.waveform as number[];
     },
     placeholderData: keepPreviousData,
     staleTime: Number.POSITIVE_INFINITY,

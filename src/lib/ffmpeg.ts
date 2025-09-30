@@ -2,6 +2,7 @@ import type { MediaItem, AspectRatio } from "@/data/schema";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile, toBlobURL } from "@ffmpeg/util";
 import { resolveMediaUrl } from "./utils";
+import { fal } from "./fal";
 
 const videoSizeMap = {
   "16:9": { width: 1024, height: 576 },
@@ -348,12 +349,18 @@ function getExtension(url: string): string {
 
 export async function getMediaMetadata(media: MediaItem) {
   try {
-    return {
-      media: {
-        duration: media.metadata?.duration,
-        ...media.metadata,
+    const { data: mediaMetadata } = await fal.subscribe(
+      "fal-ai/ffmpeg-api/metadata",
+      {
+        input: {
+          media_url: resolveMediaUrl(media),
+          extract_frames: true,
+        },
+        mode: "streaming",
       },
-    };
+    );
+
+    return mediaMetadata;
   } catch (error) {
     console.error(error);
     return {};
