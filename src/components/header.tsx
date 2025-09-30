@@ -29,7 +29,7 @@ export default function Header({
             GitHub
           </a>
         </Button>
-        {process.env.NEXT_PUBLIC_CUSTOM_KEY && openKeyDialog && (
+        {openKeyDialog && (
           <Button
             variant="ghost"
             size="icon"
