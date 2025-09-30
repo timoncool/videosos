@@ -118,7 +118,9 @@ export async function exportVideoClientSide(
 
       const url = keyframe.url;
 
-      const mediaData = await fetchFile(`/api/download?url=${encodeURIComponent(url)}`);
+      const mediaData = await fetchFile(
+        `/api/download?url=${encodeURIComponent(url)}`,
+      );
       const inputFilename = `input_${clipIndex}.${getExtension(url)}`;
       await ffmpeg.writeFile(inputFilename, mediaData);
 
@@ -242,7 +244,9 @@ export async function exportVideoClientSide(
           if (!keyframe || !keyframe.url) continue;
 
           const url = keyframe.url;
-          const audioData = await fetchFile(`/api/download?url=${encodeURIComponent(url)}`);
+          const audioData = await fetchFile(
+            `/api/download?url=${encodeURIComponent(url)}`,
+          );
           const inputFilename = `audio_track${trackIdx}_input${audioClipIndex}.${getExtension(url)}`;
           await ffmpeg.writeFile(inputFilename, audioData);
 
