@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "./ui/dialog";
-import { cn, resolveMediaUrl } from "@/lib/utils";
+import { cn, resolveMediaUrl, resolveDuration } from "@/lib/utils";
 import {
   EMPTY_VIDEO_COMPOSITION,
   useProject,
@@ -43,25 +43,40 @@ export function ExportDialog({ onOpenChange, ...props }: ExportDialogProps) {
   const exportVideo = useMutation({
     mutationFn: async () => {
       const mediaItems = composition.mediaItems;
+
+      let maxEnd = 0;
+      for (const trackFrames of Object.values(composition.frames)) {
+        for (const frame of trackFrames) {
+          const media = mediaItems[frame.data.mediaId];
+          const duration = frame.duration || resolveDuration(media) || 5000;
+          maxEnd = Math.max(maxEnd, frame.timestamp + duration);
+        }
+      }
+      const totalDuration = maxEnd / 1000;
+
       const videoData = composition.tracks.map((track) => ({
         id: track.id,
         type: track.type === "video" ? "video" : "audio",
         keyframes: composition.frames[track.id].map((frame) => {
           const media = mediaItems[frame.data.mediaId];
+          const duration = frame.duration || resolveDuration(media) || 5000;
           return {
-            timestamp: frame.timestamp,
-            duration: frame.duration,
+            timestamp: frame.timestamp / 1000,
+            duration: duration / 1000,
             url: resolveMediaUrl(media),
             type: media?.mediaType === "image" ? "image" : "video",
           };
         }),
       }));
+
       if (videoData.length === 0) {
         throw new Error("No tracks to export");
       }
+
       const { data } = await fal.subscribe("fal-ai/ffmpeg-api/compose", {
         input: {
           tracks: videoData,
+          duration: totalDuration,
         },
         mode: "polling",
         pollInterval: 3000,
