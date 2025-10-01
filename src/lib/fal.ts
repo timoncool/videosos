@@ -38,7 +38,8 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
   {
     endpointId: "fal-ai/flux-pro/kontext",
     label: "FLUX.1 Kontext [pro]",
-    description: "Professional image generation with context-aware editing capabilities",
+    description:
+      "Professional image generation with context-aware editing capabilities",
     cost: "$0.04/image",
     popularity: 5,
     category: "image",
@@ -47,7 +48,8 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
   {
     endpointId: "fal-ai/flux/dev",
     label: "FLUX.1 [dev]",
-    description: "High-quality image generation model optimized for creative workflows",
+    description:
+      "High-quality image generation model optimized for creative workflows",
     cost: "$0.025/megapixel",
     popularity: 5,
     category: "image",
@@ -55,7 +57,8 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
   {
     endpointId: "fal-ai/ideogram/v3/text-to-image",
     label: "Ideogram V3 (Text)",
-    description: "Advanced text-to-image model with superior text rendering capabilities",
+    description:
+      "Advanced text-to-image model with superior text rendering capabilities",
     cost: "$0.08/image",
     popularity: 5,
     category: "image",
@@ -198,7 +201,8 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
   {
     endpointId: "fal-ai/kling-video/v2.5-turbo/pro/text-to-video",
     label: "Kling 2.5 Turbo Pro (Text)",
-    description: "Top-tier text-to-video generation with unparalleled motion fluidity",
+    description:
+      "Top-tier text-to-video generation with unparalleled motion fluidity",
     cost: "$0.35/5sec",
     popularity: 5,
     category: "video",
@@ -241,7 +245,8 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
   {
     endpointId: "fal-ai/veo2",
     label: "Veo 2",
-    description: "Veo creates videos with realistic motion and high quality output, up to 4K",
+    description:
+      "Veo creates videos with realistic motion and high quality output, up to 4K",
     cost: "$0.50/sec",
     popularity: 4,
     category: "video",
@@ -362,7 +367,8 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
   {
     endpointId: "fal-ai/pixverse/v5/image-to-video",
     label: "PixVerse v5",
-    description: "Generate high quality video clips from text and image prompts",
+    description:
+      "Generate high quality video clips from text and image prompts",
     cost: "TBA",
     popularity: 2,
     category: "video",

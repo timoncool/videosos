@@ -68,8 +68,9 @@ function ModelEndpointPicker({
 }: ModelEndpointPickerProps) {
   const endpoints = useMemo(
     () =>
-      AVAILABLE_ENDPOINTS.filter((endpoint) => endpoint.category === mediaType)
-        .sort((a, b) => b.popularity - a.popularity),
+      AVAILABLE_ENDPOINTS.filter(
+        (endpoint) => endpoint.category === mediaType,
+      ).sort((a, b) => b.popularity - a.popularity),
     [mediaType],
   );
   return (
