@@ -27,7 +27,7 @@ export default function Header() {
             Community
           </Link>
           <Link
-            href="https://github.com/timoncool/video-starter-kit"
+            href="https://github.com/timoncool/videosos"
             className="text-sm text-gray-400 hover:text-white transition-colors"
           >
             GitHub
