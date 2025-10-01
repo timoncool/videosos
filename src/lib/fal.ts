@@ -55,7 +55,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     category: "image",
   },
   {
-    endpointId: "fal-ai/ideogram/v3/text-to-image",
+    endpointId: "fal-ai/ideogram/v3",
     label: "Ideogram V3 (Text)",
     description:
       "Advanced text-to-image model with superior text rendering capabilities",
@@ -64,7 +64,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     category: "image",
   },
   {
-    endpointId: "fal-ai/ideogram/v3/image-to-image",
+    endpointId: "fal-ai/ideogram/v3/edit",
     label: "Ideogram V3 (Image)",
     description: "Image-to-image transformation with text rendering excellence",
     cost: "$0.08/image",
@@ -182,7 +182,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
   },
   {
-    endpointId: "fal-ai/veo3/fast/text-to-video",
+    endpointId: "fal-ai/veo3/fast",
     label: "Veo 3 Fast (Text)",
     description: "Ultra-fast text-to-video generation with high quality",
     cost: "$0.20/sec",
@@ -253,7 +253,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
   },
   {
-    endpointId: "fal-ai/kling-video/v1.5/pro",
+    endpointId: "fal-ai/kling-video/v1.5/pro/text-to-video",
     label: "Kling 1.5 Pro",
     description: "High quality video generation",
     cost: "$0.1/sec",
@@ -417,6 +417,9 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     cost: "~$0.005/10sec",
     popularity: 4,
     category: "music",
+    initialInput: {
+      seconds_total: 30,
+    },
   },
   {
     endpointId: "fal-ai/minimax-music",
