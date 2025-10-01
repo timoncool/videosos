@@ -98,7 +98,11 @@ export function MediaItemRow({
 
           await db.media.update(data.id, {
             ...media,
-            metadata: mediaMetadata?.media || {},
+            metadata: {
+              ...(mediaMetadata?.media || {}),
+              start_frame_url: media.output?.start_frame_url,
+              end_frame_url: media.output?.end_frame_url,
+            },
           });
 
           await queryClient.invalidateQueries({

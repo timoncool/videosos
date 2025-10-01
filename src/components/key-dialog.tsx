@@ -3,7 +3,7 @@
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -18,6 +18,13 @@ type KeyDialogProps = {} & Parameters<typeof Dialog>[0];
 
 export function KeyDialog({ onOpenChange, open, ...props }: KeyDialogProps) {
   const [falKey, setFalKey] = useState("");
+
+  useEffect(() => {
+    if (open) {
+      const savedKey = localStorage.getItem("falKey") || "";
+      setFalKey(savedKey);
+    }
+  }, [open]);
 
   const handleOnOpenChange = (isOpen: boolean) => {
     onOpenChange?.(isOpen);
