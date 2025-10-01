@@ -81,7 +81,7 @@ function AudioWaveform({ data }: AudioWaveformProps) {
       }
 
       try {
-        const proxyUrl = `/api/download?url=${encodeURIComponent(audioUrl)}`;
+        const proxyUrl = `${window.location.origin}/api/download?url=${encodeURIComponent(audioUrl)}`;
         const response = await fetch(proxyUrl);
         const arrayBuffer = await response.arrayBuffer();
 

@@ -118,7 +118,7 @@ export async function exportVideoClientSide(
       const url = keyframe.url;
 
       const mediaData = await fetchFile(
-        `/api/download?url=${encodeURIComponent(url)}`,
+        `${window.location.origin}/api/download?url=${encodeURIComponent(url)}`,
       );
       const inputFilename = `input_${clipIndex}.${getExtension(url)}`;
       await ffmpeg.writeFile(inputFilename, mediaData);
@@ -244,7 +244,7 @@ export async function exportVideoClientSide(
 
           const url = keyframe.url;
           const audioData = await fetchFile(
-            `/api/download?url=${encodeURIComponent(url)}`,
+            `${window.location.origin}/api/download?url=${encodeURIComponent(url)}`,
           );
           const inputFilename = `audio_track${trackIdx}_input${audioClipIndex}.${getExtension(url)}`;
           await ffmpeg.writeFile(inputFilename, audioData);
@@ -371,7 +371,7 @@ export async function getMediaMetadata(media: MediaItem) {
         resolve({ media: {} });
       });
 
-      mediaElement.src = `/api/download?url=${encodeURIComponent(mediaUrl)}`;
+      mediaElement.src = `${window.location.origin}/api/download?url=${encodeURIComponent(mediaUrl)}`;
       mediaElement.load();
     });
   } catch (error) {
