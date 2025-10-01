@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import { db } from "@/data/db";
 import { queryKeys } from "@/data/queries";
 import type { MediaItem } from "@/data/schema";
@@ -39,6 +42,7 @@ export function MediaItemRow({
   draggable = true,
   ...props
 }: MediaItemRowProps) {
+  const t = useTranslations("app.toast");
   const isDone = data.status === "completed" || data.status === "failed";
   const queryClient = useQueryClient();
   const projectId = useProjectId();
@@ -75,8 +79,10 @@ export function MediaItemRow({
           await db.media.update(data.id, media);
 
           toast({
-            title: "Generation completed",
-            description: `Your ${data.mediaType} has been generated successfully.`,
+            title: t("generationCompleted"),
+            description: t("generationCompletedDesc", {
+              mediaType: data.mediaType,
+            }),
           });
         } catch {
           await db.media.update(data.id, {
@@ -84,8 +90,10 @@ export function MediaItemRow({
             status: "failed",
           });
           toast({
-            title: "Generation failed",
-            description: `Failed to generate ${data.mediaType}.`,
+            title: t("generationFailed"),
+            description: t("generationFailedDesc", {
+              mediaType: data.mediaType,
+            }),
           });
         } finally {
           await queryClient.invalidateQueries({

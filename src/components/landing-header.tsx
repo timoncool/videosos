@@ -1,8 +1,14 @@
+"use client";
+
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Video } from "lucide-react";
+import { LanguageSwitcher } from "./language-switcher";
 
 export default function Header() {
+  const t = useTranslations("landing.header");
+
   return (
     <header className="fixed top-0 w-full border-b border-white/10 bg-black/50 backdrop-blur-md z-50">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -18,26 +24,27 @@ export default function Header() {
             href="#features"
             className="text-sm text-gray-400 hover:text-white transition-colors"
           >
-            Features
+            {t("features")}
           </Link>
           <Link
             href="#community"
             className="text-sm text-gray-400 hover:text-white transition-colors"
           >
-            Community
+            {t("community")}
           </Link>
           <Link
             href="https://github.com/timoncool/videosos"
             className="text-sm text-gray-400 hover:text-white transition-colors"
           >
-            GitHub
+            {t("github")}
           </Link>
         </nav>
 
         <div className="flex flex-1 justify-end items-center space-x-4">
+          <LanguageSwitcher />
           <Link href="/app">
             <Button className="bg-white text-black hover:bg-gray-200">
-              Try it now
+              {t("tryNow")}
             </Button>
           </Link>
         </div>
