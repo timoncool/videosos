@@ -34,8 +34,8 @@ A powerful, open-source AI video editor built for creators. This is an enhanced 
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/timoncool/video-starter-kit
-cd video-starter-kit
+git clone https://github.com/timoncool/videosos
+cd videosos
 ```
 
 2. Install dependencies:
@@ -92,8 +92,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 1. Клонируйте репозиторий:
 
 ```bash
-git clone https://github.com/timoncool/video-starter-kit
-cd video-starter-kit
+git clone https://github.com/timoncool/videosos
+cd videosos
 ```
 
 2. Установите зависимости:

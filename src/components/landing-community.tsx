@@ -14,7 +14,7 @@ export default function Community() {
           </p>
 
           <div className="flex justify-center">
-            <Link href="https://github.com/timoncool/video-starter-kit">
+            <Link href="https://github.com/timoncool/videosos">
               <Button variant="outline" size="lg">
                 <Github className="mr-2 h-5 w-5" />
                 Star on GitHub

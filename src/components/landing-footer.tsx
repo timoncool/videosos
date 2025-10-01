@@ -56,7 +56,7 @@ export default function Footer() {
             <ul className="space-y-2 text-sm text-gray-400">
               <li>
                 <Link
-                  href="https://github.com/timoncool/video-starter-kit"
+                  href="https://github.com/timoncool/videosos"
                   className="hover:text-white transition-colors"
                 >
                   GitHub

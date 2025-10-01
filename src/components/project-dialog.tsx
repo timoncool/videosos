@@ -239,7 +239,7 @@ export function ProjectDialog({ onOpenChange, ...props }: ProjectDialogProps) {
             This is an{" "}
             <a
               className="underline underline-offset-2 decoration-foreground/50 text-foreground"
-              href="https://github.com/timoncool/video-starter-kit"
+              href="https://github.com/timoncool/videosos"
             >
               open-source
             </a>{" "}
