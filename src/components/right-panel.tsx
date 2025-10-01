@@ -647,27 +647,25 @@ export default function RightPanel({
                 }
               />
             )}
-            {mediaType === "music" && endpointId === "fal-ai/playht/tts/v3" && (
+            {mediaType === "music" && (
               <div className="flex-1 flex flex-row gap-2">
-                {mediaType === "music" && (
-                  <div className="flex flex-row items-center gap-1">
-                    <Label>{t("duration")}</Label>
-                    <Input
-                      className="w-12 text-center tabular-nums [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                      min={5}
-                      max={30}
-                      step={1}
-                      type="number"
-                      value={generateData.duration}
-                      onChange={(e) =>
-                        setGenerateData({
-                          duration: Number.parseInt(e.target.value),
-                        })
-                      }
-                    />
-                    <span>s</span>
-                  </div>
-                )}
+                <div className="flex flex-row items-center gap-1">
+                  <Label>{t("duration")}</Label>
+                  <Input
+                    className="w-12 text-center tabular-nums [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    min={5}
+                    max={30}
+                    step={1}
+                    type="number"
+                    value={generateData.duration}
+                    onChange={(e) =>
+                      setGenerateData({
+                        duration: Number.parseInt(e.target.value),
+                      })
+                    }
+                  />
+                  <span>s</span>
+                </div>
                 {endpointId === "fal-ai/playht/tts/v3" && (
                   <VoiceSelector
                     value={generateData.voice}
