@@ -236,38 +236,6 @@ export function ProjectDialog({ onOpenChange, ...props }: ProjectDialogProps) {
             </div>
           </div>
         </div>
-        <DialogFooter>
-          <p className="text-muted-foreground text-sm mt-4 w-full text-center">
-            {t.rich("footerText", {
-              openSource: (chunks) => (
-                <a
-                  className="underline underline-offset-2 decoration-foreground/50 text-foreground"
-                  href="https://github.com/timoncool/videosos"
-                >
-                  {chunks}
-                </a>
-              ),
-              author: (chunks) => (
-                <a
-                  className="underline underline-offset-2 decoration-foreground/50 text-foreground"
-                  href="https://t.me/nerual_dreming"
-                  target="_blank"
-                >
-                  {chunks}
-                </a>
-              ),
-              falKit: (chunks) => (
-                <a
-                  className="underline underline-offset-2 decoration-foreground/50 text-foreground"
-                  href="https://github.com/fal-ai-community/video-starter-kit"
-                  target="_blank"
-                >
-                  {chunks}
-                </a>
-              ),
-            })}
-          </p>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
