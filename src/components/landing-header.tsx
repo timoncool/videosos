@@ -14,7 +14,7 @@ export default function Header() {
     <header className="fixed top-0 w-full border-b border-white/10 bg-black/50 backdrop-blur-md z-50">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex flex-1">
-          <Link href="/" className="flex items-center space-x-2">
+          <Link href={`/${locale}`} className="flex items-center space-x-2">
             <Video className="w-6 h-6" />
             <span className="font-semibold">VideoSOS</span>
           </Link>
