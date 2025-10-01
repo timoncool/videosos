@@ -54,6 +54,9 @@ export function KeyDialog({ onOpenChange, open, ...props }: KeyDialogProps) {
               value={falKey}
               onChange={(e) => setFalKey(e.target.value)}
             />
+            <p className="text-muted-foreground text-sm">
+              {t("privacyNotice")}
+            </p>
           </div>
           <div className="flex-1 flex flex-row items-end justify-center gap-2">
             <Button onClick={handleSave}>{t("save")}</Button>
