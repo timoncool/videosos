@@ -451,6 +451,9 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     cost: "$0.05/1000 chars",
     popularity: 4,
     category: "voiceover",
+    inputMap: {
+      prompt: "text",
+    },
   },
   {
     endpointId: "fal-ai/playht/tts/v3",
@@ -459,6 +462,9 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     cost: "TBA",
     popularity: 4,
     category: "voiceover",
+    inputMap: {
+      prompt: "input",
+    },
     initialInput: {
       voice: "Dexter (English (US)/American)",
     },
@@ -470,6 +476,9 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     cost: "$0.04/1000 chars",
     popularity: 3,
     category: "voiceover",
+    inputMap: {
+      prompt: "text",
+    },
     inputAsset: ["audio"],
   },
   {
@@ -502,6 +511,9 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     cost: "TBA",
     popularity: 2,
     category: "voiceover",
+    inputMap: {
+      prompt: "text",
+    },
   },
   {
     endpointId: "fal-ai/f5-tts",
@@ -510,6 +522,9 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     cost: "TBA",
     popularity: 2,
     category: "voiceover",
+    inputMap: {
+      prompt: "gen_text",
+    },
     initialInput: {
       ref_audio_url:
         "https://github.com/SWivid/F5-TTS/raw/21900ba97d5020a5a70bcc9a0575dc7dec5021cb/tests/ref_audio/test_en_1_ref_short.wav",
