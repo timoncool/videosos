@@ -1,6 +1,7 @@
 {
-  "name": "fal-video-studio",
-  "version": "0.1.0",
+  "name": "videosos",
+  "version": "1.0.0",
+  "description": "An open-source AI video editor that runs entirely in your browser. Forked and improved from the original fal.ai kit.",
   "private": true,
   "scripts": {
     "dev": "next dev",

@@ -9,40 +9,43 @@ export default function Footer() {
           <div className="flex flex-col items-start">
             <div className="flex items-center space-x-2 mb-4">
               <Video className="w-6 h-6" />
-              <span className="font-semibold">fal.ai</span>
+              <span className="font-semibold">VideoSOS</span>
             </div>
             <p className="text-sm text-gray-400">
-              Open-source AI video developer
+              Open-source AI video editor
               <br />
-              starter kit.
+              built for creators.
             </p>
           </div>
 
           <div className="flex flex-col items-center text-center">
-            <h4 className="font-semibold mb-4">Resources</h4>
+            <h4 className="font-semibold mb-4">Credits</h4>
             <ul className="space-y-2 text-sm text-gray-400">
               <li>
                 <Link
-                  href="https://fal.ai/models"
+                  href="https://t.me/nerual_dreming"
                   className="hover:text-white transition-colors"
+                  target="_blank"
                 >
-                  AI Models
+                  Nerual Dreming
                 </Link>
               </li>
               <li>
                 <Link
-                  href="https://docs.fal.ai"
+                  href="https://artgeneration.me/"
                   className="hover:text-white transition-colors"
+                  target="_blank"
                 >
-                  API Reference
+                  ArtGeneration.me
                 </Link>
               </li>
               <li>
                 <Link
-                  href="https://blog.fal.ai"
+                  href="https://github.com/fal-ai-community/video-starter-kit"
                   className="hover:text-white transition-colors"
+                  target="_blank"
                 >
-                  fal Blog
+                  Original fal.ai Kit
                 </Link>
               </li>
             </ul>
@@ -53,27 +56,10 @@ export default function Footer() {
             <ul className="space-y-2 text-sm text-gray-400">
               <li>
                 <Link
-                  href="https://github.com/fal-ai-community/video-starter-kit"
+                  href="https://github.com/timoncool/video-starter-kit"
                   className="hover:text-white transition-colors"
                 >
                   GitHub
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="https://discord.gg/fal-ai"
-                  className="hover:text-white transition-colors"
-                >
-                  Discord
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="https://x.com/fal"
-                  target="_blank"
-                  className="hover:text-white transition-colors"
-                >
-                  Twitter
                 </Link>
               </li>
             </ul>
