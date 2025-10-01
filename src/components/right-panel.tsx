@@ -68,7 +68,9 @@ function ModelEndpointPicker({
 }: ModelEndpointPickerProps) {
   const endpoints = useMemo(
     () =>
-      AVAILABLE_ENDPOINTS.filter((endpoint) => endpoint.category === mediaType),
+      AVAILABLE_ENDPOINTS.filter(
+        (endpoint) => endpoint.category === mediaType,
+      ).sort((a, b) => b.popularity - a.popularity),
     [mediaType],
   );
   return (
@@ -79,8 +81,13 @@ function ModelEndpointPicker({
       <SelectContent>
         {endpoints.map((endpoint) => (
           <SelectItem key={endpoint.endpointId} value={endpoint.endpointId}>
-            <div className="flex flex-row gap-2 items-center">
+            <div className="flex flex-row gap-2 items-center justify-between w-full">
               <span>{endpoint.label}</span>
+              {endpoint.cost && (
+                <span className="text-xs text-muted-foreground ml-2">
+                  {endpoint.cost}
+                </span>
+              )}
             </div>
           </SelectItem>
         ))}
