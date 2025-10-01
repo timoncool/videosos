@@ -1,44 +1,40 @@
 "use client";
 
-import { useTranslations } from 'next-intl';
+import { useTranslations } from "next-intl";
 import { Scissors, Wand2, Share2, Zap, Users, Code } from "lucide-react";
 
 export default function Features() {
-  const t = useTranslations('landing.features');
-  
+  const t = useTranslations("landing.features");
+
   const features = [
     {
       icon: Scissors,
-      title: t('preciseEditing.title'),
-      description: t('preciseEditing.description'),
+      title: t("preciseEditing.title"),
+      description: t("preciseEditing.description"),
     },
     {
       icon: Wand2,
-      title: t('aiGenerated.title'),
-      description: t('aiGenerated.description'),
+      title: t("aiGenerated.title"),
+      description: t("aiGenerated.description"),
     },
     {
       icon: Share2,
-      title: t('exportAnywhere.title'),
-      description: t('exportAnywhere.description'),
+      title: t("exportAnywhere.title"),
+      description: t("exportAnywhere.description"),
     },
     {
       icon: Code,
-      title: t('openSource.title'),
-      description: t('openSource.description'),
+      title: t("openSource.title"),
+      description: t("openSource.description"),
     },
   ];
-  
+
   return (
     <section id="features" className="py-20 border-t border-white/10">
       <div className="container mx-auto px-4">
         <div className="max-w-2xl mx-auto text-center mb-16">
-          <h2 className="text-3xl font-bold mb-4">
-            {t('title')}
-          </h2>
-          <p className="text-gray-400">
-            {t('subtitle')}
-          </p>
+          <h2 className="text-3xl font-bold mb-4">{t("title")}</h2>
+          <p className="text-gray-400">{t("subtitle")}</p>
         </div>
 
         <div className="max-w-screen-md mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">

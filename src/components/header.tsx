@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from 'next-intl';
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Logo } from "./logo";
 import { SettingsIcon } from "lucide-react";
@@ -11,8 +11,8 @@ export default function Header({
 }: {
   openKeyDialog?: () => void;
 }) {
-  const t = useTranslations('app.header');
-  
+  const t = useTranslations("app.header");
+
   return (
     <header className="px-4 py-2 flex justify-between items-center border-b border-border">
       <h1 className="text-lg font-medium">
@@ -25,7 +25,7 @@ export default function Header({
             target="_blank"
             rel="noopener noreferrer"
           >
-            {t('github')}
+            {t("github")}
           </a>
         </Button>
         <LanguageSwitcher />

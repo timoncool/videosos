@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/react";
-import { getTranslations } from 'next-intl/server';
+import { getTranslations } from "next-intl/server";
 import "../../globals.css";
 
-export async function generateMetadata({ params: { locale } }: { params: { locale: string } }): Promise<Metadata> {
-  const t = await getTranslations({ locale, namespace: 'app.metadata' });
-  
+export async function generateMetadata({
+  params: { locale },
+}: { params: { locale: string } }): Promise<Metadata> {
+  const t = await getTranslations({ locale, namespace: "app.metadata" });
+
   return {
-    title: t('title'),
-    description: t('description'),
+    title: t("title"),
+    description: t("description"),
   };
 }
 

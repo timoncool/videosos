@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from 'next-intl';
+import { useTranslations } from "next-intl";
 import {
   ComponentProps,
   HTMLAttributes,
@@ -121,7 +121,7 @@ export function MediaGallerySheet({
   selectedMediaId,
   ...props
 }: MediaGallerySheetProps) {
-  const t = useTranslations('app.mediaGallery');
+  const t = useTranslations("app.mediaGallery");
   const projectId = useProjectId();
   const { data: mediaItems = [] } = useProjectMediaItems(projectId);
   const selectedMedia =
@@ -255,15 +255,15 @@ export function MediaGallerySheet({
           onPointerDownOutside={preventClose as any}
         >
           <SheetHeader>
-            <SheetTitle>{t('title')}</SheetTitle>
+            <SheetTitle>{t("title")}</SheetTitle>
             <SheetDescription className="sr-only">
-              {t('description')}
+              {t("description")}
             </SheetDescription>
           </SheetHeader>
           <div className="flex h-full max-h-full flex-1 flex-col gap-8 overflow-y-hidden">
             <div className="flex flex-col gap-4">
               <p className="text-muted-foreground">
-                {prompt ?? <span className="italic">{t('noDescription')}</span>}
+                {prompt ?? <span className="italic">{t("noDescription")}</span>}
               </p>
               <div></div>
             </div>
@@ -275,7 +275,7 @@ export function MediaGallerySheet({
                   disabled={deleteMedia.isPending}
                 >
                   <ImageUpscale className="w-4 h-4 opacity-50" />
-                  {t('upscaleVideo')}
+                  {t("upscaleVideo")}
                 </Button>
               )}
               {selectedMedia?.mediaType === "image" && (
@@ -285,7 +285,7 @@ export function MediaGallerySheet({
                   disabled={deleteMedia.isPending}
                 >
                   <FilmIcon className="w-4 h-4 opacity-50" />
-                  {t('makeVideo')}
+                  {t("makeVideo")}
                 </Button>
               )}
               <Button
@@ -294,7 +294,7 @@ export function MediaGallerySheet({
                 disabled={deleteMedia.isPending}
               >
                 <ImagesIcon className="w-4 h-4 opacity-50" />
-                {t('rerun')}
+                {t("rerun")}
               </Button>
               <Button
                 variant="secondary"
@@ -306,13 +306,16 @@ export function MediaGallerySheet({
                 ) : (
                   <TrashIcon className="w-4 h-4 opacity-50" />
                 )}
-                {t('delete')}
+                {t("delete")}
               </Button>
             </div>
             <div className="flex-1 flex flex-col gap-2 justify-end">
-              <MediaPropertyItem label={t('mediaUrl')} value={mediaUrl ?? "n/a"} />
               <MediaPropertyItem
-                label={t('model')}
+                label={t("mediaUrl")}
+                value={mediaUrl ?? "n/a"}
+              />
+              <MediaPropertyItem
+                label={t("model")}
                 value={selectedMedia.endpointId ?? "n/a"}
               >
                 <a
@@ -324,11 +327,11 @@ export function MediaGallerySheet({
                 </a>
               </MediaPropertyItem>
               <MediaPropertyItem
-                label={t('status')}
+                label={t("status")}
                 value={selectedMedia.status ?? "n/a"}
               />
               <MediaPropertyItem
-                label={t('requestId')}
+                label={t("requestId")}
                 value={selectedMedia.requestId ?? "n/a"}
               >
                 <code>{selectedMedia.requestId}</code>

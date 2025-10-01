@@ -1,5 +1,5 @@
-import { useTranslations } from 'next-intl';
-import { getTranslations } from 'next-intl/server';
+import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import Header from "@/components/header";
 import { Button } from "@/components/ui/button";
 import { fetchSharedVideo } from "@/lib/share";
@@ -21,11 +21,14 @@ export async function generateMetadata(
   { params }: PageProps,
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const t = await getTranslations({ locale: params.locale, namespace: 'share.metadata' });
+  const t = await getTranslations({
+    locale: params.locale,
+    namespace: "share.metadata",
+  });
   const video = await fetchSharedVideo(params.id);
   if (!video) {
     return {
-      title: t('notFoundTitle'),
+      title: t("notFoundTitle"),
     };
   }
 
@@ -33,7 +36,7 @@ export async function generateMetadata(
 
   return {
     title: video.title,
-    description: video.description || t('watchDescription'),
+    description: video.description || t("watchDescription"),
 
     openGraph: {
       title: video.title,
@@ -82,7 +85,10 @@ export async function generateMetadata(
 }
 
 export default async function SharePage({ params }: PageProps) {
-  const t = await getTranslations({ locale: params.locale, namespace: 'share' });
+  const t = await getTranslations({
+    locale: params.locale,
+    namespace: "share",
+  });
   const shareId = params.id;
   const shareData = await fetchSharedVideo(shareId);
   if (!shareData) {
@@ -111,11 +117,11 @@ export default async function SharePage({ params }: PageProps) {
               <Button variant="secondary" asChild size="lg">
                 <a href={shareData.videoUrl} download>
                   <DownloadIcon className="w-4 h-4 opacity-50" />
-                  {t('download')}
+                  {t("download")}
                 </a>
               </Button>
               <Button variant="secondary" size="lg" asChild>
-                <Link href="/">{t('startProject')}</Link>
+                <Link href="/">{t("startProject")}</Link>
               </Button>
             </div>
           </div>

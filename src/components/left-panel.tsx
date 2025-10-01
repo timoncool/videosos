@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from 'next-intl';
+import { useTranslations } from "next-intl";
 import { useProjectUpdater } from "@/data/mutations";
 import { queryKeys, useProject, useProjectMediaItems } from "@/data/queries";
 import { type MediaItem, PROJECT_PLACEHOLDER } from "@/data/schema";
@@ -48,8 +48,8 @@ import {
 } from "./ui/accordion";
 
 export default function LeftPanel() {
-  const t = useTranslations('app.leftPanel');
-  const tToast = useTranslations('app.toast');
+  const t = useTranslations("app.leftPanel");
+  const tToast = useTranslations("app.toast");
   const projectId = useProjectId();
   const { data: project = PROJECT_PLACEHOLDER } = useProject(projectId);
   const projectUpdate = useProjectUpdater(projectId);
@@ -76,8 +76,8 @@ export default function LeftPanel() {
     } catch (err) {
       console.warn(`ERROR! ${err}`);
       toast({
-        title: tToast('uploadFailed'),
-        description: tToast('uploadFailedDesc'),
+        title: tToast("uploadFailed"),
+        description: tToast("uploadFailedDesc"),
       });
     }
   };
@@ -130,7 +130,7 @@ export default function LeftPanel() {
               <AccordionTrigger className="py-4 h-10">
                 <div className="flex flex-row items-center">
                   <h2 className="text-sm text-muted-foreground font-semibold flex-1">
-                    {project?.title || t('projectSettings')}
+                    {project?.title || t("projectSettings")}
                   </h2>
                 </div>
               </AccordionTrigger>
@@ -139,7 +139,7 @@ export default function LeftPanel() {
                   <Input
                     id="projectName"
                     name="name"
-                    placeholder={t('untitled')}
+                    placeholder={t("untitled")}
                     value={project.title}
                     onChange={(e) =>
                       projectUpdate.mutate({ title: e.target.value })
@@ -152,7 +152,7 @@ export default function LeftPanel() {
                   <Textarea
                     id="projectDescription"
                     name="description"
-                    placeholder={t('describeVideo')}
+                    placeholder={t("describeVideo")}
                     className="resize-none"
                     value={project.description}
                     rows={6}
@@ -184,7 +184,7 @@ export default function LeftPanel() {
       <div className="flex-1 py-4 flex flex-col gap-4 border-b border-border h-full overflow-hidden relative">
         <div className="flex flex-row items-center gap-2 px-4">
           <h2 className="text-sm text-muted-foreground font-semibold flex-1">
-            {t('gallery')}
+            {t("gallery")}
           </h2>
           <div className="flex gap-2">
             <DropdownMenu>
@@ -201,35 +201,35 @@ export default function LeftPanel() {
                   onClick={() => setMediaType("all")}
                 >
                   <GalleryVerticalIcon className="w-4 h-4 opacity-50" />
-                  {t('all')}
+                  {t("all")}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className="text-sm"
                   onClick={() => setMediaType("image")}
                 >
                   <ImageIcon className="w-4 h-4 opacity-50" />
-                  {t('image')}
+                  {t("image")}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className="text-sm"
                   onClick={() => setMediaType("music")}
                 >
                   <MusicIcon className="w-4 h-4 opacity-50" />
-                  {t('music')}
+                  {t("music")}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className="text-sm"
                   onClick={() => setMediaType("voiceover")}
                 >
                   <MicIcon className="w-4 h-4 opacity-50" />
-                  {t('voiceover')}
+                  {t("voiceover")}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className="text-sm"
                   onClick={() => setMediaType("video")}
                 >
                   <FilmIcon className="w-4 h-4 opacity-50" />
-                  {t('video')}
+                  {t("video")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -265,22 +265,20 @@ export default function LeftPanel() {
               onClick={() => openGenerateDialog()}
             >
               <SparklesIcon className="w-4 h-4 opacity-50" />
-              {t('generate')}
+              {t("generate")}
             </Button>
           )}
         </div>
         {!isLoading && mediaItems.length === 0 && (
           <div className="h-full flex flex-col items-center justify-center gap-4 px-4">
-            <p className="text-sm text-center">
-              {t('emptyMessage')}
-            </p>
+            <p className="text-sm text-center">{t("emptyMessage")}</p>
             <Button
               variant="secondary"
               size="sm"
               onClick={() => openGenerateDialog()}
             >
               <ImagePlusIcon className="w-4 h-4 opacity-50" />
-              {t('generate')}
+              {t("generate")}
             </Button>
           </div>
         )}

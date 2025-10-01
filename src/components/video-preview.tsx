@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from 'next-intl';
+import { useTranslations } from "next-intl";
 import { db } from "@/data/db";
 import {
   EMPTY_VIDEO_COMPOSITION,
@@ -190,7 +190,7 @@ const AudioTrackSequence: React.FC<TrackSequenceProps> = ({
 };
 
 export default function VideoPreview() {
-  const t = useTranslations('app.videoPreview');
+  const t = useTranslations("app.videoPreview");
   const projectId = useProjectId();
   const setPlayer = useVideoProjectStore((s) => s.setPlayer);
 
@@ -294,7 +294,7 @@ export default function VideoPreview() {
         disabled={isCompositionLoading || tracks.length === 0}
       >
         <DownloadIcon className="w-4 h-4" />
-        {t('export')}
+        {t("export")}
       </Button>
       <div className="w-full h-full flex items-center justify-center mx-6  max-h-[calc(100vh-25rem)]">
         <Player

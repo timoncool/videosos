@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from 'next-intl';
+import { useTranslations } from "next-intl";
 import { db } from "@/data/db";
 import {
   TRACK_TYPE_ORDER,
@@ -17,7 +17,7 @@ import { VideoTrackRow } from "./video/track";
 import { queryKeys, refreshVideoCache } from "@/data/queries";
 
 export default function BottomBar() {
-  const t = useTranslations('app.bottomBar');
+  const t = useTranslations("app.bottomBar");
   const queryClient = useQueryClient();
   const projectId = useProjectId();
   const playerCurrentTimestamp = useVideoProjectStore(
@@ -143,7 +143,7 @@ export default function BottomBar() {
         ({
           id: "video",
           type: "video",
-          label: t('video'),
+          label: t("video"),
           locked: true,
           keyframes: [],
           projectId: projectId,
@@ -153,7 +153,7 @@ export default function BottomBar() {
         ({
           id: "music",
           type: "music",
-          label: t('music'),
+          label: t("music"),
           locked: true,
           keyframes: [],
           projectId: projectId,
@@ -163,7 +163,7 @@ export default function BottomBar() {
         ({
           id: "voiceover",
           type: "voiceover",
-          label: t('voiceover'),
+          label: t("voiceover"),
           locked: true,
           keyframes: [],
           projectId: projectId,

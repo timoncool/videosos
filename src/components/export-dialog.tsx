@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from 'next-intl';
+import { useTranslations } from "next-intl";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import {
@@ -40,7 +40,7 @@ type ShareResult = {
 };
 
 export function ExportDialog({ onOpenChange, ...props }: ExportDialogProps) {
-  const t = useTranslations('app.exportDialog');
+  const t = useTranslations("app.exportDialog");
   const projectId = useProjectId();
   const { data: composition = EMPTY_VIDEO_COMPOSITION } =
     useVideoComposition(projectId);
@@ -149,12 +149,12 @@ export function ExportDialog({ onOpenChange, ...props }: ExportDialogProps) {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <FilmIcon className="w-6 h-6 opacity-50" />
-            {t('title')}
+            {t("title")}
           </DialogTitle>
           <DialogDescription />
         </DialogHeader>
         <div className="text-muted-foreground">
-          <p>{t('description')}</p>
+          <p>{t("description")}</p>
         </div>
         <div
           className={cn(
@@ -172,7 +172,7 @@ export function ExportDialog({ onOpenChange, ...props }: ExportDialogProps) {
                 <>
                   <LoadingIcon className="w-24 h-24" />
                   <p className="mt-4 text-sm text-muted-foreground">
-                    {t('exporting')} {Math.round(exportProgress)}%
+                    {t("exporting")} {Math.round(exportProgress)}%
                   </p>
                 </>
               ) : (
@@ -191,7 +191,7 @@ export function ExportDialog({ onOpenChange, ...props }: ExportDialogProps) {
           <div className="flex flex-row gap-2 items-center">
             <Input
               value={exportVideo.data?.video_url ?? ""}
-              placeholder={t('videoUrl')}
+              placeholder={t("videoUrl")}
               readOnly
               className="text-muted-foreground"
             />
@@ -214,7 +214,7 @@ export function ExportDialog({ onOpenChange, ...props }: ExportDialogProps) {
             disabled={actionsDisabled || !exportVideo.data}
           >
             <ShareIcon className="w-4 h-4 opacity-50" />
-            {t('share')}
+            {t("share")}
           </Button>
           <Button
             variant="secondary"
@@ -224,14 +224,14 @@ export function ExportDialog({ onOpenChange, ...props }: ExportDialogProps) {
           >
             <a href={exportVideo.data?.video_url ?? "#"} download>
               <DownloadIcon className="w-4 h-4" />
-              {t('download')}
+              {t("download")}
             </a>
           </Button>
           <Button
             onClick={() => exportVideo.mutate()}
             disabled={actionsDisabled}
           >
-            {t('export')}
+            {t("export")}
           </Button>
         </DialogFooter>
       </DialogContent>

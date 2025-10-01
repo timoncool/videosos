@@ -20,7 +20,7 @@ export function LanguageSwitcher() {
 
   const switchLanguage = (newLocale: string) => {
     const currentPath = window.location.pathname;
-    const pathWithoutLocale = currentPath.replace(/^\/(en|ru)/, '');
+    const pathWithoutLocale = currentPath.replace(/^\/(en|ru)/, "");
     const newPath = `/${newLocale}${pathWithoutLocale}`;
     window.location.href = newPath;
   };
