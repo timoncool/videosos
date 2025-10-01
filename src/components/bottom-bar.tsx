@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from 'next-intl';
 import { db } from "@/data/db";
 import {
   TRACK_TYPE_ORDER,
@@ -14,6 +17,7 @@ import { VideoTrackRow } from "./video/track";
 import { queryKeys, refreshVideoCache } from "@/data/queries";
 
 export default function BottomBar() {
+  const t = useTranslations('app.bottomBar');
   const queryClient = useQueryClient();
   const projectId = useProjectId();
   const playerCurrentTimestamp = useVideoProjectStore(
@@ -139,7 +143,7 @@ export default function BottomBar() {
         ({
           id: "video",
           type: "video",
-          label: "Video",
+          label: t('video'),
           locked: true,
           keyframes: [],
           projectId: projectId,
@@ -149,7 +153,7 @@ export default function BottomBar() {
         ({
           id: "music",
           type: "music",
-          label: "Music",
+          label: t('music'),
           locked: true,
           keyframes: [],
           projectId: projectId,
@@ -159,13 +163,13 @@ export default function BottomBar() {
         ({
           id: "voiceover",
           type: "voiceover",
-          label: "Voiceover",
+          label: t('voiceover'),
           locked: true,
           keyframes: [],
           projectId: projectId,
         } as VideoTrack),
     };
-  }, [tracks, projectId]);
+  }, [tracks, projectId, t]);
 
   const handleOnDrop: DragEventHandler<HTMLDivElement> = (event) => {
     event.preventDefault();

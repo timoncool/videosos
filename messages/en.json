@@ -1,0 +1,169 @@
+{
+  "landing": {
+    "header": {
+      "features": "Features",
+      "community": "Community",
+      "github": "GitHub",
+      "tryNow": "Try it now"
+    },
+    "hero": {
+      "badge": "Now Open Source",
+      "starGithub": "Star on GitHub",
+      "title": "VideoSOS",
+      "subtitle": "AI Video Editor",
+      "description": "A powerful, open-source AI video editor built for creators. Create stunning videos with our intuitive tools, or develop your own AI video product using our kit.",
+      "tryNow": "Try it now",
+      "imageAlt": "VideoSOS interface"
+    },
+    "features": {
+      "title": "Powerful features for modern creators",
+      "subtitle": "Everything you need to create professional-quality videos, available to everyone.",
+      "preciseEditing": {
+        "title": "Precise Editing",
+        "description": "Frame-perfect cutting and editing tools for high-quality videos."
+      },
+      "aiGenerated": {
+        "title": "AI-Generated Assets",
+        "description": "Use AI to generate music, image, video and more for your videos."
+      },
+      "exportAnywhere": {
+        "title": "Export Anywhere",
+        "description": "Export to any format and share directly to social platforms."
+      },
+      "openSource": {
+        "title": "Open-Source",
+        "description": "Built on open-source technologies and available to everyone."
+      }
+    },
+    "community": {
+      "title": "Join our community",
+      "description": "VideoSOS is an open-source project. Star us on GitHub and contribute to help shape the future of AI-powered video editing.",
+      "starGithub": "Star on GitHub"
+    },
+    "footer": {
+      "appName": "VideoSOS",
+      "tagline": "Open-source AI video editor built for creators.",
+      "credits": "Credits",
+      "community": "Community",
+      "github": "GitHub"
+    }
+  },
+  "app": {
+    "metadata": {
+      "title": "VideoSOS | AI Video Editor",
+      "description": "Open-source AI video editor that runs entirely in your browser."
+    },
+    "header": {
+      "github": "GitHub"
+    },
+    "leftPanel": {
+      "projectSettings": "Project Settings",
+      "untitled": "untitled",
+      "describeVideo": "Describe your video",
+      "gallery": "Gallery",
+      "all": "All",
+      "image": "Image",
+      "music": "Music",
+      "voiceover": "Voiceover",
+      "video": "Video",
+      "generate": "Generate...",
+      "emptyMessage": "Create your image, audio and voiceover collection to compose your videos"
+    },
+    "rightPanel": {
+      "generateMedia": "Generate Media",
+      "image": "Image",
+      "video": "Video",
+      "voiceover": "Voiceover",
+      "music": "Music",
+      "using": "Using",
+      "reference": "Reference",
+      "back": "Back",
+      "select": "Select",
+      "upload": "Upload",
+      "removeMedia": "Remove media",
+      "imaginePlaceholder": "Imagine...",
+      "enhancePrompt": "Enhance Prompt",
+      "duration": "Duration",
+      "generate": "Generate"
+    },
+    "videoPreview": {
+      "export": "Export"
+    },
+    "bottomBar": {
+      "video": "Video",
+      "music": "Music",
+      "voiceover": "Voiceover"
+    },
+    "projectDialog": {
+      "title": "New Project",
+      "description": "Create a new or open an existent project",
+      "createNew": "Create New Project",
+      "projectTitle": "Project Title",
+      "describeProject": "Describe your project",
+      "aspectRatio": "Aspect Ratio:",
+      "generateTooltip": "Out of ideas? Generate a new random project.",
+      "generate": "Generate",
+      "creating": "Creating...",
+      "createProject": "Create Project",
+      "or": "or",
+      "openExisting": "Open Existing Project",
+      "noProjects": "No projects found",
+      "footerText": "This is an {openSource} project. Created by {author}, forked from the original {falKit}.",
+      "openSource": "open-source",
+      "author": "Nerual Dreming",
+      "falKit": "fal.ai kit"
+    },
+    "keyDialog": {
+      "title": "Access Key",
+      "saveKey": "Save your own FAL Key",
+      "placeholder": "Your FAL Key",
+      "save": "Save",
+      "footerText": "You can get your FAL Key from {link}.",
+      "here": "here"
+    },
+    "exportDialog": {
+      "title": "Export video",
+      "description": "This may take a while, sit back and relax.",
+      "exporting": "Exporting...",
+      "videoUrl": "Video URL...",
+      "share": "Share",
+      "download": "Download",
+      "export": "Export"
+    },
+    "mediaGallery": {
+      "title": "Media Gallery",
+      "description": "The b-roll for your video composition",
+      "noDescription": "No description",
+      "upscaleVideo": "Upscale Video",
+      "makeVideo": "Make Video",
+      "rerun": "Re-run",
+      "delete": "Delete",
+      "mediaUrl": "Media URL",
+      "model": "Model (fal endpoint)",
+      "status": "Status",
+      "requestId": "Request ID"
+    },
+    "toast": {
+      "generationCompleted": "Generation completed",
+      "generationCompletedDesc": "Your {mediaType} has been generated successfully.",
+      "generationFailed": "Generation failed",
+      "generationFailedDesc": "Failed to generate {mediaType}.",
+      "enhancePromptFailed": "Failed to enhance prompt",
+      "enhancePromptFailedDesc": "There was an unexpected error. Try again.",
+      "generateMediaFailed": "Failed to generate media",
+      "generateMediaFailedDesc": "Please ensure you've set your FAL KEY in the settings.",
+      "uploadFailed": "Failed to upload file",
+      "uploadFailedDesc": "Please try again",
+      "suggestionFailed": "Failed to create suggestion",
+      "suggestionFailedDesc": "There was an unexpected error while generating a suggestion. Try again."
+    }
+  },
+  "share": {
+    "metadata": {
+      "notFoundTitle": "Video Not Found",
+      "watchDescription": "Watch on Video AI Studio"
+    },
+    "download": "Download",
+    "startProject": "Start your project"
+  }
+}

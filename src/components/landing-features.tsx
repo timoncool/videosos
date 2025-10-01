@@ -1,41 +1,43 @@
+"use client";
+
+import { useTranslations } from 'next-intl';
 import { Scissors, Wand2, Share2, Zap, Users, Code } from "lucide-react";
 
-const features = [
-  {
-    icon: Scissors,
-    title: "Precise Editing",
-    description:
-      "Frame-perfect cutting and editing tools for high-quality videos.",
-  },
-  {
-    icon: Wand2,
-    title: "AI-Generated Assets",
-    description:
-      "Use AI to generate music, image, video and more for your videos.",
-  },
-  {
-    icon: Share2,
-    title: "Export Anywhere",
-    description: "Export to any format and share directly to social platforms.",
-  },
-  {
-    icon: Code,
-    title: "Open-Source",
-    description: "Built on open-source technologies and available to everyone.",
-  },
-];
-
 export default function Features() {
+  const t = useTranslations('landing.features');
+  
+  const features = [
+    {
+      icon: Scissors,
+      title: t('preciseEditing.title'),
+      description: t('preciseEditing.description'),
+    },
+    {
+      icon: Wand2,
+      title: t('aiGenerated.title'),
+      description: t('aiGenerated.description'),
+    },
+    {
+      icon: Share2,
+      title: t('exportAnywhere.title'),
+      description: t('exportAnywhere.description'),
+    },
+    {
+      icon: Code,
+      title: t('openSource.title'),
+      description: t('openSource.description'),
+    },
+  ];
+  
   return (
     <section id="features" className="py-20 border-t border-white/10">
       <div className="container mx-auto px-4">
         <div className="max-w-2xl mx-auto text-center mb-16">
           <h2 className="text-3xl font-bold mb-4">
-            Powerful features for modern creators
+            {t('title')}
           </h2>
           <p className="text-gray-400">
-            Everything you need to create professional-quality videos, available
-            to everyone.
+            {t('subtitle')}
           </p>
         </div>
 

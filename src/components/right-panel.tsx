@@ -89,11 +89,15 @@ function ModelEndpointPicker({
   );
 }
 
+import { useTranslations } from 'next-intl';
+
 export default function RightPanel({
   onOpenChange,
 }: {
   onOpenChange?: (open: boolean) => void;
 }) {
+  const t = useTranslations('app.rightPanel');
+  const tToast = useTranslations('app.toast');
   const videoProjectStore = useVideoProjectStore((s) => s);
   const {
     generateData,
@@ -139,8 +143,8 @@ export default function RightPanel({
     onError: (error) => {
       console.warn("Failed to create suggestion", error);
       toast({
-        title: "Failed to enhance prompt",
-        description: "There was an unexpected error. Try again.",
+        title: tToast('enhancePromptFailed'),
+        description: tToast('enhancePromptFailedDesc'),
       });
     },
   });
@@ -280,8 +284,8 @@ export default function RightPanel({
       onError: (error) => {
         console.warn("Failed to create job", error);
         toast({
-          title: "Failed to generate media",
-          description: "Please ensure you've set your FAL KEY in the settings.",
+          title: tToast('generateMediaFailed'),
+          description: tToast('generateMediaFailedDesc'),
         });
       },
     });
@@ -327,8 +331,8 @@ export default function RightPanel({
     } catch (err) {
       console.warn(`ERROR! ${err}`);
       toast({
-        title: "Failed to upload file",
-        description: "Please try again",
+        title: tToast('uploadFailed'),
+        description: tToast('uploadFailedDesc'),
       });
     }
   };
@@ -387,7 +391,7 @@ export default function RightPanel({
       <div className="flex-1 p-4 flex flex-col gap-4 border-b border-border h-full overflow-hidden relative">
         <div className="flex flex-row items-center justify-between">
           <h2 className="text-sm text-muted-foreground font-semibold flex-1">
-            Generate Media
+            {t('generateMedia')}
           </h2>
           <Button
             variant="ghost"
@@ -409,7 +413,7 @@ export default function RightPanel({
               )}
             >
               <ImageIcon className="w-4 h-4 opacity-50" />
-              <span className="text-[10px]">Image</span>
+              <span className="text-[10px]">{t('image')}</span>
             </Button>
             <Button
               variant="ghost"
@@ -420,7 +424,7 @@ export default function RightPanel({
               )}
             >
               <VideoIcon className="w-4 h-4 opacity-50" />
-              <span className="text-[10px]">Video</span>
+              <span className="text-[10px]">{t('video')}</span>
             </Button>
             <Button
               variant="ghost"
@@ -431,7 +435,7 @@ export default function RightPanel({
               )}
             >
               <MicIcon className="w-4 h-4 opacity-50" />
-              <span className="text-[10px]">Voiceover</span>
+              <span className="text-[10px]">{t('voiceover')}</span>
             </Button>
             <Button
               variant="ghost"
@@ -442,11 +446,11 @@ export default function RightPanel({
               )}
             >
               <MusicIcon className="w-4 h-4 opacity-50" />
-              <span className="text-[10px]">Music</span>
+              <span className="text-[10px]">{t('music')}</span>
             </Button>
           </div>
           <div className="flex flex-col gap-2 mt-2 justify-start font-medium text-base">
-            <div className="text-muted-foreground">Using</div>
+            <div className="text-muted-foreground">{t('using')}</div>
             <ModelEndpointPicker
               mediaType={mediaType}
               value={endpointId}
@@ -470,7 +474,7 @@ export default function RightPanel({
               <div className="flex flex-col w-full" key={getAssetType(asset)}>
                 <div className="flex justify-between">
                   <h4 className="capitalize text-muted-foreground mb-2">
-                    {getAssetType(asset)} Reference
+                    {getAssetType(asset)} {t('reference')}
                   </h4>
                   {tab === `asset-${getAssetType(asset)}` && (
                     <Button
@@ -478,7 +482,7 @@ export default function RightPanel({
                       onClick={() => setTab("generation")}
                       size="sm"
                     >
-                      <ArrowLeft /> Back
+                      <ArrowLeft /> {t('back')}
                     </Button>
                   )}
                 </div>
@@ -496,7 +500,7 @@ export default function RightPanel({
                           className="cursor-pointer min-h-[30px] flex flex-col items-center justify-center border border-dashed border-border rounded-md px-4"
                         >
                           <span className="text-muted-foreground text-xs text-center text-nowrap">
-                            Select
+                            {t('select')}
                           </span>
                         </Button>
                         <Button
@@ -520,7 +524,7 @@ export default function RightPanel({
                               <LoaderCircleIcon className="w-4 h-4 opacity-50 animate-spin" />
                             ) : (
                               <span className="text-muted-foreground text-xs text-center text-nowrap">
-                                Upload
+                                {t('upload')}
                               </span>
                             )}
                           </label>
@@ -529,7 +533,7 @@ export default function RightPanel({
                     )}
                     {generateData[getAssetKey(asset)] && (
                       <div className="cursor-pointer overflow-hidden relative w-full flex flex-col items-center justify-center border border-dashed border-border rounded-md">
-                        <WithTooltip tooltip="Remove media">
+                        <WithTooltip tooltip={t('removeMedia')}>
                           <button
                             type="button"
                             className="p-1 rounded hover:bg-black/50 absolute top-1 z-50 bg-black/80 right-1 group-hover:text-white"
@@ -583,7 +587,7 @@ export default function RightPanel({
             <div className="relative bg-border rounded-lg pb-10 placeholder:text-base w-full  resize-none">
               <Textarea
                 className="text-base shadow-none focus:!ring-0 placeholder:text-base w-full h-32 resize-none"
-                placeholder="Imagine..."
+                placeholder={t('imaginePlaceholder')}
                 value={generateData.prompt}
                 rows={3}
                 onChange={(e) => setGenerateData({ prompt: e.target.value })}
@@ -601,7 +605,7 @@ export default function RightPanel({
                     ) : (
                       <WandSparklesIcon className="opacity-50" />
                     )}
-                    Enhance Prompt
+                    {t('enhancePrompt')}
                   </Button>
                 </div>
               </WithTooltip>
@@ -640,7 +644,7 @@ export default function RightPanel({
               <div className="flex-1 flex flex-row gap-2">
                 {mediaType === "music" && (
                   <div className="flex flex-row items-center gap-1">
-                    <Label>Duration</Label>
+                    <Label>{t('duration')}</Label>
                     <Input
                       className="w-12 text-center tabular-nums [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                       min={5}
@@ -673,7 +677,7 @@ export default function RightPanel({
                 disabled={enhance.isPending || createJob.isPending}
                 onClick={handleOnGenerate}
               >
-                Generate
+                {t('generate')}
               </Button>
             </div>
           </div>

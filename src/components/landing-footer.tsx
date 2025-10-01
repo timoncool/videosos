@@ -1,7 +1,12 @@
+"use client";
+
+import { useTranslations } from 'next-intl';
 import Link from "next/link";
 import { Video } from "lucide-react";
 
 export default function Footer() {
+  const t = useTranslations('landing.footer');
+  
   return (
     <footer className="border-t flex w-full border-white/10 py-12">
       <div className="container mx-auto px-4">
@@ -9,17 +14,15 @@ export default function Footer() {
           <div className="flex flex-col items-start">
             <div className="flex items-center space-x-2 mb-4">
               <Video className="w-6 h-6" />
-              <span className="font-semibold">VideoSOS</span>
+              <span className="font-semibold">{t('appName')}</span>
             </div>
             <p className="text-sm text-gray-400">
-              Open-source AI video editor
-              <br />
-              built for creators.
+              {t('tagline')}
             </p>
           </div>
 
           <div className="flex flex-col items-center text-center">
-            <h4 className="font-semibold mb-4">Credits</h4>
+            <h4 className="font-semibold mb-4">{t('credits')}</h4>
             <ul className="space-y-2 text-sm text-gray-400">
               <li>
                 <Link
@@ -52,14 +55,14 @@ export default function Footer() {
           </div>
 
           <div className="flex flex-col items-center text-center">
-            <h4 className="font-semibold mb-4">Community</h4>
+            <h4 className="font-semibold mb-4">{t('community')}</h4>
             <ul className="space-y-2 text-sm text-gray-400">
               <li>
                 <Link
                   href="https://github.com/timoncool/videosos"
                   className="hover:text-white transition-colors"
                 >
-                  GitHub
+                  {t('github')}
                 </Link>
               </li>
             </ul>

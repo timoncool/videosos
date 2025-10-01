@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from 'next-intl';
 import { useProjectCreator } from "@/data/mutations";
 import { queryKeys, useProjects } from "@/data/queries";
 import type { AspectRatio, VideoProject } from "@/data/schema";
@@ -31,6 +32,8 @@ import { seedDatabase } from "@/data/seed";
 type ProjectDialogProps = {} & Parameters<typeof Dialog>[0];
 
 export function ProjectDialog({ onOpenChange, ...props }: ProjectDialogProps) {
+  const t = useTranslations('app.projectDialog');
+  const tToast = useTranslations('app.toast');
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [aspect, setAspect] = useState<AspectRatio>("16:9");
@@ -64,9 +67,8 @@ export function ProjectDialog({ onOpenChange, ...props }: ProjectDialogProps) {
     onError: (error) => {
       console.warn("Failed to create suggestion", error);
       toast({
-        title: "Failed to create suggestion",
-        description:
-          "There was an unexpected error while generating a suggestion. Try again.",
+        title: tToast('suggestionFailed'),
+        description: tToast('suggestionFailedDesc'),
       });
     },
   });
@@ -99,9 +101,9 @@ export function ProjectDialog({ onOpenChange, ...props }: ProjectDialogProps) {
               <Logo />
             </span>
           </div>
-          <DialogTitle className="sr-only">New Project</DialogTitle>
+          <DialogTitle className="sr-only">{t('title')}</DialogTitle>
           <DialogDescription className="sr-only">
-            Create a new or open an existent project
+            {t('description')}
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-row gap-8 h-full">
@@ -109,16 +111,16 @@ export function ProjectDialog({ onOpenChange, ...props }: ProjectDialogProps) {
           <div className="flex flex-col flex-1 gap-8">
             <h2 className="text-lg font-semibold flex flex-row gap-2">
               <FileVideoIcon className="w-6 h-6 opacity-50 stroke-1" />
-              Create New Project
+              {t('createNew')}
             </h2>
             <div className="flex flex-col gap-4">
               <Input
-                placeholder="Project Title"
+                placeholder={t('projectTitle')}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
               />
               <Textarea
-                placeholder="Describe your project"
+                placeholder={t('describeProject')}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={6}
@@ -126,7 +128,7 @@ export function ProjectDialog({ onOpenChange, ...props }: ProjectDialogProps) {
               />
               <div>
                 <h4 className="text-xs text-muted-foreground mb-1">
-                  Aspect Ratio:
+                  {t('aspectRatio')}
                 </h4>
                 <div className="flex flex-row gap-2">
                   <Button
@@ -149,7 +151,7 @@ export function ProjectDialog({ onOpenChange, ...props }: ProjectDialogProps) {
               </div>
             </div>
             <div className="flex-1 flex flex-row items-end justify-start gap-2">
-              <WithTooltip tooltip="Out of ideas? Generate a new random project.">
+              <WithTooltip tooltip={t('generateTooltip')}>
                 <Button
                   variant="secondary"
                   disabled={suggestProject.isPending}
@@ -160,7 +162,7 @@ export function ProjectDialog({ onOpenChange, ...props }: ProjectDialogProps) {
                   ) : (
                     <WandSparklesIcon className="opacity-50" />
                   )}
-                  Generate
+                  {t('generate')}
                 </Button>
               </WithTooltip>
               <Button
@@ -180,14 +182,14 @@ export function ProjectDialog({ onOpenChange, ...props }: ProjectDialogProps) {
                 }
                 disabled={!title.trim() || createProject.isPending}
               >
-                {createProject.isPending ? "Creating..." : "Create Project"}
+                {createProject.isPending ? t('creating') : t('createProject')}
               </Button>
             </div>
           </div>
 
           <div className="flex flex-col gap-2 items-center">
             <Separator orientation="vertical" className="flex-1" />
-            <span className="font-semibold">or</span>
+            <span className="font-semibold">{t('or')}</span>
             <Separator orientation="vertical" className="flex-1" />
           </div>
 
@@ -195,7 +197,7 @@ export function ProjectDialog({ onOpenChange, ...props }: ProjectDialogProps) {
           <div className="flex flex-col flex-1 gap-8">
             <h2 className="text-lg font-semibold flex flex-row gap-2">
               <FolderOpenIcon className="w-6 h-6 opacity-50 stroke-1" />
-              Open Existing Project
+              {t('openExisting')}
             </h2>
             <div className="flex flex-col gap-2 max-h-[300px] overflow-y-auto">
               {isLoading ? (
@@ -207,7 +209,7 @@ export function ProjectDialog({ onOpenChange, ...props }: ProjectDialogProps) {
                 </>
               ) : projects?.length === 0 ? (
                 <div className="text-center text-sm text-muted-foreground py-8">
-                  No projects found
+                  {t('noProjects')}
                 </div>
               ) : (
                 // Project list
@@ -236,30 +238,34 @@ export function ProjectDialog({ onOpenChange, ...props }: ProjectDialogProps) {
         </div>
         <DialogFooter>
           <p className="text-muted-foreground text-sm mt-4 w-full text-center">
-            This is an{" "}
-            <a
-              className="underline underline-offset-2 decoration-foreground/50 text-foreground"
-              href="https://github.com/timoncool/videosos"
-            >
-              open-source
-            </a>{" "}
-            project. Created by{" "}
-            <a
-              className="underline underline-offset-2 decoration-foreground/50 text-foreground"
-              href="https://t.me/nerual_dreming"
-              target="_blank"
-            >
-              Nerual Dreming
-            </a>
-            , forked from the original{" "}
-            <a
-              className="underline underline-offset-2 decoration-foreground/50 text-foreground"
-              href="https://github.com/fal-ai-community/video-starter-kit"
-              target="_blank"
-            >
-              fal.ai kit
-            </a>
-            .
+            {t.rich('footerText', {
+              openSource: (chunks) => (
+                <a
+                  className="underline underline-offset-2 decoration-foreground/50 text-foreground"
+                  href="https://github.com/timoncool/videosos"
+                >
+                  {chunks}
+                </a>
+              ),
+              author: (chunks) => (
+                <a
+                  className="underline underline-offset-2 decoration-foreground/50 text-foreground"
+                  href="https://t.me/nerual_dreming"
+                  target="_blank"
+                >
+                  {chunks}
+                </a>
+              ),
+              falKit: (chunks) => (
+                <a
+                  className="underline underline-offset-2 decoration-foreground/50 text-foreground"
+                  href="https://github.com/fal-ai-community/video-starter-kit"
+                  target="_blank"
+                >
+                  {chunks}
+                </a>
+              )
+            })}
           </p>
         </DialogFooter>
       </DialogContent>

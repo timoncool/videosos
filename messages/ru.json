@@ -1,0 +1,169 @@
+{
+  "landing": {
+    "header": {
+      "features": "Возможности",
+      "community": "Сообщество",
+      "github": "GitHub",
+      "tryNow": "Попробовать"
+    },
+    "hero": {
+      "badge": "Теперь с открытым исходным кодом",
+      "starGithub": "Поставить звезду на GitHub",
+      "title": "VideoSOS",
+      "subtitle": "ИИ видеоредактор",
+      "description": "Мощный видеоредактор с ИИ с открытым исходным кодом для создателей контента. Создавайте потрясающие видео с помощью наших интуитивных инструментов или разрабатывайте собственный продукт для работы с видео на основе ИИ.",
+      "tryNow": "Попробовать",
+      "imageAlt": "Интерфейс VideoSOS"
+    },
+    "features": {
+      "title": "Мощные возможности для современных создателей",
+      "subtitle": "Всё необходимое для создания профессиональных видео, доступное каждому.",
+      "preciseEditing": {
+        "title": "Точное редактирование",
+        "description": "Инструменты покадровой обрезки и редактирования для высококачественных видео."
+      },
+      "aiGenerated": {
+        "title": "ИИ-контент",
+        "description": "Используйте ИИ для создания музыки, изображений, видео и многого другого для ваших роликов."
+      },
+      "exportAnywhere": {
+        "title": "Экспорт в любой формат",
+        "description": "Экспортируйте в любой формат и делитесь напрямую в социальных сетях."
+      },
+      "openSource": {
+        "title": "Открытый исходный код",
+        "description": "Построен на технологиях с открытым исходным кодом и доступен каждому."
+      }
+    },
+    "community": {
+      "title": "Присоединяйтесь к нашему сообществу",
+      "description": "VideoSOS — проект с открытым исходным кодом. Поставьте нам звезду на GitHub и внесите свой вклад, чтобы помочь в развитии видеомонтажа на основе ИИ.",
+      "starGithub": "Поставить звезду на GitHub"
+    },
+    "footer": {
+      "appName": "VideoSOS",
+      "tagline": "Видеоредактор с ИИ и открытым исходным кодом для создателей.",
+      "credits": "Авторы",
+      "community": "Сообщество",
+      "github": "GitHub"
+    }
+  },
+  "app": {
+    "metadata": {
+      "title": "VideoSOS | ИИ видеоредактор",
+      "description": "Видеоредактор с ИИ и открытым исходным кодом, работающий полностью в браузере."
+    },
+    "header": {
+      "github": "GitHub"
+    },
+    "leftPanel": {
+      "projectSettings": "Настройки проекта",
+      "untitled": "без названия",
+      "describeVideo": "Опишите ваше видео",
+      "gallery": "Галерея",
+      "all": "Всё",
+      "image": "Изображение",
+      "music": "Музыка",
+      "voiceover": "Озвучка",
+      "video": "Видео",
+      "generate": "Сгенерировать...",
+      "emptyMessage": "Создайте коллекцию изображений, аудио и озвучки для монтажа ваших видео"
+    },
+    "rightPanel": {
+      "generateMedia": "Генерация медиа",
+      "image": "Изображение",
+      "video": "Видео",
+      "voiceover": "Озвучка",
+      "music": "Музыка",
+      "using": "Используется",
+      "reference": "Референс",
+      "back": "Назад",
+      "select": "Выбрать",
+      "upload": "Загрузить",
+      "removeMedia": "Удалить медиа",
+      "imaginePlaceholder": "Представьте...",
+      "enhancePrompt": "Улучшить запрос",
+      "duration": "Длительность",
+      "generate": "Сгенерировать"
+    },
+    "videoPreview": {
+      "export": "Экспорт"
+    },
+    "bottomBar": {
+      "video": "Видео",
+      "music": "Музыка",
+      "voiceover": "Озвучка"
+    },
+    "projectDialog": {
+      "title": "Новый проект",
+      "description": "Создать новый или открыть существующий проект",
+      "createNew": "Создать новый проект",
+      "projectTitle": "Название проекта",
+      "describeProject": "Опишите ваш проект",
+      "aspectRatio": "Соотношение сторон:",
+      "generateTooltip": "Нет идей? Сгенерируйте новый случайный проект.",
+      "generate": "Сгенерировать",
+      "creating": "Создание...",
+      "createProject": "Создать проект",
+      "or": "или",
+      "openExisting": "Открыть существующий проект",
+      "noProjects": "Проекты не найдены",
+      "footerText": "Это {openSource} проект. Создан {author}, форк оригинального {falKit}.",
+      "openSource": "проект с открытым исходным кодом",
+      "author": "Nerual Dreming",
+      "falKit": "fal.ai kit"
+    },
+    "keyDialog": {
+      "title": "Ключ доступа",
+      "saveKey": "Сохраните свой FAL ключ",
+      "placeholder": "Ваш FAL ключ",
+      "save": "Сохранить",
+      "footerText": "Вы можете получить свой FAL ключ {link}.",
+      "here": "здесь"
+    },
+    "exportDialog": {
+      "title": "Экспорт видео",
+      "description": "Это может занять некоторое время, расслабьтесь и подождите.",
+      "exporting": "Экспорт...",
+      "videoUrl": "URL видео...",
+      "share": "Поделиться",
+      "download": "Скачать",
+      "export": "Экспорт"
+    },
+    "mediaGallery": {
+      "title": "Галерея медиа",
+      "description": "B-roll для вашей видеокомпозиции",
+      "noDescription": "Нет описания",
+      "upscaleVideo": "Улучшить видео",
+      "makeVideo": "Создать видео",
+      "rerun": "Повторить",
+      "delete": "Удалить",
+      "mediaUrl": "URL медиа",
+      "model": "Модель (fal endpoint)",
+      "status": "Статус",
+      "requestId": "ID запроса"
+    },
+    "toast": {
+      "generationCompleted": "Генерация завершена",
+      "generationCompletedDesc": "Ваш(а) {mediaType} успешно сгенерирован(а).",
+      "generationFailed": "Ошибка генерации",
+      "generationFailedDesc": "Не удалось сгенерировать {mediaType}.",
+      "enhancePromptFailed": "Не удалось улучшить запрос",
+      "enhancePromptFailedDesc": "Произошла непредвиденная ошибка. Попробуйте снова.",
+      "generateMediaFailed": "Не удалось сгенерировать медиа",
+      "generateMediaFailedDesc": "Убедитесь, что вы установили свой FAL KEY в настройках.",
+      "uploadFailed": "Не удалось загрузить файл",
+      "uploadFailedDesc": "Пожалуйста, попробуйте снова",
+      "suggestionFailed": "Не удалось создать предложение",
+      "suggestionFailedDesc": "Произошла непредвиденная ошибка при генерации предложения. Попробуйте снова."
+    }
+  },
+  "share": {
+    "metadata": {
+      "notFoundTitle": "Видео не найдено",
+      "watchDescription": "Смотреть в Video AI Studio"
+    },
+    "download": "Скачать",
+    "startProject": "Начать свой проект"
+  }
+}
