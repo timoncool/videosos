@@ -158,7 +158,12 @@ export const db = {
       const db = await open();
       const media: MediaItem | null = await db.get("media_items", id);
       if (!media) return;
-      // Delete associated keyframes
+
+      if (media.kind === "uploaded" && media.blob) {
+        const { revokeBlobUrl } = await import("@/lib/utils");
+        revokeBlobUrl(id);
+      }
+
       const tracks = await db.getAllFromIndex(
         "tracks",
         "by_projectId",
