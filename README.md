@@ -6,7 +6,13 @@
 
 A powerful, open-source AI video editor built for creators. This is an enhanced fork of the original AI Video Starter Kit by the fal.ai community, redesigned to run entirely in the browser.
 
-![VideoSOS](https://github.com/fal-ai-community/video-starter-kit/blob/main/src/app/opengraph-image.png?raw=true)
+## Screenshots
+
+### Landing Page
+![VideoSOS Landing Page](./public/screenshot-landing.png)
+
+### Video Editor
+![VideoSOS Video Editor](./public/screenshot-app.png)
 
 ---
 
@@ -69,6 +75,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 ## 🇷🇺 Русский
+
+## Скриншоты
+
+### Главная страница
+![VideoSOS Главная страница](./public/screenshot-landing.png)
+
+### Видеоредактор
+![VideoSOS Видеоредактор](./public/screenshot-app.png)
 
 ### Ключевые улучшения
 
