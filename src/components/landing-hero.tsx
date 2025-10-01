@@ -36,20 +36,24 @@ export default function Hero() {
           </p>
 
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 mb-16">
-            <Link href="/app">
-              <Button
-                size="lg"
-                className="bg-white text-black hover:bg-gray-200 min-w-[200px]"
-              >
-                {t("tryNow")}
-              </Button>
-            </Link>
-            <Link href="https://github.com/timoncool/videosos">
-              <Button size="lg" variant="outline" className="min-w-[200px]">
+            <Button
+              size="lg"
+              className="bg-white text-black hover:bg-gray-200 min-w-[200px]"
+              asChild
+            >
+              <Link href="/app">{t("tryNow")}</Link>
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="min-w-[200px]"
+              asChild
+            >
+              <Link href="https://github.com/timoncool/videosos">
                 <Github className="mr-2 h-5 w-5" />
                 {t("starGithub")}
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         </div>
 

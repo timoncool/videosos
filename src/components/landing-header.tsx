@@ -42,11 +42,9 @@ export default function Header() {
 
         <div className="flex flex-1 justify-end items-center space-x-4">
           <LanguageSwitcher />
-          <Link href="/app">
-            <Button className="bg-white text-black hover:bg-gray-200">
-              {t("tryNow")}
-            </Button>
-          </Link>
+          <Button className="bg-white text-black hover:bg-gray-200" asChild>
+            <Link href="/app">{t("tryNow")}</Link>
+          </Button>
         </div>
       </div>
     </header>

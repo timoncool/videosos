@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/react";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
+import "../globals.css";
 
 export async function generateMetadata({
   params: { locale },
@@ -24,9 +25,13 @@ export default async function LocaleLayout({
   const messages = await getMessages({ locale });
 
   return (
-    <NextIntlClientProvider messages={messages}>
-      {children}
-      <Analytics />
-    </NextIntlClientProvider>
+    <html lang={locale}>
+      <body className="antialiased dark">
+        <NextIntlClientProvider messages={messages}>
+          {children}
+          <Analytics />
+        </NextIntlClientProvider>
+      </body>
+    </html>
   );
 }
