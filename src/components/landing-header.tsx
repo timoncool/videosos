@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Video } from "lucide-react";
 import { LanguageSwitcher } from "./language-switcher";
 
 export default function Header() {
   const t = useTranslations("landing.header");
+  const locale = useLocale();
 
   return (
     <header className="fixed top-0 w-full border-b border-white/10 bg-black/50 backdrop-blur-md z-50">
@@ -42,11 +43,9 @@ export default function Header() {
 
         <div className="flex flex-1 justify-end items-center space-x-4">
           <LanguageSwitcher />
-          <Link href="/app">
-            <Button className="bg-white text-black hover:bg-gray-200">
-              {t("tryNow")}
-            </Button>
-          </Link>
+          <Button className="bg-white text-black hover:bg-gray-200" asChild>
+            <Link href={`/${locale}/app`}>{t("tryNow")}</Link>
+          </Button>
         </div>
       </div>
     </header>

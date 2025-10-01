@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Github } from "lucide-react";
 import { LaptopMockup } from "@/components/ui/landing-laptop-mockup";
@@ -9,6 +9,7 @@ import Link from "next/link";
 
 export default function Hero() {
   const t = useTranslations("landing.hero");
+  const locale = useLocale();
 
   return (
     <section className="pt-32 pb-16 md:pt-40 md:pb-24">
@@ -36,20 +37,24 @@ export default function Hero() {
           </p>
 
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 mb-16">
-            <Link href="/app">
-              <Button
-                size="lg"
-                className="bg-white text-black hover:bg-gray-200 min-w-[200px]"
-              >
-                {t("tryNow")}
-              </Button>
-            </Link>
-            <Link href="https://github.com/timoncool/videosos">
-              <Button size="lg" variant="outline" className="min-w-[200px]">
+            <Button
+              size="lg"
+              className="bg-white text-black hover:bg-gray-200 min-w-[200px]"
+              asChild
+            >
+              <Link href={`/${locale}/app`}>{t("tryNow")}</Link>
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="min-w-[200px]"
+              asChild
+            >
+              <Link href="https://github.com/timoncool/videosos">
                 <Github className="mr-2 h-5 w-5" />
                 {t("starGithub")}
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         </div>
 
