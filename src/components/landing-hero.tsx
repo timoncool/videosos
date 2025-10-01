@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Github } from "lucide-react";
 import { LaptopMockup } from "@/components/ui/landing-laptop-mockup";
 import Image from "next/image";
-import Link from "next/link";
+import Link from "next-intl/link";
 
 export default function Hero() {
   const t = useTranslations("landing.hero");

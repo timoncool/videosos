@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "next-intl/link";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Video } from "lucide-react";
