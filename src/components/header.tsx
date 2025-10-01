@@ -1,10 +1,11 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Logo } from "./logo";
 import { SettingsIcon } from "lucide-react";
 import { LanguageSwitcher } from "./language-switcher";
+import Link from "next/link";
 
 export default function Header({
   openKeyDialog,
@@ -12,11 +13,14 @@ export default function Header({
   openKeyDialog?: () => void;
 }) {
   const t = useTranslations("app.header");
+  const locale = useLocale();
 
   return (
     <header className="px-4 py-2 flex justify-between items-center border-b border-border">
       <h1 className="text-lg font-medium">
-        <Logo />
+        <Link href={`/${locale}/app`}>
+          <Logo />
+        </Link>
       </h1>
       <nav className="flex flex-row items-center justify-end gap-1">
         <Button variant="ghost" size="sm" asChild>
