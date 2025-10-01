@@ -27,7 +27,7 @@ export default async function LocaleLayout({
   return (
     <html lang={locale}>
       <body className="antialiased dark">
-        <NextIntlClientProvider messages={messages}>
+        <NextIntlClientProvider messages={messages} locale={locale}>
           {children}
           <Analytics />
         </NextIntlClientProvider>
