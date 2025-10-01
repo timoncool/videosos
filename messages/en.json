@@ -161,5 +161,99 @@
     },
     "download": "Download",
     "startProject": "Start your project"
+  },
+  "models": {
+    "image": {
+      "fluxKontext": {
+        "label": "FLUX.1 Kontext [pro]",
+        "description": "Professional image generation with context-aware editing capabilities"
+      },
+      "fluxDev": {
+        "label": "FLUX.1 [dev]",
+        "description": "High-quality image generation model optimized for creative workflows"
+      },
+      "ideogramV3Text": {
+        "label": "Ideogram V3 (Text)",
+        "description": "Advanced text-to-image model with superior text rendering capabilities"
+      },
+      "ideogramV3Image": {
+        "label": "Ideogram V3 (Image)",
+        "description": "Image-to-image transformation with text rendering excellence"
+      },
+      "recraftV3": {
+        "label": "Recraft V3",
+        "description": "Professional design-focused image generation"
+      },
+      "nanoBanana": {
+        "label": "Nano Banana",
+        "description": "Fast image editing with mask support"
+      },
+      "sd35Large": {
+        "label": "Stable Diffusion 3.5 Large",
+        "description": "Latest Stable Diffusion with enhanced quality and control"
+      },
+      "fluxSchnell": {
+        "label": "FLUX.1 [schnell]",
+        "description": "Ultra-fast image generation model"
+      },
+      "imagen4": {
+        "label": "Imagen 4",
+        "description": "Google's latest image generation model"
+      }
+    },
+    "video": {
+      "veo3FastText": {
+        "label": "Veo 3 Fast (Text)",
+        "description": "Ultra-fast text-to-video generation with high quality"
+      },
+      "veo3FastImage": {
+        "label": "Veo 3 Fast (Image)",
+        "description": "Ultra-fast image-to-video generation"
+      },
+      "kling25Text": {
+        "label": "Kling 2.5 Turbo Pro (Text)",
+        "description": "Top-tier text-to-video generation with unparalleled motion fluidity"
+      },
+      "kling25Image": {
+        "label": "Kling 2.5 Turbo Pro (Image)",
+        "description": "Top-tier image-to-video generation with cinematic visuals"
+      },
+      "lumaDream": {
+        "label": "Luma Dream Machine",
+        "description": "High quality video generation with Ray2 and Flash modes"
+      },
+      "pika22Text": {
+        "label": "Pika 2.2 (Text)",
+        "description": "Advanced text-to-video with camera control"
+      },
+      "pika22Image": {
+        "label": "Pika 2.2 (Image)",
+        "description": "Image-to-video with advanced motion control"
+      }
+    },
+    "music": {
+      "stableAudio": {
+        "label": "Stable Audio",
+        "description": "Generate high-quality audio from text prompts"
+      },
+      "minimaxMusic": {
+        "label": "Minimax Music",
+        "description": "Music generation with mood control"
+      }
+    },
+    "voiceover": {
+      "minimaxSpeech": {
+        "label": "MiniMax Speech-02 HD",
+        "description": "High-definition text-to-speech"
+      },
+      "playhtV3": {
+        "label": "PlayHT TTS v3",
+        "description": "High-quality voice synthesis"
+      },
+      "diaTTS": {
+        "label": "Dia TTS Voice Clone",
+        "description": "Voice cloning from sample"
+      }
+    }
   }
 }

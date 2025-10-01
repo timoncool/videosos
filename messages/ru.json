@@ -161,5 +161,99 @@
     },
     "download": "Скачать",
     "startProject": "Начать свой проект"
+  },
+  "models": {
+    "image": {
+      "fluxKontext": {
+        "label": "FLUX.1 Kontext [pro]",
+        "description": "Профессиональная генерация изображений с контекстным редактированием"
+      },
+      "fluxDev": {
+        "label": "FLUX.1 [dev]",
+        "description": "Высококачественная модель генерации изображений для творческих задач"
+      },
+      "ideogramV3Text": {
+        "label": "Ideogram V3 (Text)",
+        "description": "Продвинутая модель с превосходным качеством рендеринга текста"
+      },
+      "ideogramV3Image": {
+        "label": "Ideogram V3 (Image)",
+        "description": "Преобразование изображений с отличным рендерингом текста"
+      },
+      "recraftV3": {
+        "label": "Recraft V3",
+        "description": "Профессиональная генерация изображений для дизайна"
+      },
+      "nanoBanana": {
+        "label": "Nano Banana",
+        "description": "Быстрое редактирование изображений с поддержкой масок"
+      },
+      "sd35Large": {
+        "label": "Stable Diffusion 3.5 Large",
+        "description": "Последняя версия Stable Diffusion с улучшенным качеством и контролем"
+      },
+      "fluxSchnell": {
+        "label": "FLUX.1 [schnell]",
+        "description": "Сверхбыстрая модель генерации изображений"
+      },
+      "imagen4": {
+        "label": "Imagen 4",
+        "description": "Последняя модель генерации изображений от Google"
+      }
+    },
+    "video": {
+      "veo3FastText": {
+        "label": "Veo 3 Fast (Text)",
+        "description": "Сверхбыстрая генерация видео из текста с высоким качеством"
+      },
+      "veo3FastImage": {
+        "label": "Veo 3 Fast (Image)",
+        "description": "Сверхбыстрая генерация видео из изображения"
+      },
+      "kling25Text": {
+        "label": "Kling 2.5 Turbo Pro (Text)",
+        "description": "Первоклассная генерация видео из текста с непревзойденной плавностью движения"
+      },
+      "kling25Image": {
+        "label": "Kling 2.5 Turbo Pro (Image)",
+        "description": "Первоклассная генерация видео из изображения с кинематографическим качеством"
+      },
+      "lumaDream": {
+        "label": "Luma Dream Machine",
+        "description": "Высококачественная генерация видео с режимами Ray2 и Flash"
+      },
+      "pika22Text": {
+        "label": "Pika 2.2 (Text)",
+        "description": "Продвинутая генерация видео из текста с управлением камерой"
+      },
+      "pika22Image": {
+        "label": "Pika 2.2 (Image)",
+        "description": "Генерация видео из изображения с продвинутым контролем движения"
+      }
+    },
+    "music": {
+      "stableAudio": {
+        "label": "Stable Audio",
+        "description": "Генерация высококачественного аудио из текстовых запросов"
+      },
+      "minimaxMusic": {
+        "label": "Minimax Music",
+        "description": "Генерация музыки с контролем настроения"
+      }
+    },
+    "voiceover": {
+      "minimaxSpeech": {
+        "label": "MiniMax Speech-02 HD",
+        "description": "Высококачественный синтез речи"
+      },
+      "playhtV3": {
+        "label": "PlayHT TTS v3",
+        "description": "Высококачественный синтез голоса"
+      },
+      "diaTTS": {
+        "label": "Dia TTS Voice Clone",
+        "description": "Клонирование голоса из образца"
+      }
+    }
   }
 }
