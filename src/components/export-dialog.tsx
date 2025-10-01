@@ -21,10 +21,7 @@ import { exportVideoClientSide } from "@/lib/ffmpeg";
 import { Button } from "./ui/button";
 import { useProjectId, useVideoProjectStore } from "@/data/store";
 import { LoadingIcon } from "./ui/icons";
-import {
-  DownloadIcon,
-  FilmIcon,
-} from "lucide-react";
+import { DownloadIcon, FilmIcon } from "lucide-react";
 import { PROJECT_PLACEHOLDER } from "@/data/schema";
 
 type ExportDialogProps = {} & Parameters<typeof Dialog>[0];
