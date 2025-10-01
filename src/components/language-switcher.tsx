@@ -11,8 +11,8 @@ import {
 import { Button } from "./ui/button";
 
 const languages = [
-  { code: "en", name: "English", flag: "🇬🇧" },
-  { code: "ru", name: "Русский", flag: "🇷🇺" },
+  { code: "en", name: "English" },
+  { code: "ru", name: "Русский" },
 ];
 
 export function LanguageSwitcher() {
@@ -32,7 +32,7 @@ export function LanguageSwitcher() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="sm" className="gap-2">
           <GlobeIcon className="w-4 h-4" />
-          <span>{currentLanguage?.flag}</span>
+          <span className="text-sm">{currentLanguage?.name}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
@@ -42,7 +42,6 @@ export function LanguageSwitcher() {
             onClick={() => switchLanguage(language.code)}
             className={locale === language.code ? "bg-accent" : ""}
           >
-            <span className="mr-2">{language.flag}</span>
             {language.name}
           </DropdownMenuItem>
         ))}
