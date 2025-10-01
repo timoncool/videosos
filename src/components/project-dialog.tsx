@@ -239,19 +239,27 @@ export function ProjectDialog({ onOpenChange, ...props }: ProjectDialogProps) {
             This is an{" "}
             <a
               className="underline underline-offset-2 decoration-foreground/50 text-foreground"
-              href="https://github.com/fal-ai-community/video-starter-kit"
+              href="https://github.com/timoncool/video-starter-kit"
             >
               open-source
             </a>{" "}
-            project developed by{" "}
+            project. Created by{" "}
             <a
               className="underline underline-offset-2 decoration-foreground/50 text-foreground"
-              href="https://fal.ai"
+              href="https://t.me/nerual_dreming"
+              target="_blank"
             >
-              {" "}
-              fal.ai
-            </a>{" "}
-            and its partners.
+              Nerual Dreming
+            </a>
+            , forked from the original{" "}
+            <a
+              className="underline underline-offset-2 decoration-foreground/50 text-foreground"
+              href="https://github.com/fal-ai-community/video-starter-kit"
+              target="_blank"
+            >
+              fal.ai kit
+            </a>
+            .
           </p>
         </DialogFooter>
       </DialogContent>

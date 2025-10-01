@@ -16,13 +16,8 @@ export default function Header({
       </h1>
       <nav className="flex flex-row items-center justify-end gap-1">
         <Button variant="ghost" size="sm" asChild>
-          <a href="https://fal.ai" target="_blank" rel="noopener noreferrer">
-            fal.ai
-          </a>
-        </Button>
-        <Button variant="ghost" size="sm" asChild>
           <a
-            href="https://github.com/fal-ai-community/video-starter-kit"
+            href="https://github.com/timoncool/video-starter-kit"
             target="_blank"
             rel="noopener noreferrer"
           >
