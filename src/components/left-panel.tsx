@@ -39,7 +39,8 @@ import type { ClientUploadedFileData } from "uploadthing/types";
 import { db } from "@/data/db";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "@/hooks/use-toast";
-import { getMediaMetadata } from "@/lib/ffmpeg";
+import { getMediaMetadata, extractVideoThumbnail } from "@/lib/ffmpeg";
+import { resolveMediaUrl } from "@/lib/utils";
 import {
   Accordion,
   AccordionContent,
@@ -107,10 +108,21 @@ export default function LeftPanel() {
       if (media) {
         const mediaMetadata = await getMediaMetadata(media as MediaItem);
 
+        let thumbnailUrl = null;
+        if (media.mediaType === "video") {
+          const videoUrl = resolveMediaUrl(media);
+          if (videoUrl) {
+            thumbnailUrl = await extractVideoThumbnail(videoUrl);
+          }
+        }
+
         await db.media
           .update(media.id, {
             ...media,
-            metadata: mediaMetadata?.media || {},
+            metadata: {
+              ...(mediaMetadata?.media || {}),
+              thumbnail_url: thumbnailUrl,
+            },
           })
           .finally(() => {
             queryClient.invalidateQueries({

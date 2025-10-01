@@ -379,3 +379,49 @@ export async function getMediaMetadata(media: MediaItem) {
     return { media: {} };
   }
 }
+
+export async function extractVideoThumbnail(
+  videoUrl: string,
+): Promise<string | null> {
+  try {
+    const video = document.createElement("video");
+    video.src = videoUrl;
+    video.crossOrigin = "anonymous";
+    video.muted = true;
+
+    await new Promise<void>((resolve, reject) => {
+      video.onloadedmetadata = () => resolve();
+      video.onerror = () => reject(new Error("Failed to load video"));
+    });
+
+    video.currentTime = 0;
+
+    await new Promise<void>((resolve) => {
+      video.onseeked = () => resolve();
+    });
+
+    const canvas = document.createElement("canvas");
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      throw new Error("Failed to get canvas context");
+    }
+
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    const blob = await new Promise<Blob | null>((resolve) => {
+      canvas.toBlob((blob) => resolve(blob), "image/jpeg", 0.8);
+    });
+
+    if (!blob) {
+      throw new Error("Failed to create thumbnail blob");
+    }
+
+    return URL.createObjectURL(blob);
+  } catch (error) {
+    console.error("Failed to generate video thumbnail:", error);
+    return null;
+  }
+}

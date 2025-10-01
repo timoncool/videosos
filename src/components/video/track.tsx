@@ -198,17 +198,18 @@ export function VideoTrackView({
   const { data: mediaItems = [] } = useProjectMediaItems(projectId);
 
   const media = mediaItems.find((item) => item.id === frame.data.mediaId);
-  // TODO improve missing data
-  if (!media) return null;
+  const mediaUrl = media ? resolveMediaUrl(media) : null;
 
-  const mediaUrl = resolveMediaUrl(media);
+  const trackRef = useRef<HTMLDivElement>(null);
 
   const imageUrl = useMemo(() => {
+    if (!media) return undefined;
     if (media.mediaType === "image") {
       return mediaUrl;
     }
     if (media.mediaType === "video") {
       return (
+        media.metadata?.thumbnail_url ||
         media.input?.image_url ||
         media.metadata?.start_frame_url ||
         media.metadata?.end_frame_url
@@ -217,9 +218,10 @@ export function VideoTrackView({
     return undefined;
   }, [media, mediaUrl]);
 
-  const label = media.mediaType ?? "unknown";
+  // TODO improve missing data
+  if (!media) return null;
 
-  const trackRef = useRef<HTMLDivElement>(null);
+  const label = media.mediaType ?? "unknown";
 
   const calculateBounds = () => {
     const timelineElement = document.querySelector(".timeline-container");
