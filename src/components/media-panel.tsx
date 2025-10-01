@@ -27,7 +27,7 @@ import {
 import { Badge } from "./ui/badge";
 import { LoadingIcon } from "./ui/icons";
 import { useToast } from "@/hooks/use-toast";
-import { getMediaMetadata } from "@/lib/ffmpeg";
+import { getMediaMetadata, extractVideoThumbnail } from "@/lib/ffmpeg";
 
 type MediaItemRowProps = {
   data: MediaItem;
@@ -104,12 +104,21 @@ export function MediaItemRow({
         if (media.mediaType !== "image") {
           const mediaMetadata = await getMediaMetadata(media as MediaItem);
 
+          let thumbnailUrl = null;
+          if (media.mediaType === "video") {
+            const videoUrl = resolveMediaUrl(media as MediaItem);
+            if (videoUrl) {
+              thumbnailUrl = await extractVideoThumbnail(videoUrl);
+            }
+          }
+
           await db.media.update(data.id, {
             ...media,
             metadata: {
               ...(mediaMetadata?.media || {}),
               start_frame_url: media.output?.start_frame_url,
               end_frame_url: media.output?.end_frame_url,
+              thumbnail_url: thumbnailUrl,
             },
           });
 
@@ -134,7 +143,9 @@ export function MediaItemRow({
 
   const coverImage =
     data.mediaType === "video"
-      ? data.metadata?.start_frame_url || data?.metadata?.end_frame_url
+      ? data.metadata?.thumbnail_url ||
+        data.metadata?.start_frame_url ||
+        data?.metadata?.end_frame_url
       : resolveMediaUrl(data);
 
   return (
