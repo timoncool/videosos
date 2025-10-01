@@ -1,14 +1,15 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Github } from "lucide-react";
 import { LaptopMockup } from "@/components/ui/landing-laptop-mockup";
 import Image from "next/image";
-import Link from "next-intl/link";
+import Link from "next/link";
 
 export default function Hero() {
   const t = useTranslations("landing.hero");
+  const locale = useLocale();
 
   return (
     <section className="pt-32 pb-16 md:pt-40 md:pb-24">
@@ -41,7 +42,7 @@ export default function Hero() {
               className="bg-white text-black hover:bg-gray-200 min-w-[200px]"
               asChild
             >
-              <Link href="/app">{t("tryNow")}</Link>
+              <Link href={`/${locale}/app`}>{t("tryNow")}</Link>
             </Button>
             <Button
               size="lg"
