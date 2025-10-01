@@ -107,11 +107,7 @@
       "createProject": "Создать проект",
       "or": "или",
       "openExisting": "Открыть существующий проект",
-      "noProjects": "Проекты не найдены",
-      "footerText": "Это {openSource} проект. Создан {author}, форк оригинального {falKit}.",
-      "openSource": "проект с открытым исходным кодом",
-      "author": "Nerual Dreming",
-      "falKit": "fal.ai kit"
+      "noProjects": "Проекты не найдены"
     },
     "keyDialog": {
       "title": "Ключ доступа",
@@ -119,8 +115,7 @@
       "placeholder": "Ваш FAL ключ",
       "save": "Сохранить",
       "privacyNotice": "Мы не храним ваш ключ на наших серверах. Всё остаётся в вашем браузере.",
-      "footerText": "Вы можете получить свой FAL ключ {link}.",
-      "here": "здесь"
+      "footerText": "Вы можете получить свой FAL ключ <link>здесь</link>."
     },
     "exportDialog": {
       "title": "Экспорт видео",

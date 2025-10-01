@@ -107,11 +107,7 @@
       "createProject": "Create Project",
       "or": "or",
       "openExisting": "Open Existing Project",
-      "noProjects": "No projects found",
-      "footerText": "This is an {openSource} project. Created by {author}, forked from the original {falKit}.",
-      "openSource": "open-source",
-      "author": "Nerual Dreming",
-      "falKit": "fal.ai kit"
+      "noProjects": "No projects found"
     },
     "keyDialog": {
       "title": "Access Key",
@@ -119,8 +115,7 @@
       "placeholder": "Your FAL Key",
       "save": "Save",
       "privacyNotice": "We don't store your key on our servers. Everything stays in your browser.",
-      "footerText": "You can get your FAL Key from {link}.",
-      "here": "here"
+      "footerText": "You can get your FAL Key from <link>here</link>."
     },
     "exportDialog": {
       "title": "Export video",
