@@ -3,7 +3,10 @@
 import { createFalClient } from "@fal-ai/client";
 
 export const fal = createFalClient({
-  credentials: () => typeof window !== 'undefined' ? localStorage?.getItem("falKey") as string : "",
+  credentials: () =>
+    typeof window !== "undefined"
+      ? (localStorage?.getItem("falKey") as string)
+      : "",
 });
 
 export type InputAsset =
