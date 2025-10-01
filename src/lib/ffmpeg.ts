@@ -2,7 +2,6 @@ import type { MediaItem, AspectRatio } from "@/data/schema";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile, toBlobURL } from "@ffmpeg/util";
 import { resolveMediaUrl } from "./utils";
-import { fal } from "./fal";
 
 const videoSizeMap = {
   "16:9": { width: 1024, height: 576 },
@@ -349,20 +348,33 @@ function getExtension(url: string): string {
 
 export async function getMediaMetadata(media: MediaItem) {
   try {
-    const { data: mediaMetadata } = await fal.subscribe(
-      "fal-ai/ffmpeg-api/metadata",
-      {
-        input: {
-          media_url: resolveMediaUrl(media),
-          extract_frames: true,
-        },
-        mode: "streaming",
-      },
-    );
+    const mediaUrl = resolveMediaUrl(media);
+    if (!mediaUrl) {
+      return { media: {} };
+    }
 
-    return mediaMetadata;
+    return new Promise<{ media: any }>((resolve) => {
+      const mediaElement = media.mediaType === 'video' ? 
+        document.createElement('video') : 
+        document.createElement('audio');
+      
+      mediaElement.addEventListener('loadedmetadata', () => {
+        const metadata = {
+          duration: mediaElement.duration,
+        };
+        resolve({ media: metadata });
+      });
+
+      mediaElement.addEventListener('error', () => {
+        console.error('Failed to load media metadata');
+        resolve({ media: {} });
+      });
+
+      mediaElement.src = `/api/download?url=${encodeURIComponent(mediaUrl)}`;
+      mediaElement.load();
+    });
   } catch (error) {
-    console.error(error);
-    return {};
+    console.error('Error extracting metadata:', error);
+    return { media: {} };
   }
 }
