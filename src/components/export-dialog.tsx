@@ -1,4 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -13,7 +14,7 @@ import {
   useProject,
   useVideoComposition,
 } from "@/data/queries";
-import { fal } from "@/lib/fal";
+import { exportVideoClientSide } from "@/lib/ffmpeg";
 import { Button } from "./ui/button";
 import { useProjectId, useVideoProjectStore } from "@/data/store";
 import { LoadingIcon } from "./ui/icons";
@@ -40,6 +41,7 @@ export function ExportDialog({ onOpenChange, ...props }: ExportDialogProps) {
   const { data: composition = EMPTY_VIDEO_COMPOSITION } =
     useVideoComposition(projectId);
   const router = useRouter();
+  const [exportProgress, setExportProgress] = useState(0);
   const exportVideo = useMutation({
     mutationFn: async () => {
       const mediaItems = composition.mediaItems;
@@ -52,19 +54,19 @@ export function ExportDialog({ onOpenChange, ...props }: ExportDialogProps) {
           maxEnd = Math.max(maxEnd, frame.timestamp + duration);
         }
       }
-      const totalDuration = maxEnd / 1000;
+      const totalDuration = maxEnd;
 
       const videoData = composition.tracks.map((track) => ({
         id: track.id,
-        type: track.type === "video" ? "video" : "audio",
+        type: track.type === "video" ? ("video" as const) : ("audio" as const),
         keyframes: composition.frames[track.id].map((frame) => {
           const media = mediaItems[frame.data.mediaId];
           const duration = frame.duration || resolveDuration(media) || 5000;
           return {
-            timestamp: frame.timestamp / 1000,
-            duration: duration / 1000,
+            timestamp: frame.timestamp,
+            duration: duration,
             url: resolveMediaUrl(media),
-            type: media?.mediaType === "image" ? "image" : "video",
+            mediaId: frame.data.mediaId,
           };
         }),
       }));
@@ -73,15 +75,23 @@ export function ExportDialog({ onOpenChange, ...props }: ExportDialogProps) {
         throw new Error("No tracks to export");
       }
 
-      const { data } = await fal.subscribe("fal-ai/ffmpeg-api/compose", {
-        input: {
-          tracks: videoData,
-          duration: totalDuration,
+      const videoBlob = await exportVideoClientSide(
+        videoData,
+        mediaItems,
+        totalDuration,
+        project.aspectRatio,
+        (progress) => {
+          setExportProgress(progress);
         },
-        mode: "polling",
-        pollInterval: 3000,
-      });
-      return data as ShareResult;
+      );
+
+      const videoUrl = URL.createObjectURL(videoBlob);
+
+      return {
+        video_url: videoUrl,
+        thumbnail_url: "",
+        blob: videoBlob,
+      };
     },
   });
   const setExportDialogOpen = useVideoProjectStore(
@@ -155,7 +165,12 @@ export function ExportDialog({ onOpenChange, ...props }: ExportDialogProps) {
               )}
             >
               {exportVideo.isPending ? (
-                <LoadingIcon className="w-24 h-24" />
+                <>
+                  <LoadingIcon className="w-24 h-24" />
+                  <p className="mt-4 text-sm text-muted-foreground">
+                    Экспорт... {Math.round(exportProgress)}%
+                  </p>
+                </>
               ) : (
                 <FilmIcon className="w-24 h-24 opacity-50" />
               )}
