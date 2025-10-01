@@ -74,32 +74,32 @@ function AudioWaveform({ data }: AudioWaveformProps) {
       if (data.metadata?.waveform && Array.isArray(data.metadata.waveform)) {
         return data.metadata.waveform;
       }
-      
+
       const audioUrl = resolveMediaUrl(data);
       if (!audioUrl) {
         throw new Error("No media URL found");
       }
-      
+
       try {
         const proxyUrl = `/api/download?url=${encodeURIComponent(audioUrl)}`;
         const response = await fetch(proxyUrl);
         const arrayBuffer = await response.arrayBuffer();
-        
+
         const audioContext = new AudioContext();
         const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-        
+
         const pointsPerSecond = 5;
         const precision = 3;
         const channelData = audioBuffer.getChannelData(0);
         const duration = audioBuffer.duration;
         const totalPoints = Math.floor(duration * pointsPerSecond);
         const samplesPerPoint = Math.floor(channelData.length / totalPoints);
-        
+
         const waveformData: number[] = [];
         for (let i = 0; i < totalPoints; i++) {
           const start = i * samplesPerPoint;
           const end = Math.min(start + samplesPerPoint, channelData.length);
-          
+
           let sum = 0;
           for (let j = start; j < end; j++) {
             sum += channelData[j] * channelData[j];
@@ -115,10 +115,10 @@ function AudioWaveform({ data }: AudioWaveformProps) {
             waveform: waveformData,
           },
         });
-        
+
         return waveformData;
       } catch (error) {
-        console.error('Failed to generate waveform locally:', error);
+        console.error("Failed to generate waveform locally:", error);
         return [];
       }
     },

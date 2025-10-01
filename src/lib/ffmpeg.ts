@@ -354,19 +354,20 @@ export async function getMediaMetadata(media: MediaItem) {
     }
 
     return new Promise<{ media: any }>((resolve) => {
-      const mediaElement = media.mediaType === 'video' ? 
-        document.createElement('video') : 
-        document.createElement('audio');
-      
-      mediaElement.addEventListener('loadedmetadata', () => {
+      const mediaElement =
+        media.mediaType === "video"
+          ? document.createElement("video")
+          : document.createElement("audio");
+
+      mediaElement.addEventListener("loadedmetadata", () => {
         const metadata = {
           duration: mediaElement.duration,
         };
         resolve({ media: metadata });
       });
 
-      mediaElement.addEventListener('error', () => {
-        console.error('Failed to load media metadata');
+      mediaElement.addEventListener("error", () => {
+        console.error("Failed to load media metadata");
         resolve({ media: {} });
       });
 
@@ -374,7 +375,7 @@ export async function getMediaMetadata(media: MediaItem) {
       mediaElement.load();
     });
   } catch (error) {
-    console.error('Error extracting metadata:', error);
+    console.error("Error extracting metadata:", error);
     return { media: {} };
   }
 }
