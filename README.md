@@ -137,3 +137,41 @@ npm run dev
 ### Лицензия
 
 Этот проект лицензирован по лицензии MIT - подробности см. в файле [LICENSE](LICENSE).
+
+---
+
+## 📝 Changelog / История изменений
+
+### October 2025
+
+#### [PR #32](https://github.com/timoncool/video-starter-kit/pull/32) - Fix voiceover model parameter mapping
+**🇬🇧 EN:** Added `inputMap` entries for 5 voiceover models that use non-standard parameter names (minimax/speech-02-hd, playht/tts/v3, dia-tts/voice-clone, chatterbox/text-to-speech, f5-tts).  
+**🇷🇺 RU:** Добавлены записи `inputMap` для 5 моделей озвучки, использующих нестандартные названия параметров.
+
+#### [PR #31](https://github.com/timoncool/video-starter-kit/pull/31) - Fix model endpoints and parameters
+**🇬🇧 EN:** Corrected endpoints for 5 models (Ideogram V3, Veo 3 Fast, Kling 1.5 Pro) and added `seconds_total: 30` parameter for Stable Audio. Fixed UI to show duration controls for all music models.  
+**🇷🇺 RU:** Исправлены эндпоинты для 5 моделей (Ideogram V3, Veo 3 Fast, Kling 1.5 Pro) и добавлен параметр `seconds_total: 30` для Stable Audio. Исправлен UI для отображения контроля длительности для всех музыкальных моделей.
+
+#### [PR #30](https://github.com/timoncool/video-starter-kit/pull/30) - Add AI models with costs and popularity ranking
+**🇬🇧 EN:** Added 48 new AI models across categories (Images, Video, Music, Voiceover) with cost information and popularity-based sorting in UI. Full localization support (EN/RU).  
+**🇷🇺 RU:** Добавлено 48 новых AI моделей в категориях (Изображения, Видео, Музыка, Озвучка) с информацией о ценах и сортировкой по популярности в UI. Полная локализация (EN/RU).
+
+#### [PR #29](https://github.com/timoncool/video-starter-kit/pull/29) - Fix FAL link and footer
+**🇬🇧 EN:** Made FAL.ai link clickable and removed project footer text from the editor interface.  
+**🇷🇺 RU:** Сделана кликабельной ссылка на FAL.ai и удален текст футера проекта из интерфейса редактора.
+
+#### [PR #28](https://github.com/timoncool/video-starter-kit/pull/28) - UI improvements
+**🇬🇧 EN:** Updated landing page screenshot, made logo clickable, removed share button, and added privacy notice to export dialog.  
+**🇷🇺 RU:** Обновлен скриншот главной страницы, логотип сделан кликабельным, удалена кнопка "поделиться", добавлено уведомление о конфиденциальности в диалог экспорта.
+
+#### [PR #26](https://github.com/timoncool/video-starter-kit/pull/26) - Fix build and root page
+**🇬🇧 EN:** Restored root page functionality and removed flag emojis from language switcher.  
+**🇷🇺 RU:** Восстановлена функциональность корневой страницы и удалены флаги-эмодзи из переключателя языков.
+
+#### [PR #25](https://github.com/timoncool/video-starter-kit/pull/25) - Fix i18n context and routing
+**🇬🇧 EN:** Resolved internationalization context and routing issues - added locale prop, enabled browser language detection, fixed logo navigation.  
+**🇷🇺 RU:** Исправлены проблемы с интернационализацией и маршрутизацией - добавлен параметр локали, включена автоопределение языка браузера, исправлена навигация логотипа.
+
+#### [PR #24](https://github.com/timoncool/video-starter-kit/pull/24) - Fix i18n bugs
+**🇬🇧 EN:** Fixed multiple i18n issues including root redirect, button navigation, and layout structure using next-intl Link component.  
+**🇷🇺 RU:** Исправлены множественные проблемы i18n, включая редирект с корня, навигацию кнопок и структуру layout с использованием компонента next-intl Link.
