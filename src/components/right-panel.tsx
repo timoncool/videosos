@@ -331,7 +331,9 @@ export default function RightPanel({
           console.error("Failed to upload to fal.ai storage:", err);
           toast({
             title: "Upload Failed",
-            description: "Failed to upload file to storage",
+            description:
+              "Please check that your FAL API key is set correctly in Settings (click the gear icon)",
+            variant: "destructive",
           });
           return;
         }
@@ -390,11 +392,20 @@ export default function RightPanel({
       try {
         falUrl = await fal.storage.upload(file);
       } catch (err) {
-        console.warn(
-          "Failed to upload to fal.ai storage, will upload later when needed:",
-          err,
-        );
-        falUrl = undefined;
+        console.error("Failed to upload to fal.ai storage:", err);
+
+        const falKey = localStorage.getItem("falKey");
+        const isAuthError = !falKey;
+
+        toast({
+          title: tToast("uploadFailed"),
+          description: isAuthError
+            ? "Please set your FAL API key in Settings to use uploaded files with AI generation"
+            : tToast("uploadFailedDesc"),
+          variant: "destructive",
+        });
+
+        continue;
       }
 
       const data: Omit<MediaItem, "id"> = {
@@ -403,7 +414,7 @@ export default function RightPanel({
         createdAt: Date.now(),
         mediaType: outputType as MediaType,
         status: "completed",
-        url: falUrl || file.name,
+        url: falUrl,
         blob: file,
       };
 
