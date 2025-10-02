@@ -34,8 +34,6 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { useState } from "react";
-import { useUploadThing } from "@/lib/uploadthing";
-import type { ClientUploadedFileData } from "uploadthing/types";
 import { db } from "@/data/db";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "@/hooks/use-toast";
@@ -63,31 +61,43 @@ export default function LeftPanel() {
   );
   const openGenerateDialog = useVideoProjectStore((s) => s.openGenerateDialog);
 
-  const { startUpload, isUploading } = useUploadThing("fileUploader");
+  const [isUploading, setIsUploading] = useState(false);
+  const MAX_FILE_SIZE = 50 * 1024 * 1024;
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (!files) return;
+    if (!files || files.length === 0) return;
 
+    const fileArray = Array.from(files);
+    const oversizedFiles = fileArray.filter(
+      (file) => file.size > MAX_FILE_SIZE,
+    );
+
+    if (oversizedFiles.length > 0) {
+      toast({
+        title: tToast("uploadFailed"),
+        description: `${tToast("uploadFailedDesc")}: Files must be under 50MB`,
+      });
+      e.target.value = "";
+      return;
+    }
+
+    setIsUploading(true);
     try {
-      const uploadedFiles = await startUpload(Array.from(files));
-      if (uploadedFiles) {
-        await handleUploadComplete(uploadedFiles);
-      }
+      await handleUploadComplete(fileArray);
     } catch (err) {
       console.warn(`ERROR! ${err}`);
       toast({
         title: tToast("uploadFailed"),
         description: tToast("uploadFailedDesc"),
       });
+    } finally {
+      setIsUploading(false);
+      e.target.value = "";
     }
   };
 
-  const handleUploadComplete = async (
-    files: ClientUploadedFileData<{
-      uploadedBy: string;
-    }>[],
-  ) => {
+  const handleUploadComplete = async (files: File[]) => {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       const mediaType = file.type.split("/")[0];
@@ -99,7 +109,8 @@ export default function LeftPanel() {
         createdAt: Date.now(),
         mediaType: outputType as MediaType,
         status: "completed",
-        url: file.url,
+        url: file.name,
+        blob: file,
       };
 
       const mediaId = await db.media.create(data);

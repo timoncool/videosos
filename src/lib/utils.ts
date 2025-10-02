@@ -76,10 +76,33 @@ export function resolveDuration(item: MediaItem): number | null {
  * might be represented by different properties. This utility function resolves
  * the URL of the media based on the output data.
  */
+const blobUrlCache = new Map<string, string>();
+
+export function getOrCreateBlobUrl(mediaId: string, blob: Blob): string {
+  if (blobUrlCache.has(mediaId)) {
+    return blobUrlCache.get(mediaId)!;
+  }
+
+  const url = URL.createObjectURL(blob);
+  blobUrlCache.set(mediaId, url);
+  return url;
+}
+
+export function revokeBlobUrl(mediaId: string): void {
+  const url = blobUrlCache.get(mediaId);
+  if (url) {
+    URL.revokeObjectURL(url);
+    blobUrlCache.delete(mediaId);
+  }
+}
+
 export function resolveMediaUrl(item: MediaItem | undefined): string | null {
   if (!item) return null;
 
   if (item.kind === "uploaded") {
+    if (item.blob) {
+      return getOrCreateBlobUrl(item.id, item.blob);
+    }
     return item.url;
   }
   const data = item.output;

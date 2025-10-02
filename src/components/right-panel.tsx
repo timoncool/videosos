@@ -28,11 +28,10 @@ import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 
 import { useEffect, useMemo, useState } from "react";
-import { useUploadThing } from "@/lib/uploadthing";
-import type { ClientUploadedFileData } from "uploadthing/types";
 import { db } from "@/data/db";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
+import { fal } from "@/lib/fal";
 import {
   assetKeyMap,
   cn,
@@ -302,7 +301,7 @@ export default function RightPanel({
     videoProjectStore.onGenerate = handleOnGenerate;
   }, [handleOnGenerate]);
 
-  const handleSelectMedia = (media: MediaItem) => {
+  const handleSelectMedia = async (media: MediaItem) => {
     const asset = endpoint?.inputAsset?.find((item) => {
       const assetType = getAssetType(item);
 
@@ -320,39 +319,83 @@ export default function RightPanel({
       return;
     }
 
-    setGenerateData({ [getAssetKey(asset)]: resolveMediaUrl(media) });
+    let mediaUrl = resolveMediaUrl(media);
+
+    if (media.kind === "uploaded" && media.blob) {
+      if (!media.url || !media.url.startsWith("http")) {
+        try {
+          const falUrl = await fal.storage.upload(media.blob);
+          await db.media.update(media.id, { ...media, url: falUrl });
+          mediaUrl = falUrl;
+        } catch (err) {
+          console.error("Failed to upload to fal.ai storage:", err);
+          toast({
+            title: "Upload Failed",
+            description: "Failed to upload file to storage",
+          });
+          return;
+        }
+      } else {
+        mediaUrl = media.url;
+      }
+    }
+
+    setGenerateData({ [getAssetKey(asset)]: mediaUrl });
     setTab("generation");
   };
 
-  const { startUpload, isUploading } = useUploadThing("fileUploader");
+  const [isUploading, setIsUploading] = useState(false);
+  const MAX_FILE_SIZE = 50 * 1024 * 1024;
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (!files) return;
+    if (!files || files.length === 0) return;
 
+    const fileArray = Array.from(files);
+    const oversizedFiles = fileArray.filter(
+      (file) => file.size > MAX_FILE_SIZE,
+    );
+
+    if (oversizedFiles.length > 0) {
+      toast({
+        title: tToast("uploadFailed"),
+        description: `${tToast("uploadFailedDesc")}: Files must be under 50MB`,
+      });
+      e.target.value = "";
+      return;
+    }
+
+    setIsUploading(true);
     try {
-      const uploadedFiles = await startUpload(Array.from(files));
-      if (uploadedFiles) {
-        await handleUploadComplete(uploadedFiles);
-      }
+      await handleUploadComplete(fileArray);
     } catch (err) {
       console.warn(`ERROR! ${err}`);
       toast({
         title: tToast("uploadFailed"),
         description: tToast("uploadFailedDesc"),
       });
+    } finally {
+      setIsUploading(false);
+      e.target.value = "";
     }
   };
 
-  const handleUploadComplete = async (
-    files: ClientUploadedFileData<{
-      uploadedBy: string;
-    }>[],
-  ) => {
+  const handleUploadComplete = async (files: File[]) => {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       const mediaType = file.type.split("/")[0];
       const outputType = mediaType === "audio" ? "music" : mediaType;
+
+      let falUrl: string | undefined;
+      try {
+        falUrl = await fal.storage.upload(file);
+      } catch (err) {
+        console.warn(
+          "Failed to upload to fal.ai storage, will upload later when needed:",
+          err,
+        );
+        falUrl = undefined;
+      }
 
       const data: Omit<MediaItem, "id"> = {
         projectId,
@@ -360,30 +403,33 @@ export default function RightPanel({
         createdAt: Date.now(),
         mediaType: outputType as MediaType,
         status: "completed",
-        url: file.url,
+        url: falUrl || file.name,
+        blob: file,
       };
 
-      setGenerateData({
-        ...generateData,
-        [assetKeyMap[outputType as keyof typeof assetKeyMap]]: file.url,
-      });
+      if (falUrl) {
+        setGenerateData({
+          ...generateData,
+          [assetKeyMap[outputType as keyof typeof assetKeyMap]]: falUrl,
+        });
+      }
 
       const mediaId = await db.media.create(data);
       const media = await db.media.find(mediaId as string);
 
-      if (media && media.mediaType !== "image") {
-        const mediaMetadata = await getMediaMetadata(media as MediaItem);
+      if (media) {
+        if (media.mediaType !== "image") {
+          const mediaMetadata = await getMediaMetadata(media as MediaItem);
 
-        await db.media
-          .update(media.id, {
+          await db.media.update(media.id, {
             ...media,
             metadata: mediaMetadata?.media || {},
-          })
-          .finally(() => {
-            queryClient.invalidateQueries({
-              queryKey: queryKeys.projectMediaItems(projectId),
-            });
           });
+        }
+
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.projectMediaItems(projectId),
+        });
       }
     }
   };

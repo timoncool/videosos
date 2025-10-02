@@ -117,9 +117,15 @@ export async function exportVideoClientSide(
 
       const url = keyframe.url;
 
-      const mediaData = await fetchFile(
-        `${window.location.origin}/api/download?url=${encodeURIComponent(url)}`,
-      );
+      let mediaData: Uint8Array;
+      if (url.startsWith("blob:")) {
+        mediaData = await fetchFile(url);
+      } else {
+        mediaData = await fetchFile(
+          `${window.location.origin}/api/download?url=${encodeURIComponent(url)}`,
+        );
+      }
+
       const inputFilename = `input_${clipIndex}.${getExtension(url)}`;
       await ffmpeg.writeFile(inputFilename, mediaData);
 
@@ -243,9 +249,16 @@ export async function exportVideoClientSide(
           if (!keyframe || !keyframe.url) continue;
 
           const url = keyframe.url;
-          const audioData = await fetchFile(
-            `${window.location.origin}/api/download?url=${encodeURIComponent(url)}`,
-          );
+
+          let audioData: Uint8Array;
+          if (url.startsWith("blob:")) {
+            audioData = await fetchFile(url);
+          } else {
+            audioData = await fetchFile(
+              `${window.location.origin}/api/download?url=${encodeURIComponent(url)}`,
+            );
+          }
+
           const inputFilename = `audio_track${trackIdx}_input${audioClipIndex}.${getExtension(url)}`;
           await ffmpeg.writeFile(inputFilename, audioData);
 
@@ -371,7 +384,11 @@ export async function getMediaMetadata(media: MediaItem) {
         resolve({ media: {} });
       });
 
-      mediaElement.src = `${window.location.origin}/api/download?url=${encodeURIComponent(mediaUrl)}`;
+      if (mediaUrl.startsWith("blob:")) {
+        mediaElement.src = mediaUrl;
+      } else {
+        mediaElement.src = `${window.location.origin}/api/download?url=${encodeURIComponent(mediaUrl)}`;
+      }
       mediaElement.load();
     });
   } catch (error) {
