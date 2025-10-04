@@ -7,9 +7,9 @@
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org)
 [![Remotion](https://img.shields.io/badge/Remotion-latest-blue)](https://remotion.dev)
 
-A powerful, browser-based AI video editor built for creators. Create professional videos with 100+ AI models, advanced timeline editing, and zero server dependencies. This is an enhanced fork of the original AI Video Starter Kit by the fal.ai community, completely redesigned to run entirely in your browser.
+A powerful, browser-based AI video editor built for creators. Create stunning videos with 100+ AI models and advanced timeline editing.
 
-[🇷🇺 Русская версия README](./README.ru.md)
+**[🚀 Try the Live Demo](https://videosos.vercel.app/)** | [🇷🇺 Русская версия README](./README.ru.md)
 
 ## Screenshots
 
@@ -24,19 +24,19 @@ A powerful, browser-based AI video editor built for creators. Create professiona
 ## Key Features
 
 ### 🤖 Dual AI Provider Support
-Access 100+ state-of-the-art AI models through both **fal.ai** and **Runware.ai**. Generate images with FLUX and Ideogram V3, create videos with Veo 2 and Kling, compose music with Stable Audio, and produce natural voiceovers. Switch between providers seamlessly or use both simultaneously for maximum flexibility.
+Access 100+ state-of-the-art AI models through both **fal.ai** and **Runware.ai**. Generate images with FLUX and Ideogram V3, create videos with Veo 3 and Kling, compose music with Stable Audio, and produce natural voiceovers. Switch between providers seamlessly or use both simultaneously for maximum flexibility.
 
 ### 🔒 100% Privacy-First Architecture
-Everything runs locally in your browser with **zero server dependencies**. Your projects, media, and API keys are stored in IndexedDB on your device. No uploads, no tracking, no data collection. Work offline anytime, anywhere.
+Everything runs locally in your browser. Your projects, media, and API keys are stored in IndexedDB on your device. No uploads, no tracking, no data collection.
 
-### 🎬 Professional Timeline Editor
+### 🎬 Timeline Editor
 Advanced multi-track video editing with drag-and-drop functionality, precise keyframe control, audio waveform visualization, and real-time preview. Support for multiple aspect ratios (16:9, 9:16, 1:1) perfect for social media platforms.
 
 ### 🎨 Multi-Modal Content Generation
-Create complete video projects with AI-generated images, videos, background music, and professional voiceovers. Advanced features include camera movement controls, video upscaling with Topaz, and automatic lip-sync for voiceovers.
+Create complete video projects with AI-generated images, videos, background music, and voiceovers. Advanced features include camera movement controls, video upscaling with Topaz, and automatic lip-sync for voiceovers.
 
 ### ⚡ Client-Side Video Processing
-Powered by **FFmpeg.wasm** and **Remotion** for high-quality video rendering entirely in the browser. No server uploads, no waiting in queues. Export professional videos with proper audio mixing and precise timing control.
+Powered by **FFmpeg.wasm** and **Remotion** for high-quality video rendering entirely in the browser. No server uploads, no waiting in queues. Export videos with proper audio mixing and precise timing control.
 
 ### 🌍 International & Accessible
 Full internationalization support (English/Russian) with keyboard shortcuts for power users. Intuitive UI designed for both beginners and professionals.
@@ -91,9 +91,22 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) to see the application.
 
-### Contributing
+## Star History
 
-Contributions are welcome! See the [Contributing Guide](CONTRIBUTING.md) for more information on how to get started.
+[![Star History Chart](https://api.star-history.com/svg?repos=timoncool/videosos&type=Date)](https://star-history.com/#timoncool/videosos&Date)
+
+## Contributing
+
+We welcome contributions from developers of all skill levels! Whether you're fixing bugs, adding features, improving documentation, or sharing ideas, your help makes VideoSOS better for everyone.
+
+**How to contribute:**
+1. ⭐ Star this repository to show your support
+2. 🐛 Report bugs or suggest features in [Issues](https://github.com/timoncool/videosos/issues)
+3. 🔧 Submit pull requests - see our [Contributing Guide](CONTRIBUTING.md)
+4. 📖 Improve documentation
+5. 💬 Join discussions and help other users
+
+Every contribution counts, no matter how small! Let's build the best open-source AI video editor together.
 
 ### Credits
 
