@@ -18,21 +18,29 @@
     "features": {
       "title": "Powerful features for modern creators",
       "subtitle": "Everything you need to create professional-quality videos, available to everyone.",
-      "preciseEditing": {
-        "title": "Precise Editing",
-        "description": "Frame-perfect cutting and editing tools for high-quality videos."
+      "dualAI": {
+        "title": "Dual AI Provider Support",
+        "description": "Access 100+ state-of-the-art AI models through fal.ai and Runware.ai. Generate images with FLUX and Ideogram V3, create videos with Veo 2 and Kling, compose music with Stable Audio, and produce natural voiceovers. Switch between providers seamlessly or use both simultaneously for maximum flexibility."
       },
-      "aiGenerated": {
-        "title": "AI-Generated Assets",
-        "description": "Use AI to generate music, image, video and more for your videos."
+      "privacy": {
+        "title": "100% Privacy-First Architecture",
+        "description": "Everything runs locally in your browser without server dependencies. Your projects, media, and API keys are stored in IndexedDB on your device. No uploads, no tracking, no data collection. Work offline anytime, anywhere."
       },
-      "exportAnywhere": {
-        "title": "Export Anywhere",
-        "description": "Export to any format and share directly to social platforms."
+      "timeline": {
+        "title": "Professional Timeline Editor",
+        "description": "Advanced multi-track video editing with drag-and-drop functionality, precise keyframe control, audio waveform visualization, and real-time preview. Support for multiple aspect ratios (16:9, 9:16, 1:1) perfect for social media platforms."
       },
-      "openSource": {
-        "title": "Open-Source",
-        "description": "Built on open-source technologies and available to everyone."
+      "multiModal": {
+        "title": "Multi-Modal Content Generation",
+        "description": "Create complete video projects with AI-generated images, videos, background music, and professional voiceovers. Advanced features include camera movement controls, video upscaling with Topaz, and automatic lip-sync for voiceovers."
+      },
+      "clientSide": {
+        "title": "Client-Side Video Processing",
+        "description": "Powered by FFmpeg.wasm and Remotion for high-quality video rendering entirely in the browser. No server uploads, no waiting in queues. Export professional videos with proper audio mixing and precise timing control."
+      },
+      "international": {
+        "title": "International & Accessible",
+        "description": "Full internationalization support (English/Russian) with keyboard shortcuts for power users. Intuitive UI designed for both beginners and professionals."
       }
     },
     "community": {

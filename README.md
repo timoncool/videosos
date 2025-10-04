@@ -1,10 +1,13 @@
-# VideoSOS
+# VideoSOS - Open-Source AI-Powered Video Editor
 
+[![GitHub stars](https://img.shields.io/github/stars/timoncool/videosos?style=social)](https://github.com/timoncool/videosos/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/timoncool/videosos?style=social)](https://github.com/timoncool/videosos/network/members)
+[![GitHub issues](https://img.shields.io/github/issues/timoncool/videosos)](https://github.com/timoncool/videosos/issues)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org)
 [![Remotion](https://img.shields.io/badge/Remotion-latest-blue)](https://remotion.dev)
 
-A powerful, open-source AI video editor built for creators. This is an enhanced fork of the original AI Video Starter Kit by the fal.ai community, redesigned to run entirely in the browser.
+A powerful, browser-based AI video editor built for creators. Create professional videos with 100+ AI models, advanced timeline editing, and zero server dependencies. This is an enhanced fork of the original AI Video Starter Kit by the fal.ai community, completely redesigned to run entirely in your browser.
 
 [🇷🇺 Русская версия README](./README.ru.md)
 
@@ -20,22 +23,23 @@ A powerful, open-source AI video editor built for creators. This is an enhanced 
 
 ## Key Features
 
-✅ **Dual AI Provider Support**: Use both fal.ai and Runware.ai simultaneously with 100+ AI models  
-✅ **Fully Autonomous Operation**: No server dependencies, everything runs in your browser  
-✅ **Local-First Architecture**: IndexedDB storage for complete privacy and offline capability  
-✅ **Local Video Processing**: FFmpeg.wasm for client-side video assembly and processing  
-✅ **Multi-Modal Content**: Generate and edit images, videos, music, and voiceovers  
-✅ **Advanced Timeline**: Professional drag-and-drop editing with multiple tracks  
-✅ **Video Thumbnails**: Automatic thumbnail generation for all video content  
-✅ **Internationalization**: Full support for English and Russian languages  
-✅ **Camera Controls**: Advanced camera movement controls for video generation  
-✅ **Keyboard Shortcuts**: Efficient workflow with comprehensive keyboard shortcuts  
-✅ **Aspect Ratio Options**: Flexible aspect ratios for different social media platforms  
-✅ **Audio Waveforms**: Visual audio waveform rendering on timeline  
-✅ **State-of-the-Art Models**: Latest AI models including Veo 2, LTX Video, FLUX, Ideogram V3, Kling, and more  
-✅ **Video Upscaling**: Topaz-powered video enhancement and upscaling  
-✅ **Lip-Sync Support**: Automatic lip-sync capabilities for voiceovers  
-✅ **Professional Export**: High-quality video export with proper audio handling
+### 🤖 Dual AI Provider Support
+Access 100+ state-of-the-art AI models through both **fal.ai** and **Runware.ai**. Generate images with FLUX and Ideogram V3, create videos with Veo 2 and Kling, compose music with Stable Audio, and produce natural voiceovers. Switch between providers seamlessly or use both simultaneously for maximum flexibility.
+
+### 🔒 100% Privacy-First Architecture
+Everything runs locally in your browser with **zero server dependencies**. Your projects, media, and API keys are stored in IndexedDB on your device. No uploads, no tracking, no data collection. Work offline anytime, anywhere.
+
+### 🎬 Professional Timeline Editor
+Advanced multi-track video editing with drag-and-drop functionality, precise keyframe control, audio waveform visualization, and real-time preview. Support for multiple aspect ratios (16:9, 9:16, 1:1) perfect for social media platforms.
+
+### 🎨 Multi-Modal Content Generation
+Create complete video projects with AI-generated images, videos, background music, and professional voiceovers. Advanced features include camera movement controls, video upscaling with Topaz, and automatic lip-sync for voiceovers.
+
+### ⚡ Client-Side Video Processing
+Powered by **FFmpeg.wasm** and **Remotion** for high-quality video rendering entirely in the browser. No server uploads, no waiting in queues. Export professional videos with proper audio mixing and precise timing control.
+
+### 🌍 International & Accessible
+Full internationalization support (English/Russian) with keyboard shortcuts for power users. Intuitive UI designed for both beginners and professionals.
 
 ### AI Providers
 
