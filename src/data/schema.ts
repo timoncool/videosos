@@ -69,8 +69,10 @@ export type KeyFrameData = {
 export type MediaItem = {
   id: string;
   kind: "generated" | "uploaded";
+  provider?: "fal" | "runware";
   endpointId?: string;
   requestId?: string;
+  taskUUID?: string;
   projectId: string;
   mediaType: "image" | "video" | "music" | "voiceover";
   status: "pending" | "running" | "completed" | "failed";
@@ -83,8 +85,10 @@ export type MediaItem = {
 } & (
   | {
       kind: "generated";
+      provider?: "fal" | "runware";
       endpointId: string;
-      requestId: string;
+      requestId?: string;
+      taskUUID?: string;
       input: Record<string, any>;
       output?: Record<string, any>;
     }

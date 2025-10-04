@@ -6,6 +6,7 @@ import { queryKeys } from "@/data/queries";
 import type { MediaItem } from "@/data/schema";
 import { useProjectId, useVideoProjectStore } from "@/data/store";
 import { fal } from "@/lib/fal";
+import { getRunwareClient } from "@/lib/runware";
 import { cn, resolveMediaUrl, trackIcons } from "@/lib/utils";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
@@ -51,77 +52,161 @@ export function MediaItemRow({
     queryKey: queryKeys.projectMedia(projectId, data.id),
     queryFn: async () => {
       if (data.kind === "uploaded") return null;
-      const queueStatus = await fal.queue.status(data.endpointId, {
-        requestId: data.requestId,
-      });
-      if (queueStatus.status === "IN_PROGRESS") {
-        await db.media.update(data.id, {
-          ...data,
-          status: "running",
+
+      const provider = data.provider || "fal";
+      console.log(
+        "[DEBUG] Polling - provider:",
+        provider,
+        "requestId:",
+        data.requestId,
+        "taskUUID:",
+        data.taskUUID,
+      );
+      console.log("[DEBUG] Polling - endpointId:", data.endpointId);
+
+      if (provider === "fal") {
+        if (!data.requestId) {
+          console.error("[DEBUG] requestId is missing for FAL job!", data);
+          throw new Error("requestId is required for fal provider");
+        }
+        const queueStatus = await fal.queue.status(data.endpointId, {
+          requestId: data.requestId,
         });
-        await queryClient.invalidateQueries({
-          queryKey: queryKeys.projectMediaItems(data.projectId),
-        });
-      }
-      let media: Partial<MediaItem> = {};
-
-      if (queueStatus.status === "COMPLETED") {
-        try {
-          const result = await fal.queue.result(data.endpointId, {
-            requestId: data.requestId,
-          });
-          media = {
-            ...data,
-            output: result.data,
-            status: "completed",
-          };
-
-          await db.media.update(data.id, media);
-
-          toast({
-            title: t("generationCompleted"),
-            description: t("generationCompletedDesc", {
-              mediaType: data.mediaType,
-            }),
-          });
-        } catch {
+        if (queueStatus.status === "IN_PROGRESS") {
           await db.media.update(data.id, {
             ...data,
-            status: "failed",
+            status: "running",
           });
-          toast({
-            title: t("generationFailed"),
-            description: t("generationFailedDesc", {
-              mediaType: data.mediaType,
-            }),
-          });
-        } finally {
           await queryClient.invalidateQueries({
             queryKey: queryKeys.projectMediaItems(data.projectId),
           });
         }
+        let media: Partial<MediaItem> = {};
 
-        if (media.mediaType !== "image") {
-          const mediaMetadata = await getMediaMetadata(media as MediaItem);
+        if (queueStatus.status === "COMPLETED") {
+          try {
+            const result = await fal.queue.result(data.endpointId, {
+              requestId: data.requestId!,
+            });
+            media = {
+              ...data,
+              output: result.data,
+              status: "completed",
+            };
 
-          let thumbnailUrl = null;
-          if (media.mediaType === "video") {
-            const videoUrl = resolveMediaUrl(media as MediaItem);
-            if (videoUrl) {
-              thumbnailUrl = await extractVideoThumbnail(videoUrl);
-            }
+            await db.media.update(data.id, media);
+
+            toast({
+              title: t("generationCompleted"),
+              description: t("generationCompletedDesc", {
+                mediaType: data.mediaType,
+              }),
+            });
+          } catch {
+            await db.media.update(data.id, {
+              ...data,
+              status: "failed",
+            });
+            toast({
+              title: t("generationFailed"),
+              description: t("generationFailedDesc", {
+                mediaType: data.mediaType,
+              }),
+            });
+          } finally {
+            await queryClient.invalidateQueries({
+              queryKey: queryKeys.projectMediaItems(data.projectId),
+            });
           }
 
-          await db.media.update(data.id, {
-            ...media,
-            metadata: {
-              ...(mediaMetadata?.media || {}),
-              start_frame_url: media.output?.start_frame_url,
-              end_frame_url: media.output?.end_frame_url,
-              thumbnail_url: thumbnailUrl,
-            },
+          if (media.mediaType !== "image") {
+            const mediaMetadata = await getMediaMetadata(media as MediaItem);
+
+            let thumbnailUrl = null;
+            if (media.mediaType === "video") {
+              const videoUrl = resolveMediaUrl(media as MediaItem);
+              if (videoUrl) {
+                thumbnailUrl = await extractVideoThumbnail(videoUrl);
+              }
+            }
+
+            await db.media.update(data.id, {
+              ...media,
+              metadata: {
+                ...(mediaMetadata?.media || {}),
+                start_frame_url: media.output?.start_frame_url,
+                end_frame_url: media.output?.end_frame_url,
+                thumbnail_url: thumbnailUrl,
+              },
+            });
+
+            await queryClient.invalidateQueries({
+              queryKey: queryKeys.projectMediaItems(data.projectId),
+            });
+          }
+        }
+      } else {
+        const runware = getRunwareClient();
+        if (!runware) {
+          throw new Error("Runware API key not configured");
+        }
+
+        try {
+          const response = await runware.getResponse({
+            taskUUID: data.taskUUID!,
           });
 
+          if (response && response.length > 0 && response[0]) {
+            const result = response[0];
+
+            const media = {
+              ...data,
+              output: result,
+              status: "completed" as const,
+            };
+
+            await db.media.update(data.id, media);
+
+            toast({
+              title: t("generationCompleted"),
+              description: t("generationCompletedDesc", {
+                mediaType: data.mediaType,
+              }),
+            });
+
+            await queryClient.invalidateQueries({
+              queryKey: queryKeys.projectMediaItems(data.projectId),
+            });
+          } else {
+            await db.media.update(data.id, {
+              ...data,
+              status: "running",
+            });
+            await queryClient.invalidateQueries({
+              queryKey: queryKeys.projectMediaItems(data.projectId),
+            });
+          }
+        } catch (error: any) {
+          if (
+            error?.message?.includes("not found") ||
+            error?.message?.includes("pending")
+          ) {
+            await db.media.update(data.id, {
+              ...data,
+              status: "running",
+            });
+          } else {
+            await db.media.update(data.id, {
+              ...data,
+              status: "failed",
+            });
+            toast({
+              title: t("generationFailed"),
+              description: t("generationFailedDesc", {
+                mediaType: data.mediaType,
+              }),
+            });
+          }
           await queryClient.invalidateQueries({
             queryKey: queryKeys.projectMediaItems(data.projectId),
           });
@@ -131,7 +216,16 @@ export function MediaItemRow({
       return null;
     },
     enabled: !isDone && data.kind === "generated",
-    refetchInterval: data.mediaType === "video" ? 20000 : 1000,
+    refetchInterval: () => {
+      if (data.kind === "uploaded") return false;
+      const provider = data.provider || "fal";
+
+      if (provider === "fal") {
+        return data.mediaType === "video" ? 20000 : 1000;
+      } else {
+        return 5000;
+      }
+    },
   });
   const mediaUrl = resolveMediaUrl(data) ?? "";
   const mediaId = data.id.split("-")[0];

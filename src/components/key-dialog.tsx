@@ -20,11 +20,14 @@ type KeyDialogProps = {} & Parameters<typeof Dialog>[0];
 export function KeyDialog({ onOpenChange, open, ...props }: KeyDialogProps) {
   const t = useTranslations("app.keyDialog");
   const [falKey, setFalKey] = useState("");
+  const [runwareKey, setRunwareKey] = useState("");
 
   useEffect(() => {
     if (open) {
-      const savedKey = localStorage.getItem("falKey") || "";
-      setFalKey(savedKey);
+      const savedFalKey = localStorage.getItem("falKey") || "";
+      const savedRunwareKey = localStorage.getItem("runwareKey") || "";
+      setFalKey(savedFalKey);
+      setRunwareKey(savedRunwareKey);
     }
   }, [open]);
 
@@ -34,8 +37,10 @@ export function KeyDialog({ onOpenChange, open, ...props }: KeyDialogProps) {
 
   const handleSave = () => {
     localStorage.setItem("falKey", falKey);
+    localStorage.setItem("runwareKey", runwareKey);
     handleOnOpenChange(false);
     setFalKey("");
+    setRunwareKey("");
   };
 
   return (
@@ -49,11 +54,26 @@ export function KeyDialog({ onOpenChange, open, ...props }: KeyDialogProps) {
             {t("saveKey")}
           </h2>
           <div className="flex flex-col gap-4">
-            <Input
-              placeholder={t("placeholder")}
-              value={falKey}
-              onChange={(e) => setFalKey(e.target.value)}
-            />
+            <div>
+              <label className="text-sm font-medium text-muted-foreground">
+                FAL API Key
+              </label>
+              <Input
+                placeholder={t("placeholder")}
+                value={falKey}
+                onChange={(e) => setFalKey(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium text-muted-foreground">
+                Runware API Key
+              </label>
+              <Input
+                placeholder={t("runwarePlaceholder")}
+                value={runwareKey}
+                onChange={(e) => setRunwareKey(e.target.value)}
+              />
+            </div>
             <p className="text-muted-foreground text-sm">
               {t("privacyNotice")}
             </p>
@@ -66,10 +86,22 @@ export function KeyDialog({ onOpenChange, open, ...props }: KeyDialogProps) {
         <DialogFooter>
           <p className="text-muted-foreground text-sm mt-4 w-full text-center">
             {t.rich("footerText", {
-              link: (chunks) => (
+              falLink: (chunks) => (
                 <a
                   className="underline underline-offset-2 decoration-foreground/50 text-foreground"
                   href="https://fal.ai/dashboard/keys"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {chunks}
+                </a>
+              ),
+              runwareLink: (chunks) => (
+                <a
+                  className="underline underline-offset-2 decoration-foreground/50 text-foreground"
+                  href="https://runware.ai"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   {chunks}
                 </a>

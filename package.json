@@ -35,6 +35,7 @@
     "@remotion/media-utils": "4.0.249",
     "@remotion/player": "4.0.249",
     "@remotion/preload": "4.0.249",
+    "@runware/sdk-js": "^1.1.46",
     "@tanstack/react-query": "^5.62.7",
     "@uploadthing/react": "^7.1.5",
     "@vercel/analytics": "^1.4.1",

@@ -1,6 +1,9 @@
 "use client";
 
 import { AVAILABLE_ENDPOINTS } from "@/lib/fal";
+import { RUNWARE_ENDPOINTS } from "@/lib/runware-models";
+
+const ALL_ENDPOINTS = [...AVAILABLE_ENDPOINTS, ...RUNWARE_ENDPOINTS];
 import type { PlayerRef } from "@remotion/player";
 import { createContext, useContext } from "react";
 import { createStore } from "zustand";
@@ -55,7 +58,7 @@ interface VideoProjectState extends VideoProjectProps {
 
 const DEFAULT_PROPS: VideoProjectProps = {
   projectId: "",
-  endpointId: AVAILABLE_ENDPOINTS[0].endpointId,
+  endpointId: ALL_ENDPOINTS[0].endpointId,
   projectDialogOpen: false,
   player: null,
   playerCurrentTimestamp: 0,

@@ -105,8 +105,16 @@ export function resolveMediaUrl(item: MediaItem | undefined): string | null {
     }
     return item.url;
   }
+
   const data = item.output;
   if (!data) return null;
+
+  if (item.provider === "runware") {
+    if (data.imageURL) return data.imageURL;
+    if (data.videoURL) return data.videoURL;
+    if (data.audioURL) return data.audioURL;
+  }
+
   if (
     "images" in data &&
     Array.isArray(data.images) &&
@@ -114,6 +122,7 @@ export function resolveMediaUrl(item: MediaItem | undefined): string | null {
   ) {
     return data.images[0].url;
   }
+
   const fileProperties = {
     image: 1,
     video: 1,
@@ -121,12 +130,15 @@ export function resolveMediaUrl(item: MediaItem | undefined): string | null {
     audio_file: 1,
     audio_url: 1,
   };
+
   const property = Object.keys(data).find(
     (key) => key in fileProperties && "url" in data[key],
   );
+
   if (property) {
     return data[property].url;
   }
+
   return null;
 }
 
