@@ -55,7 +55,9 @@ export function KeyDialog({ onOpenChange, open, ...props }: KeyDialogProps) {
           </h2>
           <div className="flex flex-col gap-4">
             <div>
-              <label className="text-sm font-medium text-muted-foreground">FAL API Key</label>
+              <label className="text-sm font-medium text-muted-foreground">
+                FAL API Key
+              </label>
               <Input
                 placeholder={t("placeholder")}
                 value={falKey}
@@ -63,7 +65,9 @@ export function KeyDialog({ onOpenChange, open, ...props }: KeyDialogProps) {
               />
             </div>
             <div>
-              <label className="text-sm font-medium text-muted-foreground">Runware API Key</label>
+              <label className="text-sm font-medium text-muted-foreground">
+                Runware API Key
+              </label>
               <Input
                 placeholder={t("runwarePlaceholder")}
                 value={runwareKey}

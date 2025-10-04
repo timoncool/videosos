@@ -70,34 +70,42 @@ function ModelEndpointPicker({
   mediaType,
   ...props
 }: ModelEndpointPickerProps) {
-  const [providerFilter, setProviderFilter] = useState<'all' | 'fal' | 'runware'>('all');
-  
+  const [providerFilter, setProviderFilter] = useState<
+    "all" | "fal" | "runware"
+  >("all");
+
   const endpoints = useMemo(() => {
     const allEndpoints = [...AVAILABLE_ENDPOINTS, ...RUNWARE_ENDPOINTS];
-    const filtered = allEndpoints.filter((endpoint) => {
-      if (endpoint.category !== mediaType) return false;
-      if (providerFilter !== 'all' && endpoint.provider !== providerFilter) return false;
-      return true;
-    }).sort((a, b) => {
-      if (a.provider !== b.provider) {
-        return a.provider === 'fal' ? -1 : 1;
-      }
-      return b.popularity - a.popularity;
-    });
-    
+    const filtered = allEndpoints
+      .filter((endpoint) => {
+        if (endpoint.category !== mediaType) return false;
+        if (providerFilter !== "all" && endpoint.provider !== providerFilter)
+          return false;
+        return true;
+      })
+      .sort((a, b) => {
+        if (a.provider !== b.provider) {
+          return a.provider === "fal" ? -1 : 1;
+        }
+        return b.popularity - a.popularity;
+      });
+
     return filtered;
   }, [mediaType, providerFilter]);
-  
+
   return (
     <div className="flex flex-col gap-2">
-      <Tabs value={providerFilter} onValueChange={(v) => setProviderFilter(v as any)}>
+      <Tabs
+        value={providerFilter}
+        onValueChange={(v) => setProviderFilter(v as any)}
+      >
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="all">All</TabsTrigger>
           <TabsTrigger value="fal">FAL</TabsTrigger>
           <TabsTrigger value="runware">Runware</TabsTrigger>
         </TabsList>
       </Tabs>
-      
+
       <Select {...props}>
         <SelectTrigger className="text-base w-full minw-56 font-semibold">
           <SelectValue />
@@ -190,13 +198,13 @@ export default function RightPanel({
   const mediaType = useVideoProjectStore((s) => s.generateMediaType);
   const setMediaType = useVideoProjectStore((s) => s.setGenerateMediaType);
 
-  const allEndpoints = useMemo(() => [...AVAILABLE_ENDPOINTS, ...RUNWARE_ENDPOINTS], []);
+  const allEndpoints = useMemo(
+    () => [...AVAILABLE_ENDPOINTS, ...RUNWARE_ENDPOINTS],
+    [],
+  );
 
   const endpoint = useMemo(
-    () =>
-      allEndpoints.find(
-        (endpoint) => endpoint.endpointId === endpointId,
-      ),
+    () => allEndpoints.find((endpoint) => endpoint.endpointId === endpointId),
     [endpointId, allEndpoints],
   );
   const handleMediaTypeChange = (mediaType: string) => {

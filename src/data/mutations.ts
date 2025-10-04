@@ -42,83 +42,83 @@ export const useJobCreator = ({
   input,
 }: JobCreatorParams) => {
   const queryClient = useQueryClient();
-  
+
   const allEndpoints = [...AVAILABLE_ENDPOINTS, ...RUNWARE_ENDPOINTS];
-  const endpoint = allEndpoints.find(e => e.endpointId === endpointId);
-  const provider = endpoint?.provider || 'fal';
-  
+  const endpoint = allEndpoints.find((e) => e.endpointId === endpointId);
+  const provider = endpoint?.provider || "fal";
+
   return useMutation({
     mutationFn: async () => {
-      console.log('[DEBUG] useJobCreator called with endpointId:', endpointId);
-      console.log('[DEBUG] provider determined as:', provider);
-      
-      if (provider === 'fal') {
-        console.log('[DEBUG] FAL - submitting with endpointId:', endpointId);
+      console.log("[DEBUG] useJobCreator called with endpointId:", endpointId);
+      console.log("[DEBUG] provider determined as:", provider);
+
+      if (provider === "fal") {
+        console.log("[DEBUG] FAL - submitting with endpointId:", endpointId);
         const result = await fal.queue.submit(endpointId, { input });
-        console.log('[DEBUG] FAL submit result:', result);
+        console.log("[DEBUG] FAL submit result:", result);
         return result;
       } else {
         const runware = getRunwareClient();
         if (!runware) {
           throw new Error("Runware API key not configured");
         }
-        
+
         const taskUUID = crypto.randomUUID();
-        
-        if (mediaType === 'image') {
+
+        if (mediaType === "image") {
           const response = await runware.requestImages({
-            positivePrompt: input.prompt || '',
+            positivePrompt: input.prompt || "",
             model: endpointId,
             numberResults: 1,
             customTaskUUID: taskUUID,
             ...input,
           });
-          
+
           return {
             taskUUID,
             data: response,
           };
-        } else if (mediaType === 'video') {
+        } else if (mediaType === "video") {
           const response = await runware.videoInference({
-            positivePrompt: input.prompt || '',
+            positivePrompt: input.prompt || "",
             model: endpointId,
             customTaskUUID: taskUUID,
             ...input,
           });
-          
+
           return {
             taskUUID,
             data: response,
           };
-        } else if (mediaType === 'music' || mediaType === 'voiceover') {
+        } else if (mediaType === "music" || mediaType === "voiceover") {
           const response = await runware.audioInference({
-            positivePrompt: input.prompt || '',
+            positivePrompt: input.prompt || "",
             model: endpointId,
             duration: input.duration || 30,
             customTaskUUID: taskUUID,
-            deliveryMethod: 'async',
+            deliveryMethod: "async",
             ...input,
           });
-          
+
           return {
             taskUUID,
             data: response,
           };
         }
-        
+
         throw new Error(`Unsupported media type: ${mediaType}`);
       }
     },
     onSuccess: async (data: any) => {
-      if (provider === 'fal') {
-        console.log('[DEBUG] FAL onSuccess data:', data);
-        console.log('[DEBUG] FAL request_id:', data.request_id);
+      if (provider === "fal") {
+        console.log("[DEBUG] FAL onSuccess data:", data);
+        console.log("[DEBUG] FAL request_id:", data.request_id);
         await db.media.create({
           projectId,
           createdAt: Date.now(),
           mediaType,
           kind: "generated",
-          provider: 'fal',
+          provider: "fal",
           endpointId,
           requestId: data.request_id,
           status: "pending",
@@ -130,7 +130,7 @@ export const useJobCreator = ({
           createdAt: Date.now(),
           mediaType,
           kind: "generated",
-          provider: 'runware',
+          provider: "runware",
           endpointId,
           taskUUID: data.taskUUID,
           status: "pending",

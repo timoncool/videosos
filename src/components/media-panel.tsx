@@ -52,14 +52,21 @@ export function MediaItemRow({
     queryKey: queryKeys.projectMedia(projectId, data.id),
     queryFn: async () => {
       if (data.kind === "uploaded") return null;
-      
-      const provider = data.provider || 'fal';
-      console.log('[DEBUG] Polling - provider:', provider, 'requestId:', data.requestId, 'taskUUID:', data.taskUUID);
-      console.log('[DEBUG] Polling - endpointId:', data.endpointId);
-      
-      if (provider === 'fal') {
+
+      const provider = data.provider || "fal";
+      console.log(
+        "[DEBUG] Polling - provider:",
+        provider,
+        "requestId:",
+        data.requestId,
+        "taskUUID:",
+        data.taskUUID,
+      );
+      console.log("[DEBUG] Polling - endpointId:", data.endpointId);
+
+      if (provider === "fal") {
         if (!data.requestId) {
-          console.error('[DEBUG] requestId is missing for FAL job!', data);
+          console.error("[DEBUG] requestId is missing for FAL job!", data);
           throw new Error("requestId is required for fal provider");
         }
         const queueStatus = await fal.queue.status(data.endpointId, {
@@ -151,7 +158,7 @@ export function MediaItemRow({
 
           if (response && response.length > 0 && response[0]) {
             const result = response[0];
-            
+
             const media = {
               ...data,
               output: result,
@@ -180,7 +187,10 @@ export function MediaItemRow({
             });
           }
         } catch (error: any) {
-          if (error?.message?.includes('not found') || error?.message?.includes('pending')) {
+          if (
+            error?.message?.includes("not found") ||
+            error?.message?.includes("pending")
+          ) {
             await db.media.update(data.id, {
               ...data,
               status: "running",
@@ -208,9 +218,9 @@ export function MediaItemRow({
     enabled: !isDone && data.kind === "generated",
     refetchInterval: () => {
       if (data.kind === "uploaded") return false;
-      const provider = data.provider || 'fal';
-      
-      if (provider === 'fal') {
+      const provider = data.provider || "fal";
+
+      if (provider === "fal") {
         return data.mediaType === "video" ? 20000 : 1000;
       } else {
         return 5000;
