@@ -1,31 +1,41 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Scissors, Wand2, Share2, Zap, Users, Code } from "lucide-react";
+import { Bot, Lock, Film, Palette, Zap, Globe } from "lucide-react";
 
 export default function Features() {
   const t = useTranslations("landing.features");
 
   const features = [
     {
-      icon: Scissors,
-      title: t("preciseEditing.title"),
-      description: t("preciseEditing.description"),
+      icon: Bot,
+      title: t("dualAI.title"),
+      description: t("dualAI.description"),
     },
     {
-      icon: Wand2,
-      title: t("aiGenerated.title"),
-      description: t("aiGenerated.description"),
+      icon: Lock,
+      title: t("privacy.title"),
+      description: t("privacy.description"),
     },
     {
-      icon: Share2,
-      title: t("exportAnywhere.title"),
-      description: t("exportAnywhere.description"),
+      icon: Film,
+      title: t("timeline.title"),
+      description: t("timeline.description"),
     },
     {
-      icon: Code,
-      title: t("openSource.title"),
-      description: t("openSource.description"),
+      icon: Palette,
+      title: t("multiModal.title"),
+      description: t("multiModal.description"),
+    },
+    {
+      icon: Zap,
+      title: t("clientSide.title"),
+      description: t("clientSide.description"),
+    },
+    {
+      icon: Globe,
+      title: t("international.title"),
+      description: t("international.description"),
     },
   ];
 
@@ -37,7 +47,7 @@ export default function Features() {
           <p className="text-gray-400">{t("subtitle")}</p>
         </div>
 
-        <div className="max-w-screen-md mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="max-w-screen-lg mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (
             <div
               key={index}
