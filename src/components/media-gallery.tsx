@@ -41,6 +41,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { db } from "@/data/db";
 import { LoadingIcon } from "./ui/icons";
 import { AVAILABLE_ENDPOINTS } from "@/lib/fal";
+import { RUNWARE_ENDPOINTS } from "@/lib/runware-models";
+
+const ALL_ENDPOINTS = [...AVAILABLE_ENDPOINTS, ...RUNWARE_ENDPOINTS];
 
 type MediaGallerySheetProps = ComponentProps<typeof Sheet> & {
   selectedMediaId: string;
@@ -155,11 +158,11 @@ export function MediaGallerySheet({
     setGenerateMediaType("video");
     const image = selectedMedia.output?.images?.[0]?.url;
 
-    const endpoint = AVAILABLE_ENDPOINTS.find(
+    const endpoint = ALL_ENDPOINTS.find(
       (endpoint) => endpoint.category === "video",
     );
 
-    setEndpointId(endpoint?.endpointId ?? AVAILABLE_ENDPOINTS[0].endpointId);
+    setEndpointId(endpoint?.endpointId ?? ALL_ENDPOINTS[0].endpointId);
 
     setGenerateData({
       ...(selectedMedia.input || {}),

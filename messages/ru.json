@@ -110,12 +110,13 @@
       "noProjects": "Проекты не найдены"
     },
     "keyDialog": {
-      "title": "Ключ доступа",
-      "saveKey": "Сохраните свой FAL ключ",
-      "placeholder": "Ваш FAL ключ",
+      "title": "API ключи",
+      "saveKey": "Сохраните свои API ключи",
+      "placeholder": "Ваш FAL API ключ",
+      "runwarePlaceholder": "Ваш Runware API ключ",
       "save": "Сохранить",
-      "privacyNotice": "Мы не храним ваш ключ на наших серверах. Всё остаётся в вашем браузере.",
-      "footerText": "Вы можете получить свой FAL ключ <link>здесь</link>."
+      "privacyNotice": "Мы не храним ваши ключи на наших серверах. Всё остаётся в вашем браузере.",
+      "footerText": "Получите ваш FAL ключ на <falLink>fal.ai</falLink> и Runware ключ на <runwareLink>runware.ai</runwareLink>."
     },
     "exportDialog": {
       "title": "Экспорт видео",

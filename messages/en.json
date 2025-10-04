@@ -110,12 +110,13 @@
       "noProjects": "No projects found"
     },
     "keyDialog": {
-      "title": "Access Key",
-      "saveKey": "Save your own FAL Key",
-      "placeholder": "Your FAL Key",
+      "title": "API Keys",
+      "saveKey": "Save your API Keys",
+      "placeholder": "Your FAL API Key",
+      "runwarePlaceholder": "Your Runware API Key",
       "save": "Save",
-      "privacyNotice": "We don't store your key on our servers. Everything stays in your browser.",
-      "footerText": "You can get your FAL Key from <link>here</link>."
+      "privacyNotice": "We don't store your keys on our servers. Everything stays in your browser.",
+      "footerText": "Get your FAL Key from <falLink>fal.ai</falLink> and Runware Key from <runwareLink>runware.ai</runwareLink>."
     },
     "exportDialog": {
       "title": "Export video",

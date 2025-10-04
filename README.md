@@ -26,9 +26,26 @@ A powerful, open-source AI video editor built for creators. This is an enhanced 
 ✅ **Improved Export**: Support for audio and correct duration handling.  
 ✅ **UI Bug Fixes**: Video preview on the timeline and token display have been fixed.
 
+### AI Providers
+
+VideoSOS supports multiple AI providers simultaneously:
+
+- **[fal.ai](https://fal.ai)** - Comprehensive AI model infrastructure with 50+ models for image, video, and audio generation
+- **[Runware.ai](https://runware.ai)** - High-performance AI inference platform with 100+ models including FLUX, Google Imagen, Ideogram, Kling, and more
+
+You can use either provider independently or both simultaneously. Simply add your API keys in the Settings dialog (click the gear icon in the app).
+
+#### Getting API Keys
+
+- **FAL API Key**: Get it from [fal.ai/dashboard/keys](https://fal.ai/dashboard/keys)
+- **Runware API Key**: Sign up at [runware.ai](https://runware.ai) and get your key from the dashboard
+
+Both API keys are stored locally in your browser and never sent to our servers.
+
 ### Tech Stack
 
 - [fal.ai](https://fal.ai) - AI model infrastructure
+- [Runware.ai](https://runware.ai) - High-performance AI inference platform
 - [Next.js](https://nextjs.org) - React framework
 - [Remotion](https://remotion.dev) - Video processing
 - [IndexedDB](https://developer.mozilla.org/docs/Web/API/IndexedDB_API) - Browser-based storage

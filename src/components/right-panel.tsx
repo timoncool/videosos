@@ -10,6 +10,7 @@ import {
   useVideoProjectStore,
 } from "@/data/store";
 import { AVAILABLE_ENDPOINTS, type InputAsset } from "@/lib/fal";
+import { RUNWARE_ENDPOINTS } from "@/lib/runware-models";
 import {
   ImageIcon,
   MicIcon,
@@ -26,6 +27,8 @@ import { MediaItemRow } from "./media-panel";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
+import { Badge } from "./ui/badge";
+import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 
 import { useEffect, useMemo, useState } from "react";
 import { db } from "@/data/db";
@@ -56,6 +59,8 @@ import { getMediaMetadata } from "@/lib/ffmpeg";
 import CameraMovement from "./camera-control";
 import VideoFrameSelector from "./video-frame-selector";
 
+const ALL_ENDPOINTS = [...AVAILABLE_ENDPOINTS, ...RUNWARE_ENDPOINTS];
+
 type ModelEndpointPickerProps = {
   mediaType: string;
   onValueChange: (value: MediaType) => void;
@@ -65,33 +70,59 @@ function ModelEndpointPicker({
   mediaType,
   ...props
 }: ModelEndpointPickerProps) {
-  const endpoints = useMemo(
-    () =>
-      AVAILABLE_ENDPOINTS.filter(
-        (endpoint) => endpoint.category === mediaType,
-      ).sort((a, b) => b.popularity - a.popularity),
-    [mediaType],
-  );
+  const [providerFilter, setProviderFilter] = useState<'all' | 'fal' | 'runware'>('all');
+  
+  const endpoints = useMemo(() => {
+    const allEndpoints = [...AVAILABLE_ENDPOINTS, ...RUNWARE_ENDPOINTS];
+    const filtered = allEndpoints.filter((endpoint) => {
+      if (endpoint.category !== mediaType) return false;
+      if (providerFilter !== 'all' && endpoint.provider !== providerFilter) return false;
+      return true;
+    }).sort((a, b) => {
+      if (a.provider !== b.provider) {
+        return a.provider === 'fal' ? -1 : 1;
+      }
+      return b.popularity - a.popularity;
+    });
+    
+    return filtered;
+  }, [mediaType, providerFilter]);
+  
   return (
-    <Select {...props}>
-      <SelectTrigger className="text-base w-full minw-56 font-semibold">
-        <SelectValue />
-      </SelectTrigger>
-      <SelectContent>
-        {endpoints.map((endpoint) => (
-          <SelectItem key={endpoint.endpointId} value={endpoint.endpointId}>
-            <div className="flex flex-row gap-2 items-center justify-between w-full">
-              <span>{endpoint.label}</span>
-              {endpoint.cost && (
-                <span className="text-xs text-muted-foreground ml-2">
-                  {endpoint.cost}
-                </span>
-              )}
-            </div>
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+    <div className="flex flex-col gap-2">
+      <Tabs value={providerFilter} onValueChange={(v) => setProviderFilter(v as any)}>
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="all">All</TabsTrigger>
+          <TabsTrigger value="fal">FAL</TabsTrigger>
+          <TabsTrigger value="runware">Runware</TabsTrigger>
+        </TabsList>
+      </Tabs>
+      
+      <Select {...props}>
+        <SelectTrigger className="text-base w-full minw-56 font-semibold">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {endpoints.map((endpoint) => (
+            <SelectItem key={endpoint.endpointId} value={endpoint.endpointId}>
+              <div className="flex flex-row gap-2 items-center justify-between w-full">
+                <div className="flex items-center gap-2">
+                  <span>{endpoint.label}</span>
+                  <Badge variant="outline" className="text-xs">
+                    {endpoint.provider}
+                  </Badge>
+                </div>
+                {endpoint.cost && (
+                  <span className="text-xs text-muted-foreground ml-2">
+                    {endpoint.cost}
+                  </span>
+                )}
+              </div>
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
   );
 }
 
@@ -159,16 +190,18 @@ export default function RightPanel({
   const mediaType = useVideoProjectStore((s) => s.generateMediaType);
   const setMediaType = useVideoProjectStore((s) => s.setGenerateMediaType);
 
+  const allEndpoints = useMemo(() => [...AVAILABLE_ENDPOINTS, ...RUNWARE_ENDPOINTS], []);
+
   const endpoint = useMemo(
     () =>
-      AVAILABLE_ENDPOINTS.find(
+      allEndpoints.find(
         (endpoint) => endpoint.endpointId === endpointId,
       ),
-    [endpointId],
+    [endpointId, allEndpoints],
   );
   const handleMediaTypeChange = (mediaType: string) => {
     setMediaType(mediaType as MediaType);
-    const endpoint = AVAILABLE_ENDPOINTS.find(
+    const endpoint = allEndpoints.find(
       (endpoint) => endpoint.category === mediaType,
     );
 
@@ -184,7 +217,7 @@ export default function RightPanel({
       setGenerateData({ ...initialInput });
     }
 
-    setEndpointId(endpoint?.endpointId ?? AVAILABLE_ENDPOINTS[0].endpointId);
+    setEndpointId(endpoint?.endpointId ?? allEndpoints[0].endpointId);
   };
   // TODO improve model-specific parameters
   type InputType = {
@@ -522,7 +555,7 @@ export default function RightPanel({
                 resetGenerateData();
                 setEndpointId(endpointId);
 
-                const endpoint = AVAILABLE_ENDPOINTS.find(
+                const endpoint = allEndpoints.find(
                   (endpoint) => endpoint.endpointId === endpointId,
                 );
 

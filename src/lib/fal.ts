@@ -19,10 +19,11 @@ export type InputAsset =
     };
 
 export type ApiInfo = {
+  provider: "fal" | "runware";
   endpointId: string;
   label: string;
   description: string;
-  cost: string;
+  cost?: string;
   popularity: number;
   inferenceTime?: string;
   inputMap?: Record<string, string>;
@@ -36,6 +37,7 @@ export type ApiInfo = {
 
 export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
   {
+    provider: "fal",
     endpointId: "fal-ai/flux-pro/kontext",
     label: "FLUX.1 Kontext [pro]",
     description:
@@ -46,6 +48,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/flux/dev",
     label: "FLUX.1 [dev]",
     description:
@@ -55,6 +58,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     category: "image",
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/ideogram/v3",
     label: "Ideogram V3 (Text)",
     description:
@@ -64,6 +68,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     category: "image",
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/ideogram/v3/edit",
     label: "Ideogram V3 (Image)",
     description: "Image-to-image transformation with text rendering excellence",
@@ -73,6 +78,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/recraft/v3/text-to-image",
     label: "Recraft V3",
     description: "Professional design-focused image generation",
@@ -81,6 +87,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     category: "image",
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/nano-banana",
     label: "Nano Banana",
     description: "Fast image editing with mask support",
@@ -90,6 +97,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/stable-diffusion-v35-large",
     label: "Stable Diffusion 3.5 Large",
     description: "Latest Stable Diffusion with enhanced quality and control",
@@ -98,6 +106,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     category: "image",
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/flux/schnell",
     label: "FLUX.1 [schnell]",
     description: "Ultra-fast image generation model",
@@ -106,6 +115,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     category: "image",
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/imagen4/preview",
     label: "Imagen 4",
     description: "Google's latest image generation model",
@@ -114,6 +124,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     category: "image",
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/flux-pro/v1.1-ultra",
     label: "Flux Pro 1.1 Ultra",
     description: "Ultra high quality image generation",
@@ -130,6 +141,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     },
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/hunyuan-image/v3/text-to-image",
     label: "Hunyuan Image 3.0",
     description: "Advanced image generation with style control",
@@ -138,6 +150,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     category: "image",
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/topaz/upscale/image",
     label: "Topaz Image Upscale",
     description: "Professional image upscaling",
@@ -148,6 +161,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/wan-25-preview/text-to-image",
     label: "Wan 2.5 (Text-to-Image)",
     description: "Wan 2.5 text-to-image model",
@@ -156,6 +170,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     category: "image",
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/wan-25-preview/image-to-image",
     label: "Wan 2.5 (Image-to-Image)",
     description: "Wan 2.5 image-to-image model",
@@ -165,6 +180,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/hidream-i1-full",
     label: "HiDream-I1 Full",
     description: "High-quality image generation with style presets",
@@ -173,6 +189,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     category: "image",
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/qwen-image",
     label: "Qwen Image",
     description: "Multimodal image generation and editing",
@@ -182,6 +199,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/veo3/fast",
     label: "Veo 3 Fast (Text)",
     description: "Ultra-fast text-to-video generation with high quality",
@@ -190,6 +208,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     category: "video",
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/veo3/fast/image-to-video",
     label: "Veo 3 Fast (Image)",
     description: "Ultra-fast image-to-video generation",
@@ -199,6 +218,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/kling-video/v2.5-turbo/pro/text-to-video",
     label: "Kling 2.5 Turbo Pro (Text)",
     description:
@@ -208,6 +228,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     category: "video",
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/kling-video/v2.5-turbo/pro/image-to-video",
     label: "Kling 2.5 Turbo Pro (Image)",
     description: "Top-tier image-to-video generation with cinematic visuals",
@@ -217,6 +238,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/luma-dream-machine",
     label: "Luma Dream Machine",
     description: "High quality video generation with Ray2 and Flash modes",
@@ -226,6 +248,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/pika/v2.2/text-to-video",
     label: "Pika 2.2 (Text)",
     description: "Advanced text-to-video with camera control",
@@ -234,6 +257,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     category: "video",
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/pika/v2.2/image-to-video",
     label: "Pika 2.2 (Image)",
     description: "Image-to-video with advanced motion control",
@@ -243,6 +267,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/veo2",
     label: "Veo 2",
     description:
@@ -253,6 +278,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/kling-video/v1.5/pro/text-to-video",
     label: "Kling 1.5 Pro",
     description: "High quality video generation",
@@ -262,6 +288,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/minimax/hailuo-02/standard/text-to-video",
     label: "MiniMax Hailuo-02 (Text)",
     description: "Standard quality text-to-video generation",
@@ -270,6 +297,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     category: "video",
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/minimax/hailuo-02/standard/image-to-video",
     label: "MiniMax Hailuo-02 (Image)",
     description: "Image-to-video generation with motion control",
@@ -279,6 +307,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/hunyuan-video",
     label: "Hunyuan Video",
     description: "Open-source video foundation model with superior quality",
@@ -292,6 +321,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     },
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/minimax/video-01-live",
     label: "Minimax Video 01 Live",
     description: "Live-style video generation",
@@ -301,6 +331,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/sync-lipsync",
     label: "sync.so lipsync",
     description: "Lip sync video with audio",
@@ -310,6 +341,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["video", "audio"],
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/topaz/upscale/video",
     label: "Topaz Video Upscale",
     description: "Professional video upscaling",
@@ -320,6 +352,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["video"],
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/wan-25-preview/text-to-video",
     label: "Wan 2.5 (Text)",
     description: "Wan 2.5 text-to-video model",
@@ -328,6 +361,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     category: "video",
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/wan-25-preview/image-to-video",
     label: "Wan 2.5 (Image)",
     description: "Wan 2.5 image-to-video model",
@@ -337,6 +371,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/ltx-video-v095/multiconditioning",
     label: "LTX Video v0.95",
     description: "Multi-conditional video generation",
@@ -347,6 +382,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/bytedance/omnihuman/v1.5",
     label: "OmniHuman v1.5",
     description: "Human animation from video driving",
@@ -356,6 +392,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image", "audio"],
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/kling-video/v1/standard/text-to-video",
     label: "Kling 1.0 Standard",
     description: "Standard quality video generation",
@@ -365,6 +402,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     cameraControl: true,
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/pixverse/v5/image-to-video",
     label: "PixVerse v5",
     description:
@@ -375,6 +413,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/mmaudio-v2",
     label: "MMAudio V2",
     description: "Audio generation for video",
@@ -384,6 +423,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["video"],
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/decart/lucy-5b/image-to-video",
     label: "Lucy-5B",
     description: "5-second I2V videos in under 5 seconds",
@@ -393,6 +433,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/lynx",
     label: "Lynx",
     description: "Generate subject consistent videos from ByteDance",
@@ -402,6 +443,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/infinitalk/video-to-video",
     label: "Infinitalk",
     description: "Generates talking avatar video from image and audio",
@@ -411,6 +453,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image", "audio"],
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/stable-audio",
     label: "Stable Audio",
     description: "Generate high-quality audio from text prompts",
@@ -422,6 +465,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     },
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/minimax-music",
     label: "Minimax Music",
     description: "Music generation with mood control",
@@ -436,6 +480,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     ],
   },
   {
+    provider: "fal",
     endpointId: "mirelo-ai/sfx-v1/video-to-audio",
     label: "Mirelo SFX v1",
     description: "Generate synced sound effects for any video",
@@ -445,6 +490,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["video"],
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/minimax/speech-02-hd",
     label: "MiniMax Speech-02 HD",
     description: "High-definition text-to-speech",
@@ -456,6 +502,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     },
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/playht/tts/v3",
     label: "PlayHT TTS v3",
     description: "High-quality voice synthesis",
@@ -470,6 +517,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     },
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/dia-tts/voice-clone",
     label: "Dia TTS Voice Clone",
     description: "Voice cloning from sample",
@@ -482,6 +530,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["audio"],
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/playai/tts/dialog",
     label: "PlayAI Text-to-Speech Dialog",
     description: "Generate natural-sounding multi-speaker dialogues",
@@ -505,6 +554,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     },
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/chatterbox/text-to-speech",
     label: "Chatterbox TTS",
     description: "Text-to-speech with preset voices",
@@ -516,6 +566,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     },
   },
   {
+    provider: "fal",
     endpointId: "fal-ai/f5-tts",
     label: "F5 TTS",
     description: "Multilingual text-to-speech",
