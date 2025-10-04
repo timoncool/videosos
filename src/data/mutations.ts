@@ -69,8 +69,18 @@ export const useJobCreator = ({
           const response = await runware.requestImages({
             positivePrompt: input.prompt || "",
             model: endpointId,
-            numberResults: 1,
-            customTaskUUID: taskUUID,
+            height: input.height || 1024,
+            width: input.width || 1024,
+            numberResults: input.numberResults || 1,
+            outputType: input.outputType || ["URL", "dataURI"],
+            outputFormat: input.outputFormat || "JPEG",
+            checkNSFW: input.checkNSFW !== undefined ? input.checkNSFW : true,
+            CFGScale: input.CFGScale || 3.5,
+            steps: input.steps || 28,
+            scheduler: input.scheduler || "Default",
+            includeCost:
+              input.includeCost !== undefined ? input.includeCost : true,
+            outputQuality: input.outputQuality || 85,
             ...input,
           });
 
@@ -124,18 +134,43 @@ export const useJobCreator = ({
           status: "pending",
           input,
         });
-      } else {
-        await db.media.create({
-          projectId,
-          createdAt: Date.now(),
-          mediaType,
-          kind: "generated",
-          provider: "runware",
-          endpointId,
-          taskUUID: data.taskUUID,
-          status: "pending",
-          input,
-        });
+      } else if (provider === "runware") {
+        if (
+          data.data &&
+          Array.isArray(data.data) &&
+          data.data[0] &&
+          data.data[0].imageURL
+        ) {
+          console.log(
+            "[DEBUG] Runware image completed immediately:",
+            data.data[0],
+          );
+          await db.media.create({
+            projectId,
+            createdAt: Date.now(),
+            mediaType,
+            kind: "generated",
+            provider: "runware",
+            endpointId,
+            taskUUID: data.data[0].taskUUID,
+            status: "completed",
+            output: data.data[0],
+            input,
+          });
+        } else {
+          console.log("[DEBUG] Runware task pending, taskUUID:", data.taskUUID);
+          await db.media.create({
+            projectId,
+            createdAt: Date.now(),
+            mediaType,
+            kind: "generated",
+            provider: "runware",
+            endpointId,
+            taskUUID: data.taskUUID,
+            status: "pending",
+            input,
+          });
+        }
       }
 
       await queryClient.invalidateQueries({
