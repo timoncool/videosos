@@ -103,13 +103,16 @@ export const useJobCreator = ({
             height: input.height || 1080,
             width: input.width || 1920,
           };
-          
-          console.log("[DEBUG] Calling runware.videoInference with:", videoParams);
-          
+
+          console.log(
+            "[DEBUG] Calling runware.videoInference with:",
+            videoParams,
+          );
+
           try {
             const response = await runware.videoInference(videoParams);
             console.log("[DEBUG] videoInference response:", response);
-            
+
             return {
               taskUUID,
               data: response,
@@ -134,23 +137,35 @@ export const useJobCreator = ({
               sampleRate: 44100,
             },
           };
-          
-          console.log("[DEBUG] Calling runware.audioInference with:", audioParams);
-          
+
+          console.log(
+            "[DEBUG] Calling runware.audioInference with:",
+            audioParams,
+          );
+
           try {
             const response = await runware.audioInference(audioParams);
             console.log("[DEBUG] audioInference response:", response);
-            console.log("[DEBUG] audioInference response stringified:", JSON.stringify(response, null, 2));
-            
+            console.log(
+              "[DEBUG] audioInference response stringified:",
+              JSON.stringify(response, null, 2),
+            );
+
             return {
               taskUUID,
               data: response,
             };
           } catch (error: any) {
             console.error("[DEBUG] audioInference ERROR:", error);
-            console.error("[DEBUG] audioInference ERROR message:", error?.message);
+            console.error(
+              "[DEBUG] audioInference ERROR message:",
+              error?.message,
+            );
             console.error("[DEBUG] audioInference ERROR stack:", error?.stack);
-            console.error("[DEBUG] audioInference ERROR stringified:", JSON.stringify(error, null, 2));
+            console.error(
+              "[DEBUG] audioInference ERROR stringified:",
+              JSON.stringify(error, null, 2),
+            );
             throw error;
           }
         }
@@ -174,10 +189,14 @@ export const useJobCreator = ({
           input,
         });
       } else if (provider === "runware") {
-        console.log("[DEBUG] Runware onSuccess - full data:", JSON.stringify(data, null, 2));
+        console.log(
+          "[DEBUG] Runware onSuccess - full data:",
+          JSON.stringify(data, null, 2),
+        );
         const result = data.data?.[0];
-        const isCompleted = result && (result.imageURL || result.videoURL || result.audioURL);
-        
+        const isCompleted =
+          result && (result.imageURL || result.videoURL || result.audioURL);
+
         if (isCompleted) {
           console.log("[DEBUG] Runware task completed immediately:", result);
           await db.media.create({

@@ -147,8 +147,12 @@ export function MediaItemRow({
         }
       } else {
         console.log("[DEBUG] Runware item - checking for thumbnail generation");
-        
-        if (data.status === "completed" && data.mediaType === "video" && !data.metadata?.thumbnail_url) {
+
+        if (
+          data.status === "completed" &&
+          data.mediaType === "video" &&
+          !data.metadata?.thumbnail_url
+        ) {
           console.log("[DEBUG] Generating thumbnail for Runware video");
           const videoUrl = resolveMediaUrl(data);
           if (videoUrl) {
@@ -166,7 +170,9 @@ export function MediaItemRow({
             console.log("[DEBUG] Thumbnail generated:", thumbnailUrl);
           }
         } else {
-          console.log("[DEBUG] Runware item should already be completed, skipping polling");
+          console.log(
+            "[DEBUG] Runware item should already be completed, skipping polling",
+          );
           await db.media.update(data.id, {
             ...data,
             status: "completed",
@@ -177,8 +183,12 @@ export function MediaItemRow({
 
       return null;
     },
-    enabled: (!isDone && data.kind === "generated") || 
-             (data.provider === "runware" && data.status === "completed" && data.mediaType === "video" && !data.metadata?.thumbnail_url),
+    enabled:
+      (!isDone && data.kind === "generated") ||
+      (data.provider === "runware" &&
+        data.status === "completed" &&
+        data.mediaType === "video" &&
+        !data.metadata?.thumbnail_url),
     refetchInterval: () => {
       if (data.kind === "uploaded") return false;
       const provider = data.provider || "fal";

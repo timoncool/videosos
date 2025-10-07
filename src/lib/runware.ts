@@ -5,7 +5,9 @@ import { Runware } from "@runware/sdk-js";
 let runwareClient: InstanceType<typeof Runware> | null = null;
 let initializationPromise: Promise<InstanceType<typeof Runware>> | null = null;
 
-export const getRunwareClient = async (): Promise<InstanceType<typeof Runware> | null> => {
+export const getRunwareClient = async (): Promise<InstanceType<
+  typeof Runware
+> | null> => {
   const apiKey =
     typeof window !== "undefined" ? localStorage.getItem("runwareKey") : null;
 
@@ -18,12 +20,12 @@ export const getRunwareClient = async (): Promise<InstanceType<typeof Runware> |
   }
 
   if (!initializationPromise) {
-    initializationPromise = Runware.initialize({ 
+    initializationPromise = Runware.initialize({
       apiKey,
       timeoutDuration: 180000, // 3 minutes to handle video generation
     });
   }
-  
+
   runwareClient = await initializationPromise;
   return runwareClient;
 };
