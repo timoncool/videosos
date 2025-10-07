@@ -117,6 +117,88 @@ export function revokeBlobUrl(mediaId: string): void {
     blobUrlCache.delete(mediaId);
   }
 }
+export function normalizeMediaOutput(
+  output: any,
+  provider: string,
+  mediaId?: string,
+): any {
+  if (!output) return output;
+
+  if (output.url && typeof output.url === "string") {
+    return output;
+  }
+
+  const normalized = { ...output };
+
+  if (provider === "fal") {
+    const urlSources = ["audio_file", "audio", "video", "image"];
+    for (const source of urlSources) {
+      if (output[source] && typeof output[source].url === "string") {
+        normalized.url = output[source].url;
+        if (typeof output[source].duration === "number") {
+          normalized.duration = output[source].duration;
+        }
+        break;
+      }
+    }
+
+    if (
+      !normalized.url &&
+      output.images &&
+      Array.isArray(output.images) &&
+      output.images.length > 0 &&
+      output.images[0].url
+    ) {
+      normalized.url = output.images[0].url;
+    }
+  } else if (provider === "runware") {
+    if (typeof output.audioURL === "string") {
+      normalized.url = output.audioURL;
+    } else if (typeof output.videoURL === "string") {
+      normalized.url = output.videoURL;
+    } else if (typeof output.imageURL === "string") {
+      normalized.url = output.imageURL;
+    } else if (typeof output.audioDataURI === "string") {
+      if (mediaId) {
+        try {
+          const base64Data = output.audioDataURI.split(",")[1];
+          const mimeType =
+            output.audioDataURI.match(/data:([^;]+);base64/)?.[1];
+          const byteCharacters = atob(base64Data);
+          const byteNumbers = new Array(byteCharacters.length);
+          for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+          const blob = new Blob([byteArray], { type: mimeType });
+          normalized.url = getOrCreateBlobUrl(mediaId, blob);
+          normalized.blob = blob;
+        } catch (error) {
+          console.error("Failed to convert audioDataURI to blob:", error);
+        }
+      }
+    } else if (typeof output.audioBase64Data === "string") {
+      if (mediaId) {
+        try {
+          const base64Data = output.audioBase64Data;
+          const byteCharacters = atob(base64Data);
+          const byteNumbers = new Array(byteCharacters.length);
+          for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+          const blob = new Blob([byteArray], { type: "audio/mpeg" });
+          normalized.url = getOrCreateBlobUrl(mediaId, blob);
+          normalized.blob = blob;
+        } catch (error) {
+          console.error("Failed to convert audioBase64Data to blob:", error);
+        }
+      }
+    }
+  }
+
+  return normalized;
+}
 
 export function resolveMediaUrl(item: MediaItem | undefined): string | null {
   if (!item) return null;
@@ -130,6 +212,10 @@ export function resolveMediaUrl(item: MediaItem | undefined): string | null {
 
   const data = item.output;
   if (!data) return null;
+
+  if (typeof data.url === "string") {
+    return data.url;
+  }
 
   if (item.provider === "runware") {
     if (data.imageURL) return data.imageURL;
