@@ -140,10 +140,8 @@ const TEMPLATE_PROJECT_SEED: ProjectSeed = {
           bitrate: 527931,
         },
         audio: null,
-        start_frame_url:
-          "https://v3.fal.media/files/lion/lNDR8wzGJmAgPtSdroZso_start_frame.png",
-        end_frame_url:
-          "https://v3.fal.media/files/monkey/IrmTo3WlXwU_xt2e7LWZR_end_frame.png",
+        start_frame_url: null,
+        end_frame_url: null,
       },
     },
     {
@@ -196,10 +194,8 @@ const TEMPLATE_PROJECT_SEED: ProjectSeed = {
           bitrate: 552459,
         },
         audio: null,
-        start_frame_url:
-          "https://v3.fal.media/files/tiger/vcYlw7KVM_GYJ27Rbwe5k_start_frame.png",
-        end_frame_url:
-          "https://v3.fal.media/files/koala/oslkG0Zf4xKBWk1oY95GD_end_frame.png",
+        start_frame_url: null,
+        end_frame_url: null,
       },
     },
     {
@@ -316,10 +312,8 @@ const TEMPLATE_PROJECT_SEED: ProjectSeed = {
           bitrate: 564785,
         },
         audio: null,
-        start_frame_url:
-          "https://v3.fal.media/files/monkey/WuO2_lfG3R6uggUWBA6Qv_start_frame.png",
-        end_frame_url:
-          "https://v3.fal.media/files/elephant/Ti8XbHVdc78bgONN4waSL_end_frame.png",
+        start_frame_url: null,
+        end_frame_url: null,
       },
     },
     {

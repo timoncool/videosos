@@ -58,7 +58,7 @@ export const useJobCreator = ({
         console.log("[DEBUG] FAL submit result:", result);
         return result;
       } else {
-        const runware = getRunwareClient();
+        const runware = await getRunwareClient();
         if (!runware) {
           throw new Error("Runware API key not configured");
         }
@@ -89,31 +89,70 @@ export const useJobCreator = ({
             data: response,
           };
         } else if (mediaType === "video") {
-          const response = await runware.videoInference({
+          const runware = await getRunwareClient();
+          if (!runware) {
+            throw new Error("Runware API key not configured");
+          }
+
+          const defaultDuration = endpointId.startsWith("minimax:") ? 6 : 5;
+          const videoParams = {
             positivePrompt: input.prompt || "",
             model: endpointId,
-            customTaskUUID: taskUUID,
-            ...input,
-          });
-
-          return {
-            taskUUID,
-            data: response,
+            duration: input.duration || defaultDuration,
+            fps: input.fps || 24,
+            height: input.height || 1080,
+            width: input.width || 1920,
           };
+          
+          console.log("[DEBUG] Calling runware.videoInference with:", videoParams);
+          
+          try {
+            const response = await runware.videoInference(videoParams);
+            console.log("[DEBUG] videoInference response:", response);
+            
+            return {
+              taskUUID,
+              data: response,
+            };
+          } catch (error: any) {
+            console.error("[DEBUG] videoInference ERROR:", error);
+            throw error;
+          }
         } else if (mediaType === "music" || mediaType === "voiceover") {
-          const response = await runware.audioInference({
+          const runware = await getRunwareClient();
+          if (!runware) {
+            throw new Error("Runware API key not configured");
+          }
+
+          const audioParams = {
             positivePrompt: input.prompt || "",
             model: endpointId,
             duration: input.duration || 30,
-            customTaskUUID: taskUUID,
-            deliveryMethod: "async",
-            ...input,
-          });
-
-          return {
-            taskUUID,
-            data: response,
+            outputFormat: "MP3" as const,
+            audioSettings: {
+              bitrate: 128,
+              sampleRate: 44100,
+            },
           };
+          
+          console.log("[DEBUG] Calling runware.audioInference with:", audioParams);
+          
+          try {
+            const response = await runware.audioInference(audioParams);
+            console.log("[DEBUG] audioInference response:", response);
+            console.log("[DEBUG] audioInference response stringified:", JSON.stringify(response, null, 2));
+            
+            return {
+              taskUUID,
+              data: response,
+            };
+          } catch (error: any) {
+            console.error("[DEBUG] audioInference ERROR:", error);
+            console.error("[DEBUG] audioInference ERROR message:", error?.message);
+            console.error("[DEBUG] audioInference ERROR stack:", error?.stack);
+            console.error("[DEBUG] audioInference ERROR stringified:", JSON.stringify(error, null, 2));
+            throw error;
+          }
         }
 
         throw new Error(`Unsupported media type: ${mediaType}`);
@@ -135,16 +174,12 @@ export const useJobCreator = ({
           input,
         });
       } else if (provider === "runware") {
-        if (
-          data.data &&
-          Array.isArray(data.data) &&
-          data.data[0] &&
-          data.data[0].imageURL
-        ) {
-          console.log(
-            "[DEBUG] Runware image completed immediately:",
-            data.data[0],
-          );
+        console.log("[DEBUG] Runware onSuccess - full data:", JSON.stringify(data, null, 2));
+        const result = data.data?.[0];
+        const isCompleted = result && (result.imageURL || result.videoURL || result.audioURL);
+        
+        if (isCompleted) {
+          console.log("[DEBUG] Runware task completed immediately:", result);
           await db.media.create({
             projectId,
             createdAt: Date.now(),
@@ -152,9 +187,9 @@ export const useJobCreator = ({
             kind: "generated",
             provider: "runware",
             endpointId,
-            taskUUID: data.data[0].taskUUID,
+            taskUUID: result.taskUUID || data.taskUUID,
             status: "completed",
-            output: data.data[0],
+            output: result,
             input,
           });
         } else {

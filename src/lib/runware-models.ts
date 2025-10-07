@@ -340,7 +340,7 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
 
   {
     provider: "runware",
-    endpointId: "minimax:3@2",
+    endpointId: "minimax:3@1",
     label: "MiniMax Hailuo 02",
     description: "Latest MiniMax video generation",
     popularity: 5,
