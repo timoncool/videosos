@@ -57,6 +57,47 @@ export const db = {
         id,
       });
     },
+    async delete(id: string) {
+      const db = await open();
+
+      const tracks = await db.getAllFromIndex("tracks", "by_projectId", id);
+      const trackIds = tracks.map((track) => track.id);
+
+      const frames = (
+        await Promise.all(
+          trackIds.map((trackId) =>
+            db.getAllFromIndex("keyFrames", "by_trackId", trackId)
+          )
+        )
+      ).flatMap((f) => f);
+
+      const mediaItems = await db.getAllFromIndex(
+        "media_items",
+        "by_projectId",
+        id
+      );
+
+      for (const media of mediaItems) {
+        if (media.kind === "uploaded" && media.blob) {
+          const { revokeBlobUrl } = await import("@/lib/utils");
+          revokeBlobUrl(media.id);
+        }
+      }
+
+      const tx = db.transaction(
+        ["projects", "tracks", "keyFrames", "media_items"],
+        "readwrite"
+      );
+
+      await Promise.all([
+        ...frames.map((f) => tx.objectStore("keyFrames").delete(f.id)),
+        ...tracks.map((t) => tx.objectStore("tracks").delete(t.id)),
+        ...mediaItems.map((m) => tx.objectStore("media_items").delete(m.id)),
+        tx.objectStore("projects").delete(id),
+      ]);
+
+      await tx.done;
+    },
   },
 
   tracks: {

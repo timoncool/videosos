@@ -294,6 +294,19 @@ export function MediaItemRow({
               >)}
               <span>{data.kind === "generated" ? "Job" : "File"}</span>
               <code className="text-muted-foreground">#{mediaId}</code>
+              {data.kind === "uploaded" ? (
+                <Badge variant="outline" className="text-xs ml-1">
+                  Uploaded
+                </Badge>
+              ) : data.endpointId?.startsWith("fal-ai/") ? (
+                <Badge variant="outline" className="text-xs ml-1">
+                  FAL
+                </Badge>
+              ) : (
+                <Badge variant="outline" className="text-xs ml-1">
+                  Runware
+                </Badge>
+              )}
             </h3>
             {data.status !== "completed" && (
               <Badge

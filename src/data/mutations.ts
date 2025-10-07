@@ -6,6 +6,16 @@ import { db } from "./db";
 import { queryKeys } from "./queries";
 import type { VideoProject } from "./schema";
 
+export const useProjectDeleter = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (projectId: string) => db.projects.delete(projectId),
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects });
+    },
+  });
+};
+
 export const useProjectUpdater = (projectId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
