@@ -93,6 +93,7 @@ export async function exportVideoClientSide(
   }
 
   const clips: string[] = [];
+  const videoAudioClips: string[] = [];
   let clipIndex = 0;
 
   for (const segment of segments) {
@@ -111,6 +112,16 @@ export async function exportVideoClientSide(
         "30",
         outputFilename,
       ]);
+
+      const videoAudioFilename = `video_audio_${clipIndex}.wav`;
+      await ffmpeg.exec([
+        "-f",
+        "lavfi",
+        "-i",
+        `anullsrc=channel_layout=stereo:sample_rate=44100:duration=${durationSeconds}`,
+        videoAudioFilename,
+      ]);
+      videoAudioClips.push(videoAudioFilename);
     } else {
       const { keyframe } = segment;
       if (!keyframe || !keyframe.url) continue;
@@ -149,6 +160,16 @@ export async function exportVideoClientSide(
           "30",
           outputFilename,
         ]);
+
+        const videoAudioFilename = `video_audio_${clipIndex}.wav`;
+        await ffmpeg.exec([
+          "-f",
+          "lavfi",
+          "-i",
+          `anullsrc=channel_layout=stereo:sample_rate=44100:duration=${durationSeconds}`,
+          videoAudioFilename,
+        ]);
+        videoAudioClips.push(videoAudioFilename);
       } else {
         await ffmpeg.exec([
           "-i",
@@ -163,6 +184,21 @@ export async function exportVideoClientSide(
           "yuv420p",
           outputFilename,
         ]);
+
+        const videoAudioFilename = `video_audio_${clipIndex}.wav`;
+        await ffmpeg.exec([
+          "-i",
+          inputFilename,
+          "-t",
+          durationSeconds.toString(),
+          "-vn",
+          "-ar",
+          "44100",
+          "-ac",
+          "2",
+          videoAudioFilename,
+        ]);
+        videoAudioClips.push(videoAudioFilename);
       }
     }
 
@@ -185,8 +221,32 @@ export async function exportVideoClientSide(
     "output.mp4",
   ]);
 
-  if (audioTracks.length > 0) {
+  const videoAudioConcatContent = videoAudioClips
+    .map((clip) => `file '${clip}'`)
+    .join("\n");
+  await ffmpeg.writeFile(
+    "video_audio_concat.txt",
+    new TextEncoder().encode(videoAudioConcatContent),
+  );
+
+  await ffmpeg.exec([
+    "-f",
+    "concat",
+    "-safe",
+    "0",
+    "-i",
+    "video_audio_concat.txt",
+    "-c",
+    "copy",
+    "video_audio_track.wav",
+  ]);
+
+  if (audioTracks.length > 0 || videoAudioClips.length > 0) {
     const audioInputs: string[] = [];
+
+    if (videoAudioClips.length > 0) {
+      audioInputs.push("video_audio_track.wav");
+    }
 
     for (let trackIdx = 0; trackIdx < audioTracks.length; trackIdx++) {
       const audioTrack = audioTracks[trackIdx];
