@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useProjectCreator } from "@/data/mutations";
+import { useProjectCreator, useProjectDeleter } from "@/data/mutations";
 import { queryKeys, useProjects } from "@/data/queries";
 import type { AspectRatio, VideoProject } from "@/data/schema";
 import { useVideoProjectStore } from "@/data/store";
@@ -9,7 +9,12 @@ import { useToast } from "@/hooks/use-toast";
 import { createProjectSuggestion } from "@/lib/project";
 import { cn, rememberLastProjectId } from "@/lib/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { FileVideoIcon, FolderOpenIcon, WandSparklesIcon } from "lucide-react";
+import {
+  FileVideoIcon,
+  FolderOpenIcon,
+  WandSparklesIcon,
+  Trash2,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { Logo } from "./logo";
 import { Button } from "./ui/button";
@@ -39,6 +44,8 @@ export function ProjectDialog({ onOpenChange, ...props }: ProjectDialogProps) {
   const [aspect, setAspect] = useState<AspectRatio>("16:9");
   const queryClient = useQueryClient();
   const { toast } = useToast();
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const deleteProject = useProjectDeleter();
 
   // Fetch existing projects
   const { data: projects = [], isLoading } = useProjects();
@@ -214,29 +221,78 @@ export function ProjectDialog({ onOpenChange, ...props }: ProjectDialogProps) {
               ) : (
                 // Project list
                 projects?.map((project) => (
-                  <button
-                    type="button"
+                  <div
                     key={project.id}
-                    onClick={() => handleSelectProject(project)}
                     className={cn(
-                      "w-full text-left p-3 rounded",
+                      "w-full text-left p-3 rounded flex items-start justify-between gap-2",
                       "bg-card hover:bg-accent transition-colors",
                       "border border-border",
                     )}
                   >
-                    <h3 className="font-medium text-sm">{project.title}</h3>
-                    {project.description && (
-                      <p className="text-sm text-muted-foreground line-clamp-2">
-                        {project.description}
-                      </p>
-                    )}
-                  </button>
+                    <button
+                      type="button"
+                      onClick={() => handleSelectProject(project)}
+                      className="flex-1 text-left"
+                    >
+                      <h3 className="font-medium text-sm">{project.title}</h3>
+                      {project.description && (
+                        <p className="text-sm text-muted-foreground line-clamp-2">
+                          {project.description}
+                        </p>
+                      )}
+                    </button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 text-muted-foreground hover:text-destructive shrink-0"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setDeleteConfirmId(project.id);
+                      }}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
                 ))
               )}
             </div>
           </div>
         </div>
       </DialogContent>
+
+      <Dialog
+        open={!!deleteConfirmId}
+        onOpenChange={(open) => !open && setDeleteConfirmId(null)}
+      >
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Delete Project</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this project? This action cannot
+              be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={() => setDeleteConfirmId(null)}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => {
+                if (deleteConfirmId) {
+                  deleteProject.mutate(deleteConfirmId, {
+                    onSuccess: () => {
+                      setDeleteConfirmId(null);
+                    },
+                  });
+                }
+              }}
+            >
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Dialog>
   );
 }
