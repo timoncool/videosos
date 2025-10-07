@@ -138,10 +138,10 @@ export const useJobCreator = ({
             },
           };
 
-          console.log(
-            "[DEBUG] Calling runware.audioInference with:",
-            { ...audioParams, outputType: ["URL"] },
-          );
+          console.log("[DEBUG] Calling runware.audioInference with:", {
+            ...audioParams,
+            outputType: ["URL"],
+          });
 
           try {
             const response = await runware.audioInference({
