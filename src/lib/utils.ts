@@ -161,6 +161,16 @@ export function resolveMediaUrl(item: MediaItem | undefined): string | null {
     return data[property].url;
   }
 
+  if (typeof data.url === "string") {
+    return data.url;
+  }
+  if (typeof data.audio_url === "string") {
+    return data.audio_url;
+  }
+  if (typeof data.audio_file === "string") {
+    return data.audio_file;
+  }
+
   return null;
 }
 
