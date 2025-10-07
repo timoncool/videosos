@@ -213,7 +213,6 @@ export async function exportVideoClientSide(
 
   if (audioTracks.length > 0) {
     for (let trackIdx = 0; trackIdx < audioTracks.length; trackIdx++) {
-
       const audioTrack = audioTracks[trackIdx];
       const audioKeyframes = [...audioTrack.keyframes].sort(
         (a, b) => a.timestamp - b.timestamp,
@@ -335,7 +334,6 @@ export async function exportVideoClientSide(
     if (allAudioInputs.length === 1) {
       mixedAudioFilename = allAudioInputs[0];
     } else {
-
       const amixInputs = allAudioInputs.map((_, idx) => `[${idx}:a]`).join("");
       const amixFilter = `${amixInputs}amix=inputs=${allAudioInputs.length}:duration=longest[aout]`;
 
