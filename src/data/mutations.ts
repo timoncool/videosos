@@ -5,7 +5,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { db } from "./db";
 import { queryKeys } from "./queries";
 import type { VideoProject } from "./schema";
-import { normalizeMediaOutput } from "@/lib/utils";
 
 export const useProjectDeleter = () => {
   const queryClient = useQueryClient();
@@ -227,7 +226,7 @@ export const useJobCreator = ({
             endpointId,
             taskUUID: result.taskUUID || data.taskUUID,
             status: "completed",
-            output: normalizeMediaOutput(result, "runware", result.taskUUID),
+            output: result,
             input,
           });
         } else {
