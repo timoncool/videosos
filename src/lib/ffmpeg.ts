@@ -161,6 +161,10 @@ export async function exportVideoClientSide(
           "30",
           "-pix_fmt",
           "yuv420p",
+          "-c:a",
+          "aac",
+          "-b:a",
+          "192k",
           outputFilename,
         ]);
       }
@@ -185,9 +189,29 @@ export async function exportVideoClientSide(
     "output.mp4",
   ]);
 
-  if (audioTracks.length > 0) {
-    const audioInputs: string[] = [];
+  const allAudioInputs: string[] = [];
 
+  try {
+    await ffmpeg.exec([
+      "-i",
+      "output.mp4",
+      "-vn",
+      "-acodec",
+      "pcm_s16le",
+      "-ar",
+      "44100",
+      "-ac",
+      "2",
+      "-t",
+      (totalDuration / 1000).toString(),
+      "video_audio.wav",
+    ]);
+    allAudioInputs.push("video_audio.wav");
+  } catch (error) {
+    console.warn("No audio stream found in video track, continuing without it");
+  }
+
+  if (audioTracks.length > 0) {
     for (let trackIdx = 0; trackIdx < audioTracks.length; trackIdx++) {
       const audioTrack = audioTracks[trackIdx];
       const audioKeyframes = [...audioTrack.keyframes].sort(
@@ -301,18 +325,20 @@ export async function exportVideoClientSide(
         trackOutputFilename,
       ]);
 
-      audioInputs.push(trackOutputFilename);
+      allAudioInputs.push(trackOutputFilename);
     }
+  }
 
+  if (allAudioInputs.length > 0) {
     let mixedAudioFilename = "audio_mixed.wav";
-    if (audioInputs.length === 1) {
-      mixedAudioFilename = audioInputs[0];
+    if (allAudioInputs.length === 1) {
+      mixedAudioFilename = allAudioInputs[0];
     } else {
-      const amixInputs = audioInputs.map((_, idx) => `[${idx}:a]`).join("");
-      const amixFilter = `${amixInputs}amix=inputs=${audioInputs.length}:duration=longest[aout]`;
+      const amixInputs = allAudioInputs.map((_, idx) => `[${idx}:a]`).join("");
+      const amixFilter = `${amixInputs}amix=inputs=${allAudioInputs.length}:duration=longest[aout]`;
 
       const ffmpegArgs = [];
-      for (const input of audioInputs) {
+      for (const input of allAudioInputs) {
         ffmpegArgs.push("-i", input);
       }
       ffmpegArgs.push(
@@ -337,6 +363,10 @@ export async function exportVideoClientSide(
       "aac",
       "-b:a",
       "192k",
+      "-map",
+      "0:v",
+      "-map",
+      "1:a",
       "-shortest",
       "output_with_audio.mp4",
     ]);
