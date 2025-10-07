@@ -226,7 +226,7 @@ export function ProjectDialog({ onOpenChange, ...props }: ProjectDialogProps) {
                     className={cn(
                       "w-full text-left p-3 rounded flex items-start justify-between gap-2",
                       "bg-card hover:bg-accent transition-colors",
-                      "border border-border"
+                      "border border-border",
                     )}
                   >
                     <button
@@ -268,7 +268,8 @@ export function ProjectDialog({ onOpenChange, ...props }: ProjectDialogProps) {
           <DialogHeader>
             <DialogTitle>Delete Project</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete this project? This action cannot be undone.
+              Are you sure you want to delete this project? This action cannot
+              be undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2">

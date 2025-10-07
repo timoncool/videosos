@@ -66,15 +66,15 @@ export const db = {
       const frames = (
         await Promise.all(
           trackIds.map((trackId) =>
-            db.getAllFromIndex("keyFrames", "by_trackId", trackId)
-          )
+            db.getAllFromIndex("keyFrames", "by_trackId", trackId),
+          ),
         )
       ).flatMap((f) => f);
 
       const mediaItems = await db.getAllFromIndex(
         "media_items",
         "by_projectId",
-        id
+        id,
       );
 
       for (const media of mediaItems) {
@@ -86,7 +86,7 @@ export const db = {
 
       const tx = db.transaction(
         ["projects", "tracks", "keyFrames", "media_items"],
-        "readwrite"
+        "readwrite",
       );
 
       await Promise.all([
