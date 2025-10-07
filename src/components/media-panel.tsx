@@ -148,35 +148,54 @@ export function MediaItemRow({
       } else {
         console.log("[DEBUG] Runware item - checking for thumbnail generation");
 
-        if (
-          data.status === "completed" &&
-          data.mediaType === "video" &&
-          !data.metadata?.thumbnail_url
-        ) {
-          console.log("[DEBUG] Generating thumbnail for Runware video");
-          const videoUrl = resolveMediaUrl(data);
-          if (videoUrl) {
-            const thumbnailUrl = await extractVideoThumbnail(videoUrl);
+        if (data.status === "completed") {
+          if (data.mediaType === "video" && !data.metadata?.thumbnail_url) {
+            console.log("[DEBUG] Generating thumbnail for Runware video");
+            const videoUrl = resolveMediaUrl(data);
+            if (videoUrl) {
+              const thumbnailUrl = await extractVideoThumbnail(videoUrl);
+              await db.media.update(data.id, {
+                ...data,
+                metadata: {
+                  ...data.metadata,
+                  thumbnail_url: thumbnailUrl,
+                },
+              });
+              await queryClient.invalidateQueries({
+                queryKey: queryKeys.projectMediaItems(data.projectId),
+              });
+              console.log("[DEBUG] Thumbnail generated:", thumbnailUrl);
+            }
+          }
+
+          if (data.mediaType !== "image" && !data.metadata?.duration) {
+            console.log(
+              "[DEBUG] Extracting metadata for Runware",
+              data.mediaType,
+            );
+            const mediaMetadata = await getMediaMetadata(data as MediaItem);
             await db.media.update(data.id, {
               ...data,
               metadata: {
-                ...data.metadata,
-                thumbnail_url: thumbnailUrl,
+                ...(data.metadata || {}),
+                ...(mediaMetadata?.media || {}),
               },
             });
             await queryClient.invalidateQueries({
               queryKey: queryKeys.projectMediaItems(data.projectId),
             });
-            console.log("[DEBUG] Thumbnail generated:", thumbnailUrl);
+            console.log("[DEBUG] Metadata extracted:", mediaMetadata?.media);
           }
-        } else {
-          console.log(
-            "[DEBUG] Runware item should already be completed, skipping polling",
-          );
-          await db.media.update(data.id, {
-            ...data,
-            status: "completed",
-          });
+
+          if (!data.metadata?.thumbnail_url && !data.metadata?.duration) {
+            console.log(
+              "[DEBUG] Runware item should already be completed, skipping polling",
+            );
+            await db.media.update(data.id, {
+              ...data,
+              status: "completed",
+            });
+          }
         }
         return null;
       }

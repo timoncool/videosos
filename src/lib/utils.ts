@@ -61,13 +61,35 @@ export function resolveDuration(item: MediaItem): number | null {
   }
 
   const data = item.output;
-  if (!data) return null;
+  if (!data) {
+    const input = item.input;
+    if (input) {
+      if (typeof input.seconds_total === "number") {
+        return input.seconds_total * 1000;
+      }
+      if (typeof input.duration === "number") {
+        return input.duration * 1000;
+      }
+    }
+    return null;
+  }
   if ("seconds_total" in data) {
     return data.seconds_total * 1000;
   }
   if ("audio" in data && "duration" in data.audio) {
     return data.audio.duration * 1000;
   }
+
+  const input = item.input;
+  if (input) {
+    if (typeof input.seconds_total === "number") {
+      return input.seconds_total * 1000;
+    }
+    if (typeof input.duration === "number") {
+      return input.duration * 1000;
+    }
+  }
+
   return null;
 }
 
