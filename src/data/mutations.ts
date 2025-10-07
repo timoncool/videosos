@@ -140,11 +140,14 @@ export const useJobCreator = ({
 
           console.log(
             "[DEBUG] Calling runware.audioInference with:",
-            audioParams,
+            { ...audioParams, outputType: ["URL"] },
           );
 
           try {
-            const response = await runware.audioInference(audioParams);
+            const response = await runware.audioInference({
+              ...audioParams,
+              outputType: ["URL"],
+            } as any);
             console.log("[DEBUG] audioInference response:", response);
             console.log(
               "[DEBUG] audioInference response stringified:",
@@ -195,7 +198,12 @@ export const useJobCreator = ({
         );
         const result = data.data?.[0];
         const isCompleted =
-          result && (result.imageURL || result.videoURL || result.audioURL);
+          result &&
+          (result.imageURL ||
+            result.videoURL ||
+            result.audioURL ||
+            result.audioDataURI ||
+            result.audioBase64Data);
 
         if (isCompleted) {
           console.log("[DEBUG] Runware task completed immediately:", result);
