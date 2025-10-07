@@ -7,7 +7,12 @@ import type { MediaItem } from "@/data/schema";
 import { useProjectId, useVideoProjectStore } from "@/data/store";
 import { fal } from "@/lib/fal";
 import { getRunwareClient } from "@/lib/runware";
-import { cn, resolveMediaUrl, normalizeMediaOutput, trackIcons } from "@/lib/utils";
+import {
+  cn,
+  resolveMediaUrl,
+  normalizeMediaOutput,
+  trackIcons,
+} from "@/lib/utils";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import {

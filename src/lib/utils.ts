@@ -138,7 +138,13 @@ export function normalizeMediaOutput(output: any, provider: string): any {
       }
     }
 
-    if (!normalized.url && output.images && Array.isArray(output.images) && output.images.length > 0 && output.images[0].url) {
+    if (
+      !normalized.url &&
+      output.images &&
+      Array.isArray(output.images) &&
+      output.images.length > 0 &&
+      output.images[0].url
+    ) {
       normalized.url = output.images[0].url;
     }
   } else if (provider === "runware") {
@@ -153,8 +159,6 @@ export function normalizeMediaOutput(output: any, provider: string): any {
 
   return normalized;
 }
-
-
 
 export function resolveMediaUrl(item: MediaItem | undefined): string | null {
   if (!item) return null;
