@@ -162,9 +162,8 @@ export function normalizeMediaOutput(
       if (mediaId) {
         try {
           const base64Data = output.audioDataURI.split(",")[1];
-          const mimeType = output.audioDataURI.match(
-            /data:([^;]+);base64/,
-          )?.[1];
+          const mimeType =
+            output.audioDataURI.match(/data:([^;]+);base64/)?.[1];
           const byteCharacters = atob(base64Data);
           const byteNumbers = new Array(byteCharacters.length);
           for (let i = 0; i < byteCharacters.length; i++) {
