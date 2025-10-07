@@ -117,7 +117,11 @@ export function revokeBlobUrl(mediaId: string): void {
     blobUrlCache.delete(mediaId);
   }
 }
-export function normalizeMediaOutput(output: any, provider: string): any {
+export function normalizeMediaOutput(
+  output: any,
+  provider: string,
+  mediaId?: string,
+): any {
   if (!output) return output;
 
   if (output.url && typeof output.url === "string") {
@@ -154,6 +158,43 @@ export function normalizeMediaOutput(output: any, provider: string): any {
       normalized.url = output.videoURL;
     } else if (typeof output.imageURL === "string") {
       normalized.url = output.imageURL;
+    } else if (typeof output.audioDataURI === "string") {
+      if (mediaId) {
+        try {
+          const base64Data = output.audioDataURI.split(",")[1];
+          const mimeType = output.audioDataURI.match(
+            /data:([^;]+);base64/,
+          )?.[1];
+          const byteCharacters = atob(base64Data);
+          const byteNumbers = new Array(byteCharacters.length);
+          for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+          const blob = new Blob([byteArray], { type: mimeType });
+          normalized.url = getOrCreateBlobUrl(mediaId, blob);
+          normalized.blob = blob;
+        } catch (error) {
+          console.error("Failed to convert audioDataURI to blob:", error);
+        }
+      }
+    } else if (typeof output.audioBase64Data === "string") {
+      if (mediaId) {
+        try {
+          const base64Data = output.audioBase64Data;
+          const byteCharacters = atob(base64Data);
+          const byteNumbers = new Array(byteCharacters.length);
+          for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+          const blob = new Blob([byteArray], { type: "audio/mpeg" });
+          normalized.url = getOrCreateBlobUrl(mediaId, blob);
+          normalized.blob = blob;
+        } catch (error) {
+          console.error("Failed to convert audioBase64Data to blob:", error);
+        }
+      }
     }
   }
 

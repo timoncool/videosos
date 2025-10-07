@@ -95,7 +95,7 @@ export function MediaItemRow({
             });
             media = {
               ...data,
-              output: normalizeMediaOutput(result.data, "fal"),
+              output: normalizeMediaOutput(result.data, "fal", data.id),
               status: "completed",
             };
 

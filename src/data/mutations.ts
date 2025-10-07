@@ -227,7 +227,7 @@ export const useJobCreator = ({
             endpointId,
             taskUUID: result.taskUUID || data.taskUUID,
             status: "completed",
-            output: normalizeMediaOutput(result, "runware"),
+            output: normalizeMediaOutput(result, "runware", result.taskUUID),
             input,
           });
         } else {
