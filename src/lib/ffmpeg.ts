@@ -202,8 +202,6 @@ export async function exportVideoClientSide(
       "44100",
       "-ac",
       "2",
-      "-t",
-      (totalDuration / 1000).toString(),
       "video_audio.wav",
     ]);
     allAudioInputs.push("video_audio.wav");
@@ -363,10 +361,6 @@ export async function exportVideoClientSide(
       "aac",
       "-b:a",
       "192k",
-      "-map",
-      "0:v",
-      "-map",
-      "1:a",
       "-shortest",
       "output_with_audio.mp4",
     ]);
