@@ -44,7 +44,7 @@ export function MediaItemRow({
   ...props
 }: MediaItemRowProps) {
   const t = useTranslations("app.toast");
-  const isDone = data.status === "completed" || data.status === "failed";
+  const isDone = data.status === "completed";
   const queryClient = useQueryClient();
   const projectId = useProjectId();
   const { toast } = useToast();
@@ -146,76 +146,49 @@ export function MediaItemRow({
           }
         }
       } else {
-        const runware = getRunwareClient();
-        if (!runware) {
-          throw new Error("Runware API key not configured");
-        }
+        console.log("[DEBUG] Runware item - checking for thumbnail generation");
 
-        try {
-          const response = await runware.getResponse({
-            taskUUID: data.taskUUID!,
-          });
-
-          if (response && response.length > 0 && response[0]) {
-            const result = response[0];
-
-            const media = {
-              ...data,
-              output: result,
-              status: "completed" as const,
-            };
-
-            await db.media.update(data.id, media);
-
-            toast({
-              title: t("generationCompleted"),
-              description: t("generationCompletedDesc", {
-                mediaType: data.mediaType,
-              }),
-            });
-
-            await queryClient.invalidateQueries({
-              queryKey: queryKeys.projectMediaItems(data.projectId),
-            });
-          } else {
+        if (
+          data.status === "completed" &&
+          data.mediaType === "video" &&
+          !data.metadata?.thumbnail_url
+        ) {
+          console.log("[DEBUG] Generating thumbnail for Runware video");
+          const videoUrl = resolveMediaUrl(data);
+          if (videoUrl) {
+            const thumbnailUrl = await extractVideoThumbnail(videoUrl);
             await db.media.update(data.id, {
               ...data,
-              status: "running",
+              metadata: {
+                ...data.metadata,
+                thumbnail_url: thumbnailUrl,
+              },
             });
             await queryClient.invalidateQueries({
               queryKey: queryKeys.projectMediaItems(data.projectId),
             });
+            console.log("[DEBUG] Thumbnail generated:", thumbnailUrl);
           }
-        } catch (error: any) {
-          if (
-            error?.message?.includes("not found") ||
-            error?.message?.includes("pending")
-          ) {
-            await db.media.update(data.id, {
-              ...data,
-              status: "running",
-            });
-          } else {
-            await db.media.update(data.id, {
-              ...data,
-              status: "failed",
-            });
-            toast({
-              title: t("generationFailed"),
-              description: t("generationFailedDesc", {
-                mediaType: data.mediaType,
-              }),
-            });
-          }
-          await queryClient.invalidateQueries({
-            queryKey: queryKeys.projectMediaItems(data.projectId),
+        } else {
+          console.log(
+            "[DEBUG] Runware item should already be completed, skipping polling",
+          );
+          await db.media.update(data.id, {
+            ...data,
+            status: "completed",
           });
         }
+        return null;
       }
 
       return null;
     },
-    enabled: !isDone && data.kind === "generated",
+    enabled:
+      (!isDone && data.kind === "generated") ||
+      (data.provider === "runware" &&
+        data.status === "completed" &&
+        data.mediaType === "video" &&
+        !data.metadata?.thumbnail_url),
     refetchInterval: () => {
       if (data.kind === "uploaded") return false;
       const provider = data.provider || "fal";
