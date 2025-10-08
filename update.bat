@@ -1,128 +1,127 @@
 @echo off
-chcp 65001 >nul
-title VideoSOS - Обновление
+title VideoSOS - Update
 
 echo ========================================
-echo   VideoSOS - Обновление из Git
+echo   VideoSOS - Update from Git
 echo ========================================
 echo.
 
-REM Проверка наличия Git
+REM Check for Git
 where git >nul 2>&1
 if %errorlevel% neq 0 (
-    echo ОШИБКА: Git не найден!
+    echo ERROR: Git not found!
     echo.
-    echo Пожалуйста, установите Git с https://git-scm.com/
+    echo Please install Git from https://git-scm.com/
     echo.
     pause
     exit /b 1
 )
 
-REM Проверка наличия Node.js
+REM Check for Node.js
 where node >nul 2>&1
 if %errorlevel% neq 0 (
-    echo ОШИБКА: Node.js не найден!
+    echo ERROR: Node.js not found!
     echo.
-    echo Пожалуйста, установите Node.js с https://nodejs.org/
+    echo Please install Node.js from https://nodejs.org/
     echo.
     pause
     exit /b 1
 )
 
-echo Шаг 1/4: Получение последних изменений...
+echo Step 1/4: Getting latest changes...
 echo.
 
-REM Проверка наличия .git папки
+REM Check for .git folder
 if exist ".git" (
-    echo Обновление через Git...
+    echo Updating via Git...
     echo.
     git pull
     if errorlevel 1 (
         echo.
-        echo ОШИБКА: Не удалось выполнить git pull
-        echo Возможно, у вас есть несохраненные изменения.
+        echo ERROR: Failed to run git pull
+        echo You may have unsaved changes.
         echo.
         pause
         exit /b 1
     )
 ) else (
-    echo Загрузка последней версии с GitHub...
+    echo Downloading latest version from GitHub...
     echo.
     
-    REM Скачивание архива
+    REM Download archive
     curl -L -o temp_update.zip https://github.com/timoncool/videosos/archive/refs/heads/main.zip
     if errorlevel 1 (
         echo.
-        echo ОШИБКА: Не удалось скачать обновление
-        echo Проверьте подключение к интернету.
+        echo ERROR: Failed to download update
+        echo Check your internet connection.
         echo.
         pause
         exit /b 1
     )
     
-    REM Распаковка архива
+    REM Extract archive
     powershell -command "Expand-Archive -Path temp_update.zip -DestinationPath temp_update -Force"
     if errorlevel 1 (
         echo.
-        echo ОШИБКА: Не удалось распаковать архив
+        echo ERROR: Failed to extract archive
         del temp_update.zip
         pause
         exit /b 1
     )
     
-    REM Копирование файлов
+    REM Copy files
     xcopy /E /Y /I temp_update\videosos-main\* .
     if errorlevel 1 (
         echo.
-        echo ОШИБКА: Не удалось скопировать файлы
+        echo ERROR: Failed to copy files
         del temp_update.zip
         rmdir /S /Q temp_update
         pause
         exit /b 1
     )
     
-    REM Очистка временных файлов
+    REM Clean up temporary files
     del temp_update.zip
     rmdir /S /Q temp_update
-    echo ✓ Обновление загружено успешно
+    echo Update downloaded successfully
 )
 
 echo.
-echo Шаг 2/4: Обновление зависимостей...
+echo Step 2/4: Updating dependencies...
 echo.
 call npm install
 if errorlevel 1 (
     echo.
-    echo ОШИБКА: Не удалось обновить зависимости
+    echo ERROR: Failed to update dependencies
     pause
     exit /b 1
 )
 
 echo.
-echo Шаг 3/4: Очистка старой сборки...
+echo Step 3/4: Cleaning old build...
 echo.
 if exist ".next" (
     rmdir /S /Q ".next"
-    echo ✓ Старая сборка удалена
+    echo Old build deleted
 )
 
 echo.
-echo Шаг 4/4: Создание новой production сборки...
+echo Step 4/4: Creating new production build...
 echo.
 call npm run build
 if errorlevel 1 (
     echo.
-    echo ОШИБКА: Не удалось создать новую сборку
+    echo ERROR: Failed to create new build
     pause
     exit /b 1
 )
 
 echo.
 echo ========================================
-echo ✓ Обновление завершено успешно!
+echo Update completed successfully!
 echo ========================================
 echo.
-echo Теперь вы можете запустить обновленную версию
-echo используя start.bat
+echo You can now run the updated version
+echo using start.bat
 echo.
 pause
