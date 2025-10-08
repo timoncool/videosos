@@ -11,14 +11,6 @@ A powerful, browser-based AI video editor built for creators. Create stunning vi
 
 **[🚀 Try the Live Demo](https://videosos.vercel.app/)** | [🇷🇺 Русская версия README](./README.ru.md)
 
-## Demo Video
-
-See VideoSOS in action:
-
-[![VideoSOS Demo](https://vumbnail.com/1125412027.jpg)](https://vimeo.com/1125412027)
-
-*Click the image above to watch the demo video on Vimeo*
-
 ## Screenshots
 
 ### Landing Page
