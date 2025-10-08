@@ -11,6 +11,12 @@ A powerful, browser-based AI video editor built for creators. Create stunning vi
 
 **[🚀 Try the Live Demo](https://videosos.vercel.app/)** | [🇷🇺 Русская версия README](./README.ru.md)
 
+## Demo Video
+
+See VideoSOS in action:
+
+<video src="https://github.com/timoncool/videosos/raw/main/Demo.mp4" controls width="100%"></video>
+
 ## Screenshots
 
 ### Landing Page
@@ -95,6 +101,32 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 
 [![Star History Chart](https://api.star-history.com/svg?repos=timoncool/videosos&type=Date)](https://star-history.com/#timoncool/videosos&Date)
 
+## Roadmap
+
+We're actively working on making VideoSOS even better! Here are the features and improvements we're planning:
+
+### Timeline Enhancements
+- **Segment Reordering** - Drag segments freely on the timeline to reorder them (currently they only bump into adjacent segments)
+- **Click-to-Seek** - Click anywhere on the timeline to move the playhead cursor (currently only arrow keys work)
+- **Volume Control** - Interactive volume adjustment with visual horizontal line controls for audio segments
+- **Waveform Display** - Stretch audio waveforms to match full segment length on timeline
+
+### Editing Features
+- **Segment Duplication** - Ctrl+Drag to create copies of segments (standard video editor workflow)
+- **Lip-sync Integration** - New Lip-sync tab with FAL lip-sync models (video + audio input)
+
+### Generation Workflow
+- **Persistent Sidebar** - Keep generation sidebar open after submission to queue multiple generations
+- **Runware Status** - Show generation status in sidebar like FAL (currently locks until complete)
+- **Keyboard Shortcuts** - Ctrl+Enter to submit generations
+- **Advanced Parameters** - Expose additional model parameters (steps, resolution, guidance, etc.) where available
+
+### Technical Improvements
+- **Model Verification** - Verify and fix all models across all providers (some currently not working)
+- **Server-side Rendering** - Optional server-side FFMPEG for faster video export (FFMPEG API integration)
+
+Want to contribute? Pick an item from the roadmap and submit a PR! See our [Contributing Guide](CONTRIBUTING.md) for details.
+
 ## Contributing
 
 We welcome contributions from developers of all skill levels! Whether you're fixing bugs, adding features, improving documentation, or sharing ideas, your help makes VideoSOS better for everyone.
@@ -111,6 +143,8 @@ Every contribution counts, no matter how small! Let's build the best open-source
 ### Credits
 
 Assembled by [Nerual Dreming](https://t.me/nerual_dreming) - founder of [ArtGeneration.me](https://artgeneration.me/), tech blogger, and neuro-evangelist.
+
+This project was built with [Devin](https://app.devin.ai/invite/fdc44857a73c4afea4c0763e67c7a2d2), the AI software engineer. Experience autonomous coding with Devin's free trial.
 
 This project is a fork of the original [AI Video Starter Kit](https://github.com/fal-ai-community/video-starter-kit) from the fal.ai community.
 
