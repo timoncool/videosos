@@ -488,15 +488,7 @@ export async function extractVideoThumbnail(
 
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    const blob = await new Promise<Blob | null>((resolve) => {
-      canvas.toBlob((blob) => resolve(blob), "image/jpeg", 0.8);
-    });
-
-    if (!blob) {
-      throw new Error("Failed to create thumbnail blob");
-    }
-
-    return URL.createObjectURL(blob);
+    return canvas.toDataURL("image/jpeg", 0.8);
   } catch (error) {
     console.error("Failed to generate video thumbnail:", error);
     return null;
