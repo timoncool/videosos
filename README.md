@@ -15,7 +15,9 @@ A powerful, browser-based AI video editor built for creators. Create stunning vi
 
 See VideoSOS in action:
 
-![Demo Video](./Demo.mp4)
+[![VideoSOS Demo](https://vumbnail.com/1125412027.jpg)](https://vimeo.com/1125412027)
+
+*Click the image above to watch the demo video on Vimeo*
 
 ## Screenshots
 
