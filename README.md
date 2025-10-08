@@ -15,7 +15,7 @@ A powerful, browser-based AI video editor built for creators. Create stunning vi
 
 See VideoSOS in action:
 
-<video src="https://github.com/timoncool/videosos/raw/main/Demo.mp4" controls width="100%"></video>
+![Demo Video](./Demo.mp4)
 
 ## Screenshots
 
