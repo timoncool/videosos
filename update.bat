@@ -29,16 +29,62 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
-echo Шаг 1/4: Получение последних изменений из Git...
+echo Шаг 1/4: Получение последних изменений...
 echo.
-git pull
-if errorlevel 1 (
+
+REM Проверка наличия .git папки
+if exist ".git" (
+    echo Обновление через Git...
     echo.
-    echo ОШИБКА: Не удалось выполнить git pull
-    echo Возможно, у вас есть несохраненные изменения.
+    git pull
+    if errorlevel 1 (
+        echo.
+        echo ОШИБКА: Не удалось выполнить git pull
+        echo Возможно, у вас есть несохраненные изменения.
+        echo.
+        pause
+        exit /b 1
+    )
+) else (
+    echo Загрузка последней версии с GitHub...
     echo.
-    pause
-    exit /b 1
+    
+    REM Скачивание архива
+    curl -L -o temp_update.zip https://github.com/timoncool/videosos/archive/refs/heads/main.zip
+    if errorlevel 1 (
+        echo.
+        echo ОШИБКА: Не удалось скачать обновление
+        echo Проверьте подключение к интернету.
+        echo.
+        pause
+        exit /b 1
+    )
+    
+    REM Распаковка архива
+    powershell -command "Expand-Archive -Path temp_update.zip -DestinationPath temp_update -Force"
+    if errorlevel 1 (
+        echo.
+        echo ОШИБКА: Не удалось распаковать архив
+        del temp_update.zip
+        pause
+        exit /b 1
+    )
+    
+    REM Копирование файлов
+    xcopy /E /Y /I temp_update\videosos-main\* .
+    if errorlevel 1 (
+        echo.
+        echo ОШИБКА: Не удалось скопировать файлы
+        del temp_update.zip
+        rmdir /S /Q temp_update
+        pause
+        exit /b 1
+    )
+    
+    REM Очистка временных файлов
+    del temp_update.zip
+    rmdir /S /Q temp_update
+    echo ✓ Обновление загружено успешно
 )
 
 echo.
