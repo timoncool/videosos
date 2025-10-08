@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import { Analytics } from "@vercel/analytics/react";
 import { getTranslations } from "next-intl/server";
-import "../../globals.css";
 
 export async function generateMetadata({
   params: { locale },
@@ -19,12 +17,5 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en">
-      <body className="antialiased dark">
-        {children}
-        <Analytics />
-      </body>
-    </html>
-  );
+  return children;
 }
