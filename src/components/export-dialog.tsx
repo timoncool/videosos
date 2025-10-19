@@ -137,7 +137,9 @@ export function ExportDialog({ onOpenChange, ...props }: ExportDialogProps) {
               src={exportVideo.data.video_url}
               controls
               className="w-full h-full"
-            />
+            >
+              <track kind="captions" />
+            </video>
           )}
         </div>
         <DialogFooter>
