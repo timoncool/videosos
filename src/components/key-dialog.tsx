@@ -118,11 +118,15 @@ export function KeyDialog({ onOpenChange, open, ...props }: KeyDialogProps) {
           </h2>
           <div className="flex flex-col gap-4">
             <div>
-              <label className="text-sm font-medium text-muted-foreground">
+              <label
+                htmlFor="fal-api-key"
+                className="text-sm font-medium text-muted-foreground"
+              >
                 FAL API Key
               </label>
               <div className="flex gap-2">
                 <Input
+                  id="fal-api-key"
                   type="password"
                   placeholder={t("placeholder")}
                   value={falKey}
@@ -146,11 +150,15 @@ export function KeyDialog({ onOpenChange, open, ...props }: KeyDialogProps) {
               </div>
             </div>
             <div>
-              <label className="text-sm font-medium text-muted-foreground">
+              <label
+                htmlFor="runware-api-key"
+                className="text-sm font-medium text-muted-foreground"
+              >
                 Runware API Key
               </label>
               <div className="flex gap-2">
                 <Input
+                  id="runware-api-key"
                   type="password"
                   placeholder={t("runwarePlaceholder")}
                   value={runwareKey}
