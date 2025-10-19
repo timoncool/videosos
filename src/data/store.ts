@@ -86,7 +86,7 @@ export const createVideoProjectStore = (
   return createStore<VideoProjectState>()((set, state) => ({
     ...DEFAULT_PROPS,
     ...initProps,
-    projectDialogOpen: initProps?.projectId ? false : true,
+    projectDialogOpen: !initProps?.projectId,
     setEndpointId: (endpointId: string) => set({ endpointId }),
     setProjectId: (projectId: string) => set({ projectId }),
     setProjectDialogOpen: (projectDialogOpen: boolean) =>

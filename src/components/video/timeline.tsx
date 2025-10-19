@@ -23,7 +23,7 @@ export function TimelineRuler({
               {isMajorTick && (
                 <div className="text-muted-foreground text-sm tabular-nums h-full text-center mt-1">
                   {(index / 10).toFixed(0)}s
-                  <div className="h-full max-h-full w-px bg-border/50 mx-auto mt-1 mb-4"></div>
+                  <div className="h-full max-h-full w-px bg-border/50 mx-auto mt-1 mb-4" />
                 </div>
               )}
               {isMinorTick && !isMajorTick && (

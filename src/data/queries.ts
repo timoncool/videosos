@@ -5,10 +5,10 @@ import {
 } from "@tanstack/react-query";
 import { db } from "./db";
 import {
-  MediaItem,
+  type MediaItem,
   PROJECT_PLACEHOLDER,
-  VideoKeyFrame,
-  VideoTrack,
+  type VideoKeyFrame,
+  type VideoTrack,
 } from "./schema";
 
 export const queryKeys = {
@@ -86,7 +86,7 @@ export const useVideoComposition = (projectId: string) =>
         await Promise.all(
           tracks.map((track) => db.keyFrames.keyFramesByTrack(track.id)),
         )
-      ).flatMap((f) => f);
+      ).flat();
       const mediaItems = await db.media.mediaByProject(projectId);
       return {
         tracks,

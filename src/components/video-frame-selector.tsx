@@ -23,7 +23,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import { MediaItem } from "@/data/schema";
+import type { MediaItem } from "@/data/schema";
 import { MediaItemRow } from "./media-panel";
 
 interface TimelineImage {
@@ -155,7 +155,7 @@ export default function VideoFrameSelector({
             transform: "translateX(-50%)",
           }}
         >
-          <div className="h-6 w-0.5 bg-neutral-600"></div>
+          <div className="h-6 w-0.5 bg-neutral-600" />
           <span className="text-xs text-neutral-500">{i}</span>
         </div>,
       );
@@ -174,7 +174,7 @@ export default function VideoFrameSelector({
               transform: "translateX(-50%)",
             }}
           >
-            <div className="h-3 w-[1px] bg-neutral-500/50"></div>
+            <div className="h-3 w-[1px] bg-neutral-500/50" />
           </div>,
         );
       }
@@ -258,7 +258,7 @@ export default function VideoFrameSelector({
                 <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
                   <GripVertical className="w-3 h-3 text-white" />
                 </div>
-                <div className="w-0.5 h-full bg-red-500"></div>
+                <div className="w-0.5 h-full bg-red-500" />
               </div>
 
               {/* Images on timeline */}
@@ -274,14 +274,16 @@ export default function VideoFrameSelector({
                 return (
                   <div
                     key={image.id}
-                    className={`absolute mt-10 rounded-md bg-neutral-300 h-12 min-w-12 max-w-12 aspect-square top-2 flex flex-col items-center`}
+                    className={
+                      "absolute mt-10 rounded-md bg-neutral-300 h-12 min-w-12 max-w-12 aspect-square top-2 flex flex-col items-center"
+                    }
                     style={{
                       left: `${startPercent - widthPercent / 2}%`,
                       width: `${widthPercent}%`,
                     }}
                   >
                     <div className="w-full flex relative">
-                      <div className="w-3 h-3 rotate-45 absolute bg-neutral-300 left-1/2 -translate-x-1/2 -top-1"></div>
+                      <div className="w-3 h-3 rotate-45 absolute bg-neutral-300 left-1/2 -translate-x-1/2 -top-1" />
                     </div>
                     <div className="relative aspect-square w-full p-1 h-full overflow-hidden group">
                       <img

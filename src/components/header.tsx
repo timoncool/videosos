@@ -42,7 +42,7 @@ export default function Header({
           >
             {typeof localStorage !== "undefined" &&
               !localStorage?.getItem("falKey") && (
-                <span className="dark:bg-orange-400 bg-orange-600 w-2 h-2 rounded-full absolute top-1 right-1"></span>
+                <span className="dark:bg-orange-400 bg-orange-600 w-2 h-2 rounded-full absolute top-1 right-1" />
               )}
             <SettingsIcon className="w-6 h-6" />
           </Button>

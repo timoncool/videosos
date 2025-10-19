@@ -214,9 +214,8 @@ export function MediaItemRow({
 
       if (provider === "fal") {
         return data.mediaType === "video" ? 20000 : 1000;
-      } else {
-        return 5000;
       }
+      return 5000;
     },
   });
   const mediaUrl = resolveMediaUrl(data) ?? "";

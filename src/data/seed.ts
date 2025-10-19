@@ -1,5 +1,10 @@
 import { db } from "@/data/db";
-import { VideoProject, MediaItem, VideoTrack, VideoKeyFrame } from "./schema";
+import type {
+  VideoProject,
+  MediaItem,
+  VideoTrack,
+  VideoKeyFrame,
+} from "./schema";
 
 type ProjectSeed = {
   project: VideoProject;

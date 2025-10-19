@@ -2,10 +2,10 @@
 
 import { useTranslations } from "next-intl";
 import {
-  ComponentProps,
-  HTMLAttributes,
-  MouseEventHandler,
-  PropsWithChildren,
+  type ComponentProps,
+  type HTMLAttributes,
+  type MouseEventHandler,
+  type PropsWithChildren,
   useMemo,
 } from "react";
 import {
@@ -24,7 +24,7 @@ import {
 } from "@/data/queries";
 import { useProjectId, useVideoProjectStore } from "@/data/store";
 import { cn, resolveMediaUrl } from "@/lib/utils";
-import { MediaItem } from "@/data/schema";
+import type { MediaItem } from "@/data/schema";
 import {
   CopyIcon,
   FilmIcon,
@@ -268,7 +268,7 @@ export function MediaGallerySheet({
               <p className="text-muted-foreground">
                 {prompt ?? <span className="italic">{t("noDescription")}</span>}
               </p>
-              <div></div>
+              <div />
             </div>
             <div className="flex flex-row gap-2">
               {selectedMedia?.mediaType === "video" && (
@@ -325,6 +325,7 @@ export function MediaGallerySheet({
                   href={`https://fal.ai/models/${selectedMedia.endpointId}`}
                   target="_blank"
                   className="underline underline-offset-4 decoration-muted-foreground/70 decoration-dotted"
+                  rel="noreferrer"
                 >
                   <code>{selectedMedia.endpointId}</code>
                 </a>
