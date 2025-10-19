@@ -72,7 +72,7 @@ export default function BottomBar() {
     if (tracks.length > 0) {
       limitAllKeyframesToThirtySeconds.mutate();
     }
-  }, [tracks]);
+  }, [tracks, limitAllKeyframesToThirtySeconds]);
 
   const handleOnDragOver: DragEventHandler<HTMLDivElement> = (event) => {
     event.preventDefault();
