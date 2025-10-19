@@ -215,16 +215,15 @@ export function MediaGallerySheet({
     <Sheet {...props}>
       <SheetOverlay className="pointer-events-none flex flex-col" />
       <SheetPortal>
-        <div
-          className="pointer-events-auto fixed inset-0 z-[51] mr-[42rem] flex flex-col items-center justify-center gap-4 px-32 py-16"
+        <button
+          type="button"
+          className="pointer-events-auto fixed inset-0 z-[51] mr-[42rem] flex flex-col items-center justify-center gap-4 px-32 py-16 border-0 bg-transparent p-0"
           onClick={close}
           onKeyDown={(e) => {
             if (e.key === "Escape") {
               close();
             }
           }}
-          role="button"
-          tabIndex={0}
         >
           {!!mediaUrl && (
             <>
@@ -234,14 +233,6 @@ export function MediaGallerySheet({
                   alt={"Media preview"}
                   className="animate-fade-scale-in h-auto max-h-[90%] w-auto max-w-[90%] object-contain transition-all"
                   onClick={preventClose}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      e.stopPropagation();
-                    }
-                  }}
-                  role="button"
-                  tabIndex={0}
                 />
               )}
               {selectedMedia.mediaType === "video" && (
@@ -250,14 +241,6 @@ export function MediaGallerySheet({
                   className="animate-fade-scale-in h-auto max-h-[90%] w-auto max-w-[90%] object-contain transition-all"
                   controls
                   onClick={preventClose}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      e.stopPropagation();
-                    }
-                  }}
-                  role="button"
-                  tabIndex={0}
                 >
                   <track kind="captions" />
                 </video>
@@ -283,7 +266,7 @@ export function MediaGallerySheet({
               animation: fadeScaleIn 0.3s ease-out forwards;
             }
           `}</style>
-        </div>
+        </button>
         <SheetPanel
           className="flex h-screen max-h-screen min-h-screen flex-col overflow-hidden sm:max-w-2xl"
           onPointerDownOutside={preventPointerClose}
