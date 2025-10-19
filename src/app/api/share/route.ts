@@ -1,7 +1,7 @@
 import {
   IS_SHARE_ENABLED,
-  shareVideo,
   type ShareVideoParams,
+  shareVideo,
 } from "@/lib/share";
 import { type NextRequest, NextResponse } from "next/server";
 

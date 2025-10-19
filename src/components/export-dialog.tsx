@@ -1,8 +1,19 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import {
+  EMPTY_VIDEO_COMPOSITION,
+  useProject,
+  useVideoComposition,
+} from "@/data/queries";
+import { PROJECT_PLACEHOLDER } from "@/data/schema";
+import { useProjectId, useVideoProjectStore } from "@/data/store";
+import { exportVideoClientSide } from "@/lib/ffmpeg";
+import { cn, resolveDuration, resolveMediaUrl } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
+import { DownloadIcon, FilmIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { Button } from "./ui/button";
 import {
   Dialog,
   DialogContent,
@@ -11,18 +22,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "./ui/dialog";
-import { cn, resolveMediaUrl, resolveDuration } from "@/lib/utils";
-import {
-  EMPTY_VIDEO_COMPOSITION,
-  useProject,
-  useVideoComposition,
-} from "@/data/queries";
-import { exportVideoClientSide } from "@/lib/ffmpeg";
-import { Button } from "./ui/button";
-import { useProjectId, useVideoProjectStore } from "@/data/store";
 import { LoadingIcon } from "./ui/icons";
-import { DownloadIcon, FilmIcon } from "lucide-react";
-import { PROJECT_PLACEHOLDER } from "@/data/schema";
 
 type ExportDialogProps = {} & Parameters<typeof Dialog>[0];
 

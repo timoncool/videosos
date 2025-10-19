@@ -1,6 +1,4 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
 import {
   Select,
   SelectContent,
@@ -8,7 +6,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ChevronUp, ChevronDown, FocusIcon } from "lucide-react";
+import { Slider } from "@/components/ui/slider";
+import { ChevronDown, ChevronUp, FocusIcon } from "lucide-react";
+import { useState } from "react";
 
 const CameraMovement = ({
   value: initialValue,

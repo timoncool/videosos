@@ -1,4 +1,4 @@
-import type { MediaItem, AspectRatio } from "@/data/schema";
+import type { AspectRatio, MediaItem } from "@/data/schema";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile, toBlobURL } from "@ffmpeg/util";
 import { resolveMediaUrl } from "./utils";

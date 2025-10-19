@@ -4,16 +4,6 @@ import { Slider } from "@/components/ui/slider";
 
 import type React from "react";
 
-import { useState, useRef } from "react";
-import {
-  X,
-  Plus,
-  GripVertical,
-  UploadIcon,
-  PlusIcon,
-  ChevronUp,
-  ChevronDown,
-} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -22,8 +12,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { cn } from "@/lib/utils";
 import type { MediaItem } from "@/data/schema";
+import { cn } from "@/lib/utils";
+import {
+  ChevronDown,
+  ChevronUp,
+  GripVertical,
+  Plus,
+  PlusIcon,
+  UploadIcon,
+  X,
+} from "lucide-react";
+import { useRef, useState } from "react";
 import { MediaItemRow } from "./media-panel";
 
 interface TimelineImage {

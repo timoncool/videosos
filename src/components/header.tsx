@@ -1,12 +1,12 @@
 "use client";
 
-import { useTranslations, useLocale } from "next-intl";
 import { Button } from "@/components/ui/button";
-import { Logo } from "./logo";
 import { SettingsIcon } from "lucide-react";
-import { LanguageSwitcher } from "./language-switcher";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { LanguageSwitcher } from "./language-switcher";
+import { Logo } from "./logo";
 
 export default function Header({
   openKeyDialog,

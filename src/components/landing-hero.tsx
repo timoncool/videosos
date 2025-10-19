@@ -1,9 +1,9 @@
 "use client";
 
-import { useTranslations, useLocale } from "next-intl";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Github } from "lucide-react";
 import { LaptopMockup } from "@/components/ui/landing-laptop-mockup";
+import { ArrowRight, Github } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 

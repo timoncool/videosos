@@ -1,7 +1,7 @@
 "use client";
 
+import { Bot, Film, Globe, Lock, Palette, Zap } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Bot, Lock, Film, Palette, Zap, Globe } from "lucide-react";
 
 export default function Features() {
   const t = useTranslations("landing.features");

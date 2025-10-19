@@ -2,14 +2,14 @@
 
 import { GlobeIcon } from "lucide-react";
 import { useLocale } from "next-intl";
+import { useEffect, useState } from "react";
+import { Button } from "./ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Button } from "./ui/button";
-import { useEffect, useState } from "react";
 
 const languages = [
   { code: "en", name: "English" },

@@ -1,6 +1,6 @@
 import {
-  keepPreviousData,
   type QueryClient,
+  keepPreviousData,
   useQuery,
 } from "@tanstack/react-query";
 import { db } from "./db";

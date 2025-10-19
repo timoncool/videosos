@@ -1,11 +1,12 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import { db } from "@/data/db";
 import { queryKeys } from "@/data/queries";
 import type { MediaItem } from "@/data/schema";
 import { useProjectId, useVideoProjectStore } from "@/data/store";
+import { useToast } from "@/hooks/use-toast";
 import { fal } from "@/lib/fal";
+import { extractVideoThumbnail, getMediaMetadata } from "@/lib/ffmpeg";
 import { getRunwareClient } from "@/lib/runware";
 import { cn, resolveMediaUrl, trackIcons } from "@/lib/utils";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -19,6 +20,7 @@ import {
   MusicIcon,
   VideoIcon,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import {
   type DragEventHandler,
   Fragment,
@@ -27,8 +29,6 @@ import {
 } from "react";
 import { Badge } from "./ui/badge";
 import { LoadingIcon } from "./ui/icons";
-import { useToast } from "@/hooks/use-toast";
-import { getMediaMetadata, extractVideoThumbnail } from "@/lib/ffmpeg";
 
 type MediaItemRowProps = {
   data: MediaItem;

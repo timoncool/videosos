@@ -12,29 +12,29 @@ import {
 import { AVAILABLE_ENDPOINTS, type InputAsset } from "@/lib/fal";
 import { RUNWARE_ENDPOINTS } from "@/lib/runware-models";
 import {
+  ArrowLeft,
+  CrossIcon,
   ImageIcon,
+  LoaderCircleIcon,
   MicIcon,
   MusicIcon,
-  LoaderCircleIcon,
-  VideoIcon,
-  ArrowLeft,
   TrashIcon,
+  VideoIcon,
   WandSparklesIcon,
-  CrossIcon,
   XIcon,
 } from "lucide-react";
 import { MediaItemRow } from "./media-panel";
+import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Textarea } from "./ui/textarea";
-import { Badge } from "./ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
+import { Textarea } from "./ui/textarea";
 
-import { useEffect, useMemo, useState } from "react";
 import { db } from "@/data/db";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { fal } from "@/lib/fal";
+import { getMediaMetadata } from "@/lib/ffmpeg";
+import { enhancePrompt } from "@/lib/prompt";
 import {
   assetKeyMap,
   cn,
@@ -43,6 +43,12 @@ import {
   mapInputKey,
   resolveMediaUrl,
 } from "@/lib/utils";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useMemo, useState } from "react";
+import CameraMovement from "./camera-control";
+import { VoiceSelector } from "./playht/voice-selector";
+import { LoadingIcon } from "./ui/icons";
+import { Label } from "./ui/label";
 import {
   Select,
   SelectContent,
@@ -50,13 +56,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { enhancePrompt } from "@/lib/prompt";
 import { WithTooltip } from "./ui/tooltip";
-import { Label } from "./ui/label";
-import { VoiceSelector } from "./playht/voice-selector";
-import { LoadingIcon } from "./ui/icons";
-import { getMediaMetadata } from "@/lib/ffmpeg";
-import CameraMovement from "./camera-control";
 import VideoFrameSelector from "./video-frame-selector";
 
 const ALL_ENDPOINTS = [...AVAILABLE_ENDPOINTS, ...RUNWARE_ENDPOINTS];

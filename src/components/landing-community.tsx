@@ -1,8 +1,8 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import { Github, Twitter, DiscIcon as Discord } from "lucide-react";
+import { DiscIcon as Discord, Github, Twitter } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 
 export default function Community() {
