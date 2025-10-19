@@ -322,20 +322,23 @@ export default function RightPanel({
   });
 
   const handleOnGenerate = async () => {
-    await createJob.mutateAsync({} as Parameters<typeof createJob.mutateAsync>[0], {
-      onSuccess: async () => {
-        if (!createJob.isError) {
-          handleOnOpenChange(false);
-        }
+    await createJob.mutateAsync(
+      {} as Parameters<typeof createJob.mutateAsync>[0],
+      {
+        onSuccess: async () => {
+          if (!createJob.isError) {
+            handleOnOpenChange(false);
+          }
+        },
+        onError: (error) => {
+          console.warn("Failed to create job", error);
+          toast({
+            title: tToast("generateMediaFailed"),
+            description: tToast("generateMediaFailedDesc"),
+          });
+        },
       },
-      onError: (error) => {
-        console.warn("Failed to create job", error);
-        toast({
-          title: tToast("generateMediaFailed"),
-          description: tToast("generateMediaFailedDesc"),
-        });
-      },
-    });
+    );
   };
 
   useEffect(() => {
@@ -824,7 +827,9 @@ const SelectedAssetPreview = ({
           }
           controls={false}
           style={{ pointerEvents: "none" }}
-        />
+        >
+          <track kind="captions" />
+        </video>
       )}
       {assetType === "image" && (
         <img
