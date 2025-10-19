@@ -186,7 +186,11 @@ export const useJobCreator = ({
 
       throw new Error(`Unsupported media type: ${mediaType}`);
     },
-    onSuccess: async (data: { taskUUID?: string; data?: unknown; request_id?: string }) => {
+    onSuccess: async (data: {
+      taskUUID?: string;
+      data?: unknown;
+      request_id?: string;
+    }) => {
       if (provider === "fal") {
         console.log("[DEBUG] FAL onSuccess data:", data);
         console.log("[DEBUG] FAL request_id:", data.request_id);
