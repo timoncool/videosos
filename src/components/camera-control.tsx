@@ -58,9 +58,9 @@ const CameraMovement = ({
   return (
     <div className="w-full mx-auto border-t border-neutral-800 py-3">
       {/* Header */}
-      <div
-        className="flex justify-between items-center select-none"
-        role="button"
+      <button
+        type="button"
+        className="flex justify-between items-center select-none w-full text-left"
         onClick={() => setOpen(!open)}
       >
         <div className="flex items-center gap-2">
@@ -73,7 +73,7 @@ const CameraMovement = ({
             <ChevronDown className="h-6 w-6" />
           )}
         </Button>
-      </div>
+      </button>
 
       {open && (
         <>
