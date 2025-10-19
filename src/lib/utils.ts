@@ -73,11 +73,17 @@ export function resolveDuration(item: MediaItem): number | null {
     }
     return null;
   }
-  if ("seconds_total" in data) {
+  if ("seconds_total" in data && typeof data.seconds_total === "number") {
     return data.seconds_total * 1000;
   }
-  if ("audio" in data && "duration" in data.audio) {
-    return data.audio.duration * 1000;
+  if (
+    "audio" in data &&
+    typeof data.audio === "object" &&
+    data.audio !== null &&
+    "duration" in data.audio
+  ) {
+    const audio = data.audio as { duration: number };
+    return audio.duration * 1000;
   }
 
   const input = item.input;
@@ -101,8 +107,9 @@ export function resolveDuration(item: MediaItem): number | null {
 const blobUrlCache = new Map<string, string>();
 
 export function getOrCreateBlobUrl(mediaId: string, blob: Blob): string {
-  if (blobUrlCache.has(mediaId)) {
-    return blobUrlCache.get(mediaId)!;
+  const cachedUrl = blobUrlCache.get(mediaId);
+  if (cachedUrl) {
+    return cachedUrl;
   }
 
   const url = URL.createObjectURL(blob);
@@ -131,10 +138,19 @@ export function resolveMediaUrl(item: MediaItem | undefined): string | null {
   const data = item.output;
   if (!data) return null;
 
-  if (item.provider === "runware") {
-    if (data.imageURL) return data.imageURL;
-    if (data.videoURL) return data.videoURL;
-    if (data.audioURL) return data.audioURL;
+  if (
+    item.provider === "runware" &&
+    typeof data === "object" &&
+    data !== null
+  ) {
+    const runwareData = data as {
+      imageURL?: string;
+      videoURL?: string;
+      audioURL?: string;
+    };
+    if (runwareData.imageURL) return runwareData.imageURL;
+    if (runwareData.videoURL) return runwareData.videoURL;
+    if (runwareData.audioURL) return runwareData.audioURL;
   }
 
   if (
@@ -153,12 +169,21 @@ export function resolveMediaUrl(item: MediaItem | undefined): string | null {
     audio_url: 1,
   };
 
-  const property = Object.keys(data).find(
-    (key) => key in fileProperties && "url" in data[key],
-  );
+  if (typeof data === "object" && data !== null) {
+    const property = Object.keys(data).find((key) => {
+      const value = (data as Record<string, unknown>)[key];
+      return (
+        key in fileProperties &&
+        typeof value === "object" &&
+        value !== null &&
+        "url" in value
+      );
+    });
 
-  if (property) {
-    return data[property].url;
+    if (property) {
+      const propertyValue = (data as Record<string, { url: string }>)[property];
+      return propertyValue.url;
+    }
   }
 
   return null;

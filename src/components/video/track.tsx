@@ -5,6 +5,7 @@ import {
   useProjectMediaItems,
 } from "@/data/queries";
 import type { MediaItem, VideoKeyFrame, VideoTrack } from "@/data/schema";
+import { useProjectId, useVideoProjectStore } from "@/data/store";
 import { cn, resolveDuration, resolveMediaUrl, trackIcons } from "@/lib/utils";
 import {
   keepPreviousData,
@@ -21,7 +22,6 @@ import {
   useRef,
 } from "react";
 import { WithTooltip } from "../ui/tooltip";
-import { useProjectId, useVideoProjectStore } from "@/data/store";
 
 type VideoTrackRowProps = {
   data: VideoTrack;
@@ -147,7 +147,7 @@ function AudioWaveform({ data }: AudioWaveformProps) {
 
             return (
               <rect
-                key={index}
+                key={`waveform-${index}-${x}`}
                 x={x}
                 y={y}
                 width="2"

@@ -69,7 +69,7 @@ export const db = {
             db.getAllFromIndex("keyFrames", "by_trackId", trackId),
           ),
         )
-      ).flatMap((f) => f);
+      ).flat();
 
       const mediaItems = await db.getAllFromIndex(
         "media_items",
@@ -221,7 +221,7 @@ export const db = {
           ),
         )
       )
-        .flatMap((f) => f)
+        .flat()
         .filter((f) => f.data.mediaId === id)
         .map((f) => f.id);
       const tx = db.transaction(["media_items", "keyFrames"], "readwrite");

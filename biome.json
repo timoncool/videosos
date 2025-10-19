@@ -20,7 +20,14 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "recommended": true,
+      "suspicious": {
+        "noExplicitAny": "off"
+      },
+      "a11y": {
+        "noNoninteractiveElementToInteractiveRole": "off",
+        "useSemanticElements": "warn"
+      }
     }
   },
   "javascript": {

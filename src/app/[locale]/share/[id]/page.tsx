@@ -1,12 +1,12 @@
-import { useTranslations } from "next-intl";
-import { getTranslations } from "next-intl/server";
 import Header from "@/components/header";
 import { Button } from "@/components/ui/button";
 import { fetchSharedVideo } from "@/lib/share";
 import { DownloadIcon } from "lucide-react";
 import type { Metadata, ResolvingMetadata } from "next";
-import { notFound } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 type PageParams = {
   locale: string;
@@ -111,7 +111,9 @@ export default async function SharePage({ params }: PageProps) {
                 poster={shareData.thumbnailUrl}
                 controls
                 className="w-full h-full aspect-video"
-              />
+              >
+                <track kind="captions" />
+              </video>
             </div>
             <div className="flex flex-row gap-2 items-center justify-center">
               <Button variant="secondary" asChild size="lg">

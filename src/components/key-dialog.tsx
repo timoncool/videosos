@@ -1,13 +1,13 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import { useToast } from "@/hooks/use-toast";
-import { useQueryClient } from "@tanstack/react-query";
 import { fal } from "@/lib/fal";
 import { getRunwareClient, resetRunwareClient } from "@/lib/runware";
+import { useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 
-import { useState, useEffect } from "react";
 import { CheckCircle2, Loader } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -118,11 +118,15 @@ export function KeyDialog({ onOpenChange, open, ...props }: KeyDialogProps) {
           </h2>
           <div className="flex flex-col gap-4">
             <div>
-              <label className="text-sm font-medium text-muted-foreground">
+              <label
+                htmlFor="fal-api-key"
+                className="text-sm font-medium text-muted-foreground"
+              >
                 FAL API Key
               </label>
               <div className="flex gap-2">
                 <Input
+                  id="fal-api-key"
                   type="password"
                   placeholder={t("placeholder")}
                   value={falKey}
@@ -146,11 +150,15 @@ export function KeyDialog({ onOpenChange, open, ...props }: KeyDialogProps) {
               </div>
             </div>
             <div>
-              <label className="text-sm font-medium text-muted-foreground">
+              <label
+                htmlFor="runware-api-key"
+                className="text-sm font-medium text-muted-foreground"
+              >
                 Runware API Key
               </label>
               <div className="flex gap-2">
                 <Input
+                  id="runware-api-key"
                   type="password"
                   placeholder={t("runwarePlaceholder")}
                   value={runwareKey}

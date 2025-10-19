@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
-import { useTranslations, useLocale } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Video } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
+import Link from "next/link";
 import { LanguageSwitcher } from "./language-switcher";
 
 export default function Header() {

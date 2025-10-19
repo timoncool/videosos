@@ -12,29 +12,30 @@ import {
 import { AVAILABLE_ENDPOINTS, type InputAsset } from "@/lib/fal";
 import { RUNWARE_ENDPOINTS } from "@/lib/runware-models";
 import {
+  ArrowLeft,
+  CrossIcon,
   ImageIcon,
+  LoaderCircleIcon,
   MicIcon,
   MusicIcon,
-  LoaderCircleIcon,
-  VideoIcon,
-  ArrowLeft,
   TrashIcon,
+  VideoIcon,
   WandSparklesIcon,
-  CrossIcon,
   XIcon,
 } from "lucide-react";
+import { useCallback } from "react";
 import { MediaItemRow } from "./media-panel";
+import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Textarea } from "./ui/textarea";
-import { Badge } from "./ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
+import { Textarea } from "./ui/textarea";
 
-import { useEffect, useMemo, useState } from "react";
 import { db } from "@/data/db";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { fal } from "@/lib/fal";
+import { getMediaMetadata } from "@/lib/ffmpeg";
+import { enhancePrompt } from "@/lib/prompt";
 import {
   assetKeyMap,
   cn,
@@ -43,6 +44,12 @@ import {
   mapInputKey,
   resolveMediaUrl,
 } from "@/lib/utils";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useMemo, useState } from "react";
+import CameraMovement from "./camera-control";
+import { VoiceSelector } from "./playht/voice-selector";
+import { LoadingIcon } from "./ui/icons";
+import { Label } from "./ui/label";
 import {
   Select,
   SelectContent,
@@ -50,13 +57,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { enhancePrompt } from "@/lib/prompt";
 import { WithTooltip } from "./ui/tooltip";
-import { Label } from "./ui/label";
-import { VoiceSelector } from "./playht/voice-selector";
-import { LoadingIcon } from "./ui/icons";
-import { getMediaMetadata } from "@/lib/ffmpeg";
-import CameraMovement from "./camera-control";
 import VideoFrameSelector from "./video-frame-selector";
 
 const ALL_ENDPOINTS = [...AVAILABLE_ENDPOINTS, ...RUNWARE_ENDPOINTS];
@@ -97,7 +98,7 @@ function ModelEndpointPicker({
     <div className="flex flex-col gap-2">
       <Tabs
         value={providerFilter}
-        onValueChange={(v) => setProviderFilter(v as any)}
+        onValueChange={(v) => setProviderFilter(v as "all" | "fal" | "runware")}
       >
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="all">All</TabsTrigger>
@@ -162,15 +163,18 @@ export default function RightPanel({
   );
   const queryClient = useQueryClient();
 
-  const handleOnOpenChange = (isOpen: boolean) => {
-    if (!isOpen) {
-      closeGenerateDialog();
-      resetGenerateData();
-      return;
-    }
-    onOpenChange?.(isOpen);
-    openGenerateDialog();
-  };
+  const handleOnOpenChange = useCallback(
+    (isOpen: boolean) => {
+      if (!isOpen) {
+        closeGenerateDialog();
+        resetGenerateData();
+        return;
+      }
+      onOpenChange?.(isOpen);
+      openGenerateDialog();
+    },
+    [closeGenerateDialog, resetGenerateData, onOpenChange, openGenerateDialog],
+  );
 
   const { data: project } = useProject(projectId);
 
@@ -321,26 +325,33 @@ export default function RightPanel({
     },
   });
 
-  const handleOnGenerate = async () => {
-    await createJob.mutateAsync({} as any, {
-      onSuccess: async () => {
-        if (!createJob.isError) {
-          handleOnOpenChange(false);
-        }
-      },
-      onError: (error) => {
-        console.warn("Failed to create job", error);
-        toast({
-          title: tToast("generateMediaFailed"),
-          description: tToast("generateMediaFailedDesc"),
-        });
-      },
-    });
-  };
+  const handleOnGenerate = useCallback(
+    async () => {
+      await createJob.mutateAsync(
+        {} as unknown as Parameters<typeof createJob.mutateAsync>[0],
+        {
+          onSuccess: async () => {
+            if (!createJob.isError) {
+              handleOnOpenChange(false);
+            }
+          },
+          onError: (error) => {
+            console.warn("Failed to create job", error);
+            toast({
+              title: tToast("generateMediaFailed"),
+              description: tToast("generateMediaFailedDesc"),
+            });
+          },
+        },
+      );
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [createJob, toast, tToast, handleOnOpenChange],
+  );
 
   useEffect(() => {
     videoProjectStore.onGenerate = handleOnGenerate;
-  }, [handleOnGenerate]);
+  }, [handleOnGenerate, videoProjectStore]);
 
   const handleSelectMedia = async (media: MediaItem) => {
     const asset = endpoint?.inputAsset?.find((item) => {
@@ -813,7 +824,9 @@ const SelectedAssetPreview = ({
               : data[assetKey] || ""
           }
           controls={true}
-        />
+        >
+          <track kind="captions" />
+        </audio>
       )}
       {assetType === "video" && (
         <video
@@ -824,9 +837,12 @@ const SelectedAssetPreview = ({
           }
           controls={false}
           style={{ pointerEvents: "none" }}
-        />
+        >
+          <track kind="captions" />
+        </video>
       )}
       {assetType === "image" && (
+        // eslint-disable-next-line @next/next/no-img-element
         <img
           id="image-preview"
           src={

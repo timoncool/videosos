@@ -1,13 +1,38 @@
 "use client";
 
+import { db } from "@/data/db";
+import {
+  queryKeys,
+  refreshVideoCache,
+  useProjectMediaItems,
+} from "@/data/queries";
+import type { MediaItem } from "@/data/schema";
+import { useProjectId, useVideoProjectStore } from "@/data/store";
+import { AVAILABLE_ENDPOINTS } from "@/lib/fal";
+import { RUNWARE_ENDPOINTS } from "@/lib/runware-models";
+import { cn, resolveMediaUrl } from "@/lib/utils";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { formatDuration } from "date-fns";
+import {
+  CopyIcon,
+  FilmIcon,
+  ImageUpscale,
+  ImagesIcon,
+  MicIcon,
+  MusicIcon,
+  TrashIcon,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import {
-  ComponentProps,
-  HTMLAttributes,
-  MouseEventHandler,
-  PropsWithChildren,
+  type ComponentProps,
+  type HTMLAttributes,
+  type MouseEventHandler,
+  type PropsWithChildren,
   useMemo,
 } from "react";
+import { Button } from "./ui/button";
+import { LoadingIcon } from "./ui/icons";
+import { Separator } from "./ui/separator";
 import {
   Sheet,
   SheetDescription,
@@ -17,31 +42,6 @@ import {
   SheetPortal,
   SheetTitle,
 } from "./ui/sheet";
-import {
-  queryKeys,
-  refreshVideoCache,
-  useProjectMediaItems,
-} from "@/data/queries";
-import { useProjectId, useVideoProjectStore } from "@/data/store";
-import { cn, resolveMediaUrl } from "@/lib/utils";
-import { MediaItem } from "@/data/schema";
-import {
-  CopyIcon,
-  FilmIcon,
-  ImagesIcon,
-  ImageUpscale,
-  MicIcon,
-  MusicIcon,
-  TrashIcon,
-} from "lucide-react";
-import { Button } from "./ui/button";
-import { Separator } from "./ui/separator";
-import { formatDuration } from "date-fns";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { db } from "@/data/db";
-import { LoadingIcon } from "./ui/icons";
-import { AVAILABLE_ENDPOINTS } from "@/lib/fal";
-import { RUNWARE_ENDPOINTS } from "@/lib/runware-models";
 
 const ALL_ENDPOINTS = [...AVAILABLE_ENDPOINTS, ...RUNWARE_ENDPOINTS];
 
@@ -186,6 +186,11 @@ export function MediaGallerySheet({
     e.preventDefault();
     e.stopPropagation();
   };
+
+  const preventPointerClose = (e: Event) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
   const close = () => {
     setSelectedMediaId(null);
   };
@@ -210,17 +215,30 @@ export function MediaGallerySheet({
     <Sheet {...props}>
       <SheetOverlay className="pointer-events-none flex flex-col" />
       <SheetPortal>
-        <div
-          className="pointer-events-auto fixed inset-0 z-[51] mr-[42rem] flex flex-col items-center justify-center gap-4 px-32 py-16"
+        <button
+          type="button"
+          className="pointer-events-auto fixed inset-0 z-[51] mr-[42rem] flex flex-col items-center justify-center gap-4 px-32 py-16 border-0 bg-transparent p-0"
           onClick={close}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") {
+              close();
+            }
+          }}
         >
           {!!mediaUrl && (
             <>
               {selectedMedia.mediaType === "image" && (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={mediaUrl}
+                  alt={"Media preview"}
                   className="animate-fade-scale-in h-auto max-h-[90%] w-auto max-w-[90%] object-contain transition-all"
                   onClick={preventClose}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      preventClose(e as any);
+                    }
+                  }}
                 />
               )}
               {selectedMedia.mediaType === "video" && (
@@ -229,7 +247,14 @@ export function MediaGallerySheet({
                   className="animate-fade-scale-in h-auto max-h-[90%] w-auto max-w-[90%] object-contain transition-all"
                   controls
                   onClick={preventClose}
-                />
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      preventClose(e as any);
+                    }
+                  }}
+                >
+                  <track kind="captions" />
+                </video>
               )}
               {(selectedMedia.mediaType === "music" ||
                 selectedMedia.mediaType === "voiceover") && (
@@ -252,10 +277,10 @@ export function MediaGallerySheet({
               animation: fadeScaleIn 0.3s ease-out forwards;
             }
           `}</style>
-        </div>
+        </button>
         <SheetPanel
           className="flex h-screen max-h-screen min-h-screen flex-col overflow-hidden sm:max-w-2xl"
-          onPointerDownOutside={preventClose as any}
+          onPointerDownOutside={preventPointerClose}
         >
           <SheetHeader>
             <SheetTitle>{t("title")}</SheetTitle>
@@ -268,7 +293,7 @@ export function MediaGallerySheet({
               <p className="text-muted-foreground">
                 {prompt ?? <span className="italic">{t("noDescription")}</span>}
               </p>
-              <div></div>
+              <div />
             </div>
             <div className="flex flex-row gap-2">
               {selectedMedia?.mediaType === "video" && (
@@ -325,6 +350,7 @@ export function MediaGallerySheet({
                   href={`https://fal.ai/models/${selectedMedia.endpointId}`}
                   target="_blank"
                   className="underline underline-offset-4 decoration-muted-foreground/70 decoration-dotted"
+                  rel="noreferrer"
                 >
                   <code>{selectedMedia.endpointId}</code>
                 </a>

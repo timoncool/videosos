@@ -1,20 +1,20 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import { db } from "@/data/db";
+import { queryKeys, refreshVideoCache } from "@/data/queries";
 import {
-  TRACK_TYPE_ORDER,
   type MediaItem,
+  TRACK_TYPE_ORDER,
   type VideoTrack,
 } from "@/data/schema";
 import { useProjectId, useVideoProjectStore } from "@/data/store";
 import { cn, resolveDuration } from "@/lib/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { type DragEventHandler, useMemo, useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
+import { type DragEventHandler, useEffect, useMemo, useState } from "react";
 import { VideoControls } from "./video-controls";
 import { TimelineRuler } from "./video/timeline";
 import { VideoTrackRow } from "./video/track";
-import { queryKeys, refreshVideoCache } from "@/data/queries";
 
 export default function BottomBar() {
   const t = useTranslations("app.bottomBar");
@@ -72,7 +72,7 @@ export default function BottomBar() {
     if (tracks.length > 0) {
       limitAllKeyframesToThirtySeconds.mutate();
     }
-  }, [tracks]);
+  }, [tracks, limitAllKeyframesToThirtySeconds]);
 
   const handleOnDragOver: DragEventHandler<HTMLDivElement> = (event) => {
     event.preventDefault();
@@ -216,7 +216,7 @@ export default function BottomBar() {
           />
           <TimelineRuler className="z-30 pointer-events-none" />
           <div className="flex timeline-container flex-col h-full mx-4 mt-10 gap-2 z-[31] pb-2">
-            {Object.values(trackObj).map((track, index) =>
+            {Object.entries(trackObj).map(([trackType, track]) =>
               track ? (
                 <VideoTrackRow
                   key={track.id}
@@ -227,7 +227,7 @@ export default function BottomBar() {
                 />
               ) : (
                 <div
-                  key={`empty-track-${index}`}
+                  key={`empty-track-${trackType}`}
                   className="flex flex-row relative w-full h-full timeline-container"
                 />
               ),

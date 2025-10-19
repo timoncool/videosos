@@ -1,6 +1,5 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import { db } from "@/data/db";
 import {
   EMPTY_VIDEO_COMPOSITION,
@@ -18,7 +17,9 @@ import {
 import { useProjectId, useVideoProjectStore } from "@/data/store";
 import { cn, resolveDuration, resolveMediaUrl } from "@/lib/utils";
 import { Player, type PlayerRef } from "@remotion/player";
-import { preloadVideo, preloadAudio } from "@remotion/preload";
+import { preloadAudio, preloadVideo } from "@remotion/preload";
+import { DownloadIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useCallback, useEffect } from "react";
 import {
   AbsoluteFill,
@@ -30,7 +31,6 @@ import {
 } from "remotion";
 import { throttle } from "throttle-debounce";
 import { Button } from "./ui/button";
-import { DownloadIcon } from "lucide-react";
 
 interface VideoCompositionProps {
   project: VideoProject;
@@ -242,6 +242,7 @@ export default function VideoPreview() {
 
   const setPlayerState = useVideoProjectStore((s) => s.setPlayerState);
   // Frame updates are super frequent, so we throttle the updates to the timestamp
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const updatePlayerCurrentTimestamp = useCallback(
     throttle(64, setPlayerCurrentTimestamp),
     [],

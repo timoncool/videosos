@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { db } from "@/data/db";
 import { useProjectUpdater } from "@/data/mutations";
 import { queryKeys, useProject, useProjectMediaItems } from "@/data/queries";
 import { type MediaItem, PROJECT_PLACEHOLDER } from "@/data/schema";
@@ -9,42 +9,42 @@ import {
   useProjectId,
   useVideoProjectStore,
 } from "@/data/store";
+import { toast } from "@/hooks/use-toast";
+import { extractVideoThumbnail, getMediaMetadata } from "@/lib/ffmpeg";
+import { resolveMediaUrl } from "@/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   ChevronDown,
+  CloudUploadIcon,
   FilmIcon,
   FolderOpenIcon,
   GalleryVerticalIcon,
   ImageIcon,
   ImagePlusIcon,
   ListPlusIcon,
+  LoaderCircleIcon,
   MicIcon,
   MusicIcon,
-  LoaderCircleIcon,
-  CloudUploadIcon,
   SparklesIcon,
 } from "lucide-react";
-import { MediaItemPanel } from "./media-panel";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Textarea } from "./ui/textarea";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { db } from "@/data/db";
-import { useQueryClient } from "@tanstack/react-query";
-import { toast } from "@/hooks/use-toast";
-import { getMediaMetadata, extractVideoThumbnail } from "@/lib/ffmpeg";
-import { resolveMediaUrl } from "@/lib/utils";
+import { MediaItemPanel } from "./media-panel";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "./ui/accordion";
+import { Button } from "./ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { Input } from "./ui/input";
+import { Textarea } from "./ui/textarea";
 
 export default function LeftPanel() {
   const t = useTranslations("app.leftPanel");

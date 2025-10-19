@@ -1,9 +1,9 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import { useProjectCreator, useProjectDeleter } from "@/data/mutations";
 import { queryKeys, useProjects } from "@/data/queries";
 import type { AspectRatio, VideoProject } from "@/data/schema";
+import { seedDatabase } from "@/data/seed";
 import { useVideoProjectStore } from "@/data/store";
 import { useToast } from "@/hooks/use-toast";
 import { createProjectSuggestion } from "@/lib/project";
@@ -12,9 +12,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   FileVideoIcon,
   FolderOpenIcon,
-  WandSparklesIcon,
   Trash2,
+  WandSparklesIcon,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { Logo } from "./logo";
 import { Button } from "./ui/button";
@@ -32,7 +33,6 @@ import { Separator } from "./ui/separator";
 import { Skeleton } from "./ui/skeleton";
 import { Textarea } from "./ui/textarea";
 import { WithTooltip } from "./ui/tooltip";
-import { seedDatabase } from "@/data/seed";
 
 type ProjectDialogProps = {} & Parameters<typeof Dialog>[0];
 
@@ -57,7 +57,7 @@ export function ProjectDialog({ onOpenChange, ...props }: ProjectDialogProps) {
         queryClient.invalidateQueries({ queryKey: queryKeys.projects });
       });
     }
-  }, [projects, isLoading]);
+  }, [projects, isLoading, queryClient]);
 
   // Create project mutation
   const setProjectId = useVideoProjectStore((s) => s.setProjectId);
