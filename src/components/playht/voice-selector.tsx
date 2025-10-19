@@ -100,7 +100,6 @@ export function VoiceSelector({
           variant="outline"
           {...props}
           className={cn("max-w-fit justify-between", className)}
-          role="combobox"
           aria-expanded={open}
         >
           {value ? voices.find((voice) => voice === value) : "Select voice..."}

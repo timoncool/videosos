@@ -322,26 +322,29 @@ export default function RightPanel({
     },
   });
 
-  const handleOnGenerate = useCallback(async () => {
-    await createJob.mutateAsync(
-      {} as Parameters<typeof createJob.mutateAsync>[0],
-      {
-        onSuccess: async () => {
-          if (!createJob.isError) {
-            handleOnOpenChange(false);
-          }
+  const handleOnGenerate = useCallback(
+    async () => {
+      await createJob.mutateAsync(
+        {} as Parameters<typeof createJob.mutateAsync>[0],
+        {
+          onSuccess: async () => {
+            if (!createJob.isError) {
+              handleOnOpenChange(false);
+            }
+          },
+          onError: (error) => {
+            console.warn("Failed to create job", error);
+            toast({
+              title: tToast("generateMediaFailed"),
+              description: tToast("generateMediaFailedDesc"),
+            });
+          },
         },
-        onError: (error) => {
-          console.warn("Failed to create job", error);
-          toast({
-            title: tToast("generateMediaFailed"),
-            description: tToast("generateMediaFailedDesc"),
-          });
-        },
-      },
-    );
+      );
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [createJob, toast, tToast]);
+    [createJob, toast, tToast],
+  );
 
   useEffect(() => {
     videoProjectStore.onGenerate = handleOnGenerate;
