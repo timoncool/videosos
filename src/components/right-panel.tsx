@@ -816,7 +816,9 @@ const SelectedAssetPreview = ({
               : data[assetKey] || ""
           }
           controls={true}
-        />
+        >
+          <track kind="captions" />
+        </audio>
       )}
       {assetType === "video" && (
         <video

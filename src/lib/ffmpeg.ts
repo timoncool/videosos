@@ -426,7 +426,7 @@ export async function getMediaMetadata(media: MediaItem) {
       return { media: {} };
     }
 
-    return new Promise<{ media: any }>((resolve) => {
+    return new Promise<{ media: HTMLVideoElement | HTMLAudioElement }>((resolve) => {
       const mediaElement =
         media.mediaType === "video"
           ? document.createElement("video")
