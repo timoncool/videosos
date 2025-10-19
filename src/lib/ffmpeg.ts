@@ -426,19 +426,18 @@ export async function getMediaMetadata(media: MediaItem) {
       return { media: {} };
     }
 
-    return new Promise<{ media: HTMLVideoElement | HTMLAudioElement }>(
-      (resolve) => {
-        const mediaElement =
-          media.mediaType === "video"
-            ? document.createElement("video")
-            : document.createElement("audio");
+    return new Promise<{ media: any }>((resolve) => {
+      const mediaElement =
+        media.mediaType === "video"
+          ? document.createElement("video")
+          : document.createElement("audio");
 
-        mediaElement.addEventListener("loadedmetadata", () => {
-          const metadata = {
-            duration: mediaElement.duration,
-          };
-          resolve({ media: metadata });
-        });
+      mediaElement.addEventListener("loadedmetadata", () => {
+        const metadata = {
+          duration: mediaElement.duration,
+        };
+        resolve({ media: metadata });
+      });
 
         mediaElement.addEventListener("error", () => {
           console.error("Failed to load media metadata");
