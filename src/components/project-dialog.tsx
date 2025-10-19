@@ -57,7 +57,7 @@ export function ProjectDialog({ onOpenChange, ...props }: ProjectDialogProps) {
         queryClient.invalidateQueries({ queryKey: queryKeys.projects });
       });
     }
-  }, [projects, isLoading]);
+  }, [projects, isLoading, queryClient]);
 
   // Create project mutation
   const setProjectId = useVideoProjectStore((s) => s.setProjectId);
