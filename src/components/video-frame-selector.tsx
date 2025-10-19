@@ -205,9 +205,9 @@ export default function VideoFrameSelector({
       )}
     >
       {/* Header */}
-      <div
-        className="flex mb-6 justify-between items-center select-none"
-        role="button"
+      <button
+        type="button"
+        className="flex mb-6 justify-between items-center select-none w-full text-left"
         onClick={() => setOpen(!open)}
       >
         <div className="flex items-center gap-2">
@@ -220,7 +220,7 @@ export default function VideoFrameSelector({
             <ChevronDown className="h-6 w-6" />
           )}
         </Button>
-      </div>
+      </button>
       {open && (
         <>
           <Slider
@@ -237,7 +237,15 @@ export default function VideoFrameSelector({
               ref={timelineRef}
               className="relative h-2 -mb-1 cursor-pointer"
               onClick={handleTimelineClick}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  handleTimelineClick(e as unknown as React.MouseEvent);
+                }
+              }}
               onDragOver={handleTimelineDragOver}
+              role="slider"
+              tabIndex={0}
+              aria-valuenow={currentFrame}
             >
               <div
                 className={cn(
@@ -292,6 +300,7 @@ export default function VideoFrameSelector({
                             ? URL.createObjectURL(image.src)
                             : image.src || "/placeholder.svg"
                         }
+                        alt={image?.name || "Frame preview"}
                         className="w-full h-full object-cover"
                       />
                       <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-opacity flex items-center justify-center">
