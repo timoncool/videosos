@@ -400,7 +400,7 @@ const TEMPLATE_PROJECT_SEED: ProjectSeed = {
       timestamp: 1,
       duration: 5640,
       id: "e0ad9534-267d-47fb-b512-a723e7ac04c6",
-    } as any,
+    } as VideoKeyFrame,
     {
       trackId: "700049df-22c3-4419-b886-c9b200851ac8",
       data: {
