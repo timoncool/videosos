@@ -157,7 +157,7 @@ export const useJobCreator = ({
         try {
           const response = await runware.audioInference({
             ...audioParams,
-            outputType: ["URL"],
+            outputType: ["URL"] as any,
           });
           console.log("[DEBUG] audioInference response:", response);
           console.log(
@@ -173,9 +173,9 @@ export const useJobCreator = ({
           console.error("[DEBUG] audioInference ERROR:", error);
           console.error(
             "[DEBUG] audioInference ERROR message:",
-            error?.message,
+            (error as any)?.message,
           );
-          console.error("[DEBUG] audioInference ERROR stack:", error?.stack);
+          console.error("[DEBUG] audioInference ERROR stack:", (error as any)?.stack);
           console.error(
             "[DEBUG] audioInference ERROR stringified:",
             JSON.stringify(error, null, 2),
@@ -210,7 +210,7 @@ export const useJobCreator = ({
           "[DEBUG] Runware onSuccess - full data:",
           JSON.stringify(data, null, 2),
         );
-        const result = data.data?.[0];
+        const result = (data as any).data?.[0];
         const isCompleted =
           result &&
           (result.imageURL ||

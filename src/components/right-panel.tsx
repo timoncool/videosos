@@ -328,7 +328,7 @@ export default function RightPanel({
   const handleOnGenerate = useCallback(
     async () => {
       await createJob.mutateAsync(
-        {} as Parameters<typeof createJob.mutateAsync>[0],
+        {} as unknown as Parameters<typeof createJob.mutateAsync>[0],
         {
           onSuccess: async () => {
             if (!createJob.isError) {
