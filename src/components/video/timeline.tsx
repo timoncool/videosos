@@ -20,18 +20,21 @@ export function TimelineRuler({
             const isMajorTick = tickIndex % 50 === 0;
             const isMinorTick = tickIndex % 10 === 0;
             return (
-              <div key={`tick-${tickIndex}`} className="flex-grow flex flex-col">
-              {isMajorTick && (
-                <div className="text-muted-foreground text-sm tabular-nums h-full text-center mt-1">
-                  {(tickIndex / 10).toFixed(0)}s
-                  <div className="h-full max-h-full w-px bg-border/50 mx-auto mt-1 mb-4" />
-                </div>
-              )}
-              {isMinorTick && !isMajorTick && (
-                <div className="text-muted-foreground tabular-nums text-center">
-                  &middot;
-                </div>
-              )}
+              <div
+                key={`tick-${tickIndex}`}
+                className="flex-grow flex flex-col"
+              >
+                {isMajorTick && (
+                  <div className="text-muted-foreground text-sm tabular-nums h-full text-center mt-1">
+                    {(tickIndex / 10).toFixed(0)}s
+                    <div className="h-full max-h-full w-px bg-border/50 mx-auto mt-1 mb-4" />
+                  </div>
+                )}
+                {isMinorTick && !isMajorTick && (
+                  <div className="text-muted-foreground tabular-nums text-center">
+                    &middot;
+                  </div>
+                )}
               </div>
             );
           },
