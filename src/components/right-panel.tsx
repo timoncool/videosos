@@ -163,15 +163,18 @@ export default function RightPanel({
   );
   const queryClient = useQueryClient();
 
-  const handleOnOpenChange = (isOpen: boolean) => {
-    if (!isOpen) {
-      closeGenerateDialog();
-      resetGenerateData();
-      return;
-    }
-    onOpenChange?.(isOpen);
-    openGenerateDialog();
-  };
+  const handleOnOpenChange = useCallback(
+    (isOpen: boolean) => {
+      if (!isOpen) {
+        closeGenerateDialog();
+        resetGenerateData();
+        return;
+      }
+      onOpenChange?.(isOpen);
+      openGenerateDialog();
+    },
+    [closeGenerateDialog, resetGenerateData, onOpenChange, openGenerateDialog],
+  );
 
   const { data: project } = useProject(projectId);
 
@@ -343,7 +346,7 @@ export default function RightPanel({
       );
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [createJob, toast, tToast],
+    [createJob, toast, tToast, handleOnOpenChange],
   );
 
   useEffect(() => {
