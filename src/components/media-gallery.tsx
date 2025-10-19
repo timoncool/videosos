@@ -186,6 +186,11 @@ export function MediaGallerySheet({
     e.preventDefault();
     e.stopPropagation();
   };
+
+  const preventPointerClose = (e: Event) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
   const close = () => {
     setSelectedMediaId(null);
   };
@@ -279,7 +284,7 @@ export function MediaGallerySheet({
         </div>
         <SheetPanel
           className="flex h-screen max-h-screen min-h-screen flex-col overflow-hidden sm:max-w-2xl"
-          onPointerDownOutside={preventClose as any}
+          onPointerDownOutside={preventPointerClose}
         >
           <SheetHeader>
             <SheetTitle>{t("title")}</SheetTitle>
