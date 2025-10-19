@@ -231,12 +231,13 @@ export function MediaGallerySheet({
               {selectedMedia.mediaType === "image" && (
                 <img
                   src={mediaUrl}
-                  alt={selectedMedia.name || "Media preview"}
+                  alt={"Media preview"}
                   className="animate-fade-scale-in h-auto max-h-[90%] w-auto max-w-[90%] object-contain transition-all"
                   onClick={preventClose}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
-                      preventClose(e);
+                      e.preventDefault();
+                      e.stopPropagation();
                     }
                   }}
                   role="button"
@@ -251,7 +252,8 @@ export function MediaGallerySheet({
                   onClick={preventClose}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
-                      preventClose(e);
+                      e.preventDefault();
+                      e.stopPropagation();
                     }
                   }}
                   role="button"
