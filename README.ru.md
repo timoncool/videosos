@@ -91,6 +91,31 @@ npm run dev
 
 Откройте [http://localhost:3000](http://localhost:3000), чтобы увидеть приложение.
 
+### Запуск через Docker
+
+Если у вас установлен Docker, вы можете запустить проект в контейнере:
+
+1. Клонируйте репозиторий:
+
+```bash
+git clone https://github.com/timoncool/videosos
+cd videosos
+```
+
+2. Запустите сервисы через Docker Compose:
+
+```bash
+docker compose up -d
+```
+
+3. Откройте [http://localhost:3000](http://localhost:3000), чтобы увидеть приложение.
+
+Для остановки сервисов:
+
+```bash
+docker compose down
+```
+
 ## История звёзд
 
 [![Star History Chart](https://api.star-history.com/svg?repos=timoncool/videosos&type=Date)](https://star-history.com/#timoncool/videosos&Date)
