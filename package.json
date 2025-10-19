@@ -8,7 +8,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "biome format --write",
+    "lint:biome": "biome check --write .",
+    "format": "biome format --write .",
+    "type-check": "tsc --noEmit",
+    "check": "npm run lint:biome && npm run lint && npm run type-check",
     "prepare": "husky"
   },
   "dependencies": {
