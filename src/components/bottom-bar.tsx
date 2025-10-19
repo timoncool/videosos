@@ -216,7 +216,7 @@ export default function BottomBar() {
           />
           <TimelineRuler className="z-30 pointer-events-none" />
           <div className="flex timeline-container flex-col h-full mx-4 mt-10 gap-2 z-[31] pb-2">
-            {Object.values(trackObj).map((track, index) =>
+            {Object.entries(trackObj).map(([trackType, track]) =>
               track ? (
                 <VideoTrackRow
                   key={track.id}
@@ -227,7 +227,7 @@ export default function BottomBar() {
                 />
               ) : (
                 <div
-                  key={`empty-track-${index}`}
+                  key={`empty-track-${trackType}`}
                   className="flex flex-row relative w-full h-full timeline-container"
                 />
               ),
