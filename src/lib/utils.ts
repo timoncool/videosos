@@ -101,8 +101,9 @@ export function resolveDuration(item: MediaItem): number | null {
 const blobUrlCache = new Map<string, string>();
 
 export function getOrCreateBlobUrl(mediaId: string, blob: Blob): string {
-  if (blobUrlCache.has(mediaId)) {
-    return blobUrlCache.get(mediaId)!;
+  const cachedUrl = blobUrlCache.get(mediaId);
+  if (cachedUrl) {
+    return cachedUrl;
   }
 
   const url = URL.createObjectURL(blob);
