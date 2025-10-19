@@ -343,7 +343,7 @@ export default function RightPanel({
 
   useEffect(() => {
     videoProjectStore.onGenerate = handleOnGenerate;
-  }, [handleOnGenerate]);
+  }, [handleOnGenerate, videoProjectStore]);
 
   const handleSelectMedia = async (media: MediaItem) => {
     const asset = endpoint?.inputAsset?.find((item) => {
