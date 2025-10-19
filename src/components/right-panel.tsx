@@ -842,6 +842,7 @@ const SelectedAssetPreview = ({
         </video>
       )}
       {assetType === "image" && (
+        // eslint-disable-next-line @next/next/no-img-element
         <img
           id="image-preview"
           src={

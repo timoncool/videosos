@@ -296,6 +296,7 @@ export default function VideoFrameSelector({
                       <div className="w-3 h-3 rotate-45 absolute bg-neutral-300 left-1/2 -translate-x-1/2 -top-1" />
                     </div>
                     <div className="relative aspect-square w-full p-1 h-full overflow-hidden group">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={
                           typeof image?.src !== "string"

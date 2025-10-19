@@ -267,6 +267,7 @@ export function MediaItemRow({
           <>
             {(data.mediaType === "image" || data.mediaType === "video") &&
               (coverImage ? (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={coverImage}
                   alt="Generated media"

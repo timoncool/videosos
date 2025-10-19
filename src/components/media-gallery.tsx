@@ -228,6 +228,7 @@ export function MediaGallerySheet({
           {!!mediaUrl && (
             <>
               {selectedMedia.mediaType === "image" && (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={mediaUrl}
                   alt={"Media preview"}

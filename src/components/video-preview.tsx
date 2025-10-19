@@ -242,6 +242,7 @@ export default function VideoPreview() {
 
   const setPlayerState = useVideoProjectStore((s) => s.setPlayerState);
   // Frame updates are super frequent, so we throttle the updates to the timestamp
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const updatePlayerCurrentTimestamp = useCallback(
     throttle(64, setPlayerCurrentTimestamp),
     [],
