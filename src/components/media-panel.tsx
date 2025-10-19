@@ -85,8 +85,11 @@ export function MediaItemRow({
 
         if (queueStatus.status === "COMPLETED") {
           try {
+            if (!data.requestId) {
+              throw new Error("Request ID is missing");
+            }
             const result = await fal.queue.result(data.endpointId, {
-              requestId: data.requestId!,
+              requestId: data.requestId,
             });
             media = {
               ...data,
