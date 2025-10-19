@@ -9,7 +9,6 @@ import {
   useProjectId,
   useVideoProjectStore,
 } from "@/data/store";
-import { useCallback } from "react";
 import { AVAILABLE_ENDPOINTS, type InputAsset } from "@/lib/fal";
 import { RUNWARE_ENDPOINTS } from "@/lib/runware-models";
 import {
@@ -24,6 +23,7 @@ import {
   WandSparklesIcon,
   XIcon,
 } from "lucide-react";
+import { useCallback } from "react";
 import { MediaItemRow } from "./media-panel";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
@@ -340,7 +340,8 @@ export default function RightPanel({
         },
       },
     );
-  }, [createJob, handleOnOpenChange, toast, tToast]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createJob, toast, tToast]);
 
   useEffect(() => {
     videoProjectStore.onGenerate = handleOnGenerate;
