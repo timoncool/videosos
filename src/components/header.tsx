@@ -6,6 +6,7 @@ import { Logo } from "./logo";
 import { SettingsIcon } from "lucide-react";
 import { LanguageSwitcher } from "./language-switcher";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 
 export default function Header({
   openKeyDialog,
@@ -14,6 +15,13 @@ export default function Header({
 }) {
   const t = useTranslations("app.header");
   const locale = useLocale();
+  const [showKeyWarning, setShowKeyWarning] = useState(false);
+
+  useEffect(() => {
+    // Check localStorage only on client side after hydration
+    const hasKey = localStorage?.getItem("falKey");
+    setShowKeyWarning(!hasKey);
+  }, []);
 
   return (
     <header className="px-4 py-2 flex justify-between items-center border-b border-border">
@@ -40,10 +48,9 @@ export default function Header({
             className="relative"
             onClick={openKeyDialog}
           >
-            {typeof localStorage !== "undefined" &&
-              !localStorage?.getItem("falKey") && (
-                <span className="dark:bg-orange-400 bg-orange-600 w-2 h-2 rounded-full absolute top-1 right-1" />
-              )}
+            {showKeyWarning && (
+              <span className="dark:bg-orange-400 bg-orange-600 w-2 h-2 rounded-full absolute top-1 right-1" />
+            )}
             <SettingsIcon className="w-6 h-6" />
           </Button>
         )}
