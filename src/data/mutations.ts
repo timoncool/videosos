@@ -42,7 +42,7 @@ type JobCreatorParams = {
   projectId: string;
   endpointId: string;
   mediaType: "video" | "image" | "voiceover" | "music";
-  input: Record<string, any>;
+  input: Record<string, unknown>;
 };
 
 export const useJobCreator = ({
@@ -158,7 +158,7 @@ export const useJobCreator = ({
           const response = await runware.audioInference({
             ...audioParams,
             outputType: ["URL"],
-          } as any);
+          });
           console.log("[DEBUG] audioInference response:", response);
           console.log(
             "[DEBUG] audioInference response stringified:",
@@ -186,7 +186,7 @@ export const useJobCreator = ({
 
       throw new Error(`Unsupported media type: ${mediaType}`);
     },
-    onSuccess: async (data: any) => {
+    onSuccess: async (data: { taskUUID?: string; data?: unknown; request_id?: string }) => {
       if (provider === "fal") {
         console.log("[DEBUG] FAL onSuccess data:", data);
         console.log("[DEBUG] FAL request_id:", data.request_id);

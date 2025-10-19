@@ -97,7 +97,7 @@ function ModelEndpointPicker({
     <div className="flex flex-col gap-2">
       <Tabs
         value={providerFilter}
-        onValueChange={(v) => setProviderFilter(v as any)}
+        onValueChange={(v) => setProviderFilter(v as "all" | "fal" | "runware")}
       >
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="all">All</TabsTrigger>
@@ -322,7 +322,7 @@ export default function RightPanel({
   });
 
   const handleOnGenerate = async () => {
-    await createJob.mutateAsync({} as any, {
+    await createJob.mutateAsync({} as Parameters<typeof createJob.mutateAsync>[0], {
       onSuccess: async () => {
         if (!createJob.isError) {
           handleOnOpenChange(false);

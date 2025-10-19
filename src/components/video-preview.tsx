@@ -74,7 +74,7 @@ export const VideoComposition: React.FC<VideoCompositionProps> = ({
   return (
     <Composition
       id={project.id}
-      component={MainComposition as any}
+      component={MainComposition}
       durationInFrames={DEFAULT_DURATION * FPS}
       fps={FPS}
       width={width}
