@@ -111,7 +111,9 @@ export default async function SharePage({ params }: PageProps) {
                 poster={shareData.thumbnailUrl}
                 controls
                 className="w-full h-full aspect-video"
-              />
+              >
+                <track kind="captions" />
+              </video>
             </div>
             <div className="flex flex-row gap-2 items-center justify-center">
               <Button variant="secondary" asChild size="lg">
