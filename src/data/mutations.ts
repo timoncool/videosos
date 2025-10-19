@@ -175,7 +175,10 @@ export const useJobCreator = ({
             "[DEBUG] audioInference ERROR message:",
             (error as any)?.message,
           );
-          console.error("[DEBUG] audioInference ERROR stack:", (error as any)?.stack);
+          console.error(
+            "[DEBUG] audioInference ERROR stack:",
+            (error as any)?.stack,
+          );
           console.error(
             "[DEBUG] audioInference ERROR stringified:",
             JSON.stringify(error, null, 2),
