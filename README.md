@@ -91,6 +91,31 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) to see the application.
 
+### Running with Docker
+
+If you have Docker installed, you can run the project in a container:
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/timoncool/videosos
+cd videosos
+```
+
+2. Start services with Docker Compose:
+
+```bash
+docker compose up -d
+```
+
+3. Open [http://localhost:3000](http://localhost:3000) to see the application.
+
+To stop services:
+
+```bash
+docker compose down
+```
+
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=timoncool/videosos&type=Date)](https://star-history.com/#timoncool/videosos&Date)
