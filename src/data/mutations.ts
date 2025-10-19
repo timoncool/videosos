@@ -42,7 +42,7 @@ type JobCreatorParams = {
   projectId: string;
   endpointId: string;
   mediaType: "video" | "image" | "voiceover" | "music";
-  input: Record<string, unknown>;
+  input: Record<string, any>;
 };
 
 export const useJobCreator = ({

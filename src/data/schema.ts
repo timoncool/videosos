@@ -77,11 +77,11 @@ export type MediaItem = {
   mediaType: "image" | "video" | "music" | "voiceover";
   status: "pending" | "running" | "completed" | "failed";
   createdAt: number;
-  input?: Record<string, unknown>;
-  output?: Record<string, unknown>;
+  input?: Record<string, any>;
+  output?: Record<string, any>;
   url?: string;
   blob?: Blob;
-  metadata?: Record<string, unknown>;
+  metadata?: Record<string, any>;
 } & (
   | {
       kind: "generated";
@@ -89,8 +89,8 @@ export type MediaItem = {
       endpointId: string;
       requestId?: string;
       taskUUID?: string;
-      input: Record<string, unknown>;
-      output?: Record<string, unknown>;
+      input: Record<string, any>;
+      output?: Record<string, any>;
     }
   | {
       kind: "uploaded";
