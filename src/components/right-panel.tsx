@@ -9,6 +9,7 @@ import {
   useProjectId,
   useVideoProjectStore,
 } from "@/data/store";
+import { useCallback } from "react";
 import { AVAILABLE_ENDPOINTS, type InputAsset } from "@/lib/fal";
 import { RUNWARE_ENDPOINTS } from "@/lib/runware-models";
 import {
@@ -321,7 +322,7 @@ export default function RightPanel({
     },
   });
 
-  const handleOnGenerate = async () => {
+  const handleOnGenerate = useCallback(async () => {
     await createJob.mutateAsync(
       {} as Parameters<typeof createJob.mutateAsync>[0],
       {
@@ -339,7 +340,7 @@ export default function RightPanel({
         },
       },
     );
-  };
+  }, [createJob, handleOnOpenChange, toast, tToast]);
 
   useEffect(() => {
     videoProjectStore.onGenerate = handleOnGenerate;
