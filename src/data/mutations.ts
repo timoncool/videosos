@@ -128,7 +128,7 @@ export const useJobCreator = ({
             taskUUID,
             data: response,
           };
-        } catch (error: any) {
+        } catch (error) {
           console.error("[DEBUG] videoInference ERROR:", error);
           throw error;
         }
@@ -169,7 +169,7 @@ export const useJobCreator = ({
             taskUUID,
             data: response,
           };
-        } catch (error: any) {
+        } catch (error) {
           console.error("[DEBUG] audioInference ERROR:", error);
           console.error(
             "[DEBUG] audioInference ERROR message:",
