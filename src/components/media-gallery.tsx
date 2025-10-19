@@ -213,6 +213,13 @@ export function MediaGallerySheet({
         <div
           className="pointer-events-auto fixed inset-0 z-[51] mr-[42rem] flex flex-col items-center justify-center gap-4 px-32 py-16"
           onClick={close}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") {
+              close();
+            }
+          }}
+          role="button"
+          tabIndex={0}
         >
           {!!mediaUrl && (
             <>
