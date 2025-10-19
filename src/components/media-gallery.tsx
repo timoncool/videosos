@@ -219,8 +219,16 @@ export function MediaGallerySheet({
               {selectedMedia.mediaType === "image" && (
                 <img
                   src={mediaUrl}
+                  alt={selectedMedia.name || "Media preview"}
                   className="animate-fade-scale-in h-auto max-h-[90%] w-auto max-w-[90%] object-contain transition-all"
                   onClick={preventClose}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      preventClose(e);
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
                 />
               )}
               {selectedMedia.mediaType === "video" && (
@@ -229,7 +237,16 @@ export function MediaGallerySheet({
                   className="animate-fade-scale-in h-auto max-h-[90%] w-auto max-w-[90%] object-contain transition-all"
                   controls
                   onClick={preventClose}
-                />
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      preventClose(e);
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                >
+                  <track kind="captions" />
+                </video>
               )}
               {(selectedMedia.mediaType === "music" ||
                 selectedMedia.mediaType === "voiceover") && (
