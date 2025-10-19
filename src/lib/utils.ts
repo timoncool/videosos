@@ -76,7 +76,12 @@ export function resolveDuration(item: MediaItem): number | null {
   if ("seconds_total" in data && typeof data.seconds_total === "number") {
     return data.seconds_total * 1000;
   }
-  if ("audio" in data && typeof data.audio === "object" && data.audio !== null && "duration" in data.audio) {
+  if (
+    "audio" in data &&
+    typeof data.audio === "object" &&
+    data.audio !== null &&
+    "duration" in data.audio
+  ) {
     const audio = data.audio as { duration: number };
     return audio.duration * 1000;
   }
@@ -133,8 +138,16 @@ export function resolveMediaUrl(item: MediaItem | undefined): string | null {
   const data = item.output;
   if (!data) return null;
 
-  if (item.provider === "runware" && typeof data === "object" && data !== null) {
-    const runwareData = data as { imageURL?: string; videoURL?: string; audioURL?: string };
+  if (
+    item.provider === "runware" &&
+    typeof data === "object" &&
+    data !== null
+  ) {
+    const runwareData = data as {
+      imageURL?: string;
+      videoURL?: string;
+      audioURL?: string;
+    };
     if (runwareData.imageURL) return runwareData.imageURL;
     if (runwareData.videoURL) return runwareData.videoURL;
     if (runwareData.audioURL) return runwareData.audioURL;
@@ -157,12 +170,15 @@ export function resolveMediaUrl(item: MediaItem | undefined): string | null {
   };
 
   if (typeof data === "object" && data !== null) {
-    const property = Object.keys(data).find(
-      (key) => {
-        const value = (data as Record<string, unknown>)[key];
-        return key in fileProperties && typeof value === "object" && value !== null && "url" in value;
-      }
-    );
+    const property = Object.keys(data).find((key) => {
+      const value = (data as Record<string, unknown>)[key];
+      return (
+        key in fileProperties &&
+        typeof value === "object" &&
+        value !== null &&
+        "url" in value
+      );
+    });
 
     if (property) {
       const propertyValue = (data as Record<string, { url: string }>)[property];
