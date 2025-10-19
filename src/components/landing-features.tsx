@@ -8,31 +8,37 @@ export default function Features() {
 
   const features = [
     {
+      id: "dualAI",
       icon: Bot,
       title: t("dualAI.title"),
       description: t("dualAI.description"),
     },
     {
+      id: "privacy",
       icon: Lock,
       title: t("privacy.title"),
       description: t("privacy.description"),
     },
     {
+      id: "timeline",
       icon: Film,
       title: t("timeline.title"),
       description: t("timeline.description"),
     },
     {
+      id: "multiModal",
       icon: Palette,
       title: t("multiModal.title"),
       description: t("multiModal.description"),
     },
     {
+      id: "clientSide",
       icon: Zap,
       title: t("clientSide.title"),
       description: t("clientSide.description"),
     },
     {
+      id: "international",
       icon: Globe,
       title: t("international.title"),
       description: t("international.description"),
@@ -48,9 +54,9 @@ export default function Features() {
         </div>
 
         <div className="max-w-screen-lg mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.map((feature, index) => (
+          {features.map((feature) => (
             <div
-              key={index}
+              key={feature.id}
               className="p-6 rounded-lg border border-white/10 bg-gradient-to-b from-white/5 to-transparent hover:border-white/20 transition-colors"
             >
               <feature.icon className="w-12 h-12 mb-4 text-white/80" />
