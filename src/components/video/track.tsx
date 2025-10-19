@@ -147,7 +147,7 @@ function AudioWaveform({ data }: AudioWaveformProps) {
 
             return (
               <rect
-                key={index}
+                key={`waveform-${index}-${x}`}
                 x={x}
                 y={y}
                 width="2"
