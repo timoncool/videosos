@@ -246,6 +246,8 @@ export default function VideoFrameSelector({
               role="slider"
               tabIndex={0}
               aria-valuenow={currentFrame}
+              aria-valuemin={minFrame}
+              aria-valuemax={maxFrame}
             >
               <div
                 className={cn(
