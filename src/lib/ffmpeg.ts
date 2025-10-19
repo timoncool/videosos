@@ -426,31 +426,33 @@ export async function getMediaMetadata(media: MediaItem) {
       return { media: {} };
     }
 
-    return new Promise<{ media: HTMLVideoElement | HTMLAudioElement }>((resolve) => {
-      const mediaElement =
-        media.mediaType === "video"
-          ? document.createElement("video")
-          : document.createElement("audio");
+    return new Promise<{ media: HTMLVideoElement | HTMLAudioElement }>(
+      (resolve) => {
+        const mediaElement =
+          media.mediaType === "video"
+            ? document.createElement("video")
+            : document.createElement("audio");
 
-      mediaElement.addEventListener("loadedmetadata", () => {
-        const metadata = {
-          duration: mediaElement.duration,
-        };
-        resolve({ media: metadata });
-      });
+        mediaElement.addEventListener("loadedmetadata", () => {
+          const metadata = {
+            duration: mediaElement.duration,
+          };
+          resolve({ media: metadata });
+        });
 
-      mediaElement.addEventListener("error", () => {
-        console.error("Failed to load media metadata");
-        resolve({ media: {} });
-      });
+        mediaElement.addEventListener("error", () => {
+          console.error("Failed to load media metadata");
+          resolve({ media: mediaElement });
+        });
 
-      if (mediaUrl.startsWith("blob:")) {
-        mediaElement.src = mediaUrl;
-      } else {
-        mediaElement.src = `${window.location.origin}/api/download?url=${encodeURIComponent(mediaUrl)}`;
-      }
-      mediaElement.load();
-    });
+        if (mediaUrl.startsWith("blob:")) {
+          mediaElement.src = mediaUrl;
+        } else {
+          mediaElement.src = `${window.location.origin}/api/download?url=${encodeURIComponent(mediaUrl)}`;
+        }
+        mediaElement.load();
+      },
+    );
   } catch (error) {
     console.error("Error extracting metadata:", error);
     return { media: {} };
