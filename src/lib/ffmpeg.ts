@@ -439,19 +439,18 @@ export async function getMediaMetadata(media: MediaItem) {
         resolve({ media: metadata });
       });
 
-        mediaElement.addEventListener("error", () => {
-          console.error("Failed to load media metadata");
-          resolve({ media: mediaElement });
-        });
+      mediaElement.addEventListener("error", () => {
+        console.error("Failed to load media metadata");
+        resolve({ media: mediaElement });
+      });
 
-        if (mediaUrl.startsWith("blob:")) {
-          mediaElement.src = mediaUrl;
-        } else {
-          mediaElement.src = `${window.location.origin}/api/download?url=${encodeURIComponent(mediaUrl)}`;
-        }
-        mediaElement.load();
-      },
-    );
+      if (mediaUrl.startsWith("blob:")) {
+        mediaElement.src = mediaUrl;
+      } else {
+        mediaElement.src = `${window.location.origin}/api/download?url=${encodeURIComponent(mediaUrl)}`;
+      }
+      mediaElement.load();
+    });
   } catch (error) {
     console.error("Error extracting metadata:", error);
     return { media: {} };
