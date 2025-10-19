@@ -20,7 +20,7 @@ export type GenerateData = {
   audio_url?: File | string | null;
   duration: number;
   voice: string;
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
 interface VideoProjectProps {
