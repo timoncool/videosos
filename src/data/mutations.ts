@@ -193,7 +193,7 @@ export const useJobCreator = ({
           console.error("[DEBUG] videoInference ERROR:", error);
           throw error;
         }
-      }else if (mediaType === "music" || mediaType === "voiceover") {
+      } else if (mediaType === "music" || mediaType === "voiceover") {
         const runware = await getRunwareClient();
         if (!runware) {
           throw new Error("Runware API key not configured");
