@@ -194,6 +194,23 @@ export const useJobCreator = ({
           "[DEBUG] FAL - prepared input payload:",
           serializeForLog(preparedInput),
         );
+        if (endpointId === "fal-ai/gemini-25-flash-image/edit") {
+          const resolvedPrompt =
+            "prompt" in preparedInput ? preparedInput.prompt : undefined;
+          const resolvedImageUrl =
+            ("image_url" in preparedInput
+              ? preparedInput.image_url
+              : undefined) ??
+            ("image" in preparedInput ? preparedInput.image : undefined);
+          console.log(
+            "[DEBUG] FAL - Gemini edit resolved prompt:",
+            resolvedPrompt,
+          );
+          console.log(
+            "[DEBUG] FAL - Gemini edit resolved image URL:",
+            resolvedImageUrl,
+          );
+        }
         try {
           const result = await fal.queue.submit(endpointId, {
             input: preparedInput,

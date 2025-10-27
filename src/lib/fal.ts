@@ -84,10 +84,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
     initialInput: {
       prompt: "",
-      image: "",
-    },
-    inputMap: {
-      image_url: "image",
+      image_url: "",
     },
   },
   {
