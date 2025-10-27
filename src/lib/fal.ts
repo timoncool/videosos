@@ -281,12 +281,29 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
   },
   {
     provider: "fal",
-    endpointId: "fal-ai/veo3/fast",
-    label: "Veo 3 Fast (Text)",
-    description: "Ultra-fast text-to-video generation with high quality",
-    cost: "$0.20/sec",
+    endpointId: "fal-ai/veo3",
+    label: "Veo 3",
+    description:
+      "Flagship Veo 3 text-to-video generation with cinematic quality",
+    cost: "$0.15/video",
     popularity: 5,
     category: "video",
+    initialInput: {
+      prompt: "",
+    },
+  },
+  {
+    provider: "fal",
+    endpointId: "fal-ai/veo3/fast",
+    label: "Veo 3 Fast",
+    description:
+      "Accelerated Veo 3 text-to-video generation for rapid iteration",
+    cost: "$0.10/video",
+    popularity: 5,
+    category: "video",
+    initialInput: {
+      prompt: "",
+    },
   },
   {
     provider: "fal",
