@@ -54,6 +54,40 @@ interface State {
 }
 
 const toastTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
+const autoDismissTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
+
+const clearAutoDismissTimeout = (toastId?: string) => {
+  if (toastId) {
+    const timeout = autoDismissTimeouts.get(toastId);
+    if (timeout) {
+      clearTimeout(timeout);
+      autoDismissTimeouts.delete(toastId);
+    }
+    return;
+  }
+
+  for (const timeout of Array.from(autoDismissTimeouts.values())) {
+    clearTimeout(timeout);
+  }
+  autoDismissTimeouts.clear();
+};
+
+const scheduleAutoDismiss = (
+  toastId: string,
+  dismiss: () => void,
+  duration: number,
+) => {
+  if (autoDismissTimeouts.has(toastId)) {
+    return;
+  }
+
+  const timeout = setTimeout(() => {
+    autoDismissTimeouts.delete(toastId);
+    dismiss();
+  }, duration);
+
+  autoDismissTimeouts.set(toastId, timeout);
+};
 
 const addToRemoveQueue = (toastId: string) => {
   if (toastTimeouts.has(toastId)) {
@@ -147,7 +181,17 @@ function toast({ ...props }: Toast) {
       type: "UPDATE_TOAST",
       toast: { ...props, id },
     });
-  const dismiss = () => dispatch({ type: "DISMISS_TOAST", toastId: id });
+  const dismiss = () => {
+    clearAutoDismissTimeout(id);
+    dispatch({ type: "DISMISS_TOAST", toastId: id });
+  };
+
+  const autoDismissDuration =
+    typeof props.duration === "number"
+      ? props.duration
+      : props.variant === "destructive"
+        ? TOAST_REMOVE_DELAY
+        : undefined;
 
   dispatch({
     type: "ADD_TOAST",
@@ -160,6 +204,11 @@ function toast({ ...props }: Toast) {
       },
     },
   });
+
+  if (typeof autoDismissDuration === "number") {
+    clearAutoDismissTimeout(id);
+    scheduleAutoDismiss(id, dismiss, autoDismissDuration);
+  }
 
   return {
     id: id,
@@ -185,7 +234,10 @@ function useToast() {
   return {
     ...state,
     toast,
-    dismiss: (toastId?: string) => dispatch({ type: "DISMISS_TOAST", toastId }),
+    dismiss: (toastId?: string) => {
+      clearAutoDismissTimeout(toastId);
+      dispatch({ type: "DISMISS_TOAST", toastId });
+    },
   };
 }
 
