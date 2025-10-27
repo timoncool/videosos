@@ -126,23 +126,26 @@ function AudioWaveform({ data }: AudioWaveformProps) {
     staleTime: Number.POSITIVE_INFINITY,
   });
 
-  const svgWidth = waveform.length * 3;
   const svgHeight = 100;
+
+  if (waveform.length === 0) {
+    return null;
+  }
 
   return (
     <div className="h-full flex items-center overflow-hidden">
-      <div className="min-w-max">
+      <div className="w-full">
         <svg
-          width={`${svgWidth}px`}
+          width="100%"
           height="80%"
-          viewBox={`0 0 ${svgWidth} ${svgHeight}`}
-          preserveAspectRatio="xMinYMid meet"
+          viewBox={`0 0 ${waveform.length} ${svgHeight}`}
+          preserveAspectRatio="none"
         >
           <title>Audio Waveform</title>
           {waveform.map((v, index) => {
             const amplitude = Math.abs(v);
             const height = Math.max(amplitude * svgHeight, 2);
-            const x = index * 3;
+            const x = index;
             const y = (svgHeight - height) / 2;
 
             return (
@@ -150,7 +153,7 @@ function AudioWaveform({ data }: AudioWaveformProps) {
                 key={`waveform-${index}-${x}`}
                 x={x}
                 y={y}
-                width="2"
+                width="1"
                 height={height}
                 className="fill-black/40"
                 rx="4"
