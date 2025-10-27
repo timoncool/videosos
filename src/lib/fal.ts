@@ -290,13 +290,33 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
   },
   {
     provider: "fal",
-    endpointId: "fal-ai/veo3/fast/image-to-video",
-    label: "Veo 3 Fast (Image)",
-    description: "Ultra-fast image-to-video generation",
-    cost: "$0.10/sec",
+    endpointId: "fal-ai/veo3/image-to-video",
+    label: "Veo 3 (Image-to-Video)",
+    description:
+      "Google's Veo 3 flagship image-to-video generation with native audio",
+    cost: "$0.24/sec",
     popularity: 5,
     category: "video",
     inputAsset: ["image"],
+    initialInput: {
+      prompt: "",
+      image_url: "",
+    },
+  },
+  {
+    provider: "fal",
+    endpointId: "fal-ai/veo3/fast/image-to-video",
+    label: "Veo 3 Fast (Image-to-Video)",
+    description:
+      "Accelerated Veo 3 image-to-video generation with native audio support",
+    cost: "$0.12/sec",
+    popularity: 5,
+    category: "video",
+    inputAsset: ["image"],
+    initialInput: {
+      prompt: "",
+      image_url: "",
+    },
   },
   {
     provider: "fal",
@@ -368,6 +388,21 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
   },
   {
     provider: "fal",
+    endpointId: "fal-ai/bytedance/seedance/v1/pro/image-to-video",
+    label: "Seedance 1.0 Pro (Image)",
+    description:
+      "ByteDance Seedance 1.0 Pro cinematic image-to-video generation",
+    cost: "$0.20/5sec",
+    popularity: 4,
+    category: "video",
+    inputAsset: ["image"],
+    initialInput: {
+      prompt: "",
+      image_url: "",
+    },
+  },
+  {
+    provider: "fal",
     endpointId: "fal-ai/kling-video/v2.5-turbo/pro/text-to-video",
     label: "Kling 2.5 Turbo Pro (Text)",
     description:
@@ -385,6 +420,21 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     popularity: 5,
     category: "video",
     inputAsset: ["image"],
+  },
+  {
+    provider: "fal",
+    endpointId: "fal-ai/kling-video/v2.1/master/image-to-video",
+    label: "Kling 2.1 Master",
+    description:
+      "Master-level Kling 2.1 image-to-video generation with cinematic motion",
+    cost: "$0.28/5sec",
+    popularity: 4,
+    category: "video",
+    inputAsset: ["image"],
+    initialInput: {
+      prompt: "",
+      image_url: "",
+    },
   },
   {
     provider: "fal",
