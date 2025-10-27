@@ -523,17 +523,58 @@ export default function RightPanel({
     }
 
     if (isRunwareProvider) {
-      const assetValue =
-        (media.kind === "uploaded" && media.url ? media.url : null) ??
-        (media.kind === "uploaded" && media.blob ? media.blob : null) ??
-        resolveMediaUrl(media);
+      const assetKey = getAssetKey(asset);
+      let assetValue: string | Blob | File | null = null;
+
+      try {
+        if (media.kind === "uploaded") {
+          if (media.blob) {
+            assetValue = media.blob;
+          } else if (media.url?.startsWith("blob:")) {
+            const response = await fetch(media.url);
+            if (!response.ok) {
+              throw new Error(
+                `Failed to read blob URL (${response.status} ${response.statusText})`,
+              );
+            }
+            assetValue = await response.blob();
+          } else if (media.url) {
+            assetValue = media.url;
+          }
+        }
+
+        if (!assetValue) {
+          const resolvedUrl = resolveMediaUrl(media);
+
+          if (resolvedUrl?.startsWith("blob:")) {
+            const response = await fetch(resolvedUrl);
+            if (!response.ok) {
+              throw new Error(
+                `Failed to read blob URL (${response.status} ${response.statusText})`,
+              );
+            }
+            assetValue = await response.blob();
+          } else {
+            assetValue = resolvedUrl ?? null;
+          }
+        }
+      } catch (error) {
+        console.error("Failed to normalize Runware media asset", error);
+        toast({
+          title: tToast("uploadFailed"),
+          description: tToast("runwareKeyRequiredDesc"),
+          variant: "destructive",
+        });
+        setTab("generation");
+        return;
+      }
 
       if (!assetValue) {
         setTab("generation");
         return;
       }
 
-      setGenerateData({ [getAssetKey(asset)]: assetValue });
+      setGenerateData({ [assetKey]: assetValue });
       setTab("generation");
       return;
     }

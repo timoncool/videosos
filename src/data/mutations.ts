@@ -1,5 +1,5 @@
 import { AVAILABLE_ENDPOINTS, fal } from "@/lib/fal";
-import { getRunwareClient } from "@/lib/runware";
+import { getRunwareClient, prepareRunwareImageAsset } from "@/lib/runware";
 import { RUNWARE_ENDPOINTS } from "@/lib/runware-models";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
@@ -239,6 +239,39 @@ export const useJobCreator = ({
 
           if (input.steps !== undefined) {
             imageParams.steps = input.steps;
+          }
+        }
+
+        const runwareSeedImageKeys = [
+          "seedImage",
+          "inputImage",
+          "image",
+          "image_url",
+        ];
+
+        for (const key of runwareSeedImageKeys) {
+          const candidate = input[key];
+          if (!candidate) {
+            continue;
+          }
+
+          if (typeof candidate === "string") {
+            imageParams.seedImage = candidate;
+            break;
+          }
+
+          if (typeof File !== "undefined" && candidate instanceof File) {
+            imageParams.seedImage = candidate;
+            break;
+          }
+
+          if (typeof Blob !== "undefined" && candidate instanceof Blob) {
+            imageParams.seedImage = await prepareRunwareImageAsset({
+              value: candidate,
+              runware,
+              cacheKey: key,
+            });
+            break;
           }
         }
 

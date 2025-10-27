@@ -47,11 +47,13 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
     initialInput: {
       positivePrompt: "",
-      inputImage: "",
+      seedImage: "",
     },
     inputMap: {
       prompt: "positivePrompt",
-      image_url: "inputImage",
+      image: "seedImage",
+      image_url: "seedImage",
+      seedImage: "seedImage",
     },
   },
   {
@@ -297,11 +299,13 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
     initialInput: {
       positivePrompt: "",
-      inputImage: "",
+      seedImage: "",
     },
     inputMap: {
       prompt: "positivePrompt",
-      image_url: "inputImage",
+      image: "seedImage",
+      image_url: "seedImage",
+      seedImage: "seedImage",
     },
   },
   {
@@ -314,11 +318,13 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
     initialInput: {
       positivePrompt: "",
-      inputImage: "",
+      seedImage: "",
     },
     inputMap: {
       prompt: "positivePrompt",
-      image_url: "inputImage",
+      image: "seedImage",
+      image_url: "seedImage",
+      seedImage: "seedImage",
     },
   },
   {
@@ -331,11 +337,13 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
     initialInput: {
       positivePrompt: "",
-      inputImage: "",
+      seedImage: "",
     },
     inputMap: {
       prompt: "positivePrompt",
-      image_url: "inputImage",
+      image: "seedImage",
+      image_url: "seedImage",
+      seedImage: "seedImage",
     },
   },
   {
@@ -664,11 +672,13 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
     initialInput: {
       positivePrompt: "",
-      inputImage: "",
+      seedImage: "",
     },
     inputMap: {
       prompt: "positivePrompt",
-      image_url: "inputImage",
+      image: "seedImage",
+      image_url: "seedImage",
+      seedImage: "seedImage",
     },
   },
   {
@@ -697,11 +707,13 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
     initialInput: {
       positivePrompt: "",
-      inputImage: "",
+      seedImage: "",
     },
     inputMap: {
       prompt: "positivePrompt",
-      image_url: "inputImage",
+      image: "seedImage",
+      image_url: "seedImage",
+      seedImage: "seedImage",
     },
   },
   {
