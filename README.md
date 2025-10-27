@@ -27,33 +27,12 @@ Create professional videos with AI in your browser. Free, open-source video edit
 
 Access the best AI models ranked by millions of users on lmarena.ai. VideoSOS integrates with **fal.ai** and **Runware.ai** to bring you cutting-edge AI generation capabilities:
 
-**🎬 Video Generation (Text-to-Video & Image-to-Video)**
-- **Google Veo 3.1** & **Veo 3.1 Fast** - Latest video generation with native audio (NEW)
-- **Google Veo 3** & **Veo 3 Fast** - Cinematic video with synchronized audio
-- **Kling 2.5** - High-quality video generation
-- **Hailuo-02** - Advanced video synthesis
+- **🎬 Video Generation**: Text-to-video and image-to-video with state-of-the-art models including Google Veo 3.1, Kling 2.5, and Hailuo-02
+- **🎨 Image Generation**: Text-to-image with cutting-edge models including Gemini 2.5 Flash, Imagen 4.0, FLUX.1 Pro, and Ideogram V3
+- **✏️ Image Editing**: AI-powered photo editing with leading models including the #1 ranked Gemini 2.5 Flash Edit (8.6M votes)
+- **🎵 Audio Generation**: Music composition with Stable Audio and natural voiceovers with multiple voices
 
-**🎨 Image Generation (Text-to-Image)**
-- **Gemini 2.5 Flash Image** - Ultra-fast image generation from Google
-- **Imagen 4.0 Ultra** & **Imagen 4.0 Preview Fast** - Google's latest image models
-- **Hunyuan Image 3.0** - State-of-the-art Chinese image model
-- **Seedream 4.0** & **Seedream 3.0** - High-resolution image synthesis
-- **GPT Image 1** - OpenAI's image generation model
-- **FLUX.1 Pro** - Professional-grade image generation
-- **Ideogram V3** - Advanced text rendering in images
-
-**✏️ Image Editing (AI-Powered Photo Editing)**
-- **Gemini 2.5 Flash Edit** - 8.6M votes on lmarena.ai, #1 image editing model
-- **FLUX.1 Kontext** (Pro/Max/Dev) - Context-aware image editing
-- **Qwen Image Edit** - Intelligent image modification
-- **Reve v1** - Advanced image editing capabilities
-- **Seedream 4.0 Edit** - High-quality image transformations
-
-**🎵 Audio Generation**
-- **Stable Audio** - Music composition and sound effects
-- **Natural Voiceovers** - Text-to-speech with multiple voices
-
-Switch between providers seamlessly or use both simultaneously for maximum flexibility and model availability.
+Switch between providers seamlessly or use both simultaneously for maximum flexibility. [See complete model list below](#supported-ai-models).
 
 ### 🔒 100% Privacy-First Architecture
 Everything runs locally in your browser. Your projects, media, and API keys are stored in IndexedDB on your device. No uploads, no tracking, no data collection.
