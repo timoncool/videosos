@@ -76,6 +76,48 @@ const isRunwareEndpoint = (endpointId?: string) =>
   !!endpointId &&
   RUNWARE_ENDPOINTS.some((endpoint) => endpoint.endpointId === endpointId);
 
+const assetUrlKeys = ["url", "cachedUrl"] as const;
+
+const isFileLike = (value: unknown): value is File | Blob => {
+  if (typeof File !== "undefined" && value instanceof File) {
+    return true;
+  }
+
+  return typeof Blob !== "undefined" && value instanceof Blob;
+};
+
+const normalizeAssetValue = (
+  value: unknown,
+): string | File | Blob | undefined => {
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    return trimmed.length > 0 ? trimmed : undefined;
+  }
+
+  if (isFileLike(value)) {
+    return value;
+  }
+
+  if (value && typeof value === "object") {
+    const record = value as Record<string, unknown>;
+
+    for (const key of assetUrlKeys) {
+      const urlCandidate = record[key];
+      if (typeof urlCandidate === "string") {
+        const trimmed = urlCandidate.trim();
+        if (trimmed.length > 0) {
+          return trimmed;
+        }
+      }
+    }
+  }
+
+  return undefined;
+};
+
+const isAssetValueProvided = (value: unknown) =>
+  Boolean(normalizeAssetValue(value));
+
 const getProviderForEndpoint = (
   endpointId?: string,
 ): "fal" | "runware" | undefined => {
@@ -314,8 +356,9 @@ export default function RightPanel({
 
     const missing = endpoint.inputAsset.reduce<string[]>((acc, asset) => {
       const assetKey = getAssetKey(asset);
+      const assetValue = generateData[assetKey];
 
-      if (!generateData[assetKey]) {
+      if (!isAssetValueProvided(assetValue)) {
         acc.push(getAssetType(asset));
       }
 
@@ -362,18 +405,18 @@ export default function RightPanel({
   // TODO improve model-specific parameters
   type InputType = {
     prompt: string;
-    image_url?: File | string | null;
-    video_url?: File | string | null;
-    audio_url?: File | string | null;
+    image_url?: File | Blob | string | null;
+    video_url?: File | Blob | string | null;
+    audio_url?: File | Blob | string | null;
     image_size?: { width: number; height: number } | string;
     aspect_ratio?: string;
     seconds_total?: number;
     voice?: string;
     input?: string;
-    reference_audio_url?: File | string | null;
+    reference_audio_url?: File | Blob | string | null;
     images?: {
       start_frame_num: number;
-      image_url: string | File;
+      image_url: string | File | Blob;
     }[];
     advanced_camera_control?: {
       movement_value: number;
@@ -407,17 +450,26 @@ export default function RightPanel({
       endpointId === "fal-ai/playht/tts/v3" ? generateData.prompt : undefined,
   };
 
-  if (generateData.image) {
-    input.image_url = generateData.image;
+  const normalizedImage = normalizeAssetValue(generateData.image);
+  if (normalizedImage) {
+    input.image_url = normalizedImage;
   }
-  if (generateData.video_url) {
-    input.video_url = generateData.video_url;
+
+  const normalizedVideo = normalizeAssetValue(generateData.video_url);
+  if (normalizedVideo) {
+    input.video_url = normalizedVideo;
   }
-  if (generateData.audio_url) {
-    input.audio_url = generateData.audio_url;
+
+  const normalizedAudio = normalizeAssetValue(generateData.audio_url);
+  if (normalizedAudio) {
+    input.audio_url = normalizedAudio;
   }
-  if (generateData.reference_audio_url) {
-    input.reference_audio_url = generateData.reference_audio_url;
+
+  const normalizedReferenceAudio = normalizeAssetValue(
+    generateData.reference_audio_url,
+  );
+  if (normalizedReferenceAudio) {
+    input.reference_audio_url = normalizedReferenceAudio;
   }
 
   if (generateData.advanced_camera_control) {
@@ -776,120 +828,126 @@ export default function RightPanel({
           </div>
         </div>
         <div className="flex flex-col gap-2 relative">
-          {endpoint?.inputAsset?.map((asset, index) => (
-            <div key={getAssetType(asset)} className="flex w-full">
-              <div className="flex flex-col w-full" key={getAssetType(asset)}>
-                <div className="flex justify-between">
-                  <h4 className="capitalize text-muted-foreground mb-2">
-                    {getAssetType(asset)} {t("reference")}
-                  </h4>
-                  {tab === `asset-${getAssetType(asset)}` && (
-                    <Button
-                      variant="ghost"
-                      onClick={() => setTab("generation")}
-                      size="sm"
-                    >
-                      <ArrowLeft /> {t("back")}
-                    </Button>
+          {endpoint?.inputAsset?.map((asset) => {
+            const assetType = getAssetType(asset);
+            const assetKey = getAssetKey(asset);
+            const assetValue = generateData[assetKey];
+            const hasAssetValue = isAssetValueProvided(assetValue);
+
+            return (
+              <div key={assetKey} className="flex w-full">
+                <div className="flex flex-col w-full" key={assetKey}>
+                  <div className="flex justify-between">
+                    <h4 className="capitalize text-muted-foreground mb-2">
+                      {assetType} {t("reference")}
+                    </h4>
+                    {tab === `asset-${assetType}` && (
+                      <Button
+                        variant="ghost"
+                        onClick={() => setTab("generation")}
+                        size="sm"
+                      >
+                        <ArrowLeft /> {t("back")}
+                      </Button>
+                    )}
+                  </div>
+                  {(tab === "generation" || tab !== `asset-${assetType}`) && (
+                    <>
+                      {!hasAssetValue && (
+                        <div className="flex flex-col gap-2 justify-between">
+                          <Button
+                            variant="ghost"
+                            onClick={() => {
+                              setTab(`asset-${assetType}`);
+                              setAssetMediaType(assetType ?? "all");
+                            }}
+                            className="cursor-pointer min-h-[30px] flex flex-col items-center justify-center border border-dashed border-border rounded-md px-4"
+                          >
+                            <span className="text-muted-foreground text-xs text-center text-nowrap">
+                              {t("select")}
+                            </span>
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            disabled={isUploading}
+                            className="cursor-pointer min-h-[30px] flex flex-col items-center justify-center border border-dashed border-border rounded-md px-4"
+                            asChild
+                          >
+                            <label htmlFor="assetUploadButton">
+                              <Input
+                                id="assetUploadButton"
+                                type="file"
+                                className="hidden"
+                                onChange={handleFileUpload}
+                                multiple={false}
+                                disabled={isUploading}
+                                accept="image/*,audio/*,video/*"
+                              />
+                              {isUploading ? (
+                                <LoaderCircleIcon className="w-4 h-4 opacity-50 animate-spin" />
+                              ) : (
+                                <span className="text-muted-foreground text-xs text-center text-nowrap">
+                                  {t("upload")}
+                                </span>
+                              )}
+                            </label>
+                          </Button>
+                        </div>
+                      )}
+                      {hasAssetValue && (
+                        <div className="cursor-pointer overflow-hidden relative w-full flex flex-col items-center justify-center border border-dashed border-border rounded-md">
+                          <WithTooltip tooltip={t("removeMedia")}>
+                            <button
+                              type="button"
+                              className="p-1 rounded hover:bg-black/50 absolute top-1 z-50 bg-black/80 right-1 group-hover:text-white"
+                              onClick={() =>
+                                setGenerateData({
+                                  [assetKey]: undefined,
+                                })
+                              }
+                            >
+                              <TrashIcon className="w-3 h-3 stroke-2" />
+                            </button>
+                          </WithTooltip>
+                          {hasAssetValue && (
+                            <SelectedAssetPreview
+                              asset={asset}
+                              data={generateData}
+                            />
+                          )}
+                        </div>
+                      )}
+                    </>
+                  )}
+                  {tab === `asset-${assetType}` && (
+                    <div className="flex items-center gap-2 flex-wrap overflow-y-auto max-h-80 divide-y divide-border">
+                      {mediaItems
+                        .filter((media) => {
+                          if (assetMediaType === "all") return true;
+                          if (
+                            assetMediaType === "audio" &&
+                            (media.mediaType === "voiceover" ||
+                              media.mediaType === "music")
+                          )
+                            return true;
+                          return media.mediaType === assetMediaType;
+                        })
+                        .map((job) => (
+                          <MediaItemRow
+                            draggable={false}
+                            key={job.id}
+                            data={job}
+                            onOpen={handleSelectMedia}
+                            className="cursor-pointer"
+                          />
+                        ))}
+                    </div>
                   )}
                 </div>
-                {(tab === "generation" ||
-                  tab !== `asset-${getAssetType(asset)}`) && (
-                  <>
-                    {!generateData[getAssetKey(asset)] && (
-                      <div className="flex flex-col gap-2 justify-between">
-                        <Button
-                          variant="ghost"
-                          onClick={() => {
-                            setTab(`asset-${getAssetType(asset)}`);
-                            setAssetMediaType(getAssetType(asset) ?? "all");
-                          }}
-                          className="cursor-pointer min-h-[30px] flex flex-col items-center justify-center border border-dashed border-border rounded-md px-4"
-                        >
-                          <span className="text-muted-foreground text-xs text-center text-nowrap">
-                            {t("select")}
-                          </span>
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          disabled={isUploading}
-                          className="cursor-pointer min-h-[30px] flex flex-col items-center justify-center border border-dashed border-border rounded-md px-4"
-                          asChild
-                        >
-                          <label htmlFor="assetUploadButton">
-                            <Input
-                              id="assetUploadButton"
-                              type="file"
-                              className="hidden"
-                              onChange={handleFileUpload}
-                              multiple={false}
-                              disabled={isUploading}
-                              accept="image/*,audio/*,video/*"
-                            />
-                            {isUploading ? (
-                              <LoaderCircleIcon className="w-4 h-4 opacity-50 animate-spin" />
-                            ) : (
-                              <span className="text-muted-foreground text-xs text-center text-nowrap">
-                                {t("upload")}
-                              </span>
-                            )}
-                          </label>
-                        </Button>
-                      </div>
-                    )}
-                    {generateData[getAssetKey(asset)] && (
-                      <div className="cursor-pointer overflow-hidden relative w-full flex flex-col items-center justify-center border border-dashed border-border rounded-md">
-                        <WithTooltip tooltip={t("removeMedia")}>
-                          <button
-                            type="button"
-                            className="p-1 rounded hover:bg-black/50 absolute top-1 z-50 bg-black/80 right-1 group-hover:text-white"
-                            onClick={() =>
-                              setGenerateData({
-                                [getAssetKey(asset)]: undefined,
-                              })
-                            }
-                          >
-                            <TrashIcon className="w-3 h-3 stroke-2" />
-                          </button>
-                        </WithTooltip>
-                        {generateData[getAssetKey(asset)] && (
-                          <SelectedAssetPreview
-                            asset={asset}
-                            data={generateData}
-                          />
-                        )}
-                      </div>
-                    )}
-                  </>
-                )}
-                {tab === `asset-${getAssetType(asset)}` && (
-                  <div className="flex items-center gap-2 flex-wrap overflow-y-auto max-h-80 divide-y divide-border">
-                    {mediaItems
-                      .filter((media) => {
-                        if (assetMediaType === "all") return true;
-                        if (
-                          assetMediaType === "audio" &&
-                          (media.mediaType === "voiceover" ||
-                            media.mediaType === "music")
-                        )
-                          return true;
-                        return media.mediaType === assetMediaType;
-                      })
-                      .map((job) => (
-                        <MediaItemRow
-                          draggable={false}
-                          key={job.id}
-                          data={job}
-                          onOpen={handleSelectMedia}
-                          className="cursor-pointer"
-                        />
-                      ))}
-                  </div>
-                )}
               </div>
-            </div>
-          ))}
+            );
+          })}
           {endpoint?.prompt !== false && (
             <div className="relative bg-border rounded-lg pb-10 placeholder:text-base w-full  resize-none">
               <Textarea
