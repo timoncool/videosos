@@ -36,6 +36,8 @@ type MediaItemRowProps = {
   draggable?: boolean;
 } & HTMLAttributes<HTMLDivElement>;
 
+type GeneratedMediaItem = Extract<MediaItem, { kind: "generated" }>;
+
 export function MediaItemRow({
   data,
   className,
@@ -151,16 +153,115 @@ export function MediaItemRow({
       } else {
         console.log("[DEBUG] Runware item - checking for thumbnail generation");
 
-        if (data.status === "completed") {
-          if (data.mediaType === "video" && !data.metadata?.thumbnail_url) {
+        if (data.kind !== "generated") {
+          return null;
+        }
+
+        let currentData: GeneratedMediaItem = data;
+
+        if (data.status !== "completed") {
+          if (!data.taskUUID) {
+            console.error("[DEBUG] taskUUID is missing for Runware job!", data);
+            throw new Error("taskUUID is required for runware provider");
+          }
+
+          const runware = await getRunwareClient();
+
+          if (!runware) {
+            console.error("[DEBUG] Runware client is not initialized");
+            return null;
+          }
+
+          const response = await runware.getResponse({
+            taskUUID: data.taskUUID,
+          });
+
+          const result = Array.isArray((response as any)?.data)
+            ? (response as any).data[0]
+            : (response as any)?.data || response;
+
+          console.log("[DEBUG] Runware getResponse result:", result);
+
+          if (!result) {
+            return null;
+          }
+
+          if (result.error || result.status === "failed") {
+            await db.media.update(data.id, {
+              ...data,
+              status: "failed",
+            });
+
+            toast({
+              title: t("generationFailed"),
+              description: t("generationFailedDesc", {
+                mediaType: data.mediaType,
+              }),
+            });
+
+            await queryClient.invalidateQueries({
+              queryKey: queryKeys.projectMediaItems(data.projectId),
+            });
+
+            return null;
+          }
+
+          const hasOutput = Boolean(
+            result.imageURL ||
+              result.videoURL ||
+              result.audioURL ||
+              result.audioDataURI ||
+              result.audioBase64Data,
+          );
+
+          if (!hasOutput && result.status !== "completed") {
+            if (data.status !== "running") {
+              await db.media.update(data.id, {
+                ...data,
+                status: "running",
+              });
+
+              await queryClient.invalidateQueries({
+                queryKey: queryKeys.projectMediaItems(data.projectId),
+              });
+            }
+
+            return null;
+          }
+
+          currentData = {
+            ...data,
+            output: result,
+            status: "completed",
+          } as GeneratedMediaItem;
+
+          await db.media.update(data.id, currentData);
+
+          toast({
+            title: t("generationCompleted"),
+            description: t("generationCompletedDesc", {
+              mediaType: data.mediaType,
+            }),
+          });
+
+          await queryClient.invalidateQueries({
+            queryKey: queryKeys.projectMediaItems(data.projectId),
+          });
+        }
+
+        if (currentData.status === "completed") {
+          if (
+            currentData.mediaType === "video" &&
+            !currentData.metadata?.thumbnail_url
+          ) {
             console.log("[DEBUG] Generating thumbnail for Runware video");
-            const videoUrl = resolveMediaUrl(data);
+            const videoUrl = resolveMediaUrl(currentData);
             if (videoUrl) {
               const thumbnailUrl = await extractVideoThumbnail(videoUrl);
               await db.media.update(data.id, {
-                ...data,
+                ...currentData,
                 metadata: {
-                  ...data.metadata,
+                  ...currentData.metadata,
                   thumbnail_url: thumbnailUrl,
                 },
               });
@@ -168,19 +269,30 @@ export function MediaItemRow({
                 queryKey: queryKeys.projectMediaItems(data.projectId),
               });
               console.log("[DEBUG] Thumbnail generated:", thumbnailUrl);
+
+              currentData = {
+                ...currentData,
+                metadata: {
+                  ...currentData.metadata,
+                  thumbnail_url: thumbnailUrl,
+                },
+              } as GeneratedMediaItem;
             }
           }
 
-          if (data.mediaType !== "image" && !data.metadata?.duration) {
+          if (
+            currentData.mediaType !== "image" &&
+            !currentData.metadata?.duration
+          ) {
             console.log(
               "[DEBUG] Extracting metadata for Runware",
-              data.mediaType,
+              currentData.mediaType,
             );
-            const mediaMetadata = await getMediaMetadata(data as MediaItem);
+            const mediaMetadata = await getMediaMetadata(currentData);
             await db.media.update(data.id, {
-              ...data,
+              ...currentData,
               metadata: {
-                ...(data.metadata || {}),
+                ...(currentData.metadata || {}),
                 ...(mediaMetadata?.media || {}),
               },
             });
@@ -188,15 +300,29 @@ export function MediaItemRow({
               queryKey: queryKeys.projectMediaItems(data.projectId),
             });
             console.log("[DEBUG] Metadata extracted:", mediaMetadata?.media);
+
+            currentData = {
+              ...currentData,
+              metadata: {
+                ...(currentData.metadata || {}),
+                ...(mediaMetadata?.media || {}),
+              },
+            } as GeneratedMediaItem;
           }
 
-          if (!data.metadata?.thumbnail_url && !data.metadata?.duration) {
+          if (
+            !currentData.metadata?.thumbnail_url &&
+            !currentData.metadata?.duration
+          ) {
             console.log(
               "[DEBUG] Runware item should already be completed, skipping polling",
             );
             await db.media.update(data.id, {
-              ...data,
+              ...currentData,
               status: "completed",
+            });
+            await queryClient.invalidateQueries({
+              queryKey: queryKeys.projectMediaItems(data.projectId),
             });
           }
         }
