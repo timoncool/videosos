@@ -278,7 +278,8 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     provider: "fal",
     endpointId: "fal-ai/veo2/image-to-video",
     label: "Veo 2 Image-to-Video",
-    description: "Veo 2 dedicated image-to-video endpoint with enhanced quality",
+    description:
+      "Veo 2 dedicated image-to-video endpoint with enhanced quality",
     cost: "$0.50/sec",
     popularity: 4,
     category: "video",
