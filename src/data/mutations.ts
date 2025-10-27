@@ -82,7 +82,7 @@ export const useJobCreator = ({
           height: input.height || 1024,
           width: input.width || 1024,
           numberResults: input.numberResults || 1,
-          outputType: input.outputType || ["URL", "dataURI"],
+          outputType: "URL" as const,
           outputFormat: input.outputFormat || "JPEG",
           checkNSFW: input.checkNSFW !== undefined ? input.checkNSFW : true,
           CFGScale: input.CFGScale || 3.5,
