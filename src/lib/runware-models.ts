@@ -647,15 +647,39 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
   },
   {
     provider: "runware",
-    endpointId: "google:3@1",
+    endpointId: "google:3@0",
     label: "Veo 3",
-    description: "Google's latest video generation model",
+    description:
+      "Google's Veo 3 model delivers immersive cinematic video with native audio generation for synchronized dialogue, music, and sound design.",
+    cost: "~$0.20/video",
     popularity: 5,
     category: "video",
+    initialInput: {
+      positivePrompt: "",
+    },
+    inputMap: {
+      prompt: "positivePrompt",
+    },
   },
   {
     provider: "runware",
-    endpointId: "google:3@0",
+    endpointId: "google:3@1",
+    label: "Veo 3 Fast",
+    description:
+      "Optimized Veo 3 variant that maintains Google's native audio generation while prioritizing faster, more cost-effective creation.",
+    cost: "~$0.12/video",
+    popularity: 5,
+    category: "video",
+    initialInput: {
+      positivePrompt: "",
+    },
+    inputMap: {
+      prompt: "positivePrompt",
+    },
+  },
+  {
+    provider: "runware",
+    endpointId: "google:2@0",
     label: "Veo 2",
     description: "Google Veo 2 video generation",
     popularity: 5,
@@ -663,7 +687,7 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
   },
   {
     provider: "runware",
-    endpointId: "google:2@0",
+    endpointId: "google:1@0",
     label: "Veo 1",
     description: "Original Google Veo model",
     popularity: 4,
