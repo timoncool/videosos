@@ -569,7 +569,8 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "google:3@3",
     label: "Veo 3.1 Fast",
-    description: "Optimized variant of Veo 3.1 for high-speed generation with cinematic quality",
+    description:
+      "Optimized variant of Veo 3.1 for high-speed generation with cinematic quality",
     popularity: 5,
     category: "video",
   },
@@ -577,7 +578,8 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "google:3@2",
     label: "Veo 3.1",
-    description: "Google's newest Veo model for cinematic video generation with natural sound",
+    description:
+      "Google's newest Veo model for cinematic video generation with natural sound",
     popularity: 5,
     category: "video",
   },

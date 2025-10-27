@@ -64,7 +64,10 @@ export const useJobCreator = ({
 
       if (provider === "fal") {
         console.log("[DEBUG] FAL - submitting with endpointId:", endpointId);
-        console.log("[DEBUG] FAL - input payload:", JSON.stringify(input, null, 2));
+        console.log(
+          "[DEBUG] FAL - input payload:",
+          JSON.stringify(input, null, 2),
+        );
         try {
           const result = await fal.queue.submit(endpointId, { input });
           console.log("[DEBUG] FAL submit result:", result);
