@@ -23,6 +23,7 @@ import {
   WandSparklesIcon,
   XIcon,
 } from "lucide-react";
+import type { KeyboardEvent } from "react";
 import { useCallback } from "react";
 import { MediaItemRow } from "./media-panel";
 import {
@@ -320,7 +321,9 @@ export default function RightPanel({
   const createJob = useJobCreator({
     projectId,
     endpointId:
-      generateData.image && mediaType === "video" && !endpointId.endsWith('/image-to-video')
+      generateData.image &&
+      mediaType === "video" &&
+      !endpointId.endsWith("/image-to-video")
         ? `${endpointId}/image-to-video`
         : endpointId,
     mediaType,
@@ -354,6 +357,16 @@ export default function RightPanel({
   useEffect(() => {
     videoProjectStore.onGenerate = handleOnGenerate;
   }, [handleOnGenerate, videoProjectStore]);
+
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLElement>) => {
+      if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
+        event.preventDefault();
+        handleOnGenerate();
+      }
+    },
+    [handleOnGenerate],
+  );
 
   const handleSelectMedia = async (media: MediaItem) => {
     const asset = endpoint?.inputAsset?.find((item) => {
@@ -506,7 +519,10 @@ export default function RightPanel({
         generateDialogOpen ? "right-0" : "-right-[450px]",
       )}
     >
-      <div className="flex-1 p-4 flex flex-col gap-4 border-b border-border h-full overflow-hidden relative">
+      <div
+        className="flex-1 p-4 flex flex-col gap-4 border-b border-border h-full overflow-hidden relative"
+        onKeyDown={handleKeyDown}
+      >
         <div className="flex flex-row items-center justify-between">
           <h2 className="text-sm text-muted-foreground font-semibold flex-1">
             {t("generateMedia")}
@@ -809,12 +825,20 @@ export default function RightPanel({
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="1:1">1:1 (Square)</SelectItem>
-                                <SelectItem value="16:9">16:9 (Landscape)</SelectItem>
-                                <SelectItem value="9:16">9:16 (Portrait)</SelectItem>
+                                <SelectItem value="1:1">
+                                  1:1 (Square)
+                                </SelectItem>
+                                <SelectItem value="16:9">
+                                  16:9 (Landscape)
+                                </SelectItem>
+                                <SelectItem value="9:16">
+                                  9:16 (Portrait)
+                                </SelectItem>
                                 <SelectItem value="4:3">4:3</SelectItem>
                                 <SelectItem value="3:4">3:4</SelectItem>
-                                <SelectItem value="21:9">21:9 (Ultrawide)</SelectItem>
+                                <SelectItem value="21:9">
+                                  21:9 (Ultrawide)
+                                </SelectItem>
                               </SelectContent>
                             </Select>
                           </div>
@@ -828,7 +852,10 @@ export default function RightPanel({
                               min={256}
                               max={2048}
                               step={64}
-                              value={generateData.width || (mediaType === "image" ? 1024 : 1920)}
+                              value={
+                                generateData.width ||
+                                (mediaType === "image" ? 1024 : 1920)
+                              }
                               onChange={(e) =>
                                 setGenerateData({
                                   width: Number.parseInt(e.target.value),
@@ -844,7 +871,10 @@ export default function RightPanel({
                               min={256}
                               max={2048}
                               step={64}
-                              value={generateData.height || (mediaType === "image" ? 1024 : 1080)}
+                              value={
+                                generateData.height ||
+                                (mediaType === "image" ? 1024 : 1080)
+                              }
                               onChange={(e) =>
                                 setGenerateData({
                                   height: Number.parseInt(e.target.value),
@@ -896,7 +926,9 @@ export default function RightPanel({
                                 value={generateData.seed || ""}
                                 onChange={(e) =>
                                   setGenerateData({
-                                    seed: e.target.value ? Number.parseInt(e.target.value) : undefined,
+                                    seed: e.target.value
+                                      ? Number.parseInt(e.target.value)
+                                      : undefined,
                                   })
                                 }
                               />
@@ -906,7 +938,9 @@ export default function RightPanel({
                         {mediaType === "video" && (
                           <>
                             <div className="flex flex-col gap-2">
-                              <Label className="text-xs">Duration (seconds)</Label>
+                              <Label className="text-xs">
+                                Duration (seconds)
+                              </Label>
                               <Input
                                 className="h-8 text-xs"
                                 type="number"
