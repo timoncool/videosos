@@ -63,6 +63,18 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
   },
   {
     provider: "fal",
+    endpointId: "fal-ai/gemini-25-flash-image",
+    label: "Gemini 2.5 Flash Image",
+    description: "Rapid Gemini 2.5 Flash text-to-image generation",
+    cost: "$0.05/image",
+    popularity: 5,
+    category: "image",
+    initialInput: {
+      prompt: "",
+    },
+  },
+  {
+    provider: "fal",
     endpointId: "fal-ai/gemini-25-flash-image/edit",
     label: "Gemini 2.5 Flash Image (Edit)",
     description: "Rapid Gemini 2.5 Flash image-to-image editing",
@@ -73,6 +85,18 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     initialInput: {
       prompt: "",
       image_url: "",
+    },
+  },
+  {
+    provider: "fal",
+    endpointId: "fal-ai/bytedance/seedream/v4/text-to-image",
+    label: "Seedream V4",
+    description: "ByteDance Seedream V4 high fidelity image generation",
+    cost: "$0.03/image",
+    popularity: 4,
+    category: "image",
+    initialInput: {
+      prompt: "",
     },
   },
   {
@@ -91,6 +115,18 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
   },
   {
     provider: "fal",
+    endpointId: "fal-ai/bytedance/seedream/v3/text-to-image",
+    label: "Seedream V3",
+    description: "ByteDance Seedream V3 bilingual text-to-image generation",
+    cost: "$0.02/image",
+    popularity: 3,
+    category: "image",
+    initialInput: {
+      prompt: "",
+    },
+  },
+  {
+    provider: "fal",
     endpointId: "fal-ai/reve/edit",
     label: "Reve (Edit)",
     description: "Photorealistic image refinement and editing",
@@ -101,6 +137,18 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     initialInput: {
       prompt: "",
       image_url: "",
+    },
+  },
+  {
+    provider: "fal",
+    endpointId: "fal-ai/gpt-image-1-mini",
+    label: "GPT-Image 1 Mini",
+    description: "Compact GPT-Image generation for quick iterations",
+    cost: "$0.04/image",
+    popularity: 3,
+    category: "image",
+    initialInput: {
+      prompt: "",
     },
   },
   {
@@ -201,11 +249,28 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
   {
     provider: "fal",
     endpointId: "fal-ai/imagen4/preview",
-    label: "Imagen 4",
-    description: "Google's latest image generation model",
-    cost: "~$0.05/image",
+    label: "Imagen 4.0 Ultra",
+    description: "Google's flagship Imagen 4 Ultra model for premier quality",
+    cost: "$0.08/image",
+    popularity: 5,
+    category: "image",
+    initialInput: {
+      prompt:
+        "An ultra-detailed macro photograph of a butterfly wing showing intricate patterns and iridescent colors with perfect focus and lighting",
+    },
+  },
+  {
+    provider: "fal",
+    endpointId: "fal-ai/imagen4/preview/fast",
+    label: "Imagen 4.0 Fast",
+    description:
+      "Accelerated Imagen 4 generation optimized for quick turnarounds",
+    cost: "$0.05/image",
     popularity: 4,
     category: "image",
+    initialInput: {
+      prompt: "",
+    },
   },
   {
     provider: "fal",
