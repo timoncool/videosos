@@ -2,6 +2,7 @@ import { AVAILABLE_ENDPOINTS, fal } from "@/lib/fal";
 import { getRunwareClient } from "@/lib/runware";
 import { RUNWARE_ENDPOINTS } from "@/lib/runware-models";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRef } from "react";
 import { db } from "./db";
 import { queryKeys } from "./queries";
 import type { VideoProject } from "./schema";
@@ -52,6 +53,128 @@ export const useJobCreator = ({
   input,
 }: JobCreatorParams) => {
   const queryClient = useQueryClient();
+  const lastSubmittedFalInputRef = useRef<Record<string, unknown>>(input);
+
+  const serializeForLog = (value: unknown) => {
+    const replacer = (_: string, data: unknown) => {
+      if (typeof File !== "undefined" && data instanceof File) {
+        return {
+          name: data.name,
+          size: data.size,
+          type: data.type,
+        };
+      }
+
+      if (
+        typeof Blob !== "undefined" &&
+        data instanceof Blob &&
+        !(typeof File !== "undefined" && data instanceof File)
+      ) {
+        return {
+          size: data.size,
+          type: data.type,
+        };
+      }
+
+      return data;
+    };
+
+    try {
+      return JSON.stringify(value, replacer, 2);
+    } catch (error) {
+      console.error("[DEBUG] Failed to serialize value for logging:", error);
+      return String(value);
+    }
+  };
+
+  const uploadValueIfNeeded = async (
+    key: string,
+    value: unknown,
+  ): Promise<unknown> => {
+    if (value === undefined || value === null) {
+      return value;
+    }
+
+    if (Array.isArray(value)) {
+      return Promise.all(
+        value.map((item, index) =>
+          uploadValueIfNeeded(`${key}[${index}]`, item),
+        ),
+      );
+    }
+
+    if (typeof value === "string" && value.startsWith("blob:")) {
+      console.log(
+        `[DEBUG] Uploading blob URL for key ${key} to fal.ai storage`,
+      );
+      try {
+        const response = await fetch(value);
+        if (!response.ok) {
+          throw new Error(
+            `Failed to fetch blob URL (${response.status} ${response.statusText})`,
+          );
+        }
+
+        const blob = await response.blob();
+        const uploadedUrl = await fal.storage.upload(blob);
+        console.log(
+          `[DEBUG] Uploaded blob URL for key ${key} to fal.ai storage:`,
+          uploadedUrl,
+        );
+        return uploadedUrl;
+      } catch (error) {
+        console.error(
+          `[DEBUG] Failed to upload blob URL for key ${key} to fal.ai storage:`,
+          error,
+        );
+        throw error;
+      }
+    }
+
+    const isFile = typeof File !== "undefined" && value instanceof File;
+    const isBlob =
+      !isFile && typeof Blob !== "undefined" && value instanceof Blob;
+
+    if (isFile || isBlob) {
+      console.log(
+        `[DEBUG] Uploading ${isFile ? "file" : "blob"} for key ${key} to fal.ai storage`,
+      );
+      try {
+        const uploadedUrl = await fal.storage.upload(value as Blob);
+        console.log(
+          `[DEBUG] Uploaded ${isFile ? "file" : "blob"} for key ${key}:`,
+          uploadedUrl,
+        );
+        return uploadedUrl;
+      } catch (error) {
+        console.error(
+          `[DEBUG] Failed to upload ${isFile ? "file" : "blob"} for key ${key} to fal.ai storage:`,
+          error,
+        );
+        throw error;
+      }
+    }
+
+    return value;
+  };
+
+  const prepareFalInput = async (
+    rawInput: Record<string, unknown>,
+  ): Promise<Record<string, unknown>> => {
+    const entries = await Promise.all(
+      Object.entries(rawInput).map(async ([key, value]) => {
+        const resolvedValue = await uploadValueIfNeeded(key, value);
+        return [key, resolvedValue] as const;
+      }),
+    );
+
+    return entries.reduce<Record<string, unknown>>((acc, [key, value]) => {
+      if (value !== undefined) {
+        acc[key] = value;
+      }
+      return acc;
+    }, {});
+  };
 
   const allEndpoints = [...AVAILABLE_ENDPOINTS, ...RUNWARE_ENDPOINTS];
   const endpoint = allEndpoints.find((e) => e.endpointId === endpointId);
@@ -64,14 +187,19 @@ export const useJobCreator = ({
 
       if (provider === "fal") {
         console.log("[DEBUG] FAL - submitting with endpointId:", endpointId);
+        console.log("[DEBUG] FAL - input payload:", serializeForLog(input));
+        const preparedInput = await prepareFalInput(input);
+        lastSubmittedFalInputRef.current = preparedInput;
         console.log(
-          "[DEBUG] FAL - input payload:",
-          JSON.stringify(input, null, 2),
+          "[DEBUG] FAL - prepared input payload:",
+          serializeForLog(preparedInput),
         );
         try {
-          const result = await fal.queue.submit(endpointId, { input });
+          const result = await fal.queue.submit(endpointId, {
+            input: preparedInput,
+          });
           console.log("[DEBUG] FAL submit result:", result);
-          return result;
+          return { ...result, __input: preparedInput };
         } catch (error: any) {
           console.error("[DEBUG] FAL submit ERROR:", error);
           console.error("[DEBUG] FAL submit ERROR message:", error?.message);
@@ -252,10 +380,13 @@ export const useJobCreator = ({
       taskUUID?: string;
       data?: unknown;
       request_id?: string;
+      __input?: Record<string, unknown>;
     }) => {
       if (provider === "fal") {
         console.log("[DEBUG] FAL onSuccess data:", data);
         console.log("[DEBUG] FAL request_id:", data.request_id);
+        const storedInput =
+          data.__input ?? lastSubmittedFalInputRef.current ?? input;
         await db.media.create({
           projectId,
           createdAt: Date.now(),
@@ -265,7 +396,7 @@ export const useJobCreator = ({
           endpointId,
           requestId: data.request_id,
           status: "pending",
-          input,
+          input: storedInput,
         });
       } else if (provider === "runware") {
         console.log(
