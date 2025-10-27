@@ -361,11 +361,14 @@ export default function RightPanel({
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLElement>) => {
       if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
+        if (enhance.isPending || createJob.isPending || event.repeat) {
+          return;
+        }
         event.preventDefault();
         handleOnGenerate();
       }
     },
-    [handleOnGenerate],
+    [handleOnGenerate, enhance, createJob],
   );
 
   const handleSelectMedia = async (media: MediaItem) => {
