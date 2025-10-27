@@ -76,28 +76,50 @@ export const useJobCreator = ({
       const taskUUID = crypto.randomUUID();
 
       if (mediaType === "image") {
-        const response = await runware.requestImages({
+        const isIdeogram = endpointId.startsWith("ideogram:");
+        
+        const imageParams: any = {
           positivePrompt: input.prompt || "",
           model: endpointId,
           height: input.height || 1024,
           width: input.width || 1024,
           numberResults: input.numberResults || 1,
           outputType: "URL" as const,
-          outputFormat: input.outputFormat || "JPEG",
-          checkNSFW: input.checkNSFW !== undefined ? input.checkNSFW : true,
-          CFGScale: input.CFGScale || 3.5,
-          steps: input.steps || 28,
-          scheduler: input.scheduler || "Default",
+          outputFormat: (input.outputFormat || "JPG") as "JPG" | "PNG" | "WEBP",
           includeCost:
             input.includeCost !== undefined ? input.includeCost : true,
-          outputQuality: input.outputQuality || 85,
-          ...input,
-        });
-
-        return {
-          taskUUID,
-          data: response,
         };
+
+        if (!isIdeogram) {
+          imageParams.checkNSFW = input.checkNSFW !== undefined ? input.checkNSFW : true;
+          imageParams.CFGScale = input.CFGScale || 3.5;
+          imageParams.outputQuality = input.outputQuality || 85;
+          
+          if (input.steps !== undefined) {
+            imageParams.steps = input.steps;
+          }
+        }
+
+        console.log("[DEBUG] Runware requestImages - endpointId:", endpointId);
+        console.log("[DEBUG] Runware requestImages - params:", JSON.stringify(imageParams, null, 2));
+
+        try {
+          const response = await runware.requestImages(imageParams);
+          console.log("[DEBUG] Runware requestImages - SUCCESS:", JSON.stringify(response, null, 2));
+
+          return {
+            taskUUID,
+            data: response,
+          };
+        } catch (error) {
+          console.error("[DEBUG] Runware requestImages - ERROR:", error);
+          console.error("[DEBUG] Runware requestImages - ERROR message:", (error as any)?.message);
+          console.error("[DEBUG] Runware requestImages - ERROR response:", (error as any)?.response);
+          console.error("[DEBUG] Runware requestImages - ERROR response data:", (error as any)?.response?.data);
+          console.error("[DEBUG] Runware requestImages - ERROR response status:", (error as any)?.response?.status);
+          console.error("[DEBUG] Runware requestImages - ERROR stringified:", JSON.stringify(error, null, 2));
+          throw error;
+        }
       }
       if (mediaType === "video") {
         const runware = await getRunwareClient();
@@ -143,22 +165,17 @@ export const useJobCreator = ({
           model: endpointId,
           duration: input.duration || 30,
           outputFormat: "MP3" as const,
+          outputType: "URL" as const,
           audioSettings: {
             bitrate: 128,
             sampleRate: 44100,
           },
         };
 
-        console.log("[DEBUG] Calling runware.audioInference with:", {
-          ...audioParams,
-          outputType: ["URL"],
-        });
+        console.log("[DEBUG] Calling runware.audioInference with:", audioParams);
 
         try {
-          const response = await runware.audioInference({
-            ...audioParams,
-            outputType: ["URL"] as any,
-          });
+          const response = await runware.audioInference(audioParams);
           console.log("[DEBUG] audioInference response:", response);
           console.log(
             "[DEBUG] audioInference response stringified:",
