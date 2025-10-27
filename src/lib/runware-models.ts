@@ -16,6 +16,15 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     description: "Advanced image generation with creative control",
     popularity: 5,
     category: "image",
+    inputAsset: ["image"],
+    initialInput: {
+      positivePrompt: "",
+      inputImage: "",
+    },
+    inputMap: {
+      prompt: "positivePrompt",
+      image_url: "inputImage",
+    },
   },
   {
     provider: "runware",
@@ -24,6 +33,15 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     description: "Fast image generation from Google",
     popularity: 5,
     category: "image",
+    inputAsset: ["image"],
+    initialInput: {
+      positivePrompt: "",
+      inputImage: "",
+    },
+    inputMap: {
+      prompt: "positivePrompt",
+      image_url: "inputImage",
+    },
   },
   {
     provider: "runware",
@@ -33,6 +51,14 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     popularity: 4,
     category: "image",
     inputAsset: ["image"],
+    initialInput: {
+      positivePrompt: "",
+      inputImage: "",
+    },
+    inputMap: {
+      prompt: "positivePrompt",
+      image_url: "inputImage",
+    },
   },
   {
     provider: "runware",
@@ -242,6 +268,15 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     description: "Image generation from OpenAI",
     popularity: 4,
     category: "image",
+    inputAsset: ["image"],
+    initialInput: {
+      positivePrompt: "",
+      inputImage: "",
+    },
+    inputMap: {
+      prompt: "positivePrompt",
+      image_url: "inputImage",
+    },
   },
   {
     provider: "runware",
@@ -250,6 +285,15 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     description: "FLUX development with context awareness",
     popularity: 5,
     category: "image",
+    inputAsset: ["image"],
+    initialInput: {
+      positivePrompt: "",
+      inputImage: "",
+    },
+    inputMap: {
+      prompt: "positivePrompt",
+      image_url: "inputImage",
+    },
   },
   {
     provider: "runware",
@@ -258,6 +302,15 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     description: "Professional FLUX with context",
     popularity: 5,
     category: "image",
+    inputAsset: ["image"],
+    initialInput: {
+      positivePrompt: "",
+      inputImage: "",
+    },
+    inputMap: {
+      prompt: "positivePrompt",
+      image_url: "inputImage",
+    },
   },
   {
     provider: "runware",
@@ -266,6 +319,15 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     description: "Maximum quality FLUX with context",
     popularity: 5,
     category: "image",
+    inputAsset: ["image"],
+    initialInput: {
+      positivePrompt: "",
+      inputImage: "",
+    },
+    inputMap: {
+      prompt: "positivePrompt",
+      image_url: "inputImage",
+    },
   },
   {
     provider: "runware",
