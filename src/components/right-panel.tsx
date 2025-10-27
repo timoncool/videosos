@@ -23,6 +23,7 @@ import {
   WandSparklesIcon,
   XIcon,
 } from "lucide-react";
+import type { KeyboardEvent } from "react";
 import { useCallback } from "react";
 import { MediaItemRow } from "./media-panel";
 import {
@@ -356,6 +357,19 @@ export default function RightPanel({
     videoProjectStore.onGenerate = handleOnGenerate;
   }, [handleOnGenerate, videoProjectStore]);
 
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLElement>) => {
+      if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
+        if (enhance.isPending || createJob.isPending || event.repeat) {
+          return;
+        }
+        event.preventDefault();
+        handleOnGenerate();
+      }
+    },
+    [handleOnGenerate, enhance, createJob],
+  );
+
   const handleSelectMedia = async (media: MediaItem) => {
     const asset = endpoint?.inputAsset?.find((item) => {
       const assetType = getAssetType(item);
@@ -507,7 +521,10 @@ export default function RightPanel({
         generateDialogOpen ? "right-0" : "-right-[450px]",
       )}
     >
-      <div className="flex-1 p-4 flex flex-col gap-4 border-b border-border h-full overflow-hidden relative">
+      <div
+        className="flex-1 p-4 flex flex-col gap-4 border-b border-border h-full overflow-hidden relative"
+        onKeyDown={handleKeyDown}
+      >
         <div className="flex flex-row items-center justify-between">
           <h2 className="text-sm text-muted-foreground font-semibold flex-1">
             {t("generateMedia")}
