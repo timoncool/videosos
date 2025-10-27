@@ -11,7 +11,15 @@ import { useProjectId, useVideoProjectStore } from "@/data/store";
 import { cn, resolveDuration } from "@/lib/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { type DragEventHandler, useEffect, useMemo, useState } from "react";
+import {
+  type DragEventHandler,
+  type KeyboardEventHandler,
+  type MouseEventHandler,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { VideoControls } from "./video-controls";
 import { TimelineRuler } from "./video/timeline";
 import { VideoTrackRow } from "./video/track";
@@ -20,13 +28,26 @@ export default function BottomBar() {
   const t = useTranslations("app.bottomBar");
   const queryClient = useQueryClient();
   const projectId = useProjectId();
+  const player = useVideoProjectStore((s) => s.player);
   const playerCurrentTimestamp = useVideoProjectStore(
     (s) => s.playerCurrentTimestamp,
   );
-  const formattedTimestamp =
-    (playerCurrentTimestamp < 10 ? "0" : "") +
-    playerCurrentTimestamp.toFixed(2);
-  const minTrackWidth = `${((2 / 30) * 100).toFixed(2)}%`;
+  const setPlayerCurrentTimestamp = useVideoProjectStore(
+    (s) => s.setPlayerCurrentTimestamp,
+  );
+  const timelineWrapperRef = useRef<HTMLDivElement>(null);
+  const timelineDurationSeconds = 30;
+  const FPS = 30;
+  const minTrackWidth = `${((2 / timelineDurationSeconds) * 100).toFixed(2)}%`;
+  const currentMinutes = Math.floor(playerCurrentTimestamp / 60);
+  const formattedCurrentMinutes = currentMinutes.toString().padStart(2, "0");
+  const currentSeconds = playerCurrentTimestamp % 60;
+  const formattedCurrentSeconds = currentSeconds.toFixed(2).padStart(5, "0");
+  const totalMinutes = Math.floor(timelineDurationSeconds / 60);
+  const formattedTotalMinutes = totalMinutes.toString().padStart(2, "0");
+  const formattedTotalSeconds = (timelineDurationSeconds % 60)
+    .toFixed(2)
+    .padStart(5, "0");
   const [dragOverTracks, setDragOverTracks] = useState(false);
 
   const limitAllKeyframesToThirtySeconds = useMutation({
@@ -181,16 +202,81 @@ export default function BottomBar() {
     return true;
   };
 
+  const seekToTimestamp = (nextTimestamp: number) => {
+    const clampedTimestamp = Math.max(
+      0,
+      Math.min(nextTimestamp, timelineDurationSeconds),
+    );
+
+    if (player) {
+      const frame = Math.round(clampedTimestamp * FPS);
+      player.seekTo(frame);
+    }
+
+    setPlayerCurrentTimestamp(clampedTimestamp);
+  };
+
+  const handleTimelineClick: MouseEventHandler<HTMLDivElement> = (event) => {
+    const timelineElement = timelineWrapperRef.current;
+    if (!timelineElement) return;
+
+    const rect = timelineElement.getBoundingClientRect();
+    if (rect.width === 0) return;
+
+    const relativeX = event.clientX - rect.left;
+    const clampedX = Math.min(Math.max(relativeX, 0), rect.width);
+    const ratio = clampedX / rect.width;
+    const nextTimestamp = timelineDurationSeconds * ratio;
+
+    seekToTimestamp(nextTimestamp);
+  };
+
+  const handleTimelineKeyDown: KeyboardEventHandler<HTMLDivElement> = (
+    event,
+  ) => {
+    switch (event.key) {
+      case "ArrowLeft":
+        event.preventDefault();
+        seekToTimestamp(playerCurrentTimestamp - 1);
+        break;
+      case "ArrowRight":
+        event.preventDefault();
+        seekToTimestamp(playerCurrentTimestamp + 1);
+        break;
+      case "Home":
+        event.preventDefault();
+        seekToTimestamp(0);
+        break;
+      case "End":
+        event.preventDefault();
+        seekToTimestamp(timelineDurationSeconds);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const timelineProgressPercent = (
+    (Math.max(0, Math.min(playerCurrentTimestamp, timelineDurationSeconds)) /
+      timelineDurationSeconds) *
+    100
+  ).toFixed(2);
+
   return (
     <div className="border-t pb-2 border-border flex flex-col bg-background-light ">
       <div className="border-b border-border bg-background-dark px-2 flex flex-row gap-8 py-2 justify-between items-center flex-1">
         <div className="h-full flex flex-col justify-center px-4 bg-muted/50 rounded-md font-mono cursor-default select-none shadow-inner">
           <div className="flex flex-row items-baseline font-thin tabular-nums">
-            <span className="text-muted-foreground">00:</span>
-            <span>{formattedTimestamp}</span>
+            <span className="text-muted-foreground">
+              {formattedCurrentMinutes}:
+            </span>
+            <span>{formattedCurrentSeconds}</span>
             <span className="text-muted-foreground/50 mx-2">/</span>
             <span className="text-sm opacity-50">
-              <span className="text-muted-foreground">00:</span>30.00
+              <span className="text-muted-foreground">
+                {formattedTotalMinutes}:
+              </span>
+              {formattedTotalSeconds}
             </span>
           </div>
         </div>
@@ -207,14 +293,26 @@ export default function BottomBar() {
         onDragLeave={() => setDragOverTracks(false)}
         onDrop={handleOnDrop}
       >
-        <div className="flex flex-col justify-start w-full h-full relative">
+        <div
+          ref={timelineWrapperRef}
+          className="flex flex-col justify-start w-full h-full relative"
+          role="slider"
+          aria-label="Timeline"
+          aria-valuemin={0}
+          aria-valuemax={timelineDurationSeconds}
+          aria-valuenow={playerCurrentTimestamp}
+          aria-valuetext={`${formattedCurrentMinutes}:${formattedCurrentSeconds}`}
+          tabIndex={0}
+          onClick={handleTimelineClick}
+          onKeyDown={handleTimelineKeyDown}
+        >
           <div
             className="absolute z-[32] top-6 bottom-0 w-[2px] bg-white/30 ms-4"
             style={{
-              left: `${((playerCurrentTimestamp / 30) * 100).toFixed(2)}%`,
+              left: `${timelineProgressPercent}%`,
             }}
           />
-          <TimelineRuler className="z-30 pointer-events-none" />
+          <TimelineRuler className="z-30" />
           <div className="flex timeline-container flex-col h-full mx-4 mt-10 gap-2 z-[31] pb-2">
             {Object.entries(trackObj).map(([trackType, track]) =>
               track ? (
