@@ -16,14 +16,11 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     description: "Advanced image generation with creative control",
     popularity: 5,
     category: "image",
-    inputAsset: ["image"],
     initialInput: {
       positivePrompt: "",
-      inputImage: "",
     },
     inputMap: {
       prompt: "positivePrompt",
-      image_url: "inputImage",
     },
   },
   {
@@ -33,14 +30,11 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     description: "Fast image generation from Google",
     popularity: 5,
     category: "image",
-    inputAsset: ["image"],
     initialInput: {
       positivePrompt: "",
-      inputImage: "",
     },
     inputMap: {
       prompt: "positivePrompt",
-      image_url: "inputImage",
     },
   },
   {
@@ -158,6 +152,12 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     description: "High-quality image generation with realism",
     popularity: 5,
     category: "image",
+    initialInput: {
+      positivePrompt: "",
+    },
+    inputMap: {
+      prompt: "positivePrompt",
+    },
   },
   {
     provider: "runware",
@@ -248,18 +248,30 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
   {
     provider: "runware",
     endpointId: "google:2@2",
-    label: "Imagen 4 Ultra",
+    label: "Imagen 4.0 Ultra",
     description: "Highest quality Imagen 4 model",
     popularity: 5,
     category: "image",
+    initialInput: {
+      positivePrompt: "",
+    },
+    inputMap: {
+      prompt: "positivePrompt",
+    },
   },
   {
     provider: "runware",
     endpointId: "google:2@3",
-    label: "Imagen 4 Fast",
-    description: "Fast image generation from Google",
+    label: "Imagen 4.0 Preview Fast",
+    description: "Fast preview image generation from Google",
     popularity: 5,
     category: "image",
+    initialInput: {
+      positivePrompt: "",
+    },
+    inputMap: {
+      prompt: "positivePrompt",
+    },
   },
   {
     provider: "runware",
@@ -268,14 +280,11 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     description: "Image generation from OpenAI",
     popularity: 4,
     category: "image",
-    inputAsset: ["image"],
     initialInput: {
       positivePrompt: "",
-      inputImage: "",
     },
     inputMap: {
       prompt: "positivePrompt",
-      image_url: "inputImage",
     },
   },
   {
@@ -647,7 +656,24 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
   },
   {
     provider: "runware",
-    endpointId: "google:3@0",
+    endpointId: "google:3@5",
+    label: "Veo 3 Fast (Image)",
+    description: "Ultra-fast image-to-video generation with Veo 3 Fast",
+    popularity: 5,
+    category: "video",
+    inputAsset: ["image"],
+    initialInput: {
+      positivePrompt: "",
+      inputImage: "",
+    },
+    inputMap: {
+      prompt: "positivePrompt",
+      image_url: "inputImage",
+    },
+  },
+  {
+    provider: "runware",
+    endpointId: "google:3@1",
     label: "Veo 3",
     description:
       "Google's Veo 3 model delivers immersive cinematic video with native audio generation for synchronized dialogue, music, and sound design.",
@@ -663,23 +689,24 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
   },
   {
     provider: "runware",
-    endpointId: "google:3@1",
-    label: "Veo 3 Fast",
-    description:
-      "Optimized Veo 3 variant that maintains Google's native audio generation while prioritizing faster, more cost-effective creation.",
-    cost: "~$0.12/video",
+    endpointId: "google:3@4",
+    label: "Veo 3 (Image)",
+    description: "Image-to-video generation with Google's Veo 3",
     popularity: 5,
     category: "video",
+    inputAsset: ["image"],
     initialInput: {
       positivePrompt: "",
+      inputImage: "",
     },
     inputMap: {
       prompt: "positivePrompt",
+      image_url: "inputImage",
     },
   },
   {
     provider: "runware",
-    endpointId: "google:2@0",
+    endpointId: "google:3@0",
     label: "Veo 2",
     description: "Google Veo 2 video generation",
     popularity: 5,
