@@ -647,11 +647,45 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
   },
   {
     provider: "runware",
+    endpointId: "google:3@5",
+    label: "Veo 3 Fast (Image)",
+    description: "Ultra-fast image-to-video generation with Veo 3 Fast",
+    popularity: 5,
+    category: "video",
+    inputAsset: ["image"],
+    initialInput: {
+      positivePrompt: "",
+      inputImage: "",
+    },
+    inputMap: {
+      prompt: "positivePrompt",
+      image_url: "inputImage",
+    },
+  },
+  {
+    provider: "runware",
     endpointId: "google:3@1",
     label: "Veo 3",
     description: "Google's latest video generation model",
     popularity: 5,
     category: "video",
+  },
+  {
+    provider: "runware",
+    endpointId: "google:3@4",
+    label: "Veo 3 (Image)",
+    description: "Image-to-video generation with Google's Veo 3",
+    popularity: 5,
+    category: "video",
+    inputAsset: ["image"],
+    initialInput: {
+      positivePrompt: "",
+      inputImage: "",
+    },
+    inputMap: {
+      prompt: "positivePrompt",
+      image_url: "inputImage",
+    },
   },
   {
     provider: "runware",
