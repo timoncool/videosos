@@ -92,7 +92,8 @@
       "imaginePlaceholder": "Imagine...",
       "enhancePrompt": "Enhance Prompt",
       "duration": "Duration",
-      "generate": "Generate"
+      "generate": "Generate",
+      "thisModelRequiresAsset": "This model requires an asset to be selected"
     },
     "videoPreview": {
       "export": "Export"

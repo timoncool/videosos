@@ -64,9 +64,19 @@ export const useJobCreator = ({
 
       if (provider === "fal") {
         console.log("[DEBUG] FAL - submitting with endpointId:", endpointId);
-        const result = await fal.queue.submit(endpointId, { input });
-        console.log("[DEBUG] FAL submit result:", result);
-        return result;
+        console.log("[DEBUG] FAL - input payload:", JSON.stringify(input, null, 2));
+        try {
+          const result = await fal.queue.submit(endpointId, { input });
+          console.log("[DEBUG] FAL submit result:", result);
+          return result;
+        } catch (error: any) {
+          console.error("[DEBUG] FAL submit ERROR:", error);
+          console.error("[DEBUG] FAL submit ERROR message:", error?.message);
+          console.error("[DEBUG] FAL submit ERROR status:", error?.status);
+          console.error("[DEBUG] FAL submit ERROR body:", error?.body);
+          console.error("[DEBUG] FAL submit ERROR response:", error?.response);
+          throw error;
+        }
       }
       const runware = await getRunwareClient();
       if (!runware) {
