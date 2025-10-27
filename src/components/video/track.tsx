@@ -256,6 +256,14 @@ export function VideoTrackView({
     const bounds = calculateBounds();
     const startX = e.clientX;
     const startLeft = trackElement.offsetLeft;
+    const duplicateMode = e.ctrlKey || e.metaKey;
+    const originalTimestamp = frame.timestamp;
+    const originalLeftStyle = trackElement.style.left;
+    let duplicateTimestamp = frame.timestamp;
+
+    const applyLeftStyle = (timestamp: number) => {
+      trackElement.style.left = `${((timestamp / 30) * 100) / 1000}%`;
+    };
 
     const handleMouseMove = (moveEvent: MouseEvent) => {
       const deltaX = moveEvent.clientX - startX;
@@ -271,16 +279,40 @@ export function VideoTrackView({
       const parentWidth = timelineElement
         ? (timelineElement as HTMLElement).offsetWidth
         : 1;
-      const newTimestamp = (newLeft / parentWidth) * 30;
-      frame.timestamp = (newTimestamp < 0 ? 0 : newTimestamp) * 1000;
+      const calculatedTimestamp = (newLeft / parentWidth) * 30;
+      const sanitizedTimestamp =
+        (calculatedTimestamp < 0 ? 0 : calculatedTimestamp) * 1000;
 
-      trackElement.style.left = `${((frame.timestamp / 30) * 100) / 1000}%`;
+      if (duplicateMode) {
+        duplicateTimestamp = sanitizedTimestamp;
+        applyLeftStyle(sanitizedTimestamp);
+        return;
+      }
+
+      frame.timestamp = sanitizedTimestamp;
+      applyLeftStyle(frame.timestamp);
       db.keyFrames.update(frame.id, { timestamp: frame.timestamp });
     };
 
-    const handleMouseUp = () => {
+    const handleMouseUp = async () => {
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
+
+      if (duplicateMode) {
+        if (originalLeftStyle) {
+          trackElement.style.left = originalLeftStyle;
+        } else {
+          applyLeftStyle(originalTimestamp);
+        }
+
+        await db.keyFrames.create({
+          trackId: frame.trackId,
+          data: { ...frame.data },
+          timestamp: duplicateTimestamp,
+          duration: frame.duration,
+        });
+      }
+
       queryClient.invalidateQueries({
         queryKey: queryKeys.projectPreview(projectId),
       });
