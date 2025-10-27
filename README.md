@@ -23,13 +23,13 @@ Create professional videos with AI in your browser. Free, open-source video edit
 
 ## Key Features
 
-### 🤖 100+ Top AI Models from lmarena.ai Leaderboard
+### 🤖 100+ AI Models
 
-Access the best AI models ranked by millions of users on lmarena.ai. VideoSOS integrates with **fal.ai** and **Runware.ai** to bring you cutting-edge AI generation capabilities:
+VideoSOS integrates with **fal.ai** and **Runware.ai** to bring you cutting-edge AI generation capabilities:
 
 - **🎬 Video Generation**: Text-to-video and image-to-video with state-of-the-art models including Google Veo 3.1, Kling 2.5, and Hailuo-02
 - **🎨 Image Generation**: Text-to-image with cutting-edge models including Gemini 2.5 Flash, Imagen 4.0, FLUX.1 Pro, and Ideogram V3
-- **✏️ Image Editing**: AI-powered photo editing with leading models including the #1 ranked Gemini 2.5 Flash Edit (8.6M votes)
+- **✏️ Image Editing**: AI-powered photo editing with leading models including Gemini 2.5 Flash Edit, FLUX.1 Kontext, and Qwen Image Edit
 - **🎵 Audio Generation**: Music composition with Stable Audio and natural voiceovers with multiple voices
 
 Switch between providers seamlessly or use both simultaneously for maximum flexibility. [See complete model list below](#supported-ai-models).
@@ -51,52 +51,52 @@ Full internationalization support (English/Russian) with keyboard shortcuts for 
 
 ## Supported AI Models
 
-VideoSOS features 100+ AI models from the top rankings on [lmarena.ai](https://lmarena.ai/), the largest AI model leaderboard with millions of user votes. All models are available through dual provider support for maximum reliability.
+VideoSOS features 100+ AI models across video generation, image generation, and image editing. All models are available through dual provider support for maximum reliability.
 
 ### Complete Model List by Category
 
 #### Text-to-Video Models
-| Model | Provider | Description | Votes |
-|-------|----------|-------------|-------|
-| Veo 3.1 | FAL, Runware | Google's latest video model with native audio | NEW |
-| Veo 3.1 Fast | FAL, Runware | Faster version of Veo 3.1 | NEW |
-| Veo 3 | FAL, Runware | Cinematic video with synchronized audio | 1.3M |
-| Veo 3 Fast | FAL | Fast cinematic video generation | 1.3M |
-| Kling 2.5 | FAL, Runware | High-quality video synthesis | 1.6K |
-| Hailuo-02 | FAL, Runware | Advanced video generation | 10K |
+| Model | Provider | Description |
+|-------|----------|-------------|
+| Veo 3.1 | FAL, Runware | Google's latest video model with native audio |
+| Veo 3.1 Fast | FAL, Runware | Faster version of Veo 3.1 |
+| Veo 3 | FAL, Runware | Cinematic video with synchronized audio |
+| Veo 3 Fast | FAL | Fast cinematic video generation |
+| Kling 2.5 | FAL, Runware | High-quality video synthesis |
+| Hailuo-02 | FAL, Runware | Advanced video generation |
 
 #### Image-to-Video Models
-| Model | Provider | Description | Votes |
-|-------|----------|-------------|-------|
-| Veo 3.1 Image-to-Video | FAL | Animate images with Veo 3.1 | NEW |
-| Veo 3.1 Fast Image-to-Video | FAL | Fast image animation | NEW |
-| Veo 3 Image-to-Video | FAL, Runware | Animate static images | 1.3M |
-| Veo 3 Fast Image-to-Video | FAL, Runware | Fast image animation | 1.3M |
+| Model | Provider | Description |
+|-------|----------|-------------|
+| Veo 3.1 Image-to-Video | FAL | Animate images with Veo 3.1 |
+| Veo 3.1 Fast Image-to-Video | FAL | Fast image animation |
+| Veo 3 Image-to-Video | FAL, Runware | Animate static images |
+| Veo 3 Fast Image-to-Video | FAL, Runware | Fast image animation |
 
 #### Text-to-Image Models
-| Model | Provider | Description | Votes |
-|-------|----------|-------------|-------|
-| Gemini 2.5 Flash Image | FAL, Runware | Ultra-fast image generation | 448K |
-| Imagen 4.0 Ultra | FAL, Runware | Google's highest quality image model | 448K |
-| Imagen 4.0 Preview Fast | FAL, Runware | Fast high-quality images | 447K |
-| Hunyuan Image 3.0 | FAL, Runware | State-of-the-art image synthesis | 14K |
-| Seedream 4.0 | FAL, Runware | High-resolution image generation | 33K |
-| Seedream 3.0 | FAL, Runware | Quality image synthesis | 37K |
-| GPT Image 1 | FAL, Runware | OpenAI's image model | 205K |
-| FLUX.1 Pro | FAL, Runware | Professional image generation | Popular |
-| Ideogram V3 | FAL, Runware | Text rendering in images | Popular |
+| Model | Provider | Description |
+|-------|----------|-------------|
+| Gemini 2.5 Flash Image | FAL, Runware | Ultra-fast image generation |
+| Imagen 4.0 Ultra | FAL, Runware | Google's highest quality image model |
+| Imagen 4.0 Preview Fast | FAL, Runware | Fast high-quality images |
+| Hunyuan Image 3.0 | FAL, Runware | State-of-the-art image synthesis |
+| Seedream 4.0 | FAL, Runware | High-resolution image generation |
+| Seedream 3.0 | FAL, Runware | Quality image synthesis |
+| GPT Image 1 | FAL, Runware | OpenAI's image model |
+| FLUX.1 Pro | FAL, Runware | Professional image generation |
+| Ideogram V3 | FAL, Runware | Text rendering in images |
 
 #### Image Editing Models
-| Model | Provider | Description | Votes |
-|-------|----------|-------------|-------|
-| Gemini 2.5 Flash Edit | FAL, Runware | #1 image editing model | 8.6M |
-| FLUX.1 Kontext Pro | FAL, Runware | Context-aware editing | 5.4M |
-| FLUX.1 Kontext Dev | FAL, Runware | Developer-friendly editing | 3.0M |
-| FLUX.1 Kontext Max | FAL, Runware | Maximum quality editing | 339K |
-| Qwen Image Edit | FAL, Runware | Intelligent image modification | 829K |
-| Reve v1 Edit | FAL | Advanced editing capabilities | 2.8K |
-| Seedream 4.0 Edit | FAL, Runware | High-quality transformations | 219K |
-| GPT Image 1 Edit | FAL, Runware | OpenAI image editing | 2.1M |
+| Model | Provider | Description |
+|-------|----------|-------------|
+| Gemini 2.5 Flash Edit | FAL, Runware | High-quality image editing |
+| FLUX.1 Kontext Pro | FAL, Runware | Context-aware editing |
+| FLUX.1 Kontext Dev | FAL, Runware | Developer-friendly editing |
+| FLUX.1 Kontext Max | FAL, Runware | Maximum quality editing |
+| Qwen Image Edit | FAL, Runware | Intelligent image modification |
+| Reve v1 Edit | FAL | Advanced editing capabilities |
+| Seedream 4.0 Edit | FAL, Runware | High-quality transformations |
+| GPT Image 1 Edit | FAL, Runware | OpenAI image editing |
 
 ### AI Providers
 
