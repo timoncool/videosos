@@ -25,6 +25,12 @@ import {
 } from "lucide-react";
 import { useCallback } from "react";
 import { MediaItemRow } from "./media-panel";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "./ui/accordion";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -314,7 +320,7 @@ export default function RightPanel({
   const createJob = useJobCreator({
     projectId,
     endpointId:
-      generateData.image && mediaType === "video"
+      generateData.image && mediaType === "video" && !endpointId.endsWith('/image-to-video')
         ? `${endpointId}/image-to-video`
         : endpointId,
     mediaType,
@@ -327,14 +333,10 @@ export default function RightPanel({
 
   const handleOnGenerate = useCallback(
     async () => {
-      await createJob.mutateAsync(
-        {} as unknown as Parameters<typeof createJob.mutateAsync>[0],
+      handleOnOpenChange(false);
+      createJob.mutate(
+        {} as unknown as Parameters<typeof createJob.mutate>[0],
         {
-          onSuccess: async () => {
-            if (!createJob.isError) {
-              handleOnOpenChange(false);
-            }
-          },
           onError: (error) => {
             console.warn("Failed to create job", error);
             toast({
@@ -785,6 +787,182 @@ export default function RightPanel({
                 )}
               </div>
             )}
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="advanced" className="border-none">
+                <AccordionTrigger className="text-xs text-muted-foreground py-2">
+                  Advanced Settings
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="flex flex-col gap-3">
+                    {(mediaType === "image" || mediaType === "video") && (
+                      <>
+                        {mediaType === "image" && (
+                          <div className="flex flex-col gap-2">
+                            <Label className="text-xs">Aspect Ratio</Label>
+                            <Select
+                              value={generateData.aspect_ratio || "16:9"}
+                              onValueChange={(value) =>
+                                setGenerateData({ aspect_ratio: value })
+                              }
+                            >
+                              <SelectTrigger className="h-8 text-xs">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="1:1">1:1 (Square)</SelectItem>
+                                <SelectItem value="16:9">16:9 (Landscape)</SelectItem>
+                                <SelectItem value="9:16">9:16 (Portrait)</SelectItem>
+                                <SelectItem value="4:3">4:3</SelectItem>
+                                <SelectItem value="3:4">3:4</SelectItem>
+                                <SelectItem value="21:9">21:9 (Ultrawide)</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        )}
+                        <div className="flex gap-2">
+                          <div className="flex flex-col gap-2 flex-1">
+                            <Label className="text-xs">Width</Label>
+                            <Input
+                              className="h-8 text-xs"
+                              type="number"
+                              min={256}
+                              max={2048}
+                              step={64}
+                              value={generateData.width || (mediaType === "image" ? 1024 : 1920)}
+                              onChange={(e) =>
+                                setGenerateData({
+                                  width: Number.parseInt(e.target.value),
+                                })
+                              }
+                            />
+                          </div>
+                          <div className="flex flex-col gap-2 flex-1">
+                            <Label className="text-xs">Height</Label>
+                            <Input
+                              className="h-8 text-xs"
+                              type="number"
+                              min={256}
+                              max={2048}
+                              step={64}
+                              value={generateData.height || (mediaType === "image" ? 1024 : 1080)}
+                              onChange={(e) =>
+                                setGenerateData({
+                                  height: Number.parseInt(e.target.value),
+                                })
+                              }
+                            />
+                          </div>
+                        </div>
+                        {mediaType === "image" && (
+                          <>
+                            <div className="flex flex-col gap-2">
+                              <Label className="text-xs">Steps</Label>
+                              <Input
+                                className="h-8 text-xs"
+                                type="number"
+                                min={1}
+                                max={100}
+                                step={1}
+                                value={generateData.steps || 28}
+                                onChange={(e) =>
+                                  setGenerateData({
+                                    steps: Number.parseInt(e.target.value),
+                                  })
+                                }
+                              />
+                            </div>
+                            <div className="flex flex-col gap-2">
+                              <Label className="text-xs">CFG Scale</Label>
+                              <Input
+                                className="h-8 text-xs"
+                                type="number"
+                                min={1}
+                                max={20}
+                                step={0.5}
+                                value={generateData.CFGScale || 3.5}
+                                onChange={(e) =>
+                                  setGenerateData({
+                                    CFGScale: Number.parseFloat(e.target.value),
+                                  })
+                                }
+                              />
+                            </div>
+                            <div className="flex flex-col gap-2">
+                              <Label className="text-xs">Seed</Label>
+                              <Input
+                                className="h-8 text-xs"
+                                type="number"
+                                placeholder="Random"
+                                value={generateData.seed || ""}
+                                onChange={(e) =>
+                                  setGenerateData({
+                                    seed: e.target.value ? Number.parseInt(e.target.value) : undefined,
+                                  })
+                                }
+                              />
+                            </div>
+                          </>
+                        )}
+                        {mediaType === "video" && (
+                          <>
+                            <div className="flex flex-col gap-2">
+                              <Label className="text-xs">Duration (seconds)</Label>
+                              <Input
+                                className="h-8 text-xs"
+                                type="number"
+                                min={1}
+                                max={30}
+                                step={1}
+                                value={generateData.duration || 5}
+                                onChange={(e) =>
+                                  setGenerateData({
+                                    duration: Number.parseInt(e.target.value),
+                                  })
+                                }
+                              />
+                            </div>
+                            <div className="flex flex-col gap-2">
+                              <Label className="text-xs">FPS</Label>
+                              <Input
+                                className="h-8 text-xs"
+                                type="number"
+                                min={12}
+                                max={60}
+                                step={1}
+                                value={generateData.fps || 24}
+                                onChange={(e) =>
+                                  setGenerateData({
+                                    fps: Number.parseInt(e.target.value),
+                                  })
+                                }
+                              />
+                            </div>
+                          </>
+                        )}
+                      </>
+                    )}
+                    {(mediaType === "music" || mediaType === "voiceover") && (
+                      <div className="flex flex-col gap-2">
+                        <Label className="text-xs">Duration (seconds)</Label>
+                        <Input
+                          className="h-8 text-xs"
+                          type="number"
+                          min={1}
+                          max={60}
+                          step={1}
+                          value={generateData.duration || 30}
+                          onChange={(e) =>
+                            setGenerateData({
+                              duration: Number.parseInt(e.target.value),
+                            })
+                          }
+                        />
+                      </div>
+                    )}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
             <div className="flex flex-row gap-2">
               <Button
                 className="w-full"
