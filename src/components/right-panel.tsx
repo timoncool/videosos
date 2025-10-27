@@ -24,7 +24,7 @@ import {
   XIcon,
 } from "lucide-react";
 import type { KeyboardEvent } from "react";
-import { useCallback } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { MediaItemRow } from "./media-panel";
 import {
   Accordion,
@@ -52,7 +52,6 @@ import {
   resolveMediaUrl,
 } from "@/lib/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useMemo, useState } from "react";
 import CameraMovement from "./camera-control";
 import { VoiceSelector } from "./playht/voice-selector";
 import { LoadingIcon } from "./ui/icons";
@@ -170,11 +169,15 @@ export default function RightPanel({
   );
   const queryClient = useQueryClient();
 
+  const generateDialogOpenRef = useRef(generateDialogOpen);
+  const shouldReopenOnSuccessRef = useRef(false);
+
   const handleOnOpenChange = useCallback(
     (isOpen: boolean) => {
       if (!isOpen) {
         closeGenerateDialog();
         resetGenerateData();
+        shouldReopenOnSuccessRef.current = false;
         return;
       }
       onOpenChange?.(isOpen);
@@ -334,8 +337,15 @@ export default function RightPanel({
     },
   });
 
+  useEffect(() => {
+    generateDialogOpenRef.current = generateDialogOpen;
+  }, [generateDialogOpen]);
+
   const handleOnGenerate = useCallback(
     async () => {
+      shouldReopenOnSuccessRef.current = generateDialogOpenRef.current;
+      setTab("generation");
+
       createJob.mutate(
         {} as unknown as Parameters<typeof createJob.mutate>[0],
         {
@@ -356,6 +366,13 @@ export default function RightPanel({
   useEffect(() => {
     videoProjectStore.onGenerate = handleOnGenerate;
   }, [handleOnGenerate, videoProjectStore]);
+
+  useEffect(() => {
+    if (createJob.isSuccess && shouldReopenOnSuccessRef.current) {
+      openGenerateDialog();
+      shouldReopenOnSuccessRef.current = false;
+    }
+  }, [createJob.isSuccess, openGenerateDialog]);
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLElement>) => {
