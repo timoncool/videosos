@@ -999,10 +999,27 @@ export default function RightPanel({
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
-            <div className="flex flex-row gap-2">
+            <div className="flex flex-col gap-2">
+              {endpoint?.inputAsset?.some((asset) => {
+                const assetType = getAssetType(asset);
+                const assetKey = getAssetKey(asset);
+                return !generateData[assetKey];
+              }) && (
+                <div className="text-xs text-muted-foreground text-center">
+                  {t("thisModelRequiresAsset")}
+                </div>
+              )}
               <Button
                 className="w-full"
-                disabled={enhance.isPending || createJob.isPending}
+                disabled={
+                  enhance.isPending ||
+                  createJob.isPending ||
+                  endpoint?.inputAsset?.some((asset) => {
+                    const assetType = getAssetType(asset);
+                    const assetKey = getAssetKey(asset);
+                    return !generateData[assetKey];
+                  })
+                }
                 onClick={handleOnGenerate}
               >
                 {t("generate")}

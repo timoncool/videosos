@@ -92,7 +92,8 @@
       "imaginePlaceholder": "Представьте...",
       "enhancePrompt": "Улучшить запрос",
       "duration": "Длительность",
-      "generate": "Сгенерировать"
+      "generate": "Сгенерировать",
+      "thisModelRequiresAsset": "Эта модель требует выбора ресурса"
     },
     "videoPreview": {
       "export": "Экспорт"
