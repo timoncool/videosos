@@ -163,14 +163,18 @@ export const useJobCreator = ({
         }
 
         const defaultDuration = endpointId.startsWith("minimax:") ? 6 : 5;
-        const videoParams = {
-          positivePrompt: input.prompt || "",
+        const videoParams: any = {
+          positivePrompt: input.positivePrompt || input.prompt || "",
           model: endpointId,
           duration: input.duration || defaultDuration,
           fps: input.fps || 24,
           height: input.height || 1080,
           width: input.width || 1920,
         };
+
+        if (input.inputImage) {
+          videoParams.inputImage = input.inputImage;
+        }
 
         console.log(
           "[DEBUG] Calling runware.videoInference with:",
@@ -189,7 +193,7 @@ export const useJobCreator = ({
           console.error("[DEBUG] videoInference ERROR:", error);
           throw error;
         }
-      } else if (mediaType === "music" || mediaType === "voiceover") {
+      }else if (mediaType === "music" || mediaType === "voiceover") {
         const runware = await getRunwareClient();
         if (!runware) {
           throw new Error("Runware API key not configured");
