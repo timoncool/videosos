@@ -86,6 +86,9 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
       prompt: "",
       image_url: "",
     },
+    inputMap: {
+      image_url: "image",
+    },
   },
   {
     provider: "fal",
