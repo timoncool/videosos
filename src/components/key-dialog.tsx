@@ -32,11 +32,18 @@ export function KeyDialog({ onOpenChange, open, ...props }: KeyDialogProps) {
   >("idle");
   const { toast } = useToast();
 
+  const notifyApiKeysUpdated = () => {
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("apiKeysUpdated"));
+    }
+  };
+
   const testFalKey = async () => {
     if (!falKey) return;
     setFalTestStatus("testing");
     try {
       localStorage.setItem("falKey", falKey);
+      notifyApiKeysUpdated();
       await fal.queue.submit("fal-ai/flux/schnell", {
         input: { prompt: "test", image_size: "square_hd", num_images: 1 },
       });
@@ -60,6 +67,7 @@ export function KeyDialog({ onOpenChange, open, ...props }: KeyDialogProps) {
     setRunwareTestStatus("testing");
     try {
       localStorage.setItem("runwareKey", runwareKey);
+      notifyApiKeysUpdated();
       resetRunwareClient();
       const client = await getRunwareClient();
       if (!client) throw new Error("Failed to initialize");
@@ -101,6 +109,7 @@ export function KeyDialog({ onOpenChange, open, ...props }: KeyDialogProps) {
   const handleSave = () => {
     localStorage.setItem("falKey", falKey);
     localStorage.setItem("runwareKey", runwareKey);
+    notifyApiKeysUpdated();
     handleOnOpenChange(false);
     setFalKey("");
     setRunwareKey("");

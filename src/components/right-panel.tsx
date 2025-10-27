@@ -68,6 +68,23 @@ import VideoFrameSelector from "./video-frame-selector";
 
 const ALL_ENDPOINTS = [...AVAILABLE_ENDPOINTS, ...RUNWARE_ENDPOINTS];
 
+const isFalEndpoint = (endpointId?: string) =>
+  !!endpointId &&
+  AVAILABLE_ENDPOINTS.some((endpoint) => endpoint.endpointId === endpointId);
+
+const isRunwareEndpoint = (endpointId?: string) =>
+  !!endpointId &&
+  RUNWARE_ENDPOINTS.some((endpoint) => endpoint.endpointId === endpointId);
+
+const getProviderForEndpoint = (
+  endpointId?: string,
+): "fal" | "runware" | undefined => {
+  if (!endpointId) return undefined;
+  if (isFalEndpoint(endpointId)) return "fal";
+  if (isRunwareEndpoint(endpointId)) return "runware";
+  return undefined;
+};
+
 type ModelEndpointPickerProps = {
   mediaType: string;
   onValueChange: (value: MediaType) => void;
@@ -169,6 +186,30 @@ export default function RightPanel({
   );
   const queryClient = useQueryClient();
 
+  const [apiKeys, setApiKeys] = useState({ fal: false, runware: false });
+
+  const updateApiKeys = useCallback(() => {
+    if (typeof window === "undefined") return;
+    setApiKeys({
+      fal: Boolean(localStorage.getItem("falKey")),
+      runware: Boolean(localStorage.getItem("runwareKey")),
+    });
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    updateApiKeys();
+    window.addEventListener("focus", updateApiKeys);
+    window.addEventListener("storage", updateApiKeys);
+    window.addEventListener("apiKeysUpdated", updateApiKeys);
+
+    return () => {
+      window.removeEventListener("focus", updateApiKeys);
+      window.removeEventListener("storage", updateApiKeys);
+      window.removeEventListener("apiKeysUpdated", updateApiKeys);
+    };
+  }, [updateApiKeys]);
+
   const generateDialogOpenRef = useRef(generateDialogOpen);
   const shouldReopenOnSuccessRef = useRef(false);
 
@@ -221,6 +262,49 @@ export default function RightPanel({
     () => allEndpoints.find((endpoint) => endpoint.endpointId === endpointId),
     [endpointId, allEndpoints],
   );
+  const provider = useMemo(
+    () => endpoint?.provider ?? getProviderForEndpoint(endpointId),
+    [endpoint, endpointId],
+  );
+  const isFalProvider = provider === "fal";
+  const isRunwareProvider = provider === "runware";
+  const isProviderKeyMissing =
+    (isFalProvider && !apiKeys.fal) || (isRunwareProvider && !apiKeys.runware);
+
+  const ensureProviderKey = useCallback(() => {
+    if (isFalProvider && !apiKeys.fal) {
+      toast({
+        title: tToast("falKeyRequired"),
+        description: tToast("falKeyRequiredDesc"),
+        variant: "destructive",
+      });
+      return false;
+    }
+
+    if (isRunwareProvider && !apiKeys.runware) {
+      toast({
+        title: tToast("runwareKeyRequired"),
+        description: tToast("runwareKeyRequiredDesc"),
+        variant: "destructive",
+      });
+      return false;
+    }
+
+    return true;
+  }, [
+    apiKeys.fal,
+    apiKeys.runware,
+    isFalProvider,
+    isRunwareProvider,
+    tToast,
+    toast,
+  ]);
+
+  useEffect(() => {
+    if (generateDialogOpen) {
+      updateApiKeys();
+    }
+  }, [generateDialogOpen, updateApiKeys]);
   const handleMediaTypeChange = (mediaType: string) => {
     setMediaType(mediaType as MediaType);
     const endpoint = allEndpoints.find(
@@ -341,27 +425,26 @@ export default function RightPanel({
     generateDialogOpenRef.current = generateDialogOpen;
   }, [generateDialogOpen]);
 
-  const handleOnGenerate = useCallback(
-    async () => {
-      shouldReopenOnSuccessRef.current = generateDialogOpenRef.current;
-      setTab("generation");
+  const handleOnGenerate = useCallback(async () => {
+    if (!ensureProviderKey()) {
+      return;
+    }
 
-      createJob.mutate(
-        {} as unknown as Parameters<typeof createJob.mutate>[0],
-        {
-          onError: (error) => {
-            console.warn("Failed to create job", error);
-            toast({
-              title: tToast("generateMediaFailed"),
-              description: tToast("generateMediaFailedDesc"),
-            });
-          },
-        },
-      );
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [createJob, toast, tToast],
-  );
+    shouldReopenOnSuccessRef.current = generateDialogOpenRef.current;
+    setTab("generation");
+
+    createJob.mutate({} as unknown as Parameters<typeof createJob.mutate>[0], {
+      onError: (error) => {
+        console.warn("Failed to create job", error);
+        toast({
+          title: tToast("generateMediaFailed"),
+          description: isRunwareProvider
+            ? tToast("generateMediaFailedDescRunware")
+            : tToast("generateMediaFailedDesc"),
+        });
+      },
+    });
+  }, [createJob, ensureProviderKey, isRunwareProvider, tToast, toast]);
 
   useEffect(() => {
     videoProjectStore.onGenerate = handleOnGenerate;
@@ -405,6 +488,22 @@ export default function RightPanel({
       return;
     }
 
+    if (isRunwareProvider) {
+      const assetValue =
+        (media.kind === "uploaded" && media.url ? media.url : null) ??
+        (media.kind === "uploaded" && media.blob ? media.blob : null) ??
+        resolveMediaUrl(media);
+
+      if (!assetValue) {
+        setTab("generation");
+        return;
+      }
+
+      setGenerateData({ [getAssetKey(asset)]: assetValue });
+      setTab("generation");
+      return;
+    }
+
     let mediaUrl = resolveMediaUrl(media);
 
     if (media.kind === "uploaded" && media.blob) {
@@ -416,9 +515,10 @@ export default function RightPanel({
         } catch (err) {
           console.error("Failed to upload to fal.ai storage:", err);
           toast({
-            title: "Upload Failed",
-            description:
-              "Please check that your FAL API key is set correctly in Settings (click the gear icon)",
+            title: tToast("uploadFailed"),
+            description: apiKeys.fal
+              ? tToast("uploadFailedDesc")
+              : tToast("falKeyRequiredDesc"),
             variant: "destructive",
           });
           return;
@@ -426,6 +526,11 @@ export default function RightPanel({
       } else {
         mediaUrl = media.url;
       }
+    }
+
+    if (!mediaUrl) {
+      setTab("generation");
+      return;
     }
 
     setGenerateData({ [getAssetKey(asset)]: mediaUrl });
@@ -480,13 +585,10 @@ export default function RightPanel({
       } catch (err) {
         console.error("Failed to upload to fal.ai storage:", err);
 
-        const falKey = localStorage.getItem("falKey");
-        const isAuthError = !falKey;
-
         toast({
           title: tToast("uploadFailed"),
-          description: isAuthError
-            ? "Please set your FAL API key in Settings to use uploaded files with AI generation"
+          description: !apiKeys.fal
+            ? tToast("falKeyRequiredDesc")
             : tToast("uploadFailedDesc"),
           variant: "destructive",
         });
@@ -1018,7 +1120,6 @@ export default function RightPanel({
             </Accordion>
             <div className="flex flex-col gap-2">
               {endpoint?.inputAsset?.some((asset) => {
-                const assetType = getAssetType(asset);
                 const assetKey = getAssetKey(asset);
                 return !generateData[assetKey];
               }) && (
@@ -1026,13 +1127,20 @@ export default function RightPanel({
                   {t("thisModelRequiresAsset")}
                 </div>
               )}
+              {isProviderKeyMissing && (
+                <div className="text-xs text-destructive text-center">
+                  {isFalProvider
+                    ? tToast("falKeyRequiredDesc")
+                    : tToast("runwareKeyRequiredDesc")}
+                </div>
+              )}
               <Button
                 className="w-full"
                 disabled={
                   enhance.isPending ||
                   createJob.isPending ||
+                  isProviderKeyMissing ||
                   endpoint?.inputAsset?.some((asset) => {
-                    const assetType = getAssetType(asset);
                     const assetKey = getAssetKey(asset);
                     return !generateData[assetKey];
                   })
