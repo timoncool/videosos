@@ -124,6 +124,10 @@ const getProviderForEndpoint = (
   if (!endpointId) return undefined;
   if (isFalEndpoint(endpointId)) return "fal";
   if (isRunwareEndpoint(endpointId)) return "runware";
+  
+  if (endpointId.startsWith("fal-ai/")) return "fal";
+  if (endpointId.includes(":") && endpointId.includes("@")) return "runware";
+  
   return undefined;
 };
 
