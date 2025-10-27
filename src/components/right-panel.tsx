@@ -333,7 +333,6 @@ export default function RightPanel({
 
   const handleOnGenerate = useCallback(
     async () => {
-      handleOnOpenChange(false);
       createJob.mutate(
         {} as unknown as Parameters<typeof createJob.mutate>[0],
         {
@@ -348,7 +347,7 @@ export default function RightPanel({
       );
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [createJob, toast, tToast, handleOnOpenChange],
+    [createJob, toast, tToast],
   );
 
   useEffect(() => {
