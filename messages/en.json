@@ -83,6 +83,7 @@
       "video": "Video",
       "voiceover": "Voiceover",
       "music": "Music",
+      "audio": "Audio",
       "using": "Using",
       "reference": "Reference",
       "back": "Back",
@@ -93,7 +94,8 @@
       "enhancePrompt": "Enhance Prompt",
       "duration": "Duration",
       "generate": "Generate",
-      "thisModelRequiresAsset": "This model requires an asset to be selected"
+      "thisModelRequiresAsset": "Add the following before generating: {assets}",
+      "missingAssetsTooltip": "Select {assets} to enable Generate"
     },
     "videoPreview": {
       "export": "Export"

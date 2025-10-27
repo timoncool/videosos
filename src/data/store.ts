@@ -92,9 +92,12 @@ export const createVideoProjectStore = (
     setProjectDialogOpen: (projectDialogOpen: boolean) =>
       set({ projectDialogOpen }),
     setGenerateData: (generateData: Partial<GenerateData>) =>
-      set({
-        generateData: Object.assign({}, state().generateData, generateData),
-      }),
+      set((current) => ({
+        generateData: {
+          ...current.generateData,
+          ...generateData,
+        },
+      })),
     resetGenerateData: () =>
       set({
         generateData: {

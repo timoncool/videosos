@@ -83,6 +83,7 @@
       "video": "Видео",
       "voiceover": "Озвучка",
       "music": "Музыка",
+      "audio": "Аудио",
       "using": "Используется",
       "reference": "Референс",
       "back": "Назад",
@@ -93,7 +94,8 @@
       "enhancePrompt": "Улучшить запрос",
       "duration": "Длительность",
       "generate": "Сгенерировать",
-      "thisModelRequiresAsset": "Эта модель требует выбора ресурса"
+      "thisModelRequiresAsset": "Перед генерацией добавьте: {assets}",
+      "missingAssetsTooltip": "Выберите {assets}, чтобы включить генерацию"
     },
     "videoPreview": {
       "export": "Экспорт"

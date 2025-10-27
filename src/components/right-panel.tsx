@@ -262,6 +262,7 @@ export default function RightPanel({
     () => allEndpoints.find((endpoint) => endpoint.endpointId === endpointId),
     [endpointId, allEndpoints],
   );
+
   const provider = useMemo(
     () => endpoint?.provider ?? getProviderForEndpoint(endpointId),
     [endpoint, endpointId],
@@ -305,6 +306,39 @@ export default function RightPanel({
       updateApiKeys();
     }
   }, [generateDialogOpen, updateApiKeys]);
+
+  const { isAssetProvided, missingAssets } = useMemo(() => {
+    if (!endpoint?.inputAsset || endpoint.inputAsset.length === 0) {
+      return { isAssetProvided: true, missingAssets: [] as string[] };
+    }
+
+    const missing = endpoint.inputAsset.reduce<string[]>((acc, asset) => {
+      const assetKey = getAssetKey(asset);
+
+      if (!generateData[assetKey]) {
+        acc.push(getAssetType(asset));
+      }
+
+      return acc;
+    }, []);
+
+    return {
+      isAssetProvided: missing.length === 0,
+      missingAssets: Array.from(new Set(missing)),
+    };
+  }, [endpoint?.inputAsset, generateData]);
+
+  const missingAssetLabels = useMemo(() => {
+    if (missingAssets.length === 0) return "";
+
+    const labelMap: Record<string, string> = {
+      image: t("image"),
+      video: t("video"),
+      audio: t("audio"),
+    };
+
+    return missingAssets.map((asset) => labelMap[asset] ?? asset).join(", ");
+  }, [missingAssets, t]);
   const handleMediaTypeChange = (mediaType: string) => {
     setMediaType(mediaType as MediaType);
     const endpoint = allEndpoints.find(
@@ -608,7 +642,6 @@ export default function RightPanel({
 
       if (falUrl) {
         setGenerateData({
-          ...generateData,
           [assetKeyMap[outputType as keyof typeof assetKeyMap]]: falUrl,
         });
       }
@@ -632,6 +665,25 @@ export default function RightPanel({
       }
     }
   };
+
+  const generateDisabled =
+    enhance.isPending ||
+    createJob.isPending ||
+    !isAssetProvided ||
+    isProviderKeyMissing;
+
+  const shouldShowAssetTooltip =
+    !isAssetProvided && Boolean(missingAssetLabels) && !isProviderKeyMissing;
+
+  const generateButton = (
+    <Button
+      className="w-full"
+      disabled={generateDisabled}
+      onClick={handleOnGenerate}
+    >
+      {t("generate")}
+    </Button>
+  );
 
   return (
     <div
@@ -1119,12 +1171,9 @@ export default function RightPanel({
               </AccordionItem>
             </Accordion>
             <div className="flex flex-col gap-2">
-              {endpoint?.inputAsset?.some((asset) => {
-                const assetKey = getAssetKey(asset);
-                return !generateData[assetKey];
-              }) && (
+              {!isAssetProvided && missingAssetLabels && (
                 <div className="text-xs text-muted-foreground text-center">
-                  {t("thisModelRequiresAsset")}
+                  {t("thisModelRequiresAsset", { assets: missingAssetLabels })}
                 </div>
               )}
               {isProviderKeyMissing && (
@@ -1134,21 +1183,17 @@ export default function RightPanel({
                     : tToast("runwareKeyRequiredDesc")}
                 </div>
               )}
-              <Button
-                className="w-full"
-                disabled={
-                  enhance.isPending ||
-                  createJob.isPending ||
-                  isProviderKeyMissing ||
-                  endpoint?.inputAsset?.some((asset) => {
-                    const assetKey = getAssetKey(asset);
-                    return !generateData[assetKey];
-                  })
-                }
-                onClick={handleOnGenerate}
-              >
-                {t("generate")}
-              </Button>
+              {shouldShowAssetTooltip ? (
+                <WithTooltip
+                  tooltip={t("missingAssetsTooltip", {
+                    assets: missingAssetLabels,
+                  })}
+                >
+                  {generateButton}
+                </WithTooltip>
+              ) : (
+                generateButton
+              )}
             </div>
           </div>
         )}
