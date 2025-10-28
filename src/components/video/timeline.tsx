@@ -321,10 +321,10 @@ export function TimelineRuler({
     >
       <svg
         aria-hidden="true"
-        className="w-full"
         width={Math.max(1, contentWidth)}
         height={RULER_HEIGHT}
-        preserveAspectRatio="none"
+        viewBox={`0 0 ${Math.max(1, contentWidth)} ${RULER_HEIGHT}`}
+        style={{ display: "block" }}
       >
         <rect
           x={0}
