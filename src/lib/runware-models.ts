@@ -678,56 +678,18 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
   },
   {
     provider: "runware",
-    endpointId: "google:3@5",
-    label: "Veo 3 Fast (Image)",
-    description: "Ultra-fast image-to-video generation with Veo 3 Fast",
-    popularity: 5,
-    category: "video",
-    inputAsset: ["image"],
-    initialInput: {
-      positivePrompt: "",
-      seedImage: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-      image: "seedImage",
-      image_url: "seedImage",
-      seedImage: "seedImage",
-    },
-  },
-  {
-    provider: "runware",
     endpointId: "google:3@1",
-    label: "Veo 3",
+    label: "Veo 3 Fast",
     description:
-      "Google's Veo 3 model delivers immersive cinematic video with native audio generation for synchronized dialogue, music, and sound design.",
-    cost: "~$0.20/video",
-    popularity: 5,
-    category: "video",
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-    },
-  },
-  {
-    provider: "runware",
-    endpointId: "google:3@4",
-    label: "Veo 3 (Image)",
-    description: "Image-to-video generation with Google's Veo 3",
+      "Faster and more cost-effective variant of Veo 3, optimized for speed and affordability while maintaining native audio generation capabilities",
     popularity: 5,
     category: "video",
     inputAsset: ["image"],
     initialInput: {
       positivePrompt: "",
-      seedImage: "",
     },
     inputMap: {
       prompt: "positivePrompt",
-      image: "seedImage",
-      image_url: "seedImage",
-      seedImage: "seedImage",
     },
   },
   {
