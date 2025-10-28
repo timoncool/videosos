@@ -7,6 +7,7 @@ import {
   useVideoComposition,
 } from "@/data/queries";
 import {
+  DEFAULT_TIMELINE_SETTINGS,
   type MediaItem,
   PROJECT_PLACEHOLDER,
   TRACK_TYPE_ORDER,
@@ -234,7 +235,9 @@ export default function VideoPreview() {
     return Math.max(DEFAULT_DURATION, Math.ceil((maxTimestamp + 5000) / 1000));
   }, [frames]);
 
-  const duration = calculateDuration();
+  const timelineSettings = project.timeline ?? DEFAULT_TIMELINE_SETTINGS;
+  const timelineDurationSeconds = timelineSettings.durationSeconds;
+  const duration = Math.max(calculateDuration(), timelineDurationSeconds);
 
   const setPlayerCurrentTimestamp = useVideoProjectStore(
     (s) => s.setPlayerCurrentTimestamp,

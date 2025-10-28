@@ -4,10 +4,13 @@ import { db } from "@/data/db";
 import {
   queryKeys,
   refreshVideoCache,
+  useProject,
   useVideoComposition,
 } from "@/data/queries";
 import {
+  DEFAULT_TIMELINE_SETTINGS,
   type MediaItem,
+  PROJECT_PLACEHOLDER,
   TRACK_TYPE_ORDER,
   type VideoTrack,
 } from "@/data/schema";
@@ -40,9 +43,19 @@ export default function BottomBar() {
     (s) => s.setPlayerCurrentTimestamp,
   );
   const timelineWrapperRef = useRef<HTMLDivElement>(null);
-  const timelineDurationSeconds = 30;
   const FPS = 30;
-  const minTrackWidth = `${((2 / timelineDurationSeconds) * 100).toFixed(2)}%`;
+  const { data: project = PROJECT_PLACEHOLDER } = useProject(projectId);
+  const timelineSettings = project.timeline ?? DEFAULT_TIMELINE_SETTINGS;
+  const timelineDurationSeconds = timelineSettings.durationSeconds;
+  const timelineDurationMs = Math.max(timelineDurationSeconds * 1000, 1);
+  const maxKeyframeDurationMs = Math.max(
+    timelineSettings.maxKeyframeDurationMs ??
+      DEFAULT_TIMELINE_SETTINGS.maxKeyframeDurationMs,
+    1000,
+  );
+  const minTrackWidth = `${(
+    (2 / Math.max(timelineDurationSeconds, 1)) * 100
+  ).toFixed(2)}%`;
   const currentMinutes = Math.floor(playerCurrentTimestamp / 60);
   const formattedCurrentMinutes = currentMinutes.toString().padStart(2, "0");
   const currentSeconds = playerCurrentTimestamp % 60;
@@ -54,7 +67,7 @@ export default function BottomBar() {
     .padStart(5, "0");
   const [dragOverTracks, setDragOverTracks] = useState(false);
 
-  const limitAllKeyframesToThirtySeconds = useMutation({
+  const limitAllKeyframesToProjectDuration = useMutation({
     mutationFn: async () => {
       const tracks = await db.tracks.tracksByProject(projectId);
 
@@ -64,9 +77,9 @@ export default function BottomBar() {
         const keyframes = await db.keyFrames.keyFramesByTrack(track.id);
 
         for (const frame of keyframes) {
-          if (frame.duration > 30000) {
+          if (frame.duration > maxKeyframeDurationMs) {
             await db.keyFrames.update(frame.id, {
-              duration: 30000,
+              duration: maxKeyframeDurationMs,
             });
             updatedCount++;
           }
@@ -95,16 +108,17 @@ export default function BottomBar() {
   const { data: composition } = useVideoComposition(projectId);
   const frames = composition?.frames ?? {};
 
-  // Automatically limit keyframes to 30 seconds whenever tracks change
+  // Automatically limit keyframes to the project duration whenever tracks change
   useEffect(() => {
     if (tracks.length === 0) return;
+    if (!maxKeyframeDurationMs) return;
 
     const timeoutId = setTimeout(() => {
-      limitAllKeyframesToThirtySeconds.mutate();
+      limitAllKeyframesToProjectDuration.mutate();
     }, 300);
 
     return () => clearTimeout(timeoutId);
-  }, [tracks, limitAllKeyframesToThirtySeconds]);
+  }, [tracks, limitAllKeyframesToProjectDuration, maxKeyframeDurationMs]);
 
   const handleOnDragOver: DragEventHandler<HTMLDivElement> = (event) => {
     event.preventDefault();
@@ -144,18 +158,18 @@ export default function BottomBar() {
         );
 
       const mediaDuration = resolveDuration(media) ?? 5000;
-      const duration = Math.min(mediaDuration, 30000);
+      const duration = Math.min(mediaDuration, maxKeyframeDurationMs);
       const timestamp = lastKeyframe
         ? lastKeyframe.timestamp + 1 + lastKeyframe.duration
         : 0;
 
       const mediaUrl = resolveMediaUrl(media);
-      
+
       if (!mediaUrl) {
         console.error("Cannot add media to timeline: no playable URL", media);
         return null;
       }
-      
+
       const newId = await db.keyFrames.create({
         trackId: track.id,
         data: {
@@ -304,7 +318,7 @@ export default function BottomBar() {
 
   const timelineProgressPercent = (
     (Math.max(0, Math.min(playerCurrentTimestamp, timelineDurationSeconds)) /
-      timelineDurationSeconds) *
+      Math.max(timelineDurationSeconds, 1)) *
     100
   ).toFixed(2);
 
@@ -326,7 +340,7 @@ export default function BottomBar() {
             </span>
           </div>
         </div>
-        <VideoControls />
+        <VideoControls timelineDurationSeconds={timelineDurationSeconds} />
       </div>
       <div
         className={cn(
@@ -356,7 +370,7 @@ export default function BottomBar() {
               left: `${timelineProgressPercent}%`,
             }}
           />
-          <TimelineRuler className="z-10" />
+          <TimelineRuler className="z-10" duration={timelineDurationSeconds} />
           <div
             className="relative z-30 flex timeline-container flex-col h-full mx-4 mt-10 gap-2 pb-2 pointer-events-auto"
             onDragOver={handleOnDragOver}
@@ -367,6 +381,8 @@ export default function BottomBar() {
                 <VideoTrackRow
                   key={track.id}
                   data={track}
+                  timelineDurationMs={timelineDurationMs}
+                  maxKeyframeDurationMs={maxKeyframeDurationMs}
                   style={{
                     minWidth: minTrackWidth,
                   }}

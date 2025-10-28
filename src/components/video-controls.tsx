@@ -13,7 +13,11 @@ import { Button } from "./ui/button";
 
 const FPS = 30;
 
-export function VideoControls() {
+type VideoControlsProps = {
+  timelineDurationSeconds: number;
+};
+
+export function VideoControls({ timelineDurationSeconds }: VideoControlsProps) {
   const player = useVideoProjectStore((s) => s.player);
   const playerState = useVideoProjectStore((s) => s.playerState);
   const handleTogglePlay = () => {
@@ -30,7 +34,8 @@ export function VideoControls() {
   };
   const onSeekToEnd = () => {
     if (!player) return;
-    // player.seekTo(player.getDuration());
+    const durationInSeconds = Math.max(timelineDurationSeconds, 0);
+    player.seekTo(Math.round(durationInSeconds * FPS));
   };
   const onSeekBackward = () => {
     if (!player) return;
@@ -46,7 +51,7 @@ export function VideoControls() {
   useHotkeys("left", onSeekBackward, [player]);
   useHotkeys("right", onSeekForward, [player]);
   useHotkeys("home", onSeekToStart, [player]);
-  useHotkeys("end", onSeekToEnd, [player]);
+  useHotkeys("end", onSeekToEnd, [player, timelineDurationSeconds]);
 
   return (
     <div className="flex flex-row justify-center items-center">

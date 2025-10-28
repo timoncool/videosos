@@ -5,6 +5,7 @@ import type {
   VideoProject,
   VideoTrack,
 } from "./schema";
+import { DEFAULT_TIMELINE_SETTINGS } from "./schema";
 
 const dbPromise = openDB("ai-vstudio-db-v2", 1, {
   upgrade(db) {
@@ -44,17 +45,36 @@ export const db = {
   projects: {
     async find(id: string): Promise<VideoProject | null> {
       const db = await open();
-      return db.get("projects", id);
+      const project = await db.get("projects", id);
+      if (!project) return null;
+      return {
+        ...project,
+        timeline: {
+          ...DEFAULT_TIMELINE_SETTINGS,
+          ...project.timeline,
+        },
+      };
     },
     async list(): Promise<VideoProject[]> {
       const db = await open();
-      return db.getAll("projects");
+      const projects = await db.getAll("projects");
+      return projects.map((project) => ({
+        ...project,
+        timeline: {
+          ...DEFAULT_TIMELINE_SETTINGS,
+          ...project.timeline,
+        },
+      }));
     },
     async create(project: Omit<VideoProject, "id">) {
       const db = await open();
       return db.put("projects", {
         id: crypto.randomUUID(),
         ...project,
+        timeline: {
+          ...DEFAULT_TIMELINE_SETTINGS,
+          ...project.timeline,
+        },
       });
     },
     async update(id: string, project: Partial<VideoProject>) {
@@ -64,6 +84,11 @@ export const db = {
       return db.put("projects", {
         ...existing,
         ...project,
+        timeline: {
+          ...DEFAULT_TIMELINE_SETTINGS,
+          ...existing.timeline,
+          ...project.timeline,
+        },
         id,
       });
     },

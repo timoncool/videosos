@@ -5,6 +5,7 @@ import type {
   VideoProject,
   VideoTrack,
 } from "./schema";
+import { DEFAULT_TIMELINE_SETTINGS } from "./schema";
 
 type ProjectSeed = {
   project: VideoProject;
@@ -20,6 +21,7 @@ const TEMPLATE_PROJECT_SEED: ProjectSeed = {
       "A starter project that shows off the features of the video editor.",
     aspectRatio: "16:9",
     id: "433685b7-3494-4a56-9657-c1522686139d",
+    timeline: DEFAULT_TIMELINE_SETTINGS,
   },
   media: [
     {

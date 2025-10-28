@@ -1,10 +1,21 @@
 export type AspectRatio = "16:9" | "9:16" | "1:1";
 
+export type TimelineSettings = {
+  durationSeconds: number;
+  maxKeyframeDurationMs: number;
+};
+
+export const DEFAULT_TIMELINE_SETTINGS: TimelineSettings = {
+  durationSeconds: 30,
+  maxKeyframeDurationMs: 30_000,
+};
+
 export type VideoProject = {
   id: string;
   title: string;
   description: string;
   aspectRatio: AspectRatio;
+  timeline?: TimelineSettings;
 };
 
 export const PROJECT_PLACEHOLDER: VideoProject = {
@@ -12,6 +23,7 @@ export const PROJECT_PLACEHOLDER: VideoProject = {
   title: "",
   description: "",
   aspectRatio: "16:9",
+  timeline: DEFAULT_TIMELINE_SETTINGS,
 };
 
 export type VideoTrackType = "video" | "music" | "voiceover";

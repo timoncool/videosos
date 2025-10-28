@@ -1,5 +1,6 @@
 "use client";
 
+import { DEFAULT_TIMELINE_SETTINGS } from "@/data/schema";
 import clsx from "clsx";
 import type { HTMLAttributes } from "react";
 
@@ -9,7 +10,7 @@ type TimelineRulerProps = {
 
 export function TimelineRuler({
   className,
-  duration = 30,
+  duration = DEFAULT_TIMELINE_SETTINGS.durationSeconds,
   ...props
 }: TimelineRulerProps) {
   const totalTicks = duration * 10;

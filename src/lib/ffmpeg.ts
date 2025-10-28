@@ -3,6 +3,9 @@ import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile, toBlobURL } from "@ffmpeg/util";
 import { resolveMediaUrl } from "./utils";
 
+const FF_WORKER_BASE_URL = "https://unpkg.com/@ffmpeg/ffmpeg@0.12.15/dist/esm";
+const patchedWorkerCache = new Map<number, string>();
+
 const videoSizeMap = {
   "16:9": { width: 1024, height: 576 },
   "9:16": { width: 576, height: 1024 },
@@ -32,9 +35,17 @@ export async function exportVideoClientSide(
   const ffmpeg = new FFmpeg();
 
   const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd";
+  const durationMinutes = Math.max(1, Math.ceil(totalDuration / 60000));
+  const basePages = 4096; // ~256MB
+  const extraPagesPerMinute = 512; // ~32MB per additional minute
+  const calculatedPages =
+    basePages + (durationMinutes - 1) * extraPagesPerMinute;
+  const initialPages = Math.min(calculatedPages, 16_384);
+  const workerURL = await getPatchedWorkerURL(initialPages);
   await ffmpeg.load({
     coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
     wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm"),
+    classWorkerURL: workerURL,
   });
 
   if (onProgress) {
@@ -417,6 +428,38 @@ export async function exportVideoClientSide(
 function getExtension(url: string): string {
   const match = url.match(/\.([^./?#]+)(?:[?#]|$)/);
   return match ? match[1] : "mp4";
+}
+
+async function getPatchedWorkerURL(initialPages: number): Promise<string> {
+  const cacheKey = Math.max(Math.floor(initialPages), 0);
+  const cached = patchedWorkerCache.get(cacheKey);
+  if (cached) {
+    return cached;
+  }
+
+  const response = await fetch(`${FF_WORKER_BASE_URL}/worker.js`);
+  if (!response.ok) {
+    throw new Error(`Failed to load ffmpeg worker (${response.status})`);
+  }
+
+  let script = await response.text();
+  script = script.replace(/from\s+"\.\/([^"]+)"/g, (_match, path) => {
+    return `from "${FF_WORKER_BASE_URL}/${path}"`;
+  });
+
+  const injectionAnchor = "ffmpeg = await self.createFFmpegCore({";
+  if (!script.includes(injectionAnchor)) {
+    throw new Error("Unable to patch ffmpeg worker: unexpected source format");
+  }
+
+  const injection = `const wasmMemory = self.__ffmpegWasmMemory || new WebAssembly.Memory({ initial: ${cacheKey}, maximum: 16384 });\n    self.__ffmpegWasmMemory = wasmMemory;\n    ffmpeg = await self.createFFmpegCore({`;
+  script = script.replace(injectionAnchor, injection);
+
+  const blobUrl = URL.createObjectURL(
+    new Blob([script], { type: "text/javascript" }),
+  );
+  patchedWorkerCache.set(cacheKey, blobUrl);
+  return blobUrl;
 }
 
 export async function getMediaMetadata(media: MediaItem) {

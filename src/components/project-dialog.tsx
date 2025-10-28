@@ -2,7 +2,11 @@
 
 import { useProjectCreator, useProjectDeleter } from "@/data/mutations";
 import { queryKeys, useProjects } from "@/data/queries";
-import type { AspectRatio, VideoProject } from "@/data/schema";
+import {
+  type AspectRatio,
+  DEFAULT_TIMELINE_SETTINGS,
+  type VideoProject,
+} from "@/data/schema";
 import { seedDatabase } from "@/data/seed";
 import { useVideoProjectStore } from "@/data/store";
 import { useToast } from "@/hooks/use-toast";
@@ -179,6 +183,7 @@ export function ProjectDialog({ onOpenChange, ...props }: ProjectDialogProps) {
                       title,
                       description,
                       aspectRatio: aspect,
+                      timeline: DEFAULT_TIMELINE_SETTINGS,
                     },
                     {
                       onSuccess: (projectId) => {

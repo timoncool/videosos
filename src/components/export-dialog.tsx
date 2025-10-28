@@ -5,7 +5,7 @@ import {
   useProject,
   useVideoComposition,
 } from "@/data/queries";
-import { PROJECT_PLACEHOLDER } from "@/data/schema";
+import { DEFAULT_TIMELINE_SETTINGS, PROJECT_PLACEHOLDER } from "@/data/schema";
 import { useProjectId, useVideoProjectStore } from "@/data/store";
 import { exportVideoClientSide } from "@/lib/ffmpeg";
 import { cn, resolveDuration, resolveMediaUrl } from "@/lib/utils";
@@ -44,7 +44,9 @@ export function ExportDialog({ onOpenChange, ...props }: ExportDialogProps) {
           maxEnd = Math.max(maxEnd, frame.timestamp + duration);
         }
       }
-      const totalDuration = maxEnd;
+      const timelineSettings = project.timeline ?? DEFAULT_TIMELINE_SETTINGS;
+      const timelineDurationMs = timelineSettings.durationSeconds * 1000;
+      const totalDuration = Math.max(maxEnd, timelineDurationMs);
 
       const videoData = composition.tracks.map((track) => ({
         id: track.id,
