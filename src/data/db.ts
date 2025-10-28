@@ -1,7 +1,7 @@
 import { openDB } from "idb";
 import {
-  PROJECT_PLACEHOLDER,
   type MediaItem,
+  PROJECT_PLACEHOLDER,
   type VideoKeyFrame,
   type VideoProject,
   type VideoTrack,
