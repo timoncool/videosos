@@ -4,10 +4,12 @@ import { db } from "@/data/db";
 import {
   queryKeys,
   refreshVideoCache,
+  useProject,
   useVideoComposition,
 } from "@/data/queries";
 import {
   type MediaItem,
+  PROJECT_PLACEHOLDER,
   TRACK_TYPE_ORDER,
   type VideoTrack,
 } from "@/data/schema";
@@ -39,17 +41,43 @@ export default function BottomBar() {
   const setPlayerCurrentTimestamp = useVideoProjectStore(
     (s) => s.setPlayerCurrentTimestamp,
   );
+  const timelineDurationSeconds = useVideoProjectStore(
+    (s) => s.timelineDuration,
+  );
+  const setTimelineDuration = useVideoProjectStore(
+    (s) => s.setTimelineDuration,
+  );
   const timelineWrapperRef = useRef<HTMLDivElement>(null);
-  const timelineDurationSeconds = 30;
+  const { data: project = PROJECT_PLACEHOLDER } = useProject(projectId);
+  const DEFAULT_TIMELINE_DURATION = PROJECT_PLACEHOLDER.timelineDuration;
+  const MIN_TIMELINE_DURATION = 1;
+  useEffect(() => {
+    const nextDuration = Math.max(
+      project.timelineDuration ?? DEFAULT_TIMELINE_DURATION,
+      MIN_TIMELINE_DURATION,
+    );
+    if (timelineDurationSeconds !== nextDuration) {
+      setTimelineDuration(nextDuration);
+    }
+  }, [
+    project.timelineDuration,
+    DEFAULT_TIMELINE_DURATION,
+    setTimelineDuration,
+    timelineDurationSeconds,
+  ]);
+  const safeTimelineDuration = Math.max(
+    timelineDurationSeconds,
+    MIN_TIMELINE_DURATION,
+  );
   const FPS = 30;
-  const minTrackWidth = `${((2 / timelineDurationSeconds) * 100).toFixed(2)}%`;
+  const minTrackWidth = `${((2 / safeTimelineDuration) * 100).toFixed(2)}%`;
   const currentMinutes = Math.floor(playerCurrentTimestamp / 60);
   const formattedCurrentMinutes = currentMinutes.toString().padStart(2, "0");
   const currentSeconds = playerCurrentTimestamp % 60;
   const formattedCurrentSeconds = currentSeconds.toFixed(2).padStart(5, "0");
-  const totalMinutes = Math.floor(timelineDurationSeconds / 60);
+  const totalMinutes = Math.floor(safeTimelineDuration / 60);
   const formattedTotalMinutes = totalMinutes.toString().padStart(2, "0");
-  const formattedTotalSeconds = (timelineDurationSeconds % 60)
+  const formattedTotalSeconds = (safeTimelineDuration % 60)
     .toFixed(2)
     .padStart(5, "0");
   const [dragOverTracks, setDragOverTracks] = useState(false);
@@ -150,12 +178,12 @@ export default function BottomBar() {
         : 0;
 
       const mediaUrl = resolveMediaUrl(media);
-      
+
       if (!mediaUrl) {
         console.error("Cannot add media to timeline: no playable URL", media);
         return null;
       }
-      
+
       const newId = await db.keyFrames.create({
         trackId: track.id,
         data: {
@@ -243,7 +271,7 @@ export default function BottomBar() {
   const seekToTimestamp = (nextTimestamp: number) => {
     const clampedTimestamp = Math.max(
       0,
-      Math.min(nextTimestamp, timelineDurationSeconds),
+      Math.min(nextTimestamp, safeTimelineDuration),
     );
 
     if (player) {
@@ -272,7 +300,7 @@ export default function BottomBar() {
     const relativeX = event.clientX - rect.left;
     const clampedX = Math.min(Math.max(relativeX, 0), rect.width);
     const ratio = clampedX / rect.width;
-    const nextTimestamp = timelineDurationSeconds * ratio;
+    const nextTimestamp = safeTimelineDuration * ratio;
 
     seekToTimestamp(nextTimestamp);
   };
@@ -295,7 +323,7 @@ export default function BottomBar() {
         break;
       case "End":
         event.preventDefault();
-        seekToTimestamp(timelineDurationSeconds);
+        seekToTimestamp(safeTimelineDuration);
         break;
       default:
         break;
@@ -303,9 +331,11 @@ export default function BottomBar() {
   };
 
   const timelineProgressPercent = (
-    (Math.max(0, Math.min(playerCurrentTimestamp, timelineDurationSeconds)) /
-      timelineDurationSeconds) *
-    100
+    safeTimelineDuration > 0
+      ? (Math.max(0, Math.min(playerCurrentTimestamp, safeTimelineDuration)) /
+          safeTimelineDuration) *
+        100
+      : 0
   ).toFixed(2);
 
   return (
@@ -343,7 +373,7 @@ export default function BottomBar() {
           role="slider"
           aria-label="Timeline"
           aria-valuemin={0}
-          aria-valuemax={timelineDurationSeconds}
+          aria-valuemax={safeTimelineDuration}
           aria-valuenow={playerCurrentTimestamp}
           aria-valuetext={`${formattedCurrentMinutes}:${formattedCurrentSeconds}`}
           tabIndex={0}
@@ -356,7 +386,7 @@ export default function BottomBar() {
               left: `${timelineProgressPercent}%`,
             }}
           />
-          <TimelineRuler className="z-10" />
+          <TimelineRuler className="z-10" duration={safeTimelineDuration} />
           <div
             className="relative z-30 flex timeline-container flex-col h-full mx-4 mt-10 gap-2 pb-2 pointer-events-auto"
             onDragOver={handleOnDragOver}
@@ -370,6 +400,7 @@ export default function BottomBar() {
                   style={{
                     minWidth: minTrackWidth,
                   }}
+                  timelineDurationSeconds={safeTimelineDuration}
                 />
               ) : (
                 <div

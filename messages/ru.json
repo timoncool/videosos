@@ -68,6 +68,8 @@
       "projectSettings": "Настройки проекта",
       "untitled": "без названия",
       "describeVideo": "Опишите ваше видео",
+      "timelineDuration": "Длительность таймлайна (в секундах)",
+      "fitToContent": "По содержимому",
       "gallery": "Галерея",
       "all": "Всё",
       "image": "Изображение",

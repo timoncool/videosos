@@ -1,9 +1,10 @@
 import { openDB } from "idb";
-import type {
-  MediaItem,
-  VideoKeyFrame,
-  VideoProject,
-  VideoTrack,
+import {
+  type MediaItem,
+  PROJECT_PLACEHOLDER,
+  type VideoKeyFrame,
+  type VideoProject,
+  type VideoTrack,
 } from "./schema";
 
 const dbPromise = openDB("ai-vstudio-db-v2", 1, {
@@ -44,17 +45,38 @@ export const db = {
   projects: {
     async find(id: string): Promise<VideoProject | null> {
       const db = await open();
-      return db.get("projects", id);
+      const project = await db.get("projects", id);
+      if (!project) return null;
+      return {
+        ...PROJECT_PLACEHOLDER,
+        ...project,
+        timelineDuration:
+          typeof project.timelineDuration === "number"
+            ? project.timelineDuration
+            : PROJECT_PLACEHOLDER.timelineDuration,
+      } satisfies VideoProject;
     },
     async list(): Promise<VideoProject[]> {
       const db = await open();
-      return db.getAll("projects");
+      const projects = await db.getAll("projects");
+      return projects.map((project) => ({
+        ...PROJECT_PLACEHOLDER,
+        ...project,
+        timelineDuration:
+          typeof project.timelineDuration === "number"
+            ? project.timelineDuration
+            : PROJECT_PLACEHOLDER.timelineDuration,
+      })) as VideoProject[];
     },
     async create(project: Omit<VideoProject, "id">) {
       const db = await open();
       return db.put("projects", {
         id: crypto.randomUUID(),
         ...project,
+        timelineDuration:
+          typeof project.timelineDuration === "number"
+            ? project.timelineDuration
+            : PROJECT_PLACEHOLDER.timelineDuration,
       });
     },
     async update(id: string, project: Partial<VideoProject>) {
@@ -65,6 +87,11 @@ export const db = {
         ...existing,
         ...project,
         id,
+        timelineDuration:
+          typeof (project.timelineDuration ?? existing.timelineDuration) ===
+          "number"
+            ? (project.timelineDuration ?? existing.timelineDuration)
+            : PROJECT_PLACEHOLDER.timelineDuration,
       });
     },
     async delete(id: string) {
