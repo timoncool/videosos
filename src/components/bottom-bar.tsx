@@ -460,6 +460,7 @@ export default function BottomBar() {
                   style={{ width: "100%" }}
                   duration={timelineDurationSeconds}
                   zoom={zoom}
+                  timelineWidth={timelineWidthPx}
                 />
                 <div
                   className="relative z-30 flex timeline-container flex-col h-full mx-4 mt-10 gap-2 pb-2 pointer-events-auto"
