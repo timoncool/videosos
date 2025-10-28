@@ -386,7 +386,7 @@ export default function BottomBar() {
       </div>
       <div
         className={cn(
-          "min-h-64  max-h-72 h-full flex flex-row overflow-y-scroll transition-colors",
+          "min-h-64  max-h-72 h-full flex flex-row overflow-y-scroll transition-colors relative",
           {
             "bg-white/5": dragOverTracks,
           },
@@ -405,40 +405,39 @@ export default function BottomBar() {
           onClick={handleTimelineClick}
           onKeyDown={handleTimelineKeyDown}
         >
-          <div className="flex flex-row items-center justify-between gap-2 px-4 py-2">
+          <div className="absolute top-2 right-4 z-50 flex items-center gap-2 bg-background/95 backdrop-blur-sm px-3 py-2 rounded-md border border-border shadow-lg pointer-events-auto">
             <span className="text-sm text-muted-foreground">Zoom</span>
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                className="px-2 py-1 text-sm rounded border border-border hover:bg-muted"
-                onClick={handleZoomButton(-ZOOM_STEP)}
-                aria-label="Zoom out"
-              >
-                -
-              </button>
-              <input
-                type="range"
-                min={MIN_ZOOM}
-                max={MAX_ZOOM}
-                step={ZOOM_STEP}
-                value={zoom}
-                onChange={handleZoomInput}
-                aria-label="Timeline zoom"
-              />
-              <button
-                type="button"
-                className="px-2 py-1 text-sm rounded border border-border hover:bg-muted"
-                onClick={handleZoomButton(ZOOM_STEP)}
-                aria-label="Zoom in"
-              >
-                +
-              </button>
-              <span className="text-xs text-muted-foreground tabular-nums">
-                {zoomPercentage}%
-              </span>
-            </div>
+            <button
+              type="button"
+              className="px-2 py-1 text-sm rounded border border-border hover:bg-muted"
+              onClick={handleZoomButton(-ZOOM_STEP)}
+              aria-label="Zoom out"
+            >
+              -
+            </button>
+            <input
+              type="range"
+              min={MIN_ZOOM}
+              max={MAX_ZOOM}
+              step={ZOOM_STEP}
+              value={zoom}
+              onChange={handleZoomInput}
+              aria-label="Timeline zoom"
+              className="w-24"
+            />
+            <button
+              type="button"
+              className="px-2 py-1 text-sm rounded border border-border hover:bg-muted"
+              onClick={handleZoomButton(ZOOM_STEP)}
+              aria-label="Zoom in"
+            >
+              +
+            </button>
+            <span className="text-xs text-muted-foreground tabular-nums">
+              {zoomPercentage}%
+            </span>
           </div>
-          <div className="flex-1 relative">
+          <div className="flex-1 relative pt-12">
             <div
               className="pointer-events-none absolute z-20 top-12 bottom-0 w-[2px] bg-white/30 ms-4"
               style={{

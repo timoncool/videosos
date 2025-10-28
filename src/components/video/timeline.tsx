@@ -49,8 +49,12 @@ function formatTickLabel(seconds: number, majorInterval: number) {
   }
 
   if (seconds >= 1) {
-    const decimals =
-      majorInterval < 1 ? Math.ceil(-Math.log10(majorInterval)) : 0;
+    const isNearInteger = Math.abs(seconds - Math.round(seconds)) < 0.005;
+    const decimals = isNearInteger && majorInterval >= 1
+      ? 0
+      : majorInterval < 1
+        ? Math.ceil(-Math.log10(majorInterval))
+        : Math.min(2, Math.max(1, Math.ceil(-Math.log10(seconds - Math.floor(seconds)))));
     return `${seconds.toFixed(decimals)}s`;
   }
 
