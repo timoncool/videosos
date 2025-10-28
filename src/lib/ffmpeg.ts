@@ -3,7 +3,7 @@ import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile, toBlobURL } from "@ffmpeg/util";
 import { resolveMediaUrl } from "./utils";
 
-const FF_WORKER_BASE_URL = "https://unpkg.com/@ffmpeg/ffmpeg@0.12.15/dist/esm";
+const FF_WORKER_BASE_URL = "https://unpkg.com/@ffmpeg/ffmpeg@0.12.15/dist/umd";
 const patchedWorkerCache = new Map<number, string>();
 
 const videoSizeMap = {
@@ -437,15 +437,13 @@ async function getPatchedWorkerURL(initialPages: number): Promise<string> {
     return cached;
   }
 
-  const response = await fetch(`${FF_WORKER_BASE_URL}/worker.js`);
+  const workerUrl = `${window.location.origin}/api/download?url=${encodeURIComponent(`${FF_WORKER_BASE_URL}/worker.js`)}`;
+  const response = await fetch(workerUrl);
   if (!response.ok) {
     throw new Error(`Failed to load ffmpeg worker (${response.status})`);
   }
 
   let script = await response.text();
-  script = script.replace(/from\s+"\.\/([^"]+)"/g, (_match, path) => {
-    return `from "${FF_WORKER_BASE_URL}/${path}"`;
-  });
 
   const injectionAnchor = "ffmpeg = await self.createFFmpegCore({";
   if (!script.includes(injectionAnchor)) {

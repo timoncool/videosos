@@ -56,7 +56,7 @@ export function App({ projectId }: AppProps) {
             <Header openKeyDialog={() => setKeyDialog(true)} />
             <main className="flex overflow-hidden h-full w-screen">
               <LeftPanel />
-              <div className="flex flex-col flex-1">
+              <div className="flex flex-col flex-1 min-w-0">
                 <VideoPreview />
                 <BottomBar />
               </div>
