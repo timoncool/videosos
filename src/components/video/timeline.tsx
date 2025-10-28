@@ -337,9 +337,9 @@ export function TimelineRuler({
     >
       <svg
         aria-hidden="true"
-        className="w-full h-full"
-        viewBox={`0 0 ${Math.max(1, viewWidth)} ${RULER_HEIGHT}`}
-        preserveAspectRatio="none"
+        className="w-full"
+        width={Math.max(1, viewWidth)}
+        height={RULER_HEIGHT}
       >
         <rect
           x={0}
