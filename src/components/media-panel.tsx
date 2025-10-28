@@ -350,7 +350,8 @@ export function MediaItemRow({
   const mediaUrl = resolveMediaUrl(data) ?? "";
   const mediaId = data.id.split("-")[0];
   const handleOnDragStart: DragEventHandler<HTMLDivElement> = (event) => {
-    const jobData = JSON.stringify(data);
+    const { blob, ...safeData } = data;
+    const jobData = JSON.stringify(safeData);
     event.dataTransfer.setData("job", jobData);
     event.dataTransfer.setData("application/json", jobData);
     event.dataTransfer.setData("text/plain", jobData);
