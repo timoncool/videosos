@@ -365,60 +365,66 @@ export default function BottomBar() {
   }, [timelineWidthPx]);
 
   return (
-    <div className="border-t pb-2 border-border flex flex-col bg-background-light ">
-      <div className="border-b border-border bg-background-dark px-2 flex flex-row gap-8 py-2 justify-between items-center flex-1 overflow-visible pr-4">
-        <div className="h-full flex flex-col justify-center px-4 bg-muted/50 rounded-md font-mono cursor-default select-none shadow-inner">
-          <div className="flex flex-row items-baseline font-thin tabular-nums">
-            <span className="text-muted-foreground">
-              {formattedCurrentMinutes}:
-            </span>
-            <span>{formattedCurrentSeconds}</span>
-            <span className="text-muted-foreground/50 mx-2">/</span>
-            <span className="text-sm opacity-50">
+    <div className="border-t pb-2 border-border flex flex-col bg-background-light">
+      <div className="relative border-b border-border bg-background-dark">
+        <div className="relative flex items-center gap-6 px-2 py-2">
+          <div className="h-full flex flex-col justify-center px-4 bg-muted/50 rounded-md font-mono cursor-default select-none shadow-inner">
+            <div className="flex flex-row items-baseline font-thin tabular-nums">
               <span className="text-muted-foreground">
-                {formattedTotalMinutes}:
+                {formattedCurrentMinutes}:
               </span>
-              {formattedTotalSeconds}
-            </span>
+              <span>{formattedCurrentSeconds}</span>
+              <span className="text-muted-foreground/50 mx-2">/</span>
+              <span className="text-sm opacity-50">
+                <span className="text-muted-foreground">
+                  {formattedTotalMinutes}:
+                </span>
+                {formattedTotalSeconds}
+              </span>
+            </div>
           </div>
-        </div>
-        <VideoControls />
-        <div className="ml-auto flex items-center gap-2 whitespace-nowrap shrink-0">
-          <span className="text-sm text-muted-foreground">Zoom</span>
-          <button
-            type="button"
-            className="px-2 py-1 text-sm rounded border border-border hover:bg-muted"
-            onClick={handleZoomButton(-ZOOM_STEP)}
-            aria-label="Zoom out"
-          >
-            -
-          </button>
-          <input
-            type="range"
-            min={MIN_ZOOM}
-            max={MAX_ZOOM}
-            step={ZOOM_STEP}
-            value={zoom}
-            onChange={handleZoomInput}
-            aria-label="Timeline zoom"
-            className="w-20"
-          />
-          <button
-            type="button"
-            className="px-2 py-1 text-sm rounded border border-border hover:bg-muted"
-            onClick={handleZoomButton(ZOOM_STEP)}
-            aria-label="Zoom in"
-          >
-            +
-          </button>
-          <span className="text-xs text-muted-foreground tabular-nums">
-            {zoomPercentage}%
-          </span>
+          <div className="flex items-center justify-center">
+            <VideoControls />
+          </div>
+          <div className="ml-auto flex">
+            <div className="sticky top-0 right-0 z-50 flex w-[12rem] min-w-[12rem] items-center gap-2 bg-background-dark/95 px-3 py-2 shadow-lg">
+              <span className="text-sm text-muted-foreground">Zoom</span>
+              <button
+                type="button"
+                className="px-2 py-1 text-sm rounded border border-border hover:bg-muted"
+                onClick={handleZoomButton(-ZOOM_STEP)}
+                aria-label="Zoom out"
+              >
+                -
+              </button>
+              <input
+                type="range"
+                min={MIN_ZOOM}
+                max={MAX_ZOOM}
+                step={ZOOM_STEP}
+                value={zoom}
+                onChange={handleZoomInput}
+                aria-label="Timeline zoom"
+                className="w-20"
+              />
+              <button
+                type="button"
+                className="px-2 py-1 text-sm rounded border border-border hover:bg-muted"
+                onClick={handleZoomButton(ZOOM_STEP)}
+                aria-label="Zoom in"
+              >
+                +
+              </button>
+              <span className="text-xs text-muted-foreground tabular-nums">
+                {zoomPercentage}%
+              </span>
+            </div>
+          </div>
         </div>
       </div>
       <div
         className={cn(
-          "min-h-64  max-h-72 h-full flex flex-row overflow-y-scroll transition-colors relative",
+          "min-h-64 max-h-72 h-full flex flex-row overflow-y-scroll transition-colors relative",
           {
             "bg-white/5": dragOverTracks,
           },
@@ -439,7 +445,7 @@ export default function BottomBar() {
         >
           <div className="flex-1 relative">
             <div
-              className="pointer-events-none absolute z-20 top-12 bottom-0 w-[2px] bg-white/30 ms-4"
+              className="pointer-events-none absolute z-50 top-12 bottom-0 w-[2px] bg-white/30 ms-4"
               style={{
                 left: `${timelineProgressPx}px`,
               }}
@@ -459,6 +465,7 @@ export default function BottomBar() {
                   style={{ width: "100%" }}
                   duration={timelineDurationSeconds}
                   zoom={zoom}
+                  timelineWidth={timelineWidthPx}
                 />
                 <div
                   className="relative z-30 flex timeline-container flex-col h-full mx-4 mt-12 gap-2 pb-2 pointer-events-auto"

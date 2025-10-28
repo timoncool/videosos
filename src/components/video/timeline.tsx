@@ -12,6 +12,7 @@ import {
 type TimelineRulerProps = {
   duration?: number;
   zoom?: number;
+  timelineWidth?: number;
 } & HTMLAttributes<HTMLDivElement>;
 
 type ViewportState = {
@@ -28,7 +29,6 @@ const MAJOR_INTERVALS: number[] = [
 
 const RULER_HEIGHT = 48;
 const MIN_MAJOR_SPACING_PX = 96;
-const TICK_VISIBILITY_BUFFER = 32;
 const EPSILON = 0.000_01;
 
 function formatTickLabel(seconds: number, majorInterval: number) {
@@ -106,6 +106,7 @@ export function TimelineRuler({
   className,
   duration = 30,
   zoom: zoomProp,
+  timelineWidth,
   ...props
 }: TimelineRulerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -221,120 +222,91 @@ export function TimelineRuler({
     };
   }, [zoomProp]);
 
-  const { majorTicks, minorTicks, majorInterval, viewWidth } = useMemo(() => {
-    if (duration <= 0) {
-      return {
-        majorTicks: [],
-        minorTicks: [],
-        majorInterval: 1,
-        viewWidth: Math.max(1, viewport.width),
-      };
-    }
-
-    const viewportWidth = Math.max(1, viewport.width);
-    const zoomValue = zoomProp ?? viewport.zoomAttr ?? 1;
-
-    let totalContentWidth = Math.max(viewport.contentWidth, viewportWidth);
-    if (zoomValue !== 1 && Math.abs(totalContentWidth - viewportWidth) < 0.5) {
-      totalContentWidth *= zoomValue;
-    }
-
-    const pixelsPerSecond = totalContentWidth / duration;
-    if (!Number.isFinite(pixelsPerSecond) || pixelsPerSecond <= 0) {
-      return {
-        majorTicks: [],
-        minorTicks: [],
-        majorInterval: 1,
-        viewWidth: viewportWidth,
-      };
-    }
-
-    const visibleStartSeconds = clampToRange(
-      viewport.scrollLeft / pixelsPerSecond,
-      0,
-      duration,
-    );
-    const visibleEndSeconds = clampToRange(
-      (viewport.scrollLeft + viewportWidth) / pixelsPerSecond,
-      0,
-      duration,
-    );
-
-    const majorIntervalValue = chooseMajorInterval(pixelsPerSecond);
-    const minorIntervalValue = chooseMinorInterval(majorIntervalValue);
-
-    const startRange = clampToRange(
-      visibleStartSeconds - majorIntervalValue,
-      0,
-      duration,
-    );
-    const endRange = clampToRange(
-      visibleEndSeconds + majorIntervalValue,
-      0,
-      duration,
-    );
-
-    const majorLines: { time: number; x: number }[] = [];
-    const minorLines: { time: number; x: number }[] = [];
-
-    const minorStartIndex = Math.floor(startRange / minorIntervalValue) - 1;
-    const minorEndIndex = Math.ceil(endRange / minorIntervalValue) + 1;
-
-    for (let index = minorStartIndex; index <= minorEndIndex; index += 1) {
-      const time = index * minorIntervalValue;
-      if (time < -EPSILON || time - duration > EPSILON) {
-        continue;
+  const { majorTicks, minorTicks, majorInterval, contentWidth } =
+    useMemo(() => {
+      if (duration <= 0) {
+        return {
+          majorTicks: [],
+          minorTicks: [],
+          majorInterval: 1,
+          contentWidth: Math.max(1, timelineWidth ?? viewport.width),
+        };
       }
 
-      const clampedTime = clampToRange(time, 0, duration);
-      const position = clampedTime * pixelsPerSecond - viewport.scrollLeft;
+      const viewportWidth = Math.max(1, viewport.width);
+      const measuredContentWidth = Math.max(
+        1,
+        timelineWidth ?? viewport.contentWidth ?? viewportWidth,
+      );
 
-      if (
-        position < -TICK_VISIBILITY_BUFFER ||
-        position > viewportWidth + TICK_VISIBILITY_BUFFER
-      ) {
-        continue;
+      const pixelsPerSecond = measuredContentWidth / duration;
+      if (!Number.isFinite(pixelsPerSecond) || pixelsPerSecond <= 0) {
+        return {
+          majorTicks: [],
+          minorTicks: [],
+          majorInterval: 1,
+          contentWidth: measuredContentWidth,
+        };
       }
 
-      const ratio = clampedTime / majorIntervalValue;
-      const isMajor = Math.abs(ratio - Math.round(ratio)) < EPSILON;
+      const majorIntervalValue = chooseMajorInterval(pixelsPerSecond);
+      const minorIntervalValue = chooseMinorInterval(majorIntervalValue);
 
-      if (isMajor) {
+      const majorLines: { time: number; x: number }[] = [];
+      const minorLines: { time: number; x: number }[] = [];
+
+      const pushMajor = (time: number) => {
+        const clampedTime = clampToRange(time, 0, duration);
         if (
-          !majorLines.some(
-            (line) => Math.abs(line.time - clampedTime) < EPSILON,
-          )
+          majorLines.some((line) => Math.abs(line.time - clampedTime) < EPSILON)
         ) {
-          majorLines.push({ time: clampedTime, x: position });
+          return;
         }
-      } else {
-        minorLines.push({ time: clampedTime, x: position });
+
+        majorLines.push({
+          time: clampedTime,
+          x: clampedTime * pixelsPerSecond,
+        });
+      };
+
+      const majorTickCount = Math.floor(duration / majorIntervalValue);
+      for (let index = 0; index <= majorTickCount; index += 1) {
+        pushMajor(index * majorIntervalValue);
       }
-    }
 
-    if (!majorLines.some((line) => line.time < EPSILON)) {
-      majorLines.push({ time: 0, x: -viewport.scrollLeft });
-    }
+      pushMajor(0);
+      pushMajor(duration);
 
-    if (!majorLines.some((line) => Math.abs(line.time - duration) < EPSILON)) {
-      const endPosition = duration * pixelsPerSecond - viewport.scrollLeft;
-      if (
-        endPosition >= -TICK_VISIBILITY_BUFFER &&
-        endPosition <= viewportWidth + TICK_VISIBILITY_BUFFER
-      ) {
-        majorLines.push({ time: duration, x: endPosition });
+      const minorTickCount = Math.floor(duration / minorIntervalValue);
+      for (let index = 0; index <= minorTickCount; index += 1) {
+        const time = index * minorIntervalValue;
+        if (time < -EPSILON || time - duration > EPSILON) {
+          continue;
+        }
+
+        const clampedTime = clampToRange(time, 0, duration);
+        if (
+          majorLines.some((line) => Math.abs(line.time - clampedTime) < EPSILON)
+        ) {
+          continue;
+        }
+
+        minorLines.push({
+          time: clampedTime,
+          x: clampedTime * pixelsPerSecond,
+        });
       }
-    }
 
-    majorLines.sort((a, b) => a.time - b.time);
+      majorLines.sort((a, b) => a.time - b.time);
+      minorLines.sort((a, b) => a.time - b.time);
 
-    return {
-      majorTicks: majorLines,
-      minorTicks: minorLines,
-      majorInterval: majorIntervalValue,
-      viewWidth: viewportWidth,
-    };
-  }, [duration, viewport, zoomProp]);
+      return {
+        majorTicks: majorLines,
+        minorTicks: minorLines,
+        majorInterval: majorIntervalValue,
+        contentWidth: measuredContentWidth,
+      };
+    }, [duration, timelineWidth, viewport]);
 
   return (
     <div
@@ -349,14 +321,15 @@ export function TimelineRuler({
     >
       <svg
         aria-hidden="true"
-        className="w-full z-40"
-        width={Math.max(1, viewWidth)}
+        className="w-full"
+        width={Math.max(1, contentWidth)}
         height={RULER_HEIGHT}
+        preserveAspectRatio="none"
       >
         <rect
           x={0}
           y={0}
-          width={Math.max(1, viewWidth)}
+          width={Math.max(1, contentWidth)}
           height={RULER_HEIGHT}
           fill="url(#timeline-ruler-bg)"
           opacity={0}
@@ -370,7 +343,7 @@ export function TimelineRuler({
         <line
           x1={0}
           y1={RULER_HEIGHT - 6}
-          x2={Math.max(1, viewWidth)}
+          x2={Math.max(1, contentWidth)}
           y2={RULER_HEIGHT - 6}
           stroke="hsl(var(--border))"
           strokeOpacity={0.2}
@@ -393,7 +366,7 @@ export function TimelineRuler({
           const isEnd = Math.abs(tick.time - duration) < EPSILON;
           const textAnchor = isStart ? "start" : isEnd ? "end" : "middle";
           const dx = isStart ? 4 : isEnd ? -4 : 0;
-          
+
           return (
             <g key={`major-${tick.time.toFixed(5)}-${tick.x.toFixed(2)}`}>
               <line
