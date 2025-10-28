@@ -1,7 +1,11 @@
 "use client";
 
 import { db } from "@/data/db";
-import { queryKeys, refreshVideoCache } from "@/data/queries";
+import {
+  queryKeys,
+  refreshVideoCache,
+  useVideoComposition,
+} from "@/data/queries";
 import {
   type MediaItem,
   TRACK_TYPE_ORDER,
@@ -88,11 +92,18 @@ export default function BottomBar() {
     },
   });
 
+  const { data: composition } = useVideoComposition(projectId);
+  const frames = composition?.frames ?? {};
+
   // Automatically limit keyframes to 30 seconds whenever tracks change
   useEffect(() => {
-    if (tracks.length > 0) {
+    if (tracks.length === 0) return;
+
+    const timeoutId = setTimeout(() => {
       limitAllKeyframesToThirtySeconds.mutate();
-    }
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
   }, [tracks, limitAllKeyframesToThirtySeconds]);
 
   const handleOnDragOver: DragEventHandler<HTMLDivElement> = (event) => {
@@ -103,7 +114,6 @@ export default function BottomBar() {
 
   const addToTrack = useMutation({
     mutationFn: async (media: MediaItem) => {
-      const tracks = await db.tracks.tracksByProject(media.projectId);
       const trackType = media.mediaType === "image" ? "video" : media.mediaType;
       let track = tracks.find((t) => t.type === trackType);
       if (!track) {
@@ -114,10 +124,13 @@ export default function BottomBar() {
           locked: true,
         });
         const newTrack = await db.tracks.find(id.toString());
-        if (!newTrack) return;
+        if (!newTrack) {
+          return;
+        }
         track = newTrack;
       }
-      const keyframes = await db.keyFrames.keyFramesByTrack(track.id);
+
+      const keyframes = frames[track.id] ?? [];
 
       const lastKeyframe = [...keyframes]
         .sort((a, b) => a.timestamp - b.timestamp)
@@ -132,6 +145,9 @@ export default function BottomBar() {
 
       const mediaDuration = resolveDuration(media) ?? 5000;
       const duration = Math.min(mediaDuration, 30000);
+      const timestamp = lastKeyframe
+        ? lastKeyframe.timestamp + 1 + lastKeyframe.duration
+        : 0;
 
       const newId = await db.keyFrames.create({
         trackId: track.id,
@@ -141,11 +157,10 @@ export default function BottomBar() {
           prompt: media.input?.prompt || "",
           url: media.input?.image_url?.url,
         },
-        timestamp: lastKeyframe
-          ? lastKeyframe.timestamp + 1 + lastKeyframe.duration
-          : 0,
+        timestamp,
         duration,
       });
+
       return db.keyFrames.find(newId.toString());
     },
     onSuccess: (data) => {
@@ -203,16 +218,14 @@ export default function BottomBar() {
     }
 
     if (!jobPayload) {
-      console.error(
-        "No job data found in drop event. Available types:",
-        event.dataTransfer.types,
-      );
       return false;
     }
 
     try {
       const job: MediaItem = JSON.parse(jobPayload);
-      addToTrack.mutate(job);
+      setTimeout(() => {
+        addToTrack.mutate(job);
+      }, 0);
       return true;
     } catch (error) {
       console.error("Failed to parse job data:", error, jobPayload);
@@ -315,9 +328,7 @@ export default function BottomBar() {
             "bg-white/5": dragOverTracks,
           },
         )}
-        onDragOver={handleOnDragOver}
         onDragLeave={() => setDragOverTracks(false)}
-        onDrop={handleOnDrop}
       >
         <div
           ref={timelineWrapperRef}
@@ -331,8 +342,6 @@ export default function BottomBar() {
           tabIndex={0}
           onClick={handleTimelineClick}
           onKeyDown={handleTimelineKeyDown}
-          onDragOver={handleOnDragOver}
-          onDrop={handleOnDrop}
         >
           <div
             className="pointer-events-none absolute z-20 top-6 bottom-0 w-[2px] bg-white/30 ms-4"

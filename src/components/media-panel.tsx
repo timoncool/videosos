@@ -401,6 +401,7 @@ export function MediaItemRow({
                   src={coverImage}
                   alt="Generated media"
                   className="h-full w-full object-cover"
+                  draggable={false}
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center top-0 left-0 absolute p-2 z-50">
