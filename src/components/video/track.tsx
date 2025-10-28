@@ -25,9 +25,16 @@ import { WithTooltip } from "../ui/tooltip";
 
 type VideoTrackRowProps = {
   data: VideoTrack;
+  pixelsPerMs: number;
+  timelineDurationMs: number;
 } & HTMLAttributes<HTMLDivElement>;
 
-export function VideoTrackRow({ data, ...props }: VideoTrackRowProps) {
+export function VideoTrackRow({
+  data,
+  pixelsPerMs,
+  timelineDurationMs,
+  ...props
+}: VideoTrackRowProps) {
   const { data: keyframes = [] } = useQuery({
     queryKey: ["frames", data],
     queryFn: () => db.keyFrames.keyFramesByTrack(data.id),
@@ -52,11 +59,13 @@ export function VideoTrackRow({ data, ...props }: VideoTrackRowProps) {
           key={frame.id}
           className="absolute top-0 bottom-0"
           style={{
-            left: `${(frame.timestamp / 10 / 30).toFixed(2)}%`,
-            width: `${(frame.duration / 10 / 30).toFixed(2)}%`,
+            left: `${frame.timestamp * pixelsPerMs}px`,
+            width: `${frame.duration * pixelsPerMs}px`,
           }}
           track={data}
           frame={frame}
+          pixelsPerMs={pixelsPerMs}
+          timelineDurationMs={timelineDurationMs}
         />
       ))}
     </div>
@@ -169,12 +178,16 @@ function AudioWaveform({ data }: AudioWaveformProps) {
 type VideoTrackViewProps = {
   track: VideoTrack;
   frame: VideoKeyFrame;
+  pixelsPerMs: number;
+  timelineDurationMs: number;
 } & HTMLAttributes<HTMLDivElement>;
 
 export function VideoTrackView({
   className,
   track,
   frame,
+  pixelsPerMs,
+  timelineDurationMs,
   ...props
 }: VideoTrackViewProps) {
   const queryClient = useQueryClient();
@@ -275,7 +288,7 @@ export function VideoTrackView({
     let duplicateTimestamp = frame.timestamp;
 
     const applyLeftStyle = (timestamp: number) => {
-      trackElement.style.left = `${((timestamp / 30) * 100) / 1000}%`;
+      trackElement.style.left = `${timestamp * pixelsPerMs}px`;
     };
 
     const handleMouseMove = (moveEvent: MouseEvent) => {
@@ -288,21 +301,21 @@ export function VideoTrackView({
         newLeft = bounds.right;
       }
 
-      const timelineElement = trackElement.closest(".timeline-container");
-      const parentWidth = timelineElement
-        ? (timelineElement as HTMLElement).offsetWidth
-        : 1;
-      const calculatedTimestamp = (newLeft / parentWidth) * 30;
-      const sanitizedTimestamp =
-        (calculatedTimestamp < 0 ? 0 : calculatedTimestamp) * 1000;
+      const maxTimestamp = Math.max(timelineDurationMs - frame.duration, 0);
+      const calculatedTimestamp = newLeft / pixelsPerMs;
+      const sanitizedTimestamp = Math.max(
+        0,
+        Math.min(calculatedTimestamp, maxTimestamp),
+      );
+      const normalizedTimestamp = Math.round(sanitizedTimestamp);
 
       if (duplicateMode) {
-        duplicateTimestamp = sanitizedTimestamp;
-        applyLeftStyle(sanitizedTimestamp);
+        duplicateTimestamp = normalizedTimestamp;
+        applyLeftStyle(normalizedTimestamp);
         return;
       }
 
-      frame.timestamp = sanitizedTimestamp;
+      frame.timestamp = normalizedTimestamp;
       applyLeftStyle(frame.timestamp);
       db.keyFrames.update(frame.id, { timestamp: frame.timestamp });
     };
@@ -344,36 +357,41 @@ export function VideoTrackView({
     if (!trackElement) return;
     const startX = e.clientX;
     const startWidth = trackElement.offsetWidth;
+    const minDuration = 1000;
+    const mediaDuration = resolveDuration(media) ?? 5000;
+    const maxDuration = Math.min(mediaDuration, 30000);
 
     const handleMouseMove = (moveEvent: MouseEvent) => {
       const deltaX = moveEvent.clientX - startX;
       let newWidth = startWidth + (direction === "right" ? deltaX : -deltaX);
 
-      const minDuration = 1000;
-      const mediaDuration = resolveDuration(media) ?? 5000;
-      const maxDuration = Math.min(mediaDuration, 30000);
+      const availableDuration = Math.max(
+        timelineDurationMs - frame.timestamp,
+        minDuration,
+      );
+      const maxAllowedDuration = Math.min(maxDuration, availableDuration);
 
-      const timelineElement = trackElement.closest(".timeline-container");
-      const parentWidth = timelineElement
-        ? (timelineElement as HTMLElement).offsetWidth
-        : 1;
-      let newDuration = (newWidth / parentWidth) * 30 * 1000;
+      let newDuration = newWidth / pixelsPerMs;
 
       if (newDuration < minDuration) {
-        newWidth = (minDuration / 1000 / 30) * parentWidth;
         newDuration = minDuration;
-      } else if (newDuration > maxDuration) {
-        newWidth = (maxDuration / 1000 / 30) * parentWidth;
-        newDuration = maxDuration;
+        newWidth = newDuration * pixelsPerMs;
+      } else if (newDuration > maxAllowedDuration) {
+        newDuration = maxAllowedDuration;
+        newWidth = newDuration * pixelsPerMs;
       }
 
       frame.duration = newDuration;
-      trackElement.style.width = `${((frame.duration / 30) * 100) / 1000}%`;
+      trackElement.style.width = `${frame.duration * pixelsPerMs}px`;
     };
 
     const handleMouseUp = () => {
       frame.duration = Math.round(frame.duration / 100) * 100;
-      trackElement.style.width = `${((frame.duration / 30) * 100) / 1000}%`;
+      frame.duration = Math.min(
+        Math.max(frame.duration, minDuration),
+        Math.max(timelineDurationMs - frame.timestamp, minDuration),
+      );
+      trackElement.style.width = `${frame.duration * pixelsPerMs}px`;
       db.keyFrames.update(frame.id, { duration: frame.duration });
       queryClient.invalidateQueries({
         queryKey: queryKeys.projectPreview(projectId),
