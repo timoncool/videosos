@@ -1,7 +1,11 @@
 "use client";
 
 import { db } from "@/data/db";
-import { queryKeys, refreshVideoCache, useVideoComposition } from "@/data/queries";
+import {
+  queryKeys,
+  refreshVideoCache,
+  useVideoComposition,
+} from "@/data/queries";
 import {
   type MediaItem,
   TRACK_TYPE_ORDER,
@@ -94,11 +98,11 @@ export default function BottomBar() {
   // Automatically limit keyframes to 30 seconds whenever tracks change
   useEffect(() => {
     if (tracks.length === 0) return;
-    
+
     const timeoutId = setTimeout(() => {
       limitAllKeyframesToThirtySeconds.mutate();
     }, 300);
-    
+
     return () => clearTimeout(timeoutId);
   }, [tracks, limitAllKeyframesToThirtySeconds]);
 
@@ -125,7 +129,7 @@ export default function BottomBar() {
         }
         track = newTrack;
       }
-      
+
       const keyframes = frames[track.id] ?? [];
 
       const lastKeyframe = [...keyframes]
@@ -141,7 +145,9 @@ export default function BottomBar() {
 
       const mediaDuration = resolveDuration(media) ?? 5000;
       const duration = Math.min(mediaDuration, 30000);
-      const timestamp = lastKeyframe ? lastKeyframe.timestamp + 1 + lastKeyframe.duration : 0;
+      const timestamp = lastKeyframe
+        ? lastKeyframe.timestamp + 1 + lastKeyframe.duration
+        : 0;
 
       const newId = await db.keyFrames.create({
         trackId: track.id,
@@ -154,7 +160,7 @@ export default function BottomBar() {
         timestamp,
         duration,
       });
-      
+
       return db.keyFrames.find(newId.toString());
     },
     onSuccess: (data) => {

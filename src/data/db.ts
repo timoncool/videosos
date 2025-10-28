@@ -24,7 +24,9 @@ const dbPromise = openDB("ai-vstudio-db-v2", 1, {
     mediaStore.createIndex("by_projectId", "projectId");
   },
   blocked() {
-    console.warn("[IndexedDB] Database upgrade blocked - another connection is open");
+    console.warn(
+      "[IndexedDB] Database upgrade blocked - another connection is open",
+    );
   },
   blocking() {
     console.warn("[IndexedDB] This connection is blocking a version upgrade");
