@@ -392,7 +392,7 @@ export function TimelineRuler({
           const isEnd = Math.abs(tick.time - duration) < EPSILON;
           const textAnchor = isStart ? "start" : isEnd ? "end" : "middle";
           const dx = isStart ? 4 : isEnd ? -4 : 0;
-          
+
           return (
             <g key={`major-${tick.time.toFixed(5)}-${tick.x.toFixed(2)}`}>
               <line
