@@ -18,21 +18,21 @@ import {
   type HTMLAttributes,
   type MouseEventHandler,
   createElement,
-  useEffect,
   useMemo,
   useRef,
-  useState,
 } from "react";
 import { WithTooltip } from "../ui/tooltip";
 
 type VideoTrackRowProps = {
   data: VideoTrack;
-  timelineDurationSeconds: number;
+  pixelsPerMs: number;
+  timelineDurationMs: number;
 } & HTMLAttributes<HTMLDivElement>;
 
 export function VideoTrackRow({
   data,
-  timelineDurationSeconds,
+  pixelsPerMs,
+  timelineDurationMs,
   ...props
 }: VideoTrackRowProps) {
   const { data: keyframes = [] } = useQuery({
@@ -41,8 +41,6 @@ export function VideoTrackRow({
   });
 
   const mediaType = useMemo(() => keyframes[0]?.data.type, [keyframes]);
-  const safeTimelineDuration = Math.max(timelineDurationSeconds, 1);
-  const timelineDurationMs = safeTimelineDuration * 1000;
 
   return (
     <div
@@ -56,30 +54,20 @@ export function VideoTrackRow({
       )}
       {...props}
     >
-      {keyframes.map((frame) => {
-        const leftPercent = Math.min(
-          (frame.timestamp / timelineDurationMs) * 100,
-          100,
-        );
-        const widthPercent = Math.min(
-          (frame.duration / timelineDurationMs) * 100,
-          100,
-        );
-
-        return (
-          <VideoTrackView
-            key={frame.id}
-            className="absolute top-0 bottom-0"
-            style={{
-              left: `${leftPercent.toFixed(2)}%`,
-              width: `${widthPercent.toFixed(2)}%`,
-            }}
-            track={data}
-            frame={frame}
-            timelineDurationSeconds={safeTimelineDuration}
-          />
-        );
-      })}
+      {keyframes.map((frame) => (
+        <VideoTrackView
+          key={frame.id}
+          className="absolute top-0 bottom-0"
+          style={{
+            left: `${frame.timestamp * pixelsPerMs}px`,
+            width: `${frame.duration * pixelsPerMs}px`,
+          }}
+          track={data}
+          frame={frame}
+          pixelsPerMs={pixelsPerMs}
+          timelineDurationMs={timelineDurationMs}
+        />
+      ))}
     </div>
   );
 }
@@ -190,15 +178,16 @@ function AudioWaveform({ data }: AudioWaveformProps) {
 type VideoTrackViewProps = {
   track: VideoTrack;
   frame: VideoKeyFrame;
-  timelineDurationSeconds: number;
+  pixelsPerMs: number;
+  timelineDurationMs: number;
 } & HTMLAttributes<HTMLDivElement>;
 
 export function VideoTrackView({
   className,
   track,
   frame,
-  timelineDurationSeconds,
-  style,
+  pixelsPerMs,
+  timelineDurationMs,
   ...props
 }: VideoTrackViewProps) {
   const queryClient = useQueryClient();
@@ -228,71 +217,6 @@ export function VideoTrackView({
   const mediaUrl = media ? resolveMediaUrl(media) : null;
 
   const trackRef = useRef<HTMLDivElement>(null);
-  const [isFocusing, setIsFocusing] = useState(false);
-  const hasScrolledIntoView = useRef<boolean>(false);
-  const highlightTimeoutRef = useRef<number | undefined>(undefined);
-  const previousFrameIdRef = useRef<string | undefined>(undefined);
-
-  useEffect(() => {
-    const element = trackRef.current;
-    if (!element) return;
-
-    if (previousFrameIdRef.current !== frame.id) {
-      hasScrolledIntoView.current = false;
-      previousFrameIdRef.current = frame.id;
-    }
-
-    if (!isSelected) {
-      hasScrolledIntoView.current = false;
-      if (highlightTimeoutRef.current) {
-        window.clearTimeout(highlightTimeoutRef.current);
-        highlightTimeoutRef.current = undefined;
-      }
-      setIsFocusing(false);
-      return;
-    }
-
-    if (!hasScrolledIntoView.current) {
-      const container = element.closest(
-        "[data-timeline-scroll-container]",
-      ) as HTMLElement | null;
-
-      if (container) {
-        const containerRect = container.getBoundingClientRect();
-        const frameRect = element.getBoundingClientRect();
-        const guard = Math.min(containerRect.width * 0.1, 96);
-        const isWithinViewport =
-          frameRect.left >= containerRect.left + guard &&
-          frameRect.right <= containerRect.right - guard;
-
-        if (!isWithinViewport) {
-          element.scrollIntoView({
-            behavior: "smooth",
-            block: "nearest",
-            inline: "center",
-          });
-        }
-      }
-
-      hasScrolledIntoView.current = true;
-    }
-
-    setIsFocusing(true);
-    if (highlightTimeoutRef.current) {
-      window.clearTimeout(highlightTimeoutRef.current);
-    }
-    highlightTimeoutRef.current = window.setTimeout(() => {
-      setIsFocusing(false);
-      highlightTimeoutRef.current = undefined;
-    }, 800);
-
-    return () => {
-      if (highlightTimeoutRef.current) {
-        window.clearTimeout(highlightTimeoutRef.current);
-        highlightTimeoutRef.current = undefined;
-      }
-    };
-  }, [frame.id, isSelected]);
 
   const imageUrl = useMemo(() => {
     if (!media) return undefined;
@@ -363,11 +287,8 @@ export function VideoTrackView({
     const originalLeftStyle = trackElement.style.left;
     let duplicateTimestamp = frame.timestamp;
 
-    const safeTimelineDuration = Math.max(timelineDurationSeconds, 1);
-    const timelineDurationMs = safeTimelineDuration * 1000;
-
     const applyLeftStyle = (timestamp: number) => {
-      trackElement.style.left = `${((timestamp / timelineDurationMs) * 100).toFixed(4)}%`;
+      trackElement.style.left = `${timestamp * pixelsPerMs}px`;
     };
 
     const handleMouseMove = (moveEvent: MouseEvent) => {
@@ -380,22 +301,21 @@ export function VideoTrackView({
         newLeft = bounds.right;
       }
 
-      const timelineElement = trackElement.closest(".timeline-container");
-      const parentWidth = timelineElement
-        ? (timelineElement as HTMLElement).offsetWidth
-        : 1;
-      const calculatedTimestamp =
-        (newLeft / parentWidth) * safeTimelineDuration;
-      const sanitizedTimestamp =
-        (calculatedTimestamp < 0 ? 0 : calculatedTimestamp) * 1000;
+      const maxTimestamp = Math.max(timelineDurationMs - frame.duration, 0);
+      const calculatedTimestamp = newLeft / pixelsPerMs;
+      const sanitizedTimestamp = Math.max(
+        0,
+        Math.min(calculatedTimestamp, maxTimestamp),
+      );
+      const normalizedTimestamp = Math.round(sanitizedTimestamp);
 
       if (duplicateMode) {
-        duplicateTimestamp = sanitizedTimestamp;
-        applyLeftStyle(sanitizedTimestamp);
+        duplicateTimestamp = normalizedTimestamp;
+        applyLeftStyle(normalizedTimestamp);
         return;
       }
 
-      frame.timestamp = sanitizedTimestamp;
+      frame.timestamp = normalizedTimestamp;
       applyLeftStyle(frame.timestamp);
       db.keyFrames.update(frame.id, { timestamp: frame.timestamp });
     };
@@ -411,16 +331,12 @@ export function VideoTrackView({
           applyLeftStyle(originalTimestamp);
         }
 
-        const newId = await db.keyFrames.create({
+        await db.keyFrames.create({
           trackId: frame.trackId,
           data: { ...frame.data },
           timestamp: duplicateTimestamp,
           duration: frame.duration,
         });
-        if (typeof newId === "string") {
-          selectKeyframe(newId);
-        }
-        await refreshVideoCache(queryClient, projectId);
       }
 
       queryClient.invalidateQueries({
@@ -441,38 +357,41 @@ export function VideoTrackView({
     if (!trackElement) return;
     const startX = e.clientX;
     const startWidth = trackElement.offsetWidth;
-    const safeTimelineDuration = Math.max(timelineDurationSeconds, 1);
-    const timelineDurationMs = safeTimelineDuration * 1000;
+    const minDuration = 1000;
+    const mediaDuration = resolveDuration(media) ?? 5000;
+    const maxDuration = Math.min(mediaDuration, 30000);
 
     const handleMouseMove = (moveEvent: MouseEvent) => {
       const deltaX = moveEvent.clientX - startX;
       let newWidth = startWidth + (direction === "right" ? deltaX : -deltaX);
 
-      const minDuration = 1000;
-      const mediaDuration = resolveDuration(media) ?? 5000;
-      const maxDuration = Math.min(mediaDuration, timelineDurationMs);
+      const availableDuration = Math.max(
+        timelineDurationMs - frame.timestamp,
+        minDuration,
+      );
+      const maxAllowedDuration = Math.min(maxDuration, availableDuration);
 
-      const timelineElement = trackElement.closest(".timeline-container");
-      const parentWidth = timelineElement
-        ? (timelineElement as HTMLElement).offsetWidth
-        : 1;
-      let newDuration = (newWidth / parentWidth) * safeTimelineDuration * 1000;
+      let newDuration = newWidth / pixelsPerMs;
 
       if (newDuration < minDuration) {
-        newWidth = (minDuration / timelineDurationMs) * parentWidth;
         newDuration = minDuration;
-      } else if (newDuration > maxDuration) {
-        newWidth = (maxDuration / timelineDurationMs) * parentWidth;
-        newDuration = maxDuration;
+        newWidth = newDuration * pixelsPerMs;
+      } else if (newDuration > maxAllowedDuration) {
+        newDuration = maxAllowedDuration;
+        newWidth = newDuration * pixelsPerMs;
       }
 
       frame.duration = newDuration;
-      trackElement.style.width = `${((frame.duration / timelineDurationMs) * 100).toFixed(4)}%`;
+      trackElement.style.width = `${frame.duration * pixelsPerMs}px`;
     };
 
     const handleMouseUp = () => {
       frame.duration = Math.round(frame.duration / 100) * 100;
-      trackElement.style.width = `${((frame.duration / timelineDurationMs) * 100).toFixed(4)}%`;
+      frame.duration = Math.min(
+        Math.max(frame.duration, minDuration),
+        Math.max(timelineDurationMs - frame.timestamp, minDuration),
+      );
+      trackElement.style.width = `${frame.duration * pixelsPerMs}px`;
       db.keyFrames.update(frame.id, { duration: frame.duration });
       queryClient.invalidateQueries({
         queryKey: queryKeys.projectPreview(projectId),
@@ -493,23 +412,11 @@ export function VideoTrackView({
       aria-checked={isSelected}
       onClick={handleOnClick}
       className={cn(
-        "flex flex-col border border-white/10 rounded-lg relative transition-shadow transition-colors",
-        {
-          "ring-2 ring-sky-300/70 shadow-[0_0_0_1px_rgba(56,189,248,0.35)]":
-            isSelected,
-        },
+        "flex flex-col border border-white/10 rounded-lg",
         className,
       )}
-      style={{
-        ...(style ?? {}),
-        scrollMarginInline: "96px",
-        scrollMarginBlock: "16px",
-      }}
       {...props}
     >
-      {isFocusing && (
-        <span className="pointer-events-none absolute inset-0 rounded-lg border-2 border-sky-200/70 backdrop-blur-[1px] timeline-focus-ring" />
-      )}
       <div
         className={cn(
           "flex flex-col select-none rounded overflow-hidden group h-full",
