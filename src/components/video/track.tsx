@@ -227,9 +227,11 @@ export function VideoTrackView({
   const label = media.mediaType ?? "unknown";
 
   const calculateBounds = () => {
-    const timelineElement = document.querySelector(".timeline-container");
-    const timelineRect = timelineElement?.getBoundingClientRect();
     const trackElement = trackRef.current;
+    const timelineElement = trackElement?.closest(
+      ".timeline-container",
+    ) as HTMLElement | null;
+    const timelineRect = timelineElement?.getBoundingClientRect();
     const trackRect = trackElement?.getBoundingClientRect();
 
     if (!timelineRect || !trackRect || !trackElement)
@@ -407,10 +409,7 @@ export function VideoTrackView({
           },
         )}
       >
-        <div
-          className="relative z-40 p-0.5 pl-1 bg-black/10 flex flex-row items-center"
-          onMouseDown={(e) => e.stopPropagation()}
-        >
+        <div className="relative z-40 p-0.5 pl-1 bg-black/10 flex flex-row items-center">
           <div className="flex flex-row gap-1 text-sm items-center font-semibold text-white/60 w-full">
             <div className="flex flex-row truncate gap-1 items-center">
               {createElement(trackIcons[track.type], {
