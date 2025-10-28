@@ -36,34 +36,53 @@ export function ExportDialog({ onOpenChange, ...props }: ExportDialogProps) {
     mutationFn: async () => {
       const mediaItems = composition.mediaItems;
 
-      let maxEnd = 0;
-      for (const trackFrames of Object.values(composition.frames)) {
-        for (const frame of trackFrames) {
-          const media = mediaItems[frame.data.mediaId];
-          const duration = frame.duration || resolveDuration(media) || 5000;
-          maxEnd = Math.max(maxEnd, frame.timestamp + duration);
-        }
-      }
-      const totalDuration = maxEnd;
+      const videoData = composition.tracks
+        .map((track) => {
+          const rawFrames = composition.frames[track.id] ?? [];
+          const keyframes = rawFrames
+            .map((frame) => {
+              const media = mediaItems[frame.data.mediaId];
+              const url = resolveMediaUrl(media);
+              const duration = frame.duration ?? resolveDuration(media) ?? 0;
+              
+              if (!media || !url || duration <= 0) {
+                console.warn(`Skipping invalid frame: mediaId=${frame.data.mediaId}, url=${url}, duration=${duration}`);
+                return null;
+              }
+              
+              return {
+                timestamp: frame.timestamp,
+                duration: duration,
+                url: url,
+                mediaId: frame.data.mediaId,
+              };
+            })
+            .filter((k): k is NonNullable<typeof k> => k !== null);
 
-      const videoData = composition.tracks.map((track) => ({
-        id: track.id,
-        type: track.type === "video" ? ("video" as const) : ("audio" as const),
-        keyframes: composition.frames[track.id].map((frame) => {
-          const media = mediaItems[frame.data.mediaId];
-          const duration = frame.duration || resolveDuration(media) || 5000;
           return {
-            timestamp: frame.timestamp,
-            duration: duration,
-            url: resolveMediaUrl(media),
-            mediaId: frame.data.mediaId,
+            id: track.id,
+            type: track.type === "video" ? ("video" as const) : ("audio" as const),
+            keyframes: keyframes,
           };
-        }),
-      }));
+        })
+        .filter((track) => track.keyframes.length > 0);
 
       if (videoData.length === 0) {
-        throw new Error("No tracks to export");
+        throw new Error("No valid tracks to export. Please ensure all media items are loaded.");
       }
+
+      const maxEnd = Math.max(
+        0,
+        ...videoData.flatMap((t) =>
+          t.keyframes.map((k) => k.timestamp + k.duration),
+        ),
+      );
+      const totalDuration = maxEnd > 0 ? maxEnd + 1000 : 5000;
+
+      console.log(`Export: ${videoData.length} tracks, totalDuration=${totalDuration}ms`);
+      videoData.forEach((track, i) => {
+        console.log(`  Track ${i} (${track.type}): ${track.keyframes.length} keyframes`);
+      });
 
       const videoBlob = await exportVideoClientSide(
         videoData,
@@ -82,6 +101,10 @@ export function ExportDialog({ onOpenChange, ...props }: ExportDialogProps) {
         thumbnail_url: "",
         blob: videoBlob,
       };
+    },
+    onError: (error) => {
+      console.error("Export failed:", error);
+      alert(`Export failed: ${error instanceof Error ? error.message : String(error)}`);
     },
   });
   const setExportDialogOpen = useVideoProjectStore(
