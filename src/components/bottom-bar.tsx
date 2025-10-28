@@ -4,10 +4,12 @@ import { db } from "@/data/db";
 import {
   queryKeys,
   refreshVideoCache,
+  useProject,
   useVideoComposition,
 } from "@/data/queries";
 import {
   type MediaItem,
+  PROJECT_PLACEHOLDER,
   TRACK_TYPE_ORDER,
   type VideoTrack,
 } from "@/data/schema";
@@ -34,6 +36,7 @@ export default function BottomBar() {
   const t = useTranslations("app.bottomBar");
   const queryClient = useQueryClient();
   const projectId = useProjectId();
+  const { data: project = PROJECT_PLACEHOLDER } = useProject(projectId);
   const player = useVideoProjectStore((s) => s.player);
   const playerCurrentTimestamp = useVideoProjectStore(
     (s) => s.playerCurrentTimestamp,
@@ -41,10 +44,12 @@ export default function BottomBar() {
   const setPlayerCurrentTimestamp = useVideoProjectStore(
     (s) => s.setPlayerCurrentTimestamp,
   );
+  const selectKeyframe = useVideoProjectStore((s) => s.selectKeyframe);
   const timelineScrollRef = useRef<HTMLDivElement>(null);
   const timelineContentRef = useRef<HTMLDivElement>(null);
   const [zoom, setZoom] = useState(1);
-  const timelineDurationSeconds = 30;
+  const timelineDurationMs = project?.duration ?? 30000;
+  const timelineDurationSeconds = timelineDurationMs / 1000;
   const FPS = 30;
   const MIN_ZOOM = 0.5;
   const MAX_ZOOM = 4;
@@ -60,34 +65,6 @@ export default function BottomBar() {
     .padStart(5, "0");
   const [dragOverTracks, setDragOverTracks] = useState(false);
 
-  const limitAllKeyframesToThirtySeconds = useMutation({
-    mutationFn: async () => {
-      const tracks = await db.tracks.tracksByProject(projectId);
-
-      let updatedCount = 0;
-
-      for (const track of tracks) {
-        const keyframes = await db.keyFrames.keyFramesByTrack(track.id);
-
-        for (const frame of keyframes) {
-          if (frame.duration > 30000) {
-            await db.keyFrames.update(frame.id, {
-              duration: 30000,
-            });
-            updatedCount++;
-          }
-        }
-      }
-
-      return updatedCount;
-    },
-    onSuccess: (updatedCount) => {
-      if (updatedCount > 0) {
-        refreshVideoCache(queryClient, projectId);
-      }
-    },
-  });
-
   const { data: tracks = [] } = useQuery({
     queryKey: queryKeys.projectTracks(projectId),
     queryFn: async () => {
@@ -100,17 +77,6 @@ export default function BottomBar() {
 
   const { data: composition } = useVideoComposition(projectId);
   const frames = composition?.frames ?? {};
-
-  // Automatically limit keyframes to 30 seconds whenever tracks change
-  useEffect(() => {
-    if (tracks.length === 0) return;
-
-    const timeoutId = setTimeout(() => {
-      limitAllKeyframesToThirtySeconds.mutate();
-    }, 300);
-
-    return () => clearTimeout(timeoutId);
-  }, [tracks, limitAllKeyframesToThirtySeconds]);
 
   const handleOnDragOver: DragEventHandler<HTMLDivElement> = (event) => {
     event.preventDefault();
@@ -150,7 +116,7 @@ export default function BottomBar() {
         );
 
       const mediaDuration = resolveDuration(media) ?? 5000;
-      const duration = Math.min(mediaDuration, 30000);
+      const duration = mediaDuration;
       const timestamp = lastKeyframe
         ? lastKeyframe.timestamp + 1 + lastKeyframe.duration
         : 0;
@@ -174,11 +140,27 @@ export default function BottomBar() {
         duration,
       });
 
-      return db.keyFrames.find(newId.toString());
+      const newKeyframe = await db.keyFrames.find(newId.toString());
+
+      const newEndTime = timestamp + duration;
+      const currentProject = await db.projects.find(projectId);
+      const projectDuration = currentProject?.duration ?? 30000;
+
+      if (newEndTime > projectDuration) {
+        await db.projects.update(projectId, {
+          duration: newEndTime + 1000,
+        });
+        await queryClient.invalidateQueries({
+          queryKey: queryKeys.project(projectId),
+        });
+      }
+
+      return newKeyframe;
     },
     onSuccess: (data) => {
       if (!data) return;
       refreshVideoCache(queryClient, projectId);
+      selectKeyframe(data.id);
     },
   });
 
@@ -347,7 +329,6 @@ export default function BottomBar() {
   const zoomPercentage = Math.round(zoom * 100);
 
   const BASE_PIXELS_PER_SECOND = 80;
-  const timelineDurationMs = timelineDurationSeconds * 1000;
   const pixelsPerSecond = BASE_PIXELS_PER_SECOND * zoom;
   const timelineWidthPx = pixelsPerSecond * timelineDurationSeconds;
   const pixelsPerMs = pixelsPerSecond / 1000;
