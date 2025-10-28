@@ -652,6 +652,13 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
       "Optimized variant of Veo 3.1 for high-speed generation with cinematic quality",
     popularity: 5,
     category: "video",
+    inputAsset: ["image"],
+    initialInput: {
+      positivePrompt: "",
+    },
+    inputMap: {
+      prompt: "positivePrompt",
+    },
   },
   {
     provider: "runware",
@@ -661,6 +668,13 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
       "Google's newest Veo model for cinematic video generation with natural sound",
     popularity: 5,
     category: "video",
+    inputAsset: ["image"],
+    initialInput: {
+      positivePrompt: "",
+    },
+    inputMap: {
+      prompt: "positivePrompt",
+    },
   },
   {
     provider: "runware",
