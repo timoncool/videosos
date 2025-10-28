@@ -313,8 +313,9 @@ export function TimelineRuler({
       ref={containerRef}
       aria-hidden="true"
       className={clsx(
-        "pointer-events-none absolute inset-0 w-full h-full overflow-hidden",
+        "pointer-events-none absolute inset-0 w-full h-full overflow-visible",
         className,
+        "z-40",
       )}
       {...props}
     >
