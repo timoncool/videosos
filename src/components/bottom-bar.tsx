@@ -307,7 +307,7 @@ export default function BottomBar() {
           onKeyDown={handleTimelineKeyDown}
         >
           <div
-            className="absolute z-[32] top-6 bottom-0 w-[2px] bg-white/30 ms-4"
+            className="pointer-events-none absolute z-[32] top-6 bottom-0 w-[2px] bg-white/30 ms-4"
             style={{
               left: `${timelineProgressPercent}%`,
             }}

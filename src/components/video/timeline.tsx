@@ -13,7 +13,13 @@ export function TimelineRuler({
 }: TimelineRulerProps) {
   const totalTicks = duration * 10;
   return (
-    <div className={clsx("w-full h-full absolute overflow-hidden", className)}>
+    <div
+      aria-hidden="true"
+      className={clsx(
+        "pointer-events-none w-full h-full absolute overflow-hidden",
+        className,
+      )}
+    >
       <div className="flex px-2 py-0.5 h-full">
         {Array.from({ length: totalTicks + 1 }, (_, index) => index).map(
           (tickIndex) => {
