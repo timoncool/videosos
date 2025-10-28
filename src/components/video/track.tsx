@@ -27,15 +27,22 @@ import { WithTooltip } from "../ui/tooltip";
 
 type VideoTrackRowProps = {
   data: VideoTrack;
+  timelineDurationSeconds: number;
 } & HTMLAttributes<HTMLDivElement>;
 
-export function VideoTrackRow({ data, ...props }: VideoTrackRowProps) {
+export function VideoTrackRow({
+  data,
+  timelineDurationSeconds,
+  ...props
+}: VideoTrackRowProps) {
   const { data: keyframes = [] } = useQuery({
     queryKey: ["frames", data],
     queryFn: () => db.keyFrames.keyFramesByTrack(data.id),
   });
 
   const mediaType = useMemo(() => keyframes[0]?.data.type, [keyframes]);
+  const safeTimelineDuration = Math.max(timelineDurationSeconds, 1);
+  const timelineDurationMs = safeTimelineDuration * 1000;
 
   return (
     <div
@@ -49,18 +56,30 @@ export function VideoTrackRow({ data, ...props }: VideoTrackRowProps) {
       )}
       {...props}
     >
-      {keyframes.map((frame) => (
-        <VideoTrackView
-          key={frame.id}
-          className="absolute top-0 bottom-0"
-          style={{
-            left: `${(frame.timestamp / 10 / 30).toFixed(2)}%`,
-            width: `${(frame.duration / 10 / 30).toFixed(2)}%`,
-          }}
-          track={data}
-          frame={frame}
-        />
-      ))}
+      {keyframes.map((frame) => {
+        const leftPercent = Math.min(
+          (frame.timestamp / timelineDurationMs) * 100,
+          100,
+        );
+        const widthPercent = Math.min(
+          (frame.duration / timelineDurationMs) * 100,
+          100,
+        );
+
+        return (
+          <VideoTrackView
+            key={frame.id}
+            className="absolute top-0 bottom-0"
+            style={{
+              left: `${leftPercent.toFixed(2)}%`,
+              width: `${widthPercent.toFixed(2)}%`,
+            }}
+            track={data}
+            frame={frame}
+            timelineDurationSeconds={safeTimelineDuration}
+          />
+        );
+      })}
     </div>
   );
 }
@@ -171,12 +190,14 @@ function AudioWaveform({ data }: AudioWaveformProps) {
 type VideoTrackViewProps = {
   track: VideoTrack;
   frame: VideoKeyFrame;
+  timelineDurationSeconds: number;
 } & HTMLAttributes<HTMLDivElement>;
 
 export function VideoTrackView({
   className,
   track,
   frame,
+  timelineDurationSeconds,
   style,
   ...props
 }: VideoTrackViewProps) {
@@ -342,8 +363,11 @@ export function VideoTrackView({
     const originalLeftStyle = trackElement.style.left;
     let duplicateTimestamp = frame.timestamp;
 
+    const safeTimelineDuration = Math.max(timelineDurationSeconds, 1);
+    const timelineDurationMs = safeTimelineDuration * 1000;
+
     const applyLeftStyle = (timestamp: number) => {
-      trackElement.style.left = `${((timestamp / 30) * 100) / 1000}%`;
+      trackElement.style.left = `${((timestamp / timelineDurationMs) * 100).toFixed(4)}%`;
     };
 
     const handleMouseMove = (moveEvent: MouseEvent) => {
@@ -360,7 +384,8 @@ export function VideoTrackView({
       const parentWidth = timelineElement
         ? (timelineElement as HTMLElement).offsetWidth
         : 1;
-      const calculatedTimestamp = (newLeft / parentWidth) * 30;
+      const calculatedTimestamp =
+        (newLeft / parentWidth) * safeTimelineDuration;
       const sanitizedTimestamp =
         (calculatedTimestamp < 0 ? 0 : calculatedTimestamp) * 1000;
 
@@ -416,6 +441,8 @@ export function VideoTrackView({
     if (!trackElement) return;
     const startX = e.clientX;
     const startWidth = trackElement.offsetWidth;
+    const safeTimelineDuration = Math.max(timelineDurationSeconds, 1);
+    const timelineDurationMs = safeTimelineDuration * 1000;
 
     const handleMouseMove = (moveEvent: MouseEvent) => {
       const deltaX = moveEvent.clientX - startX;
@@ -423,29 +450,29 @@ export function VideoTrackView({
 
       const minDuration = 1000;
       const mediaDuration = resolveDuration(media) ?? 5000;
-      const maxDuration = Math.min(mediaDuration, 30000);
+      const maxDuration = Math.min(mediaDuration, timelineDurationMs);
 
       const timelineElement = trackElement.closest(".timeline-container");
       const parentWidth = timelineElement
         ? (timelineElement as HTMLElement).offsetWidth
         : 1;
-      let newDuration = (newWidth / parentWidth) * 30 * 1000;
+      let newDuration = (newWidth / parentWidth) * safeTimelineDuration * 1000;
 
       if (newDuration < minDuration) {
-        newWidth = (minDuration / 1000 / 30) * parentWidth;
+        newWidth = (minDuration / timelineDurationMs) * parentWidth;
         newDuration = minDuration;
       } else if (newDuration > maxDuration) {
-        newWidth = (maxDuration / 1000 / 30) * parentWidth;
+        newWidth = (maxDuration / timelineDurationMs) * parentWidth;
         newDuration = maxDuration;
       }
 
       frame.duration = newDuration;
-      trackElement.style.width = `${((frame.duration / 30) * 100) / 1000}%`;
+      trackElement.style.width = `${((frame.duration / timelineDurationMs) * 100).toFixed(4)}%`;
     };
 
     const handleMouseUp = () => {
       frame.duration = Math.round(frame.duration / 100) * 100;
-      trackElement.style.width = `${((frame.duration / 30) * 100) / 1000}%`;
+      trackElement.style.width = `${((frame.duration / timelineDurationMs) * 100).toFixed(4)}%`;
       db.keyFrames.update(frame.id, { duration: frame.duration });
       queryClient.invalidateQueries({
         queryKey: queryKeys.projectPreview(projectId),

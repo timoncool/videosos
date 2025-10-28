@@ -57,9 +57,9 @@ export default function BottomBar() {
   const formattedCurrentMinutes = currentMinutes.toString().padStart(2, "0");
   const currentSeconds = playerCurrentTimestamp % 60;
   const formattedCurrentSeconds = currentSeconds.toFixed(2).padStart(5, "0");
-  const totalMinutes = Math.floor(timelineDurationSeconds / 60);
+  const totalMinutes = Math.floor(safeTimelineDurationSeconds / 60);
   const formattedTotalMinutes = totalMinutes.toString().padStart(2, "0");
-  const formattedTotalSeconds = (timelineDurationSeconds % 60)
+  const formattedTotalSeconds = (safeTimelineDurationSeconds % 60)
     .toFixed(2)
     .padStart(5, "0");
   const [dragOverTracks, setDragOverTracks] = useState(false);
@@ -230,7 +230,7 @@ export default function BottomBar() {
   const seekToTimestamp = (nextTimestamp: number) => {
     const clampedTimestamp = Math.max(
       0,
-      Math.min(nextTimestamp, timelineDurationSeconds),
+      Math.min(nextTimestamp, safeTimelineDurationSeconds),
     );
 
     if (player) {
@@ -259,7 +259,7 @@ export default function BottomBar() {
     const relativeX = event.clientX - rect.left;
     const clampedX = Math.min(Math.max(relativeX, 0), rect.width);
     const ratio = clampedX / rect.width;
-    const nextTimestamp = timelineDurationSeconds * ratio;
+    const nextTimestamp = safeTimelineDurationSeconds * ratio;
 
     seekToTimestamp(nextTimestamp);
   };
@@ -282,7 +282,7 @@ export default function BottomBar() {
         break;
       case "End":
         event.preventDefault();
-        seekToTimestamp(timelineDurationSeconds);
+        seekToTimestamp(safeTimelineDurationSeconds);
         break;
       default:
         break;
@@ -330,7 +330,7 @@ export default function BottomBar() {
           role="slider"
           aria-label="Timeline"
           aria-valuemin={0}
-          aria-valuemax={timelineDurationSeconds}
+          aria-valuemax={safeTimelineDurationSeconds}
           aria-valuenow={playerCurrentTimestamp}
           aria-valuetext={`${formattedCurrentMinutes}:${formattedCurrentSeconds}`}
           tabIndex={0}
@@ -358,6 +358,7 @@ export default function BottomBar() {
                   style={{
                     minWidth: minTrackWidth,
                   }}
+                  timelineDurationSeconds={safeTimelineDurationSeconds}
                 />
               ) : (
                 <div

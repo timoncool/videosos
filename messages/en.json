@@ -68,6 +68,8 @@
       "projectSettings": "Project Settings",
       "untitled": "untitled",
       "describeVideo": "Describe your video",
+      "timelineDuration": "Timeline duration (seconds)",
+      "fitToContent": "Fit to Content",
       "gallery": "Gallery",
       "all": "All",
       "image": "Image",

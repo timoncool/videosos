@@ -45,18 +45,38 @@ export const db = {
   projects: {
     async find(id: string): Promise<VideoProject | null> {
       const db = await open();
-      return db.get("projects", id);
+      const project = await db.get("projects", id);
+      if (!project) return null;
+      return {
+        ...PROJECT_PLACEHOLDER,
+        ...project,
+        duration:
+          typeof project.duration === "number"
+            ? project.duration
+            : PROJECT_PLACEHOLDER.duration,
+      } satisfies VideoProject;
     },
     async list(): Promise<VideoProject[]> {
       const db = await open();
-      return db.getAll("projects");
+      const projects = await db.getAll("projects");
+      return projects.map((project) => ({
+        ...PROJECT_PLACEHOLDER,
+        ...project,
+        duration:
+          typeof project.duration === "number"
+            ? project.duration
+            : PROJECT_PLACEHOLDER.duration,
+      })) as VideoProject[];
     },
     async create(project: Omit<VideoProject, "id">) {
       const db = await open();
       return db.put("projects", {
         id: crypto.randomUUID(),
-        duration: PROJECT_PLACEHOLDER.duration,
         ...project,
+        duration:
+          typeof project.duration === "number"
+            ? project.duration
+            : PROJECT_PLACEHOLDER.duration,
       });
     },
     async update(id: string, project: Partial<VideoProject>) {
@@ -67,6 +87,10 @@ export const db = {
         ...existing,
         ...project,
         id,
+        duration:
+          typeof (project.duration ?? existing.duration) === "number"
+            ? (project.duration ?? existing.duration)
+            : PROJECT_PLACEHOLDER.duration,
       });
     },
     async delete(id: string) {

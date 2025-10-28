@@ -25,6 +25,7 @@ export type GenerateData = {
 
 interface VideoProjectProps {
   projectId: string;
+  timelineDuration: number;
   projectDialogOpen: boolean;
   player: PlayerRef | null;
   playerCurrentTimestamp: number;
@@ -40,6 +41,7 @@ interface VideoProjectProps {
 
 interface VideoProjectState extends VideoProjectProps {
   setProjectId: (projectId: string) => void;
+  setTimelineDuration: (timelineDuration: number) => void;
   setProjectDialogOpen: (open: boolean) => void;
   resetGenerateData: () => void;
   setPlayer: (player: PlayerRef) => void;
@@ -58,6 +60,7 @@ interface VideoProjectState extends VideoProjectProps {
 
 const DEFAULT_PROPS: VideoProjectProps = {
   projectId: "",
+  timelineDuration: 30,
   endpointId: ALL_ENDPOINTS[0].endpointId,
   projectDialogOpen: false,
   player: null,
@@ -89,6 +92,8 @@ export const createVideoProjectStore = (
     projectDialogOpen: !initProps?.projectId,
     setEndpointId: (endpointId: string) => set({ endpointId }),
     setProjectId: (projectId: string) => set({ projectId }),
+    setTimelineDuration: (timelineDuration: number) =>
+      set({ timelineDuration }),
     setProjectDialogOpen: (projectDialogOpen: boolean) =>
       set({ projectDialogOpen }),
     setGenerateData: (generateData: Partial<GenerateData>) =>

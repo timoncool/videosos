@@ -2,7 +2,12 @@
 
 import { db } from "@/data/db";
 import { useProjectUpdater } from "@/data/mutations";
-import { queryKeys, useProject, useProjectMediaItems } from "@/data/queries";
+import {
+  queryKeys,
+  useProject,
+  useProjectMediaItems,
+  useVideoComposition,
+} from "@/data/queries";
 import { type MediaItem, PROJECT_PLACEHOLDER } from "@/data/schema";
 import {
   type MediaType,
@@ -28,7 +33,10 @@ import {
   SparklesIcon,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+const DEFAULT_TIMELINE_DURATION_MS = PROJECT_PLACEHOLDER.duration ?? 30000;
+const MIN_TIMELINE_DURATION_MS = 1000;
 import { MediaItemPanel } from "./media-panel";
 import {
   Accordion,
@@ -51,6 +59,7 @@ export default function LeftPanel() {
   const tToast = useTranslations("app.toast");
   const projectId = useProjectId();
   const { data: project = PROJECT_PLACEHOLDER } = useProject(projectId);
+  const { data: composition } = useVideoComposition(projectId);
   const projectUpdate = useProjectUpdater(projectId);
   const [mediaType, setMediaType] = useState("all");
   const queryClient = useQueryClient();
@@ -60,9 +69,52 @@ export default function LeftPanel() {
     (s) => s.setProjectDialogOpen,
   );
   const openGenerateDialog = useVideoProjectStore((s) => s.openGenerateDialog);
+  const [timelineDurationInput, setTimelineDurationInput] = useState(
+    () =>
+      `${((project.duration ?? DEFAULT_TIMELINE_DURATION_MS) / 1000).toFixed(2)}`,
+  );
+
+  const frames = composition?.frames ?? {};
+  const hasFrames = Object.values(frames).some((trackFrames) =>
+    Array.isArray(trackFrames) ? trackFrames.length > 0 : false,
+  );
 
   const [isUploading, setIsUploading] = useState(false);
   const MAX_FILE_SIZE = 50 * 1024 * 1024;
+
+  const commitTimelineDuration = (value: string) => {
+    const parsedSeconds = Number.parseFloat(value);
+    if (!Number.isFinite(parsedSeconds) || parsedSeconds <= 0) {
+      const fallbackMs = project.duration ?? DEFAULT_TIMELINE_DURATION_MS;
+      setTimelineDurationInput(`${(fallbackMs / 1000).toFixed(2)}`);
+      return;
+    }
+
+    const roundedSeconds = Number(parsedSeconds.toFixed(2));
+    const nextDurationMs = Math.max(
+      roundedSeconds * 1000,
+      MIN_TIMELINE_DURATION_MS,
+    );
+    setTimelineDurationInput(`${(nextDurationMs / 1000).toFixed(2)}`);
+    projectUpdate.mutate({ duration: nextDurationMs });
+  };
+
+  const handleFitTimelineToContent = () => {
+    if (!hasFrames) {
+      commitTimelineDuration(`${DEFAULT_TIMELINE_DURATION_MS / 1000}`);
+      return;
+    }
+
+    const maxEndMs = Object.values(frames)
+      .flat()
+      .reduce((max, frame) => {
+        const end = frame.timestamp + frame.duration;
+        return end > max ? end : max;
+      }, 0);
+
+    const computedSeconds = maxEndMs / 1000;
+    commitTimelineDuration(`${computedSeconds}`);
+  };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -188,6 +240,44 @@ export default function LeftPanel() {
                       })
                     }
                   />
+                  <div className="flex flex-col gap-2">
+                    <label
+                      htmlFor="timelineDuration"
+                      className="text-xs font-medium text-muted-foreground"
+                    >
+                      {t("timelineDuration")}
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        id="timelineDuration"
+                        type="number"
+                        inputMode="decimal"
+                        min={MIN_TIMELINE_DURATION_MS / 1000}
+                        step={0.5}
+                        value={timelineDurationInput}
+                        onChange={(event) =>
+                          setTimelineDurationInput(event.target.value)
+                        }
+                        onBlur={(event) =>
+                          commitTimelineDuration(event.target.value)
+                        }
+                        onKeyDown={(event) => {
+                          if (event.key === "Enter") {
+                            event.currentTarget.blur();
+                          }
+                        }}
+                      />
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        size="sm"
+                        onClick={handleFitTimelineToContent}
+                        disabled={!hasFrames}
+                      >
+                        {t("fitToContent")}
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </AccordionContent>
             </AccordionItem>
