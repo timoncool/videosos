@@ -340,15 +340,51 @@ export const useJobCreator = ({
           throw new Error("Runware API key not configured");
         }
 
-        const defaultDuration = endpointId.startsWith("minimax:") ? 6 : 5;
+        const isGoogleVeo = endpointId.startsWith("google:");
+        const isMinimax = endpointId.startsWith("minimax:");
+
+        // Set default duration based on model
+        let defaultDuration = 5;
+        if (isMinimax) {
+          defaultDuration = 6;
+        } else if (isGoogleVeo) {
+          // Google Veo models support 4-8 seconds
+          defaultDuration = 4;
+        }
+
+        // Set default dimensions based on model
+        let defaultHeight = 1080;
+        let defaultWidth = 1920;
+        if (isGoogleVeo) {
+          // Google Veo models default to 720p (16:9)
+          defaultHeight = 720;
+          defaultWidth = 1280;
+        }
+
         const videoParams: any = {
           positivePrompt: input.positivePrompt || input.prompt || "",
           model: endpointId,
           duration: input.duration || defaultDuration,
           fps: input.fps || 24,
-          height: input.height || 1080,
-          width: input.width || 1920,
+          height: input.height || defaultHeight,
+          width: input.width || defaultWidth,
+          outputFormat: input.outputFormat || "mp4",
+          outputType: "URL",
+          numberResults: input.numberResults || 1,
+          includeCost: input.includeCost !== undefined ? input.includeCost : true,
+          outputQuality: input.outputQuality || 99,
+          deliveryMethod: "async",
         };
+
+        // Add providerSettings for Google models
+        if (isGoogleVeo) {
+          videoParams.providerSettings = {
+            google: {
+              enhancePrompt: input.enhancePrompt !== undefined ? input.enhancePrompt : true,
+              generateAudio: input.generateAudio !== undefined ? input.generateAudio : true,
+            },
+          };
+        }
 
         if (input.inputImage) {
           videoParams.inputImage = input.inputImage;
