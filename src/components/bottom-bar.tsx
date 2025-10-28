@@ -217,6 +217,14 @@ export default function BottomBar() {
   };
 
   const handleTimelineClick: MouseEventHandler<HTMLDivElement> = (event) => {
+    if (
+      (event.target as HTMLElement).closest(
+        'button,[role="button"],a,input,textarea,select',
+      )
+    ) {
+      return;
+    }
+
     const timelineElement = timelineWrapperRef.current;
     if (!timelineElement) return;
 
@@ -305,9 +313,11 @@ export default function BottomBar() {
           tabIndex={0}
           onClick={handleTimelineClick}
           onKeyDown={handleTimelineKeyDown}
+          onDragOver={handleOnDragOver}
+          onDrop={handleOnDrop}
         >
           <div
-            className="pointer-events-none absolute z-40 top-6 bottom-0 w-[2px] bg-white/30 ms-4"
+            className="pointer-events-none absolute z-20 top-6 bottom-0 w-[2px] bg-white/30 ms-4"
             style={{
               left: `${timelineProgressPercent}%`,
             }}
