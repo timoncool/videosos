@@ -99,10 +99,6 @@ export default function BottomBar() {
     event.preventDefault();
     event.dataTransfer.dropEffect = "copy";
     setDragOverTracks(true);
-    const jobPayload = event.dataTransfer.getData("job");
-    if (!jobPayload) return false;
-    const job: MediaItem = JSON.parse(jobPayload);
-    return job.status === "completed";
   };
 
   const addToTrack = useMutation({
@@ -197,11 +193,28 @@ export default function BottomBar() {
     event.preventDefault();
     event.stopPropagation();
     setDragOverTracks(false);
-    const jobPayload = event.dataTransfer.getData("job");
-    if (!jobPayload) return false;
-    const job: MediaItem = JSON.parse(jobPayload);
-    addToTrack.mutate(job);
-    return true;
+    
+    let jobPayload = event.dataTransfer.getData("job");
+    if (!jobPayload) {
+      jobPayload = event.dataTransfer.getData("application/json");
+    }
+    if (!jobPayload) {
+      jobPayload = event.dataTransfer.getData("text/plain");
+    }
+    
+    if (!jobPayload) {
+      console.error("No job data found in drop event. Available types:", event.dataTransfer.types);
+      return false;
+    }
+    
+    try {
+      const job: MediaItem = JSON.parse(jobPayload);
+      addToTrack.mutate(job);
+      return true;
+    } catch (error) {
+      console.error("Failed to parse job data:", error, jobPayload);
+      return false;
+    }
   };
 
   const seekToTimestamp = (nextTimestamp: number) => {
@@ -325,7 +338,11 @@ export default function BottomBar() {
             }}
           />
           <TimelineRuler className="z-10" />
-          <div className="relative z-30 flex timeline-container flex-col h-full mx-4 mt-10 gap-2 pb-2 pointer-events-auto">
+          <div
+            className="relative z-30 flex timeline-container flex-col h-full mx-4 mt-10 gap-2 pb-2 pointer-events-auto"
+            onDragOver={handleOnDragOver}
+            onDrop={handleOnDrop}
+          >
             {Object.entries(trackObj).map(([trackType, track]) =>
               track ? (
                 <VideoTrackRow
