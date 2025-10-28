@@ -18,8 +18,10 @@ import {
   type HTMLAttributes,
   type MouseEventHandler,
   createElement,
+  useEffect,
   useMemo,
   useRef,
+  useState,
 } from "react";
 import { WithTooltip } from "../ui/tooltip";
 
@@ -175,6 +177,7 @@ export function VideoTrackView({
   className,
   track,
   frame,
+  style,
   ...props
 }: VideoTrackViewProps) {
   const queryClient = useQueryClient();
@@ -204,6 +207,71 @@ export function VideoTrackView({
   const mediaUrl = media ? resolveMediaUrl(media) : null;
 
   const trackRef = useRef<HTMLDivElement>(null);
+  const [isFocusing, setIsFocusing] = useState(false);
+  const hasScrolledIntoView = useRef<boolean>(false);
+  const highlightTimeoutRef = useRef<number | undefined>(undefined);
+  const previousFrameIdRef = useRef<string | undefined>(undefined);
+
+  useEffect(() => {
+    const element = trackRef.current;
+    if (!element) return;
+
+    if (previousFrameIdRef.current !== frame.id) {
+      hasScrolledIntoView.current = false;
+      previousFrameIdRef.current = frame.id;
+    }
+
+    if (!isSelected) {
+      hasScrolledIntoView.current = false;
+      if (highlightTimeoutRef.current) {
+        window.clearTimeout(highlightTimeoutRef.current);
+        highlightTimeoutRef.current = undefined;
+      }
+      setIsFocusing(false);
+      return;
+    }
+
+    if (!hasScrolledIntoView.current) {
+      const container = element.closest(
+        "[data-timeline-scroll-container]",
+      ) as HTMLElement | null;
+
+      if (container) {
+        const containerRect = container.getBoundingClientRect();
+        const frameRect = element.getBoundingClientRect();
+        const guard = Math.min(containerRect.width * 0.1, 96);
+        const isWithinViewport =
+          frameRect.left >= containerRect.left + guard &&
+          frameRect.right <= containerRect.right - guard;
+
+        if (!isWithinViewport) {
+          element.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+            inline: "center",
+          });
+        }
+      }
+
+      hasScrolledIntoView.current = true;
+    }
+
+    setIsFocusing(true);
+    if (highlightTimeoutRef.current) {
+      window.clearTimeout(highlightTimeoutRef.current);
+    }
+    highlightTimeoutRef.current = window.setTimeout(() => {
+      setIsFocusing(false);
+      highlightTimeoutRef.current = undefined;
+    }, 800);
+
+    return () => {
+      if (highlightTimeoutRef.current) {
+        window.clearTimeout(highlightTimeoutRef.current);
+        highlightTimeoutRef.current = undefined;
+      }
+    };
+  }, [frame.id, isSelected]);
 
   const imageUrl = useMemo(() => {
     if (!media) return undefined;
@@ -318,12 +386,16 @@ export function VideoTrackView({
           applyLeftStyle(originalTimestamp);
         }
 
-        await db.keyFrames.create({
+        const newId = await db.keyFrames.create({
           trackId: frame.trackId,
           data: { ...frame.data },
           timestamp: duplicateTimestamp,
           duration: frame.duration,
         });
+        if (typeof newId === "string") {
+          selectKeyframe(newId);
+        }
+        await refreshVideoCache(queryClient, projectId);
       }
 
       queryClient.invalidateQueries({
@@ -394,11 +466,23 @@ export function VideoTrackView({
       aria-checked={isSelected}
       onClick={handleOnClick}
       className={cn(
-        "flex flex-col border border-white/10 rounded-lg",
+        "flex flex-col border border-white/10 rounded-lg relative transition-shadow transition-colors",
+        {
+          "ring-2 ring-sky-300/70 shadow-[0_0_0_1px_rgba(56,189,248,0.35)]":
+            isSelected,
+        },
         className,
       )}
+      style={{
+        ...(style ?? {}),
+        scrollMarginInline: "96px",
+        scrollMarginBlock: "16px",
+      }}
       {...props}
     >
+      {isFocusing && (
+        <span className="pointer-events-none absolute inset-0 rounded-lg border-2 border-sky-200/70 backdrop-blur-[1px] timeline-focus-ring" />
+      )}
       <div
         className={cn(
           "flex flex-col select-none rounded overflow-hidden group h-full",

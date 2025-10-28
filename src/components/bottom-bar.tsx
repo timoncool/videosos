@@ -39,6 +39,7 @@ export default function BottomBar() {
   const setPlayerCurrentTimestamp = useVideoProjectStore(
     (s) => s.setPlayerCurrentTimestamp,
   );
+  const selectKeyframe = useVideoProjectStore((s) => s.selectKeyframe);
   const timelineWrapperRef = useRef<HTMLDivElement>(null);
   const timelineDurationSeconds = 30;
   const FPS = 30;
@@ -173,6 +174,7 @@ export default function BottomBar() {
     onSuccess: (data) => {
       if (!data) return;
       refreshVideoCache(queryClient, projectId);
+      selectKeyframe(data.id);
     },
   });
 
@@ -358,7 +360,8 @@ export default function BottomBar() {
           />
           <TimelineRuler className="z-10" />
           <div
-            className="relative z-30 flex timeline-container flex-col h-full mx-4 mt-10 gap-2 pb-2 pointer-events-auto"
+            className="relative z-30 flex timeline-container flex-col h-full mx-4 mt-10 gap-2 pb-2 pointer-events-auto overflow-x-auto"
+            data-timeline-scroll-container
             onDragOver={handleOnDragOver}
             onDrop={handleOnDrop}
           >
