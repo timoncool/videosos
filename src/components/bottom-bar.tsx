@@ -4,10 +4,12 @@ import { db } from "@/data/db";
 import {
   queryKeys,
   refreshVideoCache,
+  useProject,
   useVideoComposition,
 } from "@/data/queries";
 import {
   type MediaItem,
+  PROJECT_PLACEHOLDER,
   TRACK_TYPE_ORDER,
   type VideoTrack,
 } from "@/data/schema";
@@ -19,7 +21,6 @@ import {
   type DragEventHandler,
   type KeyboardEventHandler,
   type MouseEventHandler,
-  useEffect,
   useMemo,
   useRef,
   useState,
@@ -32,6 +33,7 @@ export default function BottomBar() {
   const t = useTranslations("app.bottomBar");
   const queryClient = useQueryClient();
   const projectId = useProjectId();
+  const { data: project = PROJECT_PLACEHOLDER } = useProject(projectId);
   const player = useVideoProjectStore((s) => s.player);
   const playerCurrentTimestamp = useVideoProjectStore(
     (s) => s.playerCurrentTimestamp,
@@ -40,9 +42,16 @@ export default function BottomBar() {
     (s) => s.setPlayerCurrentTimestamp,
   );
   const timelineWrapperRef = useRef<HTMLDivElement>(null);
-  const timelineDurationSeconds = 30;
+  const timelineDurationMs = project?.duration ?? 30000;
+  const timelineDurationSeconds = timelineDurationMs / 1000;
   const FPS = 30;
-  const minTrackWidth = `${((2 / timelineDurationSeconds) * 100).toFixed(2)}%`;
+  const safeTimelineDurationSeconds = Math.max(
+    timelineDurationSeconds,
+    Number.EPSILON,
+  );
+  const minTrackWidth = `${((2 / safeTimelineDurationSeconds) * 100).toFixed(
+    2,
+  )}%`;
   const currentMinutes = Math.floor(playerCurrentTimestamp / 60);
   const formattedCurrentMinutes = currentMinutes.toString().padStart(2, "0");
   const currentSeconds = playerCurrentTimestamp % 60;
@@ -53,34 +62,6 @@ export default function BottomBar() {
     .toFixed(2)
     .padStart(5, "0");
   const [dragOverTracks, setDragOverTracks] = useState(false);
-
-  const limitAllKeyframesToThirtySeconds = useMutation({
-    mutationFn: async () => {
-      const tracks = await db.tracks.tracksByProject(projectId);
-
-      let updatedCount = 0;
-
-      for (const track of tracks) {
-        const keyframes = await db.keyFrames.keyFramesByTrack(track.id);
-
-        for (const frame of keyframes) {
-          if (frame.duration > 30000) {
-            await db.keyFrames.update(frame.id, {
-              duration: 30000,
-            });
-            updatedCount++;
-          }
-        }
-      }
-
-      return updatedCount;
-    },
-    onSuccess: (updatedCount) => {
-      if (updatedCount > 0) {
-        refreshVideoCache(queryClient, projectId);
-      }
-    },
-  });
 
   const { data: tracks = [] } = useQuery({
     queryKey: queryKeys.projectTracks(projectId),
@@ -94,17 +75,6 @@ export default function BottomBar() {
 
   const { data: composition } = useVideoComposition(projectId);
   const frames = composition?.frames ?? {};
-
-  // Automatically limit keyframes to 30 seconds whenever tracks change
-  useEffect(() => {
-    if (tracks.length === 0) return;
-
-    const timeoutId = setTimeout(() => {
-      limitAllKeyframesToThirtySeconds.mutate();
-    }, 300);
-
-    return () => clearTimeout(timeoutId);
-  }, [tracks, limitAllKeyframesToThirtySeconds]);
 
   const handleOnDragOver: DragEventHandler<HTMLDivElement> = (event) => {
     event.preventDefault();
@@ -144,18 +114,18 @@ export default function BottomBar() {
         );
 
       const mediaDuration = resolveDuration(media) ?? 5000;
-      const duration = Math.min(mediaDuration, 30000);
+      const duration = mediaDuration;
       const timestamp = lastKeyframe
         ? lastKeyframe.timestamp + 1 + lastKeyframe.duration
         : 0;
 
       const mediaUrl = resolveMediaUrl(media);
-      
+
       if (!mediaUrl) {
         console.error("Cannot add media to timeline: no playable URL", media);
         return null;
       }
-      
+
       const newId = await db.keyFrames.create({
         trackId: track.id,
         data: {
@@ -168,7 +138,22 @@ export default function BottomBar() {
         duration,
       });
 
-      return db.keyFrames.find(newId.toString());
+      const newKeyframe = await db.keyFrames.find(newId.toString());
+
+      const newEndTime = timestamp + duration;
+      const currentProject = await db.projects.find(projectId);
+      const projectDuration = currentProject?.duration ?? 30000;
+
+      if (newEndTime > projectDuration) {
+        await db.projects.update(projectId, {
+          duration: newEndTime + 1000,
+        });
+        await queryClient.invalidateQueries({
+          queryKey: queryKeys.project(projectId),
+        });
+      }
+
+      return newKeyframe;
     },
     onSuccess: (data) => {
       if (!data) return;
@@ -304,7 +289,7 @@ export default function BottomBar() {
 
   const timelineProgressPercent = (
     (Math.max(0, Math.min(playerCurrentTimestamp, timelineDurationSeconds)) /
-      timelineDurationSeconds) *
+      safeTimelineDurationSeconds) *
     100
   ).toFixed(2);
 
@@ -356,7 +341,7 @@ export default function BottomBar() {
               left: `${timelineProgressPercent}%`,
             }}
           />
-          <TimelineRuler className="z-10" />
+          <TimelineRuler className="z-10" duration={timelineDurationSeconds} />
           <div
             className="relative z-30 flex timeline-container flex-col h-full mx-4 mt-10 gap-2 pb-2 pointer-events-auto"
             onDragOver={handleOnDragOver}
