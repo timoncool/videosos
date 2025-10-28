@@ -359,7 +359,7 @@ export function VideoTrackView({
     const startWidth = trackElement.offsetWidth;
     const minDuration = 1000;
     const mediaDuration = resolveDuration(media) ?? 5000;
-    const maxDuration = Math.min(mediaDuration, 30000);
+    const maxDuration = mediaDuration;
 
     const handleMouseMove = (moveEvent: MouseEvent) => {
       const deltaX = moveEvent.clientX - startX;
