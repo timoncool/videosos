@@ -97,6 +97,7 @@ export default function BottomBar() {
 
   const handleOnDragOver: DragEventHandler<HTMLDivElement> = (event) => {
     event.preventDefault();
+    event.dataTransfer.dropEffect = "copy";
     setDragOverTracks(true);
     const jobPayload = event.dataTransfer.getData("job");
     if (!jobPayload) return false;
@@ -194,6 +195,7 @@ export default function BottomBar() {
 
   const handleOnDrop: DragEventHandler<HTMLDivElement> = (event) => {
     event.preventDefault();
+    event.stopPropagation();
     setDragOverTracks(false);
     const jobPayload = event.dataTransfer.getData("job");
     if (!jobPayload) return false;
