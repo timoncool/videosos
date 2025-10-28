@@ -4,10 +4,12 @@ import { db } from "@/data/db";
 import {
   queryKeys,
   refreshVideoCache,
+  useProject,
   useVideoComposition,
 } from "@/data/queries";
 import {
   type MediaItem,
+  PROJECT_PLACEHOLDER,
   TRACK_TYPE_ORDER,
   type VideoTrack,
 } from "@/data/schema";
@@ -32,6 +34,7 @@ export default function BottomBar() {
   const t = useTranslations("app.bottomBar");
   const queryClient = useQueryClient();
   const projectId = useProjectId();
+  const { data: project = PROJECT_PLACEHOLDER } = useProject(projectId);
   const player = useVideoProjectStore((s) => s.player);
   const playerCurrentTimestamp = useVideoProjectStore(
     (s) => s.playerCurrentTimestamp,
@@ -40,9 +43,13 @@ export default function BottomBar() {
     (s) => s.setPlayerCurrentTimestamp,
   );
   const timelineWrapperRef = useRef<HTMLDivElement>(null);
-  const timelineDurationSeconds = 30;
+  const timelineDurationMs = project.durationMs ?? 30000;
+  const timelineDurationSeconds = timelineDurationMs / 1000;
   const FPS = 30;
-  const minTrackWidth = `${((2 / timelineDurationSeconds) * 100).toFixed(2)}%`;
+  const minTrackWidth =
+    timelineDurationMs > 0
+      ? `${((2000 / timelineDurationMs) * 100).toFixed(2)}%`
+      : "0%";
   const currentMinutes = Math.floor(playerCurrentTimestamp / 60);
   const formattedCurrentMinutes = currentMinutes.toString().padStart(2, "0");
   const currentSeconds = playerCurrentTimestamp % 60;
@@ -148,14 +155,19 @@ export default function BottomBar() {
       const timestamp = lastKeyframe
         ? lastKeyframe.timestamp + 1 + lastKeyframe.duration
         : 0;
+      const endTimestamp = timestamp + duration;
 
       const mediaUrl = resolveMediaUrl(media);
-      
+
       if (!mediaUrl) {
         console.error("Cannot add media to timeline: no playable URL", media);
         return null;
       }
-      
+
+      if (endTimestamp > timelineDurationMs) {
+        await db.projects.update(projectId, { durationMs: endTimestamp });
+      }
+
       const newId = await db.keyFrames.create({
         trackId: track.id,
         data: {
@@ -173,6 +185,9 @@ export default function BottomBar() {
     onSuccess: (data) => {
       if (!data) return;
       refreshVideoCache(queryClient, projectId);
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.project(projectId),
+      });
     },
   });
 
@@ -243,7 +258,7 @@ export default function BottomBar() {
   const seekToTimestamp = (nextTimestamp: number) => {
     const clampedTimestamp = Math.max(
       0,
-      Math.min(nextTimestamp, timelineDurationSeconds),
+      Math.min(nextTimestamp, timelineDurationSeconds || 0),
     );
 
     if (player) {
@@ -271,6 +286,11 @@ export default function BottomBar() {
 
     const relativeX = event.clientX - rect.left;
     const clampedX = Math.min(Math.max(relativeX, 0), rect.width);
+    if (timelineDurationSeconds === 0) {
+      seekToTimestamp(0);
+      return;
+    }
+
     const ratio = clampedX / rect.width;
     const nextTimestamp = timelineDurationSeconds * ratio;
 
@@ -302,11 +322,16 @@ export default function BottomBar() {
     }
   };
 
-  const timelineProgressPercent = (
-    (Math.max(0, Math.min(playerCurrentTimestamp, timelineDurationSeconds)) /
-      timelineDurationSeconds) *
-    100
-  ).toFixed(2);
+  const timelineProgressPercent = timelineDurationSeconds
+    ? (
+        (Math.max(
+          0,
+          Math.min(playerCurrentTimestamp, timelineDurationSeconds),
+        ) /
+          timelineDurationSeconds) *
+        100
+      ).toFixed(2)
+    : "0.00";
 
   return (
     <div className="border-t pb-2 border-border flex flex-col bg-background-light ">
@@ -356,7 +381,7 @@ export default function BottomBar() {
               left: `${timelineProgressPercent}%`,
             }}
           />
-          <TimelineRuler className="z-10" />
+          <TimelineRuler className="z-10" duration={timelineDurationSeconds} />
           <div
             className="relative z-30 flex timeline-container flex-col h-full mx-4 mt-10 gap-2 pb-2 pointer-events-auto"
             onDragOver={handleOnDragOver}
@@ -367,6 +392,7 @@ export default function BottomBar() {
                 <VideoTrackRow
                   key={track.id}
                   data={track}
+                  timelineDurationMs={timelineDurationMs}
                   style={{
                     minWidth: minTrackWidth,
                   }}

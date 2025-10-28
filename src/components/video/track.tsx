@@ -25,15 +25,25 @@ import { WithTooltip } from "../ui/tooltip";
 
 type VideoTrackRowProps = {
   data: VideoTrack;
+  timelineDurationMs: number;
 } & HTMLAttributes<HTMLDivElement>;
 
-export function VideoTrackRow({ data, ...props }: VideoTrackRowProps) {
+export function VideoTrackRow({
+  data,
+  timelineDurationMs,
+  ...props
+}: VideoTrackRowProps) {
   const { data: keyframes = [] } = useQuery({
     queryKey: ["frames", data],
     queryFn: () => db.keyFrames.keyFramesByTrack(data.id),
   });
 
   const mediaType = useMemo(() => keyframes[0]?.data.type, [keyframes]);
+
+  const toPercent = (value: number) => {
+    if (timelineDurationMs <= 0) return "0.00";
+    return ((value / timelineDurationMs) * 100).toFixed(2);
+  };
 
   return (
     <div
@@ -52,11 +62,12 @@ export function VideoTrackRow({ data, ...props }: VideoTrackRowProps) {
           key={frame.id}
           className="absolute top-0 bottom-0"
           style={{
-            left: `${(frame.timestamp / 10 / 30).toFixed(2)}%`,
-            width: `${(frame.duration / 10 / 30).toFixed(2)}%`,
+            left: `${toPercent(frame.timestamp)}%`,
+            width: `${toPercent(frame.duration)}%`,
           }}
           track={data}
           frame={frame}
+          timelineDurationMs={timelineDurationMs}
         />
       ))}
     </div>
@@ -169,12 +180,14 @@ function AudioWaveform({ data }: AudioWaveformProps) {
 type VideoTrackViewProps = {
   track: VideoTrack;
   frame: VideoKeyFrame;
+  timelineDurationMs: number;
 } & HTMLAttributes<HTMLDivElement>;
 
 export function VideoTrackView({
   className,
   track,
   frame,
+  timelineDurationMs,
   ...props
 }: VideoTrackViewProps) {
   const queryClient = useQueryClient();
@@ -265,7 +278,7 @@ export function VideoTrackView({
     }
 
     const trackElement = trackRef.current;
-    if (!trackElement) return;
+    if (!trackElement || timelineDurationMs <= 0) return;
     const bounds = calculateBounds();
     const startX = e.clientX;
     const startLeft = trackElement.offsetLeft;
@@ -275,7 +288,9 @@ export function VideoTrackView({
     let duplicateTimestamp = frame.timestamp;
 
     const applyLeftStyle = (timestamp: number) => {
-      trackElement.style.left = `${((timestamp / 30) * 100) / 1000}%`;
+      const percent =
+        timelineDurationMs > 0 ? (timestamp / timelineDurationMs) * 100 : 0;
+      trackElement.style.left = `${percent}%`;
     };
 
     const handleMouseMove = (moveEvent: MouseEvent) => {
@@ -292,9 +307,10 @@ export function VideoTrackView({
       const parentWidth = timelineElement
         ? (timelineElement as HTMLElement).offsetWidth
         : 1;
-      const calculatedTimestamp = (newLeft / parentWidth) * 30;
+      const ratio = parentWidth > 0 ? newLeft / parentWidth : 0;
+      const calculatedTimestamp = ratio * timelineDurationMs;
       const sanitizedTimestamp =
-        (calculatedTimestamp < 0 ? 0 : calculatedTimestamp) * 1000;
+        calculatedTimestamp < 0 ? 0 : calculatedTimestamp;
 
       if (duplicateMode) {
         duplicateTimestamp = sanitizedTimestamp;
@@ -311,6 +327,8 @@ export function VideoTrackView({
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
 
+      let frameEnd = frame.timestamp + frame.duration;
+
       if (duplicateMode) {
         if (originalLeftStyle) {
           trackElement.style.left = originalLeftStyle;
@@ -324,11 +342,12 @@ export function VideoTrackView({
           timestamp: duplicateTimestamp,
           duration: frame.duration,
         });
+
+        frameEnd = duplicateTimestamp + frame.duration;
       }
 
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.projectPreview(projectId),
-      });
+      await extendTimelineIfNeeded(frameEnd);
+      void refreshVideoCache(queryClient, projectId);
     };
 
     document.addEventListener("mousemove", handleMouseMove);
@@ -341,7 +360,7 @@ export function VideoTrackView({
   ) => {
     e.stopPropagation();
     const trackElement = trackRef.current;
-    if (!trackElement) return;
+    if (!trackElement || timelineDurationMs <= 0) return;
     const startX = e.clientX;
     const startWidth = trackElement.offsetWidth;
 
@@ -350,40 +369,60 @@ export function VideoTrackView({
       let newWidth = startWidth + (direction === "right" ? deltaX : -deltaX);
 
       const minDuration = 1000;
-      const mediaDuration = resolveDuration(media) ?? 5000;
-      const maxDuration = Math.min(mediaDuration, 30000);
+      const mediaDuration = resolveDuration(media);
+      const maxDuration = mediaDuration ?? Number.POSITIVE_INFINITY;
 
       const timelineElement = trackElement.closest(".timeline-container");
       const parentWidth = timelineElement
         ? (timelineElement as HTMLElement).offsetWidth
         : 1;
-      let newDuration = (newWidth / parentWidth) * 30 * 1000;
+      const ratio = parentWidth > 0 ? newWidth / parentWidth : 0;
+      let newDuration = ratio * timelineDurationMs;
 
       if (newDuration < minDuration) {
-        newWidth = (minDuration / 1000 / 30) * parentWidth;
+        newWidth = (minDuration / timelineDurationMs) * parentWidth;
         newDuration = minDuration;
-      } else if (newDuration > maxDuration) {
-        newWidth = (maxDuration / 1000 / 30) * parentWidth;
+      } else if (
+        maxDuration !== Number.POSITIVE_INFINITY &&
+        newDuration > maxDuration
+      ) {
+        newWidth = (maxDuration / timelineDurationMs) * parentWidth;
         newDuration = maxDuration;
       }
 
       frame.duration = newDuration;
-      trackElement.style.width = `${((frame.duration / 30) * 100) / 1000}%`;
+      const percent =
+        timelineDurationMs > 0
+          ? (frame.duration / timelineDurationMs) * 100
+          : 0;
+      trackElement.style.width = `${percent}%`;
     };
 
-    const handleMouseUp = () => {
+    const handleMouseUp = async () => {
       frame.duration = Math.round(frame.duration / 100) * 100;
-      trackElement.style.width = `${((frame.duration / 30) * 100) / 1000}%`;
+      const percent =
+        timelineDurationMs > 0
+          ? (frame.duration / timelineDurationMs) * 100
+          : 0;
+      trackElement.style.width = `${percent}%`;
       db.keyFrames.update(frame.id, { duration: frame.duration });
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.projectPreview(projectId),
-      });
+      await extendTimelineIfNeeded(frame.timestamp + frame.duration);
+      void refreshVideoCache(queryClient, projectId);
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
     };
 
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseup", handleMouseUp);
+  };
+
+  const extendTimelineIfNeeded = async (endTimestamp: number) => {
+    if (endTimestamp <= timelineDurationMs) return;
+    const nextDuration = Math.ceil(endTimestamp);
+    await db.projects.update(projectId, { durationMs: nextDuration });
+    await queryClient.invalidateQueries({
+      queryKey: queryKeys.project(projectId),
+    });
   };
 
   return (

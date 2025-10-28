@@ -5,6 +5,7 @@ export type VideoProject = {
   title: string;
   description: string;
   aspectRatio: AspectRatio;
+  durationMs: number;
 };
 
 export const PROJECT_PLACEHOLDER: VideoProject = {
@@ -12,6 +13,7 @@ export const PROJECT_PLACEHOLDER: VideoProject = {
   title: "",
   description: "",
   aspectRatio: "16:9",
+  durationMs: 30000,
 };
 
 export type VideoTrackType = "video" | "music" | "voiceover";

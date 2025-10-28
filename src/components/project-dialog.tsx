@@ -179,6 +179,7 @@ export function ProjectDialog({ onOpenChange, ...props }: ProjectDialogProps) {
                       title,
                       description,
                       aspectRatio: aspect,
+                      durationMs: 30000,
                     },
                     {
                       onSuccess: (projectId) => {
