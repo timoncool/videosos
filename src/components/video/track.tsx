@@ -409,7 +409,7 @@ export function VideoTrackView({
           },
         )}
       >
-        <div className="relative z-40 p-0.5 pl-1 bg-black/10 flex flex-row items-center">
+        <div className="relative z-60 p-0.5 pl-1 bg-black/10 flex flex-row items-center pointer-events-auto">
           <div className="flex flex-row gap-1 text-sm items-center font-semibold text-white/60 w-full">
             <div className="flex flex-row truncate gap-1 items-center">
               {createElement(trackIcons[track.type], {
@@ -426,6 +426,7 @@ export function VideoTrackView({
                 <button
                   type="button"
                   className="p-1 rounded hover:bg-black/5 group-hover:text-white"
+                  onPointerDownCapture={(e) => e.stopPropagation()}
                   onMouseDown={(e) => e.stopPropagation()}
                   onClick={(e) => {
                     e.stopPropagation();

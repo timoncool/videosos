@@ -350,9 +350,12 @@ export function MediaItemRow({
   const mediaUrl = resolveMediaUrl(data) ?? "";
   const mediaId = data.id.split("-")[0];
   const handleOnDragStart: DragEventHandler<HTMLDivElement> = (event) => {
-    event.dataTransfer.setData("job", JSON.stringify(data));
+    const jobData = JSON.stringify(data);
+    event.dataTransfer.setData("job", jobData);
+    event.dataTransfer.setData("application/json", jobData);
+    event.dataTransfer.setData("text/plain", jobData);
+    event.dataTransfer.effectAllowed = "copyMove";
     return true;
-    // event.dataTransfer.dropEffect = "copy";
   };
 
   const coverImage =
