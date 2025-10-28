@@ -289,7 +289,7 @@ export default function VideoPreview() {
   return (
     <div className="flex-grow flex-1 h-full flex items-center justify-center bg-background-dark dark:bg-background-light relative">
       <Button
-        className="fixed top-4 right-4 z-40"
+        className="absolute top-4 right-4 z-40"
         variant="default"
         onClick={() => setExportDialogOpen(true)}
         disabled={isCompositionLoading || tracks.length === 0}
