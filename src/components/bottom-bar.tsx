@@ -150,13 +150,19 @@ export default function BottomBar() {
         : 0;
 
       const mediaUrl = resolveMediaUrl(media);
+      
+      if (!mediaUrl) {
+        console.error("Cannot add media to timeline: no playable URL", media);
+        return null;
+      }
+      
       const newId = await db.keyFrames.create({
         trackId: track.id,
         data: {
           mediaId: media.id,
           type: media.mediaType,
           prompt: media.input?.prompt || "",
-          url: mediaUrl ?? "",
+          url: mediaUrl,
         },
         timestamp,
         duration,
