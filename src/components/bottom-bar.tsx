@@ -386,40 +386,38 @@ export default function BottomBar() {
           <div className="flex items-center justify-center">
             <VideoControls />
           </div>
-          <div className="ml-auto flex">
-            <div className="sticky top-0 right-0 z-50 flex w-[12rem] min-w-[12rem] items-center gap-2 bg-background-dark/95 px-3 py-2 shadow-lg">
-              <span className="text-sm text-muted-foreground">Zoom</span>
-              <button
-                type="button"
-                className="px-2 py-1 text-sm rounded border border-border hover:bg-muted"
-                onClick={handleZoomButton(-ZOOM_STEP)}
-                aria-label="Zoom out"
-              >
-                -
-              </button>
-              <input
-                type="range"
-                min={MIN_ZOOM}
-                max={MAX_ZOOM}
-                step={ZOOM_STEP}
-                value={zoom}
-                onChange={handleZoomInput}
-                aria-label="Timeline zoom"
-                className="w-20"
-              />
-              <button
-                type="button"
-                className="px-2 py-1 text-sm rounded border border-border hover:bg-muted"
-                onClick={handleZoomButton(ZOOM_STEP)}
-                aria-label="Zoom in"
-              >
-                +
-              </button>
-              <span className="text-xs text-muted-foreground tabular-nums">
-                {zoomPercentage}%
-              </span>
-            </div>
-          </div>
+        </div>
+        <div className="fixed top-[calc(100vh-20rem)] right-2 flex items-center gap-2 bg-background-dark/95 px-3 py-2 z-50 border border-border/50 rounded-md shadow-lg">
+          <span className="text-sm text-muted-foreground whitespace-nowrap">Zoom</span>
+          <button
+            type="button"
+            className="px-2 py-1 text-sm rounded border border-border hover:bg-muted"
+            onClick={handleZoomButton(-ZOOM_STEP)}
+            aria-label="Zoom out"
+          >
+            -
+          </button>
+          <input
+            type="range"
+            min={MIN_ZOOM}
+            max={MAX_ZOOM}
+            step={ZOOM_STEP}
+            value={zoom}
+            onChange={handleZoomInput}
+            aria-label="Timeline zoom"
+            className="w-20"
+          />
+          <button
+            type="button"
+            className="px-2 py-1 text-sm rounded border border-border hover:bg-muted"
+            onClick={handleZoomButton(ZOOM_STEP)}
+            aria-label="Zoom in"
+          >
+            +
+          </button>
+          <span className="text-xs text-muted-foreground tabular-nums whitespace-nowrap">
+            {zoomPercentage}%
+          </span>
         </div>
       </div>
       <div
@@ -445,7 +443,7 @@ export default function BottomBar() {
         >
           <div className="flex-1 relative">
             <div
-              className="pointer-events-none absolute z-20 top-12 bottom-0 w-[2px] bg-white/30 ms-4"
+              className="pointer-events-none absolute z-50 top-12 bottom-0 w-[2px] bg-white/30 ms-4"
               style={{
                 left: `${timelineProgressPx}px`,
               }}
@@ -462,7 +460,7 @@ export default function BottomBar() {
                 style={{ width: `${timelineWidthPx}px` }}
               >
                 <TimelineRuler
-                  className="z-10"
+                  className="z-40"
                   style={{ width: "100%" }}
                   duration={timelineDurationSeconds}
                   zoom={zoom}
