@@ -254,6 +254,14 @@ export function VideoTrackView({
   };
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (
+      (e.target as HTMLElement).closest(
+        'button,[role="button"],a,input,textarea,select',
+      )
+    ) {
+      return;
+    }
+
     const trackElement = trackRef.current;
     if (!trackElement) return;
     const bounds = calculateBounds();
@@ -416,7 +424,11 @@ export function VideoTrackView({
                 <button
                   type="button"
                   className="p-1 rounded hover:bg-black/5 group-hover:text-white"
-                  onClick={handleOnDelete}
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleOnDelete();
+                  }}
                 >
                   <TrashIcon className="w-3 h-3 text-white" />
                 </button>

@@ -217,6 +217,14 @@ export default function BottomBar() {
   };
 
   const handleTimelineClick: MouseEventHandler<HTMLDivElement> = (event) => {
+    if (
+      (event.target as HTMLElement).closest(
+        'button,[role="button"],a,input,textarea,select',
+      )
+    ) {
+      return;
+    }
+
     const timelineElement = timelineWrapperRef.current;
     if (!timelineElement) return;
 
@@ -305,15 +313,17 @@ export default function BottomBar() {
           tabIndex={0}
           onClick={handleTimelineClick}
           onKeyDown={handleTimelineKeyDown}
+          onDragOver={handleOnDragOver}
+          onDrop={handleOnDrop}
         >
           <div
-            className="pointer-events-none absolute z-[32] top-6 bottom-0 w-[2px] bg-white/30 ms-4"
+            className="pointer-events-none absolute z-20 top-6 bottom-0 w-[2px] bg-white/30 ms-4"
             style={{
               left: `${timelineProgressPercent}%`,
             }}
           />
-          <TimelineRuler className="z-30" />
-          <div className="flex timeline-container flex-col h-full mx-4 mt-10 gap-2 z-[31] pb-2">
+          <TimelineRuler className="z-10" />
+          <div className="relative z-30 flex timeline-container flex-col h-full mx-4 mt-10 gap-2 pb-2 pointer-events-auto">
             {Object.entries(trackObj).map(([trackType, track]) =>
               track ? (
                 <VideoTrackRow
