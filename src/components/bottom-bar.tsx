@@ -41,6 +41,7 @@ export default function BottomBar() {
   );
   const timelineWrapperRef = useRef<HTMLDivElement>(null);
   const timelineDurationSeconds = 30;
+  const timelineZoom = 1;
   const FPS = 30;
   const minTrackWidth = `${((2 / timelineDurationSeconds) * 100).toFixed(2)}%`;
   const currentMinutes = Math.floor(playerCurrentTimestamp / 60);
@@ -150,12 +151,12 @@ export default function BottomBar() {
         : 0;
 
       const mediaUrl = resolveMediaUrl(media);
-      
+
       if (!mediaUrl) {
         console.error("Cannot add media to timeline: no playable URL", media);
         return null;
       }
-      
+
       const newId = await db.keyFrames.create({
         trackId: track.id,
         data: {
@@ -339,6 +340,7 @@ export default function BottomBar() {
       >
         <div
           ref={timelineWrapperRef}
+          data-timeline-zoom={timelineZoom}
           className="flex flex-col justify-start w-full h-full relative"
           role="slider"
           aria-label="Timeline"
@@ -356,7 +358,11 @@ export default function BottomBar() {
               left: `${timelineProgressPercent}%`,
             }}
           />
-          <TimelineRuler className="z-10" />
+          <TimelineRuler
+            className="z-10"
+            duration={timelineDurationSeconds}
+            zoom={timelineZoom}
+          />
           <div
             className="relative z-30 flex timeline-container flex-col h-full mx-4 mt-10 gap-2 pb-2 pointer-events-auto"
             onDragOver={handleOnDragOver}
