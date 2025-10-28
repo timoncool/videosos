@@ -366,7 +366,7 @@ export default function BottomBar() {
 
   return (
     <div className="border-t pb-2 border-border flex flex-col bg-background-light ">
-      <div className="border-b border-border bg-background-dark px-2 flex flex-row gap-8 py-2 justify-between items-center flex-1">
+      <div className="border-b border-border bg-background-dark px-2 flex flex-row gap-8 py-2 justify-between items-center flex-1 overflow-visible pr-4">
         <div className="h-full flex flex-col justify-center px-4 bg-muted/50 rounded-md font-mono cursor-default select-none shadow-inner">
           <div className="flex flex-row items-baseline font-thin tabular-nums">
             <span className="text-muted-foreground">
@@ -383,7 +383,7 @@ export default function BottomBar() {
           </div>
         </div>
         <VideoControls />
-        <div className="ms-auto flex items-center gap-2">
+        <div className="ml-auto flex items-center gap-2 whitespace-nowrap shrink-0">
           <span className="text-sm text-muted-foreground">Zoom</span>
           <button
             type="button"
@@ -401,7 +401,7 @@ export default function BottomBar() {
             value={zoom}
             onChange={handleZoomInput}
             aria-label="Timeline zoom"
-            className="w-24"
+            className="w-20"
           />
           <button
             type="button"

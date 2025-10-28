@@ -387,29 +387,36 @@ export function TimelineRuler({
             strokeWidth={1}
           />
         ))}
-        {majorTicks.map((tick) => (
-          <g key={`major-${tick.time.toFixed(5)}-${tick.x.toFixed(2)}`}>
-            <line
-              x1={tick.x}
-              y1={RULER_HEIGHT - 32}
-              x2={tick.x}
-              y2={RULER_HEIGHT - 6}
-              stroke="hsl(var(--border))"
-              strokeOpacity={0.55}
-              strokeWidth={1.5}
-            />
-            <text
-              x={tick.x}
-              y={RULER_HEIGHT - 38}
-              textAnchor="middle"
-              fontSize={12}
-              fill="hsl(var(--muted-foreground))"
-              style={{ pointerEvents: "none" }}
-            >
-              {formatTickLabel(tick.time, majorInterval)}
-            </text>
-          </g>
-        ))}
+        {majorTicks.map((tick) => {
+          const isStart = tick.time < EPSILON;
+          const isEnd = Math.abs(tick.time - duration) < EPSILON;
+          const textAnchor = isStart ? "start" : isEnd ? "end" : "middle";
+          const dx = isStart ? 4 : isEnd ? -4 : 0;
+          
+          return (
+            <g key={`major-${tick.time.toFixed(5)}-${tick.x.toFixed(2)}`}>
+              <line
+                x1={tick.x}
+                y1={RULER_HEIGHT - 32}
+                x2={tick.x}
+                y2={RULER_HEIGHT - 6}
+                stroke="hsl(var(--border))"
+                strokeOpacity={0.55}
+                strokeWidth={1.5}
+              />
+              <text
+                x={tick.x + dx}
+                y={RULER_HEIGHT - 38}
+                textAnchor={textAnchor}
+                fontSize={12}
+                fill="hsl(var(--muted-foreground))"
+                style={{ pointerEvents: "none" }}
+              >
+                {formatTickLabel(tick.time, majorInterval)}
+              </text>
+            </g>
+          );
+        })}
       </svg>
     </div>
   );
