@@ -456,13 +456,12 @@ export default function BottomBar() {
                 style={{ width: `${timelineWidthPx}px` }}
               >
                 <TimelineRuler
-                  className="z-10"
                   style={{ width: "100%" }}
                   duration={timelineDurationSeconds}
                   zoom={zoom}
                 />
                 <div
-                  className="relative z-30 flex timeline-container flex-col h-full mx-4 mt-10 gap-2 pb-2 pointer-events-auto"
+                  className="relative z-30 flex timeline-container flex-col h-full mx-4 mt-12 gap-2 pb-2 pointer-events-auto"
                   onDragOver={handleOnDragOver}
                   onDrop={handleOnDrop}
                   style={{ width: "100%" }}
