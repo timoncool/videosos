@@ -21,7 +21,6 @@ import {
   type DragEventHandler,
   type KeyboardEventHandler,
   type MouseEventHandler,
-  useEffect,
   useMemo,
   useRef,
   useState,
@@ -34,6 +33,7 @@ export default function BottomBar() {
   const t = useTranslations("app.bottomBar");
   const queryClient = useQueryClient();
   const projectId = useProjectId();
+  const { data: project = PROJECT_PLACEHOLDER } = useProject(projectId);
   const player = useVideoProjectStore((s) => s.player);
   const playerCurrentTimestamp = useVideoProjectStore(
     (s) => s.playerCurrentTimestamp,
@@ -41,74 +41,28 @@ export default function BottomBar() {
   const setPlayerCurrentTimestamp = useVideoProjectStore(
     (s) => s.setPlayerCurrentTimestamp,
   );
-  const timelineDurationSeconds = useVideoProjectStore(
-    (s) => s.timelineDuration,
-  );
-  const setTimelineDuration = useVideoProjectStore(
-    (s) => s.setTimelineDuration,
-  );
+  const selectKeyframe = useVideoProjectStore((s) => s.selectKeyframe);
   const timelineWrapperRef = useRef<HTMLDivElement>(null);
-  const { data: project = PROJECT_PLACEHOLDER } = useProject(projectId);
-  const DEFAULT_TIMELINE_DURATION = PROJECT_PLACEHOLDER.timelineDuration;
-  const MIN_TIMELINE_DURATION = 1;
-  useEffect(() => {
-    const nextDuration = Math.max(
-      project.timelineDuration ?? DEFAULT_TIMELINE_DURATION,
-      MIN_TIMELINE_DURATION,
-    );
-    if (timelineDurationSeconds !== nextDuration) {
-      setTimelineDuration(nextDuration);
-    }
-  }, [
-    project.timelineDuration,
-    DEFAULT_TIMELINE_DURATION,
-    setTimelineDuration,
-    timelineDurationSeconds,
-  ]);
-  const safeTimelineDuration = Math.max(
-    timelineDurationSeconds,
-    MIN_TIMELINE_DURATION,
-  );
+  const timelineDurationMs = project?.duration ?? 30000;
+  const timelineDurationSeconds = timelineDurationMs / 1000;
   const FPS = 30;
-  const minTrackWidth = `${((2 / safeTimelineDuration) * 100).toFixed(2)}%`;
+  const safeTimelineDurationSeconds = Math.max(
+    timelineDurationSeconds,
+    Number.EPSILON,
+  );
+  const minTrackWidth = `${((2 / safeTimelineDurationSeconds) * 100).toFixed(
+    2,
+  )}%`;
   const currentMinutes = Math.floor(playerCurrentTimestamp / 60);
   const formattedCurrentMinutes = currentMinutes.toString().padStart(2, "0");
   const currentSeconds = playerCurrentTimestamp % 60;
   const formattedCurrentSeconds = currentSeconds.toFixed(2).padStart(5, "0");
-  const totalMinutes = Math.floor(safeTimelineDuration / 60);
+  const totalMinutes = Math.floor(safeTimelineDurationSeconds / 60);
   const formattedTotalMinutes = totalMinutes.toString().padStart(2, "0");
-  const formattedTotalSeconds = (safeTimelineDuration % 60)
+  const formattedTotalSeconds = (safeTimelineDurationSeconds % 60)
     .toFixed(2)
     .padStart(5, "0");
   const [dragOverTracks, setDragOverTracks] = useState(false);
-
-  const limitAllKeyframesToThirtySeconds = useMutation({
-    mutationFn: async () => {
-      const tracks = await db.tracks.tracksByProject(projectId);
-
-      let updatedCount = 0;
-
-      for (const track of tracks) {
-        const keyframes = await db.keyFrames.keyFramesByTrack(track.id);
-
-        for (const frame of keyframes) {
-          if (frame.duration > 30000) {
-            await db.keyFrames.update(frame.id, {
-              duration: 30000,
-            });
-            updatedCount++;
-          }
-        }
-      }
-
-      return updatedCount;
-    },
-    onSuccess: (updatedCount) => {
-      if (updatedCount > 0) {
-        refreshVideoCache(queryClient, projectId);
-      }
-    },
-  });
 
   const { data: tracks = [] } = useQuery({
     queryKey: queryKeys.projectTracks(projectId),
@@ -122,17 +76,6 @@ export default function BottomBar() {
 
   const { data: composition } = useVideoComposition(projectId);
   const frames = composition?.frames ?? {};
-
-  // Automatically limit keyframes to 30 seconds whenever tracks change
-  useEffect(() => {
-    if (tracks.length === 0) return;
-
-    const timeoutId = setTimeout(() => {
-      limitAllKeyframesToThirtySeconds.mutate();
-    }, 300);
-
-    return () => clearTimeout(timeoutId);
-  }, [tracks, limitAllKeyframesToThirtySeconds]);
 
   const handleOnDragOver: DragEventHandler<HTMLDivElement> = (event) => {
     event.preventDefault();
@@ -172,7 +115,7 @@ export default function BottomBar() {
         );
 
       const mediaDuration = resolveDuration(media) ?? 5000;
-      const duration = Math.min(mediaDuration, 30000);
+      const duration = mediaDuration;
       const timestamp = lastKeyframe
         ? lastKeyframe.timestamp + 1 + lastKeyframe.duration
         : 0;
@@ -196,11 +139,27 @@ export default function BottomBar() {
         duration,
       });
 
-      return db.keyFrames.find(newId.toString());
+      const newKeyframe = await db.keyFrames.find(newId.toString());
+
+      const newEndTime = timestamp + duration;
+      const currentProject = await db.projects.find(projectId);
+      const projectDuration = currentProject?.duration ?? 30000;
+
+      if (newEndTime > projectDuration) {
+        await db.projects.update(projectId, {
+          duration: newEndTime + 1000,
+        });
+        await queryClient.invalidateQueries({
+          queryKey: queryKeys.project(projectId),
+        });
+      }
+
+      return newKeyframe;
     },
     onSuccess: (data) => {
       if (!data) return;
       refreshVideoCache(queryClient, projectId);
+      selectKeyframe(data.id);
     },
   });
 
@@ -271,7 +230,7 @@ export default function BottomBar() {
   const seekToTimestamp = (nextTimestamp: number) => {
     const clampedTimestamp = Math.max(
       0,
-      Math.min(nextTimestamp, safeTimelineDuration),
+      Math.min(nextTimestamp, safeTimelineDurationSeconds),
     );
 
     if (player) {
@@ -300,7 +259,7 @@ export default function BottomBar() {
     const relativeX = event.clientX - rect.left;
     const clampedX = Math.min(Math.max(relativeX, 0), rect.width);
     const ratio = clampedX / rect.width;
-    const nextTimestamp = safeTimelineDuration * ratio;
+    const nextTimestamp = safeTimelineDurationSeconds * ratio;
 
     seekToTimestamp(nextTimestamp);
   };
@@ -323,7 +282,7 @@ export default function BottomBar() {
         break;
       case "End":
         event.preventDefault();
-        seekToTimestamp(safeTimelineDuration);
+        seekToTimestamp(safeTimelineDurationSeconds);
         break;
       default:
         break;
@@ -331,11 +290,9 @@ export default function BottomBar() {
   };
 
   const timelineProgressPercent = (
-    safeTimelineDuration > 0
-      ? (Math.max(0, Math.min(playerCurrentTimestamp, safeTimelineDuration)) /
-          safeTimelineDuration) *
-        100
-      : 0
+    (Math.max(0, Math.min(playerCurrentTimestamp, timelineDurationSeconds)) /
+      safeTimelineDurationSeconds) *
+    100
   ).toFixed(2);
 
   return (
@@ -373,7 +330,7 @@ export default function BottomBar() {
           role="slider"
           aria-label="Timeline"
           aria-valuemin={0}
-          aria-valuemax={safeTimelineDuration}
+          aria-valuemax={safeTimelineDurationSeconds}
           aria-valuenow={playerCurrentTimestamp}
           aria-valuetext={`${formattedCurrentMinutes}:${formattedCurrentSeconds}`}
           tabIndex={0}
@@ -386,9 +343,10 @@ export default function BottomBar() {
               left: `${timelineProgressPercent}%`,
             }}
           />
-          <TimelineRuler className="z-10" duration={safeTimelineDuration} />
+          <TimelineRuler className="z-10" duration={timelineDurationSeconds} />
           <div
-            className="relative z-30 flex timeline-container flex-col h-full mx-4 mt-10 gap-2 pb-2 pointer-events-auto"
+            className="relative z-30 flex timeline-container flex-col h-full mx-4 mt-10 gap-2 pb-2 pointer-events-auto overflow-x-auto"
+            data-timeline-scroll-container
             onDragOver={handleOnDragOver}
             onDrop={handleOnDrop}
           >
@@ -400,7 +358,7 @@ export default function BottomBar() {
                   style={{
                     minWidth: minTrackWidth,
                   }}
-                  timelineDurationSeconds={safeTimelineDuration}
+                  timelineDurationSeconds={safeTimelineDurationSeconds}
                 />
               ) : (
                 <div

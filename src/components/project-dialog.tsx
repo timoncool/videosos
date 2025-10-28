@@ -183,7 +183,7 @@ export function ProjectDialog({ onOpenChange, ...props }: ProjectDialogProps) {
                       title,
                       description,
                       aspectRatio: aspect,
-                      timelineDuration: PROJECT_PLACEHOLDER.timelineDuration,
+                      duration: PROJECT_PLACEHOLDER.duration,
                     },
                     {
                       onSuccess: (projectId) => {

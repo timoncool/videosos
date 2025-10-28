@@ -35,8 +35,8 @@ import {
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
-const DEFAULT_TIMELINE_DURATION = PROJECT_PLACEHOLDER.timelineDuration;
-const MIN_TIMELINE_DURATION = 1;
+const DEFAULT_TIMELINE_DURATION_MS = PROJECT_PLACEHOLDER.duration ?? 30000;
+const MIN_TIMELINE_DURATION_MS = 1000;
 import { MediaItemPanel } from "./media-panel";
 import {
   Accordion,
@@ -69,19 +69,10 @@ export default function LeftPanel() {
     (s) => s.setProjectDialogOpen,
   );
   const openGenerateDialog = useVideoProjectStore((s) => s.openGenerateDialog);
-  const setTimelineDuration = useVideoProjectStore(
-    (s) => s.setTimelineDuration,
-  );
-
   const [timelineDurationInput, setTimelineDurationInput] = useState(
-    () => `${project.timelineDuration ?? DEFAULT_TIMELINE_DURATION}`,
+    () =>
+      `${((project.duration ?? DEFAULT_TIMELINE_DURATION_MS) / 1000).toFixed(2)}`,
   );
-
-  useEffect(() => {
-    const nextDuration = project.timelineDuration ?? DEFAULT_TIMELINE_DURATION;
-    setTimelineDuration(nextDuration);
-    setTimelineDurationInput(`${nextDuration}`);
-  }, [project.timelineDuration, setTimelineDuration]);
 
   const frames = composition?.frames ?? {};
   const hasFrames = Object.values(frames).some((trackFrames) =>
@@ -92,24 +83,25 @@ export default function LeftPanel() {
   const MAX_FILE_SIZE = 50 * 1024 * 1024;
 
   const commitTimelineDuration = (value: string) => {
-    const parsed = Number.parseFloat(value);
-    if (!Number.isFinite(parsed) || parsed <= 0) {
-      const fallback = project.timelineDuration ?? DEFAULT_TIMELINE_DURATION;
-      setTimelineDurationInput(`${fallback}`);
-      setTimelineDuration(fallback);
+    const parsedSeconds = Number.parseFloat(value);
+    if (!Number.isFinite(parsedSeconds) || parsedSeconds <= 0) {
+      const fallbackMs = project.duration ?? DEFAULT_TIMELINE_DURATION_MS;
+      setTimelineDurationInput(`${(fallbackMs / 1000).toFixed(2)}`);
       return;
     }
 
-    const rounded = Number(parsed.toFixed(2));
-    const nextDuration = Math.max(rounded, MIN_TIMELINE_DURATION);
-    setTimelineDurationInput(`${nextDuration}`);
-    setTimelineDuration(nextDuration);
-    projectUpdate.mutate({ timelineDuration: nextDuration });
+    const roundedSeconds = Number(parsedSeconds.toFixed(2));
+    const nextDurationMs = Math.max(
+      roundedSeconds * 1000,
+      MIN_TIMELINE_DURATION_MS,
+    );
+    setTimelineDurationInput(`${(nextDurationMs / 1000).toFixed(2)}`);
+    projectUpdate.mutate({ duration: nextDurationMs });
   };
 
   const handleFitTimelineToContent = () => {
     if (!hasFrames) {
-      commitTimelineDuration(`${DEFAULT_TIMELINE_DURATION}`);
+      commitTimelineDuration(`${DEFAULT_TIMELINE_DURATION_MS / 1000}`);
       return;
     }
 
@@ -260,7 +252,7 @@ export default function LeftPanel() {
                         id="timelineDuration"
                         type="number"
                         inputMode="decimal"
-                        min={MIN_TIMELINE_DURATION}
+                        min={MIN_TIMELINE_DURATION_MS / 1000}
                         step={0.5}
                         value={timelineDurationInput}
                         onChange={(event) =>

@@ -20,7 +20,7 @@ const TEMPLATE_PROJECT_SEED: ProjectSeed = {
       "A starter project that shows off the features of the video editor.",
     aspectRatio: "16:9",
     id: "433685b7-3494-4a56-9657-c1522686139d",
-    timelineDuration: 30,
+    duration: 30000,
   },
   media: [
     {

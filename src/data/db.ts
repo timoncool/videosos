@@ -1,7 +1,7 @@
 import { openDB } from "idb";
 import {
-  type MediaItem,
   PROJECT_PLACEHOLDER,
+  type MediaItem,
   type VideoKeyFrame,
   type VideoProject,
   type VideoTrack,
@@ -50,10 +50,10 @@ export const db = {
       return {
         ...PROJECT_PLACEHOLDER,
         ...project,
-        timelineDuration:
-          typeof project.timelineDuration === "number"
-            ? project.timelineDuration
-            : PROJECT_PLACEHOLDER.timelineDuration,
+        duration:
+          typeof project.duration === "number"
+            ? project.duration
+            : PROJECT_PLACEHOLDER.duration,
       } satisfies VideoProject;
     },
     async list(): Promise<VideoProject[]> {
@@ -62,10 +62,10 @@ export const db = {
       return projects.map((project) => ({
         ...PROJECT_PLACEHOLDER,
         ...project,
-        timelineDuration:
-          typeof project.timelineDuration === "number"
-            ? project.timelineDuration
-            : PROJECT_PLACEHOLDER.timelineDuration,
+        duration:
+          typeof project.duration === "number"
+            ? project.duration
+            : PROJECT_PLACEHOLDER.duration,
       })) as VideoProject[];
     },
     async create(project: Omit<VideoProject, "id">) {
@@ -73,10 +73,10 @@ export const db = {
       return db.put("projects", {
         id: crypto.randomUUID(),
         ...project,
-        timelineDuration:
-          typeof project.timelineDuration === "number"
-            ? project.timelineDuration
-            : PROJECT_PLACEHOLDER.timelineDuration,
+        duration:
+          typeof project.duration === "number"
+            ? project.duration
+            : PROJECT_PLACEHOLDER.duration,
       });
     },
     async update(id: string, project: Partial<VideoProject>) {
@@ -87,11 +87,10 @@ export const db = {
         ...existing,
         ...project,
         id,
-        timelineDuration:
-          typeof (project.timelineDuration ?? existing.timelineDuration) ===
-          "number"
-            ? (project.timelineDuration ?? existing.timelineDuration)
-            : PROJECT_PLACEHOLDER.timelineDuration,
+        duration:
+          typeof (project.duration ?? existing.duration) === "number"
+            ? (project.duration ?? existing.duration)
+            : PROJECT_PLACEHOLDER.duration,
       });
     },
     async delete(id: string) {

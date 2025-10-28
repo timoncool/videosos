@@ -85,6 +85,27 @@ body {
   }
 }
 
+@keyframes timeline-focus-ring {
+  0% {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+}
+
+@layer utilities {
+  .timeline-focus-ring {
+    animation: timeline-focus-ring 0.75s ease-out;
+  }
+}
+
 /* Scroll Bar Styles */
 ::-webkit-scrollbar {
   height: 0.25rem;
