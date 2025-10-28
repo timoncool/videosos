@@ -44,12 +44,14 @@ export function ExportDialog({ onOpenChange, ...props }: ExportDialogProps) {
               const media = mediaItems[frame.data.mediaId];
               const url = resolveMediaUrl(media);
               const duration = frame.duration ?? resolveDuration(media) ?? 0;
-              
+
               if (!media || !url || duration <= 0) {
-                console.warn(`Skipping invalid frame: mediaId=${frame.data.mediaId}, url=${url}, duration=${duration}`);
+                console.warn(
+                  `Skipping invalid frame: mediaId=${frame.data.mediaId}, url=${url}, duration=${duration}`,
+                );
                 return null;
               }
-              
+
               return {
                 timestamp: frame.timestamp,
                 duration: duration,
@@ -61,14 +63,17 @@ export function ExportDialog({ onOpenChange, ...props }: ExportDialogProps) {
 
           return {
             id: track.id,
-            type: track.type === "video" ? ("video" as const) : ("audio" as const),
+            type:
+              track.type === "video" ? ("video" as const) : ("audio" as const),
             keyframes: keyframes,
           };
         })
         .filter((track) => track.keyframes.length > 0);
 
       if (videoData.length === 0) {
-        throw new Error("No valid tracks to export. Please ensure all media items are loaded.");
+        throw new Error(
+          "No valid tracks to export. Please ensure all media items are loaded.",
+        );
       }
 
       const maxEnd = Math.max(
@@ -79,9 +84,13 @@ export function ExportDialog({ onOpenChange, ...props }: ExportDialogProps) {
       );
       const totalDuration = maxEnd > 0 ? maxEnd + 1000 : 5000;
 
-      console.log(`Export: ${videoData.length} tracks, totalDuration=${totalDuration}ms`);
+      console.log(
+        `Export: ${videoData.length} tracks, totalDuration=${totalDuration}ms`,
+      );
       videoData.forEach((track, i) => {
-        console.log(`  Track ${i} (${track.type}): ${track.keyframes.length} keyframes`);
+        console.log(
+          `  Track ${i} (${track.type}): ${track.keyframes.length} keyframes`,
+        );
       });
 
       const videoBlob = await exportVideoClientSide(
@@ -104,7 +113,9 @@ export function ExportDialog({ onOpenChange, ...props }: ExportDialogProps) {
     },
     onError: (error) => {
       console.error("Export failed:", error);
-      alert(`Export failed: ${error instanceof Error ? error.message : String(error)}`);
+      alert(
+        `Export failed: ${error instanceof Error ? error.message : String(error)}`,
+      );
     },
   });
   const setExportDialogOpen = useVideoProjectStore(
