@@ -12,7 +12,7 @@ import {
   type VideoTrack,
 } from "@/data/schema";
 import { useProjectId, useVideoProjectStore } from "@/data/store";
-import { cn, resolveDuration } from "@/lib/utils";
+import { cn, resolveDuration, resolveMediaUrl } from "@/lib/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import {
@@ -149,13 +149,14 @@ export default function BottomBar() {
         ? lastKeyframe.timestamp + 1 + lastKeyframe.duration
         : 0;
 
+      const mediaUrl = resolveMediaUrl(media);
       const newId = await db.keyFrames.create({
         trackId: track.id,
         data: {
           mediaId: media.id,
-          type: media.input?.image_url ? "image" : "prompt",
+          type: media.mediaType,
           prompt: media.input?.prompt || "",
-          url: media.input?.image_url?.url,
+          url: mediaUrl ?? "",
         },
         timestamp,
         duration,
