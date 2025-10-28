@@ -445,7 +445,7 @@ export default function BottomBar() {
         >
           <div className="flex-1 relative">
             <div
-              className="pointer-events-none absolute z-20 top-12 bottom-0 w-[2px] bg-white/30 ms-4"
+              className="pointer-events-none absolute z-50 top-12 bottom-0 w-[2px] bg-white/30 ms-4"
               style={{
                 left: `${timelineProgressPx}px`,
               }}
@@ -462,14 +462,13 @@ export default function BottomBar() {
                 style={{ width: `${timelineWidthPx}px` }}
               >
                 <TimelineRuler
-                  className="z-10"
                   style={{ width: "100%" }}
                   duration={timelineDurationSeconds}
                   zoom={zoom}
                   timelineWidth={timelineWidthPx}
                 />
                 <div
-                  className="relative z-30 flex timeline-container flex-col h-full mx-4 mt-10 gap-2 pb-2 pointer-events-auto"
+                  className="relative z-30 flex timeline-container flex-col h-full mx-4 mt-12 gap-2 pb-2 pointer-events-auto"
                   onDragOver={handleOnDragOver}
                   onDrop={handleOnDrop}
                   style={{ width: "100%" }}
