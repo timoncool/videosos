@@ -6,25 +6,36 @@ import type {
   VideoTrack,
 } from "./schema";
 
+const dbPromise = openDB("ai-vstudio-db-v2", 1, {
+  upgrade(db) {
+    db.createObjectStore("projects", { keyPath: "id" });
+
+    const trackStore = db.createObjectStore("tracks", { keyPath: "id" });
+    trackStore.createIndex("by_projectId", "projectId");
+
+    const keyFrameStore = db.createObjectStore("keyFrames", {
+      keyPath: "id",
+    });
+    keyFrameStore.createIndex("by_trackId", "trackId");
+
+    const mediaStore = db.createObjectStore("media_items", {
+      keyPath: "id",
+    });
+    mediaStore.createIndex("by_projectId", "projectId");
+  },
+  blocked() {
+    console.warn("[IndexedDB] Database upgrade blocked - another connection is open");
+  },
+  blocking() {
+    console.warn("[IndexedDB] This connection is blocking a version upgrade");
+  },
+  terminated() {
+    console.error("[IndexedDB] Database connection terminated unexpectedly");
+  },
+});
+
 function open() {
-  return openDB("ai-vstudio-db-v2", 1, {
-    upgrade(db) {
-      db.createObjectStore("projects", { keyPath: "id" });
-
-      const trackStore = db.createObjectStore("tracks", { keyPath: "id" });
-      trackStore.createIndex("by_projectId", "projectId");
-
-      const keyFrameStore = db.createObjectStore("keyFrames", {
-        keyPath: "id",
-      });
-      keyFrameStore.createIndex("by_trackId", "trackId");
-
-      const mediaStore = db.createObjectStore("media_items", {
-        keyPath: "id",
-      });
-      mediaStore.createIndex("by_projectId", "projectId");
-    },
-  });
+  return dbPromise;
 }
 
 export const db = {
