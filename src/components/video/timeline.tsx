@@ -22,7 +22,7 @@ export function TimelineRuler({
       )}
       {...props}
     >
-      <div className="flex px-2 py-0.5 h-full">
+      <div className="pointer-events-none flex px-2 py-0.5 h-full">
         {Array.from({ length: totalTicks + 1 }, (_, index) => index).map(
           (tickIndex) => {
             const isMajorTick = tickIndex % 50 === 0;

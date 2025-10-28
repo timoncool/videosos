@@ -307,13 +307,13 @@ export default function BottomBar() {
           onKeyDown={handleTimelineKeyDown}
         >
           <div
-            className="pointer-events-none absolute z-[32] top-6 bottom-0 w-[2px] bg-white/30 ms-4"
+            className="pointer-events-none absolute z-40 top-6 bottom-0 w-[2px] bg-white/30 ms-4"
             style={{
               left: `${timelineProgressPercent}%`,
             }}
           />
-          <TimelineRuler className="z-30" />
-          <div className="relative z-[31] flex timeline-container flex-col h-full mx-4 mt-10 gap-2 pb-2 pointer-events-auto">
+          <TimelineRuler className="z-10" />
+          <div className="relative z-30 flex timeline-container flex-col h-full mx-4 mt-10 gap-2 pb-2 pointer-events-auto">
             {Object.entries(trackObj).map(([trackType, track]) =>
               track ? (
                 <VideoTrackRow
