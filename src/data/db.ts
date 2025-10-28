@@ -1,9 +1,10 @@
 import { openDB } from "idb";
-import type {
-  MediaItem,
-  VideoKeyFrame,
-  VideoProject,
-  VideoTrack,
+import {
+  PROJECT_PLACEHOLDER,
+  type MediaItem,
+  type VideoKeyFrame,
+  type VideoProject,
+  type VideoTrack,
 } from "./schema";
 
 const dbPromise = openDB("ai-vstudio-db-v2", 1, {
@@ -54,6 +55,7 @@ export const db = {
       const db = await open();
       return db.put("projects", {
         id: crypto.randomUUID(),
+        duration: PROJECT_PLACEHOLDER.duration,
         ...project,
       });
     },
