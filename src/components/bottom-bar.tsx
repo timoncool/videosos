@@ -193,7 +193,7 @@ export default function BottomBar() {
     event.preventDefault();
     event.stopPropagation();
     setDragOverTracks(false);
-    
+
     let jobPayload = event.dataTransfer.getData("job");
     if (!jobPayload) {
       jobPayload = event.dataTransfer.getData("application/json");
@@ -201,12 +201,15 @@ export default function BottomBar() {
     if (!jobPayload) {
       jobPayload = event.dataTransfer.getData("text/plain");
     }
-    
+
     if (!jobPayload) {
-      console.error("No job data found in drop event. Available types:", event.dataTransfer.types);
+      console.error(
+        "No job data found in drop event. Available types:",
+        event.dataTransfer.types,
+      );
       return false;
     }
-    
+
     try {
       const job: MediaItem = JSON.parse(jobPayload);
       addToTrack.mutate(job);
