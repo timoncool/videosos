@@ -407,7 +407,10 @@ export function VideoTrackView({
           },
         )}
       >
-        <div className="p-0.5 pl-1 bg-black/10 flex flex-row items-center">
+        <div
+          className="relative z-40 p-0.5 pl-1 bg-black/10 flex flex-row items-center"
+          onMouseDown={(e) => e.stopPropagation()}
+        >
           <div className="flex flex-row gap-1 text-sm items-center font-semibold text-white/60 w-full">
             <div className="flex flex-row truncate gap-1 items-center">
               {createElement(trackIcons[track.type], {
