@@ -260,12 +260,16 @@ export const useJobCreator = ({
           }
         }
 
+        // Prepare seed image if needed (need client for this)
         const runwareSeedImageKeys = [
           "seedImage",
           "inputImage",
           "image",
           "image_url",
         ];
+        let hasBlobImage = false;
+        let blobImageKey = "";
+        let blobImageValue: Blob | null = null;
 
         for (const key of runwareSeedImageKeys) {
           const candidate = input[key];
@@ -284,11 +288,9 @@ export const useJobCreator = ({
           }
 
           if (typeof Blob !== "undefined" && candidate instanceof Blob) {
-            imageParams.seedImage = await prepareRunwareImageAsset({
-              value: candidate,
-              runware,
-              cacheKey: key,
-            });
+            hasBlobImage = true;
+            blobImageKey = key;
+            blobImageValue = candidate;
             break;
           }
         }
@@ -299,62 +301,117 @@ export const useJobCreator = ({
           JSON.stringify(imageParams, null, 2),
         );
 
-        try {
-          const response = await runware.requestImages(imageParams);
-          console.log(
-            "[DEBUG] Runware requestImages - SUCCESS:",
-            JSON.stringify(response, null, 2),
-          );
+        // Create pending MediaItem IMMEDIATELY (before API call)
+        await db.media.create({
+          projectId,
+          createdAt: Date.now(),
+          mediaType,
+          kind: "generated",
+          provider: "runware",
+          endpointId,
+          taskUUID,
+          status: "pending",
+          input,
+        });
 
-          // Check if response contains an error (Runware SDK doesn't throw)
-          const responseArray = Array.isArray(response) ? response : [response];
-          const firstResult = responseArray[0] as any;
+        // Invalidate queries so UI updates immediately
+        await queryClient.invalidateQueries({
+          queryKey: queryKeys.projectMediaItems(projectId),
+        });
 
-          if (firstResult?.error || firstResult?.status === "error") {
-            const errorObj = firstResult.error || firstResult;
-            const errorMessage =
-              errorObj.message ||
-              errorObj.responseContent ||
-              "Image generation failed";
-            console.error("[DEBUG] requestImages returned error:", errorObj);
-            throw new Error(errorMessage);
+        // Call API in background (non-blocking) - get client inside async
+        (async () => {
+          const runware = await getRunwareClient();
+          if (!runware) {
+            console.error("[DEBUG] Runware client not available");
+            await db.media.update(taskUUID, { status: "failed" });
+            await queryClient.invalidateQueries({
+              queryKey: queryKeys.projectMediaItems(projectId),
+            });
+            return;
           }
 
-          return {
-            taskUUID,
-            data: response,
-          };
-        } catch (error) {
-          console.error("[DEBUG] Runware requestImages - ERROR:", error);
-          console.error(
-            "[DEBUG] Runware requestImages - ERROR message:",
-            (error as any)?.message,
-          );
-          console.error(
-            "[DEBUG] Runware requestImages - ERROR response:",
-            (error as any)?.response,
-          );
-          console.error(
-            "[DEBUG] Runware requestImages - ERROR response data:",
-            (error as any)?.response?.data,
-          );
-          console.error(
-            "[DEBUG] Runware requestImages - ERROR response status:",
-            (error as any)?.response?.status,
-          );
-          console.error(
-            "[DEBUG] Runware requestImages - ERROR stringified:",
-            JSON.stringify(error, null, 2),
-          );
-          throw error;
-        }
+          // Prepare blob image if needed
+          if (hasBlobImage && blobImageValue) {
+            imageParams.seedImage = await prepareRunwareImageAsset({
+              value: blobImageValue,
+              runware,
+              cacheKey: blobImageKey,
+            });
+          }
+
+          return runware.requestImages(imageParams);
+        })()
+          .then(async (response) => {
+            if (!response) return;
+            console.log(
+              "[DEBUG] Runware requestImages - SUCCESS:",
+              JSON.stringify(response, null, 2),
+            );
+
+            // Check if response contains an error
+            const responseArray = Array.isArray(response)
+              ? response
+              : [response];
+            const firstResult = responseArray[0] as any;
+
+            if (firstResult?.error || firstResult?.status === "error") {
+              const errorObj = firstResult.error || firstResult;
+              const errorMessage =
+                errorObj.message ||
+                errorObj.responseContent ||
+                "Image generation failed";
+              console.error("[DEBUG] requestImages returned error:", errorObj);
+
+              // Update MediaItem to failed status
+              await db.media.update(taskUUID, { status: "failed" });
+              await queryClient.invalidateQueries({
+                queryKey: queryKeys.projectMediaItems(projectId),
+              });
+              return;
+            }
+
+            // Check if completed immediately
+            const isCompleted = firstResult?.imageURL;
+
+            if (isCompleted) {
+              // Update to completed status with cost metadata
+              await db.media.update(taskUUID, {
+                status: "completed",
+                output: firstResult,
+                metadata: {
+                  cost: firstResult.cost,
+                  taskUUID: firstResult.taskUUID,
+                },
+              });
+
+              // Download blob in background
+              if (firstResult.imageURL) {
+                downloadUrlAsBlob(firstResult.imageURL)
+                  .then((blob) => db.media.update(taskUUID, { blob }))
+                  .catch((error) =>
+                    console.error("Failed to download blob:", error),
+                  );
+              }
+            }
+
+            // Polling will handle pending tasks
+            await queryClient.invalidateQueries({
+              queryKey: queryKeys.projectMediaItems(projectId),
+            });
+          })
+          .catch(async (error) => {
+            console.error("[DEBUG] Runware requestImages - ERROR:", error);
+            await db.media.update(taskUUID, { status: "failed" });
+            await queryClient.invalidateQueries({
+              queryKey: queryKeys.projectMediaItems(projectId),
+            });
+          });
+
+        // Return immediately - item already created
+        return { taskUUID, immediate: true };
       }
       if (mediaType === "video") {
-        const runware = await getRunwareClient();
-        if (!runware) {
-          throw new Error("Runware API key not configured");
-        }
-
         // Find endpoint configuration to get defaults
         const endpoint = RUNWARE_ENDPOINTS.find(
           (ep) => ep.endpointId === endpointId,
@@ -405,7 +462,7 @@ export const useJobCreator = ({
           videoParams,
         );
 
-        // Create pending MediaItem IMMEDIATELY (before API call)
+        // Create pending MediaItem IMMEDIATELY (BEFORE getting runware client)
         await db.media.create({
           projectId,
           createdAt: Date.now(),
@@ -423,10 +480,22 @@ export const useJobCreator = ({
           queryKey: queryKeys.projectMediaItems(projectId),
         });
 
-        // Call API in background (non-blocking)
-        runware
-          .videoInference(videoParams)
+        // Call API in background (non-blocking) - get client inside async
+        (async () => {
+          const runware = await getRunwareClient();
+          if (!runware) {
+            console.error("[DEBUG] Runware client not available");
+            await db.media.update(taskUUID, { status: "failed" });
+            await queryClient.invalidateQueries({
+              queryKey: queryKeys.projectMediaItems(projectId),
+            });
+            return;
+          }
+
+          return runware.videoInference(videoParams);
+        })()
           .then(async (response) => {
+            if (!response) return;
             console.log("[DEBUG] videoInference response:", response);
 
             // Check if response contains an error
@@ -497,11 +566,6 @@ export const useJobCreator = ({
       }
 
       if (mediaType === "music" || mediaType === "voiceover") {
-        const runware = await getRunwareClient();
-        if (!runware) {
-          throw new Error("Runware API key not configured");
-        }
-
         const audioParams = {
           positivePrompt: input.prompt || "",
           model: endpointId,
@@ -519,48 +583,107 @@ export const useJobCreator = ({
           audioParams,
         );
 
-        try {
-          const response = await runware.audioInference(audioParams);
-          console.log("[DEBUG] audioInference response:", response);
-          console.log(
-            "[DEBUG] audioInference response stringified:",
-            JSON.stringify(response, null, 2),
-          );
+        // Create pending MediaItem IMMEDIATELY (BEFORE getting runware client)
+        await db.media.create({
+          projectId,
+          createdAt: Date.now(),
+          mediaType,
+          kind: "generated",
+          provider: "runware",
+          endpointId,
+          taskUUID,
+          status: "pending",
+          input,
+        });
 
-          // Check if response contains an error (Runware SDK doesn't throw)
-          const responseArray = Array.isArray(response) ? response : [response];
-          const firstResult = responseArray[0] as any;
+        // Invalidate queries so UI updates immediately
+        await queryClient.invalidateQueries({
+          queryKey: queryKeys.projectMediaItems(projectId),
+        });
 
-          if (firstResult?.error || firstResult?.status === "error") {
-            const errorObj = firstResult.error || firstResult;
-            const errorMessage =
-              errorObj.message ||
-              errorObj.responseContent ||
-              "Audio generation failed";
-            console.error("[DEBUG] audioInference returned error:", errorObj);
-            throw new Error(errorMessage);
+        // Call API in background (non-blocking) - get client inside async
+        (async () => {
+          const runware = await getRunwareClient();
+          if (!runware) {
+            console.error("[DEBUG] Runware client not available");
+            await db.media.update(taskUUID, { status: "failed" });
+            await queryClient.invalidateQueries({
+              queryKey: queryKeys.projectMediaItems(projectId),
+            });
+            return;
           }
 
-          return {
-            taskUUID,
-            data: response,
-          };
-        } catch (error) {
-          console.error("[DEBUG] audioInference ERROR:", error);
-          console.error(
-            "[DEBUG] audioInference ERROR message:",
-            (error as any)?.message,
-          );
-          console.error(
-            "[DEBUG] audioInference ERROR stack:",
-            (error as any)?.stack,
-          );
-          console.error(
-            "[DEBUG] audioInference ERROR stringified:",
-            JSON.stringify(error, null, 2),
-          );
-          throw error;
-        }
+          return runware.audioInference(audioParams);
+        })()
+          .then(async (response) => {
+            if (!response) return;
+            console.log("[DEBUG] audioInference response:", response);
+            console.log(
+              "[DEBUG] audioInference response stringified:",
+              JSON.stringify(response, null, 2),
+            );
+
+            // Check if response contains an error
+            const responseArray = Array.isArray(response)
+              ? response
+              : [response];
+            const firstResult = responseArray[0] as any;
+
+            if (firstResult?.error || firstResult?.status === "error") {
+              const errorObj = firstResult.error || firstResult;
+              const errorMessage =
+                errorObj.message ||
+                errorObj.responseContent ||
+                "Audio generation failed";
+              console.error("[DEBUG] audioInference returned error:", errorObj);
+
+              // Update MediaItem to failed status
+              await db.media.update(taskUUID, { status: "failed" });
+              await queryClient.invalidateQueries({
+                queryKey: queryKeys.projectMediaItems(projectId),
+              });
+              return;
+            }
+
+            // Check if completed immediately
+            const isCompleted = firstResult?.audioURL;
+
+            if (isCompleted) {
+              // Update to completed status with cost metadata
+              await db.media.update(taskUUID, {
+                status: "completed",
+                output: firstResult,
+                metadata: {
+                  cost: firstResult.cost,
+                  taskUUID: firstResult.taskUUID,
+                },
+              });
+
+              // Download blob in background
+              if (firstResult.audioURL) {
+                downloadUrlAsBlob(firstResult.audioURL)
+                  .then((blob) => db.media.update(taskUUID, { blob }))
+                  .catch((error) =>
+                    console.error("Failed to download blob:", error),
+                  );
+              }
+            }
+
+            // Polling will handle pending tasks
+            await queryClient.invalidateQueries({
+              queryKey: queryKeys.projectMediaItems(projectId),
+            });
+          })
+          .catch(async (error) => {
+            console.error("[DEBUG] audioInference ERROR:", error);
+            await db.media.update(taskUUID, { status: "failed" });
+            await queryClient.invalidateQueries({
+              queryKey: queryKeys.projectMediaItems(projectId),
+            });
+          });
+
+        // Return immediately - item already created
+        return { taskUUID, immediate: true };
       }
 
       throw new Error(`Unsupported media type: ${mediaType}`);
