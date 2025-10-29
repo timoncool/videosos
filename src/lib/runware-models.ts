@@ -681,10 +681,9 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     description: "Text-to-video and image-to-video with KlingAI 2.5 Turbo Pro",
     popularity: 5,
     category: "video",
-    inputAsset: ["image"],
+    // inputAsset removed - supports both text-to-video and image-to-video
     initialInput: {
       positivePrompt: "",
-      seedImage: "",
     },
     inputMap: {
       prompt: "positivePrompt",
@@ -697,13 +696,12 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "klingai:5@3",
     label: "KlingAI 2.1 Master",
-    description: "Master quality video generation with text and image support",
+    description: "Master quality video generation. Supports text-to-video and image-to-video",
     popularity: 5,
     category: "video",
-    inputAsset: ["image"],
+    // inputAsset removed - supports both text-to-video and image-to-video
     initialInput: {
       positivePrompt: "",
-      seedImage: "",
     },
     inputMap: {
       prompt: "positivePrompt",
@@ -734,13 +732,12 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "klingai:4@3",
     label: "KlingAI 2.0 Master",
-    description: "Master quality video generation with text and image support",
+    description: "Master quality video generation. Supports text-to-video and image-to-video",
     popularity: 4,
     category: "video",
-    inputAsset: ["image"],
+    // inputAsset removed - supports both text-to-video and image-to-video
     initialInput: {
       positivePrompt: "",
-      seedImage: "",
     },
     inputMap: {
       prompt: "positivePrompt",
@@ -762,13 +759,12 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "klingai:3@1",
     label: "KlingAI 1.6 Standard",
-    description: "Standard quality video generation with text and image support",
+    description: "Standard quality video generation. Supports text-to-video and image-to-video",
     popularity: 4,
     category: "video",
-    inputAsset: ["image"],
+    // inputAsset removed - supports both text-to-video and image-to-video
     initialInput: {
       positivePrompt: "",
-      seedImage: "",
     },
     inputMap: {
       prompt: "positivePrompt",
@@ -863,13 +859,12 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "minimax:2@1",
     label: "MiniMax 01 Director",
-    description: "MiniMax Hailuo 01 Director with text and image support",
+    description: "MiniMax Hailuo 01 Director. Supports text-to-video and image-to-video",
     popularity: 4,
     category: "video",
-    inputAsset: ["image"],
+    // inputAsset removed - supports both text-to-video and image-to-video
     initialInput: {
       positivePrompt: "",
-      seedImage: "",
     },
     inputMap: {
       prompt: "positivePrompt",
@@ -955,13 +950,12 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "vidu:1@1",
     label: "Vidu Q1",
-    description: "Vidu Q1 video generation with text and image support",
+    description: "Vidu Q1 video generation. Supports text-to-video and image-to-video",
     popularity: 4,
     category: "video",
-    inputAsset: ["image"],
+    // inputAsset removed - supports both text-to-video and image-to-video
     initialInput: {
       positivePrompt: "",
-      seedImage: "",
     },
     inputMap: {
       prompt: "positivePrompt",
@@ -1113,14 +1107,13 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "openai:3@2",
     label: "Sora 2 Pro",
-    description: "OpenAI's Sora 2 Pro with enhanced quality and resolution",
+    description: "OpenAI's Sora 2 Pro with enhanced quality and resolution. Supports text-to-video and image-to-video",
     cost: "~$0.5/video",
     popularity: 5,
     category: "video",
-    inputAsset: ["image"],
+    // inputAsset removed - image is optional for text-to-video
     initialInput: {
       positivePrompt: "",
-      seedImage: "",
     },
     inputMap: {
       prompt: "positivePrompt",
@@ -1145,14 +1138,13 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "openai:3@1",
     label: "Sora 2",
-    description: "OpenAI's Sora 2 video generation model",
+    description: "OpenAI's Sora 2 video generation model. Supports text-to-video and image-to-video",
     cost: "$0.4/video",
     popularity: 5,
     category: "video",
-    inputAsset: ["image"],
+    // inputAsset removed - image is optional for text-to-video
     initialInput: {
       positivePrompt: "",
-      seedImage: "",
     },
     inputMap: {
       prompt: "positivePrompt",
@@ -1177,13 +1169,12 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "pixverse:1@5",
     label: "PixVerse v5",
-    description: "Latest PixVerse video generation with text and image support",
+    description: "Latest PixVerse video generation. Supports text-to-video and image-to-video",
     popularity: 5,
     category: "video",
-    inputAsset: ["image"],
+    // inputAsset removed - supports both text-to-video and image-to-video
     initialInput: {
       positivePrompt: "",
-      seedImage: "",
     },
     inputMap: {
       prompt: "positivePrompt",
@@ -1196,13 +1187,12 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "pixverse:1@3",
     label: "PixVerse v4.5",
-    description: "PixVerse v4.5 video generation with text and image support",
+    description: "PixVerse v4.5 video generation. Supports text-to-video and image-to-video",
     popularity: 4,
     category: "video",
-    inputAsset: ["image"],
+    // inputAsset removed - supports both text-to-video and image-to-video
     initialInput: {
       positivePrompt: "",
-      seedImage: "",
     },
     inputMap: {
       prompt: "positivePrompt",
