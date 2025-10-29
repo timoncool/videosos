@@ -33,6 +33,15 @@ export type ApiInfo = {
   imageForFrame?: boolean;
   category: "image" | "video" | "music" | "voiceover";
   prompt?: boolean;
+
+  // Model-specific constraints for UI options
+  availableDurations?: number[];  // e.g., [4, 6, 8] or [8] for fixed duration
+  availableDimensions?: Array<{width: number; height: number; label: string}>;
+  availableFps?: number[];  // e.g., [24] or [24, 25, 50]
+  defaultDuration?: number;
+  defaultWidth?: number;
+  defaultHeight?: number;
+  defaultFps?: number;
 };
 
 export const AVAILABLE_ENDPOINTS: ApiInfo[] = [

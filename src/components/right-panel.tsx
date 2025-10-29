@@ -1119,46 +1119,78 @@ export default function RightPanel({
                             </Select>
                           </div>
                         )}
-                        <div className="flex gap-2">
-                          <div className="flex flex-col gap-2 flex-1">
-                            <Label className="text-xs">Width</Label>
-                            <Input
-                              className="h-8 text-xs"
-                              type="number"
-                              min={256}
-                              max={2048}
-                              step={64}
-                              value={
-                                generateData.width ||
-                                (mediaType === "image" ? 1024 : 1920)
-                              }
-                              onChange={(e) =>
-                                setGenerateData({
-                                  width: Number.parseInt(e.target.value),
-                                })
-                              }
-                            />
+                        {endpoint?.availableDimensions &&
+                        endpoint.availableDimensions.length > 0 ? (
+                          <div className="flex flex-col gap-2">
+                            <Label className="text-xs">Size</Label>
+                            <Select
+                              value={`${generateData.width || endpoint.defaultWidth || endpoint.availableDimensions[0].width}x${generateData.height || endpoint.defaultHeight || endpoint.availableDimensions[0].height}`}
+                              onValueChange={(value) => {
+                                const [width, height] = value
+                                  .split("x")
+                                  .map(Number);
+                                setGenerateData({ width, height });
+                              }}
+                            >
+                              <SelectTrigger className="h-8 text-xs">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {endpoint.availableDimensions.map((dim) => (
+                                  <SelectItem
+                                    key={`${dim.width}x${dim.height}`}
+                                    value={`${dim.width}x${dim.height}`}
+                                  >
+                                    {dim.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                           </div>
-                          <div className="flex flex-col gap-2 flex-1">
-                            <Label className="text-xs">Height</Label>
-                            <Input
-                              className="h-8 text-xs"
-                              type="number"
-                              min={256}
-                              max={2048}
-                              step={64}
-                              value={
-                                generateData.height ||
-                                (mediaType === "image" ? 1024 : 1080)
-                              }
-                              onChange={(e) =>
-                                setGenerateData({
-                                  height: Number.parseInt(e.target.value),
-                                })
-                              }
-                            />
+                        ) : (
+                          <div className="flex gap-2">
+                            <div className="flex flex-col gap-2 flex-1">
+                              <Label className="text-xs">Width</Label>
+                              <Input
+                                className="h-8 text-xs"
+                                type="number"
+                                min={256}
+                                max={2048}
+                                step={64}
+                                value={
+                                  generateData.width ||
+                                  endpoint?.defaultWidth ||
+                                  (mediaType === "image" ? 1024 : 1920)
+                                }
+                                onChange={(e) =>
+                                  setGenerateData({
+                                    width: Number.parseInt(e.target.value),
+                                  })
+                                }
+                              />
+                            </div>
+                            <div className="flex flex-col gap-2 flex-1">
+                              <Label className="text-xs">Height</Label>
+                              <Input
+                                className="h-8 text-xs"
+                                type="number"
+                                min={256}
+                                max={2048}
+                                step={64}
+                                value={
+                                  generateData.height ||
+                                  endpoint?.defaultHeight ||
+                                  (mediaType === "image" ? 1024 : 1080)
+                                }
+                                onChange={(e) =>
+                                  setGenerateData({
+                                    height: Number.parseInt(e.target.value),
+                                  })
+                                }
+                              />
+                            </div>
                           </div>
-                        </div>
+                        )}
                         {mediaType === "image" && (
                           <>
                             <div className="flex flex-col gap-2">
@@ -1217,35 +1249,93 @@ export default function RightPanel({
                               <Label className="text-xs">
                                 Duration (seconds)
                               </Label>
-                              <Input
-                                className="h-8 text-xs"
-                                type="number"
-                                min={1}
-                                max={30}
-                                step={1}
-                                value={generateData.duration || 5}
-                                onChange={(e) =>
-                                  setGenerateData({
-                                    duration: Number.parseInt(e.target.value),
-                                  })
-                                }
-                              />
+                              {endpoint?.availableDurations &&
+                              endpoint.availableDurations.length > 0 ? (
+                                <Select
+                                  value={String(
+                                    generateData.duration ||
+                                      endpoint.defaultDuration ||
+                                      endpoint.availableDurations[0],
+                                  )}
+                                  onValueChange={(value) =>
+                                    setGenerateData({
+                                      duration: Number.parseInt(value),
+                                    })
+                                  }
+                                >
+                                  <SelectTrigger className="h-8 text-xs">
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {endpoint.availableDurations.map((dur) => (
+                                      <SelectItem key={dur} value={String(dur)}>
+                                        {dur}s
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              ) : (
+                                <Input
+                                  className="h-8 text-xs"
+                                  type="number"
+                                  min={1}
+                                  max={30}
+                                  step={1}
+                                  value={
+                                    generateData.duration ||
+                                    endpoint?.defaultDuration ||
+                                    5
+                                  }
+                                  onChange={(e) =>
+                                    setGenerateData({
+                                      duration: Number.parseInt(e.target.value),
+                                    })
+                                  }
+                                />
+                              )}
                             </div>
                             <div className="flex flex-col gap-2">
                               <Label className="text-xs">FPS</Label>
-                              <Input
-                                className="h-8 text-xs"
-                                type="number"
-                                min={12}
-                                max={60}
-                                step={1}
-                                value={generateData.fps || 24}
-                                onChange={(e) =>
-                                  setGenerateData({
-                                    fps: Number.parseInt(e.target.value),
-                                  })
-                                }
-                              />
+                              {endpoint?.availableFps &&
+                              endpoint.availableFps.length > 0 ? (
+                                <Select
+                                  value={String(
+                                    generateData.fps ||
+                                      endpoint.defaultFps ||
+                                      endpoint.availableFps[0],
+                                  )}
+                                  onValueChange={(value) =>
+                                    setGenerateData({
+                                      fps: Number.parseInt(value),
+                                    })
+                                  }
+                                >
+                                  <SelectTrigger className="h-8 text-xs">
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {endpoint.availableFps.map((fps) => (
+                                      <SelectItem key={fps} value={String(fps)}>
+                                        {fps} FPS
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              ) : (
+                                <Input
+                                  className="h-8 text-xs"
+                                  type="number"
+                                  min={12}
+                                  max={60}
+                                  step={1}
+                                  value={generateData.fps || endpoint?.defaultFps || 24}
+                                  onChange={(e) =>
+                                    setGenerateData({
+                                      fps: Number.parseInt(e.target.value),
+                                    })
+                                  }
+                                />
+                              )}
                             </div>
                           </>
                         )}
