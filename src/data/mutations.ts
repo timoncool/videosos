@@ -306,6 +306,23 @@ export const useJobCreator = ({
             JSON.stringify(response, null, 2),
           );
 
+          // Check if response contains an error (Runware SDK doesn't throw)
+          const responseArray = Array.isArray(response) ? response : [response];
+          const firstResult = responseArray[0] as any;
+
+          if (firstResult?.error || firstResult?.status === "error") {
+            const errorObj = firstResult.error || firstResult;
+            const errorMessage =
+              errorObj.message ||
+              errorObj.responseContent ||
+              "Image generation failed";
+            console.error(
+              "[DEBUG] requestImages returned error:",
+              errorObj,
+            );
+            throw new Error(errorMessage);
+          }
+
           return {
             taskUUID,
             data: response,
@@ -395,6 +412,23 @@ export const useJobCreator = ({
           const response = await runware.videoInference(videoParams);
           console.log("[DEBUG] videoInference response:", response);
 
+          // Check if response contains an error (Runware SDK doesn't throw)
+          const responseArray = Array.isArray(response) ? response : [response];
+          const firstResult = responseArray[0] as any;
+
+          if (firstResult?.error || firstResult?.status === "error") {
+            const errorObj = firstResult.error || firstResult;
+            const errorMessage =
+              errorObj.message ||
+              errorObj.responseContent ||
+              "Video generation failed";
+            console.error(
+              "[DEBUG] videoInference returned error:",
+              errorObj,
+            );
+            throw new Error(errorMessage);
+          }
+
           return {
             taskUUID,
             data: response,
@@ -433,6 +467,23 @@ export const useJobCreator = ({
             "[DEBUG] audioInference response stringified:",
             JSON.stringify(response, null, 2),
           );
+
+          // Check if response contains an error (Runware SDK doesn't throw)
+          const responseArray = Array.isArray(response) ? response : [response];
+          const firstResult = responseArray[0] as any;
+
+          if (firstResult?.error || firstResult?.status === "error") {
+            const errorObj = firstResult.error || firstResult;
+            const errorMessage =
+              errorObj.message ||
+              errorObj.responseContent ||
+              "Audio generation failed";
+            console.error(
+              "[DEBUG] audioInference returned error:",
+              errorObj,
+            );
+            throw new Error(errorMessage);
+          }
 
           return {
             taskUUID,
@@ -497,25 +548,8 @@ export const useJobCreator = ({
         if (isCompleted) {
           console.log("[DEBUG] Runware task completed immediately:", result);
 
-          // Download media from Runware URL and store as Blob
-          let blob: Blob | undefined;
-          const mediaUrl =
-            result.videoURL || result.imageURL || result.audioURL;
-
-          if (mediaUrl) {
-            try {
-              console.log("[DEBUG] Downloading Runware media from:", mediaUrl);
-              blob = await downloadUrlAsBlob(mediaUrl);
-              console.log("[DEBUG] Downloaded blob:", {
-                size: blob.size,
-                type: blob.type,
-              });
-            } catch (error) {
-              console.error("[DEBUG] Failed to download Runware media:", error);
-              // Continue without blob - will use URL as fallback
-            }
-          }
-
+          // Create media item immediately without blocking on blob download
+          // Blob will be downloaded in background by media-panel polling
           await db.media.create({
             projectId,
             createdAt: Date.now(),
@@ -527,8 +561,29 @@ export const useJobCreator = ({
             status: "completed",
             output: result,
             input,
-            blob,
           });
+
+          // Download blob in background (non-blocking)
+          const mediaUrl =
+            result.videoURL || result.imageURL || result.audioURL;
+          if (mediaUrl) {
+            downloadUrlAsBlob(mediaUrl)
+              .then((blob) => {
+                console.log("[DEBUG] Downloaded blob in background:", {
+                  size: blob.size,
+                  type: blob.type,
+                });
+                return db.media.update(result.taskUUID || data.taskUUID, {
+                  blob,
+                });
+              })
+              .catch((error) => {
+                console.error(
+                  "[DEBUG] Failed to download Runware media in background:",
+                  error,
+                );
+              });
+          }
         } else {
           console.log("[DEBUG] Runware task pending, taskUUID:", data.taskUUID);
           await db.media.create({
