@@ -8,7 +8,13 @@ import { useToast } from "@/hooks/use-toast";
 import { fal } from "@/lib/fal";
 import { extractVideoThumbnail, getMediaMetadata } from "@/lib/ffmpeg";
 import { getRunwareClient } from "@/lib/runware";
-import { cn, resolveMediaUrl, trackIcons } from "@/lib/utils";
+import {
+  cn,
+  downloadUrlAsBlob,
+  getOrCreateBlobUrl,
+  resolveMediaUrl,
+  trackIcons,
+} from "@/lib/utils";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import {
@@ -93,10 +99,61 @@ export function MediaItemRow({
             const result = await fal.queue.result(data.endpointId, {
               requestId: data.requestId,
             });
+
+            // Download media from FAL URL and store as Blob
+            let blob: Blob | undefined;
+            let mediaUrl: string | undefined;
+
+            // Extract URL from different FAL output formats
+            if (result.data) {
+              if (
+                "video" in result.data &&
+                typeof result.data.video === "object" &&
+                result.data.video !== null &&
+                "url" in result.data.video
+              ) {
+                mediaUrl = (result.data.video as { url: string }).url;
+              } else if (
+                "images" in result.data &&
+                Array.isArray(result.data.images)
+              ) {
+                mediaUrl = result.data.images[0]?.url;
+              } else if (
+                "audio_file" in result.data &&
+                typeof result.data.audio_file === "object" &&
+                result.data.audio_file !== null &&
+                "url" in result.data.audio_file
+              ) {
+                mediaUrl = (result.data.audio_file as { url: string }).url;
+              } else if (
+                "audio" in result.data &&
+                typeof result.data.audio === "object" &&
+                result.data.audio !== null &&
+                "url" in result.data.audio
+              ) {
+                mediaUrl = (result.data.audio as { url: string }).url;
+              }
+            }
+
+            if (mediaUrl) {
+              try {
+                console.log("[DEBUG] Downloading FAL media from:", mediaUrl);
+                blob = await downloadUrlAsBlob(mediaUrl);
+                console.log("[DEBUG] Downloaded FAL blob:", {
+                  size: blob.size,
+                  type: blob.type,
+                });
+              } catch (error) {
+                console.error("[DEBUG] Failed to download FAL media:", error);
+                // Continue without blob - will use URL as fallback
+              }
+            }
+
             media = {
               ...data,
               output: result.data,
               status: "completed",
+              blob,
             };
 
             await db.media.update(data.id, media);
@@ -127,21 +184,27 @@ export function MediaItemRow({
           if (media.mediaType !== "image") {
             const mediaMetadata = await getMediaMetadata(media as MediaItem);
 
-            let thumbnailUrl = null;
+            let thumbnailBlob: Blob | null = null;
             if (media.mediaType === "video") {
               const videoUrl = resolveMediaUrl(media as MediaItem);
               if (videoUrl) {
-                thumbnailUrl = await extractVideoThumbnail(videoUrl);
+                thumbnailBlob = await extractVideoThumbnail(videoUrl);
+                if (thumbnailBlob) {
+                  console.log("[DEBUG] FAL thumbnail blob generated:", {
+                    size: thumbnailBlob.size,
+                    type: thumbnailBlob.type,
+                  });
+                }
               }
             }
 
             await db.media.update(data.id, {
               ...media,
+              thumbnailBlob,
               metadata: {
                 ...(mediaMetadata?.media || {}),
                 start_frame_url: media.output?.start_frame_url,
                 end_frame_url: media.output?.end_frame_url,
-                thumbnail_url: thumbnailUrl,
               },
             });
 
@@ -229,10 +292,36 @@ export function MediaItemRow({
             return null;
           }
 
+          // Download media from Runware URL and store as Blob
+          let blob: Blob | undefined;
+          const mediaUrl =
+            result.videoURL || result.imageURL || result.audioURL;
+
+          if (mediaUrl) {
+            try {
+              console.log(
+                "[DEBUG] Downloading Runware media from async task:",
+                mediaUrl,
+              );
+              blob = await downloadUrlAsBlob(mediaUrl);
+              console.log("[DEBUG] Downloaded blob from async task:", {
+                size: blob.size,
+                type: blob.type,
+              });
+            } catch (error) {
+              console.error(
+                "[DEBUG] Failed to download Runware media from async task:",
+                error,
+              );
+              // Continue without blob - will use URL as fallback
+            }
+          }
+
           currentData = {
             ...data,
             output: result,
             status: "completed",
+            blob,
           } as GeneratedMediaItem;
 
           await db.media.update(data.id, currentData);
@@ -250,33 +339,33 @@ export function MediaItemRow({
         }
 
         if (currentData.status === "completed") {
+          // Generate and store thumbnail as Blob if not already present
           if (
             currentData.mediaType === "video" &&
-            !currentData.metadata?.thumbnail_url
+            !currentData.thumbnailBlob
           ) {
-            console.log("[DEBUG] Generating thumbnail for Runware video");
+            console.log("[DEBUG] Generating thumbnail blob for video");
             const videoUrl = resolveMediaUrl(currentData);
             if (videoUrl) {
-              const thumbnailUrl = await extractVideoThumbnail(videoUrl);
-              await db.media.update(data.id, {
-                ...currentData,
-                metadata: {
-                  ...currentData.metadata,
-                  thumbnail_url: thumbnailUrl,
-                },
-              });
-              await queryClient.invalidateQueries({
-                queryKey: queryKeys.projectMediaItems(data.projectId),
-              });
-              console.log("[DEBUG] Thumbnail generated:", thumbnailUrl);
+              const thumbnailBlob = await extractVideoThumbnail(videoUrl);
+              if (thumbnailBlob) {
+                console.log("[DEBUG] Thumbnail blob generated:", {
+                  size: thumbnailBlob.size,
+                  type: thumbnailBlob.type,
+                });
+                await db.media.update(data.id, {
+                  ...currentData,
+                  thumbnailBlob,
+                });
+                await queryClient.invalidateQueries({
+                  queryKey: queryKeys.projectMediaItems(data.projectId),
+                });
 
-              currentData = {
-                ...currentData,
-                metadata: {
-                  ...currentData.metadata,
-                  thumbnail_url: thumbnailUrl,
-                },
-              } as GeneratedMediaItem;
+                currentData = {
+                  ...currentData,
+                  thumbnailBlob,
+                } as GeneratedMediaItem;
+              }
             }
           }
 
@@ -310,10 +399,7 @@ export function MediaItemRow({
             } as GeneratedMediaItem;
           }
 
-          if (
-            !currentData.metadata?.thumbnail_url &&
-            !currentData.metadata?.duration
-          ) {
+          if (!currentData.thumbnailBlob && !currentData.metadata?.duration) {
             console.log(
               "[DEBUG] Runware item should already be completed, skipping polling",
             );
@@ -336,7 +422,7 @@ export function MediaItemRow({
       (data.provider === "runware" &&
         data.status === "completed" &&
         data.mediaType === "video" &&
-        !data.metadata?.thumbnail_url),
+        !data.thumbnailBlob),
     refetchInterval: () => {
       if (data.kind === "uploaded") return false;
       const provider = data.provider || "fal";
@@ -361,9 +447,9 @@ export function MediaItemRow({
 
   const coverImage =
     data.mediaType === "video"
-      ? data.metadata?.thumbnail_url ||
-        data.metadata?.start_frame_url ||
-        data?.metadata?.end_frame_url
+      ? data.thumbnailBlob
+        ? getOrCreateBlobUrl(`${data.id}-thumbnail`, data.thumbnailBlob)
+        : data.metadata?.start_frame_url || data?.metadata?.end_frame_url
       : resolveMediaUrl(data);
 
   return (

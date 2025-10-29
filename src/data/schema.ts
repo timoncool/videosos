@@ -93,6 +93,7 @@ export type MediaItem = {
   output?: Record<string, any>;
   url?: string;
   blob?: Blob;
+  thumbnailBlob?: Blob;
   metadata?: Record<string, any>;
 } & (
   | {

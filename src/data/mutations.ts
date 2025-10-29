@@ -1,6 +1,7 @@
 import { AVAILABLE_ENDPOINTS, fal } from "@/lib/fal";
 import { getRunwareClient, prepareRunwareImageAsset } from "@/lib/runware";
 import { RUNWARE_ENDPOINTS } from "@/lib/runware-models";
+import { downloadUrlAsBlob } from "@/lib/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
 import { db } from "./db";
@@ -500,6 +501,25 @@ export const useJobCreator = ({
 
         if (isCompleted) {
           console.log("[DEBUG] Runware task completed immediately:", result);
+
+          // Download media from Runware URL and store as Blob
+          let blob: Blob | undefined;
+          const mediaUrl = result.videoURL || result.imageURL || result.audioURL;
+
+          if (mediaUrl) {
+            try {
+              console.log("[DEBUG] Downloading Runware media from:", mediaUrl);
+              blob = await downloadUrlAsBlob(mediaUrl);
+              console.log("[DEBUG] Downloaded blob:", {
+                size: blob.size,
+                type: blob.type,
+              });
+            } catch (error) {
+              console.error("[DEBUG] Failed to download Runware media:", error);
+              // Continue without blob - will use URL as fallback
+            }
+          }
+
           await db.media.create({
             projectId,
             createdAt: Date.now(),
@@ -511,6 +531,7 @@ export const useJobCreator = ({
             status: "completed",
             output: result,
             input,
+            blob,
           });
         } else {
           console.log("[DEBUG] Runware task pending, taskUUID:", data.taskUUID);
