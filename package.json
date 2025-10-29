@@ -1,6 +1,6 @@
 {
   "name": "videosos",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "An open-source AI video editor that runs entirely in your browser. Forked and improved from the original fal.ai kit.",
   "private": true,
   "scripts": {
