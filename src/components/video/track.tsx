@@ -363,8 +363,6 @@ export function VideoTrackView({
     direction: "left" | "right",
   ) => {
     e.stopPropagation();
-    const trackElement = trackRef.current;
-    if (!trackElement) return;
     const startX = e.clientX;
     const startTimestamp = frame.timestamp;
     const startDuration = frame.duration;
@@ -372,76 +370,75 @@ export function VideoTrackView({
     const mediaDuration = resolveDuration(media) ?? 5000;
     const maxDuration = mediaDuration;
 
-    // Use local variables to track changes during drag
-    let currentTimestamp = startTimestamp;
-    let currentDuration = startDuration;
-
     const handleMouseMove = (moveEvent: MouseEvent) => {
       const deltaX = moveEvent.clientX - startX;
+      const deltaMs = deltaX / pixelsPerMs;
 
       if (direction === "right") {
         // Resize from right: only change duration
-        const deltaMs = deltaX / pixelsPerMs;
-        currentDuration = startDuration + deltaMs;
+        let newDuration = startDuration + deltaMs;
 
         const availableDuration = Math.max(
-          timelineDurationMs - currentTimestamp,
+          timelineDurationMs - frame.timestamp,
           minDuration,
         );
         const maxAllowedDuration = Math.min(maxDuration, availableDuration);
 
         // Apply constraints
-        if (currentDuration < minDuration) {
-          currentDuration = minDuration;
-        } else if (currentDuration > maxAllowedDuration) {
-          currentDuration = maxAllowedDuration;
+        if (newDuration < minDuration) {
+          newDuration = minDuration;
+        } else if (newDuration > maxAllowedDuration) {
+          newDuration = maxAllowedDuration;
         }
 
-        trackElement.style.width = `${currentDuration * pixelsPerMs}px`;
+        // Update frame directly for React to re-render
+        frame.duration = newDuration;
       } else {
         // Resize from left: trim from beginning
-        const deltaMs = deltaX / pixelsPerMs;
-        currentTimestamp = startTimestamp + deltaMs;
-        currentDuration = startDuration - deltaMs;
+        // Keep right edge fixed: (timestamp + duration) stays constant
+        const rightEdge = startTimestamp + startDuration;
+        let newTimestamp = startTimestamp + deltaMs;
+        let newDuration = rightEdge - newTimestamp;
 
         // Ensure timestamp doesn't go negative
-        if (currentTimestamp < 0) {
-          currentTimestamp = 0;
-          currentDuration = startTimestamp + startDuration;
+        if (newTimestamp < 0) {
+          newTimestamp = 0;
+          newDuration = rightEdge;
         }
 
         // Ensure duration doesn't go below minimum
-        if (currentDuration < minDuration) {
-          currentDuration = minDuration;
-          currentTimestamp = startTimestamp + startDuration - minDuration;
+        if (newDuration < minDuration) {
+          newDuration = minDuration;
+          newTimestamp = rightEdge - minDuration;
         }
 
         // Ensure duration doesn't exceed max
-        if (currentDuration > maxDuration) {
-          currentDuration = maxDuration;
-          currentTimestamp = startTimestamp + startDuration - maxDuration;
+        if (newDuration > maxDuration) {
+          newDuration = maxDuration;
+          newTimestamp = rightEdge - maxDuration;
         }
 
-        trackElement.style.left = `${currentTimestamp * pixelsPerMs}px`;
-        trackElement.style.width = `${currentDuration * pixelsPerMs}px`;
+        // Update frame directly for React to re-render
+        frame.timestamp = newTimestamp;
+        frame.duration = newDuration;
       }
     };
 
     const handleMouseUp = () => {
       // Round values
-      currentTimestamp = Math.round(currentTimestamp / 100) * 100;
-      currentDuration = Math.round(currentDuration / 100) * 100;
+      frame.timestamp = Math.round(frame.timestamp / 100) * 100;
+      frame.duration = Math.round(frame.duration / 100) * 100;
 
       // Ensure final constraints
-      currentDuration = Math.min(
-        Math.max(currentDuration, minDuration),
-        Math.max(timelineDurationMs - currentTimestamp, minDuration),
+      frame.duration = Math.min(
+        Math.max(frame.duration, minDuration),
+        Math.max(timelineDurationMs - frame.timestamp, minDuration),
       );
 
       // Update database with final values
       db.keyFrames.update(frame.id, {
-        timestamp: currentTimestamp,
-        duration: currentDuration,
+        timestamp: frame.timestamp,
+        duration: frame.duration,
       });
       queryClient.invalidateQueries({
         queryKey: queryKeys.projectPreview(projectId),

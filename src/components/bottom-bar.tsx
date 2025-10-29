@@ -391,7 +391,7 @@ export default function BottomBar() {
             <VideoControls />
           </div>
         </div>
-        <div className="fixed top-[calc(100vh-21.5rem)] right-2 flex items-center gap-2 bg-background-dark/95 px-3 py-2 z-50 border border-border/50 rounded-md shadow-lg">
+        <div className="fixed top-[calc(100vh-20.75rem)] right-2 flex items-center gap-2 bg-background-dark/95 px-3 py-2 z-50 border border-border/50 rounded-md shadow-lg">
           <span className="text-sm text-muted-foreground whitespace-nowrap">
             Zoom
           </span>
