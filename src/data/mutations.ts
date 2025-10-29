@@ -316,10 +316,7 @@ export const useJobCreator = ({
               errorObj.message ||
               errorObj.responseContent ||
               "Image generation failed";
-            console.error(
-              "[DEBUG] requestImages returned error:",
-              errorObj,
-            );
+            console.error("[DEBUG] requestImages returned error:", errorObj);
             throw new Error(errorMessage);
           }
 
@@ -422,10 +419,7 @@ export const useJobCreator = ({
               errorObj.message ||
               errorObj.responseContent ||
               "Video generation failed";
-            console.error(
-              "[DEBUG] videoInference returned error:",
-              errorObj,
-            );
+            console.error("[DEBUG] videoInference returned error:", errorObj);
             throw new Error(errorMessage);
           }
 
@@ -478,10 +472,7 @@ export const useJobCreator = ({
               errorObj.message ||
               errorObj.responseContent ||
               "Audio generation failed";
-            console.error(
-              "[DEBUG] audioInference returned error:",
-              errorObj,
-            );
+            console.error("[DEBUG] audioInference returned error:", errorObj);
             throw new Error(errorMessage);
           }
 
