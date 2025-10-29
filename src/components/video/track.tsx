@@ -281,6 +281,7 @@ export function VideoTrackView({
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     if (isResizingRef.current) {
+      console.log('[MOVE] Skipped: isResizingRef is true');
       return;
     }
 
@@ -289,9 +290,11 @@ export function VideoTrackView({
         'button,[role="button"],a,input,textarea,select,[data-trim-handle]',
       )
     ) {
+      console.log('[MOVE] Skipped: target is a trim handle or button');
       return;
     }
 
+    console.log('[MOVE] Starting move operation');
     const trackElement = trackRef.current;
     if (!trackElement) return;
     const bounds = calculateBounds();
@@ -382,6 +385,14 @@ export function VideoTrackView({
     const mediaDuration = resolveDuration(media) ?? 5000;
     const maxDuration = mediaDuration;
 
+    console.log(`[RESIZE-${direction.toUpperCase()}] Starting resize:`, {
+      startTimestamp,
+      startDuration,
+      startOffset,
+      mediaDuration,
+      rightEdge: startTimestamp + startDuration,
+    });
+
     // Track current values during drag
     let currentTimestamp = startTimestamp;
     let currentDuration = startDuration;
@@ -428,6 +439,17 @@ export function VideoTrackView({
 
         const trimmedFromLeft = currentTimestamp - startTimestamp;
         currentOffset = startOffset + trimmedFromLeft;
+
+        console.log('[RESIZE-LEFT] During drag:', {
+          deltaX,
+          deltaMs,
+          rightEdge,
+          currentTimestamp,
+          currentDuration,
+          currentOffset,
+          trimmedFromLeft,
+          computedRight: currentTimestamp + currentDuration,
+        });
 
         // Ensure timestamp doesn't go negative
         if (currentTimestamp < 0) {
@@ -522,6 +544,13 @@ export function VideoTrackView({
           currentTimestamp = startTimestamp + actualTrimmed;
           currentDuration = rightEdge - currentTimestamp;
         }
+
+        console.log('[RESIZE-LEFT] Final values:', {
+          currentTimestamp,
+          currentDuration,
+          currentOffset,
+          rightEdge: currentTimestamp + currentDuration,
+        });
 
         // Update database with both timestamp, duration, and offset
         db.keyFrames.update(frame.id, {
