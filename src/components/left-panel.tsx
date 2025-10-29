@@ -172,11 +172,11 @@ export default function LeftPanel() {
       if (media) {
         const mediaMetadata = await getMediaMetadata(media as MediaItem);
 
-        let thumbnailBlob: Blob | undefined = undefined;
+        let thumbnailBlob = null;
         if (media.mediaType === "video") {
           const videoUrl = resolveMediaUrl(media);
           if (videoUrl) {
-            thumbnailBlob = (await extractVideoThumbnail(videoUrl)) ?? undefined;
+            thumbnailBlob = await extractVideoThumbnail(videoUrl);
           }
         }
 
@@ -186,7 +186,7 @@ export default function LeftPanel() {
             metadata: {
               ...(mediaMetadata?.media || {}),
             },
-            thumbnailBlob,
+            thumbnailBlob: thumbnailBlob,
           })
           .finally(() => {
             queryClient.invalidateQueries({

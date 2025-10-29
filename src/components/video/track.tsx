@@ -366,43 +366,108 @@ export function VideoTrackView({
     const trackElement = trackRef.current;
     if (!trackElement) return;
     const startX = e.clientX;
-    const startWidth = trackElement.offsetWidth;
+    const startTimestamp = frame.timestamp;
+    const startDuration = frame.duration;
     const minDuration = 1000;
     const mediaDuration = resolveDuration(media) ?? 5000;
     const maxDuration = mediaDuration;
 
+    // Track current values during drag
+    let currentTimestamp = startTimestamp;
+    let currentDuration = startDuration;
+
     const handleMouseMove = (moveEvent: MouseEvent) => {
       const deltaX = moveEvent.clientX - startX;
-      let newWidth = startWidth + (direction === "right" ? deltaX : -deltaX);
+      const deltaMs = deltaX / pixelsPerMs;
 
-      const availableDuration = Math.max(
-        timelineDurationMs - frame.timestamp,
-        minDuration,
-      );
-      const maxAllowedDuration = Math.min(maxDuration, availableDuration);
+      if (direction === "right") {
+        // Right trim: keep LEFT edge fixed, move RIGHT edge
+        // Timestamp stays unchanged, duration changes
+        currentDuration = startDuration + deltaMs;
 
-      let newDuration = newWidth / pixelsPerMs;
+        const availableDuration = Math.max(
+          timelineDurationMs - currentTimestamp,
+          minDuration,
+        );
+        const maxAllowedDuration = Math.min(maxDuration, availableDuration);
 
-      if (newDuration < minDuration) {
-        newDuration = minDuration;
-        newWidth = newDuration * pixelsPerMs;
-      } else if (newDuration > maxAllowedDuration) {
-        newDuration = maxAllowedDuration;
-        newWidth = newDuration * pixelsPerMs;
+        // Apply constraints
+        if (currentDuration < minDuration) {
+          currentDuration = minDuration;
+        } else if (currentDuration > maxAllowedDuration) {
+          currentDuration = maxAllowedDuration;
+        }
+
+        // Update DOM for visual feedback
+        trackElement.style.width = `${currentDuration * pixelsPerMs}px`;
+      } else {
+        // Left trim: keep RIGHT edge fixed, move LEFT edge
+        // This is standard video editor behavior for left trim
+        const rightEdge = startTimestamp + startDuration;
+        currentTimestamp = startTimestamp + deltaMs;
+        currentDuration = rightEdge - currentTimestamp;
+
+        // Ensure timestamp doesn't go negative
+        if (currentTimestamp < 0) {
+          currentTimestamp = 0;
+          currentDuration = rightEdge;
+        }
+
+        // Ensure duration doesn't go below minimum
+        if (currentDuration < minDuration) {
+          currentDuration = minDuration;
+          currentTimestamp = rightEdge - minDuration;
+        }
+
+        // Ensure duration doesn't exceed max
+        if (currentDuration > maxDuration) {
+          currentDuration = maxDuration;
+          currentTimestamp = rightEdge - maxDuration;
+        }
+
+        // Update DOM for visual feedback
+        trackElement.style.left = `${currentTimestamp * pixelsPerMs}px`;
+        trackElement.style.width = `${currentDuration * pixelsPerMs}px`;
       }
-
-      frame.duration = newDuration;
-      trackElement.style.width = `${frame.duration * pixelsPerMs}px`;
     };
 
     const handleMouseUp = () => {
-      frame.duration = Math.round(frame.duration / 100) * 100;
-      frame.duration = Math.min(
-        Math.max(frame.duration, minDuration),
-        Math.max(timelineDurationMs - frame.timestamp, minDuration),
-      );
-      trackElement.style.width = `${frame.duration * pixelsPerMs}px`;
-      db.keyFrames.update(frame.id, { duration: frame.duration });
+      if (direction === "right") {
+        // Right trim: round duration, timestamp stays unchanged
+        currentDuration = Math.round(currentDuration / 100) * 100;
+
+        // Ensure final constraints
+        currentDuration = Math.min(
+          Math.max(currentDuration, minDuration),
+          Math.max(timelineDurationMs - currentTimestamp, minDuration),
+        );
+
+        // Update database with new duration only
+        db.keyFrames.update(frame.id, { duration: currentDuration });
+      } else {
+        // Left trim: round timestamp, recalculate duration to preserve right edge
+        const rightEdge = startTimestamp + startDuration;
+        currentTimestamp = Math.round(currentTimestamp / 100) * 100;
+        currentDuration = rightEdge - currentTimestamp;
+
+        // Ensure constraints while keeping right edge fixed
+        if (currentDuration < minDuration) {
+          currentDuration = minDuration;
+          currentTimestamp = rightEdge - minDuration;
+        }
+        if (currentDuration > maxDuration) {
+          currentDuration = maxDuration;
+          currentTimestamp = rightEdge - maxDuration;
+        }
+
+        // Update database with both timestamp and duration
+        db.keyFrames.update(frame.id, {
+          timestamp: currentTimestamp,
+          duration: currentDuration,
+        });
+      }
+
+      // Invalidate queries to trigger React re-render with new values
       queryClient.invalidateQueries({
         queryKey: queryKeys.projectPreview(projectId),
       });
@@ -481,6 +546,21 @@ export function VideoTrackView({
           {(media.mediaType === "music" || media.mediaType === "voiceover") && (
             <AudioWaveform data={media} />
           )}
+          {/* Left trim handle */}
+          <div
+            className={cn(
+              "absolute left-0 z-50 top-0 bg-black/20 group-hover:bg-black/40",
+              "rounded-md bottom-0 w-2 m-1 p-px cursor-ew-resize backdrop-blur-md text-white/40",
+              "transition-colors flex flex-col items-center justify-center text-xs tracking-tighter",
+            )}
+            onMouseDown={(e) => handleResize(e, "left")}
+          >
+            <span className="flex gap-[1px]">
+              <span className="w-px h-2 rounded bg-white/40" />
+              <span className="w-px h-2 rounded bg-white/40" />
+            </span>
+          </div>
+          {/* Right trim handle */}
           <div
             className={cn(
               "absolute right-0 z-50 top-0 bg-black/20 group-hover:bg-black/40",
