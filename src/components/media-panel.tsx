@@ -125,7 +125,8 @@ export function MediaItemRow({
             console.log("[DEBUG] FAL result:", JSON.stringify(result, null, 2));
 
             // Extract cost if available
-            const cost = (result as any).cost || (result as any).billing_info?.cost;
+            const cost =
+              (result as any).cost || (result as any).billing_info?.cost;
 
             // Download media from FAL URL and store as Blob
             let blob: Blob | undefined;
