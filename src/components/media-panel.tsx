@@ -61,6 +61,28 @@ export function MediaItemRow({
     queryFn: async () => {
       if (data.kind === "uploaded") return null;
 
+      // Check for timeout (10 minutes)
+      const TIMEOUT_MS = 10 * 60 * 1000; // 10 minutes
+      const elapsedTime = Date.now() - data.createdAt;
+
+      if (elapsedTime > TIMEOUT_MS && data.status !== "completed") {
+        console.error("[DEBUG] Task timed out after 10 minutes:", data.id);
+        await db.media.update(data.id, {
+          ...data,
+          status: "failed",
+        });
+        await queryClient.invalidateQueries({
+          queryKey: queryKeys.projectMediaItems(data.projectId),
+        });
+        toast({
+          title: t("generationFailed"),
+          description: `${t("generationFailedDesc", {
+            mediaType: data.mediaType,
+          })} (timeout)`,
+        });
+        return null;
+      }
+
       const provider = data.provider || "fal";
       console.log(
         "[DEBUG] Polling - provider:",

@@ -462,7 +462,14 @@ export async function extractVideoThumbnail(
 ): Promise<Blob | null> {
   try {
     const video = document.createElement("video");
-    video.src = videoUrl;
+
+    // Use proxy for external URLs to avoid CORS issues
+    if (videoUrl.startsWith("blob:")) {
+      video.src = videoUrl;
+    } else {
+      video.src = `${window.location.origin}/api/download?url=${encodeURIComponent(videoUrl)}`;
+    }
+
     video.crossOrigin = "anonymous";
     video.muted = true;
 
