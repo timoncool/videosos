@@ -227,11 +227,8 @@ export const useJobCreator = ({
           throw error;
         }
       }
-      const runware = await getRunwareClient();
-      if (!runware) {
-        throw new Error("Runware API key not configured");
-      }
 
+      // Generate taskUUID for tracking
       const taskUUID = crypto.randomUUID();
 
       if (mediaType === "image") {
