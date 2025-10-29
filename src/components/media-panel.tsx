@@ -605,7 +605,10 @@ export function MediaItemRow({
           </div>
           {data.metadata?.cost !== undefined && (
             <span className="font-mono text-emerald-600 dark:text-emerald-400">
-              ${typeof data.metadata.cost === 'number' ? data.metadata.cost.toFixed(4) : data.metadata.cost}
+              $
+              {typeof data.metadata.cost === "number"
+                ? data.metadata.cost.toFixed(4)
+                : data.metadata.cost}
             </span>
           )}
         </div>

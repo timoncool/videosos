@@ -25,7 +25,7 @@ export function ProjectStatsDialog() {
     const totalCost = generated.reduce((sum, item) => {
       const cost = item.metadata?.cost;
       if (typeof cost === "number") return sum + cost;
-      if (typeof cost === "string") return sum + parseFloat(cost);
+      if (typeof cost === "string") return sum + Number.parseFloat(cost);
       return sum;
     }, 0);
 
@@ -35,7 +35,7 @@ export function ProjectStatsDialog() {
         acc[item.mediaType] = (acc[item.mediaType] || 0) + 1;
         return acc;
       },
-      {} as Record<string, number>
+      {} as Record<string, number>,
     );
 
     // Count by provider
@@ -45,7 +45,7 @@ export function ProjectStatsDialog() {
         acc[provider] = (acc[provider] || 0) + 1;
         return acc;
       },
-      {} as Record<string, number>
+      {} as Record<string, number>,
     );
 
     // Count by model (endpointId)
@@ -55,7 +55,7 @@ export function ProjectStatsDialog() {
         acc[model] = (acc[model] || 0) + 1;
         return acc;
       },
-      {} as Record<string, number>
+      {} as Record<string, number>,
     );
 
     return {
@@ -99,9 +99,7 @@ export function ProjectStatsDialog() {
                 <span className="text-2xl font-bold">
                   {stats.generatedFiles}
                 </span>
-                <span className="text-xs text-muted-foreground">
-                  Generated
-                </span>
+                <span className="text-xs text-muted-foreground">Generated</span>
               </div>
               <div className="flex flex-col gap-1 p-3 border rounded-lg">
                 <span className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
@@ -157,9 +155,7 @@ export function ProjectStatsDialog() {
                     key={model}
                     className="flex justify-between p-2 border rounded text-xs"
                   >
-                    <span className="font-mono truncate flex-1">
-                      {model}
-                    </span>
+                    <span className="font-mono truncate flex-1">{model}</span>
                     <span className="font-mono ml-2">{count}x</span>
                   </div>
                 ))}
