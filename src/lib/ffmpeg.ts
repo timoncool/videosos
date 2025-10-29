@@ -39,7 +39,19 @@ export async function exportVideoClientSide(
 
   if (onProgress) {
     ffmpeg.on("progress", ({ progress }) => {
-      onProgress(Math.min(progress * 100, 99));
+      // Validate and normalize progress value
+      // FFmpeg can return unexpected values (NaN, negative, or very large numbers)
+      if (
+        typeof progress !== "number" ||
+        !Number.isFinite(progress) ||
+        progress < 0
+      ) {
+        return;
+      }
+
+      // Clamp progress between 0 and 99
+      const normalizedProgress = Math.min(Math.max(progress * 100, 0), 99);
+      onProgress(normalizedProgress);
     });
   }
 

@@ -59,6 +59,36 @@ export function MediaItemRow({
   useQuery({
     queryKey: queryKeys.projectMedia(projectId, data.id),
     queryFn: async () => {
+      // Handle uploaded videos without thumbnails
+      if (
+        data.kind === "uploaded" &&
+        data.mediaType === "video" &&
+        !data.thumbnailBlob
+      ) {
+        console.log(
+          "[DEBUG] Generating thumbnail for uploaded video:",
+          data.id,
+        );
+        const videoUrl = resolveMediaUrl(data);
+        if (videoUrl) {
+          const thumbnailBlob = await extractVideoThumbnail(videoUrl);
+          if (thumbnailBlob) {
+            console.log("[DEBUG] Thumbnail blob generated for uploaded video:", {
+              size: thumbnailBlob.size,
+              type: thumbnailBlob.type,
+            });
+            await db.media.update(data.id, {
+              ...data,
+              thumbnailBlob: thumbnailBlob,
+            });
+            await queryClient.invalidateQueries({
+              queryKey: queryKeys.projectMediaItems(data.projectId),
+            });
+          }
+        }
+        return null;
+      }
+
       if (data.kind === "uploaded") return null;
 
       // Check for timeout (10 minutes)
@@ -452,8 +482,19 @@ export function MediaItemRow({
       (data.provider === "runware" &&
         data.status === "completed" &&
         data.mediaType === "video" &&
+        !data.thumbnailBlob) ||
+      (data.kind === "uploaded" &&
+        data.mediaType === "video" &&
         !data.thumbnailBlob),
     refetchInterval: () => {
+      // Enable polling for uploaded videos without thumbnails
+      if (
+        data.kind === "uploaded" &&
+        data.mediaType === "video" &&
+        !data.thumbnailBlob
+      ) {
+        return 5000; // Check every 5 seconds
+      }
       if (data.kind === "uploaded") return false;
       const provider = data.provider || "fal";
 
