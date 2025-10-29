@@ -431,15 +431,31 @@ export function VideoTrackView({
     };
 
     const handleMouseUp = () => {
-      // Round values
-      currentTimestamp = Math.round(currentTimestamp / 100) * 100;
-      currentDuration = Math.round(currentDuration / 100) * 100;
+      if (direction === "right") {
+        // Right trim: round duration, timestamp stays same
+        currentDuration = Math.round(currentDuration / 100) * 100;
 
-      // Ensure final constraints
-      currentDuration = Math.min(
-        Math.max(currentDuration, minDuration),
-        Math.max(timelineDurationMs - currentTimestamp, minDuration),
-      );
+        // Ensure final constraints
+        currentDuration = Math.min(
+          Math.max(currentDuration, minDuration),
+          Math.max(timelineDurationMs - currentTimestamp, minDuration),
+        );
+      } else {
+        // Left trim: round timestamp, recalculate duration to keep right edge fixed
+        const rightEdge = startTimestamp + startDuration;
+        currentTimestamp = Math.round(currentTimestamp / 100) * 100;
+        currentDuration = rightEdge - currentTimestamp;
+
+        // Ensure constraints while keeping right edge fixed
+        if (currentDuration < minDuration) {
+          currentDuration = minDuration;
+          currentTimestamp = rightEdge - minDuration;
+        }
+        if (currentDuration > maxDuration) {
+          currentDuration = maxDuration;
+          currentTimestamp = rightEdge - maxDuration;
+        }
+      }
 
       // Update database with final values
       db.keyFrames.update(frame.id, {
