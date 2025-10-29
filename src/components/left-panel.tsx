@@ -38,6 +38,7 @@ import { useEffect, useState } from "react";
 const DEFAULT_TIMELINE_DURATION_MS = PROJECT_PLACEHOLDER.duration ?? 30000;
 const MIN_TIMELINE_DURATION_MS = 1000;
 import { MediaItemPanel } from "./media-panel";
+import { ProjectStatsDialog } from "./project-stats-dialog";
 import {
   Accordion,
   AccordionContent,
@@ -370,6 +371,7 @@ export default function LeftPanel() {
                 )}
               </label>
             </Button>
+            <ProjectStatsDialog />
           </div>
           {mediaItems.length > 0 && (
             <Button

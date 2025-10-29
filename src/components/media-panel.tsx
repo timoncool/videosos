@@ -594,10 +594,20 @@ export function MediaItemRow({
             {data.input?.prompt}
           </p>
         </div>
-        <div className="flex flex-row gap-2 justify-between">
-          <span className="text-xs text-muted-foreground">
-            {formatDistanceToNow(data.createdAt, { addSuffix: true })}
-          </span>
+        <div className="flex flex-row gap-2 justify-between text-xs text-muted-foreground">
+          <div className="flex flex-col gap-0.5">
+            <span>
+              {formatDistanceToNow(data.createdAt, { addSuffix: true })}
+            </span>
+            {data.metadata?.duration && (
+              <span>Duration: {data.metadata.duration.toFixed(1)}s</span>
+            )}
+          </div>
+          {data.metadata?.cost !== undefined && (
+            <span className="font-mono text-emerald-600 dark:text-emerald-400">
+              ${typeof data.metadata.cost === 'number' ? data.metadata.cost.toFixed(4) : data.metadata.cost}
+            </span>
+          )}
         </div>
       </div>
     </div>
