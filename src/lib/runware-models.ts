@@ -510,7 +510,8 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "bytedance:2@1",
     label: "Seedance 1.0 Pro",
-    description: "High-quality video generation with advanced features. Supports text-to-video and image-to-video",
+    description:
+      "High-quality video generation with advanced features. Supports text-to-video and image-to-video",
     popularity: 5,
     category: "video",
     initialInput: {
@@ -547,7 +548,8 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "bytedance:1@1",
     label: "Seedance 1.0 Lite",
-    description: "Lightweight video generation model. Supports text-to-video and image-to-video",
+    description:
+      "Lightweight video generation model. Supports text-to-video and image-to-video",
     popularity: 4,
     category: "video",
     initialInput: {
