@@ -125,13 +125,29 @@ export function revokeBlobUrl(mediaId: string): void {
   }
 }
 
+/**
+ * Downloads a URL and converts it to a Blob for persistent storage in IndexedDB.
+ * This is used to store Runware media locally instead of relying on temporary URLs.
+ */
+export async function downloadUrlAsBlob(url: string): Promise<Blob> {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(
+      `Failed to download ${url}: ${response.status} ${response.statusText}`,
+    );
+  }
+  return await response.blob();
+}
+
 export function resolveMediaUrl(item: MediaItem | undefined): string | null {
   if (!item) return null;
 
+  // Always prefer blob over URLs (for both uploaded and generated media)
+  if (item.blob) {
+    return getOrCreateBlobUrl(item.id, item.blob);
+  }
+
   if (item.kind === "uploaded") {
-    if (item.blob) {
-      return getOrCreateBlobUrl(item.id, item.blob);
-    }
     return item.url;
   }
 

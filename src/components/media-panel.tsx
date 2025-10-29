@@ -8,7 +8,12 @@ import { useToast } from "@/hooks/use-toast";
 import { fal } from "@/lib/fal";
 import { extractVideoThumbnail, getMediaMetadata } from "@/lib/ffmpeg";
 import { getRunwareClient } from "@/lib/runware";
-import { cn, resolveMediaUrl, trackIcons } from "@/lib/utils";
+import {
+  cn,
+  downloadUrlAsBlob,
+  resolveMediaUrl,
+  trackIcons,
+} from "@/lib/utils";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import {
@@ -229,10 +234,36 @@ export function MediaItemRow({
             return null;
           }
 
+          // Download media from Runware URL and store as Blob
+          let blob: Blob | undefined;
+          const mediaUrl =
+            result.videoURL || result.imageURL || result.audioURL;
+
+          if (mediaUrl) {
+            try {
+              console.log(
+                "[DEBUG] Downloading Runware media from async task:",
+                mediaUrl,
+              );
+              blob = await downloadUrlAsBlob(mediaUrl);
+              console.log("[DEBUG] Downloaded blob from async task:", {
+                size: blob.size,
+                type: blob.type,
+              });
+            } catch (error) {
+              console.error(
+                "[DEBUG] Failed to download Runware media from async task:",
+                error,
+              );
+              // Continue without blob - will use URL as fallback
+            }
+          }
+
           currentData = {
             ...data,
             output: result,
             status: "completed",
+            blob,
           } as GeneratedMediaItem;
 
           await db.media.update(data.id, currentData);
