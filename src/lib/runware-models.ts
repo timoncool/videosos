@@ -472,7 +472,8 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "bytedance:2@2",
     label: "Seedance 1.0 Pro Fast",
-    description: "Fast variant of Seedance 1.0 Pro for high-speed video generation",
+    description:
+      "Fast variant of Seedance 1.0 Pro for high-speed video generation",
     popularity: 5,
     category: "video",
     inputAsset: ["image"],
@@ -607,7 +608,8 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "lightricks:2@0",
     label: "LTX-2 Pro",
-    description: "Professional cinematic video generation with realistic motion and precise lighting control",
+    description:
+      "Professional cinematic video generation with realistic motion and precise lighting control",
     popularity: 5,
     category: "video",
     inputAsset: ["image"],
@@ -623,8 +625,16 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     },
     availableDurations: [6, 8, 10],
     availableDimensions: [
-      { width: 1920, height: 1080, label: "16:9 (Standard / Landscape) - 1080p" },
-      { width: 2560, height: 1440, label: "16:9 (Standard / Landscape) - 1440p" },
+      {
+        width: 1920,
+        height: 1080,
+        label: "16:9 (Standard / Landscape) - 1080p",
+      },
+      {
+        width: 2560,
+        height: 1440,
+        label: "16:9 (Standard / Landscape) - 1440p",
+      },
       { width: 3840, height: 2160, label: "16:9 (Standard / Landscape) - 4K" },
     ],
     availableFps: [25, 50],
@@ -637,7 +647,8 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "lightricks:2@1",
     label: "LTX-2 Fast",
-    description: "High-speed cinematic video generation with efficient motion rendering",
+    description:
+      "High-speed cinematic video generation with efficient motion rendering",
     popularity: 5,
     category: "video",
     inputAsset: ["image"],
@@ -653,8 +664,16 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     },
     availableDurations: [6, 8, 10],
     availableDimensions: [
-      { width: 1920, height: 1080, label: "16:9 (Standard / Landscape) - 1080p" },
-      { width: 2560, height: 1440, label: "16:9 (Standard / Landscape) - 1440p" },
+      {
+        width: 1920,
+        height: 1080,
+        label: "16:9 (Standard / Landscape) - 1080p",
+      },
+      {
+        width: 2560,
+        height: 1440,
+        label: "16:9 (Standard / Landscape) - 1440p",
+      },
       { width: 3840, height: 2160, label: "16:9 (Standard / Landscape) - 4K" },
     ],
     availableFps: [25, 50],
@@ -696,7 +715,8 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "klingai:5@3",
     label: "KlingAI 2.1 Master",
-    description: "Master quality video generation. Supports text-to-video and image-to-video",
+    description:
+      "Master quality video generation. Supports text-to-video and image-to-video",
     popularity: 5,
     category: "video",
     // inputAsset removed - supports both text-to-video and image-to-video
@@ -732,7 +752,8 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "klingai:4@3",
     label: "KlingAI 2.0 Master",
-    description: "Master quality video generation. Supports text-to-video and image-to-video",
+    description:
+      "Master quality video generation. Supports text-to-video and image-to-video",
     popularity: 4,
     category: "video",
     // inputAsset removed - supports both text-to-video and image-to-video
@@ -759,7 +780,8 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "klingai:3@1",
     label: "KlingAI 1.6 Standard",
-    description: "Standard quality video generation. Supports text-to-video and image-to-video",
+    description:
+      "Standard quality video generation. Supports text-to-video and image-to-video",
     popularity: 4,
     category: "video",
     // inputAsset removed - supports both text-to-video and image-to-video
@@ -779,7 +801,8 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "minimax:4@1",
     label: "MiniMax Hailuo 2.3",
-    description: "Latest MiniMax Hailuo video generation model. Supports text-to-video and image-to-video",
+    description:
+      "Latest MiniMax Hailuo video generation model. Supports text-to-video and image-to-video",
     popularity: 5,
     category: "video",
     initialInput: {
@@ -795,7 +818,11 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     availableDurations: [6, 10],
     availableDimensions: [
       { width: 1366, height: 768, label: "4:3 (Standard / Landscape) - 768p" },
-      { width: 1920, height: 1080, label: "16:9 (Standard / Landscape) - 1080p" },
+      {
+        width: 1920,
+        height: 1080,
+        label: "16:9 (Standard / Landscape) - 1080p",
+      },
     ],
     availableFps: [24],
     defaultDuration: 6,
@@ -807,7 +834,8 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "minimax:4@2",
     label: "MiniMax Hailuo 2.3 Fast",
-    description: "Fast variant of MiniMax Hailuo 2.3 for high-speed generation. Supports text-to-video and image-to-video",
+    description:
+      "Fast variant of MiniMax Hailuo 2.3 for high-speed generation. Supports text-to-video and image-to-video",
     popularity: 5,
     category: "video",
     initialInput: {
@@ -823,7 +851,11 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     availableDurations: [6, 10],
     availableDimensions: [
       { width: 1366, height: 768, label: "4:3 (Standard / Landscape) - 768p" },
-      { width: 1920, height: 1080, label: "16:9 (Standard / Landscape) - 1080p" },
+      {
+        width: 1920,
+        height: 1080,
+        label: "16:9 (Standard / Landscape) - 1080p",
+      },
     ],
     availableFps: [24],
     defaultDuration: 6,
@@ -859,7 +891,8 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "minimax:2@1",
     label: "MiniMax 01 Director",
-    description: "MiniMax Hailuo 01 Director. Supports text-to-video and image-to-video",
+    description:
+      "MiniMax Hailuo 01 Director. Supports text-to-video and image-to-video",
     popularity: 4,
     category: "video",
     // inputAsset removed - supports both text-to-video and image-to-video
@@ -873,9 +906,7 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
       seedImage: "seedImage",
     },
     availableDurations: [6],
-    availableDimensions: [
-      { width: 1366, height: 768, label: "16:9 (768p)" },
-    ],
+    availableDimensions: [{ width: 1366, height: 768, label: "16:9 (768p)" }],
     availableFps: [25],
     defaultDuration: 6,
     defaultWidth: 1366,
@@ -950,7 +981,8 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "vidu:1@1",
     label: "Vidu Q1",
-    description: "Vidu Q1 video generation. Supports text-to-video and image-to-video",
+    description:
+      "Vidu Q1 video generation. Supports text-to-video and image-to-video",
     popularity: 4,
     category: "video",
     // inputAsset removed - supports both text-to-video and image-to-video
@@ -1000,8 +1032,16 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     availableDimensions: [
       { width: 1280, height: 720, label: "16:9 (Standard / Landscape) - 720p" },
       { width: 720, height: 1280, label: "9:16 (Standard / Portrait) - 720p" },
-      { width: 1920, height: 1080, label: "16:9 (Standard / Landscape) - 1080p" },
-      { width: 1080, height: 1920, label: "9:16 (Standard / Portrait) - 1080p" },
+      {
+        width: 1920,
+        height: 1080,
+        label: "16:9 (Standard / Landscape) - 1080p",
+      },
+      {
+        width: 1080,
+        height: 1920,
+        label: "9:16 (Standard / Portrait) - 1080p",
+      },
     ],
     availableFps: [24],
     defaultDuration: 4,
@@ -1031,8 +1071,16 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     availableDimensions: [
       { width: 1280, height: 720, label: "16:9 (Standard / Landscape) - 720p" },
       { width: 720, height: 1280, label: "9:16 (Standard / Portrait) - 720p" },
-      { width: 1920, height: 1080, label: "16:9 (Standard / Landscape) - 1080p" },
-      { width: 1080, height: 1920, label: "9:16 (Standard / Portrait) - 1080p" },
+      {
+        width: 1920,
+        height: 1080,
+        label: "16:9 (Standard / Landscape) - 1080p",
+      },
+      {
+        width: 1080,
+        height: 1920,
+        label: "9:16 (Standard / Portrait) - 1080p",
+      },
     ],
     availableFps: [24],
     defaultDuration: 8,
@@ -1062,8 +1110,16 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     availableDimensions: [
       { width: 1280, height: 720, label: "16:9 (Standard / Landscape) - 720p" },
       { width: 720, height: 1280, label: "9:16 (Standard / Portrait) - 720p" },
-      { width: 1920, height: 1080, label: "16:9 (Standard / Landscape) - 1080p" },
-      { width: 1080, height: 1920, label: "9:16 (Standard / Portrait) - 1080p" },
+      {
+        width: 1920,
+        height: 1080,
+        label: "16:9 (Standard / Landscape) - 1080p",
+      },
+      {
+        width: 1080,
+        height: 1920,
+        label: "9:16 (Standard / Portrait) - 1080p",
+      },
     ],
     availableFps: [24],
     defaultDuration: 8,
@@ -1075,7 +1131,8 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "google:3@0",
     label: "Google Veo 3",
-    description: "Google Veo 3 video generation with text and image support. Supports text-to-video and image-to-video",
+    description:
+      "Google Veo 3 video generation with text and image support. Supports text-to-video and image-to-video",
     popularity: 5,
     category: "video",
     // inputAsset removed - image is optional for text-to-video
@@ -1092,8 +1149,16 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     availableDimensions: [
       { width: 1280, height: 720, label: "16:9 (Standard / Landscape) - 720p" },
       { width: 720, height: 1280, label: "9:16 (Standard / Portrait) - 720p" },
-      { width: 1920, height: 1080, label: "16:9 (Standard / Landscape) - 1080p" },
-      { width: 1080, height: 1920, label: "9:16 (Standard / Portrait) - 1080p" },
+      {
+        width: 1920,
+        height: 1080,
+        label: "16:9 (Standard / Landscape) - 1080p",
+      },
+      {
+        width: 1080,
+        height: 1920,
+        label: "9:16 (Standard / Portrait) - 1080p",
+      },
     ],
     availableFps: [24],
     defaultDuration: 8,
@@ -1107,7 +1172,8 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "openai:3@2",
     label: "Sora 2 Pro",
-    description: "OpenAI's Sora 2 Pro with enhanced quality and resolution. Supports text-to-video and image-to-video",
+    description:
+      "OpenAI's Sora 2 Pro with enhanced quality and resolution. Supports text-to-video and image-to-video",
     cost: "~$0.5/video",
     popularity: 5,
     category: "video",
@@ -1138,7 +1204,8 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "openai:3@1",
     label: "Sora 2",
-    description: "OpenAI's Sora 2 video generation model. Supports text-to-video and image-to-video",
+    description:
+      "OpenAI's Sora 2 video generation model. Supports text-to-video and image-to-video",
     cost: "$0.4/video",
     popularity: 5,
     category: "video",
@@ -1169,7 +1236,8 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "pixverse:1@5",
     label: "PixVerse v5",
-    description: "Latest PixVerse video generation. Supports text-to-video and image-to-video",
+    description:
+      "Latest PixVerse video generation. Supports text-to-video and image-to-video",
     popularity: 5,
     category: "video",
     // inputAsset removed - supports both text-to-video and image-to-video
@@ -1187,7 +1255,8 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "pixverse:1@3",
     label: "PixVerse v4.5",
-    description: "PixVerse v4.5 video generation. Supports text-to-video and image-to-video",
+    description:
+      "PixVerse v4.5 video generation. Supports text-to-video and image-to-video",
     popularity: 4,
     category: "video",
     // inputAsset removed - supports both text-to-video and image-to-video
@@ -1230,7 +1299,8 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "runware:200@8",
     label: "Wan2.2 A14B Turbo",
-    description: "Turbo variant of Runware Wan 2.2 A14B for high-speed generation",
+    description:
+      "Turbo variant of Runware Wan 2.2 A14B for high-speed generation",
     popularity: 5,
     category: "video",
     initialInput: {

@@ -35,9 +35,9 @@ export type ApiInfo = {
   prompt?: boolean;
 
   // Model-specific constraints for UI options
-  availableDurations?: number[];  // e.g., [4, 6, 8] or [8] for fixed duration
-  availableDimensions?: Array<{width: number; height: number; label: string}>;
-  availableFps?: number[];  // e.g., [24] or [24, 25, 50]
+  availableDurations?: number[]; // e.g., [4, 6, 8] or [8] for fixed duration
+  availableDimensions?: Array<{ width: number; height: number; label: string }>;
+  availableFps?: number[]; // e.g., [24] or [24, 25, 50]
   defaultDuration?: number;
   defaultWidth?: number;
   defaultHeight?: number;

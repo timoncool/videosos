@@ -372,7 +372,8 @@ export const useJobCreator = ({
           outputFormat: input.outputFormat || "mp4",
           outputType: "URL",
           numberResults: input.numberResults || 1,
-          includeCost: input.includeCost !== undefined ? input.includeCost : true,
+          includeCost:
+            input.includeCost !== undefined ? input.includeCost : true,
           outputQuality: input.outputQuality || 99,
           deliveryMethod: "async",
         };
@@ -381,8 +382,10 @@ export const useJobCreator = ({
         if (isGoogleVeo) {
           videoParams.providerSettings = {
             google: {
-              enhancePrompt: input.enhancePrompt !== undefined ? input.enhancePrompt : true,
-              generateAudio: input.generateAudio !== undefined ? input.generateAudio : true,
+              enhancePrompt:
+                input.enhancePrompt !== undefined ? input.enhancePrompt : true,
+              generateAudio:
+                input.generateAudio !== undefined ? input.generateAudio : true,
             },
           };
         }
@@ -504,7 +507,8 @@ export const useJobCreator = ({
 
           // Download media from Runware URL and store as Blob
           let blob: Blob | undefined;
-          const mediaUrl = result.videoURL || result.imageURL || result.audioURL;
+          const mediaUrl =
+            result.videoURL || result.imageURL || result.audioURL;
 
           if (mediaUrl) {
             try {

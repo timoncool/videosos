@@ -1440,7 +1440,11 @@ export default function RightPanel({
                                   min={12}
                                   max={60}
                                   step={1}
-                                  value={generateData.fps || endpoint?.defaultFps || 24}
+                                  value={
+                                    generateData.fps ||
+                                    endpoint?.defaultFps ||
+                                    24
+                                  }
                                   onChange={(e) =>
                                     setGenerateData({
                                       fps: Number.parseInt(e.target.value),

@@ -340,10 +340,7 @@ export function MediaItemRow({
 
         if (currentData.status === "completed") {
           // Generate and store thumbnail as Blob if not already present
-          if (
-            currentData.mediaType === "video" &&
-            !currentData.thumbnailBlob
-          ) {
+          if (currentData.mediaType === "video" && !currentData.thumbnailBlob) {
             console.log("[DEBUG] Generating thumbnail blob for video");
             const videoUrl = resolveMediaUrl(currentData);
             if (videoUrl) {
