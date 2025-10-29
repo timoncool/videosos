@@ -363,6 +363,9 @@ export function VideoTrackView({
     direction: "left" | "right",
   ) => {
     e.stopPropagation();
+    const trackElement = trackRef.current;
+    if (!trackElement) return;
+
     const startX = e.clientX;
     const startTimestamp = frame.timestamp;
     const startDuration = frame.duration;
@@ -370,79 +373,85 @@ export function VideoTrackView({
     const mediaDuration = resolveDuration(media) ?? 5000;
     const maxDuration = mediaDuration;
 
+    // Track current values during drag
+    let currentTimestamp = startTimestamp;
+    let currentDuration = startDuration;
+
     const handleMouseMove = (moveEvent: MouseEvent) => {
       const deltaX = moveEvent.clientX - startX;
       const deltaMs = deltaX / pixelsPerMs;
 
       if (direction === "right") {
         // Resize from right: only change duration
-        let newDuration = startDuration + deltaMs;
+        currentDuration = startDuration + deltaMs;
 
         const availableDuration = Math.max(
-          timelineDurationMs - frame.timestamp,
+          timelineDurationMs - currentTimestamp,
           minDuration,
         );
         const maxAllowedDuration = Math.min(maxDuration, availableDuration);
 
         // Apply constraints
-        if (newDuration < minDuration) {
-          newDuration = minDuration;
-        } else if (newDuration > maxAllowedDuration) {
-          newDuration = maxAllowedDuration;
+        if (currentDuration < minDuration) {
+          currentDuration = minDuration;
+        } else if (currentDuration > maxAllowedDuration) {
+          currentDuration = maxAllowedDuration;
         }
 
-        // Update frame directly for React to re-render
-        frame.duration = newDuration;
+        // Update DOM for visual feedback
+        trackElement.style.width = `${currentDuration * pixelsPerMs}px`;
       } else {
-        // Resize from left: trim from beginning
-        // Keep right edge fixed: (timestamp + duration) stays constant
+        // Resize from left: trim from beginning, keep right edge fixed
         const rightEdge = startTimestamp + startDuration;
-        let newTimestamp = startTimestamp + deltaMs;
-        let newDuration = rightEdge - newTimestamp;
+        currentTimestamp = startTimestamp + deltaMs;
+        currentDuration = rightEdge - currentTimestamp;
 
         // Ensure timestamp doesn't go negative
-        if (newTimestamp < 0) {
-          newTimestamp = 0;
-          newDuration = rightEdge;
+        if (currentTimestamp < 0) {
+          currentTimestamp = 0;
+          currentDuration = rightEdge;
         }
 
         // Ensure duration doesn't go below minimum
-        if (newDuration < minDuration) {
-          newDuration = minDuration;
-          newTimestamp = rightEdge - minDuration;
+        if (currentDuration < minDuration) {
+          currentDuration = minDuration;
+          currentTimestamp = rightEdge - minDuration;
         }
 
         // Ensure duration doesn't exceed max
-        if (newDuration > maxDuration) {
-          newDuration = maxDuration;
-          newTimestamp = rightEdge - maxDuration;
+        if (currentDuration > maxDuration) {
+          currentDuration = maxDuration;
+          currentTimestamp = rightEdge - maxDuration;
         }
 
-        // Update frame directly for React to re-render
-        frame.timestamp = newTimestamp;
-        frame.duration = newDuration;
+        // Update DOM for visual feedback
+        trackElement.style.left = `${currentTimestamp * pixelsPerMs}px`;
+        trackElement.style.width = `${currentDuration * pixelsPerMs}px`;
       }
     };
 
     const handleMouseUp = () => {
       // Round values
-      frame.timestamp = Math.round(frame.timestamp / 100) * 100;
-      frame.duration = Math.round(frame.duration / 100) * 100;
+      currentTimestamp = Math.round(currentTimestamp / 100) * 100;
+      currentDuration = Math.round(currentDuration / 100) * 100;
 
       // Ensure final constraints
-      frame.duration = Math.min(
-        Math.max(frame.duration, minDuration),
-        Math.max(timelineDurationMs - frame.timestamp, minDuration),
+      currentDuration = Math.min(
+        Math.max(currentDuration, minDuration),
+        Math.max(timelineDurationMs - currentTimestamp, minDuration),
       );
 
       // Update database with final values
       db.keyFrames.update(frame.id, {
-        timestamp: frame.timestamp,
-        duration: frame.duration,
+        timestamp: currentTimestamp,
+        duration: currentDuration,
       });
+
+      // Invalidate queries to trigger React re-render with new values
       queryClient.invalidateQueries({
         queryKey: queryKeys.projectPreview(projectId),
       });
+
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
     };
