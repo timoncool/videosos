@@ -1078,7 +1078,7 @@ export default function RightPanel({
                             <SelectedAssetPreview
                               asset={{
                                 type: "image",
-                                fieldName: "seedImage",
+                                key: "seedImage",
                               }}
                               data={generateData}
                             />
