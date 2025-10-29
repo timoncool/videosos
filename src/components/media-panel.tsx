@@ -52,7 +52,7 @@ export function MediaItemRow({
   ...props
 }: MediaItemRowProps) {
   const t = useTranslations("app.toast");
-  const isDone = data.status === "completed";
+  const isDone = data.status === "completed" || data.status === "failed";
   const queryClient = useQueryClient();
   const projectId = useProjectId();
   const { toast } = useToast();

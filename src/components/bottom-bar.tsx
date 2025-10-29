@@ -257,7 +257,9 @@ export default function BottomBar() {
     const rect = scrollContainer.getBoundingClientRect();
     if (rect.width === 0) return;
 
-    const relativeX = event.clientX - rect.left + scrollContainer.scrollLeft;
+    // Account for mx-4 (16px margin) in timeline-container
+    const TIMELINE_MARGIN = 16;
+    const relativeX = event.clientX - rect.left + scrollContainer.scrollLeft - TIMELINE_MARGIN;
     const clampedX = Math.min(Math.max(relativeX, 0), timelineWidthPx);
     const ratio = timelineWidthPx === 0 ? 0 : clampedX / timelineWidthPx;
     const nextTimestamp = timelineDurationSeconds * ratio;

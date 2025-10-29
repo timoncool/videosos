@@ -473,13 +473,11 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     endpointId: "bytedance:2@2",
     label: "Seedance 1.0 Pro Fast",
     description:
-      "Fast variant of Seedance 1.0 Pro for high-speed video generation",
+      "Fast variant of Seedance 1.0 Pro for high-speed video generation. Supports text-to-video and image-to-video",
     popularity: 5,
     category: "video",
-    inputAsset: ["image"],
     initialInput: {
       positivePrompt: "",
-      seedImage: "",
     },
     inputMap: {
       prompt: "positivePrompt",
@@ -512,13 +510,11 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "bytedance:2@1",
     label: "Seedance 1.0 Pro",
-    description: "High-quality video generation with advanced features",
+    description: "High-quality video generation with advanced features. Supports text-to-video and image-to-video",
     popularity: 5,
     category: "video",
-    inputAsset: ["image"],
     initialInput: {
       positivePrompt: "",
-      seedImage: "",
     },
     inputMap: {
       prompt: "positivePrompt",
@@ -551,13 +547,11 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "bytedance:1@1",
     label: "Seedance 1.0 Lite",
-    description: "Lightweight video generation model",
+    description: "Lightweight video generation model. Supports text-to-video and image-to-video",
     popularity: 4,
     category: "video",
-    inputAsset: ["image"],
     initialInput: {
       positivePrompt: "",
-      seedImage: "",
     },
     inputMap: {
       prompt: "positivePrompt",
