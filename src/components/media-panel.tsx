@@ -99,10 +99,61 @@ export function MediaItemRow({
             const result = await fal.queue.result(data.endpointId, {
               requestId: data.requestId,
             });
+
+            // Download media from FAL URL and store as Blob
+            let blob: Blob | undefined;
+            let mediaUrl: string | undefined;
+
+            // Extract URL from different FAL output formats
+            if (result.data) {
+              if (
+                "video" in result.data &&
+                typeof result.data.video === "object" &&
+                result.data.video !== null &&
+                "url" in result.data.video
+              ) {
+                mediaUrl = (result.data.video as { url: string }).url;
+              } else if (
+                "images" in result.data &&
+                Array.isArray(result.data.images)
+              ) {
+                mediaUrl = result.data.images[0]?.url;
+              } else if (
+                "audio_file" in result.data &&
+                typeof result.data.audio_file === "object" &&
+                result.data.audio_file !== null &&
+                "url" in result.data.audio_file
+              ) {
+                mediaUrl = (result.data.audio_file as { url: string }).url;
+              } else if (
+                "audio" in result.data &&
+                typeof result.data.audio === "object" &&
+                result.data.audio !== null &&
+                "url" in result.data.audio
+              ) {
+                mediaUrl = (result.data.audio as { url: string }).url;
+              }
+            }
+
+            if (mediaUrl) {
+              try {
+                console.log("[DEBUG] Downloading FAL media from:", mediaUrl);
+                blob = await downloadUrlAsBlob(mediaUrl);
+                console.log("[DEBUG] Downloaded FAL blob:", {
+                  size: blob.size,
+                  type: blob.type,
+                });
+              } catch (error) {
+                console.error("[DEBUG] Failed to download FAL media:", error);
+                // Continue without blob - will use URL as fallback
+              }
+            }
+
             media = {
               ...data,
               output: result.data,
               status: "completed",
+              blob,
             };
 
             await db.media.update(data.id, media);
