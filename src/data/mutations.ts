@@ -342,7 +342,10 @@ export const useJobCreator = ({
           return runware.requestImages(imageParams);
         })()
           .then(async (response) => {
-            console.log("[DEBUG] .then() callback started, response:", !!response);
+            console.log(
+              "[DEBUG] .then() callback started, response:",
+              !!response,
+            );
             if (!response) {
               console.log("[DEBUG] No response, exiting .then()");
               return;
@@ -386,7 +389,10 @@ export const useJobCreator = ({
             console.log("[DEBUG] Is completed immediately?", isCompleted);
 
             if (isCompleted) {
-              console.log("[DEBUG] Updating MediaItem to completed, taskUUID:", taskUUID);
+              console.log(
+                "[DEBUG] Updating MediaItem to completed, taskUUID:",
+                taskUUID,
+              );
               // Update to completed status with cost metadata
               const updateResult = await db.media.update(taskUUID, {
                 status: "completed",
@@ -409,7 +415,10 @@ export const useJobCreator = ({
             }
 
             // Polling will handle pending tasks
-            console.log("[DEBUG] Invalidating queries for projectId:", projectId);
+            console.log(
+              "[DEBUG] Invalidating queries for projectId:",
+              projectId,
+            );
             await queryClient.invalidateQueries({
               queryKey: queryKeys.projectMediaItems(projectId),
             });
