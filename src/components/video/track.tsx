@@ -367,42 +367,85 @@ export function VideoTrackView({
     if (!trackElement) return;
     const startX = e.clientX;
     const startWidth = trackElement.offsetWidth;
+    const startTimestamp = frame.timestamp;
+    const startDuration = frame.duration;
     const minDuration = 1000;
     const mediaDuration = resolveDuration(media) ?? 5000;
     const maxDuration = mediaDuration;
 
     const handleMouseMove = (moveEvent: MouseEvent) => {
       const deltaX = moveEvent.clientX - startX;
-      let newWidth = startWidth + (direction === "right" ? deltaX : -deltaX);
 
-      const availableDuration = Math.max(
-        timelineDurationMs - frame.timestamp,
-        minDuration,
-      );
-      const maxAllowedDuration = Math.min(maxDuration, availableDuration);
+      if (direction === "right") {
+        // Resize from right: only change duration
+        let newWidth = startWidth + deltaX;
+        const availableDuration = Math.max(
+          timelineDurationMs - frame.timestamp,
+          minDuration,
+        );
+        const maxAllowedDuration = Math.min(maxDuration, availableDuration);
 
-      let newDuration = newWidth / pixelsPerMs;
+        let newDuration = newWidth / pixelsPerMs;
 
-      if (newDuration < minDuration) {
-        newDuration = minDuration;
-        newWidth = newDuration * pixelsPerMs;
-      } else if (newDuration > maxAllowedDuration) {
-        newDuration = maxAllowedDuration;
-        newWidth = newDuration * pixelsPerMs;
+        if (newDuration < minDuration) {
+          newDuration = minDuration;
+          newWidth = newDuration * pixelsPerMs;
+        } else if (newDuration > maxAllowedDuration) {
+          newDuration = maxAllowedDuration;
+          newWidth = newDuration * pixelsPerMs;
+        }
+
+        frame.duration = newDuration;
+        trackElement.style.width = `${frame.duration * pixelsPerMs}px`;
+      } else {
+        // Resize from left: change both timestamp and duration
+        const deltaMs = deltaX / pixelsPerMs;
+        let newTimestamp = startTimestamp + deltaMs;
+        let newDuration = startDuration - deltaMs;
+
+        // Ensure timestamp doesn't go negative
+        if (newTimestamp < 0) {
+          newTimestamp = 0;
+          newDuration = startTimestamp + startDuration;
+        }
+
+        // Ensure duration doesn't go below minimum
+        if (newDuration < minDuration) {
+          newDuration = minDuration;
+          newTimestamp = startTimestamp + startDuration - minDuration;
+        }
+
+        // Ensure duration doesn't exceed max
+        if (newDuration > maxDuration) {
+          newDuration = maxDuration;
+          newTimestamp = startTimestamp + startDuration - maxDuration;
+        }
+
+        frame.timestamp = newTimestamp;
+        frame.duration = newDuration;
+        trackElement.style.left = `${frame.timestamp * pixelsPerMs}px`;
+        trackElement.style.width = `${frame.duration * pixelsPerMs}px`;
       }
-
-      frame.duration = newDuration;
-      trackElement.style.width = `${frame.duration * pixelsPerMs}px`;
     };
 
     const handleMouseUp = () => {
+      // Round values
+      frame.timestamp = Math.round(frame.timestamp / 100) * 100;
       frame.duration = Math.round(frame.duration / 100) * 100;
+
+      // Ensure constraints
       frame.duration = Math.min(
         Math.max(frame.duration, minDuration),
         Math.max(timelineDurationMs - frame.timestamp, minDuration),
       );
+
+      trackElement.style.left = `${frame.timestamp * pixelsPerMs}px`;
       trackElement.style.width = `${frame.duration * pixelsPerMs}px`;
-      db.keyFrames.update(frame.id, { duration: frame.duration });
+
+      db.keyFrames.update(frame.id, {
+        timestamp: frame.timestamp,
+        duration: frame.duration,
+      });
       queryClient.invalidateQueries({
         queryKey: queryKeys.projectPreview(projectId),
       });
@@ -481,6 +524,21 @@ export function VideoTrackView({
           {(media.mediaType === "music" || media.mediaType === "voiceover") && (
             <AudioWaveform data={media} />
           )}
+          {/* Left trim handle */}
+          <div
+            className={cn(
+              "absolute left-0 z-50 top-0 bg-black/20 group-hover:bg-black/40",
+              "rounded-md bottom-0 w-2 m-1 p-px cursor-ew-resize backdrop-blur-md text-white/40",
+              "transition-colors flex flex-col items-center justify-center text-xs tracking-tighter",
+            )}
+            onMouseDown={(e) => handleResize(e, "left")}
+          >
+            <span className="flex gap-[1px]">
+              <span className="w-px h-2 rounded bg-white/40" />
+              <span className="w-px h-2 rounded bg-white/40" />
+            </span>
+          </div>
+          {/* Right trim handle */}
           <div
             className={cn(
               "absolute right-0 z-50 top-0 bg-black/20 group-hover:bg-black/40",
