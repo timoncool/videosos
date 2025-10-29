@@ -194,6 +194,7 @@ export async function exportVideoClientSide(
           "30",
           "-pix_fmt",
           "yuv420p",
+          "-an",
           outputFilename,
         ]);
 
@@ -403,6 +404,10 @@ export async function exportVideoClientSide(
       "output.mp4",
       "-i",
       mixedAudioFilename,
+      "-map",
+      "0:v:0",
+      "-map",
+      "1:a:0",
       "-c:v",
       "copy",
       "-c:a",
