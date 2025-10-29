@@ -341,32 +341,24 @@ export const useJobCreator = ({
           throw new Error("Runware API key not configured");
         }
 
+        // Find endpoint configuration to get defaults
+        const endpoint = RUNWARE_ENDPOINTS.find(
+          (ep) => ep.endpointId === endpointId,
+        );
+
+        // Use endpoint defaults or fallback to generic defaults
+        const defaultDuration = endpoint?.defaultDuration || 5;
+        const defaultWidth = endpoint?.defaultWidth || 1920;
+        const defaultHeight = endpoint?.defaultHeight || 1080;
+        const defaultFps = endpoint?.defaultFps || 24;
+
         const isGoogleVeo = endpointId.startsWith("google:");
-        const isMinimax = endpointId.startsWith("minimax:");
-
-        // Set default duration based on model
-        let defaultDuration = 5;
-        if (isMinimax) {
-          defaultDuration = 6;
-        } else if (isGoogleVeo) {
-          // Google Veo models support 4-8 seconds
-          defaultDuration = 4;
-        }
-
-        // Set default dimensions based on model
-        let defaultHeight = 1080;
-        let defaultWidth = 1920;
-        if (isGoogleVeo) {
-          // Google Veo models default to 720p (16:9)
-          defaultHeight = 720;
-          defaultWidth = 1280;
-        }
 
         const videoParams: any = {
           positivePrompt: input.positivePrompt || input.prompt || "",
           model: endpointId,
           duration: input.duration || defaultDuration,
-          fps: input.fps || 24,
+          fps: input.fps || defaultFps,
           height: input.height || defaultHeight,
           width: input.width || defaultWidth,
           outputFormat: input.outputFormat || "mp4",

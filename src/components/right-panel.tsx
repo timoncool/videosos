@@ -394,14 +394,31 @@ export default function RightPanel({
 
     const initialInput = endpoint?.initialInput || {};
 
+    // Add defaults for video models from endpoint configuration
+    const dataWithDefaults: any = { ...initialInput };
+    if (mediaType === "video" && endpoint) {
+      if (endpoint.defaultDuration !== undefined) {
+        dataWithDefaults.duration = endpoint.defaultDuration;
+      }
+      if (endpoint.defaultFps !== undefined) {
+        dataWithDefaults.fps = endpoint.defaultFps;
+      }
+      if (endpoint.defaultWidth !== undefined) {
+        dataWithDefaults.width = endpoint.defaultWidth;
+      }
+      if (endpoint.defaultHeight !== undefined) {
+        dataWithDefaults.height = endpoint.defaultHeight;
+      }
+    }
+
     if (
       (mediaType === "video" &&
         endpoint?.endpointId === "fal-ai/hunyuan-video") ||
       mediaType !== "video"
     ) {
-      setGenerateData({ image: null, ...initialInput });
+      setGenerateData({ image: null, ...dataWithDefaults });
     } else {
-      setGenerateData({ ...initialInput });
+      setGenerateData({ ...dataWithDefaults });
     }
 
     setEndpointId(endpoint?.endpointId ?? allEndpoints[0].endpointId);
@@ -867,7 +884,25 @@ export default function RightPanel({
                 );
 
                 const initialInput = endpoint?.initialInput || {};
-                setGenerateData({ ...initialInput });
+
+                // Add defaults for video models from endpoint configuration
+                const dataWithDefaults: any = { ...initialInput };
+                if (mediaType === "video" && endpoint) {
+                  if (endpoint.defaultDuration !== undefined) {
+                    dataWithDefaults.duration = endpoint.defaultDuration;
+                  }
+                  if (endpoint.defaultFps !== undefined) {
+                    dataWithDefaults.fps = endpoint.defaultFps;
+                  }
+                  if (endpoint.defaultWidth !== undefined) {
+                    dataWithDefaults.width = endpoint.defaultWidth;
+                  }
+                  if (endpoint.defaultHeight !== undefined) {
+                    dataWithDefaults.height = endpoint.defaultHeight;
+                  }
+                }
+
+                setGenerateData(dataWithDefaults);
               }}
             />
           </div>

@@ -1224,11 +1224,11 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
       { width: 1280, height: 720, label: "16:9 (Standard / Landscape) - 720p" },
       { width: 720, height: 1280, label: "9:16 (Standard / Portrait) - 720p" },
     ],
-    availableFps: [24],
-    defaultDuration: 8,
+    availableFps: [24, 30],
+    defaultDuration: 4,
     defaultWidth: 1280,
     defaultHeight: 720,
-    defaultFps: 24,
+    defaultFps: 30,
   },
 
   // PixVerse Video Models
