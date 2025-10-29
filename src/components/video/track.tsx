@@ -6,7 +6,13 @@ import {
 } from "@/data/queries";
 import type { MediaItem, VideoKeyFrame, VideoTrack } from "@/data/schema";
 import { useProjectId, useVideoProjectStore } from "@/data/store";
-import { cn, resolveDuration, resolveMediaUrl, trackIcons } from "@/lib/utils";
+import {
+  cn,
+  getOrCreateBlobUrl,
+  resolveDuration,
+  resolveMediaUrl,
+  trackIcons,
+} from "@/lib/utils";
 import {
   keepPreviousData,
   useMutation,
@@ -224,6 +230,10 @@ export function VideoTrackView({
       return mediaUrl;
     }
     if (media.mediaType === "video") {
+      // Prioritize thumbnailBlob over URLs
+      if (media.thumbnailBlob) {
+        return getOrCreateBlobUrl(`${media.id}-thumbnail`, media.thumbnailBlob);
+      }
       return (
         media.metadata?.thumbnail_url ||
         media.input?.image_url ||
