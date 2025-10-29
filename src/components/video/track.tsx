@@ -398,6 +398,9 @@ export function VideoTrackView({
           currentDuration = maxAllowedDuration;
         }
 
+        // Mutate frame directly so React uses updated values on re-render
+        frame.duration = currentDuration;
+
         // Update DOM for visual feedback
         trackElement.style.width = `${currentDuration * pixelsPerMs}px`;
       } else {
@@ -424,6 +427,10 @@ export function VideoTrackView({
           currentDuration = maxDuration;
           currentTimestamp = rightEdge - maxDuration;
         }
+
+        // Mutate frame directly so React uses updated values on re-render
+        frame.timestamp = currentTimestamp;
+        frame.duration = currentDuration;
 
         // Update DOM for visual feedback
         trackElement.style.left = `${currentTimestamp * pixelsPerMs}px`;
