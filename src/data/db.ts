@@ -113,8 +113,9 @@ export const db = {
         id,
       );
 
+      // Clean up blob URLs for all media items that have blobs (both uploaded and generated)
       for (const media of mediaItems) {
-        if (media.kind === "uploaded" && media.blob) {
+        if (media.blob) {
           const { revokeBlobUrl } = await import("@/lib/utils");
           revokeBlobUrl(media.id);
         }
@@ -233,7 +234,8 @@ export const db = {
       const media: MediaItem | null = await db.get("media_items", id);
       if (!media) return;
 
-      if (media.kind === "uploaded" && media.blob) {
+      // Clean up blob URL if this media item has a blob (both uploaded and generated)
+      if (media.blob) {
         const { revokeBlobUrl } = await import("@/lib/utils");
         revokeBlobUrl(id);
       }
