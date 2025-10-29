@@ -571,15 +571,23 @@ export const useJobCreator = ({
 
                     // Generate thumbnail for videos
                     if (firstResult.videoURL && mediaType === "video") {
-                      const { extractVideoThumbnail } = await import("@/lib/ffmpeg");
-                      const { getOrCreateBlobUrl } = await import("@/lib/utils");
+                      const { extractVideoThumbnail } = await import(
+                        "@/lib/ffmpeg"
+                      );
+                      const { getOrCreateBlobUrl } = await import(
+                        "@/lib/utils"
+                      );
                       const blobUrl = getOrCreateBlobUrl(taskUUID, blob);
-                      const thumbnailBlob = await extractVideoThumbnail(blobUrl);
+                      const thumbnailBlob =
+                        await extractVideoThumbnail(blobUrl);
                       if (thumbnailBlob) {
-                        console.log("[DEBUG] Video thumbnail generated in background:", {
-                          size: thumbnailBlob.size,
-                          type: thumbnailBlob.type,
-                        });
+                        console.log(
+                          "[DEBUG] Video thumbnail generated in background:",
+                          {
+                            size: thumbnailBlob.size,
+                            type: thumbnailBlob.type,
+                          },
+                        );
                         await db.media.update(taskUUID, { thumbnailBlob });
                         await queryClient.invalidateQueries({
                           queryKey: queryKeys.projectMediaItems(projectId),
@@ -587,7 +595,10 @@ export const useJobCreator = ({
                       }
                     }
                   } catch (error) {
-                    console.error("Failed to download blob or generate thumbnail:", error);
+                    console.error(
+                      "Failed to download blob or generate thumbnail:",
+                      error,
+                    );
                   }
                 })();
               }

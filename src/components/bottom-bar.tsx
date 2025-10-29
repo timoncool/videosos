@@ -452,9 +452,13 @@ export default function BottomBar() {
             />
             <div
               ref={timelineScrollRef}
-              className="relative h-full overflow-x-auto"
+              className="relative h-full overflow-x-auto scrollbar-visible"
               onWheel={handleZoomWheel}
               data-timeline-zoom={zoom}
+              style={{
+                scrollbarWidth: "thin",
+                scrollbarColor: "rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.2)",
+              }}
             >
               <div
                 ref={timelineContentRef}
