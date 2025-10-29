@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
 import { db } from "./db";
 import { queryKeys } from "./queries";
-import type { VideoProject } from "./schema";
+import type { MediaItem, VideoProject } from "./schema";
 
 export const useProjectDeleter = () => {
   const queryClient = useQueryClient();
@@ -299,7 +299,10 @@ export const useJobCreator = ({
         );
 
         // Create pending MediaItem IMMEDIATELY (before API call)
+        // Use taskUUID as id so we can find it later for updates
+        console.log("[DEBUG] Creating MediaItem with id=taskUUID:", taskUUID);
         await db.media.create({
+          id: taskUUID, // Use taskUUID as id for easy updates
           projectId,
           createdAt: Date.now(),
           mediaType,
@@ -309,7 +312,8 @@ export const useJobCreator = ({
           taskUUID,
           status: "pending",
           input,
-        });
+        } as MediaItem); // Cast to bypass Omit<MediaItem, 'id'> type
+        console.log("[DEBUG] MediaItem created with id:", taskUUID);
 
         // Note: Query invalidation will happen in onSuccess, not here
         // to avoid blocking the mutation from completing
@@ -338,7 +342,11 @@ export const useJobCreator = ({
           return runware.requestImages(imageParams);
         })()
           .then(async (response) => {
-            if (!response) return;
+            console.log("[DEBUG] .then() callback started, response:", !!response);
+            if (!response) {
+              console.log("[DEBUG] No response, exiting .then()");
+              return;
+            }
             console.log(
               "[DEBUG] Runware requestImages - SUCCESS:",
               JSON.stringify(response, null, 2),
@@ -349,6 +357,12 @@ export const useJobCreator = ({
               ? response
               : [response];
             const firstResult = responseArray[0] as any;
+
+            console.log("[DEBUG] firstResult extracted:", {
+              hasError: !!firstResult?.error,
+              hasImageURL: !!firstResult?.imageURL,
+              taskUUID: firstResult?.taskUUID,
+            });
 
             if (firstResult?.error || firstResult?.status === "error") {
               const errorObj = firstResult.error || firstResult;
@@ -369,9 +383,12 @@ export const useJobCreator = ({
             // Check if completed immediately
             const isCompleted = firstResult?.imageURL;
 
+            console.log("[DEBUG] Is completed immediately?", isCompleted);
+
             if (isCompleted) {
+              console.log("[DEBUG] Updating MediaItem to completed, taskUUID:", taskUUID);
               // Update to completed status with cost metadata
-              await db.media.update(taskUUID, {
+              const updateResult = await db.media.update(taskUUID, {
                 status: "completed",
                 output: firstResult,
                 metadata: {
@@ -379,6 +396,7 @@ export const useJobCreator = ({
                   taskUUID: firstResult.taskUUID,
                 },
               });
+              console.log("[DEBUG] MediaItem update result:", updateResult);
 
               // Download blob in background
               if (firstResult.imageURL) {
@@ -391,9 +409,11 @@ export const useJobCreator = ({
             }
 
             // Polling will handle pending tasks
+            console.log("[DEBUG] Invalidating queries for projectId:", projectId);
             await queryClient.invalidateQueries({
               queryKey: queryKeys.projectMediaItems(projectId),
             });
+            console.log("[DEBUG] Queries invalidated successfully");
           })
           .catch(async (error) => {
             console.error("[DEBUG] Runware requestImages - ERROR:", error);
@@ -458,7 +478,9 @@ export const useJobCreator = ({
         );
 
         // Create pending MediaItem IMMEDIATELY (BEFORE getting runware client)
+        // Use taskUUID as id so we can find it later for updates
         await db.media.create({
+          id: taskUUID, // Use taskUUID as id for easy updates
           projectId,
           createdAt: Date.now(),
           mediaType,
@@ -468,7 +490,7 @@ export const useJobCreator = ({
           taskUUID,
           status: "pending",
           input,
-        });
+        } as MediaItem); // Cast to bypass Omit<MediaItem, 'id'> type
 
         // Note: Query invalidation will happen in onSuccess, not here
         // to avoid blocking the mutation from completing
@@ -577,7 +599,9 @@ export const useJobCreator = ({
         );
 
         // Create pending MediaItem IMMEDIATELY (BEFORE getting runware client)
+        // Use taskUUID as id so we can find it later for updates
         await db.media.create({
+          id: taskUUID, // Use taskUUID as id for easy updates
           projectId,
           createdAt: Date.now(),
           mediaType,
@@ -587,7 +611,7 @@ export const useJobCreator = ({
           taskUUID,
           status: "pending",
           input,
-        });
+        } as MediaItem); // Cast to bypass Omit<MediaItem, 'id'> type
 
         // Note: Query invalidation will happen in onSuccess, not here
         // to avoid blocking the mutation from completing
