@@ -91,6 +91,7 @@
       "back": "Back",
       "select": "Select",
       "upload": "Upload",
+      "optional": "Optional",
       "removeMedia": "Remove media",
       "imaginePlaceholder": "Imagine...",
       "enhancePrompt": "Enhance Prompt",

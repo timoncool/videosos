@@ -993,6 +993,118 @@ export default function RightPanel({
               </div>
             );
           })}
+          {/* Optional image field for models without required inputAsset but with inputMap support */}
+          {(!endpoint?.inputAsset || endpoint.inputAsset.length === 0) &&
+            endpoint?.inputMap &&
+            (endpoint.inputMap.image ||
+              endpoint.inputMap.seedImage ||
+              endpoint.inputMap.image_url) && (
+              <div className="flex w-full">
+                <div className="flex flex-col w-full">
+                  <div className="flex justify-between">
+                    <h4 className="capitalize text-muted-foreground mb-2">
+                      {t("image")} ({t("optional").toLowerCase()})
+                    </h4>
+                    {tab === "asset-image" && (
+                      <Button
+                        variant="ghost"
+                        onClick={() => setTab("generation")}
+                        size="sm"
+                      >
+                        <ArrowLeft /> {t("back")}
+                      </Button>
+                    )}
+                  </div>
+                  {(tab === "generation" || tab !== "asset-image") && (
+                    <>
+                      {!generateData.seedImage && (
+                        <div className="flex flex-col gap-2 justify-between">
+                          <Button
+                            variant="ghost"
+                            onClick={() => {
+                              setTab("asset-image");
+                              setAssetMediaType("image");
+                            }}
+                            className="cursor-pointer min-h-[30px] flex flex-col items-center justify-center border border-dashed border-border rounded-md px-4"
+                          >
+                            <span className="text-muted-foreground text-xs text-center text-nowrap">
+                              {t("select")}
+                            </span>
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            disabled={isUploading}
+                            className="cursor-pointer min-h-[30px] flex flex-col items-center justify-center border border-dashed border-border rounded-md px-4"
+                            asChild
+                          >
+                            <label htmlFor="optionalImageUploadButton">
+                              <Input
+                                id="optionalImageUploadButton"
+                                type="file"
+                                className="hidden"
+                                onChange={handleFileUpload}
+                                multiple={false}
+                                disabled={isUploading}
+                                accept="image/*"
+                              />
+                              {isUploading ? (
+                                <LoaderCircleIcon className="w-4 h-4 opacity-50 animate-spin" />
+                              ) : (
+                                <span className="text-muted-foreground text-xs text-center text-nowrap">
+                                  {t("upload")}
+                                </span>
+                              )}
+                            </label>
+                          </Button>
+                        </div>
+                      )}
+                      {generateData.seedImage && (
+                        <div className="cursor-pointer overflow-hidden relative w-full flex flex-col items-center justify-center border border-dashed border-border rounded-md">
+                          <WithTooltip tooltip={t("removeMedia")}>
+                            <button
+                              type="button"
+                              className="p-1 rounded hover:bg-black/50 absolute top-1 z-50 bg-black/80 right-1 group-hover:text-white"
+                              onClick={() =>
+                                setGenerateData({
+                                  seedImage: undefined,
+                                })
+                              }
+                            >
+                              <TrashIcon className="w-3 h-3 stroke-2" />
+                            </button>
+                          </WithTooltip>
+                          {generateData.seedImage && (
+                            <SelectedAssetPreview
+                              asset={{
+                                type: "image",
+                                fieldName: "seedImage",
+                              }}
+                              data={generateData}
+                            />
+                          )}
+                        </div>
+                      )}
+                    </>
+                  )}
+                  {tab === "asset-image" && (
+                    <div className="flex items-center gap-2 flex-wrap overflow-y-auto max-h-80 divide-y divide-border">
+                      {mediaItems
+                        .filter((media) => media.mediaType === "image")
+                        .map((job) => (
+                          <MediaItemRow
+                            draggable={false}
+                            key={job.id}
+                            data={job}
+                            onOpen={handleSelectMedia}
+                            className="cursor-pointer"
+                          />
+                        ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           {endpoint?.prompt !== false && (
             <div className="relative bg-border rounded-lg pb-10 placeholder:text-base w-full  resize-none">
               <Textarea
