@@ -609,13 +609,12 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     endpointId: "lightricks:2@0",
     label: "LTX-2 Pro",
     description:
-      "Professional cinematic video generation with realistic motion and precise lighting control",
+      "Professional cinematic video generation with realistic motion and precise lighting control. Supports text-to-video and image-to-video",
     popularity: 5,
     category: "video",
-    inputAsset: ["image"],
+    // inputAsset removed - supports both text-to-video and image-to-video
     initialInput: {
       positivePrompt: "",
-      seedImage: "",
     },
     inputMap: {
       prompt: "positivePrompt",
@@ -648,13 +647,12 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     endpointId: "lightricks:2@1",
     label: "LTX-2 Fast",
     description:
-      "High-speed cinematic video generation with efficient motion rendering",
+      "High-speed cinematic video generation with efficient motion rendering. Supports text-to-video and image-to-video",
     popularity: 5,
     category: "video",
-    inputAsset: ["image"],
+    // inputAsset removed - supports both text-to-video and image-to-video
     initialInput: {
       positivePrompt: "",
-      seedImage: "",
     },
     inputMap: {
       prompt: "positivePrompt",

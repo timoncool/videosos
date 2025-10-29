@@ -405,33 +405,98 @@ export const useJobCreator = ({
           videoParams,
         );
 
-        try {
-          const response = await runware.videoInference(videoParams);
-          console.log("[DEBUG] videoInference response:", response);
+        // Create pending MediaItem IMMEDIATELY (before API call)
+        await db.media.create({
+          projectId,
+          createdAt: Date.now(),
+          mediaType,
+          kind: "generated",
+          provider: "runware",
+          endpointId,
+          taskUUID,
+          status: "pending",
+          input,
+        });
 
-          // Check if response contains an error (Runware SDK doesn't throw)
-          const responseArray = Array.isArray(response) ? response : [response];
-          const firstResult = responseArray[0] as any;
+        // Invalidate queries so UI updates immediately
+        await queryClient.invalidateQueries({
+          queryKey: queryKeys.projectMediaItems(projectId),
+        });
 
-          if (firstResult?.error || firstResult?.status === "error") {
-            const errorObj = firstResult.error || firstResult;
-            const errorMessage =
-              errorObj.message ||
-              errorObj.responseContent ||
-              "Video generation failed";
-            console.error("[DEBUG] videoInference returned error:", errorObj);
-            throw new Error(errorMessage);
-          }
+        // Call API in background (non-blocking)
+        runware
+          .videoInference(videoParams)
+          .then(async (response) => {
+            console.log("[DEBUG] videoInference response:", response);
 
-          return {
-            taskUUID,
-            data: response,
-          };
-        } catch (error) {
-          console.error("[DEBUG] videoInference ERROR:", error);
-          throw error;
-        }
-      } else if (mediaType === "music" || mediaType === "voiceover") {
+            // Check if response contains an error
+            const responseArray = Array.isArray(response)
+              ? response
+              : [response];
+            const firstResult = responseArray[0] as any;
+
+            if (firstResult?.error || firstResult?.status === "error") {
+              const errorObj = firstResult.error || firstResult;
+              const errorMessage =
+                errorObj.message ||
+                errorObj.responseContent ||
+                "Video generation failed";
+              console.error("[DEBUG] videoInference returned error:", errorObj);
+
+              // Update MediaItem to failed status
+              await db.media.update(taskUUID, { status: "failed" });
+              await queryClient.invalidateQueries({
+                queryKey: queryKeys.projectMediaItems(projectId),
+              });
+
+              // Show error toast manually (mutation already succeeded)
+              throw new Error(errorMessage);
+            }
+
+            // Check if completed immediately
+            const isCompleted =
+              firstResult && (firstResult.videoURL || firstResult.imageURL);
+
+            if (isCompleted) {
+              // Update to completed status with cost metadata
+              await db.media.update(taskUUID, {
+                status: "completed",
+                output: firstResult,
+                metadata: {
+                  cost: firstResult.cost,
+                  taskUUID: firstResult.taskUUID,
+                },
+              });
+
+              // Download blob in background
+              const mediaUrl = firstResult.videoURL || firstResult.imageURL;
+              if (mediaUrl) {
+                downloadUrlAsBlob(mediaUrl)
+                  .then((blob) => db.media.update(taskUUID, { blob }))
+                  .catch((error) =>
+                    console.error("Failed to download blob:", error),
+                  );
+              }
+            }
+
+            // Polling will handle pending tasks
+            await queryClient.invalidateQueries({
+              queryKey: queryKeys.projectMediaItems(projectId),
+            });
+          })
+          .catch(async (error) => {
+            console.error("[DEBUG] videoInference ERROR:", error);
+            await db.media.update(taskUUID, { status: "failed" });
+            await queryClient.invalidateQueries({
+              queryKey: queryKeys.projectMediaItems(projectId),
+            });
+          });
+
+        // Return immediately - item already created
+        return { taskUUID, immediate: true };
+      }
+
+      if (mediaType === "music" || mediaType === "voiceover") {
         const runware = await getRunwareClient();
         if (!runware) {
           throw new Error("Runware API key not configured");
@@ -505,6 +570,7 @@ export const useJobCreator = ({
       data?: unknown;
       request_id?: string;
       __input?: Record<string, unknown>;
+      immediate?: boolean;
     }) => {
       if (provider === "fal") {
         console.log("[DEBUG] FAL onSuccess data:", data);
@@ -523,6 +589,14 @@ export const useJobCreator = ({
           input: storedInput,
         });
       } else if (provider === "runware") {
+        // If immediate flag is set, MediaItem already created in mutationFn
+        if (data.immediate) {
+          console.log(
+            "[DEBUG] Runware onSuccess - item already created, skipping",
+          );
+          return;
+        }
+
         console.log(
           "[DEBUG] Runware onSuccess - full data:",
           JSON.stringify(data, null, 2),
@@ -552,6 +626,10 @@ export const useJobCreator = ({
             status: "completed",
             output: result,
             input,
+            metadata: {
+              cost: result.cost,
+              taskUUID: result.taskUUID || data.taskUUID,
+            },
           });
 
           // Download blob in background (non-blocking)
