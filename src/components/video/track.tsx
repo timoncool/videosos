@@ -401,63 +401,36 @@ export function VideoTrackView({
         // Update DOM for visual feedback
         trackElement.style.width = `${currentDuration * pixelsPerMs}px`;
       } else {
-        // Resize from left: trim from beginning, keep right edge fixed
-        const rightEdge = startTimestamp + startDuration;
-        currentTimestamp = startTimestamp + deltaMs;
-        currentDuration = rightEdge - currentTimestamp;
+        // Resize from left: trim from beginning
+        // Element position (timestamp) DOES NOT change
+        // Duration decreases when dragging right (positive deltaMs)
+        currentDuration = startDuration - deltaMs;
 
-        // Ensure timestamp doesn't go negative
-        if (currentTimestamp < 0) {
-          currentTimestamp = 0;
-          currentDuration = rightEdge;
-        }
-
-        // Ensure duration doesn't go below minimum
+        // Apply constraints
         if (currentDuration < minDuration) {
           currentDuration = minDuration;
-          currentTimestamp = rightEdge - minDuration;
-        }
-
-        // Ensure duration doesn't exceed max
-        if (currentDuration > maxDuration) {
+        } else if (currentDuration > maxDuration) {
           currentDuration = maxDuration;
-          currentTimestamp = rightEdge - maxDuration;
         }
 
         // Update DOM for visual feedback
-        trackElement.style.left = `${currentTimestamp * pixelsPerMs}px`;
+        // Position (left) stays the same, only width changes
         trackElement.style.width = `${currentDuration * pixelsPerMs}px`;
       }
     };
 
     const handleMouseUp = () => {
-      if (direction === "right") {
-        // Right trim: round duration, timestamp stays same
-        currentDuration = Math.round(currentDuration / 100) * 100;
+      // Both left and right trim: round duration, timestamp NEVER changes
+      currentDuration = Math.round(currentDuration / 100) * 100;
 
-        // Ensure final constraints
-        currentDuration = Math.min(
-          Math.max(currentDuration, minDuration),
-          Math.max(timelineDurationMs - currentTimestamp, minDuration),
-        );
-      } else {
-        // Left trim: round timestamp, recalculate duration to keep right edge fixed
-        const rightEdge = startTimestamp + startDuration;
-        currentTimestamp = Math.round(currentTimestamp / 100) * 100;
-        currentDuration = rightEdge - currentTimestamp;
-
-        // Ensure constraints while keeping right edge fixed
-        if (currentDuration < minDuration) {
-          currentDuration = minDuration;
-          currentTimestamp = rightEdge - minDuration;
-        }
-        if (currentDuration > maxDuration) {
-          currentDuration = maxDuration;
-          currentTimestamp = rightEdge - maxDuration;
-        }
-      }
+      // Ensure final constraints
+      currentDuration = Math.min(
+        Math.max(currentDuration, minDuration),
+        Math.max(timelineDurationMs - currentTimestamp, minDuration),
+      );
 
       // Update database with final values
+      // timestamp stays the same for both left and right trim
       db.keyFrames.update(frame.id, {
         timestamp: currentTimestamp,
         duration: currentDuration,
