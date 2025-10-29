@@ -73,10 +73,13 @@ export function MediaItemRow({
         if (videoUrl) {
           const thumbnailBlob = await extractVideoThumbnail(videoUrl);
           if (thumbnailBlob) {
-            console.log("[DEBUG] Thumbnail blob generated for uploaded video:", {
-              size: thumbnailBlob.size,
-              type: thumbnailBlob.type,
-            });
+            console.log(
+              "[DEBUG] Thumbnail blob generated for uploaded video:",
+              {
+                size: thumbnailBlob.size,
+                type: thumbnailBlob.type,
+              },
+            );
             await db.media.update(data.id, {
               ...data,
               thumbnailBlob: thumbnailBlob,

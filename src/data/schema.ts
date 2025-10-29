@@ -51,6 +51,7 @@ export type VideoKeyFrame = {
 export type KeyFrameData = {
   type: "prompt" | "image" | "video" | "voiceover" | "music";
   mediaId: string;
+  offset?: number;
 } & (
   | {
       type: "prompt";
