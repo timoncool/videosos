@@ -79,7 +79,7 @@ export function MediaItemRow({
             });
             await db.media.update(data.id, {
               ...data,
-              thumbnailBlob: thumbnailBlob,
+              thumbnailBlob,
             });
             await queryClient.invalidateQueries({
               queryKey: queryKeys.projectMediaItems(data.projectId),
@@ -415,7 +415,7 @@ export function MediaItemRow({
                 });
                 await db.media.update(data.id, {
                   ...currentData,
-                  thumbnailBlob: thumbnailBlob,
+                  thumbnailBlob,
                 });
                 await queryClient.invalidateQueries({
                   queryKey: queryKeys.projectMediaItems(data.projectId),
@@ -423,7 +423,7 @@ export function MediaItemRow({
 
                 currentData = {
                   ...currentData,
-                  thumbnailBlob: thumbnailBlob,
+                  thumbnailBlob,
                 } as GeneratedMediaItem;
               }
             }
