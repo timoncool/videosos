@@ -459,7 +459,7 @@ export async function getMediaMetadata(media: MediaItem) {
 
 export async function extractVideoThumbnail(
   videoUrl: string,
-): Promise<string | null> {
+): Promise<Blob | null> {
   try {
     const video = document.createElement("video");
     video.src = videoUrl;
@@ -488,7 +488,16 @@ export async function extractVideoThumbnail(
 
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    return canvas.toDataURL("image/jpeg", 0.8);
+    // Convert canvas to Blob instead of data URL
+    return new Promise<Blob | null>((resolve) => {
+      canvas.toBlob(
+        (blob) => {
+          resolve(blob);
+        },
+        "image/jpeg",
+        0.8,
+      );
+    });
   } catch (error) {
     console.error("Failed to generate video thumbnail:", error);
     return null;

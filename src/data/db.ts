@@ -115,9 +115,12 @@ export const db = {
 
       // Clean up blob URLs for all media items that have blobs (both uploaded and generated)
       for (const media of mediaItems) {
+        const { revokeBlobUrl } = await import("@/lib/utils");
         if (media.blob) {
-          const { revokeBlobUrl } = await import("@/lib/utils");
           revokeBlobUrl(media.id);
+        }
+        if (media.thumbnailBlob) {
+          revokeBlobUrl(`${media.id}-thumbnail`);
         }
       }
 
@@ -234,10 +237,13 @@ export const db = {
       const media: MediaItem | null = await db.get("media_items", id);
       if (!media) return;
 
-      // Clean up blob URL if this media item has a blob (both uploaded and generated)
+      // Clean up blob URLs if this media item has blobs (both uploaded and generated)
+      const { revokeBlobUrl } = await import("@/lib/utils");
       if (media.blob) {
-        const { revokeBlobUrl } = await import("@/lib/utils");
         revokeBlobUrl(id);
+      }
+      if (media.thumbnailBlob) {
+        revokeBlobUrl(`${id}-thumbnail`);
       }
 
       const tracks = await db.getAllFromIndex(
