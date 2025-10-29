@@ -314,10 +314,8 @@ export const useJobCreator = ({
           input,
         });
 
-        // Invalidate queries so UI updates immediately
-        await queryClient.invalidateQueries({
-          queryKey: queryKeys.projectMediaItems(projectId),
-        });
+        // Note: Query invalidation will happen in onSuccess, not here
+        // to avoid blocking the mutation from completing
 
         // Call API in background (non-blocking) - get client inside async
         (async () => {
@@ -475,10 +473,8 @@ export const useJobCreator = ({
           input,
         });
 
-        // Invalidate queries so UI updates immediately
-        await queryClient.invalidateQueries({
-          queryKey: queryKeys.projectMediaItems(projectId),
-        });
+        // Note: Query invalidation will happen in onSuccess, not here
+        // to avoid blocking the mutation from completing
 
         // Call API in background (non-blocking) - get client inside async
         (async () => {
@@ -596,10 +592,8 @@ export const useJobCreator = ({
           input,
         });
 
-        // Invalidate queries so UI updates immediately
-        await queryClient.invalidateQueries({
-          queryKey: queryKeys.projectMediaItems(projectId),
-        });
+        // Note: Query invalidation will happen in onSuccess, not here
+        // to avoid blocking the mutation from completing
 
         // Call API in background (non-blocking) - get client inside async
         (async () => {
@@ -715,8 +709,12 @@ export const useJobCreator = ({
         // If immediate flag is set, MediaItem already created in mutationFn
         if (data.immediate) {
           console.log(
-            "[DEBUG] Runware onSuccess - item already created, skipping",
+            "[DEBUG] Runware onSuccess - item already created, invalidating queries",
           );
+          // Invalidate queries to trigger UI update
+          await queryClient.invalidateQueries({
+            queryKey: queryKeys.projectMediaItems(projectId),
+          });
           return;
         }
 
