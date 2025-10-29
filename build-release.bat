@@ -124,8 +124,7 @@ echo.
 
 REM Step 7: Copy launcher files
 echo Step 7/7: Copying launcher files...
-copy /Y start.bat "release\" >nul
-copy /Y stop.bat "release\" >nul
+copy /Y start-portable.bat "release\start.bat" >nul
 copy /Y update.bat "release\" >nul
 copy /Y README-Portable.txt "release\" >nul
 copy /Y INSTALL-PORTABLE.txt "release\" >nul

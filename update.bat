@@ -14,17 +14,17 @@ if exist "node\node.exe" (
     echo [Portable Mode] Using portable Node.js
     node\node.exe --version
     echo.
-    
+
     REM Add portable Node.js to PATH for this session
     set "PATH=%~dp0node;%PATH%"
     set "PORTABLE_MODE=1"
     set "NPM_CMD=..\node\npm.cmd"
-    
+
     REM Navigate to app directory
     cd app
 ) else (
     echo [Standard Mode] Checking for system Node.js
-    
+
     REM Check for Git
     where git >nul 2>&1
     if %errorlevel% neq 0 (
@@ -35,7 +35,7 @@ if exist "node\node.exe" (
         pause
         exit /b 1
     )
-    
+
     REM Check for Node.js
     where node >nul 2>&1
     if %errorlevel% neq 0 (
@@ -46,11 +46,11 @@ if exist "node\node.exe" (
         pause
         exit /b 1
     )
-    
+
     echo Node.js found:
     node --version
     echo.
-    
+
     set "NPM_CMD=npm"
 )
 
@@ -73,7 +73,7 @@ if exist ".git" (
 ) else (
     echo Downloading latest version from GitHub...
     echo.
-    
+
     REM Download archive
     curl -L -o temp_update.zip https://github.com/timoncool/videosos/archive/refs/heads/main.zip
     if errorlevel 1 (
@@ -84,7 +84,7 @@ if exist ".git" (
         pause
         exit /b 1
     )
-    
+
     REM Extract archive
     powershell -command "Expand-Archive -Path temp_update.zip -DestinationPath temp_update -Force"
     if errorlevel 1 (
@@ -94,7 +94,7 @@ if exist ".git" (
         pause
         exit /b 1
     )
-    
+
     REM Copy files
     xcopy /E /Y /I temp_update\videosos-main\* .
     if errorlevel 1 (
@@ -105,7 +105,7 @@ if exist ".git" (
         pause
         exit /b 1
     )
-    
+
     REM Clean up temporary files
     del temp_update.zip
     rmdir /S /Q temp_update

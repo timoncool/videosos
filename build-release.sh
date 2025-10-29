@@ -71,102 +71,16 @@ echo ""
 
 # Step 5: Copy launcher files to release root
 echo "Step 5/6: Copying launcher files..."
-cp start.bat "${BUILD_DIR}/"
-cp stop.bat "${BUILD_DIR}/"
+cp start-portable.bat "${BUILD_DIR}/start.bat"
 cp update.bat "${BUILD_DIR}/"
 cp README-Portable.txt "${BUILD_DIR}/"
 cp INSTALL-PORTABLE.txt "${BUILD_DIR}/"
 echo "✓ Launcher files copied"
 echo ""
 
-# Step 6: Update launcher files for portable mode
-echo "Step 6/6: Configuring portable mode..."
-
-# Create portable start.bat
-cat > "${BUILD_DIR}/start.bat" << 'EOF'
-@echo off
-chcp 65001 >nul
-title VideoSOS - Portable Edition
-
-echo ========================================
-echo   VideoSOS v1.0.2 - Portable Edition
-echo ========================================
-echo.
-
-REM Navigate to script directory
-cd /d "%~dp0"
-
-REM Check for portable Node.js
-if exist "node\node.exe" (
-    echo [Portable Mode] Using bundled Node.js
-    node\node.exe --version
-    echo.
-
-    REM Set PATH to use portable Node.js
-    set "PATH=%~dp0node;%PATH%"
-    set "NODE_PATH=%~dp0node"
-
-    REM Navigate to app directory
-    cd app
-) else (
-    echo ERROR: Portable Node.js not found!
-    echo.
-    echo This is a portable build that requires Node.js to be bundled.
-    echo Please download the complete portable package from GitHub releases.
-    echo.
-    echo Alternative: Install Node.js from https://nodejs.org/
-    echo.
-    pause
-    exit /b 1
-)
-
-echo Starting VideoSOS...
-echo.
-echo Application will be available at: http://localhost:3000
-echo Browser will open automatically in a few seconds.
-echo.
-echo To stop the server:
-echo   - Use stop.bat
-echo   - Or press Ctrl+C in this window
-echo.
-echo ========================================
-echo.
-
-REM Start server in background and open browser
-start /B ..\node\node.exe ..\node\node_modules\npm\bin\npm-cli.js start
-timeout /t 3 /nobreak >nul
-start http://localhost:3000
-
-echo Server is running!
-echo Do not close this window while using the application.
-echo.
-pause
-EOF
-
-# Create portable stop.bat
-cat > "${BUILD_DIR}/stop.bat" << 'EOF'
-@echo off
-title VideoSOS - Stop Server
-
-echo ========================================
-echo   Stopping VideoSOS Server
-echo ========================================
-echo.
-
-REM Kill all Node.js processes
-taskkill /F /IM node.exe 2>nul
-
-if %errorlevel% equ 0 (
-    echo ✓ Server stopped successfully
-) else (
-    echo No running server found
-)
-
-echo.
-pause
-EOF
-
-echo "✓ Portable configuration complete"
+# Step 6: Done
+echo "Step 6/6: Release prepared"
+echo "✓ All files ready"
 echo ""
 
 # Step 7: Create README for completing the build
