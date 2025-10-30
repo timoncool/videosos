@@ -1401,54 +1401,78 @@ export default function RightPanel({
                         )}
                         {mediaType === "image" && (
                           <>
-                            <div className="flex flex-col gap-2">
-                              <Label className="text-xs">Steps</Label>
-                              <Input
-                                className="h-8 text-xs"
-                                type="number"
-                                min={1}
-                                max={100}
-                                step={1}
-                                value={generateData.steps || 28}
-                                onChange={(e) =>
-                                  setGenerateData({
-                                    steps: Number.parseInt(e.target.value),
-                                  })
-                                }
-                              />
-                            </div>
-                            <div className="flex flex-col gap-2">
-                              <Label className="text-xs">CFG Scale</Label>
-                              <Input
-                                className="h-8 text-xs"
-                                type="number"
-                                min={1}
-                                max={20}
-                                step={0.5}
-                                value={generateData.CFGScale || 3.5}
-                                onChange={(e) =>
-                                  setGenerateData({
-                                    CFGScale: Number.parseFloat(e.target.value),
-                                  })
-                                }
-                              />
-                            </div>
-                            <div className="flex flex-col gap-2">
-                              <Label className="text-xs">Seed</Label>
-                              <Input
-                                className="h-8 text-xs"
-                                type="number"
-                                placeholder="Random"
-                                value={generateData.seed || ""}
-                                onChange={(e) =>
-                                  setGenerateData({
-                                    seed: e.target.value
-                                      ? Number.parseInt(e.target.value)
-                                      : undefined,
-                                  })
-                                }
-                              />
-                            </div>
+                            {/* Show Steps only if model has steps parameters */}
+                            {(endpoint?.minSteps !== undefined ||
+                              endpoint?.maxSteps !== undefined ||
+                              endpoint?.defaultSteps !== undefined ||
+                              endpoint?.availableSteps !== undefined) && (
+                              <div className="flex flex-col gap-2">
+                                <Label className="text-xs">Steps</Label>
+                                <Input
+                                  className="h-8 text-xs"
+                                  type="number"
+                                  min={endpoint?.minSteps || 1}
+                                  max={endpoint?.maxSteps || 100}
+                                  step={1}
+                                  value={
+                                    generateData.steps ||
+                                    endpoint?.defaultSteps ||
+                                    28
+                                  }
+                                  onChange={(e) =>
+                                    setGenerateData({
+                                      steps: Number.parseInt(e.target.value),
+                                    })
+                                  }
+                                />
+                              </div>
+                            )}
+                            {/* Show CFG Scale only if model has guidance parameters */}
+                            {(endpoint?.minGuidanceScale !== undefined ||
+                              endpoint?.maxGuidanceScale !== undefined ||
+                              endpoint?.defaultGuidanceScale !== undefined) && (
+                              <div className="flex flex-col gap-2">
+                                <Label className="text-xs">CFG Scale</Label>
+                                <Input
+                                  className="h-8 text-xs"
+                                  type="number"
+                                  min={endpoint?.minGuidanceScale || 1}
+                                  max={endpoint?.maxGuidanceScale || 20}
+                                  step={0.5}
+                                  value={
+                                    generateData.CFGScale ||
+                                    endpoint?.defaultGuidanceScale ||
+                                    3.5
+                                  }
+                                  onChange={(e) =>
+                                    setGenerateData({
+                                      CFGScale: Number.parseFloat(
+                                        e.target.value,
+                                      ),
+                                    })
+                                  }
+                                />
+                              </div>
+                            )}
+                            {/* Show Seed only if model has seed parameter */}
+                            {endpoint?.hasSeed && (
+                              <div className="flex flex-col gap-2">
+                                <Label className="text-xs">Seed</Label>
+                                <Input
+                                  className="h-8 text-xs"
+                                  type="number"
+                                  placeholder="Random"
+                                  value={generateData.seed || ""}
+                                  onChange={(e) =>
+                                    setGenerateData({
+                                      seed: e.target.value
+                                        ? Number.parseInt(e.target.value)
+                                        : undefined,
+                                    })
+                                  }
+                                />
+                              </div>
+                            )}
                           </>
                         )}
                         {mediaType === "video" && (
