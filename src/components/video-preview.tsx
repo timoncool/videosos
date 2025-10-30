@@ -141,19 +141,22 @@ const VideoTrackSequence: React.FC<TrackSequenceProps> = ({
         const durationInFrames = Math.floor(duration / (1000 / FPS));
         const offset = (frame.data as any).offset ?? 0;
         const startFrom = Math.floor(offset / (1000 / FPS));
+        const timestampInFrames = Math.floor(frame.timestamp / (1000 / FPS));
+        
+        const clipKey = `${frame.id}:${startFrom}:${timestampInFrames}:${durationInFrames}`;
 
         return (
           <Sequence
-            key={frame.id}
-            from={Math.floor(frame.timestamp / (1000 / FPS))}
+            key={clipKey}
+            from={timestampInFrames}
             durationInFrames={durationInFrames}
             premountFor={3000}
           >
             {media.mediaType === "video" && (
-              <Video src={mediaUrl} volume={1} startFrom={startFrom} />
+              <Video key={clipKey} src={mediaUrl} volume={1} startFrom={startFrom} />
             )}
             {media.mediaType === "image" && (
-              <Img src={mediaUrl} style={{ objectFit: "cover" }} />
+              <Img key={clipKey} src={mediaUrl} style={{ objectFit: "cover" }} />
             )}
           </Sequence>
         );
@@ -179,15 +182,18 @@ const AudioTrackSequence: React.FC<TrackSequenceProps> = ({
         const durationInFrames = Math.floor(duration / (1000 / FPS));
         const offset = (frame.data as any).offset ?? 0;
         const startFrom = Math.floor(offset / (1000 / FPS));
+        const timestampInFrames = Math.floor(frame.timestamp / (1000 / FPS));
+        
+        const clipKey = `${frame.id}:${startFrom}:${timestampInFrames}:${durationInFrames}`;
 
         return (
           <Sequence
-            key={frame.id}
-            from={Math.floor(frame.timestamp / (1000 / FPS))}
+            key={clipKey}
+            from={timestampInFrames}
             durationInFrames={durationInFrames}
             premountFor={3000}
           >
-            <Audio src={audioUrl} startFrom={startFrom} />
+            <Audio key={clipKey} src={audioUrl} startFrom={startFrom} />
           </Sequence>
         );
       })}
