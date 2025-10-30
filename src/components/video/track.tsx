@@ -223,7 +223,6 @@ export function VideoTrackView({
   const mediaUrl = media ? resolveMediaUrl(media) : null;
 
   const trackRef = useRef<HTMLDivElement>(null);
-  const isResizingRef = useRef(false);
 
   const imageUrl = useMemo(() => {
     if (!media) return undefined;
@@ -279,27 +278,17 @@ export function VideoTrackView({
     };
   };
 
-  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (isResizingRef.current) {
-      console.log("[MOVE] Skipped: isResizingRef is true");
-      return;
-    }
-
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     if (
       (e.target as HTMLElement).closest(
-        'button,[role="button"],a,input,textarea,select,[data-trim-handle]',
+        'button,[role="button"],a,input,textarea,select',
       )
     ) {
-      console.log("[MOVE] Skipped: target is a trim handle or button");
       return;
     }
 
-    console.log("[MOVE] Starting move operation");
     const trackElement = trackRef.current;
     if (!trackElement) return;
-
-    trackElement.setPointerCapture(e.pointerId);
-
     const bounds = calculateBounds();
     const startX = e.clientX;
     const startLeft = trackElement.offsetLeft;
@@ -312,7 +301,7 @@ export function VideoTrackView({
       trackElement.style.left = `${timestamp * pixelsPerMs}px`;
     };
 
-    const handlePointerMove = (moveEvent: PointerEvent) => {
+    const handleMouseMove = (moveEvent: MouseEvent) => {
       const deltaX = moveEvent.clientX - startX;
       let newLeft = startLeft + deltaX;
 
@@ -341,9 +330,9 @@ export function VideoTrackView({
       db.keyFrames.update(frame.id, { timestamp: frame.timestamp });
     };
 
-    const handlePointerUp = async () => {
-      trackElement.removeEventListener("pointermove", handlePointerMove);
-      trackElement.removeEventListener("pointerup", handlePointerUp);
+    const handleMouseUp = async () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
 
       if (duplicateMode) {
         if (originalLeftStyle) {
@@ -365,45 +354,29 @@ export function VideoTrackView({
       });
     };
 
-    trackElement.addEventListener("pointermove", handlePointerMove);
-    trackElement.addEventListener("pointerup", handlePointerUp);
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
   };
 
   const handleResize = (
-    e: React.PointerEvent<HTMLDivElement>,
+    e: React.MouseEvent<HTMLDivElement>,
     direction: "left" | "right",
   ) => {
     e.stopPropagation();
-    e.preventDefault();
     const trackElement = trackRef.current;
     if (!trackElement) return;
-
-    const handleElement = e.currentTarget as HTMLElement;
-    handleElement.setPointerCapture(e.pointerId);
-
-    isResizingRef.current = true;
-
     const startX = e.clientX;
     const startTimestamp = frame.timestamp;
     const startDuration = frame.duration;
-    const startOffset = (frame.data as any).offset ?? 0;
     const minDuration = 1000;
     const mediaDuration = resolveDuration(media) ?? 5000;
     const maxDuration = mediaDuration;
 
-    console.log(`[RESIZE-${direction.toUpperCase()}] Starting resize:`, {
-      startTimestamp,
-      startDuration,
-      startOffset,
-      mediaDuration,
-      rightEdge: startTimestamp + startDuration,
-    });
-
+    // Track current values during drag
     let currentTimestamp = startTimestamp;
     let currentDuration = startDuration;
-    let currentOffset = startOffset;
 
-    const handlePointerMove = (moveEvent: PointerEvent) => {
+    const handleMouseMove = (moveEvent: MouseEvent) => {
       const deltaX = moveEvent.clientX - startX;
       const deltaMs = deltaX / pixelsPerMs;
 
@@ -425,11 +398,6 @@ export function VideoTrackView({
           currentDuration = maxAllowedDuration;
         }
 
-        // Ensure offset + duration doesn't exceed media duration
-        if (currentOffset + currentDuration > mediaDuration) {
-          currentDuration = mediaDuration - currentOffset;
-        }
-
         // Mutate frame directly so React uses updated values on re-render
         frame.duration = currentDuration;
 
@@ -442,63 +410,35 @@ export function VideoTrackView({
         currentTimestamp = startTimestamp + deltaMs;
         currentDuration = rightEdge - currentTimestamp;
 
-        const trimmedFromLeft = currentTimestamp - startTimestamp;
-        currentOffset = startOffset + trimmedFromLeft;
-
-        console.log("[RESIZE-LEFT] During drag:", {
-          deltaX,
-          deltaMs,
-          rightEdge,
-          currentTimestamp,
-          currentDuration,
-          currentOffset,
-          trimmedFromLeft,
-          computedRight: currentTimestamp + currentDuration,
-        });
-
         // Ensure timestamp doesn't go negative
         if (currentTimestamp < 0) {
           currentTimestamp = 0;
           currentDuration = rightEdge;
-          currentOffset = startOffset;
         }
 
         // Ensure duration doesn't go below minimum
         if (currentDuration < minDuration) {
           currentDuration = minDuration;
           currentTimestamp = rightEdge - minDuration;
-          currentOffset = startOffset + (currentTimestamp - startTimestamp);
         }
 
-        // Ensure offset doesn't go negative
-        if (currentOffset < 0) {
-          currentOffset = 0;
-          currentTimestamp = startTimestamp;
-          currentDuration = startDuration;
-        }
-
-        // Ensure offset + duration doesn't exceed media duration
-        if (currentOffset + currentDuration > mediaDuration) {
-          currentOffset = mediaDuration - currentDuration;
-          const actualTrimmed = currentOffset - startOffset;
-          currentTimestamp = startTimestamp + actualTrimmed;
-          currentDuration = rightEdge - currentTimestamp;
+        // Ensure duration doesn't exceed max
+        if (currentDuration > maxDuration) {
+          currentDuration = maxDuration;
+          currentTimestamp = rightEdge - maxDuration;
         }
 
         // Mutate frame directly so React uses updated values on re-render
         frame.timestamp = currentTimestamp;
         frame.duration = currentDuration;
-        (frame.data as any).offset = currentOffset;
 
-        // Update DOM for visual feedback - this prevents React from overwriting
+        // Update DOM for visual feedback
         trackElement.style.left = `${currentTimestamp * pixelsPerMs}px`;
         trackElement.style.width = `${currentDuration * pixelsPerMs}px`;
       }
     };
 
-    const handlePointerUp = () => {
-      isResizingRef.current = false;
-
+    const handleMouseUp = () => {
       if (direction === "right") {
         // Right trim: round duration, timestamp stays unchanged
         currentDuration = Math.round(currentDuration / 100) * 100;
@@ -509,59 +449,28 @@ export function VideoTrackView({
           Math.max(timelineDurationMs - currentTimestamp, minDuration),
         );
 
-        // Ensure offset + duration doesn't exceed media duration
-        if (currentOffset + currentDuration > mediaDuration) {
-          currentDuration = mediaDuration - currentOffset;
-        }
-
         // Update database with new duration only
-        db.keyFrames.update(frame.id, {
-          duration: currentDuration,
-          data: { ...frame.data, offset: currentOffset },
-        });
+        db.keyFrames.update(frame.id, { duration: currentDuration });
       } else {
         // Left trim: round timestamp, recalculate duration to preserve right edge
         const rightEdge = startTimestamp + startDuration;
         currentTimestamp = Math.round(currentTimestamp / 100) * 100;
         currentDuration = rightEdge - currentTimestamp;
 
-        const trimmedFromLeft = currentTimestamp - startTimestamp;
-        currentOffset = startOffset + trimmedFromLeft;
-
         // Ensure constraints while keeping right edge fixed
         if (currentDuration < minDuration) {
           currentDuration = minDuration;
           currentTimestamp = rightEdge - minDuration;
-          currentOffset = startOffset + (currentTimestamp - startTimestamp);
+        }
+        if (currentDuration > maxDuration) {
+          currentDuration = maxDuration;
+          currentTimestamp = rightEdge - maxDuration;
         }
 
-        // Ensure offset doesn't go negative
-        if (currentOffset < 0) {
-          currentOffset = 0;
-          currentTimestamp = startTimestamp;
-          currentDuration = startDuration;
-        }
-
-        // Ensure offset + duration doesn't exceed media duration
-        if (currentOffset + currentDuration > mediaDuration) {
-          currentOffset = Math.max(0, mediaDuration - currentDuration);
-          const actualTrimmed = currentOffset - startOffset;
-          currentTimestamp = startTimestamp + actualTrimmed;
-          currentDuration = rightEdge - currentTimestamp;
-        }
-
-        console.log("[RESIZE-LEFT] Final values:", {
-          currentTimestamp,
-          currentDuration,
-          currentOffset,
-          rightEdge: currentTimestamp + currentDuration,
-        });
-
-        // Update database with both timestamp, duration, and offset
+        // Update database with both timestamp and duration
         db.keyFrames.update(frame.id, {
           timestamp: currentTimestamp,
           duration: currentDuration,
-          data: { ...frame.data, offset: currentOffset },
         });
       }
 
@@ -569,18 +478,18 @@ export function VideoTrackView({
       queryClient.invalidateQueries({
         queryKey: queryKeys.projectPreview(projectId),
       });
-      handleElement.removeEventListener("pointermove", handlePointerMove);
-      handleElement.removeEventListener("pointerup", handlePointerUp);
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
     };
 
-    handleElement.addEventListener("pointermove", handlePointerMove);
-    handleElement.addEventListener("pointerup", handlePointerUp);
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
   };
 
   return (
     <div
       ref={trackRef}
-      onPointerDown={handlePointerDown}
+      onMouseDown={handleMouseDown}
       onContextMenu={(e) => e.preventDefault()}
       aria-checked={isSelected}
       onClick={handleOnClick}
@@ -644,29 +553,28 @@ export function VideoTrackView({
           {(media.mediaType === "music" || media.mediaType === "voiceover") && (
             <AudioWaveform data={media} />
           )}
+          {/* Left trim handle */}
+          <div
+            className={cn(
+              "absolute left-0 z-50 top-0 bg-black/20 group-hover:bg-black/40",
+              "rounded-md bottom-0 w-2 m-1 p-px cursor-ew-resize backdrop-blur-md text-white/40",
+              "transition-colors flex flex-col items-center justify-center text-xs tracking-tighter",
+            )}
+            onMouseDown={(e) => handleResize(e, "left")}
+          >
+            <span className="flex gap-[1px]">
+              <span className="w-px h-2 rounded bg-white/40" />
+              <span className="w-px h-2 rounded bg-white/40" />
+            </span>
+          </div>
           {/* Right trim handle */}
           <div
-            data-trim-handle="right"
             className={cn(
               "absolute right-0 z-50 top-0 bg-black/20 group-hover:bg-black/40",
               "rounded-md bottom-0 w-2 m-1 p-px cursor-ew-resize backdrop-blur-md text-white/40",
               "transition-colors flex flex-col items-center justify-center text-xs tracking-tighter",
             )}
-            onPointerDownCapture={(e) => {
-              e.stopPropagation();
-              isResizingRef.current = true;
-            }}
-            onPointerDown={(e) => handleResize(e, "right")}
-            onClick={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.stopPropagation();
-                e.preventDefault();
-              }
-            }}
+            onMouseDown={(e) => handleResize(e, "right")}
           >
             <span className="flex gap-[1px]">
               <span className="w-px h-2 rounded bg-white/40" />

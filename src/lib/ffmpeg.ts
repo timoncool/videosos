@@ -14,7 +14,6 @@ interface ExportKeyframe {
   duration: number;
   url: string | null;
   mediaId: string;
-  offset?: number;
 }
 
 interface ExportTrack {
@@ -157,8 +156,6 @@ export async function exportVideoClientSide(
       const isImage =
         media?.mediaType === "image" || /\.(jpg|jpeg|png|gif|webp)$/i.test(url);
 
-      const offsetSeconds = (keyframe.offset ?? 0) / 1000;
-
       if (isImage) {
         await ffmpeg.exec([
           "-loop",
@@ -186,13 +183,9 @@ export async function exportVideoClientSide(
         ]);
         videoAudioClips.push(videoAudioFilename);
       } else {
-        const videoArgs = [
-          "-ss",
-          offsetSeconds.toString(),
+        await ffmpeg.exec([
           "-i",
           inputFilename,
-        ];
-        videoArgs.push(
           "-t",
           durationSeconds.toString(),
           "-vf",
@@ -203,17 +196,12 @@ export async function exportVideoClientSide(
           "yuv420p",
           "-an",
           outputFilename,
-        );
-        await ffmpeg.exec(videoArgs);
+        ]);
 
         const videoAudioFilename = `video_audio_${clipIndex}.wav`;
-        const audioArgs = [
-          "-ss",
-          offsetSeconds.toString(),
+        await ffmpeg.exec([
           "-i",
           inputFilename,
-        ];
-        audioArgs.push(
           "-t",
           durationSeconds.toString(),
           "-vn",
@@ -222,8 +210,7 @@ export async function exportVideoClientSide(
           "-ac",
           "2",
           videoAudioFilename,
-        );
-        await ffmpeg.exec(audioArgs);
+        ]);
         videoAudioClips.push(videoAudioFilename);
       }
     }
@@ -348,14 +335,9 @@ export async function exportVideoClientSide(
           const inputFilename = `audio_track${trackIdx}_input${audioClipIndex}.${getExtension(url)}`;
           await ffmpeg.writeFile(inputFilename, audioData);
 
-          const offsetSeconds = (keyframe.offset ?? 0) / 1000;
-          const audioArgs = [
-            "-ss",
-            offsetSeconds.toString(),
+          await ffmpeg.exec([
             "-i",
             inputFilename,
-          ];
-          audioArgs.push(
             "-t",
             durationSeconds.toString(),
             "-ar",
@@ -363,8 +345,7 @@ export async function exportVideoClientSide(
             "-ac",
             "2",
             outputFilename,
-          );
-          await ffmpeg.exec(audioArgs);
+          ]);
         }
 
         trackAudioClips.push(outputFilename);

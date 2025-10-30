@@ -57,7 +57,6 @@ export function ExportDialog({ onOpenChange, ...props }: ExportDialogProps) {
                 duration: duration,
                 url: url,
                 mediaId: frame.data.mediaId,
-                offset: (frame.data as any).offset ?? 0,
               };
             })
             .filter((k): k is NonNullable<typeof k> => k !== null);
