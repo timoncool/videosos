@@ -139,6 +139,8 @@ const VideoTrackSequence: React.FC<TrackSequenceProps> = ({
 
         const duration = frame.duration || resolveDuration(media) || 5000;
         const durationInFrames = Math.floor(duration / (1000 / FPS));
+        const offset = (frame.data as any).offset ?? 0;
+        const startFrom = Math.floor(offset / (1000 / FPS));
 
         return (
           <Sequence
@@ -147,7 +149,9 @@ const VideoTrackSequence: React.FC<TrackSequenceProps> = ({
             durationInFrames={durationInFrames}
             premountFor={3000}
           >
-            {media.mediaType === "video" && <Video src={mediaUrl} volume={1} />}
+            {media.mediaType === "video" && (
+              <Video src={mediaUrl} volume={1} startFrom={startFrom} />
+            )}
             {media.mediaType === "image" && (
               <Img src={mediaUrl} style={{ objectFit: "cover" }} />
             )}
@@ -173,6 +177,8 @@ const AudioTrackSequence: React.FC<TrackSequenceProps> = ({
 
         const duration = frame.duration || resolveDuration(media) || 5000;
         const durationInFrames = Math.floor(duration / (1000 / FPS));
+        const offset = (frame.data as any).offset ?? 0;
+        const startFrom = Math.floor(offset / (1000 / FPS));
 
         return (
           <Sequence
@@ -181,7 +187,7 @@ const AudioTrackSequence: React.FC<TrackSequenceProps> = ({
             durationInFrames={durationInFrames}
             premountFor={3000}
           >
-            <Audio src={audioUrl} />
+            <Audio src={audioUrl} startFrom={startFrom} />
           </Sequence>
         );
       })}

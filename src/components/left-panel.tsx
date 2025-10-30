@@ -176,7 +176,8 @@ export default function LeftPanel() {
         if (media.mediaType === "video") {
           const videoUrl = resolveMediaUrl(media);
           if (videoUrl) {
-            thumbnailBlob = (await extractVideoThumbnail(videoUrl)) ?? undefined;
+            thumbnailBlob =
+              (await extractVideoThumbnail(videoUrl)) ?? undefined;
           }
         }
 
