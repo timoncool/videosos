@@ -182,17 +182,26 @@ function ModelEndpointPicker({
         </SelectTrigger>
         <SelectContent>
           {endpoints.map((endpoint) => {
-            // Get pricing info from schema for FAL endpoints
-            const pricingInfo =
-              endpoint.provider === "fal"
-                ? getPricingInfo(endpoint.endpointId)
-                : null;
+            let displayCost: string | null = null;
 
+            if (endpoint.provider === "fal") {
+              // Calculate estimated cost with default parameters for FAL models
+              const estimatedCost = calculateModelCost(endpoint.endpointId, {
+                duration: endpoint.defaultDuration || 5,
+                width: endpoint.defaultWidth || 1024,
+                height: endpoint.defaultHeight || 1024,
+                textLength: 100, // Default text length for estimation
+                quantity: 1,
+              });
+
+              if (estimatedCost !== null) {
+                displayCost = formatCost(estimatedCost);
+              } else if (endpoint.cost) {
+                // Fallback to hardcoded cost if calculation not possible
+                displayCost = endpoint.cost;
+              }
+            }
             // For Runware, don't show pricing in selector (shown after generation)
-            const displayCost =
-              endpoint.provider === "runware"
-                ? null
-                : pricingInfo?.displayText || endpoint.cost;
 
             return (
               <SelectItem key={endpoint.endpointId} value={endpoint.endpointId}>
@@ -204,8 +213,8 @@ function ModelEndpointPicker({
                     </Badge>
                   </div>
                   {displayCost && (
-                    <span className="text-xs text-muted-foreground ml-2">
-                      ~{displayCost}
+                    <span className="text-xs text-white/70 ml-2">
+                      {displayCost}
                     </span>
                   )}
                 </div>
@@ -1273,9 +1282,22 @@ export default function RightPanel({
                             <Label className="text-xs">Aspect Ratio</Label>
                             <Select
                               value={generateData.aspect_ratio || "16:9"}
-                              onValueChange={(value) =>
-                                setGenerateData({ aspect_ratio: value })
-                              }
+                              onValueChange={(value) => {
+                                // Update aspect ratio and calculate corresponding dimensions
+                                const dimensionsMap: Record<string, { width: number; height: number }> = {
+                                  "1:1": { width: 1024, height: 1024 },
+                                  "16:9": { width: 1024, height: 576 },
+                                  "9:16": { width: 576, height: 1024 },
+                                  "4:3": { width: 1024, height: 768 },
+                                  "3:4": { width: 768, height: 1024 },
+                                  "21:9": { width: 1024, height: 438 },
+                                };
+                                const dimensions = dimensionsMap[value];
+                                setGenerateData({
+                                  aspect_ratio: value,
+                                  ...(dimensions && { width: dimensions.width, height: dimensions.height })
+                                });
+                              }}
                             >
                               <SelectTrigger className="h-8 text-xs">
                                 <SelectValue />
