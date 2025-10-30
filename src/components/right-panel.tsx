@@ -1277,56 +1277,58 @@ export default function RightPanel({
                   <div className="flex flex-col gap-3">
                     {(mediaType === "image" || mediaType === "video") && (
                       <>
-                        {mediaType === "image" && (
-                          <div className="flex flex-col gap-2">
-                            <Label className="text-xs">Aspect Ratio</Label>
-                            <Select
-                              value={generateData.aspect_ratio || "16:9"}
-                              onValueChange={(value) => {
-                                // Update aspect ratio and calculate corresponding dimensions
-                                const dimensionsMap: Record<
-                                  string,
-                                  { width: number; height: number }
-                                > = {
-                                  "1:1": { width: 1024, height: 1024 },
-                                  "16:9": { width: 1024, height: 576 },
-                                  "9:16": { width: 576, height: 1024 },
-                                  "4:3": { width: 1024, height: 768 },
-                                  "3:4": { width: 768, height: 1024 },
-                                  "21:9": { width: 1024, height: 438 },
-                                };
-                                const dimensions = dimensionsMap[value];
-                                setGenerateData({
-                                  aspect_ratio: value,
-                                  ...(dimensions && {
-                                    width: dimensions.width,
-                                    height: dimensions.height,
-                                  }),
-                                });
-                              }}
-                            >
-                              <SelectTrigger className="h-8 text-xs">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="1:1">
-                                  1:1 (Square)
-                                </SelectItem>
-                                <SelectItem value="16:9">
-                                  16:9 (Landscape)
-                                </SelectItem>
-                                <SelectItem value="9:16">
-                                  9:16 (Portrait)
-                                </SelectItem>
-                                <SelectItem value="4:3">4:3</SelectItem>
-                                <SelectItem value="3:4">3:4</SelectItem>
-                                <SelectItem value="21:9">
-                                  21:9 (Ultrawide)
-                                </SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        )}
+                        {/* Show Aspect Ratio selector only if model doesn't have availableDimensions */}
+                        {mediaType === "image" &&
+                          !endpoint?.availableDimensions && (
+                            <div className="flex flex-col gap-2">
+                              <Label className="text-xs">Aspect Ratio</Label>
+                              <Select
+                                value={generateData.aspect_ratio || "16:9"}
+                                onValueChange={(value) => {
+                                  // Update aspect ratio and calculate corresponding dimensions
+                                  const dimensionsMap: Record<
+                                    string,
+                                    { width: number; height: number }
+                                  > = {
+                                    "1:1": { width: 1024, height: 1024 },
+                                    "16:9": { width: 1024, height: 576 },
+                                    "9:16": { width: 576, height: 1024 },
+                                    "4:3": { width: 1024, height: 768 },
+                                    "3:4": { width: 768, height: 1024 },
+                                    "21:9": { width: 1024, height: 438 },
+                                  };
+                                  const dimensions = dimensionsMap[value];
+                                  setGenerateData({
+                                    aspect_ratio: value,
+                                    ...(dimensions && {
+                                      width: dimensions.width,
+                                      height: dimensions.height,
+                                    }),
+                                  });
+                                }}
+                              >
+                                <SelectTrigger className="h-8 text-xs">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="1:1">
+                                    1:1 (Square)
+                                  </SelectItem>
+                                  <SelectItem value="16:9">
+                                    16:9 (Landscape)
+                                  </SelectItem>
+                                  <SelectItem value="9:16">
+                                    9:16 (Portrait)
+                                  </SelectItem>
+                                  <SelectItem value="4:3">4:3</SelectItem>
+                                  <SelectItem value="3:4">3:4</SelectItem>
+                                  <SelectItem value="21:9">
+                                    21:9 (Ultrawide)
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          )}
                         {endpoint?.availableDimensions &&
                         endpoint.availableDimensions.length > 0 ? (
                           <div className="flex flex-col gap-2">
