@@ -9,7 +9,10 @@ import falModelsData from "../data/fal_models_schemas.json";
 interface ModelSchema {
   id: string;
   pricing: any;
-  inputParameters: Record<string, any>;
+  inputParameters?: Record<string, any>;
+  input?: {
+    properties?: Record<string, any>;
+  };
 }
 
 interface EndpointOptions {
@@ -41,7 +44,9 @@ function extractEndpointOptions(modelId: string): EndpointOptions | null {
   if (!schema) return null;
 
   const options: EndpointOptions = {};
-  const params = schema.inputParameters;
+  // Support both formats: inputParameters (new) and input.properties (old)
+  const params = schema.inputParameters || schema.input?.properties;
+  if (!params) return null;
 
   // Extract duration options
   if (params.duration) {
