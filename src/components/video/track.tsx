@@ -644,35 +644,6 @@ export function VideoTrackView({
           {(media.mediaType === "music" || media.mediaType === "voiceover") && (
             <AudioWaveform data={media} />
           )}
-          {/* Left trim handle */}
-          <div
-            data-trim-handle="left"
-            className={cn(
-              "absolute left-0 z-50 top-0 bg-black/20 group-hover:bg-black/40",
-              "rounded-md bottom-0 w-2 m-1 p-px cursor-ew-resize backdrop-blur-md text-white/40",
-              "transition-colors flex flex-col items-center justify-center text-xs tracking-tighter",
-            )}
-            onPointerDownCapture={(e) => {
-              e.stopPropagation();
-              isResizingRef.current = true;
-            }}
-            onPointerDown={(e) => handleResize(e, "left")}
-            onClick={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.stopPropagation();
-                e.preventDefault();
-              }
-            }}
-          >
-            <span className="flex gap-[1px]">
-              <span className="w-px h-2 rounded bg-white/40" />
-              <span className="w-px h-2 rounded bg-white/40" />
-            </span>
-          </div>
           {/* Right trim handle */}
           <div
             data-trim-handle="right"
