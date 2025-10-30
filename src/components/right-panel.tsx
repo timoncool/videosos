@@ -1284,7 +1284,10 @@ export default function RightPanel({
                               value={generateData.aspect_ratio || "16:9"}
                               onValueChange={(value) => {
                                 // Update aspect ratio and calculate corresponding dimensions
-                                const dimensionsMap: Record<string, { width: number; height: number }> = {
+                                const dimensionsMap: Record<
+                                  string,
+                                  { width: number; height: number }
+                                > = {
                                   "1:1": { width: 1024, height: 1024 },
                                   "16:9": { width: 1024, height: 576 },
                                   "9:16": { width: 576, height: 1024 },
@@ -1295,7 +1298,10 @@ export default function RightPanel({
                                 const dimensions = dimensionsMap[value];
                                 setGenerateData({
                                   aspect_ratio: value,
-                                  ...(dimensions && { width: dimensions.width, height: dimensions.height })
+                                  ...(dimensions && {
+                                    width: dimensions.width,
+                                    height: dimensions.height,
+                                  }),
                                 });
                               }}
                             >
