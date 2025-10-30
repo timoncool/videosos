@@ -287,7 +287,7 @@ export function VideoTrackView({
       return;
     }
 
-    console.debug('[DRAG] Starting drag operation');
+    console.debug("[DRAG] Starting drag operation");
     const trackElement = trackRef.current;
     if (!trackElement) return;
     const bounds = calculateBounds();
