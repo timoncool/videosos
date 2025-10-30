@@ -22,6 +22,29 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     inputMap: {
       prompt: "positivePrompt",
     },
+    hasNegativePrompt: true,
+    availableDimensions: [
+      // 1K
+      { width: 1024, height: 1024, label: "1024×1024 (1:1) - 1K" },
+      // 2K
+      { width: 2048, height: 2048, label: "2048×2048 (1:1) - 2K" },
+      { width: 2304, height: 1728, label: "2304×1728 (4:3) - 2K" },
+      { width: 1728, height: 2304, label: "1728×2304 (3:4) - 2K" },
+      { width: 2560, height: 1440, label: "2560×1440 (16:9) - 2K" },
+      { width: 1440, height: 2560, label: "1440×2560 (9:16) - 2K" },
+      { width: 2496, height: 1664, label: "2496×1664 (3:2) - 2K" },
+      { width: 1664, height: 2496, label: "1664×2496 (2:3) - 2K" },
+      { width: 3024, height: 1296, label: "3024×1296 (21:9) - 2K" },
+      // 4K
+      { width: 4096, height: 4096, label: "4096×4096 (1:1) - 4K" },
+      { width: 4608, height: 3456, label: "4608×3456 (4:3) - 4K" },
+      { width: 3456, height: 4608, label: "3456×4608 (3:4) - 4K" },
+      { width: 5120, height: 2880, label: "5120×2880 (16:9) - 4K" },
+      { width: 2880, height: 5120, label: "2880×5120 (9:16) - 4K" },
+      { width: 4992, height: 3328, label: "4992×3328 (3:2) - 4K" },
+      { width: 3328, height: 4992, label: "3328×4992 (2:3) - 4K" },
+      { width: 6048, height: 2592, label: "6048×2592 (21:9) - 4K" },
+    ],
   },
   {
     provider: "runware",
@@ -105,6 +128,22 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     description: "Multimodal image generation from Qwen",
     popularity: 4,
     category: "image",
+    hasNegativePrompt: true,
+    availableSteps: { min: 1, max: 100 },
+    defaultSteps: 20,
+    availableCFGScale: { min: 0, max: 50 },
+    defaultCFGScale: 2.5,
+    availableDimensions: [
+      { width: 1024, height: 1024, label: "1024×1024 (1:1) - Square" },
+      { width: 2389, height: 1024, label: "2389×1024 (21:9) - Ultra-Wide" },
+      { width: 1824, height: 1024, label: "1824×1024 (16:9) - Wide" },
+      { width: 1408, height: 1024, label: "1408×1024 (4:3) - Standard" },
+      { width: 1536, height: 1024, label: "1536×1024 (3:2) - Classic" },
+      { width: 1024, height: 1536, label: "1024×1536 (2:3) - Classic Portrait" },
+      { width: 1024, height: 1408, label: "1024×1408 (3:4) - Standard Portrait" },
+      { width: 1024, height: 1824, label: "1024×1824 (9:16) - Tall" },
+      { width: 1024, height: 2389, label: "1024×2389 (9:21) - Ultra-Tall" },
+    ],
   },
   {
     provider: "runware",
@@ -1244,6 +1283,36 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
       image_url: "seedImage",
       seedImage: "seedImage",
     },
+    hasNegativePrompt: true,
+    availableDurations: [5, 8],
+    defaultDuration: 5,
+    availableDimensions: [
+      // 16:9 (Landscape)
+      { width: 640, height: 360, label: "640×360 (16:9) - 360p" },
+      { width: 960, height: 540, label: "960×540 (16:9) - 540p" },
+      { width: 1280, height: 720, label: "1280×720 (16:9) - 720p" },
+      { width: 1920, height: 1080, label: "1920×1080 (16:9) - 1080p" },
+      // 4:3 (Standard)
+      { width: 480, height: 360, label: "480×360 (4:3) - 360p" },
+      { width: 720, height: 540, label: "720×540 (4:3) - 540p" },
+      { width: 960, height: 720, label: "960×720 (4:3) - 720p" },
+      { width: 1440, height: 1080, label: "1440×1080 (4:3) - 1080p" },
+      // 1:1 (Square)
+      { width: 360, height: 360, label: "360×360 (1:1) - 360p" },
+      { width: 540, height: 540, label: "540×540 (1:1) - 540p" },
+      { width: 720, height: 720, label: "720×720 (1:1) - 720p" },
+      { width: 1080, height: 1080, label: "1080×1080 (1:1) - 1080p" },
+      // 3:4 (Portrait)
+      { width: 360, height: 480, label: "360×480 (3:4) - 360p" },
+      { width: 540, height: 720, label: "540×720 (3:4) - 540p" },
+      { width: 720, height: 960, label: "720×960 (3:4) - 720p" },
+      { width: 1080, height: 1440, label: "1080×1440 (3:4) - 1080p" },
+      // 9:16 (Tall)
+      { width: 360, height: 640, label: "360×640 (9:16) - 360p" },
+      { width: 540, height: 960, label: "540×960 (9:16) - 540p" },
+      { width: 720, height: 1280, label: "720×1280 (9:16) - 720p" },
+      { width: 1080, height: 1920, label: "1080×1920 (9:16) - 1080p" },
+    ],
   },
   {
     provider: "runware",
