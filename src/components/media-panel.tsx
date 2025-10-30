@@ -5,7 +5,7 @@ import { queryKeys } from "@/data/queries";
 import type { MediaItem } from "@/data/schema";
 import { useProjectId, useVideoProjectStore } from "@/data/store";
 import { useToast } from "@/hooks/use-toast";
-import { fal, calculateModelCost } from "@/lib/fal";
+import { calculateModelCost, fal } from "@/lib/fal";
 import { extractVideoThumbnail, getMediaMetadata } from "@/lib/ffmpeg";
 import { getRunwareClient } from "@/lib/runware";
 import {
@@ -164,7 +164,8 @@ export function MediaItemRow({
               duration: inputParams.duration,
               width: inputParams.width,
               height: inputParams.height,
-              textLength: inputParams.prompt?.length || inputParams.text?.length || 0,
+              textLength:
+                inputParams.prompt?.length || inputParams.text?.length || 0,
               quantity: 1,
             });
 
