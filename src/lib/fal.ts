@@ -115,44 +115,44 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     initialInput: {
       prompt: "",
       image_url: "",
-      availableDimensions: [
-        {
-          width: 1024,
-          height: 438,
-          label: "1024x438 (21:9)",
-        },
-        {
-          width: 1024,
-          height: 576,
-          label: "1024x576 (16:9)",
-        },
-        {
-          width: 1024,
-          height: 768,
-          label: "1024x768 (4:3)",
-        },
-        {
-          width: 1024,
-          height: 1024,
-          label: "1024x1024 (1:1)",
-        },
-        {
-          width: 768,
-          height: 1024,
-          label: "768x1024 (3:4)",
-        },
-        {
-          width: 576,
-          height: 1024,
-          label: "576x1024 (9:16)",
-        },
-        {
-          width: 438,
-          height: 1024,
-          label: "438x1024 (9:21)",
-        },
-      ],
     },
+    availableDimensions: [
+      {
+        width: 1024,
+        height: 438,
+        label: "1024x438 (21:9)",
+      },
+      {
+        width: 1024,
+        height: 576,
+        label: "1024x576 (16:9)",
+      },
+      {
+        width: 1024,
+        height: 768,
+        label: "1024x768 (4:3)",
+      },
+      {
+        width: 1024,
+        height: 1024,
+        label: "1024x1024 (1:1)",
+      },
+      {
+        width: 768,
+        height: 1024,
+        label: "768x1024 (3:4)",
+      },
+      {
+        width: 576,
+        height: 1024,
+        label: "576x1024 (9:16)",
+      },
+      {
+        width: 438,
+        height: 1024,
+        label: "438x1024 (9:21)",
+      },
+    ],
   },
   {
     provider: "fal",
@@ -164,39 +164,39 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     category: "image",
     initialInput: {
       prompt: "",
-      availableDimensions: [
-        {
-          width: 1024,
-          height: 438,
-          label: "1024x438 (21:9)",
-        },
-        {
-          width: 1024,
-          height: 1024,
-          label: "1024x1024 (1:1)",
-        },
-        {
-          width: 1024,
-          height: 768,
-          label: "1024x768 (4:3)",
-        },
-        {
-          width: 768,
-          height: 1024,
-          label: "768x1024 (3:4)",
-        },
-        {
-          width: 1024,
-          height: 576,
-          label: "1024x576 (16:9)",
-        },
-        {
-          width: 576,
-          height: 1024,
-          label: "576x1024 (9:16)",
-        },
-      ],
     },
+    availableDimensions: [
+      {
+        width: 1024,
+        height: 438,
+        label: "1024x438 (21:9)",
+      },
+      {
+        width: 1024,
+        height: 1024,
+        label: "1024x1024 (1:1)",
+      },
+      {
+        width: 1024,
+        height: 768,
+        label: "1024x768 (4:3)",
+      },
+      {
+        width: 768,
+        height: 1024,
+        label: "768x1024 (3:4)",
+      },
+      {
+        width: 1024,
+        height: 576,
+        label: "1024x576 (16:9)",
+      },
+      {
+        width: 576,
+        height: 1024,
+        label: "576x1024 (9:16)",
+      },
+    ],
   },
   {
     provider: "fal",
@@ -421,34 +421,34 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     initialInput: {
       prompt:
         "An ultra-detailed macro photograph of a butterfly wing showing intricate patterns and iridescent colors with perfect focus and lighting",
-      availableDimensions: [
-        {
-          width: 1024,
-          height: 1024,
-          label: "1024x1024 (1:1)",
-        },
-        {
-          width: 1024,
-          height: 576,
-          label: "1024x576 (16:9)",
-        },
-        {
-          width: 576,
-          height: 1024,
-          label: "576x1024 (9:16)",
-        },
-        {
-          width: 768,
-          height: 1024,
-          label: "768x1024 (3:4)",
-        },
-        {
-          width: 1024,
-          height: 768,
-          label: "1024x768 (4:3)",
-        },
-      ],
     },
+    availableDimensions: [
+      {
+        width: 1024,
+        height: 1024,
+        label: "1024x1024 (1:1)",
+      },
+      {
+        width: 1024,
+        height: 576,
+        label: "1024x576 (16:9)",
+      },
+      {
+        width: 576,
+        height: 1024,
+        label: "576x1024 (9:16)",
+      },
+      {
+        width: 768,
+        height: 1024,
+        label: "768x1024 (3:4)",
+      },
+      {
+        width: 1024,
+        height: 768,
+        label: "1024x768 (4:3)",
+      },
+    ],
   },
   {
     provider: "fal",
@@ -461,34 +461,34 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     category: "image",
     initialInput: {
       prompt: "",
-      availableDimensions: [
-        {
-          width: 1024,
-          height: 1024,
-          label: "1024x1024 (1:1)",
-        },
-        {
-          width: 1024,
-          height: 576,
-          label: "1024x576 (16:9)",
-        },
-        {
-          width: 576,
-          height: 1024,
-          label: "576x1024 (9:16)",
-        },
-        {
-          width: 768,
-          height: 1024,
-          label: "768x1024 (3:4)",
-        },
-        {
-          width: 1024,
-          height: 768,
-          label: "1024x768 (4:3)",
-        },
-      ],
     },
+    availableDimensions: [
+      {
+        width: 1024,
+        height: 1024,
+        label: "1024x1024 (1:1)",
+      },
+      {
+        width: 1024,
+        height: 576,
+        label: "1024x576 (16:9)",
+      },
+      {
+        width: 576,
+        height: 1024,
+        label: "576x1024 (9:16)",
+      },
+      {
+        width: 768,
+        height: 1024,
+        label: "768x1024 (3:4)",
+      },
+      {
+        width: 1024,
+        height: 768,
+        label: "1024x768 (4:3)",
+      },
+    ],
   },
   {
     provider: "fal",
@@ -575,26 +575,26 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     category: "video",
     initialInput: {
       prompt: "",
-      availableDurations: [4, 6, 8],
-      defaultDuration: 8,
-      availableDimensions: [
-        {
-          width: 576,
-          height: 1024,
-          label: "576x1024 (9:16)",
-        },
-        {
-          width: 1024,
-          height: 576,
-          label: "1024x576 (16:9)",
-        },
-        {
-          width: 1024,
-          height: 1024,
-          label: "1024x1024 (1:1)",
-        },
-      ],
     },
+    availableDurations: [4, 6, 8],
+    defaultDuration: 8,
+    availableDimensions: [
+      {
+        width: 576,
+        height: 1024,
+        label: "576x1024 (9:16)",
+      },
+      {
+        width: 1024,
+        height: 576,
+        label: "1024x576 (16:9)",
+      },
+      {
+        width: 1024,
+        height: 1024,
+        label: "1024x1024 (1:1)",
+      },
+    ],
   },
   {
     provider: "fal",
@@ -607,26 +607,26 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     category: "video",
     initialInput: {
       prompt: "",
-      availableDurations: [4, 6, 8],
-      defaultDuration: 8,
-      availableDimensions: [
-        {
-          width: 576,
-          height: 1024,
-          label: "576x1024 (9:16)",
-        },
-        {
-          width: 1024,
-          height: 576,
-          label: "1024x576 (16:9)",
-        },
-        {
-          width: 1024,
-          height: 1024,
-          label: "1024x1024 (1:1)",
-        },
-      ],
     },
+    availableDurations: [4, 6, 8],
+    defaultDuration: 8,
+    availableDimensions: [
+      {
+        width: 576,
+        height: 1024,
+        label: "576x1024 (9:16)",
+      },
+      {
+        width: 1024,
+        height: 576,
+        label: "1024x576 (16:9)",
+      },
+      {
+        width: 1024,
+        height: 1024,
+        label: "1024x1024 (1:1)",
+      },
+    ],
   },
   {
     provider: "fal",
@@ -641,26 +641,26 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     initialInput: {
       prompt: "",
       image_url: "",
-      availableDurations: [8],
-      defaultDuration: 8,
-      availableDimensions: [
-        {
-          width: 576,
-          height: 1024,
-          label: "576x1024 (9:16)",
-        },
-        {
-          width: 1024,
-          height: 576,
-          label: "1024x576 (16:9)",
-        },
-        {
-          width: 1024,
-          height: 1024,
-          label: "1024x1024 (1:1)",
-        },
-      ],
     },
+    availableDurations: [8],
+    defaultDuration: 8,
+    availableDimensions: [
+      {
+        width: 576,
+        height: 1024,
+        label: "576x1024 (9:16)",
+      },
+      {
+        width: 1024,
+        height: 576,
+        label: "1024x576 (16:9)",
+      },
+      {
+        width: 1024,
+        height: 1024,
+        label: "1024x1024 (1:1)",
+      },
+    ],
   },
   {
     provider: "fal",
@@ -675,26 +675,26 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     initialInput: {
       prompt: "",
       image_url: "",
-      availableDurations: [8],
-      defaultDuration: 8,
-      availableDimensions: [
-        {
-          width: 576,
-          height: 1024,
-          label: "576x1024 (9:16)",
-        },
-        {
-          width: 1024,
-          height: 576,
-          label: "1024x576 (16:9)",
-        },
-        {
-          width: 1024,
-          height: 1024,
-          label: "1024x1024 (1:1)",
-        },
-      ],
     },
+    availableDurations: [8],
+    defaultDuration: 8,
+    availableDimensions: [
+      {
+        width: 576,
+        height: 1024,
+        label: "576x1024 (9:16)",
+      },
+      {
+        width: 1024,
+        height: 576,
+        label: "1024x576 (16:9)",
+      },
+      {
+        width: 1024,
+        height: 1024,
+        label: "1024x1024 (1:1)",
+      },
+    ],
   },
   {
     provider: "fal",
@@ -883,41 +883,41 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     initialInput: {
       prompt: "",
       image_url: "",
-      availableDurations: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-      defaultDuration: 5,
-      availableDimensions: [
-        {
-          width: 1024,
-          height: 438,
-          label: "1024x438 (21:9)",
-        },
-        {
-          width: 1024,
-          height: 576,
-          label: "1024x576 (16:9)",
-        },
-        {
-          width: 1024,
-          height: 768,
-          label: "1024x768 (4:3)",
-        },
-        {
-          width: 1024,
-          height: 1024,
-          label: "1024x1024 (1:1)",
-        },
-        {
-          width: 768,
-          height: 1024,
-          label: "768x1024 (3:4)",
-        },
-        {
-          width: 576,
-          height: 1024,
-          label: "576x1024 (9:16)",
-        },
-      ],
     },
+    availableDurations: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+    defaultDuration: 5,
+    availableDimensions: [
+      {
+        width: 1024,
+        height: 438,
+        label: "1024x438 (21:9)",
+      },
+      {
+        width: 1024,
+        height: 576,
+        label: "1024x576 (16:9)",
+      },
+      {
+        width: 1024,
+        height: 768,
+        label: "1024x768 (4:3)",
+      },
+      {
+        width: 1024,
+        height: 1024,
+        label: "1024x1024 (1:1)",
+      },
+      {
+        width: 768,
+        height: 1024,
+        label: "768x1024 (3:4)",
+      },
+      {
+        width: 576,
+        height: 1024,
+        label: "576x1024 (9:16)",
+      },
+    ],
   },
   {
     provider: "fal",
@@ -973,9 +973,9 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     initialInput: {
       prompt: "",
       image_url: "",
-      availableDurations: [5, 10],
-      defaultDuration: 5,
     },
+    availableDurations: [5, 10],
+    defaultDuration: 5,
   },
   {
     provider: "fal",
@@ -1313,19 +1313,19 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     initialInput: {
       flow_shift: 7,
       embedded_guidance_scale: 6,
-      availableDimensions: [
-        {
-          width: 1024,
-          height: 576,
-          label: "1024x576 (16:9)",
-        },
-        {
-          width: 576,
-          height: 1024,
-          label: "576x1024 (9:16)",
-        },
-      ],
     },
+    availableDimensions: [
+      {
+        width: 1024,
+        height: 576,
+        label: "1024x576 (16:9)",
+      },
+      {
+        width: 576,
+        height: 1024,
+        label: "576x1024 (9:16)",
+      },
+    ],
   },
   {
     provider: "fal",
