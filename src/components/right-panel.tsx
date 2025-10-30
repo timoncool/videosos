@@ -40,7 +40,7 @@ import { Textarea } from "./ui/textarea";
 
 import { db } from "@/data/db";
 import { useToast } from "@/hooks/use-toast";
-import { fal } from "@/lib/fal";
+import { calculateModelCost, fal, formatCost, getPricingInfo } from "@/lib/fal";
 import { getMediaMetadata } from "@/lib/ffmpeg";
 import { enhancePrompt } from "@/lib/prompt";
 import {
@@ -181,23 +181,46 @@ function ModelEndpointPicker({
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          {endpoints.map((endpoint) => (
-            <SelectItem key={endpoint.endpointId} value={endpoint.endpointId}>
-              <div className="flex flex-row gap-2 items-center justify-between w-full">
-                <div className="flex items-center gap-2">
-                  <span>{endpoint.label}</span>
-                  <Badge variant="outline" className="text-xs">
-                    {endpoint.provider}
-                  </Badge>
+          {endpoints.map((endpoint) => {
+            let displayCost: string | null = null;
+
+            if (endpoint.provider === "fal") {
+              // Calculate estimated cost with default parameters for FAL models
+              const estimatedCost = calculateModelCost(endpoint.endpointId, {
+                duration: endpoint.defaultDuration || 5,
+                width: endpoint.defaultWidth || 1024,
+                height: endpoint.defaultHeight || 1024,
+                textLength: 100, // Default text length for estimation
+                quantity: 1,
+              });
+
+              if (estimatedCost !== null) {
+                displayCost = formatCost(estimatedCost);
+              } else if (endpoint.cost) {
+                // Fallback to hardcoded cost if calculation not possible
+                displayCost = endpoint.cost;
+              }
+            }
+            // For Runware, don't show pricing in selector (shown after generation)
+
+            return (
+              <SelectItem key={endpoint.endpointId} value={endpoint.endpointId}>
+                <div className="flex flex-row gap-2 items-center justify-between w-full">
+                  <div className="flex items-center gap-2">
+                    <span>{endpoint.label}</span>
+                    <Badge variant="outline" className="text-xs">
+                      {endpoint.provider}
+                    </Badge>
+                  </div>
+                  {displayCost && (
+                    <span className="text-xs text-white/70 ml-2">
+                      {displayCost}
+                    </span>
+                  )}
                 </div>
-                {endpoint.cost && (
-                  <span className="text-xs text-muted-foreground ml-2">
-                    {endpoint.cost}
-                  </span>
-                )}
-              </div>
-            </SelectItem>
-          ))}
+              </SelectItem>
+            );
+          })}
         </SelectContent>
       </Select>
     </div>
@@ -789,6 +812,25 @@ export default function RightPanel({
   const shouldShowAssetTooltip =
     !isAssetProvided && Boolean(missingAssetLabels) && !isProviderKeyMissing;
 
+  // Calculate estimated cost for FAL models
+  const estimatedCost = useMemo(() => {
+    if (!endpointId || !isFalEndpoint(endpointId)) return null;
+
+    return calculateModelCost(endpointId, {
+      duration: generateData.duration,
+      width: generateData.width,
+      height: generateData.height,
+      textLength: generateData.prompt?.length || 0,
+      quantity: 1,
+    });
+  }, [
+    endpointId,
+    generateData.duration,
+    generateData.width,
+    generateData.height,
+    generateData.prompt,
+  ]);
+
   const generateButton = (
     <Button
       className="w-full"
@@ -1240,9 +1282,28 @@ export default function RightPanel({
                             <Label className="text-xs">Aspect Ratio</Label>
                             <Select
                               value={generateData.aspect_ratio || "16:9"}
-                              onValueChange={(value) =>
-                                setGenerateData({ aspect_ratio: value })
-                              }
+                              onValueChange={(value) => {
+                                // Update aspect ratio and calculate corresponding dimensions
+                                const dimensionsMap: Record<
+                                  string,
+                                  { width: number; height: number }
+                                > = {
+                                  "1:1": { width: 1024, height: 1024 },
+                                  "16:9": { width: 1024, height: 576 },
+                                  "9:16": { width: 576, height: 1024 },
+                                  "4:3": { width: 1024, height: 768 },
+                                  "3:4": { width: 768, height: 1024 },
+                                  "21:9": { width: 1024, height: 438 },
+                                };
+                                const dimensions = dimensionsMap[value];
+                                setGenerateData({
+                                  aspect_ratio: value,
+                                  ...(dimensions && {
+                                    width: dimensions.width,
+                                    height: dimensions.height,
+                                  }),
+                                });
+                              }}
                             >
                               <SelectTrigger className="h-8 text-xs">
                                 <SelectValue />
@@ -1515,6 +1576,23 @@ export default function RightPanel({
               </AccordionItem>
             </Accordion>
             <div className="flex flex-col gap-2">
+              {/* Estimated cost display for FAL models */}
+              {estimatedCost !== null && isFalEndpoint(endpointId) && (
+                <div className="flex items-center justify-between px-3 py-2 bg-accent/30 rounded-md border border-accent">
+                  <span className="text-xs text-muted-foreground">
+                    Estimated cost:
+                  </span>
+                  <span className="text-sm font-semibold">
+                    {formatCost(estimatedCost)}
+                  </span>
+                </div>
+              )}
+              {/* Info message for Runware pricing */}
+              {isRunwareEndpoint(endpointId) && (
+                <div className="text-xs text-muted-foreground text-center px-2">
+                  Pricing for Runware will be shown after generation
+                </div>
+              )}
               {!isAssetProvided && missingAssetLabels && (
                 <div className="text-xs text-muted-foreground text-center">
                   {t("thisModelRequiresAsset", { assets: missingAssetLabels })}

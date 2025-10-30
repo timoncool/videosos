@@ -1,6 +1,13 @@
 "use client";
 
 import { createFalClient } from "@fal-ai/client";
+import {
+  type ModelPricing,
+  calculateModelCost,
+  formatCost,
+  getModelSchema,
+  getPricingInfo,
+} from "./pricing";
 
 export const fal = createFalClient({
   credentials: () =>
@@ -23,7 +30,7 @@ export type ApiInfo = {
   endpointId: string;
   label: string;
   description: string;
-  cost?: string;
+  cost?: string; // Deprecated: Use getPricingInfo() or calculateModelCost() instead
   popularity: number;
   inferenceTime?: string;
   inputMap?: Record<string, string>;
@@ -42,6 +49,9 @@ export type ApiInfo = {
   defaultWidth?: number;
   defaultHeight?: number;
   defaultFps?: number;
+
+  // Structured pricing information (from fal_models_schemas.json)
+  pricing?: ModelPricing;
 };
 
 export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
@@ -976,3 +986,44 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     },
   },
 ];
+
+/**
+ * Get enhanced API info with pricing data from schema
+ */
+export function getEnhancedApiInfo(endpointId: string): ApiInfo | undefined {
+  const endpoint = AVAILABLE_ENDPOINTS.find((e) => e.endpointId === endpointId);
+  if (!endpoint) return undefined;
+
+  // Get pricing data from schema
+  const schema = getModelSchema(endpointId);
+  if (schema?.pricing) {
+    return {
+      ...endpoint,
+      pricing: schema.pricing,
+    };
+  }
+
+  return endpoint;
+}
+
+/**
+ * Get all endpoints enhanced with pricing data
+ */
+export function getEnhancedEndpoints(): ApiInfo[] {
+  return AVAILABLE_ENDPOINTS.map((endpoint) => {
+    const schema = getModelSchema(endpoint.endpointId);
+    if (schema?.pricing) {
+      return {
+        ...endpoint,
+        pricing: schema.pricing,
+      };
+    }
+    return endpoint;
+  });
+}
+
+/**
+ * Calculate cost for a model generation
+ * Re-export from pricing module for convenience
+ */
+export { calculateModelCost, formatCost, getPricingInfo };
