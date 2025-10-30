@@ -279,9 +279,9 @@ export function VideoTrackView({
     };
   };
 
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (isResizingRef.current) {
-      console.log('[MOVE] Skipped: isResizingRef is true');
+      console.log("[MOVE] Skipped: isResizingRef is true");
       return;
     }
 
@@ -290,13 +290,16 @@ export function VideoTrackView({
         'button,[role="button"],a,input,textarea,select,[data-trim-handle]',
       )
     ) {
-      console.log('[MOVE] Skipped: target is a trim handle or button');
+      console.log("[MOVE] Skipped: target is a trim handle or button");
       return;
     }
 
-    console.log('[MOVE] Starting move operation');
+    console.log("[MOVE] Starting move operation");
     const trackElement = trackRef.current;
     if (!trackElement) return;
+    
+    trackElement.setPointerCapture(e.pointerId);
+    
     const bounds = calculateBounds();
     const startX = e.clientX;
     const startLeft = trackElement.offsetLeft;
@@ -309,7 +312,7 @@ export function VideoTrackView({
       trackElement.style.left = `${timestamp * pixelsPerMs}px`;
     };
 
-    const handleMouseMove = (moveEvent: MouseEvent) => {
+    const handlePointerMove = (moveEvent: PointerEvent) => {
       const deltaX = moveEvent.clientX - startX;
       let newLeft = startLeft + deltaX;
 
@@ -338,9 +341,9 @@ export function VideoTrackView({
       db.keyFrames.update(frame.id, { timestamp: frame.timestamp });
     };
 
-    const handleMouseUp = async () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
+    const handlePointerUp = async () => {
+      trackElement.removeEventListener("pointermove", handlePointerMove);
+      trackElement.removeEventListener("pointerup", handlePointerUp);
 
       if (duplicateMode) {
         if (originalLeftStyle) {
@@ -362,18 +365,21 @@ export function VideoTrackView({
       });
     };
 
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
+    trackElement.addEventListener("pointermove", handlePointerMove);
+    trackElement.addEventListener("pointerup", handlePointerUp);
   };
 
   const handleResize = (
-    e: React.MouseEvent<HTMLDivElement>,
+    e: React.PointerEvent<HTMLDivElement>,
     direction: "left" | "right",
   ) => {
     e.stopPropagation();
     e.preventDefault();
     const trackElement = trackRef.current;
     if (!trackElement) return;
+    
+    const handleElement = e.currentTarget as HTMLElement;
+    handleElement.setPointerCapture(e.pointerId);
 
     isResizingRef.current = true;
 
@@ -393,12 +399,11 @@ export function VideoTrackView({
       rightEdge: startTimestamp + startDuration,
     });
 
-    // Track current values during drag
     let currentTimestamp = startTimestamp;
     let currentDuration = startDuration;
     let currentOffset = startOffset;
 
-    const handleMouseMove = (moveEvent: MouseEvent) => {
+    const handlePointerMove = (moveEvent: PointerEvent) => {
       const deltaX = moveEvent.clientX - startX;
       const deltaMs = deltaX / pixelsPerMs;
 
@@ -440,7 +445,7 @@ export function VideoTrackView({
         const trimmedFromLeft = currentTimestamp - startTimestamp;
         currentOffset = startOffset + trimmedFromLeft;
 
-        console.log('[RESIZE-LEFT] During drag:', {
+        console.log("[RESIZE-LEFT] During drag:", {
           deltaX,
           deltaMs,
           rightEdge,
@@ -491,7 +496,7 @@ export function VideoTrackView({
       }
     };
 
-    const handleMouseUp = () => {
+    const handlePointerUp = () => {
       isResizingRef.current = false;
 
       if (direction === "right") {
@@ -545,7 +550,7 @@ export function VideoTrackView({
           currentDuration = rightEdge - currentTimestamp;
         }
 
-        console.log('[RESIZE-LEFT] Final values:', {
+        console.log("[RESIZE-LEFT] Final values:", {
           currentTimestamp,
           currentDuration,
           currentOffset,
@@ -564,18 +569,18 @@ export function VideoTrackView({
       queryClient.invalidateQueries({
         queryKey: queryKeys.projectPreview(projectId),
       });
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
+      handleElement.removeEventListener("pointermove", handlePointerMove);
+      handleElement.removeEventListener("pointerup", handlePointerUp);
     };
 
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
+    handleElement.addEventListener("pointermove", handlePointerMove);
+    handleElement.addEventListener("pointerup", handlePointerUp);
   };
 
   return (
     <div
       ref={trackRef}
-      onMouseDown={handleMouseDown}
+      onPointerDown={handlePointerDown}
       onContextMenu={(e) => e.preventDefault()}
       aria-checked={isSelected}
       onClick={handleOnClick}
@@ -649,8 +654,9 @@ export function VideoTrackView({
             )}
             onPointerDownCapture={(e) => {
               e.stopPropagation();
+              isResizingRef.current = true;
             }}
-            onMouseDown={(e) => handleResize(e, "left")}
+            onPointerDown={(e) => handleResize(e, "left")}
             onClick={(e) => {
               e.stopPropagation();
               e.preventDefault();
@@ -677,8 +683,9 @@ export function VideoTrackView({
             )}
             onPointerDownCapture={(e) => {
               e.stopPropagation();
+              isResizingRef.current = true;
             }}
-            onMouseDown={(e) => handleResize(e, "right")}
+            onPointerDown={(e) => handleResize(e, "right")}
             onClick={(e) => {
               e.stopPropagation();
               e.preventDefault();
