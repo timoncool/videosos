@@ -5,7 +5,7 @@ import { queryKeys } from "@/data/queries";
 import type { MediaItem } from "@/data/schema";
 import { useProjectId, useVideoProjectStore } from "@/data/store";
 import { useToast } from "@/hooks/use-toast";
-import { fal } from "@/lib/fal";
+import { fal, calculateModelCost } from "@/lib/fal";
 import { extractVideoThumbnail, getMediaMetadata } from "@/lib/ffmpeg";
 import { getRunwareClient } from "@/lib/runware";
 import {
@@ -157,9 +157,16 @@ export function MediaItemRow({
 
             console.log("[DEBUG] FAL result:", JSON.stringify(result, null, 2));
 
-            // Extract cost if available
-            const cost =
-              (result as any).cost || (result as any).billing_info?.cost;
+            // Calculate estimated cost for FAL (FAL API doesn't return actual cost)
+            // Use stored input parameters from media item to calculate
+            const inputParams = data.input || {};
+            const cost = calculateModelCost(data.endpointId, {
+              duration: inputParams.duration,
+              width: inputParams.width,
+              height: inputParams.height,
+              textLength: inputParams.prompt?.length || inputParams.text?.length || 0,
+              quantity: 1,
+            });
 
             // Download media from FAL URL and store as Blob
             let blob: Blob | undefined;

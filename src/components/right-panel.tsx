@@ -40,7 +40,7 @@ import { Textarea } from "./ui/textarea";
 
 import { db } from "@/data/db";
 import { useToast } from "@/hooks/use-toast";
-import { fal } from "@/lib/fal";
+import { calculateModelCost, fal, formatCost, getPricingInfo } from "@/lib/fal";
 import { getMediaMetadata } from "@/lib/ffmpeg";
 import { enhancePrompt } from "@/lib/prompt";
 import {
@@ -181,23 +181,37 @@ function ModelEndpointPicker({
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          {endpoints.map((endpoint) => (
-            <SelectItem key={endpoint.endpointId} value={endpoint.endpointId}>
-              <div className="flex flex-row gap-2 items-center justify-between w-full">
-                <div className="flex items-center gap-2">
-                  <span>{endpoint.label}</span>
-                  <Badge variant="outline" className="text-xs">
-                    {endpoint.provider}
-                  </Badge>
+          {endpoints.map((endpoint) => {
+            // Get pricing info from schema for FAL endpoints
+            const pricingInfo =
+              endpoint.provider === "fal"
+                ? getPricingInfo(endpoint.endpointId)
+                : null;
+
+            // For Runware, don't show pricing in selector (shown after generation)
+            const displayCost =
+              endpoint.provider === "runware"
+                ? null
+                : pricingInfo?.displayText || endpoint.cost;
+
+            return (
+              <SelectItem key={endpoint.endpointId} value={endpoint.endpointId}>
+                <div className="flex flex-row gap-2 items-center justify-between w-full">
+                  <div className="flex items-center gap-2">
+                    <span>{endpoint.label}</span>
+                    <Badge variant="outline" className="text-xs">
+                      {endpoint.provider}
+                    </Badge>
+                  </div>
+                  {displayCost && (
+                    <span className="text-xs text-muted-foreground ml-2">
+                      ~{displayCost}
+                    </span>
+                  )}
                 </div>
-                {endpoint.cost && (
-                  <span className="text-xs text-muted-foreground ml-2">
-                    {endpoint.cost}
-                  </span>
-                )}
-              </div>
-            </SelectItem>
-          ))}
+              </SelectItem>
+            );
+          })}
         </SelectContent>
       </Select>
     </div>
@@ -788,6 +802,25 @@ export default function RightPanel({
 
   const shouldShowAssetTooltip =
     !isAssetProvided && Boolean(missingAssetLabels) && !isProviderKeyMissing;
+
+  // Calculate estimated cost for FAL models
+  const estimatedCost = useMemo(() => {
+    if (!endpointId || !isFalEndpoint(endpointId)) return null;
+
+    return calculateModelCost(endpointId, {
+      duration: generateData.duration,
+      width: generateData.width,
+      height: generateData.height,
+      textLength: generateData.prompt?.length || 0,
+      quantity: 1,
+    });
+  }, [
+    endpointId,
+    generateData.duration,
+    generateData.width,
+    generateData.height,
+    generateData.prompt,
+  ]);
 
   const generateButton = (
     <Button
@@ -1515,6 +1548,23 @@ export default function RightPanel({
               </AccordionItem>
             </Accordion>
             <div className="flex flex-col gap-2">
+              {/* Estimated cost display for FAL models */}
+              {estimatedCost !== null && isFalEndpoint(endpointId) && (
+                <div className="flex items-center justify-between px-3 py-2 bg-accent/30 rounded-md border border-accent">
+                  <span className="text-xs text-muted-foreground">
+                    Estimated cost:
+                  </span>
+                  <span className="text-sm font-semibold">
+                    {formatCost(estimatedCost)}
+                  </span>
+                </div>
+              )}
+              {/* Info message for Runware pricing */}
+              {isRunwareEndpoint(endpointId) && (
+                <div className="text-xs text-muted-foreground text-center px-2">
+                  Pricing for Runware will be shown after generation
+                </div>
+              )}
               {!isAssetProvided && missingAssetLabels && (
                 <div className="text-xs text-muted-foreground text-center">
                   {t("thisModelRequiresAsset", { assets: missingAssetLabels })}

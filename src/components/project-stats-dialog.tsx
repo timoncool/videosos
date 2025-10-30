@@ -29,6 +29,9 @@ export function ProjectStatsDialog() {
       return sum;
     }, 0);
 
+    // Check if any FAL generations exist
+    const hasFalGenerations = generated.some((item) => item.provider === "fal");
+
     // Count by media type
     const byType = generated.reduce(
       (acc, item) => {
@@ -64,6 +67,7 @@ export function ProjectStatsDialog() {
       uploadedFiles: mediaItems.filter((item) => item.kind === "uploaded")
         .length,
       totalCost,
+      hasFalGenerations,
       byType,
       byProvider,
       byModel,
@@ -107,9 +111,16 @@ export function ProjectStatsDialog() {
                 </span>
                 <span className="text-xs text-muted-foreground">
                   Total Cost
+                  {stats.hasFalGenerations && " *"}
                 </span>
               </div>
             </div>
+            {stats.hasFalGenerations && (
+              <div className="text-xs text-muted-foreground bg-accent/30 p-2 rounded border border-accent">
+                * FAL generation costs are approximate. Actual costs may vary
+                based on final processing requirements.
+              </div>
+            )}
           </div>
 
           {/* By Media Type */}
