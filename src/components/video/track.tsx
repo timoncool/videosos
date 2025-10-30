@@ -297,9 +297,9 @@ export function VideoTrackView({
     console.log("[MOVE] Starting move operation");
     const trackElement = trackRef.current;
     if (!trackElement) return;
-    
+
     trackElement.setPointerCapture(e.pointerId);
-    
+
     const bounds = calculateBounds();
     const startX = e.clientX;
     const startLeft = trackElement.offsetLeft;
@@ -377,7 +377,7 @@ export function VideoTrackView({
     e.preventDefault();
     const trackElement = trackRef.current;
     if (!trackElement) return;
-    
+
     const handleElement = e.currentTarget as HTMLElement;
     handleElement.setPointerCapture(e.pointerId);
 
