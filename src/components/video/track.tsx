@@ -287,6 +287,7 @@ export function VideoTrackView({
       return;
     }
 
+    console.debug('[DRAG] Starting drag operation');
     const trackElement = trackRef.current;
     if (!trackElement) return;
     const bounds = calculateBounds();
@@ -363,6 +364,7 @@ export function VideoTrackView({
     direction: "left" | "right",
   ) => {
     e.stopPropagation();
+    console.debug(`[TRIM-${direction.toUpperCase()}] Starting trim operation`);
     const trackElement = trackRef.current;
     if (!trackElement) return;
     const startX = e.clientX;
@@ -553,20 +555,6 @@ export function VideoTrackView({
           {(media.mediaType === "music" || media.mediaType === "voiceover") && (
             <AudioWaveform data={media} />
           )}
-          {/* Left trim handle */}
-          <div
-            className={cn(
-              "absolute left-0 z-50 top-0 bg-black/20 group-hover:bg-black/40",
-              "rounded-md bottom-0 w-2 m-1 p-px cursor-ew-resize backdrop-blur-md text-white/40",
-              "transition-colors flex flex-col items-center justify-center text-xs tracking-tighter",
-            )}
-            onMouseDown={(e) => handleResize(e, "left")}
-          >
-            <span className="flex gap-[1px]">
-              <span className="w-px h-2 rounded bg-white/40" />
-              <span className="w-px h-2 rounded bg-white/40" />
-            </span>
-          </div>
           {/* Right trim handle */}
           <div
             className={cn(
