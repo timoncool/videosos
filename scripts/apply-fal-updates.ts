@@ -185,6 +185,7 @@ for (const match of endpointMatches) {
   // Add new properties before the closing brace
   const propsToAdd: string[] = [];
 
+  // Duration parameters
   if (options.availableDurations) {
     propsToAdd.push(
       `availableDurations: [${options.availableDurations.join(", ")}]`,
@@ -193,6 +194,8 @@ for (const match of endpointMatches) {
   if (options.defaultDuration) {
     propsToAdd.push(`defaultDuration: ${options.defaultDuration}`);
   }
+
+  // Dimension parameters
   if (options.availableDimensions) {
     const dimsStr = JSON.stringify(
       options.availableDimensions,
@@ -207,11 +210,60 @@ for (const match of endpointMatches) {
   if (options.defaultHeight) {
     propsToAdd.push(`defaultHeight: ${options.defaultHeight}`);
   }
+
+  // FPS parameters
   if (options.availableFps) {
     propsToAdd.push(`availableFps: [${options.availableFps.join(", ")}]`);
   }
   if (options.defaultFps) {
     propsToAdd.push(`defaultFps: ${options.defaultFps}`);
+  }
+
+  // Steps parameters
+  if (options.availableSteps) {
+    propsToAdd.push(`availableSteps: [${options.availableSteps.join(", ")}]`);
+  }
+  if (options.minSteps !== undefined) {
+    propsToAdd.push(`minSteps: ${options.minSteps}`);
+  }
+  if (options.maxSteps !== undefined) {
+    propsToAdd.push(`maxSteps: ${options.maxSteps}`);
+  }
+  if (options.defaultSteps !== undefined) {
+    propsToAdd.push(`defaultSteps: ${options.defaultSteps}`);
+  }
+
+  // Guidance scale parameters
+  if (options.minGuidanceScale !== undefined) {
+    propsToAdd.push(`minGuidanceScale: ${options.minGuidanceScale}`);
+  }
+  if (options.maxGuidanceScale !== undefined) {
+    propsToAdd.push(`maxGuidanceScale: ${options.maxGuidanceScale}`);
+  }
+  if (options.defaultGuidanceScale !== undefined) {
+    propsToAdd.push(`defaultGuidanceScale: ${options.defaultGuidanceScale}`);
+  }
+
+  // Strength parameters
+  if (options.minStrength !== undefined) {
+    propsToAdd.push(`minStrength: ${options.minStrength}`);
+  }
+  if (options.maxStrength !== undefined) {
+    propsToAdd.push(`maxStrength: ${options.maxStrength}`);
+  }
+  if (options.defaultStrength !== undefined) {
+    propsToAdd.push(`defaultStrength: ${options.defaultStrength}`);
+  }
+
+  // Feature flags
+  if (options.hasSeed) {
+    propsToAdd.push("hasSeed: true");
+  }
+  if (options.hasNegativePrompt) {
+    propsToAdd.push("hasNegativePrompt: true");
+  }
+  if (options.hasSafetyChecker) {
+    propsToAdd.push("hasSafetyChecker: true");
   }
 
   if (propsToAdd.length > 0) {

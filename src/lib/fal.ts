@@ -50,6 +50,27 @@ export type ApiInfo = {
   defaultHeight?: number;
   defaultFps?: number;
 
+  // Steps/inference parameters
+  availableSteps?: number[];
+  minSteps?: number;
+  maxSteps?: number;
+  defaultSteps?: number;
+
+  // Guidance/CFG scale parameters
+  minGuidanceScale?: number;
+  maxGuidanceScale?: number;
+  defaultGuidanceScale?: number;
+
+  // Strength parameter (for img2img, video2video)
+  minStrength?: number;
+  maxStrength?: number;
+  defaultStrength?: number;
+
+  // Feature flags
+  hasSeed?: boolean;
+  hasNegativePrompt?: boolean;
+  hasSafetyChecker?: boolean;
+
   // Structured pricing information (from fal_models_schemas.json)
   pricing?: ModelPricing;
 };
@@ -102,6 +123,10 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
         label: "438x1024 (9:21)",
       },
     ],
+    minGuidanceScale: 1,
+    maxGuidanceScale: 20,
+    defaultGuidanceScale: 3.5,
+    hasSeed: true,
   },
   {
     provider: "fal",
@@ -153,6 +178,10 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
         label: "438x1024 (9:21)",
       },
     ],
+    minGuidanceScale: 1,
+    maxGuidanceScale: 20,
+    defaultGuidanceScale: 3.5,
+    hasSeed: true,
   },
   {
     provider: "fal",
@@ -228,6 +257,8 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
       defaultWidth: 2048,
       defaultHeight: 2048,
     },
+    hasSeed: true,
+    hasSafetyChecker: true,
   },
   {
     provider: "fal",
@@ -244,6 +275,8 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
       defaultWidth: 2048,
       defaultHeight: 2048,
     },
+    hasSeed: true,
+    hasSafetyChecker: true,
   },
   {
     provider: "fal",
@@ -256,6 +289,11 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     initialInput: {
       prompt: "",
     },
+    minGuidanceScale: 1,
+    maxGuidanceScale: 10,
+    defaultGuidanceScale: 2.5,
+    hasSeed: true,
+    hasSafetyChecker: true,
   },
   {
     provider: "fal",
@@ -310,6 +348,14 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
       prompt: "",
       image_url: "",
     },
+    minSteps: 10,
+    maxSteps: 50,
+    defaultSteps: 30,
+    minGuidanceScale: 0,
+    maxGuidanceScale: 20,
+    defaultGuidanceScale: 2.5,
+    hasSeed: true,
+    hasSafetyChecker: true,
   },
   {
     provider: "fal",
@@ -320,6 +366,14 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     cost: "$0.025/megapixel",
     popularity: 5,
     category: "image",
+    minSteps: 1,
+    maxSteps: 50,
+    defaultSteps: 28,
+    minGuidanceScale: 1,
+    maxGuidanceScale: 20,
+    defaultGuidanceScale: 3.5,
+    hasSeed: true,
+    hasSafetyChecker: true,
   },
   {
     provider: "fal",
@@ -330,6 +384,8 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     cost: "$0.08/image",
     popularity: 5,
     category: "image",
+    hasSeed: true,
+    hasNegativePrompt: true,
   },
   {
     provider: "fal",
@@ -340,6 +396,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     popularity: 5,
     category: "image",
     inputAsset: ["image"],
+    hasSeed: true,
   },
   {
     provider: "fal",
@@ -349,6 +406,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     cost: "$0.0125/image",
     popularity: 5,
     category: "image",
+    hasSafetyChecker: true,
   },
   {
     provider: "fal",
@@ -400,6 +458,15 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     cost: "$0.03/megapixel",
     popularity: 4,
     category: "image",
+    minSteps: 1,
+    maxSteps: 50,
+    defaultSteps: 28,
+    minGuidanceScale: 0,
+    maxGuidanceScale: 20,
+    defaultGuidanceScale: 3.5,
+    hasSeed: true,
+    hasNegativePrompt: true,
+    hasSafetyChecker: true,
   },
   {
     provider: "fal",
@@ -409,6 +476,14 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     cost: "$0.003/megapixel",
     popularity: 4,
     category: "image",
+    minSteps: 1,
+    maxSteps: 12,
+    defaultSteps: 4,
+    minGuidanceScale: 1,
+    maxGuidanceScale: 20,
+    defaultGuidanceScale: 3.5,
+    hasSeed: true,
+    hasSafetyChecker: true,
   },
   {
     provider: "fal",
@@ -449,6 +524,8 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
         label: "1024x768 (4:3)",
       },
     ],
+    hasSeed: true,
+    hasNegativePrompt: true,
   },
   {
     provider: "fal",
@@ -489,6 +566,8 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
         label: "1024x768 (4:3)",
       },
     ],
+    hasSeed: true,
+    hasNegativePrompt: true,
   },
   {
     provider: "fal",
@@ -503,6 +582,8 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
       aspect_ratio: "16:9",
       raw: true,
     },
+    hasSeed: true,
+    hasSafetyChecker: true,
   },
   {
     provider: "fal",
@@ -512,6 +593,15 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     cost: "$0.1/megapixel",
     popularity: 3,
     category: "image",
+    minSteps: 1,
+    maxSteps: 50,
+    defaultSteps: 28,
+    minGuidanceScale: 1,
+    maxGuidanceScale: 20,
+    defaultGuidanceScale: 7.5,
+    hasSeed: true,
+    hasNegativePrompt: true,
+    hasSafetyChecker: true,
   },
   {
     provider: "fal",
@@ -532,6 +622,9 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     cost: "TBA",
     popularity: 3,
     category: "image",
+    hasSeed: true,
+    hasNegativePrompt: true,
+    hasSafetyChecker: true,
   },
   {
     provider: "fal",
@@ -542,6 +635,9 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     popularity: 3,
     category: "image",
     inputAsset: ["image"],
+    hasSeed: true,
+    hasNegativePrompt: true,
+    hasSafetyChecker: true,
   },
   {
     provider: "fal",
@@ -553,6 +649,15 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     category: "image",
     defaultWidth: 1024,
     defaultHeight: 1024,
+    minSteps: 1,
+    maxSteps: 50,
+    defaultSteps: 50,
+    minGuidanceScale: 0,
+    maxGuidanceScale: 20,
+    defaultGuidanceScale: 5,
+    hasSeed: true,
+    hasNegativePrompt: true,
+    hasSafetyChecker: true,
   },
   {
     provider: "fal",
@@ -563,6 +668,15 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     popularity: 2,
     category: "image",
     inputAsset: ["image"],
+    minSteps: 2,
+    maxSteps: 250,
+    defaultSteps: 30,
+    minGuidanceScale: 0,
+    maxGuidanceScale: 20,
+    defaultGuidanceScale: 2.5,
+    hasSeed: true,
+    hasNegativePrompt: true,
+    hasSafetyChecker: true,
   },
   {
     provider: "fal",
@@ -595,6 +709,8 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
         label: "1024x1024 (1:1)",
       },
     ],
+    hasSeed: true,
+    hasNegativePrompt: true,
   },
   {
     provider: "fal",
@@ -627,6 +743,8 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
         label: "1024x1024 (1:1)",
       },
     ],
+    hasSeed: true,
+    hasNegativePrompt: true,
   },
   {
     provider: "fal",
@@ -723,6 +841,8 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
         label: "1024x1024 (1:1)",
       },
     ],
+    hasSeed: true,
+    hasNegativePrompt: true,
   },
   {
     provider: "fal",
@@ -751,6 +871,8 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
         label: "1024x1024 (1:1)",
       },
     ],
+    hasSeed: true,
+    hasNegativePrompt: true,
   },
   {
     provider: "fal",
@@ -918,6 +1040,8 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
         label: "576x1024 (9:16)",
       },
     ],
+    hasSeed: true,
+    hasSafetyChecker: true,
   },
   {
     provider: "fal",
@@ -947,6 +1071,10 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
         label: "1024x1024 (1:1)",
       },
     ],
+    minGuidanceScale: 0,
+    maxGuidanceScale: 1,
+    defaultGuidanceScale: 0.5,
+    hasNegativePrompt: true,
   },
   {
     provider: "fal",
@@ -959,6 +1087,10 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
     availableDurations: [5, 10],
     defaultDuration: 5,
+    minGuidanceScale: 0,
+    maxGuidanceScale: 1,
+    defaultGuidanceScale: 0.5,
+    hasNegativePrompt: true,
   },
   {
     provider: "fal",
@@ -976,6 +1108,10 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     },
     availableDurations: [5, 10],
     defaultDuration: 5,
+    minGuidanceScale: 0,
+    maxGuidanceScale: 1,
+    defaultGuidanceScale: 0.5,
+    hasNegativePrompt: true,
   },
   {
     provider: "fal",
@@ -1045,6 +1181,8 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
         label: "1024x1024 (1:1)",
       },
     ],
+    hasSeed: true,
+    hasNegativePrompt: true,
   },
   {
     provider: "fal",
@@ -1056,6 +1194,8 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     category: "video",
     inputAsset: ["image"],
     defaultDuration: 5,
+    hasSeed: true,
+    hasNegativePrompt: true,
   },
   {
     provider: "fal",
@@ -1081,6 +1221,8 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
         label: "576x1024 (9:16)",
       },
     ],
+    hasSeed: true,
+    hasNegativePrompt: true,
   },
   {
     provider: "fal",
@@ -1209,6 +1351,11 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     cost: "TBA",
     popularity: 4,
     category: "video",
+    minSteps: 1,
+    maxSteps: 50,
+    defaultSteps: 30,
+    hasSeed: true,
+    hasNegativePrompt: true,
   },
   {
     provider: "fal",
@@ -1219,6 +1366,11 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     popularity: 4,
     category: "video",
     inputAsset: ["image"],
+    minSteps: 1,
+    maxSteps: 50,
+    defaultSteps: 30,
+    hasSeed: true,
+    hasNegativePrompt: true,
   },
   {
     provider: "fal",
@@ -1248,6 +1400,10 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
         label: "1024x1024 (1:1)",
       },
     ],
+    minGuidanceScale: 0,
+    maxGuidanceScale: 1,
+    defaultGuidanceScale: 0.5,
+    hasNegativePrompt: true,
   },
   {
     provider: "fal",
@@ -1277,6 +1433,10 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
         label: "1024x1024 (1:1)",
       },
     ],
+    minGuidanceScale: 0,
+    maxGuidanceScale: 1,
+    defaultGuidanceScale: 0.5,
+    hasNegativePrompt: true,
   },
   {
     provider: "fal",
@@ -1326,6 +1486,11 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
         label: "576x1024 (9:16)",
       },
     ],
+    minSteps: 2,
+    maxSteps: 30,
+    defaultSteps: 30,
+    hasSeed: true,
+    hasSafetyChecker: true,
   },
   {
     provider: "fal",
@@ -1395,6 +1560,9 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
         label: "1024x1024 (1:1)",
       },
     ],
+    hasSeed: true,
+    hasNegativePrompt: true,
+    hasSafetyChecker: true,
   },
   {
     provider: "fal",
@@ -1407,6 +1575,9 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
     availableDurations: [5, 10],
     defaultDuration: 5,
+    hasSeed: true,
+    hasNegativePrompt: true,
+    hasSafetyChecker: true,
   },
   {
     provider: "fal",
@@ -1417,6 +1588,8 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     popularity: 4,
     category: "video",
     inputAsset: ["image"],
+    hasSeed: true,
+    hasSafetyChecker: true,
   },
   {
     provider: "fal",
@@ -1440,6 +1613,11 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
         label: "1024x576 (16:9)",
       },
     ],
+    minSteps: 2,
+    maxSteps: 50,
+    defaultSteps: 40,
+    hasSeed: true,
+    hasNegativePrompt: true,
   },
   {
     provider: "fal",
@@ -1479,6 +1657,10 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
         label: "1024x1024 (1:1)",
       },
     ],
+    minGuidanceScale: 0,
+    maxGuidanceScale: 1,
+    defaultGuidanceScale: 0.5,
+    hasNegativePrompt: true,
   },
   {
     provider: "fal",
@@ -1519,6 +1701,8 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
         label: "576x1024 (9:16)",
       },
     ],
+    hasSeed: true,
+    hasNegativePrompt: true,
   },
   {
     provider: "fal",
@@ -1530,6 +1714,8 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     category: "video",
     inputAsset: ["video"],
     defaultDuration: 8,
+    hasSeed: true,
+    hasNegativePrompt: true,
   },
   {
     provider: "fal",
@@ -1579,6 +1765,17 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
         label: "1024x1024 (1:1)",
       },
     ],
+    minSteps: 1,
+    maxSteps: 75,
+    defaultSteps: 50,
+    minGuidanceScale: 1,
+    maxGuidanceScale: 20,
+    defaultGuidanceScale: 5,
+    minStrength: 0,
+    maxStrength: 2,
+    defaultStrength: 1,
+    hasSeed: true,
+    hasNegativePrompt: true,
   },
   {
     provider: "fal",
@@ -1589,6 +1786,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     popularity: 1,
     category: "video",
     inputAsset: ["image", "audio"],
+    hasSeed: true,
   },
   {
     provider: "fal",
@@ -1601,6 +1799,9 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     initialInput: {
       seconds_total: 30,
     },
+    minSteps: 1,
+    maxSteps: 1000,
+    defaultSteps: 100,
   },
   {
     provider: "fal",
@@ -1627,6 +1828,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     category: "music",
     inputAsset: ["video"],
     defaultDuration: 10,
+    hasSeed: true,
   },
   {
     provider: "fal",
@@ -1691,6 +1893,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
         },
       ],
     },
+    hasSeed: true,
   },
   {
     provider: "fal",
@@ -1703,6 +1906,7 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputMap: {
       prompt: "text",
     },
+    hasSeed: true,
   },
   {
     provider: "fal",
