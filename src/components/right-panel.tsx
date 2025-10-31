@@ -646,6 +646,8 @@ export default function RightPanel({
       endpointId === "fal-ai/playht/tts/v3" ? generateData.voice : undefined,
     input:
       endpointId === "fal-ai/playht/tts/v3" ? generateData.prompt : undefined,
+    ...(generateData.width && { width: generateData.width }),
+    ...(generateData.height && { height: generateData.height }),
   };
 
   const normalizedImage = normalizeAssetValue(generateData.image);
