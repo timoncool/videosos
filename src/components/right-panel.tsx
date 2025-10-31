@@ -645,28 +645,22 @@ export default function RightPanel({
       endpointId === "fal-ai/playht/tts/v3" ? generateData.prompt : undefined,
   };
 
-  // Handle dimensions properly based on what's available
+  // Handle dimensions based on media type and endpoint
   if (mediaType === "image") {
-    // If model has availableDimensions and user selected specific dimensions
-    if (endpoint?.availableDimensions && (generateData.width || generateData.height)) {
+    // For image models, prioritize width/height if explicitly set
+    if (generateData.width && generateData.height) {
       input.width = generateData.width;
       input.height = generateData.height;
     }
-    // If no specific dimensions, use image_size/aspect_ratio from project
-    else if (!generateData.width && !generateData.height) {
+    // Fallback to image_size from project aspect ratio
+    else if (imageAspectRatio) {
       input.image_size = imageAspectRatio;
     }
-    // If dimensions are set but no availableDimensions, still pass them
-    else if (generateData.width || generateData.height) {
-      input.width = generateData.width;
-      input.height = generateData.height;
-    }
   } else if (mediaType === "video") {
-    // For video, use aspect_ratio
-    input.aspect_ratio = videoAspectRatio;
-    // But also pass width/height if explicitly set
-    if (generateData.width) input.width = generateData.width;
-    if (generateData.height) input.height = generateData.height;
+    // For video, only use aspect_ratio - never width/height
+    if (videoAspectRatio) {
+      input.aspect_ratio = videoAspectRatio;
+    }
   }
 
   const normalizedImage = normalizeAssetValue(generateData.image);
@@ -1006,9 +1000,13 @@ export default function RightPanel({
     generateData.prompt,
   ]);
 
-  // Initialize dimensions when endpoint changes
+  // Initialize dimensions when endpoint changes (IMAGE models only)
   useEffect(() => {
-    if (endpoint?.availableDimensions && endpoint.availableDimensions.length > 0) {
+    if (
+      mediaType === "image" &&
+      endpoint?.availableDimensions &&
+      endpoint.availableDimensions.length > 0
+    ) {
       // Only set dimensions if not already set or if customDimensions is not enabled
       if (!generateData.customDimensions && (!generateData.width || !generateData.height)) {
         const defaultDim = endpoint.availableDimensions[0];
@@ -1019,7 +1017,7 @@ export default function RightPanel({
         });
       }
     }
-  }, [endpoint, generateData.customDimensions, generateData.width, generateData.height, setGenerateData]);
+  }, [endpoint, mediaType, generateData.customDimensions, generateData.width, generateData.height, setGenerateData]);
 
   const generateButton = (
     <Button
@@ -1519,96 +1517,101 @@ export default function RightPanel({
                               </Select>
                             </div>
                           )}
-                        {endpoint?.availableDimensions &&
-                        endpoint.availableDimensions.length > 0 ? (
-                          <>
-                            <div className="flex flex-col gap-2">
-                              <Label className="text-xs">Size</Label>
-                              <Select
-                                value={
-                                  generateData.customDimensions
-                                    ? "custom"
-                                    : `${generateData.width || endpoint.defaultWidth || endpoint.availableDimensions[0].width}x${generateData.height || endpoint.defaultHeight || endpoint.availableDimensions[0].height}`
-                                }
-                                onValueChange={(value) => {
-                                  if (value === "custom") {
-                                    setGenerateData({ customDimensions: true });
-                                  } else {
-                                    const [width, height] = value
-                                      .split("x")
-                                      .map(Number);
-                                    setGenerateData({
-                                      width,
-                                      height,
-                                      customDimensions: false,
-                                    });
+                        {/* ONLY show Size selector for IMAGE models with availableDimensions */}
+                        {mediaType === "image" &&
+                          endpoint?.availableDimensions &&
+                          endpoint.availableDimensions.length > 0 && (
+                            <>
+                              <div className="flex flex-col gap-2">
+                                <Label className="text-xs">Size</Label>
+                                <Select
+                                  value={
+                                    generateData.customDimensions
+                                      ? "custom"
+                                      : `${generateData.width || endpoint.defaultWidth || endpoint.availableDimensions[0].width}x${generateData.height || endpoint.defaultHeight || endpoint.availableDimensions[0].height}`
                                   }
-                                }}
-                              >
-                                <SelectTrigger className="h-8 text-xs">
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {endpoint.availableDimensions.map((dim) => (
-                                    <SelectItem
-                                      key={`${dim.width}x${dim.height}`}
-                                      value={`${dim.width}x${dim.height}`}
-                                    >
-                                      {dim.label}
+                                  onValueChange={(value) => {
+                                    if (value === "custom") {
+                                      setGenerateData({ customDimensions: true });
+                                    } else {
+                                      const [width, height] = value
+                                        .split("x")
+                                        .map(Number);
+                                      setGenerateData({
+                                        width,
+                                        height,
+                                        customDimensions: false,
+                                      });
+                                    }
+                                  }}
+                                >
+                                  <SelectTrigger className="h-8 text-xs">
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {endpoint.availableDimensions.map((dim) => (
+                                      <SelectItem
+                                        key={`${dim.width}x${dim.height}`}
+                                        value={`${dim.width}x${dim.height}`}
+                                      >
+                                        {dim.label}
+                                      </SelectItem>
+                                    ))}
+                                    <SelectItem value="custom">
+                                      Custom (manual input)
                                     </SelectItem>
-                                  ))}
-                                  <SelectItem value="custom">
-                                    Custom (manual input)
-                                  </SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
-                            {generateData.customDimensions && (
-                              <div className="flex gap-2">
-                                <div className="flex flex-col gap-2 flex-1">
-                                  <Label className="text-xs">Width</Label>
-                                  <Input
-                                    className="h-8 text-xs"
-                                    type="number"
-                                    min={256}
-                                    max={4096}
-                                    step={64}
-                                    value={
-                                      generateData.width ||
-                                      endpoint?.defaultWidth ||
-                                      1024
-                                    }
-                                    onChange={(e) =>
-                                      setGenerateData({
-                                        width: Number.parseInt(e.target.value),
-                                      })
-                                    }
-                                  />
-                                </div>
-                                <div className="flex flex-col gap-2 flex-1">
-                                  <Label className="text-xs">Height</Label>
-                                  <Input
-                                    className="h-8 text-xs"
-                                    type="number"
-                                    min={256}
-                                    max={4096}
-                                    step={64}
-                                    value={
-                                      generateData.height ||
-                                      endpoint?.defaultHeight ||
-                                      1024
-                                    }
-                                    onChange={(e) =>
-                                      setGenerateData({
-                                        height: Number.parseInt(e.target.value),
-                                      })
-                                    }
-                                  />
-                                </div>
+                                  </SelectContent>
+                                </Select>
                               </div>
-                            )}
-                          </>
-                        ) : (
+                              {generateData.customDimensions && (
+                                <div className="flex gap-2">
+                                  <div className="flex flex-col gap-2 flex-1">
+                                    <Label className="text-xs">Width</Label>
+                                    <Input
+                                      className="h-8 text-xs"
+                                      type="number"
+                                      min={256}
+                                      max={4096}
+                                      step={64}
+                                      value={
+                                        generateData.width ||
+                                        endpoint?.defaultWidth ||
+                                        1024
+                                      }
+                                      onChange={(e) =>
+                                        setGenerateData({
+                                          width: Number.parseInt(e.target.value),
+                                        })
+                                      }
+                                    />
+                                  </div>
+                                  <div className="flex flex-col gap-2 flex-1">
+                                    <Label className="text-xs">Height</Label>
+                                    <Input
+                                      className="h-8 text-xs"
+                                      type="number"
+                                      min={256}
+                                      max={4096}
+                                      step={64}
+                                      value={
+                                        generateData.height ||
+                                        endpoint?.defaultHeight ||
+                                        1024
+                                      }
+                                      onChange={(e) =>
+                                        setGenerateData({
+                                          height: Number.parseInt(e.target.value),
+                                        })
+                                      }
+                                    />
+                                  </div>
+                                </div>
+                              )}
+                            </>
+                          )}
+                        {/* Show direct width/height inputs for IMAGE models WITHOUT availableDimensions */}
+                        {mediaType === "image" &&
+                          !endpoint?.availableDimensions && (
                           <div className="flex gap-2">
                             <div className="flex flex-col gap-2 flex-1">
                               <Label className="text-xs">Width</Label>
