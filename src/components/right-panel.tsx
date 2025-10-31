@@ -623,9 +623,14 @@ export default function RightPanel({
   };
 
   const aspectRatioMap = {
-    "16:9": { image: "landscape_16_9", video: "16:9" },
-    "9:16": { image: "portrait_16_9", video: "9:16" },
-    "1:1": { image: "square", video: "1:1" },
+    "16:9": {
+      image: "landscape_16_9",
+      video: "16:9",
+      width: 1408,
+      height: 768,
+    },
+    "9:16": { image: "portrait_16_9", video: "9:16", width: 768, height: 1408 },
+    "1:1": { image: "square", video: "1:1", width: 1024, height: 1024 },
   };
 
   const isFal = provider === "fal";
@@ -655,6 +660,12 @@ export default function RightPanel({
     dimensionsInput = {
       width: generateData.width,
       height: generateData.height,
+    };
+  } else if (isRunware && isImage && project?.aspectRatio) {
+    const ratio = aspectRatioMap[project.aspectRatio];
+    dimensionsInput = {
+      width: ratio?.width ?? 1024,
+      height: ratio?.height ?? 1024,
     };
   } else if (isVideo && project?.aspectRatio) {
     dimensionsInput = {
