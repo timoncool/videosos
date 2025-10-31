@@ -624,38 +624,57 @@ export default function RightPanel({
 
   const aspectRatioMap = {
     "16:9": { image: "landscape_16_9", video: "16:9" },
-    "9:16": { image: "portrait_16_9", video: "9:16" },
+    "9:16": { image: "portrait_9_16", video: "9:16" },
     "1:1": { image: "square_1_1", video: "1:1" },
   };
 
-  let imageAspectRatio: string | { width: number; height: number } | undefined;
-  let videoAspectRatio: string | undefined;
+  const isFal = provider === "fal";
+  const isRunware = provider === "runware";
+  const isImage = endpoint?.category === "image";
+  const isVideo = endpoint?.category === "video";
 
-  // or if the user hasn't selected specific dimensions
-  const hasAvailableDimensions =
-    endpoint?.availableDimensions && endpoint.availableDimensions.length > 0;
-  const hasUserSelectedDimensions = generateData.width && generateData.height;
+  const selectedDim = endpoint?.availableDimensions?.find(
+    (d) => d.width === generateData.width && d.height === generateData.height,
+  );
 
-  if (
-    project?.aspectRatio &&
-    (!hasAvailableDimensions || !hasUserSelectedDimensions)
+  let dimensionsInput: {
+    image_size?: string;
+    width?: number;
+    height?: number;
+    aspect_ratio?: string;
+  } = {};
+
+  if (isFal && isImage && selectedDim?.preset) {
+    dimensionsInput = { image_size: selectedDim.preset };
+  } else if (
+    isRunware &&
+    isImage &&
+    generateData.width &&
+    generateData.height
   ) {
-    imageAspectRatio = aspectRatioMap[project.aspectRatio].image;
-    videoAspectRatio = aspectRatioMap[project.aspectRatio].video;
+    dimensionsInput = {
+      width: generateData.width,
+      height: generateData.height,
+    };
+  } else if (isVideo && project?.aspectRatio) {
+    dimensionsInput = {
+      aspect_ratio: aspectRatioMap[project.aspectRatio]?.video,
+    };
+  } else if (project?.aspectRatio && !selectedDim) {
+    dimensionsInput = {
+      image_size: aspectRatioMap[project.aspectRatio]?.image,
+    };
   }
 
   const input: InputType = {
     prompt: generateData.prompt,
     image_url: undefined,
-    image_size: imageAspectRatio,
-    aspect_ratio: videoAspectRatio,
     seconds_total: generateData.duration ?? undefined,
     voice:
       endpointId === "fal-ai/playht/tts/v3" ? generateData.voice : undefined,
     input:
       endpointId === "fal-ai/playht/tts/v3" ? generateData.prompt : undefined,
-    ...(generateData.width && { width: generateData.width }),
-    ...(generateData.height && { height: generateData.height }),
+    ...dimensionsInput,
   };
 
   const normalizedImage = normalizeAssetValue(generateData.image);

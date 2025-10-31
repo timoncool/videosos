@@ -43,7 +43,7 @@ export type ApiInfo = {
 
   // Model-specific constraints for UI options
   availableDurations?: number[]; // e.g., [4, 6, 8] or [8] for fixed duration
-  availableDimensions?: Array<{ width: number; height: number; label: string }>;
+  availableDimensions?: Array<{ width: number; height: number; label: string; preset?: string }>;
   availableFps?: number[]; // e.g., [24] or [24, 25, 50]
   defaultDuration?: number;
   defaultWidth?: number;
@@ -489,31 +489,37 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
         width: 1024,
         height: 1024,
         label: "1024x1024 (1:1) - Square",
+        preset: "square",
       },
       {
         width: 1536,
         height: 1536,
         label: "1536x1536 (1:1) - Square HD",
+        preset: "square_hd",
       },
       {
         width: 1024,
         height: 768,
         label: "1024x768 (4:3) - Landscape",
+        preset: "landscape_4_3",
       },
       {
         width: 1024,
         height: 576,
         label: "1024x576 (16:9) - Landscape",
+        preset: "landscape_16_9",
       },
       {
         width: 768,
         height: 1024,
         label: "768x1024 (3:4) - Portrait",
+        preset: "portrait_3_4",
       },
       {
         width: 576,
         height: 1024,
         label: "576x1024 (9:16) - Portrait",
+        preset: "portrait_9_16",
       },
     ],
   },
