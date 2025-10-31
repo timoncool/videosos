@@ -632,10 +632,14 @@ export default function RightPanel({
   let videoAspectRatio: string | undefined;
 
   // or if the user hasn't selected specific dimensions
-  const hasAvailableDimensions = endpoint?.availableDimensions && endpoint.availableDimensions.length > 0;
+  const hasAvailableDimensions =
+    endpoint?.availableDimensions && endpoint.availableDimensions.length > 0;
   const hasUserSelectedDimensions = generateData.width && generateData.height;
 
-  if (project?.aspectRatio && (!hasAvailableDimensions || !hasUserSelectedDimensions)) {
+  if (
+    project?.aspectRatio &&
+    (!hasAvailableDimensions || !hasUserSelectedDimensions)
+  ) {
     imageAspectRatio = aspectRatioMap[project.aspectRatio].image;
     videoAspectRatio = aspectRatioMap[project.aspectRatio].video;
   }
