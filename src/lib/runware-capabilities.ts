@@ -199,7 +199,7 @@ export function getEndpointFamily(endpointId: string): string {
       return "qwen-image";
     }
 
-    if (modelNumber === "107" || modelNumber === "109") {
+    if (modelNumber === "107" || modelNumber === "111") {
       return "flux";
     }
 
