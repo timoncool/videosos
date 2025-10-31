@@ -83,9 +83,14 @@ export const FAMILY_CAPABILITIES: Record<string, ModelCapabilities> = {
     checkNSFW: false,
     numberResults: true,
     outputQuality: false,
-    outputFormats: ["JPG", "PNG", "WEBP"],
+    outputFormats: ["PNG", "JPEG", "WEBP"],
     outputType: true,
-    dimensionRule: "multiples_of_64",
+    dimensionRule: "fixed_set",
+    availableDimensions: [
+      { width: 1024, height: 1024, label: "1:1 (Square)" },
+      { width: 1248, height: 832, label: "3:2 (Classic Landscape)" },
+      { width: 832, height: 1248, label: "2:3 (Classic Portrait)" },
+    ],
   },
 
   openai: {
@@ -102,9 +107,14 @@ export const FAMILY_CAPABILITIES: Record<string, ModelCapabilities> = {
     checkNSFW: false,
     numberResults: true,
     outputQuality: false,
-    outputFormats: ["JPG", "PNG", "WEBP"],
+    outputFormats: ["PNG", "JPEG", "WEBP"],
     outputType: true,
-    dimensionRule: "multiples_of_64",
+    dimensionRule: "fixed_set",
+    availableDimensions: [
+      { width: 1024, height: 1024, label: "1:1 (Square)" },
+      { width: 1536, height: 1024, label: "3:2 (Landscape)" },
+      { width: 1024, height: 1536, label: "2:3 (Portrait)" },
+    ],
   },
 
   flux: {
@@ -136,7 +146,7 @@ export const FAMILY_CAPABILITIES: Record<string, ModelCapabilities> = {
     ...DEFAULT_CAPABILITIES,
     steps: { supported: true, min: 1, max: 100, default: 20 },
     cfgScale: { supported: true, min: 0, max: 50, default: 2.5 },
-    dimensionRule: "fixed_set",
+    dimensionRule: "multiples_of_64",
   },
 
   sdxl: {
@@ -159,9 +169,9 @@ export const FAMILY_CAPABILITIES: Record<string, ModelCapabilities> = {
     checkNSFW: true,
     numberResults: true,
     outputQuality: true,
-    outputFormats: ["JPG", "PNG", "WEBP"],
+    outputFormats: ["PNG", "JPEG", "WEBP"],
     outputType: true,
-    dimensionRule: "fixed_set",
+    dimensionRule: "multiples_of_64",
   },
 
   klingai: {
