@@ -669,7 +669,7 @@ export default function RightPanel({
   const input: InputType = {
     prompt: generateData.prompt,
     image_url: undefined,
-    seconds_total: !isImage ? generateData.duration ?? undefined : undefined,
+    seconds_total: !isImage ? (generateData.duration ?? undefined) : undefined,
     voice:
       endpointId === "fal-ai/playht/tts/v3" ? generateData.voice : undefined,
     input:
