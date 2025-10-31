@@ -1445,7 +1445,7 @@ export default function RightPanel({
                                     "9:16": { width: 576, height: 1024 },
                                     "4:3": { width: 1024, height: 768 },
                                     "3:4": { width: 768, height: 1024 },
-                                    "21:9": { width: 1024, height: 438 },
+                                    "21:9": { width: 1344, height: 576 }, // Must be multiples of 64 for Runware
                                   };
                                   const dimensions = dimensionsMap[value];
                                   setGenerateData({
