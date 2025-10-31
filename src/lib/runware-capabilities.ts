@@ -280,7 +280,9 @@ export function buildRunwarePayload(
   }
   if (
     capabilities.outputFormats &&
-    !capabilities.outputFormats.includes(outputFormat as "JPG" | "JPEG" | "PNG" | "WEBP")
+    !capabilities.outputFormats.includes(
+      outputFormat as "JPG" | "JPEG" | "PNG" | "WEBP",
+    )
   ) {
     outputFormat = "PNG"; // Safe default
   }
