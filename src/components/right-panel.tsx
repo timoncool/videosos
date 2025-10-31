@@ -23,6 +23,7 @@ import {
   WandSparklesIcon,
   XIcon,
 } from "lucide-react";
+import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import type { KeyboardEvent } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { MediaItemRow } from "./media-panel";
@@ -34,9 +35,6 @@ import {
 } from "./ui/accordion";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
-import { Textarea } from "./ui/textarea";
 import {
   Command,
   CommandEmpty,
@@ -45,8 +43,10 @@ import {
   CommandItem,
   CommandList,
 } from "./ui/command";
+import { Input } from "./ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
+import { Textarea } from "./ui/textarea";
 
 import { db } from "@/data/db";
 import { useToast } from "@/hooks/use-toast";
@@ -142,7 +142,9 @@ const getProviderForEndpoint = (
 };
 
 // Helper function to determine model subcategory
-const getModelSubcategory = (endpoint: typeof ALL_ENDPOINTS[number]): string => {
+const getModelSubcategory = (
+  endpoint: (typeof ALL_ENDPOINTS)[number],
+): string => {
   const { category, inputAsset } = endpoint;
 
   if (category === "image") {
@@ -167,8 +169,8 @@ const subcategoryLabels: Record<string, string> = {
   "image-to-image": "Image to Image",
   "text-to-video": "Text to Video",
   "image-to-video": "Image to Video",
-  "music": "Music",
-  "voiceover": "Voiceover",
+  music: "Music",
+  voiceover: "Voiceover",
 };
 
 type ModelEndpointPickerProps = {
@@ -295,7 +297,9 @@ function ModelEndpointPicker({
             aria-expanded={open}
             className="w-full justify-between text-base font-semibold"
           >
-            <span className="truncate">{selectedEndpoint?.label || "Select model..."}</span>
+            <span className="truncate">
+              {selectedEndpoint?.label || "Select model..."}
+            </span>
             <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>

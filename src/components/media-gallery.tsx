@@ -397,37 +397,40 @@ export function MediaGallerySheet({
                   );
                 })}
 
-              {selectedMedia.metadata && Object.keys(selectedMedia.metadata).length > 0 && (
-                <>
-                  <Separator className="my-2" />
-                  <div className="text-xs font-semibold text-muted-foreground mb-2">
-                    Generation Metadata
-                  </div>
-                  {Object.entries(selectedMedia.metadata).map(([key, value]) => {
-                    // Skip rendering complex objects and null/undefined values
-                    if (
-                      value === null ||
-                      value === undefined ||
-                      (typeof value === "object" && !Array.isArray(value))
-                    ) {
-                      return null;
-                    }
+              {selectedMedia.metadata &&
+                Object.keys(selectedMedia.metadata).length > 0 && (
+                  <>
+                    <Separator className="my-2" />
+                    <div className="text-xs font-semibold text-muted-foreground mb-2">
+                      Generation Metadata
+                    </div>
+                    {Object.entries(selectedMedia.metadata).map(
+                      ([key, value]) => {
+                        // Skip rendering complex objects and null/undefined values
+                        if (
+                          value === null ||
+                          value === undefined ||
+                          (typeof value === "object" && !Array.isArray(value))
+                        ) {
+                          return null;
+                        }
 
-                    const displayValue =
-                      typeof value === "object"
-                        ? JSON.stringify(value)
-                        : String(value);
+                        const displayValue =
+                          typeof value === "object"
+                            ? JSON.stringify(value)
+                            : String(value);
 
-                    return (
-                      <MediaPropertyItem
-                        key={key}
-                        label={key}
-                        value={displayValue}
-                      />
-                    );
-                  })}
-                </>
-              )}
+                        return (
+                          <MediaPropertyItem
+                            key={key}
+                            label={key}
+                            value={displayValue}
+                          />
+                        );
+                      },
+                    )}
+                  </>
+                )}
             </div>
           </div>
         </SheetPanel>
