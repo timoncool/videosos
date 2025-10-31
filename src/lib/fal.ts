@@ -484,6 +484,38 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     defaultGuidanceScale: 3.5,
     hasSeed: true,
     hasSafetyChecker: true,
+    availableDimensions: [
+      {
+        width: 1024,
+        height: 1024,
+        label: "1024x1024 (1:1) - Square",
+      },
+      {
+        width: 1536,
+        height: 1536,
+        label: "1536x1536 (1:1) - Square HD",
+      },
+      {
+        width: 1024,
+        height: 768,
+        label: "1024x768 (4:3) - Landscape",
+      },
+      {
+        width: 1024,
+        height: 576,
+        label: "1024x576 (16:9) - Landscape",
+      },
+      {
+        width: 768,
+        height: 1024,
+        label: "768x1024 (3:4) - Portrait",
+      },
+      {
+        width: 576,
+        height: 1024,
+        label: "576x1024 (9:16) - Portrait",
+      },
+    ],
   },
   {
     provider: "fal",
