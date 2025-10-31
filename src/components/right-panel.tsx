@@ -1112,6 +1112,8 @@ export default function RightPanel({
               mediaType={mediaType}
               value={endpointId}
               onValueChange={(endpointId) => {
+                // Preserve the current prompt before resetting
+                const currentPrompt = generateData.prompt;
                 resetGenerateData();
                 setEndpointId(endpointId);
 
@@ -1137,6 +1139,9 @@ export default function RightPanel({
                     dataWithDefaults.height = endpoint.defaultHeight;
                   }
                 }
+
+                // Restore the preserved prompt
+                dataWithDefaults.prompt = currentPrompt;
 
                 setGenerateData(dataWithDefaults);
               }}
