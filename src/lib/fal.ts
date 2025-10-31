@@ -88,9 +88,9 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
     availableDimensions: [
       {
-        width: 1024,
-        height: 438,
-        label: "1024x438 (21:9)",
+        width: 1344,
+        height: 576,
+        label: "1344x576 (21:9)",
       },
       {
         width: 1024,
@@ -118,9 +118,9 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
         label: "576x1024 (9:16)",
       },
       {
-        width: 438,
-        height: 1024,
-        label: "438x1024 (9:21)",
+        width: 576,
+        height: 1344,
+        label: "576x1344 (9:21)",
       },
     ],
     minGuidanceScale: 1,
@@ -143,9 +143,9 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     },
     availableDimensions: [
       {
-        width: 1024,
-        height: 438,
-        label: "1024x438 (21:9)",
+        width: 1344,
+        height: 576,
+        label: "1344x576 (21:9)",
       },
       {
         width: 1024,
@@ -173,9 +173,9 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
         label: "576x1024 (9:16)",
       },
       {
-        width: 438,
-        height: 1024,
-        label: "438x1024 (9:21)",
+        width: 576,
+        height: 1344,
+        label: "576x1344 (9:21)",
       },
     ],
     minGuidanceScale: 1,
@@ -196,9 +196,9 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     },
     availableDimensions: [
       {
-        width: 1024,
-        height: 438,
-        label: "1024x438 (21:9)",
+        width: 1344,
+        height: 576,
+        label: "1344x576 (21:9)",
       },
       {
         width: 1024,
@@ -419,9 +419,9 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
     availableDimensions: [
       {
-        width: 1024,
-        height: 438,
-        label: "1024x438 (21:9)",
+        width: 1344,
+        height: 576,
+        label: "1344x576 (21:9)",
       },
       {
         width: 1024,
@@ -1034,9 +1034,9 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     defaultDuration: 5,
     availableDimensions: [
       {
-        width: 1024,
-        height: 438,
-        label: "1024x438 (21:9)",
+        width: 1344,
+        height: 576,
+        label: "1344x576 (21:9)",
       },
       {
         width: 1024,
@@ -1168,14 +1168,14 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
         label: "768x1024 (3:4)",
       },
       {
-        width: 1024,
-        height: 438,
-        label: "1024x438 (21:9)",
+        width: 1344,
+        height: 576,
+        label: "1344x576 (21:9)",
       },
       {
-        width: 438,
-        height: 1024,
-        label: "438x1024 (9:21)",
+        width: 576,
+        height: 1344,
+        label: "576x1344 (9:21)",
       },
     ],
   },

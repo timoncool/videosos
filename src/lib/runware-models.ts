@@ -16,6 +16,29 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     description: "Advanced image generation with creative control",
     popularity: 5,
     category: "image",
+    hasNegativePrompt: true,
+    availableDimensions: [
+      // 1K
+      { width: 1024, height: 1024, label: "1024×1024 (1:1) - 1K" },
+      // 2K
+      { width: 2048, height: 2048, label: "2048×2048 (1:1) - 2K" },
+      { width: 2304, height: 1728, label: "2304×1728 (4:3) - 2K" },
+      { width: 1728, height: 2304, label: "1728×2304 (3:4) - 2K" },
+      { width: 2560, height: 1440, label: "2560×1440 (16:9) - 2K" },
+      { width: 1440, height: 2560, label: "1440×2560 (9:16) - 2K" },
+      { width: 2496, height: 1664, label: "2496×1664 (3:2) - 2K" },
+      { width: 1664, height: 2496, label: "1664×2496 (2:3) - 2K" },
+      { width: 3024, height: 1296, label: "3024×1296 (21:9) - 2K" },
+      // 4K
+      { width: 4096, height: 4096, label: "4096×4096 (1:1) - 4K" },
+      { width: 4608, height: 3456, label: "4608×3456 (4:3) - 4K" },
+      { width: 3456, height: 4608, label: "3456×4608 (3:4) - 4K" },
+      { width: 5120, height: 2880, label: "5120×2880 (16:9) - 4K" },
+      { width: 2880, height: 5120, label: "2880×5120 (9:16) - 4K" },
+      { width: 4992, height: 3328, label: "4992×3328 (3:2) - 4K" },
+      { width: 3328, height: 4992, label: "3328×4992 (2:3) - 4K" },
+      { width: 6048, height: 2592, label: "6048×2592 (21:9) - 4K" },
+    ],
   },
   {
     provider: "runware",
@@ -27,22 +50,28 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
   },
   {
     provider: "runware",
+    endpointId: "google:1@1",
+    label: "Imagen 3.0",
+    description: "High-quality image generation from Google Imagen 3.0",
+    popularity: 5,
+    category: "image",
+  },
+  {
+    provider: "runware",
+    endpointId: "google:1@2",
+    label: "Imagen 3.0 Fast",
+    description: "Fast variant of Google Imagen 3.0",
+    popularity: 5,
+    category: "image",
+  },
+  {
+    provider: "runware",
     endpointId: "runware:108@20",
     label: "Qwen-Image-Edit",
     description: "Advanced image editing capabilities",
     popularity: 4,
     category: "image",
     inputAsset: ["image"],
-    initialInput: {
-      positivePrompt: "",
-      seedImage: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-      image: "seedImage",
-      image_url: "seedImage",
-      seedImage: "seedImage",
-    },
   },
   {
     provider: "runware",
@@ -93,6 +122,32 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     description: "Multimodal image generation from Qwen",
     popularity: 4,
     category: "image",
+    hasNegativePrompt: true,
+    minSteps: 1,
+    maxSteps: 100,
+    defaultSteps: 20,
+    minGuidanceScale: 0,
+    maxGuidanceScale: 50,
+    defaultGuidanceScale: 2.5,
+    availableDimensions: [
+      { width: 1024, height: 1024, label: "1024×1024 (1:1) - Square" },
+      { width: 2389, height: 1024, label: "2389×1024 (21:9) - Ultra-Wide" },
+      { width: 1824, height: 1024, label: "1824×1024 (16:9) - Wide" },
+      { width: 1408, height: 1024, label: "1408×1024 (4:3) - Standard" },
+      { width: 1536, height: 1024, label: "1536×1024 (3:2) - Classic" },
+      {
+        width: 1024,
+        height: 1536,
+        label: "1024×1536 (2:3) - Classic Portrait",
+      },
+      {
+        width: 1024,
+        height: 1408,
+        label: "1024×1408 (3:4) - Standard Portrait",
+      },
+      { width: 1024, height: 1824, label: "1024×1824 (9:16) - Tall" },
+      { width: 1024, height: 2389, label: "1024×2389 (9:21) - Ultra-Tall" },
+    ],
   },
   {
     provider: "runware",
@@ -134,14 +189,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     popularity: 4,
     category: "image",
     inputAsset: ["image"],
-  },
-  {
-    provider: "runware",
-    endpointId: "bytedance:3@1",
-    label: "Seedream 3.0",
-    description: "High-quality image generation with realism",
-    popularity: 5,
-    category: "image",
   },
   {
     provider: "runware",
@@ -252,12 +299,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     description: "Image generation from OpenAI",
     popularity: 4,
     category: "image",
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-    },
   },
   {
     provider: "runware",
@@ -267,16 +308,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     popularity: 5,
     category: "image",
     inputAsset: ["image"],
-    initialInput: {
-      positivePrompt: "",
-      seedImage: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-      image: "seedImage",
-      image_url: "seedImage",
-      seedImage: "seedImage",
-    },
   },
   {
     provider: "runware",
@@ -286,16 +317,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     popularity: 5,
     category: "image",
     inputAsset: ["image"],
-    initialInput: {
-      positivePrompt: "",
-      seedImage: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-      image: "seedImage",
-      image_url: "seedImage",
-      seedImage: "seedImage",
-    },
   },
   {
     provider: "runware",
@@ -305,16 +326,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     popularity: 5,
     category: "image",
     inputAsset: ["image"],
-    initialInput: {
-      positivePrompt: "",
-      seedImage: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-      image: "seedImage",
-      image_url: "seedImage",
-      seedImage: "seedImage",
-    },
   },
   {
     provider: "runware",
@@ -446,15 +457,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
       "Fast variant of Seedance 1.0 Pro for high-speed video generation. Supports text-to-video and image-to-video",
     popularity: 5,
     category: "video",
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-      image: "seedImage",
-      image_url: "seedImage",
-      seedImage: "seedImage",
-    },
     availableDurations: [5, 10],
     availableDimensions: [
       { width: 864, height: 480, label: "16:9 (480p)" },
@@ -484,15 +486,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
       "High-quality video generation with advanced features. Supports text-to-video and image-to-video",
     popularity: 5,
     category: "video",
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-      image: "seedImage",
-      image_url: "seedImage",
-      seedImage: "seedImage",
-    },
     availableDurations: [5, 10],
     availableDimensions: [
       { width: 864, height: 480, label: "16:9 (480p)" },
@@ -522,15 +515,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
       "Lightweight video generation model. Supports text-to-video and image-to-video",
     popularity: 4,
     category: "video",
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-      image: "seedImage",
-      image_url: "seedImage",
-      seedImage: "seedImage",
-    },
     availableDurations: [5, 10],
     availableDimensions: [
       { width: 864, height: 480, label: "16:9 (480p)" },
@@ -552,15 +536,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
   },
   {
     provider: "runware",
-    endpointId: "bytedance:5@2",
-    label: "OmniHuman-1.5",
-    description: "Enhanced human animation from image and audio",
-    popularity: 5,
-    category: "video",
-    inputAsset: ["image", "audio"],
-  },
-  {
-    provider: "runware",
     endpointId: "bytedance:5@1",
     label: "OmniHuman-1",
     description: "Human animation from image and audio",
@@ -579,15 +554,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     popularity: 5,
     category: "video",
     // inputAsset removed - supports both text-to-video and image-to-video
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-      image: "seedImage",
-      image_url: "seedImage",
-      seedImage: "seedImage",
-    },
     availableDurations: [6, 8, 10],
     availableDimensions: [
       {
@@ -617,15 +583,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     popularity: 5,
     category: "video",
     // inputAsset removed - supports both text-to-video and image-to-video
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-      image: "seedImage",
-      image_url: "seedImage",
-      seedImage: "seedImage",
-    },
     availableDurations: [6, 8, 10],
     availableDimensions: [
       {
@@ -665,15 +622,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     popularity: 5,
     category: "video",
     // inputAsset removed - supports both text-to-video and image-to-video
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-      image: "seedImage",
-      image_url: "seedImage",
-      seedImage: "seedImage",
-    },
   },
   {
     provider: "runware",
@@ -684,15 +632,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     popularity: 5,
     category: "video",
     // inputAsset removed - supports both text-to-video and image-to-video
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-      image: "seedImage",
-      image_url: "seedImage",
-      seedImage: "seedImage",
-    },
   },
   {
     provider: "runware",
@@ -721,15 +660,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     popularity: 4,
     category: "video",
     // inputAsset removed - supports both text-to-video and image-to-video
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-      image: "seedImage",
-      image_url: "seedImage",
-      seedImage: "seedImage",
-    },
   },
   {
     provider: "runware",
@@ -749,15 +679,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     popularity: 4,
     category: "video",
     // inputAsset removed - supports both text-to-video and image-to-video
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-      image: "seedImage",
-      image_url: "seedImage",
-      seedImage: "seedImage",
-    },
   },
 
   // MiniMax Video Models
@@ -769,15 +690,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
       "Latest MiniMax Hailuo video generation model. Supports text-to-video and image-to-video",
     popularity: 5,
     category: "video",
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-      image: "seedImage",
-      image_url: "seedImage",
-      seedImage: "seedImage",
-    },
     // From user's interface description
     availableDurations: [6, 10],
     availableDimensions: [
@@ -802,15 +714,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
       "Fast variant of MiniMax Hailuo 2.3 for high-speed generation. Supports text-to-video and image-to-video",
     popularity: 5,
     category: "video",
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-      image: "seedImage",
-      image_url: "seedImage",
-      seedImage: "seedImage",
-    },
     // Same as Hailuo 2.3
     availableDurations: [6, 10],
     availableDimensions: [
@@ -834,12 +737,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     description: "MiniMax Hailuo 02 text-to-video model",
     popularity: 5,
     category: "video",
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-    },
     availableDurations: [6, 10],
     availableDimensions: [
       { width: 1366, height: 768, label: "16:9 (768p)" },
@@ -860,15 +757,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     popularity: 4,
     category: "video",
     // inputAsset removed - supports both text-to-video and image-to-video
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-      image: "seedImage",
-      image_url: "seedImage",
-      seedImage: "seedImage",
-    },
     availableDurations: [6],
     availableDimensions: [{ width: 1366, height: 768, label: "16:9 (768p)" }],
     availableFps: [25],
@@ -887,16 +775,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     popularity: 5,
     category: "video",
     inputAsset: ["image"],
-    initialInput: {
-      positivePrompt: "",
-      seedImage: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-      image: "seedImage",
-      image_url: "seedImage",
-      seedImage: "seedImage",
-    },
     availableDurations: [1, 2, 3, 4, 5, 6, 7, 8],
     availableDimensions: [
       { width: 640, height: 360, label: "16:9 - 360p" },
@@ -918,16 +796,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     popularity: 5,
     category: "video",
     inputAsset: ["image"],
-    initialInput: {
-      positivePrompt: "",
-      seedImage: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-      image: "seedImage",
-      image_url: "seedImage",
-      seedImage: "seedImage",
-    },
     availableDurations: [1, 2, 3, 4, 5, 6, 7, 8],
     availableDimensions: [
       { width: 640, height: 360, label: "16:9 - 360p" },
@@ -950,15 +818,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     popularity: 4,
     category: "video",
     // inputAsset removed - supports both text-to-video and image-to-video
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-      image: "seedImage",
-      image_url: "seedImage",
-      seedImage: "seedImage",
-    },
     availableDurations: [5],
     availableDimensions: [
       { width: 1920, height: 1080, label: "16:9 (1080p)" },
@@ -982,15 +841,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     popularity: 5,
     category: "video",
     // inputAsset removed - image is optional for text-to-video
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-      image: "seedImage",
-      image_url: "seedImage",
-      seedImage: "seedImage",
-    },
     // Real constraints from user's screenshot (newer than docs)
     availableDurations: [4, 6, 8],
     availableDimensions: [
@@ -1022,15 +872,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     popularity: 5,
     category: "video",
     // inputAsset removed - image is optional for text-to-video
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-      image: "seedImage",
-      image_url: "seedImage",
-      seedImage: "seedImage",
-    },
     availableDurations: [8],
     availableDimensions: [
       { width: 1280, height: 720, label: "16:9 (Standard / Landscape) - 720p" },
@@ -1061,15 +902,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     popularity: 5,
     category: "video",
     // inputAsset removed - image is optional for text-to-video
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-      image: "seedImage",
-      image_url: "seedImage",
-      seedImage: "seedImage",
-    },
     availableDurations: [8],
     availableDimensions: [
       { width: 1280, height: 720, label: "16:9 (Standard / Landscape) - 720p" },
@@ -1100,15 +932,35 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     popularity: 5,
     category: "video",
     // inputAsset removed - image is optional for text-to-video
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-      image: "seedImage",
-      image_url: "seedImage",
-      seedImage: "seedImage",
-    },
+    availableDurations: [8],
+    availableDimensions: [
+      { width: 1280, height: 720, label: "16:9 (Standard / Landscape) - 720p" },
+      { width: 720, height: 1280, label: "9:16 (Standard / Portrait) - 720p" },
+      {
+        width: 1920,
+        height: 1080,
+        label: "16:9 (Standard / Landscape) - 1080p",
+      },
+      {
+        width: 1080,
+        height: 1920,
+        label: "9:16 (Standard / Portrait) - 1080p",
+      },
+    ],
+    availableFps: [24],
+    defaultDuration: 8,
+    defaultWidth: 1280,
+    defaultHeight: 720,
+    defaultFps: 24,
+  },
+  {
+    provider: "runware",
+    endpointId: "google:2@0",
+    label: "Google Veo 2.0",
+    description:
+      "Google Veo 2.0 video generation model. Supports text-to-video and image-to-video",
+    popularity: 5,
+    category: "video",
     availableDurations: [8],
     availableDimensions: [
       { width: 1280, height: 720, label: "16:9 (Standard / Landscape) - 720p" },
@@ -1142,15 +994,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     popularity: 5,
     category: "video",
     // inputAsset removed - image is optional for text-to-video
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-      image: "seedImage",
-      image_url: "seedImage",
-      seedImage: "seedImage",
-    },
     availableDurations: [4, 8, 12],
     availableDimensions: [
       { width: 1280, height: 720, label: "16:9 (Standard / Landscape) - 720p" },
@@ -1174,15 +1017,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     popularity: 5,
     category: "video",
     // inputAsset removed - image is optional for text-to-video
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-      image: "seedImage",
-      image_url: "seedImage",
-      seedImage: "seedImage",
-    },
     availableDurations: [4, 8, 12],
     availableDimensions: [
       { width: 1280, height: 720, label: "16:9 (Standard / Landscape) - 720p" },
@@ -1205,15 +1039,36 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     popularity: 5,
     category: "video",
     // inputAsset removed - supports both text-to-video and image-to-video
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-      image: "seedImage",
-      image_url: "seedImage",
-      seedImage: "seedImage",
-    },
+    hasNegativePrompt: true,
+    availableDurations: [5, 8],
+    defaultDuration: 5,
+    availableDimensions: [
+      // 16:9 (Landscape)
+      { width: 640, height: 360, label: "640×360 (16:9) - 360p" },
+      { width: 960, height: 540, label: "960×540 (16:9) - 540p" },
+      { width: 1280, height: 720, label: "1280×720 (16:9) - 720p" },
+      { width: 1920, height: 1080, label: "1920×1080 (16:9) - 1080p" },
+      // 4:3 (Standard)
+      { width: 480, height: 360, label: "480×360 (4:3) - 360p" },
+      { width: 720, height: 540, label: "720×540 (4:3) - 540p" },
+      { width: 960, height: 720, label: "960×720 (4:3) - 720p" },
+      { width: 1440, height: 1080, label: "1440×1080 (4:3) - 1080p" },
+      // 1:1 (Square)
+      { width: 360, height: 360, label: "360×360 (1:1) - 360p" },
+      { width: 540, height: 540, label: "540×540 (1:1) - 540p" },
+      { width: 720, height: 720, label: "720×720 (1:1) - 720p" },
+      { width: 1080, height: 1080, label: "1080×1080 (1:1) - 1080p" },
+      // 3:4 (Portrait)
+      { width: 360, height: 480, label: "360×480 (3:4) - 360p" },
+      { width: 540, height: 720, label: "540×720 (3:4) - 540p" },
+      { width: 720, height: 960, label: "720×960 (3:4) - 720p" },
+      { width: 1080, height: 1440, label: "1080×1440 (3:4) - 1080p" },
+      // 9:16 (Tall)
+      { width: 360, height: 640, label: "360×640 (9:16) - 360p" },
+      { width: 540, height: 960, label: "540×960 (9:16) - 540p" },
+      { width: 720, height: 1280, label: "720×1280 (9:16) - 720p" },
+      { width: 1080, height: 1920, label: "1080×1920 (9:16) - 1080p" },
+    ],
   },
   {
     provider: "runware",
@@ -1224,15 +1079,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     popularity: 4,
     category: "video",
     // inputAsset removed - supports both text-to-video and image-to-video
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-      image: "seedImage",
-      image_url: "seedImage",
-      seedImage: "seedImage",
-    },
   },
   {
     provider: "runware",
@@ -1252,12 +1098,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     description: "Preview of Runware Wan 2.5 video model",
     popularity: 5,
     category: "video",
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-    },
   },
   {
     provider: "runware",
@@ -1267,12 +1107,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
       "Turbo variant of Runware Wan 2.2 A14B for high-speed generation",
     popularity: 5,
     category: "video",
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-    },
   },
   {
     provider: "runware",
@@ -1281,12 +1115,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     description: "Runware Wan 2.2 A14B video generation model",
     popularity: 5,
     category: "video",
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-    },
   },
   {
     provider: "runware",
@@ -1295,12 +1123,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     description: "Runware Ovi video generation model",
     popularity: 5,
     category: "video",
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-    },
   },
 
   {

@@ -337,7 +337,7 @@ export function MediaGallerySheet({
                 {t("delete")}
               </Button>
             </div>
-            <div className="flex-1 flex flex-col gap-2 justify-end">
+            <div className="flex-1 flex flex-col gap-2 justify-end overflow-y-auto">
               <MediaPropertyItem
                 label={t("mediaUrl")}
                 value={mediaUrl ?? "n/a"}
@@ -365,6 +365,72 @@ export function MediaGallerySheet({
               >
                 <code>{selectedMedia.requestId}</code>
               </MediaPropertyItem>
+
+              <Separator className="my-2" />
+
+              {/* Generation Parameters Section */}
+              <div className="text-xs font-semibold text-muted-foreground mb-2">
+                Generation Parameters
+              </div>
+              {selectedMedia.input &&
+                Object.entries(selectedMedia.input).map(([key, value]) => {
+                  // Skip rendering complex objects and null/undefined values
+                  if (
+                    value === null ||
+                    value === undefined ||
+                    (typeof value === "object" && !Array.isArray(value))
+                  ) {
+                    return null;
+                  }
+
+                  const displayValue =
+                    typeof value === "object"
+                      ? JSON.stringify(value)
+                      : String(value);
+
+                  return (
+                    <MediaPropertyItem
+                      key={key}
+                      label={key}
+                      value={displayValue}
+                    />
+                  );
+                })}
+
+              {selectedMedia.metadata &&
+                Object.keys(selectedMedia.metadata).length > 0 && (
+                  <>
+                    <Separator className="my-2" />
+                    <div className="text-xs font-semibold text-muted-foreground mb-2">
+                      Generation Metadata
+                    </div>
+                    {Object.entries(selectedMedia.metadata).map(
+                      ([key, value]) => {
+                        // Skip rendering complex objects and null/undefined values
+                        if (
+                          value === null ||
+                          value === undefined ||
+                          (typeof value === "object" && !Array.isArray(value))
+                        ) {
+                          return null;
+                        }
+
+                        const displayValue =
+                          typeof value === "object"
+                            ? JSON.stringify(value)
+                            : String(value);
+
+                        return (
+                          <MediaPropertyItem
+                            key={key}
+                            label={key}
+                            value={displayValue}
+                          />
+                        );
+                      },
+                    )}
+                  </>
+                )}
             </div>
           </div>
         </SheetPanel>

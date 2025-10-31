@@ -23,6 +23,7 @@ import {
   WandSparklesIcon,
   XIcon,
 } from "lucide-react";
+import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import type { KeyboardEvent } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { MediaItemRow } from "./media-panel";
@@ -34,7 +35,16 @@ import {
 } from "./ui/accordion";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "./ui/command";
 import { Input } from "./ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import { Textarea } from "./ui/textarea";
 
@@ -131,37 +141,115 @@ const getProviderForEndpoint = (
   return undefined;
 };
 
+// Helper function to determine model subcategory
+const getModelSubcategory = (
+  endpoint: (typeof ALL_ENDPOINTS)[number],
+): string => {
+  const { category, inputAsset } = endpoint;
+
+  if (category === "image") {
+    if (inputAsset && inputAsset.length > 0) {
+      return "image-to-image";
+    }
+    return "text-to-image";
+  }
+
+  if (category === "video") {
+    if (inputAsset && inputAsset.length > 0) {
+      return "image-to-video";
+    }
+    return "text-to-video";
+  }
+
+  return category; // music, voiceover
+};
+
+const subcategoryLabels: Record<string, string> = {
+  "text-to-image": "Text to Image",
+  "image-to-image": "Image to Image",
+  "text-to-video": "Text to Video",
+  "image-to-video": "Image to Video",
+  music: "Music",
+  voiceover: "Voiceover",
+};
+
 type ModelEndpointPickerProps = {
   mediaType: string;
-  onValueChange: (value: MediaType) => void;
-} & Parameters<typeof Select>[0];
+  value?: string;
+  onValueChange: (value: string) => void;
+};
 
 function ModelEndpointPicker({
   mediaType,
-  ...props
+  value,
+  onValueChange,
 }: ModelEndpointPickerProps) {
+  const [open, setOpen] = useState(false);
   const [providerFilter, setProviderFilter] = useState<
     "all" | "fal" | "runware"
   >("all");
+  const [typeFilter, setTypeFilter] = useState<string>("all");
+
+  const allEndpoints = useMemo(
+    () => [...AVAILABLE_ENDPOINTS, ...RUNWARE_ENDPOINTS],
+    [],
+  );
 
   const endpoints = useMemo(() => {
-    const allEndpoints = [...AVAILABLE_ENDPOINTS, ...RUNWARE_ENDPOINTS];
     const filtered = allEndpoints
       .filter((endpoint) => {
         if (endpoint.category !== mediaType) return false;
         if (providerFilter !== "all" && endpoint.provider !== providerFilter)
           return false;
+        if (typeFilter !== "all") {
+          const subcat = getModelSubcategory(endpoint);
+          if (subcat !== typeFilter) return false;
+        }
         return true;
       })
       .sort((a, b) => {
-        if (a.provider !== b.provider) {
-          return a.provider === "fal" ? -1 : 1;
+        // First, group by subcategory
+        const subcatA = getModelSubcategory(a);
+        const subcatB = getModelSubcategory(b);
+
+        if (subcatA !== subcatB) {
+          return subcatA.localeCompare(subcatB);
         }
-        return b.popularity - a.popularity;
+
+        // Within same subcategory, sort alphabetically by label
+        return a.label.localeCompare(b.label);
       });
 
     return filtered;
-  }, [mediaType, providerFilter]);
+  }, [allEndpoints, mediaType, providerFilter, typeFilter]);
+
+  // Group endpoints by subcategory for rendering with headers
+  const groupedEndpoints = useMemo(() => {
+    const groups: Record<string, typeof endpoints> = {};
+
+    endpoints.forEach((endpoint) => {
+      const subcat = getModelSubcategory(endpoint);
+      if (!groups[subcat]) {
+        groups[subcat] = [];
+      }
+      groups[subcat].push(endpoint);
+    });
+
+    return groups;
+  }, [endpoints]);
+
+  // Get available subcategories for current media type
+  const availableSubcategories = useMemo(() => {
+    const subcats = new Set<string>();
+    allEndpoints.forEach((endpoint) => {
+      if (endpoint.category === mediaType) {
+        subcats.add(getModelSubcategory(endpoint));
+      }
+    });
+    return Array.from(subcats).sort();
+  }, [allEndpoints, mediaType]);
+
+  const selectedEndpoint = allEndpoints.find((e) => e.endpointId === value);
 
   return (
     <div className="flex flex-col gap-2">
@@ -176,53 +264,119 @@ function ModelEndpointPicker({
         </TabsList>
       </Tabs>
 
-      <Select {...props}>
-        <SelectTrigger className="text-base w-full minw-56 font-semibold">
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          {endpoints.map((endpoint) => {
-            let displayCost: string | null = null;
+      {/* Type filter chips */}
+      {availableSubcategories.length > 1 && (
+        <div className="flex flex-wrap gap-1">
+          <Button
+            variant={typeFilter === "all" ? "secondary" : "ghost"}
+            size="sm"
+            className="h-7 text-xs"
+            onClick={() => setTypeFilter("all")}
+          >
+            All Types
+          </Button>
+          {availableSubcategories.map((subcat) => (
+            <Button
+              key={subcat}
+              variant={typeFilter === subcat ? "secondary" : "ghost"}
+              size="sm"
+              className="h-7 text-xs"
+              onClick={() => setTypeFilter(subcat)}
+            >
+              {subcategoryLabels[subcat] || subcat}
+            </Button>
+          ))}
+        </div>
+      )}
 
-            if (endpoint.provider === "fal") {
-              // Calculate estimated cost with default parameters for FAL models
-              const estimatedCost = calculateModelCost(endpoint.endpointId, {
-                duration: endpoint.defaultDuration || 5,
-                width: endpoint.defaultWidth || 1024,
-                height: endpoint.defaultHeight || 1024,
-                textLength: 100, // Default text length for estimation
-                quantity: 1,
-              });
+      <Popover open={open} onOpenChange={setOpen} modal>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            className="w-full justify-between text-base font-semibold"
+          >
+            <span className="truncate">
+              {selectedEndpoint?.label || "Select model..."}
+            </span>
+            <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[450px] p-0" align="start">
+          <Command>
+            <CommandInput placeholder="Search models..." className="h-9" />
+            <CommandList>
+              <CommandEmpty>No model found</CommandEmpty>
+              {Object.entries(groupedEndpoints).map(
+                ([subcategory, subcategoryEndpoints]) => (
+                  <CommandGroup
+                    key={subcategory}
+                    heading={subcategoryLabels[subcategory] || subcategory}
+                  >
+                    {subcategoryEndpoints.map((endpoint) => {
+                      let displayCost: string | null = null;
 
-              if (estimatedCost !== null) {
-                displayCost = formatCost(estimatedCost);
-              } else if (endpoint.cost) {
-                // Fallback to hardcoded cost if calculation not possible
-                displayCost = endpoint.cost;
-              }
-            }
-            // For Runware, don't show pricing in selector (shown after generation)
+                      if (endpoint.provider === "fal") {
+                        // Calculate estimated cost with default parameters for FAL models
+                        const estimatedCost = calculateModelCost(
+                          endpoint.endpointId,
+                          {
+                            duration: endpoint.defaultDuration || 5,
+                            width: endpoint.defaultWidth || 1024,
+                            height: endpoint.defaultHeight || 1024,
+                            textLength: 100,
+                            quantity: 1,
+                          },
+                        );
 
-            return (
-              <SelectItem key={endpoint.endpointId} value={endpoint.endpointId}>
-                <div className="flex flex-row gap-2 items-center justify-between w-full">
-                  <div className="flex items-center gap-2">
-                    <span>{endpoint.label}</span>
-                    <Badge variant="outline" className="text-xs">
-                      {endpoint.provider}
-                    </Badge>
-                  </div>
-                  {displayCost && (
-                    <span className="text-xs text-white/70 ml-2">
-                      {displayCost}
-                    </span>
-                  )}
-                </div>
-              </SelectItem>
-            );
-          })}
-        </SelectContent>
-      </Select>
+                        if (estimatedCost !== null) {
+                          displayCost = formatCost(estimatedCost);
+                        } else if (endpoint.cost) {
+                          displayCost = endpoint.cost;
+                        }
+                      }
+
+                      return (
+                        <CommandItem
+                          key={endpoint.endpointId}
+                          value={`${endpoint.label} ${endpoint.provider} ${endpoint.endpointId}`}
+                          onSelect={() => {
+                            onValueChange(endpoint.endpointId);
+                            setOpen(false);
+                          }}
+                        >
+                          <div className="flex flex-row gap-2 items-center justify-between w-full">
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm">{endpoint.label}</span>
+                              <Badge variant="outline" className="text-xs">
+                                {endpoint.provider}
+                              </Badge>
+                            </div>
+                            {displayCost && (
+                              <span className="text-xs text-muted-foreground ml-2">
+                                ~{displayCost}
+                              </span>
+                            )}
+                          </div>
+                          <CheckIcon
+                            className={cn(
+                              "ml-auto h-4 w-4",
+                              value === endpoint.endpointId
+                                ? "opacity-100"
+                                : "opacity-0",
+                            )}
+                          />
+                        </CommandItem>
+                      );
+                    })}
+                  </CommandGroup>
+                ),
+              )}
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
     </div>
   );
 }
@@ -1295,7 +1449,7 @@ export default function RightPanel({
                                     "9:16": { width: 576, height: 1024 },
                                     "4:3": { width: 1024, height: 768 },
                                     "3:4": { width: 768, height: 1024 },
-                                    "21:9": { width: 1024, height: 438 },
+                                    "21:9": { width: 1344, height: 576 }, // Must be multiples of 64 for Runware
                                   };
                                   const dimensions = dimensionsMap[value];
                                   setGenerateData({
@@ -1622,19 +1776,24 @@ export default function RightPanel({
             <div className="flex flex-col gap-2">
               {/* Estimated cost display for FAL models */}
               {estimatedCost !== null && isFalEndpoint(endpointId) && (
-                <div className="flex items-center justify-between px-3 py-2 bg-accent/30 rounded-md border border-accent">
-                  <span className="text-xs text-muted-foreground">
-                    Estimated cost:
-                  </span>
-                  <span className="text-sm font-semibold">
-                    {formatCost(estimatedCost)}
-                  </span>
-                </div>
+                <>
+                  <div className="flex items-center justify-between px-3 py-2 bg-accent/30 rounded-md border border-accent">
+                    <span className="text-xs text-muted-foreground">
+                      Estimated cost:
+                    </span>
+                    <span className="text-sm font-semibold">
+                      {formatCost(estimatedCost)}
+                    </span>
+                  </div>
+                  <div className="text-xs text-muted-foreground/70 text-center px-2">
+                    FAL pricing is estimated and may vary based on actual usage
+                  </div>
+                </>
               )}
               {/* Info message for Runware pricing */}
               {isRunwareEndpoint(endpointId) && (
                 <div className="text-xs text-muted-foreground text-center px-2">
-                  Pricing for Runware will be shown after generation
+                  Runware pricing will be shown after generation
                 </div>
               )}
               {!isAssetProvided && missingAssetLabels && (

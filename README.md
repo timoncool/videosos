@@ -114,6 +114,57 @@ You can use either provider independently or both simultaneously. Simply add you
 
 Both API keys are stored locally in your browser and never sent to our servers.
 
+## For Developers
+
+### Updating Model Information
+
+VideoSOS includes automated scripts to keep model information up-to-date with provider APIs. Here's how to update models:
+
+#### FAL Models
+
+Run the FAL model update script to fetch latest models and pricing:
+
+```bash
+npm run update-fal-models
+```
+
+This script:
+- Fetches all available models from FAL API
+- Updates model schemas and parameters
+- Syncs pricing information
+- Updates `src/lib/fal.ts` and related files
+
+#### Runware Models
+
+For Runware models, manually enrich model configurations in `src/lib/runware-models.ts` based on [Runware documentation](https://docs.runware.ai/):
+
+1. Check model documentation for available parameters
+2. Add `availableDimensions`, `hasNegativePrompt`, `availableSteps`, etc.
+3. Verify changes match actual API capabilities
+
+**Example enrichment:**
+```typescript
+{
+  endpointId: "google:4@1",
+  label: "Gemini Flash Image 2.5",
+  hasNegativePrompt: true,
+  availableDimensions: [
+    { width: 1024, height: 1024, label: "1024×1024 (1:1)" },
+    { width: 1824, height: 1024, label: "1824×1024 (16:9)" },
+    // ... more dimensions
+  ],
+}
+```
+
+#### Safe Updates
+
+The project includes safe update scripts that preserve existing configurations:
+
+```bash
+# Apply FAL parameter updates safely
+npm run safe-apply-parameters
+```
+
 ### Tech Stack
 
 - [fal.ai](https://fal.ai) - AI model infrastructure

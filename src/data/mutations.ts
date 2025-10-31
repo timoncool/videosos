@@ -234,11 +234,24 @@ export const useJobCreator = ({
       if (mediaType === "image") {
         const isIdeogram = endpointId.startsWith("ideogram:");
 
+        // Runware requires dimensions to be multiples of 64
+        const roundToMultipleOf64 = (value: number): number => {
+          return Math.round(value / 64) * 64;
+        };
+
+        // Get dimensions and round ONLY for Runware
+        let width = input.width || 1024;
+        let height = input.height || 1024;
+
+        // Round to multiples of 64 for Runware compatibility
+        width = roundToMultipleOf64(width);
+        height = roundToMultipleOf64(height);
+
         const imageParams: any = {
           positivePrompt: input.prompt || "",
           model: endpointId,
-          height: input.height || 1024,
-          width: input.width || 1024,
+          height,
+          width,
           numberResults: input.numberResults || 1,
           outputType: "URL" as const,
           outputFormat: (input.outputFormat || "JPG") as "JPG" | "PNG" | "WEBP",
