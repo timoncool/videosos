@@ -106,9 +106,22 @@ export const FAMILY_CAPABILITIES: Record<string, ModelCapabilities> = {
   },
 
   "flux-pro": {
-    ...DEFAULT_CAPABILITIES,
-    steps: { supported: true, min: 1, max: 50, default: 20 },
-    cfgScale: { supported: true, min: 1, max: 20, default: 3.5 },
+    prompt: "required",
+    negativePrompt: true,
+    seed: true,
+    seedImage: false,
+    maskImage: false,
+    outpainting: false,
+    steps: { supported: false },
+    cfgScale: { supported: false },
+    scheduler: false,
+    clipSkip: false,
+    checkNSFW: false,
+    numberResults: true,
+    outputQuality: false,
+    outputFormats: ["PNG", "WEBP", "JPG"],
+    outputType: true,
+    dimensionRule: "multiples_of_64",
   },
 
   "qwen-image": {
