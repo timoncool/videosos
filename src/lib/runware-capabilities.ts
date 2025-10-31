@@ -17,9 +17,10 @@ export type ModelCapabilities = {
   checkNSFW: boolean;
   numberResults: boolean;
   outputQuality: boolean;
-  outputFormats: Array<"JPG" | "PNG" | "WEBP">;
+  outputFormats: Array<"JPG" | "JPEG" | "PNG" | "WEBP">;
   outputType: boolean;
   dimensionRule: "multiples_of_64" | "fixed_set";
+  availableDimensions?: Array<{ width: number; height: number; label: string }>;
 };
 
 const DEFAULT_CAPABILITIES: ModelCapabilities = {
@@ -44,7 +45,7 @@ const DEFAULT_CAPABILITIES: ModelCapabilities = {
 export const FAMILY_CAPABILITIES: Record<string, ModelCapabilities> = {
   google: {
     prompt: "required",
-    negativePrompt: true,
+    negativePrompt: false,
     seed: true,
     seedImage: false,
     maskImage: false,
@@ -56,9 +57,16 @@ export const FAMILY_CAPABILITIES: Record<string, ModelCapabilities> = {
     checkNSFW: false,
     numberResults: true,
     outputQuality: false,
-    outputFormats: ["JPG", "PNG", "WEBP"],
+    outputFormats: ["PNG", "JPEG", "WEBP"],
     outputType: true,
-    dimensionRule: "multiples_of_64",
+    dimensionRule: "fixed_set",
+    availableDimensions: [
+      { width: 1024, height: 1024, label: "1:1 (Square)" },
+      { width: 1408, height: 768, label: "16:9 (Landscape)" },
+      { width: 768, height: 1408, label: "9:16 (Portrait)" },
+      { width: 1280, height: 896, label: "4:3 (Landscape)" },
+      { width: 896, height: 1280, label: "3:4 (Portrait)" },
+    ],
   },
 
   ideogram: {
@@ -244,16 +252,48 @@ export function buildRunwarePayload(
   if (capabilities.dimensionRule === "multiples_of_64") {
     width = roundToMultipleOf64(width);
     height = roundToMultipleOf64(height);
+  } else if (
+    capabilities.dimensionRule === "fixed_set" &&
+    capabilities.availableDimensions
+  ) {
+    const requestedRatio = width / height;
+    let closestMatch = capabilities.availableDimensions[0];
+    let smallestDiff = Math.abs(
+      closestMatch.width / closestMatch.height - requestedRatio,
+    );
+
+    for (const dim of capabilities.availableDimensions) {
+      const diff = Math.abs(dim.width / dim.height - requestedRatio);
+      if (diff < smallestDiff) {
+        smallestDiff = diff;
+        closestMatch = dim;
+      }
+    }
+
+    width = closestMatch.width;
+    height = closestMatch.height;
   }
 
+  let outputFormat = (input.outputFormat || "PNG") as string;
+  if (outputFormat === "JPG") {
+    outputFormat = "JPEG";
+  }
+  if (
+    capabilities.outputFormats &&
+    !capabilities.outputFormats.includes(outputFormat as "JPG" | "JPEG" | "PNG" | "WEBP")
+  ) {
+    outputFormat = "PNG"; // Safe default
+  }
+
+  const outputType = input.outputType ?? ["URL"];
   const payload: Record<string, unknown> = {
     positivePrompt: input.prompt || "",
     model: endpointId,
     height,
     width,
     numberResults: capabilities.numberResults ? input.numberResults || 1 : 1,
-    outputType: "URL" as const,
-    outputFormat: (input.outputFormat || "JPG") as "JPG" | "PNG" | "WEBP",
+    outputType: Array.isArray(outputType) ? outputType : [outputType],
+    outputFormat: outputFormat as "PNG" | "JPEG" | "WEBP",
     includeCost: input.includeCost !== undefined ? input.includeCost : true,
   };
 
@@ -273,9 +313,8 @@ export function buildRunwarePayload(
     payload.CFGScale = input.CFGScale || capabilities.cfgScale.default || 3.5;
   }
 
-  if (capabilities.outputQuality) {
-    payload.outputQuality =
-      input.outputQuality || (mediaType === "video" ? 99 : 85);
+  if (capabilities.outputQuality && input.outputQuality !== undefined) {
+    payload.outputQuality = input.outputQuality;
   }
 
   if (capabilities.steps.supported && input.steps !== undefined) {
