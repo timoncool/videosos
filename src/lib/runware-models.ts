@@ -109,14 +109,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
   },
   {
     provider: "runware",
-    endpointId: "runware:109@1",
-    label: "FLUX.1 [dev] SRPO",
-    description: "FLUX development model with SRPO optimization",
-    popularity: 5,
-    category: "image",
-  },
-  {
-    provider: "runware",
     endpointId: "runware:108@1",
     label: "Qwen-Image",
     description: "Multimodal image generation from Qwen",
