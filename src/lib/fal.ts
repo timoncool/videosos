@@ -515,12 +515,6 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
         preset: "landscape_16_9",
       },
       {
-        width: 768,
-        height: 1024,
-        label: "768x1024 (3:4) - Portrait",
-        preset: "portrait_3_4",
-      },
-      {
         width: 576,
         height: 1024,
         label: "576x1024 (9:16) - Portrait",

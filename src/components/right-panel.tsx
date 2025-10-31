@@ -625,7 +625,7 @@ export default function RightPanel({
   const aspectRatioMap = {
     "16:9": { image: "landscape_16_9", video: "16:9" },
     "9:16": { image: "portrait_9_16", video: "9:16" },
-    "1:1": { image: "square_1_1", video: "1:1" },
+    "1:1": { image: "square", video: "1:1" },
   };
 
   const isFal = provider === "fal";
