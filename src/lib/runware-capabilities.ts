@@ -128,6 +128,7 @@ export const FAMILY_CAPABILITIES: Record<string, ModelCapabilities> = {
     ...DEFAULT_CAPABILITIES,
     steps: { supported: true, min: 1, max: 100, default: 20 },
     cfgScale: { supported: true, min: 0, max: 50, default: 2.5 },
+    dimensionRule: "fixed_set",
   },
 
   sdxl: {
