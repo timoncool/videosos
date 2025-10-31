@@ -137,6 +137,14 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
   },
   {
     provider: "runware",
+    endpointId: "bytedance:3@1",
+    label: "Seedream 3.0",
+    description: "High-quality image generation with realism",
+    popularity: 5,
+    category: "image",
+  },
+  {
+    provider: "runware",
     endpointId: "ideogram:4@1",
     label: "Ideogram 3.0",
     description: "Text-to-image with superior text rendering",
