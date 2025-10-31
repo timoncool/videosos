@@ -16,12 +16,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     description: "Advanced image generation with creative control",
     popularity: 5,
     category: "image",
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-    },
   },
   {
     provider: "runware",
@@ -30,12 +24,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     description: "Fast image generation from Google",
     popularity: 5,
     category: "image",
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-    },
   },
   {
     provider: "runware",
@@ -149,20 +137,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
   },
   {
     provider: "runware",
-    endpointId: "bytedance:3@1",
-    label: "Seedream 3.0",
-    description: "High-quality image generation with realism",
-    popularity: 5,
-    category: "image",
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-    },
-  },
-  {
-    provider: "runware",
     endpointId: "ideogram:4@1",
     label: "Ideogram 3.0",
     description: "Text-to-image with superior text rendering",
@@ -254,12 +228,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     description: "Highest quality Imagen 4 model",
     popularity: 5,
     category: "image",
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-    },
   },
   {
     provider: "runware",
@@ -268,12 +236,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     description: "Fast preview image generation from Google",
     popularity: 5,
     category: "image",
-    initialInput: {
-      positivePrompt: "",
-    },
-    inputMap: {
-      prompt: "positivePrompt",
-    },
   },
   {
     provider: "runware",
