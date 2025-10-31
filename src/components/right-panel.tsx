@@ -227,13 +227,13 @@ function ModelEndpointPicker({
   const groupedEndpoints = useMemo(() => {
     const groups: Record<string, typeof endpoints> = {};
 
-    endpoints.forEach((endpoint) => {
+    for (const endpoint of endpoints) {
       const subcat = getModelSubcategory(endpoint);
       if (!groups[subcat]) {
         groups[subcat] = [];
       }
       groups[subcat].push(endpoint);
-    });
+    }
 
     return groups;
   }, [endpoints]);
@@ -241,11 +241,11 @@ function ModelEndpointPicker({
   // Get available subcategories for current media type
   const availableSubcategories = useMemo(() => {
     const subcats = new Set<string>();
-    allEndpoints.forEach((endpoint) => {
+    for (const endpoint of allEndpoints) {
       if (endpoint.category === mediaType) {
         subcats.add(getModelSubcategory(endpoint));
       }
-    });
+    }
     return Array.from(subcats).sort();
   }, [allEndpoints, mediaType]);
 

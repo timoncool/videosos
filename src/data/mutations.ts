@@ -232,42 +232,14 @@ export const useJobCreator = ({
       const taskUUID = crypto.randomUUID();
 
       if (mediaType === "image") {
-        const isIdeogram = endpointId.startsWith("ideogram:");
-
-        // Runware requires dimensions to be multiples of 64
-        const roundToMultipleOf64 = (value: number): number => {
-          return Math.round(value / 64) * 64;
-        };
-
-        // Get dimensions and round ONLY for Runware
-        let width = input.width || 1024;
-        let height = input.height || 1024;
-
-        // Round to multiples of 64 for Runware compatibility
-        width = roundToMultipleOf64(width);
-        height = roundToMultipleOf64(height);
-
-        const imageParams: any = {
-          positivePrompt: input.prompt || "",
-          model: endpointId,
-          height,
-          width,
-          numberResults: input.numberResults || 1,
-          outputType: "URL" as const,
-          outputFormat: (input.outputFormat || "JPG") as "JPG" | "PNG" | "WEBP",
-          includeCost:
-            input.includeCost !== undefined ? input.includeCost : true,
-        };
-
-        if (!isIdeogram) {
-          imageParams.checkNSFW =
-            input.checkNSFW !== undefined ? input.checkNSFW : true;
-          imageParams.CFGScale = input.CFGScale || 3.5;
-          imageParams.outputQuality = input.outputQuality || 85;
-
-          if (input.steps !== undefined) {
-            imageParams.steps = input.steps;
-          }
+        const { buildRunwarePayload } = await import("@/lib/runware-capabilities");
+        
+        let imageParams: any;
+        try {
+          imageParams = buildRunwarePayload(endpointId, input, "image");
+        } catch (error: any) {
+          console.error("[DEBUG] Runware buildRunwarePayload ERROR:", error?.message);
+          throw error;
         }
 
         // Prepare seed image if needed (need client for this)
@@ -439,6 +411,21 @@ export const useJobCreator = ({
           })
           .catch(async (error) => {
             console.error("[DEBUG] Runware requestImages - ERROR:", error);
+            console.error("[DEBUG] Runware requestImages - ERROR message:", error?.message);
+            console.error("[DEBUG] Runware requestImages - ERROR status:", error?.status);
+            console.error("[DEBUG] Runware requestImages - ERROR code:", error?.code);
+            console.error("[DEBUG] Runware requestImages - ERROR response:", error?.response);
+            console.error("[DEBUG] Runware requestImages - ERROR body:", error?.body);
+            if (error?.response) {
+              try {
+                const responseText = typeof error.response.text === 'function' 
+                  ? await error.response.text() 
+                  : JSON.stringify(error.response);
+                console.error("[DEBUG] Runware requestImages - ERROR response text:", responseText);
+              } catch (e) {
+                console.error("[DEBUG] Could not extract response text:", e);
+              }
+            }
             await db.media.update(taskUUID, { status: "failed" });
             await queryClient.invalidateQueries({
               queryKey: queryKeys.projectMediaItems(projectId),
@@ -449,6 +436,9 @@ export const useJobCreator = ({
         return { taskUUID, immediate: true };
       }
       if (mediaType === "video") {
+        const { getModelCapabilities } = await import("@/lib/runware-capabilities");
+        const capabilities = getModelCapabilities(endpointId);
+        
         // Find endpoint configuration to get defaults
         const endpoint = RUNWARE_ENDPOINTS.find(
           (ep) => ep.endpointId === endpointId,
@@ -474,9 +464,12 @@ export const useJobCreator = ({
           numberResults: input.numberResults || 1,
           includeCost:
             input.includeCost !== undefined ? input.includeCost : true,
-          outputQuality: input.outputQuality || 99,
           deliveryMethod: "async",
         };
+
+        if (capabilities.outputQuality) {
+          videoParams.outputQuality = input.outputQuality || 99;
+        }
 
         // Add providerSettings for Google models
         if (isGoogleVeo) {
