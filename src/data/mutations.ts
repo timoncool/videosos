@@ -259,17 +259,33 @@ export const useJobCreator = ({
             continue;
           }
 
+          // Skip invalid values (objects, arrays, etc that are not File/Blob)
+          if (
+            typeof candidate === "object" &&
+            !(typeof File !== "undefined" && candidate instanceof File) &&
+            !(typeof Blob !== "undefined" && candidate instanceof Blob)
+          ) {
+            console.warn(
+              `[DEBUG] Skipping invalid ${key} value:`,
+              candidate,
+            );
+            continue;
+          }
+
           if (typeof candidate === "string") {
+            console.log(`[DEBUG] Found string ${key}:`, candidate.substring(0, 100));
             imageParams.seedImage = candidate;
             break;
           }
 
           if (typeof File !== "undefined" && candidate instanceof File) {
+            console.log(`[DEBUG] Found File ${key}:`, candidate.name);
             imageParams.seedImage = candidate;
             break;
           }
 
           if (typeof Blob !== "undefined" && candidate instanceof Blob) {
+            console.log(`[DEBUG] Found Blob ${key}, will prepare for upload`);
             hasBlobImage = true;
             blobImageKey = key;
             blobImageValue = candidate;
@@ -484,7 +500,21 @@ export const useJobCreator = ({
         }
 
         if (input.inputImage) {
-          videoParams.inputImage = input.inputImage;
+          // Only include inputImage if it's a valid type (string URL, File, or Blob)
+          const inputImageValue = input.inputImage;
+          const isValidInputImage =
+            typeof inputImageValue === "string" ||
+            (typeof File !== "undefined" && inputImageValue instanceof File) ||
+            (typeof Blob !== "undefined" && inputImageValue instanceof Blob);
+
+          if (isValidInputImage) {
+            videoParams.inputImage = input.inputImage;
+          } else {
+            console.warn(
+              "[DEBUG] Skipping invalid inputImage value:",
+              inputImageValue,
+            );
+          }
         }
 
         console.log(

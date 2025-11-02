@@ -342,11 +342,29 @@ export function buildRunwarePayload(
   }
 
   if (capabilities.seedImage && input.seedImage) {
-    payload.seedImage = input.seedImage;
+    // Only include seedImage if it's a valid type (string URL/UUID/base64, File, or Blob)
+    const seedImageValue = input.seedImage;
+    const isValidSeedImage =
+      typeof seedImageValue === "string" ||
+      (typeof File !== "undefined" && seedImageValue instanceof File) ||
+      (typeof Blob !== "undefined" && seedImageValue instanceof Blob);
+
+    if (isValidSeedImage) {
+      payload.seedImage = input.seedImage;
+    }
   }
 
   if (capabilities.maskImage && input.maskImage) {
-    payload.maskImage = input.maskImage;
+    // Only include maskImage if it's a valid type (string URL/UUID/base64, File, or Blob)
+    const maskImageValue = input.maskImage;
+    const isValidMaskImage =
+      typeof maskImageValue === "string" ||
+      (typeof File !== "undefined" && maskImageValue instanceof File) ||
+      (typeof Blob !== "undefined" && maskImageValue instanceof Blob);
+
+    if (isValidMaskImage) {
+      payload.maskImage = input.maskImage;
+    }
   }
 
   return payload;

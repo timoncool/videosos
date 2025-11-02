@@ -844,6 +844,17 @@ export default function RightPanel({
               );
             }
             assetValue = await response.blob();
+          } else if (resolvedUrl?.startsWith("http://") || resolvedUrl?.startsWith("https://")) {
+            // For HTTP(S) URLs (e.g., from FAL), download as Blob
+            // This ensures Runware can access the image even if the URL requires CORS or auth
+            console.log("[DEBUG] Downloading HTTP(S) URL as Blob for Runware:", resolvedUrl);
+            const response = await fetch(resolvedUrl);
+            if (!response.ok) {
+              throw new Error(
+                `Failed to download URL (${response.status} ${response.statusText})`,
+              );
+            }
+            assetValue = await response.blob();
           } else {
             assetValue = resolvedUrl ?? null;
           }
