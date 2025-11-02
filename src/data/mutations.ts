@@ -346,7 +346,8 @@ export const useJobCreator = ({
             JSON.stringify(imageParams, null, 2),
           );
 
-          return runware.requestImages(imageParams);
+          // Runware API expects an ARRAY of task objects, not a single object
+          return runware.requestImages([imageParams]);
         })()
           .then(async (response) => {
             console.log(
