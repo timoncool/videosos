@@ -272,9 +272,10 @@ export const useJobCreator = ({
             continue;
           }
 
+          // String URLs are already handled by buildRunwarePayload above
+          // which sets the correct parameter (seedImage or referenceImages) based on model capabilities
           if (typeof candidate === "string") {
-            console.log(`[DEBUG] Found string ${key}:`, candidate.substring(0, 100));
-            imageParams.seedImage = candidate;
+            console.log(`[DEBUG] Found string ${key}:`, candidate.substring(0, 100), "- already handled by buildRunwarePayload");
             break;
           }
 
@@ -332,12 +333,25 @@ export const useJobCreator = ({
           // Prepare blob/file image if needed - upload to Runware
           if (hasBlobOrFileImage && blobOrFileImageValue) {
             console.log("[DEBUG] Uploading File/Blob to Runware via imageUpload API");
-            imageParams.seedImage = await prepareRunwareImageAsset({
+            const uploadedUuid = await prepareRunwareImageAsset({
               value: blobOrFileImageValue,
               runware,
               cacheKey: blobOrFileImageKey,
             });
-            console.log("[DEBUG] Upload complete, seedImage UUID:", imageParams.seedImage);
+            console.log("[DEBUG] Upload complete, UUID:", uploadedUuid);
+
+            // Determine which parameter to use based on model capabilities
+            const { getModelCapabilities } = await import("@/lib/runware-capabilities");
+            const capabilities = getModelCapabilities(endpointId);
+            const paramName = capabilities.imageInputParam || "seedImage";
+
+            if (paramName === "referenceImages") {
+              imageParams.referenceImages = [uploadedUuid];
+              console.log("[DEBUG] Set referenceImages:", imageParams.referenceImages);
+            } else {
+              imageParams.seedImage = uploadedUuid;
+              console.log("[DEBUG] Set seedImage:", imageParams.seedImage);
+            }
           }
 
           // Log final params AFTER preparing assets
