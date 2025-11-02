@@ -85,6 +85,8 @@ export type MediaItem = {
   endpointId?: string;
   requestId?: string;
   taskUUID?: string;
+  statusUrl?: string;
+  responseUrl?: string;
   projectId: string;
   mediaType: "image" | "video" | "music" | "voiceover";
   status: "pending" | "running" | "completed" | "failed";
@@ -102,6 +104,8 @@ export type MediaItem = {
       endpointId: string;
       requestId?: string;
       taskUUID?: string;
+      statusUrl?: string;
+      responseUrl?: string;
       input: Record<string, any>;
       output?: Record<string, any>;
     }

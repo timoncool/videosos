@@ -132,9 +132,33 @@ export function MediaItemRow({
           console.error("[DEBUG] requestId is missing for FAL job!", data);
           throw new Error("requestId is required for fal provider");
         }
-        const queueStatus = await fal.queue.status(data.endpointId, {
-          requestId: data.requestId,
-        });
+
+        const statusUrl = data.statusUrl;
+        const responseUrl = data.responseUrl;
+
+        console.log("[DEBUG] FAL polling URLs:", { statusUrl, responseUrl });
+
+        let queueStatus: { status: string };
+        if (statusUrl) {
+          try {
+            const statusResponse = await fetch(statusUrl);
+            if (!statusResponse.ok) {
+              throw new Error(`Status check failed: ${statusResponse.status}`);
+            }
+            queueStatus = await statusResponse.json();
+            console.log("[DEBUG] FAL status from status_url:", queueStatus);
+          } catch (error) {
+            console.error("[DEBUG] Failed to fetch status_url:", error);
+            queueStatus = await fal.queue.status(data.endpointId, {
+              requestId: data.requestId,
+            });
+          }
+        } else {
+          queueStatus = await fal.queue.status(data.endpointId, {
+            requestId: data.requestId,
+          });
+        }
+
         if (queueStatus.status === "IN_PROGRESS") {
           await db.media.update(data.id, {
             ...data,
@@ -151,9 +175,27 @@ export function MediaItemRow({
             if (!data.requestId) {
               throw new Error("Request ID is missing");
             }
-            const result = await fal.queue.result(data.endpointId, {
-              requestId: data.requestId,
-            });
+
+            let result: any;
+            if (responseUrl) {
+              try {
+                const resultResponse = await fetch(responseUrl);
+                if (!resultResponse.ok) {
+                  throw new Error(`Result fetch failed: ${resultResponse.status}`);
+                }
+                result = await resultResponse.json();
+                console.log("[DEBUG] FAL result from response_url:", result);
+              } catch (error) {
+                console.error("[DEBUG] Failed to fetch response_url:", error);
+                result = await fal.queue.result(data.endpointId, {
+                  requestId: data.requestId,
+                });
+              }
+            } else {
+              result = await fal.queue.result(data.endpointId, {
+                requestId: data.requestId,
+              });
+            }
 
             console.log("[DEBUG] FAL result:", JSON.stringify(result, null, 2));
 

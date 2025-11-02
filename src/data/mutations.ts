@@ -872,12 +872,16 @@ export const useJobCreator = ({
       taskUUID?: string;
       data?: unknown;
       request_id?: string;
+      status_url?: string;
+      response_url?: string;
       __input?: Record<string, unknown>;
       immediate?: boolean;
     }) => {
       if (provider === "fal") {
         console.log("[DEBUG] FAL onSuccess data:", data);
         console.log("[DEBUG] FAL request_id:", data.request_id);
+        console.log("[DEBUG] FAL status_url:", data.status_url);
+        console.log("[DEBUG] FAL response_url:", data.response_url);
         const storedInput =
           data.__input ?? lastSubmittedFalInputRef.current ?? input;
         await db.media.create({
@@ -888,6 +892,8 @@ export const useJobCreator = ({
           provider: "fal",
           endpointId,
           requestId: data.request_id,
+          statusUrl: data.status_url,
+          responseUrl: data.response_url,
           status: "pending",
           input: storedInput,
         });
