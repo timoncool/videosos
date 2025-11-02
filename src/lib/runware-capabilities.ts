@@ -51,9 +51,9 @@ const DEFAULT_CAPABILITIES: ModelCapabilities = {
 export const FAMILY_CAPABILITIES: Record<string, ModelCapabilities> = {
   google: {
     prompt: "required",
-    negativePrompt: false,
+    negativePrompt: true,
     seed: true,
-    seedImage: false,
+    seedImage: true,
     maskImage: false,
     outpainting: false,
     steps: { supported: false },
@@ -62,17 +62,11 @@ export const FAMILY_CAPABILITIES: Record<string, ModelCapabilities> = {
     clipSkip: false,
     checkNSFW: false,
     numberResults: true,
-    outputQuality: false,
+    outputQuality: true,
     outputFormats: ["PNG", "JPEG", "WEBP"],
     outputType: true,
-    dimensionRule: "fixed_set",
-    availableDimensions: [
-      { width: 1024, height: 1024, label: "1:1 (Square)" },
-      { width: 1408, height: 768, label: "16:9 (Landscape)" },
-      { width: 768, height: 1408, label: "9:16 (Portrait)" },
-      { width: 1280, height: 896, label: "4:3 (Landscape)" },
-      { width: 896, height: 1280, label: "3:4 (Portrait)" },
-    ],
+    dimensionRule: "multiples_of_64",
+    imageInputParam: "referenceImages", // Google uses referenceImages
   },
 
   ideogram: {
@@ -135,7 +129,7 @@ export const FAMILY_CAPABILITIES: Record<string, ModelCapabilities> = {
     prompt: "required",
     negativePrompt: true,
     seed: true,
-    seedImage: true, // BFL FLUX Kontext uses seedImage for img2img
+    seedImage: false, // BFL FLUX Kontext does NOT support img2img
     maskImage: false,
     outpainting: false,
     steps: { supported: false },
@@ -148,7 +142,6 @@ export const FAMILY_CAPABILITIES: Record<string, ModelCapabilities> = {
     outputFormats: ["PNG", "WEBP", "JPG"],
     outputType: true,
     dimensionRule: "multiples_of_64",
-    imageInputParam: "seedImage", // BFL uses seedImage, not referenceImages
   },
 
   "qwen-image": {
