@@ -346,8 +346,11 @@ export const useJobCreator = ({
             JSON.stringify(imageParams, null, 2),
           );
 
-          // Runware API expects an ARRAY of task objects, not a single object
-          return runware.requestImages([imageParams]);
+          const result = await runware.requestImages(imageParams);
+          console.log("[DEBUG] requestImages returned (before .then):", result);
+          console.log("[DEBUG] result type:", typeof result);
+          console.log("[DEBUG] result is array:", Array.isArray(result));
+          return result;
         })()
           .then(async (response) => {
             console.log(
@@ -433,22 +436,26 @@ export const useJobCreator = ({
             console.log("[DEBUG] Queries invalidated successfully");
           })
           .catch(async (error) => {
-            console.error("[DEBUG] Runware requestImages - ERROR:", error);
-            console.error("[DEBUG] Runware requestImages - ERROR message:", error?.message);
-            console.error("[DEBUG] Runware requestImages - ERROR status:", error?.status);
-            console.error("[DEBUG] Runware requestImages - ERROR code:", error?.code);
-            console.error("[DEBUG] Runware requestImages - ERROR response:", error?.response);
-            console.error("[DEBUG] Runware requestImages - ERROR body:", error?.body);
-            if (error?.response) {
-              try {
-                const responseText = typeof error.response.text === 'function' 
-                  ? await error.response.text() 
-                  : JSON.stringify(error.response);
-                console.error("[DEBUG] Runware requestImages - ERROR response text:", responseText);
-              } catch (e) {
-                console.error("[DEBUG] Could not extract response text:", e);
-              }
+            console.error("[DEBUG] Runware requestImages - ERROR - FULL OBJECT:");
+            console.error("[DEBUG] error:", error);
+            console.error("[DEBUG] error type:", typeof error);
+            console.error("[DEBUG] error constructor:", error?.constructor?.name);
+            console.error("[DEBUG] error toString():", error?.toString());
+
+            // Try to get all properties
+            if (error && typeof error === 'object') {
+              console.error("[DEBUG] error keys:", Object.keys(error));
+              console.error("[DEBUG] error values:", Object.values(error));
+              console.error("[DEBUG] error JSON:", JSON.stringify(error, Object.getOwnPropertyNames(error)));
             }
+
+            console.error("[DEBUG] error.message:", error?.message);
+            console.error("[DEBUG] error.status:", error?.status);
+            console.error("[DEBUG] error.code:", error?.code);
+            console.error("[DEBUG] error.response:", error?.response);
+            console.error("[DEBUG] error.data:", error?.data);
+            console.error("[DEBUG] error.error:", error?.error);
+
             await db.media.update(taskUUID, { status: "failed" });
             await queryClient.invalidateQueries({
               queryKey: queryKeys.projectMediaItems(projectId),
