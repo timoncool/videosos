@@ -404,9 +404,15 @@ export function buildRunwarePayload(
     }
 
     if (capabilities.maxPixels && width * height > capabilities.maxPixels) {
-      throw new Error(
-        `Image dimensions ${width}x${height} (${width * height} pixels) exceed the maximum allowed ${capabilities.maxPixels} pixels for this model. Please reduce the image size.`,
-      );
+      const scale = Math.sqrt(capabilities.maxPixels / (width * height));
+      width = Math.floor((width * scale) / 64) * 64;
+      height = Math.floor((height * scale) / 64) * 64;
+
+      if (width * height > capabilities.maxPixels) {
+        throw new Error(
+          `Image dimensions ${width}x${height} (${width * height} pixels) exceed the maximum allowed ${capabilities.maxPixels} pixels for this model even after downscaling. Please reduce the image size.`,
+        );
+      }
     }
   }
 
@@ -436,7 +442,7 @@ export function buildRunwarePayload(
     includeCost: input.includeCost !== undefined ? input.includeCost : true,
   };
 
-  if (shouldIncludeDimensions) {
+  if (shouldIncludeDimensions && capabilities.supportsDimensions !== false) {
     payload.height = height;
     payload.width = width;
   }
