@@ -13,7 +13,10 @@
     "is_popular": true,
     "category_id": 1,
     "metadata": {
-      "durations": [5, 10],
+      "durations": [
+        5,
+        10
+      ],
       "resolutions": [
         "864x480",
         "736x544",
@@ -28,7 +31,9 @@
         "928x2176",
         "2176x928"
       ],
-      "fps": [24],
+      "fps": [
+        24
+      ],
       "default_duration": 5,
       "default_resolution": "1920x1088",
       "default_fps": 24,
@@ -53,7 +58,10 @@
     "is_popular": true,
     "category_id": 1,
     "metadata": {
-      "durations": [5, 10],
+      "durations": [
+        5,
+        10
+      ],
       "resolutions": [
         "864x480",
         "736x544",
@@ -68,7 +76,9 @@
         "928x2176",
         "2176x928"
       ],
-      "fps": [24],
+      "fps": [
+        24
+      ],
       "default_duration": 5,
       "default_resolution": "1920x1088",
       "default_fps": 24,
@@ -93,7 +103,10 @@
     "is_popular": false,
     "category_id": 2,
     "metadata": {
-      "durations": [5, 10],
+      "durations": [
+        5,
+        10
+      ],
       "resolutions": [
         "864x480",
         "736x544",
@@ -106,7 +119,9 @@
         "1504x640",
         "640x1504"
       ],
-      "fps": [24],
+      "fps": [
+        24
+      ],
       "default_duration": 5,
       "default_resolution": "864x480",
       "default_fps": 24,
@@ -124,7 +139,7 @@
     "provider_id": 3,
     "family_name": "Seedream",
     "mode": 2,
-    "cost": null,
+    "cost": 800,
     "image_url": null,
     "subscription": 3,
     "performance_level": 3,
@@ -147,20 +162,27 @@
     "provider_id": 3,
     "family_name": "LTX",
     "mode": 3,
-    "cost": null,
+    "cost": 400,
     "image_url": null,
     "subscription": 4,
     "performance_level": 3,
     "is_popular": true,
     "category_id": 1,
     "metadata": {
-      "durations": [6, 8, 10],
+      "durations": [
+        6,
+        8,
+        10
+      ],
       "resolutions": [
         "1920x1080",
         "2560x1440",
         "3840x2160"
       ],
-      "fps": [25, 50],
+      "fps": [
+        25,
+        50
+      ],
       "default_duration": 6,
       "default_resolution": "1920x1080",
       "default_fps": 25,
@@ -179,20 +201,27 @@
     "provider_id": 3,
     "family_name": "LTX",
     "mode": 3,
-    "cost": null,
+    "cost": 300,
     "image_url": null,
     "subscription": 3,
     "performance_level": 1,
     "is_popular": true,
     "category_id": 1,
     "metadata": {
-      "durations": [6, 8, 10],
+      "durations": [
+        6,
+        8,
+        10
+      ],
       "resolutions": [
         "1920x1080",
         "2560x1440",
         "3840x2160"
       ],
-      "fps": [25, 50],
+      "fps": [
+        25,
+        50
+      ],
       "default_duration": 6,
       "default_resolution": "1920x1080",
       "default_fps": 25,
@@ -211,16 +240,21 @@
     "provider_id": 3,
     "family_name": "Kling",
     "mode": 2,
-    "cost": null,
+    "cost": 250,
     "image_url": null,
     "subscription": 3,
     "performance_level": 2,
     "is_popular": true,
     "category_id": 1,
     "metadata": {
-      "durations": [5, 10],
+      "durations": [
+        5,
+        10
+      ],
       "resolutions": [],
-      "fps": [30],
+      "fps": [
+        30
+      ],
       "default_duration": 5,
       "default_fps": 30,
       "provider_settings": {
@@ -239,20 +273,25 @@
     "provider_id": 3,
     "family_name": "Kling",
     "mode": 3,
-    "cost": null,
+    "cost": 400,
     "image_url": null,
     "subscription": 4,
     "performance_level": 3,
     "is_popular": true,
     "category_id": 1,
     "metadata": {
-      "durations": [5, 10],
+      "durations": [
+        5,
+        10
+      ],
       "resolutions": [
         "1280x720",
         "720x720",
         "720x1280"
       ],
-      "fps": [30],
+      "fps": [
+        30
+      ],
       "default_duration": 5,
       "default_resolution": "1280x720",
       "default_fps": 30,
@@ -272,20 +311,25 @@
     "provider_id": 3,
     "family_name": "Kling",
     "mode": 3,
-    "cost": null,
+    "cost": 1600,
     "image_url": null,
     "subscription": 4,
     "performance_level": 3,
     "is_popular": true,
     "category_id": 1,
     "metadata": {
-      "durations": [5, 10],
+      "durations": [
+        5,
+        10
+      ],
       "resolutions": [
         "1280x720",
         "720x720",
         "720x1280"
       ],
-      "fps": [30],
+      "fps": [
+        30
+      ],
       "default_duration": 5,
       "default_resolution": "1280x720",
       "default_fps": 30,
@@ -305,20 +349,25 @@
     "provider_id": 3,
     "family_name": "Kling",
     "mode": 2,
-    "cost": null,
+    "cost": 500,
     "image_url": null,
     "subscription": 3,
     "performance_level": 3,
     "is_popular": true,
     "category_id": 1,
     "metadata": {
-      "durations": [5, 10],
+      "durations": [
+        5,
+        10
+      ],
       "resolutions": [
         "1280x720",
         "720x720",
         "720x1280"
       ],
-      "fps": [30],
+      "fps": [
+        30
+      ],
       "default_duration": 5,
       "default_resolution": "1280x720",
       "default_fps": 30,
@@ -338,20 +387,25 @@
     "provider_id": 3,
     "family_name": "Kling",
     "mode": 2,
-    "cost": null,
+    "cost": 300,
     "image_url": null,
     "subscription": 3,
     "performance_level": 2,
     "is_popular": false,
     "category_id": 1,
     "metadata": {
-      "durations": [5, 10],
+      "durations": [
+        5,
+        10
+      ],
       "resolutions": [
         "1280x720",
         "720x720",
         "720x1280"
       ],
-      "fps": [30],
+      "fps": [
+        30
+      ],
       "default_duration": 5,
       "default_resolution": "1280x720",
       "default_fps": 30,
@@ -371,20 +425,25 @@
     "provider_id": 3,
     "family_name": "Kling",
     "mode": 3,
-    "cost": null,
+    "cost": 1600,
     "image_url": null,
     "subscription": 4,
     "performance_level": 3,
     "is_popular": false,
     "category_id": 1,
     "metadata": {
-      "durations": [5, 10],
+      "durations": [
+        5,
+        10
+      ],
       "resolutions": [
         "1280x720",
         "720x720",
         "720x1280"
       ],
-      "fps": [30],
+      "fps": [
+        30
+      ],
       "default_duration": 5,
       "default_resolution": "1280x720",
       "default_fps": 30,
@@ -404,20 +463,25 @@
     "provider_id": 3,
     "family_name": "Kling",
     "mode": 2,
-    "cost": null,
+    "cost": 550,
     "image_url": null,
     "subscription": 3,
     "performance_level": 3,
     "is_popular": false,
     "category_id": 1,
     "metadata": {
-      "durations": [5, 10],
+      "durations": [
+        5,
+        10
+      ],
       "resolutions": [
         "1280x720",
         "720x720",
         "720x1280"
       ],
-      "fps": [30],
+      "fps": [
+        30
+      ],
       "default_duration": 5,
       "default_resolution": "1280x720",
       "default_fps": 30,
@@ -437,20 +501,25 @@
     "provider_id": 3,
     "family_name": "Kling",
     "mode": 3,
-    "cost": null,
+    "cost": 250,
     "image_url": null,
     "subscription": 3,
     "performance_level": 2,
     "is_popular": false,
     "category_id": 1,
     "metadata": {
-      "durations": [5, 10],
+      "durations": [
+        5,
+        10
+      ],
       "resolutions": [
         "1280x720",
         "720x720",
         "720x1280"
       ],
-      "fps": [30],
+      "fps": [
+        30
+      ],
       "default_duration": 5,
       "default_resolution": "1280x720",
       "default_fps": 30,
@@ -470,19 +539,24 @@
     "provider_id": 3,
     "family_name": "Hailuo",
     "mode": 3,
-    "cost": null,
+    "cost": 550,
     "image_url": null,
     "subscription": 4,
     "performance_level": 3,
     "is_popular": true,
     "category_id": 2,
     "metadata": {
-      "durations": [6, 10],
+      "durations": [
+        6,
+        10
+      ],
       "resolutions": [
         "1366x768",
         "1920x1080"
       ],
-      "fps": [24],
+      "fps": [
+        24
+      ],
       "default_duration": 6,
       "default_resolution": "1366x768",
       "default_fps": 24,
@@ -501,19 +575,24 @@
     "provider_id": 3,
     "family_name": "Hailuo",
     "mode": 3,
-    "cost": null,
+    "cost": 400,
     "image_url": null,
     "subscription": 3,
     "performance_level": 1,
     "is_popular": true,
     "category_id": 2,
     "metadata": {
-      "durations": [6, 10],
+      "durations": [
+        6,
+        10
+      ],
       "resolutions": [
         "1366x768",
         "1920x1080"
       ],
-      "fps": [24],
+      "fps": [
+        24
+      ],
       "default_duration": 6,
       "default_resolution": "1366x768",
       "default_fps": 24,
@@ -532,19 +611,24 @@
     "provider_id": 3,
     "family_name": "Hailuo",
     "mode": 1,
-    "cost": null,
+    "cost": 300,
     "image_url": null,
     "subscription": 3,
     "performance_level": 2,
     "is_popular": true,
     "category_id": 2,
     "metadata": {
-      "durations": [6, 10],
+      "durations": [
+        6,
+        10
+      ],
       "resolutions": [
         "1366x768",
         "1920x1080"
       ],
-      "fps": [25],
+      "fps": [
+        25
+      ],
       "default_duration": 6,
       "default_resolution": "1366x768",
       "default_fps": 25,
@@ -562,18 +646,22 @@
     "provider_id": 3,
     "family_name": "Hailuo",
     "mode": 3,
-    "cost": null,
+    "cost": 600,
     "image_url": null,
     "subscription": 3,
     "performance_level": 3,
     "is_popular": false,
     "category_id": 2,
     "metadata": {
-      "durations": [6],
+      "durations": [
+        6
+      ],
       "resolutions": [
         "1366x768"
       ],
-      "fps": [25],
+      "fps": [
+        25
+      ],
       "default_duration": 6,
       "default_resolution": "1366x768",
       "default_fps": 25,
@@ -592,21 +680,32 @@
     "provider_id": 3,
     "family_name": "Vidu",
     "mode": 2,
-    "cost": null,
+    "cost": 100,
     "image_url": null,
     "subscription": 3,
     "performance_level": 1,
     "is_popular": true,
     "category_id": 1,
     "metadata": {
-      "durations": [1, 2, 3, 4, 5, 6, 7, 8],
+      "durations": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
       "resolutions": [
         "640x360",
         "960x540",
         "1280x720",
         "1920x1080"
       ],
-      "fps": [24],
+      "fps": [
+        24
+      ],
       "default_duration": 5,
       "default_resolution": "1280x720",
       "default_fps": 24,
@@ -625,21 +724,32 @@
     "provider_id": 3,
     "family_name": "Vidu",
     "mode": 2,
-    "cost": null,
+    "cost": 100,
     "image_url": null,
     "subscription": 4,
     "performance_level": 3,
     "is_popular": true,
     "category_id": 1,
     "metadata": {
-      "durations": [1, 2, 3, 4, 5, 6, 7, 8],
+      "durations": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
       "resolutions": [
         "640x360",
         "960x540",
         "1280x720",
         "1920x1080"
       ],
-      "fps": [24],
+      "fps": [
+        24
+      ],
       "default_duration": 5,
       "default_resolution": "1280x720",
       "default_fps": 24,
@@ -658,20 +768,24 @@
     "provider_id": 3,
     "family_name": "Vidu",
     "mode": 3,
-    "cost": null,
+    "cost": 100,
     "image_url": null,
     "subscription": 3,
     "performance_level": 2,
     "is_popular": false,
     "category_id": 1,
     "metadata": {
-      "durations": [5],
+      "durations": [
+        5
+      ],
       "resolutions": [
         "1920x1080",
         "1080x1080",
         "1080x1920"
       ],
-      "fps": [24],
+      "fps": [
+        24
+      ],
       "default_duration": 5,
       "default_resolution": "1920x1080",
       "default_fps": 24,
@@ -690,21 +804,27 @@
     "provider_id": 3,
     "family_name": "Veo",
     "mode": 3,
-    "cost": null,
+    "cost": 700,
     "image_url": null,
     "subscription": 3,
     "performance_level": 1,
     "is_popular": true,
     "category_id": 1,
     "metadata": {
-      "durations": [4, 6, 8],
+      "durations": [
+        4,
+        6,
+        8
+      ],
       "resolutions": [
         "1280x720",
         "720x1280",
         "1920x1080",
         "1080x1920"
       ],
-      "fps": [24],
+      "fps": [
+        24
+      ],
       "default_duration": 4,
       "default_resolution": "1280x720",
       "default_fps": 24,
@@ -723,21 +843,25 @@
     "provider_id": 3,
     "family_name": "Veo",
     "mode": 3,
-    "cost": null,
+    "cost": 3600,
     "image_url": null,
     "subscription": 4,
     "performance_level": 3,
     "is_popular": true,
     "category_id": 1,
     "metadata": {
-      "durations": [8],
+      "durations": [
+        8
+      ],
       "resolutions": [
         "1280x720",
         "720x1280",
         "1920x1080",
         "1080x1920"
       ],
-      "fps": [24],
+      "fps": [
+        24
+      ],
       "default_duration": 8,
       "default_resolution": "1280x720",
       "default_fps": 24,
@@ -756,21 +880,25 @@
     "provider_id": 3,
     "family_name": "Veo",
     "mode": 3,
-    "cost": null,
+    "cost": 1350,
     "image_url": null,
     "subscription": 3,
     "performance_level": 1,
     "is_popular": true,
     "category_id": 1,
     "metadata": {
-      "durations": [8],
+      "durations": [
+        8
+      ],
       "resolutions": [
         "1280x720",
         "720x1280",
         "1920x1080",
         "1080x1920"
       ],
-      "fps": [24],
+      "fps": [
+        24
+      ],
       "default_duration": 8,
       "default_resolution": "1280x720",
       "default_fps": 24,
@@ -789,21 +917,25 @@
     "provider_id": 3,
     "family_name": "Veo",
     "mode": 3,
-    "cost": null,
+    "cost": 3600,
     "image_url": null,
     "subscription": 4,
     "performance_level": 3,
     "is_popular": true,
     "category_id": 1,
     "metadata": {
-      "durations": [8],
+      "durations": [
+        8
+      ],
       "resolutions": [
         "1280x720",
         "720x1280",
         "1920x1080",
         "1080x1920"
       ],
-      "fps": [24],
+      "fps": [
+        24
+      ],
       "default_duration": 8,
       "default_resolution": "1280x720",
       "default_fps": 24,
@@ -822,21 +954,25 @@
     "provider_id": 3,
     "family_name": "Veo",
     "mode": 3,
-    "cost": null,
+    "cost": 4450,
     "image_url": null,
     "subscription": 3,
     "performance_level": 2,
     "is_popular": true,
     "category_id": 1,
     "metadata": {
-      "durations": [8],
+      "durations": [
+        8
+      ],
       "resolutions": [
         "1280x720",
         "720x1280",
         "1920x1080",
         "1080x1920"
       ],
-      "fps": [24],
+      "fps": [
+        24
+      ],
       "default_duration": 8,
       "default_resolution": "1280x720",
       "default_fps": 24,
@@ -855,21 +991,27 @@
     "provider_id": 3,
     "family_name": "Sora",
     "mode": 3,
-    "cost": 600,
+    "cost": 900,
     "image_url": null,
     "subscription": 4,
     "performance_level": 3,
     "is_popular": true,
     "category_id": 1,
     "metadata": {
-      "durations": [4, 8, 12],
+      "durations": [
+        4,
+        8,
+        12
+      ],
       "resolutions": [
         "1280x720",
         "720x1280",
         "1792x1024",
         "1024x1792"
       ],
-      "fps": [24],
+      "fps": [
+        24
+      ],
       "default_duration": 8,
       "default_resolution": "1280x720",
       "default_fps": 24,
@@ -894,12 +1036,19 @@
     "is_popular": true,
     "category_id": 1,
     "metadata": {
-      "durations": [4, 8, 12],
+      "durations": [
+        4,
+        8,
+        12
+      ],
       "resolutions": [
         "1280x720",
         "720x1280"
       ],
-      "fps": [24, 30],
+      "fps": [
+        24,
+        30
+      ],
       "default_duration": 4,
       "default_resolution": "1280x720",
       "default_fps": 30,
@@ -917,14 +1066,17 @@
     "provider_id": 3,
     "family_name": "PixVerse",
     "mode": 3,
-    "cost": null,
+    "cost": 100,
     "image_url": null,
     "subscription": 3,
     "performance_level": 3,
     "is_popular": true,
     "category_id": 4,
     "metadata": {
-      "durations": [5, 8],
+      "durations": [
+        5,
+        8
+      ],
       "resolutions": [
         "640x360",
         "960x540",
@@ -965,7 +1117,7 @@
     "provider_id": 3,
     "family_name": "PixVerse",
     "mode": 3,
-    "cost": null,
+    "cost": 100,
     "image_url": null,
     "subscription": 3,
     "performance_level": 2,
@@ -1014,7 +1166,7 @@
     "provider_id": 3,
     "family_name": "Runware",
     "mode": 1,
-    "cost": null,
+    "cost": 300,
     "image_url": null,
     "subscription": 3,
     "performance_level": 2,
@@ -1034,7 +1186,7 @@
     "provider_id": 3,
     "family_name": "Runware",
     "mode": 1,
-    "cost": null,
+    "cost": 150,
     "image_url": null,
     "subscription": 3,
     "performance_level": 1,
@@ -1054,7 +1206,7 @@
     "provider_id": 3,
     "family_name": "Runware",
     "mode": 1,
-    "cost": null,
+    "cost": 450,
     "image_url": null,
     "subscription": 3,
     "performance_level": 2,
@@ -1074,7 +1226,7 @@
     "provider_id": 3,
     "family_name": "Runware",
     "mode": 1,
-    "cost": null,
+    "cost": 250,
     "image_url": null,
     "subscription": 3,
     "performance_level": 2,
