@@ -13,6 +13,8 @@ import { AVAILABLE_ENDPOINTS, type InputAsset } from "@/lib/fal";
 import { RUNWARE_ENDPOINTS } from "@/lib/runware-models";
 import {
   ArrowLeft,
+  ChevronLeft,
+  ChevronRight,
   CrossIcon,
   ImageIcon,
   LoaderCircleIcon,
@@ -248,6 +250,15 @@ function ModelEndpointPicker({
   >("all");
   const [typeFilter, setTypeFilter] = useState<string>("all");
   const [modelTypeFilter, setModelTypeFilter] = useState<string>("all");
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const scrollLeft = () => {
+    scrollContainerRef.current?.scrollBy({ left: -200, behavior: "smooth" });
+  };
+
+  const scrollRight = () => {
+    scrollContainerRef.current?.scrollBy({ left: 200, behavior: "smooth" });
+  };
 
   const allEndpoints = useMemo(
     () => [...AVAILABLE_ENDPOINTS, ...RUNWARE_ENDPOINTS],
@@ -438,6 +449,57 @@ function ModelEndpointPicker({
                 Runware
               </Button>
             </div>
+
+            {/* Model Family chips with horizontal scroll */}
+            {availableModelTypes.length > 1 && (
+              <div className="flex items-center gap-1 px-2 py-2 border-b">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 w-7 p-0 shrink-0"
+                  onClick={scrollLeft}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <div
+                  ref={scrollContainerRef}
+                  className="flex items-center gap-1 overflow-x-auto scrollbar-hide scroll-smooth flex-1"
+                  style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+                >
+                  <Button
+                    variant={modelTypeFilter === "all" ? "secondary" : "ghost"}
+                    size="sm"
+                    className="h-7 text-xs whitespace-nowrap shrink-0"
+                    onClick={() => setModelTypeFilter("all")}
+                  >
+                    All ({endpoints.length})
+                  </Button>
+                  {availableModelTypes.map((modelType) => {
+                    const count = groupedEndpoints[modelType]?.length || 0;
+                    return (
+                      <Button
+                        key={modelType}
+                        variant={modelTypeFilter === modelType ? "secondary" : "ghost"}
+                        size="sm"
+                        className="h-7 text-xs whitespace-nowrap shrink-0"
+                        onClick={() => setModelTypeFilter(modelType)}
+                      >
+                        {modelType} ({count})
+                      </Button>
+                    );
+                  })}
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 w-7 p-0 shrink-0"
+                  onClick={scrollRight}
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
+
             <CommandList>
               <CommandEmpty>No model found</CommandEmpty>
               {Object.entries(groupedEndpoints).map(
