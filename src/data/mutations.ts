@@ -275,9 +275,10 @@ export const useJobCreator = ({
             continue;
           }
 
+          // String URLs are already handled by buildRunwarePayload above
+          // which sets the correct parameter (seedImage or referenceImages) based on model capabilities
           if (typeof candidate === "string") {
-            console.log(`[DEBUG] Found string ${key}:`, candidate.substring(0, 100));
-            imageParams.seedImage = candidate;
+            console.log(`[DEBUG] Found string ${key}:`, candidate.substring(0, 100), "- already handled by buildRunwarePayload");
             break;
           }
 
