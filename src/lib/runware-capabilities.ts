@@ -375,6 +375,12 @@ export function buildRunwarePayload(
     else if (capabilities.dimensionRule === "multiples_of_64") {
       width = roundToMultipleOf64(width);
       height = roundToMultipleOf64(height);
+
+      if (capabilities.maxPixels && width * height > capabilities.maxPixels) {
+        const scale = Math.sqrt(capabilities.maxPixels / (width * height));
+        width = Math.floor((width * scale) / 64) * 64;
+        height = Math.floor((height * scale) / 64) * 64;
+      }
     } else if (
       capabilities.dimensionRule === "fixed_set" &&
       capabilities.availableDimensions
