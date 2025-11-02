@@ -92,7 +92,7 @@ export const FAMILY_CAPABILITIES: Record<string, ModelCapabilities> = {
       { width: 1248, height: 832, label: "3:2 (Classic Landscape)" },
       { width: 832, height: 1248, label: "2:3 (Classic Portrait)" },
     ],
-    imageInputParam: "referenceImages",
+    imageInputParam: "seedImage+referenceImages", // Ideogram img2img uses BOTH
   },
 
   openai: {
@@ -130,7 +130,7 @@ export const FAMILY_CAPABILITIES: Record<string, ModelCapabilities> = {
     prompt: "required",
     negativePrompt: true,
     seed: true,
-    seedImage: false,
+    seedImage: true, // BFL FLUX Kontext uses seedImage for img2img
     maskImage: false,
     outpainting: false,
     steps: { supported: false },
@@ -143,6 +143,7 @@ export const FAMILY_CAPABILITIES: Record<string, ModelCapabilities> = {
     outputFormats: ["PNG", "WEBP", "JPG"],
     outputType: true,
     dimensionRule: "multiples_of_64",
+    imageInputParam: "seedImage", // BFL uses seedImage, not referenceImages
   },
 
   "qwen-image": {
@@ -186,15 +187,43 @@ export const FAMILY_CAPABILITIES: Record<string, ModelCapabilities> = {
   },
 
   bria: {
-    ...DEFAULT_CAPABILITIES,
-    steps: { supported: true, min: 1, max: 50, default: 20 },
-    cfgScale: { supported: true, min: 1, max: 20, default: 7 },
+    prompt: "required",
+    negativePrompt: false,
+    seed: false,
+    seedImage: true,
+    maskImage: false,
+    outpainting: false,
+    steps: { supported: true, min: 1, max: 50, default: 50 },
+    cfgScale: { supported: true, min: 1, max: 20, default: 5 },
+    scheduler: false,
+    clipSkip: false,
+    checkNSFW: false,
+    numberResults: true,
+    outputQuality: false,
+    outputFormats: ["PNG", "JPEG", "WEBP"],
+    outputType: false,
+    dimensionRule: "multiples_of_64",
+    imageInputParam: "inputs.image", // Bria uses inputs.image
   },
 
   sourceful: {
-    ...DEFAULT_CAPABILITIES,
-    steps: { supported: true, min: 1, max: 50, default: 20 },
-    cfgScale: { supported: true, min: 1, max: 20, default: 7 },
+    prompt: "required",
+    negativePrompt: false,
+    seed: false,
+    seedImage: true,
+    maskImage: false,
+    outpainting: false,
+    steps: { supported: false },
+    cfgScale: { supported: false },
+    scheduler: false,
+    clipSkip: false,
+    checkNSFW: false,
+    numberResults: true,
+    outputQuality: false,
+    outputFormats: ["PNG", "JPEG", "WEBP"],
+    outputType: false,
+    dimensionRule: "multiples_of_64",
+    imageInputParam: "inputs.references", // Sourceful uses inputs.references
   },
 
   vidu: {
@@ -346,6 +375,11 @@ export function buildRunwarePayload(
     payload.clipSkip = input.clipSkip;
   }
 
+  // Add acceleration if supported (used by some Qwen models)
+  if (input.acceleration !== undefined) {
+    payload.acceleration = input.acceleration;
+  }
+
   if (capabilities.seedImage) {
     // Look for seedImage in multiple possible input keys
     // Models with inputAsset: ["image"] might use "image" or "image_url" instead of "seedImage"
@@ -372,10 +406,22 @@ export function buildRunwarePayload(
       if (typeof candidate === "string") {
         // Use the correct parameter name based on model capabilities
         const paramName = capabilities.imageInputParam || "seedImage";
+
         if (paramName === "referenceImages") {
           // referenceImages expects an array
           payload.referenceImages = [candidate];
+        } else if (paramName === "inputs.image") {
+          // Bria uses inputs.image
+          payload.inputs = { image: candidate };
+        } else if (paramName === "inputs.references") {
+          // Sourceful uses inputs.references as array
+          payload.inputs = { references: [candidate] };
+        } else if (paramName === "seedImage+referenceImages") {
+          // Ideogram img2img uses BOTH seedImage and referenceImages
+          payload.seedImage = candidate;
+          payload.referenceImages = [candidate];
         } else {
+          // Default: seedImage
           payload.seedImage = candidate;
         }
         break;
