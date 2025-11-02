@@ -351,7 +351,21 @@ export const useJobCreator = ({
             if (paramName === "referenceImages") {
               imageParams.referenceImages = [uploadedUuid];
               console.log("[DEBUG] Set referenceImages:", imageParams.referenceImages);
+            } else if (paramName === "inputs.image") {
+              // Bria uses inputs.image
+              imageParams.inputs = { image: uploadedUuid };
+              console.log("[DEBUG] Set inputs.image:", imageParams.inputs.image);
+            } else if (paramName === "inputs.references") {
+              // Sourceful uses inputs.references
+              imageParams.inputs = { references: [uploadedUuid] };
+              console.log("[DEBUG] Set inputs.references:", imageParams.inputs.references);
+            } else if (paramName === "seedImage+referenceImages") {
+              // Ideogram img2img uses BOTH seedImage and referenceImages
+              imageParams.seedImage = uploadedUuid;
+              imageParams.referenceImages = [uploadedUuid];
+              console.log("[DEBUG] Set seedImage + referenceImages:", uploadedUuid);
             } else {
+              // Default: seedImage
               imageParams.seedImage = uploadedUuid;
               console.log("[DEBUG] Set seedImage:", imageParams.seedImage);
             }

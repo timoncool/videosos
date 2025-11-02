@@ -76,6 +76,12 @@ export type ApiInfo = {
   hasNegativePrompt?: boolean;
   hasSafetyChecker?: boolean;
 
+  // Scheduler and acceleration
+  availableSchedulers?: string[];
+  defaultScheduler?: string;
+  availableAcceleration?: string[];
+  defaultAcceleration?: string;
+
   // Structured pricing information (from fal_models_schemas.json)
   pricing?: ModelPricing;
 };
