@@ -135,6 +135,7 @@ export function MediaItemRow({
         const queueStatus = await fal.queue.status(data.endpointId, {
           requestId: data.requestId,
         });
+
         if (queueStatus.status === "IN_PROGRESS") {
           await db.media.update(data.id, {
             ...data,
@@ -144,6 +145,7 @@ export function MediaItemRow({
             queryKey: queryKeys.projectMediaItems(data.projectId),
           });
         }
+
         let media: Partial<MediaItem> = {};
 
         if (queueStatus.status === "COMPLETED") {
@@ -237,7 +239,13 @@ export function MediaItemRow({
                 mediaType: data.mediaType,
               }),
             });
-          } catch {
+          } catch (error: any) {
+            console.error("[DEBUG] FAL job FAILED during result fetch");
+            console.error("[DEBUG] FAL job failure error object:", error);
+            console.error("[DEBUG] FAL job failure error message:", error?.message);
+            console.error("[DEBUG] FAL job failure error body:", error?.body);
+            console.error("[DEBUG] FAL job failure error response:", error?.response);
+            
             await db.media.update(data.id, {
               ...data,
               status: "failed",
