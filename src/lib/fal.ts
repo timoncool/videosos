@@ -254,10 +254,10 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
     initialInput: {
       prompt: "",
-      image_url: "",
+      image_urls: [],
     },
     inputMap: {
-      image: "image_url",
+      image_url: "image_urls",
     },
   },
   {
@@ -287,9 +287,12 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
     initialInput: {
       prompt: "",
-      image_url: "",
+      image_urls: [],
       defaultWidth: 2048,
       defaultHeight: 2048,
+    },
+    inputMap: {
+      image_url: "image_urls",
     },
     hasSeed: true,
     hasSafetyChecker: true,
@@ -348,7 +351,10 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     inputAsset: ["image"],
     initialInput: {
       prompt: "",
-      image_url: "",
+      image_urls: [],
+    },
+    inputMap: {
+      image_url: "image_urls",
     },
   },
   {
@@ -406,12 +412,11 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
   {
     provider: "fal",
     endpointId: "fal-ai/ideogram/v3/edit",
-    label: "Ideogram V3 (Image)",
-    description: "Image-to-image transformation with text rendering excellence",
+    label: "Ideogram V3 (Inpainting)",
+    description: "Inpainting with mask support - requires mask_url parameter",
     cost: "$0.08/image",
     popularity: 5,
     category: "image",
-    inputAsset: ["image"],
     hasSeed: true,
   },
   {
@@ -689,6 +694,13 @@ export const AVAILABLE_ENDPOINTS: ApiInfo[] = [
     popularity: 3,
     category: "image",
     inputAsset: ["image"],
+    initialInput: {
+      prompt: "",
+      image_urls: [],
+    },
+    inputMap: {
+      image_url: "image_urls",
+    },
     hasSeed: true,
     hasNegativePrompt: true,
     hasSafetyChecker: true,
