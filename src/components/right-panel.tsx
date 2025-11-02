@@ -365,59 +365,53 @@ function ModelEndpointPicker({
         </TabsList>
       </Tabs>
 
-      {/* Subcategory filter chips */}
-      {availableSubcategories.length > 1 && (
-        <div className="flex flex-col gap-1">
-          <Label className="text-xs text-muted-foreground">Category</Label>
-          <div className="flex flex-wrap gap-1">
-            <Button
-              variant={typeFilter === "all" ? "secondary" : "ghost"}
-              size="sm"
-              className="h-7 text-xs"
-              onClick={() => setTypeFilter("all")}
-            >
-              All Types
-            </Button>
-            {availableSubcategories.map((subcat) => (
-              <Button
-                key={subcat}
-                variant={typeFilter === subcat ? "secondary" : "ghost"}
-                size="sm"
-                className="h-7 text-xs"
-                onClick={() => setTypeFilter(subcat)}
-              >
-                {subcategoryLabels[subcat] || subcat}
-              </Button>
-            ))}
-          </div>
-        </div>
-      )}
+      {/* Compact filter selects */}
+      {(availableSubcategories.length > 1 || availableModelTypes.length > 1) && (
+        <div className={cn(
+          "grid gap-2",
+          availableSubcategories.length > 1 && availableModelTypes.length > 1
+            ? "grid-cols-2"
+            : "grid-cols-1"
+        )}>
+          {/* Category filter */}
+          {availableSubcategories.length > 1 && (
+            <div className="flex flex-col gap-1.5">
+              <Label className="text-xs text-muted-foreground">Category</Label>
+              <Select value={typeFilter} onValueChange={setTypeFilter}>
+                <SelectTrigger className="h-9">
+                  <SelectValue placeholder="All Types" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Types</SelectItem>
+                  {availableSubcategories.map((subcat) => (
+                    <SelectItem key={subcat} value={subcat}>
+                      {subcategoryLabels[subcat] || subcat}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
 
-      {/* Model type filter chips */}
-      {availableModelTypes.length > 1 && (
-        <div className="flex flex-col gap-1">
-          <Label className="text-xs text-muted-foreground">Model Family</Label>
-          <div className="flex flex-wrap gap-1 max-h-32 overflow-y-auto">
-            <Button
-              variant={modelTypeFilter === "all" ? "secondary" : "ghost"}
-              size="sm"
-              className="h-7 text-xs"
-              onClick={() => setModelTypeFilter("all")}
-            >
-              All Models
-            </Button>
-            {availableModelTypes.map((modelType) => (
-              <Button
-                key={modelType}
-                variant={modelTypeFilter === modelType ? "secondary" : "ghost"}
-                size="sm"
-                className="h-7 text-xs"
-                onClick={() => setModelTypeFilter(modelType)}
-              >
-                {modelType}
-              </Button>
-            ))}
-          </div>
+          {/* Model Family filter */}
+          {availableModelTypes.length > 1 && (
+            <div className="flex flex-col gap-1.5">
+              <Label className="text-xs text-muted-foreground">Model Family</Label>
+              <Select value={modelTypeFilter} onValueChange={setModelTypeFilter}>
+                <SelectTrigger className="h-9">
+                  <SelectValue placeholder="All Models" />
+                </SelectTrigger>
+                <SelectContent className="max-h-[300px]">
+                  <SelectItem value="all">All Models</SelectItem>
+                  {availableModelTypes.map((modelType) => (
+                    <SelectItem key={modelType} value={modelType}>
+                      {modelType}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
         </div>
       )}
 
