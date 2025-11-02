@@ -111,6 +111,7 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     defaultScheduler: "FlowMatchEulerDiscreteScheduler",
     availableAcceleration: ["none", "medium", "high"],
     defaultAcceleration: "medium",
+    // NOTE: No steps parameter for this model - it uses acceleration instead
   },
   {
     provider: "runware",

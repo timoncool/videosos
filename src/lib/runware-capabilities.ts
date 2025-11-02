@@ -324,7 +324,9 @@ export function buildRunwarePayload(
     height = closestMatch.height;
   }
 
-  let outputFormat = (input.outputFormat || "PNG") as string;
+  // For img2img models, default to JPEG format
+  const hasInputImage = input.image || input.image_url || input.seedImage || input.inputImage;
+  let outputFormat = (input.outputFormat || (hasInputImage ? "JPEG" : "PNG")) as string;
   if (outputFormat === "JPG") {
     outputFormat = "JPEG";
   }
@@ -334,10 +336,10 @@ export function buildRunwarePayload(
       outputFormat as "JPG" | "JPEG" | "PNG" | "WEBP",
     )
   ) {
-    outputFormat = "PNG"; // Safe default
+    outputFormat = hasInputImage ? "JPEG" : "PNG"; // img2img uses JPEG
   }
 
-  const outputType = input.outputType ?? (capabilities.outputType ? ["dataURI", "URL"] : ["URL"]);
+  const outputType = input.outputType ?? ["dataURI", "URL"];
   const payload: Record<string, unknown> = {
     positivePrompt: input.prompt || "",
     model: endpointId,
@@ -369,25 +371,26 @@ export function buildRunwarePayload(
       3.5;
   }
 
-  // outputQuality should default to 85 for img2img models
+  // outputQuality defaults to 85 for img2img models
   if (capabilities.outputQuality) {
     payload.outputQuality = input.outputQuality ?? 85;
   }
 
-  // Add steps - use input value, or endpoint default, or capability default
+  // Only add steps if explicitly provided OR if endpoint has defaultSteps configured
   if (capabilities.steps.supported) {
-    payload.steps =
-      input.steps ||
-      endpointInfo?.defaultSteps ||
-      capabilities.steps.default ||
-      20;
+    if (input.steps !== undefined) {
+      payload.steps = input.steps;
+    } else if (endpointInfo?.defaultSteps !== undefined) {
+      payload.steps = endpointInfo.defaultSteps;
+    }
   }
 
-  // Add scheduler - use input value or endpoint default
+  // Only add scheduler if explicitly provided OR if endpoint has defaultScheduler configured
   if (capabilities.scheduler) {
-    const schedulerValue = input.scheduler || endpointInfo?.defaultScheduler;
-    if (schedulerValue) {
-      payload.scheduler = schedulerValue;
+    if (input.scheduler) {
+      payload.scheduler = input.scheduler;
+    } else if (endpointInfo?.defaultScheduler) {
+      payload.scheduler = endpointInfo.defaultScheduler;
     }
   }
 
@@ -395,9 +398,11 @@ export function buildRunwarePayload(
     payload.clipSkip = input.clipSkip;
   }
 
-  // Add acceleration if supported (used by some Qwen models)
-  if (input.acceleration || endpointInfo?.defaultAcceleration) {
-    payload.acceleration = input.acceleration || endpointInfo?.defaultAcceleration;
+  // Only add acceleration if explicitly provided OR if endpoint has defaultAcceleration configured
+  if (input.acceleration !== undefined) {
+    payload.acceleration = input.acceleration;
+  } else if (endpointInfo?.defaultAcceleration) {
+    payload.acceleration = endpointInfo.defaultAcceleration;
   }
 
   if (capabilities.seedImage) {
