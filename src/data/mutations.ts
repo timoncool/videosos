@@ -237,6 +237,9 @@ export const useJobCreator = ({
         let imageParams: any;
         try {
           imageParams = buildRunwarePayload(endpointId, input, "image");
+          // Add required fields that Runware API expects
+          imageParams.taskType = "imageInference";
+          imageParams.taskUUID = taskUUID;
         } catch (error: any) {
           console.error("[DEBUG] Runware buildRunwarePayload ERROR:", error?.message);
           throw error;
