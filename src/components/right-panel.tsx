@@ -352,93 +352,99 @@ function ModelEndpointPicker({
 
   const selectedEndpoint = allEndpoints.find((e) => e.endpointId === value);
 
+  // Calculate display cost for selected endpoint
+  const selectedDisplayCost = useMemo(() => {
+    if (!selectedEndpoint) return null;
+
+    if (selectedEndpoint.provider === "fal") {
+      const estimatedCost = calculateModelCost(
+        selectedEndpoint.endpointId,
+        {
+          duration: selectedEndpoint.defaultDuration || 5,
+          width: selectedEndpoint.defaultWidth || 1024,
+          height: selectedEndpoint.defaultHeight || 1024,
+          textLength: 100,
+          quantity: 1,
+        },
+      );
+
+      if (estimatedCost !== null) {
+        return formatCost(estimatedCost);
+      } else if (selectedEndpoint.cost) {
+        return selectedEndpoint.cost;
+      }
+    }
+    return null;
+  }, [selectedEndpoint]);
+
   return (
     <div className="flex flex-col gap-2">
-      <Tabs
-        value={providerFilter}
-        onValueChange={(v) => setProviderFilter(v as "all" | "fal" | "runware")}
-      >
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="fal">FAL</TabsTrigger>
-          <TabsTrigger value="runware">Runware</TabsTrigger>
-        </TabsList>
-      </Tabs>
-
-      {/* Compact filter selects */}
-      {(availableSubcategories.length > 1 || availableModelTypes.length > 1) && (
-        <div className={cn(
-          "grid gap-2",
-          availableSubcategories.length > 1 && availableModelTypes.length > 1
-            ? "grid-cols-2"
-            : "grid-cols-1"
-        )}>
-          {/* Category filter */}
-          {availableSubcategories.length > 1 && (
-            <div className="flex flex-col gap-1.5">
-              <Label className="text-xs text-muted-foreground">Category</Label>
-              <Select value={typeFilter} onValueChange={setTypeFilter}>
-                <SelectTrigger className="h-9">
-                  <SelectValue placeholder="All Types" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Types</SelectItem>
-                  {availableSubcategories.map((subcat) => (
-                    <SelectItem key={subcat} value={subcat}>
-                      {subcategoryLabels[subcat] || subcat}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
-
-          {/* Model Family filter */}
-          {availableModelTypes.length > 1 && (
-            <div className="flex flex-col gap-1.5">
-              <Label className="text-xs text-muted-foreground">Model Family</Label>
-              <Select value={modelTypeFilter} onValueChange={setModelTypeFilter}>
-                <SelectTrigger className="h-9">
-                  <SelectValue placeholder="All Models" />
-                </SelectTrigger>
-                <SelectContent className="max-h-[300px]">
-                  <SelectItem value="all">All Models</SelectItem>
-                  {availableModelTypes.map((modelType) => (
-                    <SelectItem key={modelType} value={modelType}>
-                      {modelType}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
-        </div>
-      )}
-
       <Popover open={open} onOpenChange={setOpen} modal>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-full justify-between text-base font-semibold"
+            className="w-full justify-between h-auto py-2.5 px-3"
           >
-            <span className="truncate">
-              {selectedEndpoint?.label || "Select model..."}
-            </span>
+            {selectedEndpoint ? (
+              <div className="flex items-center justify-between w-full gap-2 min-w-0">
+                <span className="font-semibold truncate">{selectedEndpoint.label}</span>
+                <div className="flex items-center gap-2 shrink-0">
+                  <Badge variant="outline" className="text-xs">
+                    {selectedEndpoint.provider}
+                  </Badge>
+                  {selectedDisplayCost && (
+                    <span className="text-xs text-muted-foreground">
+                      ~{selectedDisplayCost}
+                    </span>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <span className="text-muted-foreground">Select model...</span>
+            )}
             <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[450px] p-0" align="start">
+        <PopoverContent className="w-[500px] p-0" align="start">
           <Command>
             <CommandInput placeholder="Search models..." className="h-9" />
+
+            {/* Provider filter buttons inside dropdown */}
+            <div className="flex items-center gap-1 px-2 py-2 border-b">
+              <Button
+                variant={providerFilter === "all" ? "secondary" : "ghost"}
+                size="sm"
+                className="h-7 text-xs flex-1"
+                onClick={() => setProviderFilter("all")}
+              >
+                All
+              </Button>
+              <Button
+                variant={providerFilter === "fal" ? "secondary" : "ghost"}
+                size="sm"
+                className="h-7 text-xs flex-1"
+                onClick={() => setProviderFilter("fal")}
+              >
+                FAL
+              </Button>
+              <Button
+                variant={providerFilter === "runware" ? "secondary" : "ghost"}
+                size="sm"
+                className="h-7 text-xs flex-1"
+                onClick={() => setProviderFilter("runware")}
+              >
+                Runware
+              </Button>
+            </div>
             <CommandList>
               <CommandEmpty>No model found</CommandEmpty>
               {Object.entries(groupedEndpoints).map(
                 ([modelType, modelTypeEndpoints]) => (
                   <CommandGroup
                     key={modelType}
-                    heading={modelType}
+                    heading={`${modelType} (${modelTypeEndpoints.length})`}
                   >
                     {modelTypeEndpoints.map((endpoint) => {
                       let displayCost: string | null = null;
