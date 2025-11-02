@@ -828,9 +828,15 @@ export default function RightPanel({
               );
             }
             assetValue = await response.blob();
-          } else if (media.url?.startsWith("http://") || media.url?.startsWith("https://")) {
+          } else if (
+            media.url?.startsWith("http://") ||
+            media.url?.startsWith("https://")
+          ) {
             // For HTTP(S) URLs from uploaded media (e.g., FAL uploaded), download as Blob
-            console.log("[DEBUG] Downloading HTTP(S) URL as Blob for Runware (uploaded):", media.url);
+            console.log(
+              "[DEBUG] Downloading HTTP(S) URL as Blob for Runware (uploaded):",
+              media.url,
+            );
             const response = await fetch(media.url);
             if (!response.ok) {
               throw new Error(
@@ -854,10 +860,16 @@ export default function RightPanel({
               );
             }
             assetValue = await response.blob();
-          } else if (resolvedUrl?.startsWith("http://") || resolvedUrl?.startsWith("https://")) {
+          } else if (
+            resolvedUrl?.startsWith("http://") ||
+            resolvedUrl?.startsWith("https://")
+          ) {
             // For HTTP(S) URLs (e.g., from FAL), download as Blob
             // This ensures Runware can access the image even if the URL requires CORS or auth
-            console.log("[DEBUG] Downloading HTTP(S) URL as Blob for Runware (generated):", resolvedUrl);
+            console.log(
+              "[DEBUG] Downloading HTTP(S) URL as Blob for Runware (generated):",
+              resolvedUrl,
+            );
             const response = await fetch(resolvedUrl);
             if (!response.ok) {
               throw new Error(

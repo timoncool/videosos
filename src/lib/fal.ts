@@ -49,6 +49,11 @@ export type ApiInfo = {
     label: string;
     preset?: string;
   }>;
+  supportedAspectRatios?: Array<{
+    width: number;
+    height: number;
+    label: string;
+  }>;
   availableFps?: number[]; // e.g., [24] or [24, 25, 50]
   defaultDuration?: number;
   defaultWidth?: number;
