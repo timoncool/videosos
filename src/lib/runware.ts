@@ -139,18 +139,19 @@ export const prepareRunwareImageAsset = async ({
       );
 
       const uploaded = await runware.imageUpload({ image: base64DataUri });
-      const uuid = uploaded?.imageUUID || uploaded?.imageURL;
+      // IMPORTANT: Use imageURL (not imageUUID) - Runware API expects full URLs in referenceImages
+      const url = uploaded?.imageURL || uploaded?.imageUUID;
 
-      if (!uuid) {
-        throw new Error("imageUpload did not return imageUUID or imageURL");
+      if (!url) {
+        throw new Error("imageUpload did not return imageURL or imageUUID");
       }
 
-      // Ensure UUID is a string (Runware SDK types might allow string | number)
-      const uploadedUuid = typeof uuid === "string" ? uuid : String(uuid);
+      // Ensure URL is a string (Runware SDK types might allow string | number)
+      const uploadedUrl = typeof url === "string" ? url : String(url);
 
-      console.log("[DEBUG] Runware upload result UUID:", uploadedUuid);
-      runwareUploadCache.set(cacheKeyForBlob, uploadedUuid);
-      return uploadedUuid;
+      console.log("[DEBUG] Runware upload result URL:", uploadedUrl);
+      runwareUploadCache.set(cacheKeyForBlob, uploadedUrl);
+      return uploadedUrl;
     } catch (error) {
       console.error("Failed to upload File/Blob to Runware:", error);
       // Cannot return File/Blob as-is - they don't work with Runware API
