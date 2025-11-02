@@ -141,6 +141,64 @@ const getProviderForEndpoint = (
   return undefined;
 };
 
+// Helper function to determine model type/family
+const getModelType = (endpoint: (typeof ALL_ENDPOINTS)[number]): string => {
+  const { endpointId, label } = endpoint;
+  const lowerLabel = label.toLowerCase();
+  const lowerEndpoint = endpointId.toLowerCase();
+
+  // Check for model families in order of specificity
+  if (lowerLabel.includes("flux") || lowerEndpoint.includes("flux")) return "FLUX";
+  if (lowerLabel.includes("veo") || lowerEndpoint.includes("veo")) return "Veo";
+  if (lowerLabel.includes("sora") || lowerEndpoint.includes("sora")) return "Sora";
+  if (lowerLabel.includes("kling") || lowerEndpoint.includes("kling")) return "Kling";
+  if (lowerLabel.includes("ideogram") || lowerEndpoint.includes("ideogram")) return "Ideogram";
+  if (lowerLabel.includes("imagen") || lowerEndpoint.includes("imagen")) return "Imagen";
+  if (lowerLabel.includes("gemini") || lowerEndpoint.includes("gemini")) return "Gemini";
+  if (lowerLabel.includes("seedream") || lowerLabel.includes("seedance") || lowerEndpoint.includes("seedream") || lowerEndpoint.includes("seedance")) return "Seedream";
+  if (lowerLabel.includes("qwen") || lowerEndpoint.includes("qwen")) return "Qwen";
+  if (lowerLabel.includes("hunyuan") || lowerEndpoint.includes("hunyuan")) return "Hunyuan";
+  if (lowerLabel.includes("kolors") || lowerEndpoint.includes("kolors")) return "Kolors";
+  if (lowerLabel.includes("bria") || lowerEndpoint.includes("bria")) return "Bria";
+  if (lowerLabel.includes("gpt") && lowerLabel.includes("image")) return "GPT Image";
+  if (lowerLabel.includes("recraft") || lowerEndpoint.includes("recraft")) return "Recraft";
+  if (lowerLabel.includes("stable diffusion") || lowerEndpoint.includes("stable-diffusion")) return "Stable Diffusion";
+  if (lowerLabel.includes("hidream") || lowerEndpoint.includes("hidream")) return "HiDream";
+  if (lowerLabel.includes("vidu") || lowerEndpoint.includes("vidu")) return "Vidu";
+  if (lowerLabel.includes("juggernaut") || lowerEndpoint.includes("juggernaut")) return "Juggernaut";
+  if (lowerLabel.includes("realistic vision") || lowerEndpoint.includes("realistic")) return "Realistic Vision";
+  if (lowerLabel.includes("dreamshaper") || lowerEndpoint.includes("dreamshaper")) return "DreamShaper";
+  if (lowerLabel.includes("meinamix") || lowerEndpoint.includes("meinamix")) return "MeinaMix";
+  if (lowerLabel.includes("epic realism") || lowerEndpoint.includes("epic")) return "Epic Realism";
+  if (lowerLabel.includes("riverflow") || lowerEndpoint.includes("riverflow") || lowerEndpoint.includes("sourceful")) return "Riverflow";
+  if (lowerLabel.includes("luma") || lowerEndpoint.includes("luma")) return "Luma";
+  if (lowerLabel.includes("pika") || lowerEndpoint.includes("pika")) return "Pika";
+  if (lowerLabel.includes("minimax") || lowerLabel.includes("hailuo") || lowerEndpoint.includes("minimax")) return "MiniMax";
+  if (lowerLabel.includes("ltx") || lowerEndpoint.includes("ltx") || lowerEndpoint.includes("lightricks")) return "LTX";
+  if (lowerLabel.includes("pixverse") || lowerEndpoint.includes("pixverse")) return "PixVerse";
+  if (lowerLabel.includes("wan") || lowerEndpoint.includes("wan")) return "Wan";
+  if (lowerLabel.includes("ovi") || lowerEndpoint.includes("ovi")) return "OVI";
+  if (lowerLabel.includes("stable audio") || lowerEndpoint.includes("stable-audio")) return "Stable Audio";
+  if (lowerLabel.includes("mirelo") || lowerEndpoint.includes("mirelo")) return "Mirelo";
+  if (lowerLabel.includes("elevenlabs") || lowerEndpoint.includes("elevenlabs")) return "ElevenLabs";
+  if (lowerLabel.includes("playht") || lowerEndpoint.includes("playht")) return "PlayHT";
+  if (lowerLabel.includes("playai") || lowerEndpoint.includes("playai")) return "PlayAI";
+  if (lowerLabel.includes("dia") && lowerLabel.includes("tts")) return "Dia TTS";
+  if (lowerLabel.includes("chatterbox") || lowerEndpoint.includes("chatterbox")) return "Chatterbox";
+  if (lowerLabel.includes("f5") && lowerLabel.includes("tts")) return "F5 TTS";
+  if (lowerLabel.includes("topaz") || lowerEndpoint.includes("topaz")) return "Topaz";
+  if (lowerLabel.includes("nano banana") || lowerEndpoint.includes("nano-banana")) return "Nano Banana";
+  if (lowerLabel.includes("reve") || lowerEndpoint.includes("reve")) return "Reve";
+  if (lowerLabel.includes("lynx") || lowerEndpoint.includes("lynx")) return "Lynx";
+  if (lowerLabel.includes("infinitalk") || lowerEndpoint.includes("infinitalk")) return "Infinitalk";
+  if (lowerLabel.includes("lucy") || lowerEndpoint.includes("lucy")) return "Lucy";
+  if (lowerLabel.includes("omnihuman") || lowerEndpoint.includes("omnihuman")) return "OmniHuman";
+  if (lowerLabel.includes("mmaudio") || lowerEndpoint.includes("mmaudio")) return "MMAudio";
+  if (lowerLabel.includes("sync") && (lowerLabel.includes("lipsync") || lowerEndpoint.includes("sync-lipsync"))) return "sync.so";
+
+  return "Other";
+};
+
 // Helper function to determine model subcategory
 const getModelSubcategory = (
   endpoint: (typeof ALL_ENDPOINTS)[number],
@@ -189,6 +247,7 @@ function ModelEndpointPicker({
     "all" | "fal" | "runware"
   >("all");
   const [typeFilter, setTypeFilter] = useState<string>("all");
+  const [modelTypeFilter, setModelTypeFilter] = useState<string>("all");
 
   const allEndpoints = useMemo(
     () => [...AVAILABLE_ENDPOINTS, ...RUNWARE_ENDPOINTS],
@@ -205,37 +264,56 @@ function ModelEndpointPicker({
           const subcat = getModelSubcategory(endpoint);
           if (subcat !== typeFilter) return false;
         }
+        if (modelTypeFilter !== "all") {
+          const modelType = getModelType(endpoint);
+          if (modelType !== modelTypeFilter) return false;
+        }
         return true;
       })
       .sort((a, b) => {
-        // First, group by subcategory
-        const subcatA = getModelSubcategory(a);
-        const subcatB = getModelSubcategory(b);
+        // First, group by model type
+        const modelTypeA = getModelType(a);
+        const modelTypeB = getModelType(b);
 
-        if (subcatA !== subcatB) {
-          return subcatA.localeCompare(subcatB);
+        if (modelTypeA !== modelTypeB) {
+          // Put "Other" at the end
+          if (modelTypeA === "Other") return 1;
+          if (modelTypeB === "Other") return -1;
+          return modelTypeA.localeCompare(modelTypeB);
         }
 
-        // Within same subcategory, sort alphabetically by label
+        // Within same model type, sort alphabetically by label
         return a.label.localeCompare(b.label);
       });
 
     return filtered;
-  }, [allEndpoints, mediaType, providerFilter, typeFilter]);
+  }, [allEndpoints, mediaType, providerFilter, typeFilter, modelTypeFilter]);
 
-  // Group endpoints by subcategory for rendering with headers
+  // Group endpoints by model type for rendering with headers
   const groupedEndpoints = useMemo(() => {
     const groups: Record<string, typeof endpoints> = {};
 
     for (const endpoint of endpoints) {
-      const subcat = getModelSubcategory(endpoint);
-      if (!groups[subcat]) {
-        groups[subcat] = [];
+      const modelType = getModelType(endpoint);
+      if (!groups[modelType]) {
+        groups[modelType] = [];
       }
-      groups[subcat].push(endpoint);
+      groups[modelType].push(endpoint);
     }
 
-    return groups;
+    // Sort groups so "Other" is last
+    const sortedGroups: Record<string, typeof endpoints> = {};
+    const keys = Object.keys(groups).sort((a, b) => {
+      if (a === "Other") return 1;
+      if (b === "Other") return -1;
+      return a.localeCompare(b);
+    });
+
+    for (const key of keys) {
+      sortedGroups[key] = groups[key];
+    }
+
+    return sortedGroups;
   }, [endpoints]);
 
   // Get available subcategories for current media type
@@ -248,6 +326,29 @@ function ModelEndpointPicker({
     }
     return Array.from(subcats).sort();
   }, [allEndpoints, mediaType]);
+
+  // Get available model types for current media type and filters
+  const availableModelTypes = useMemo(() => {
+    const types = new Set<string>();
+    for (const endpoint of allEndpoints) {
+      if (endpoint.category === mediaType) {
+        // Apply provider filter
+        if (providerFilter !== "all" && endpoint.provider !== providerFilter) continue;
+        // Apply subcategory filter
+        if (typeFilter !== "all") {
+          const subcat = getModelSubcategory(endpoint);
+          if (subcat !== typeFilter) continue;
+        }
+        types.add(getModelType(endpoint));
+      }
+    }
+    // Sort with "Other" at the end
+    return Array.from(types).sort((a, b) => {
+      if (a === "Other") return 1;
+      if (b === "Other") return -1;
+      return a.localeCompare(b);
+    });
+  }, [allEndpoints, mediaType, providerFilter, typeFilter]);
 
   const selectedEndpoint = allEndpoints.find((e) => e.endpointId === value);
 
@@ -264,28 +365,59 @@ function ModelEndpointPicker({
         </TabsList>
       </Tabs>
 
-      {/* Type filter chips */}
+      {/* Subcategory filter chips */}
       {availableSubcategories.length > 1 && (
-        <div className="flex flex-wrap gap-1">
-          <Button
-            variant={typeFilter === "all" ? "secondary" : "ghost"}
-            size="sm"
-            className="h-7 text-xs"
-            onClick={() => setTypeFilter("all")}
-          >
-            All Types
-          </Button>
-          {availableSubcategories.map((subcat) => (
+        <div className="flex flex-col gap-1">
+          <Label className="text-xs text-muted-foreground">Category</Label>
+          <div className="flex flex-wrap gap-1">
             <Button
-              key={subcat}
-              variant={typeFilter === subcat ? "secondary" : "ghost"}
+              variant={typeFilter === "all" ? "secondary" : "ghost"}
               size="sm"
               className="h-7 text-xs"
-              onClick={() => setTypeFilter(subcat)}
+              onClick={() => setTypeFilter("all")}
             >
-              {subcategoryLabels[subcat] || subcat}
+              All Types
             </Button>
-          ))}
+            {availableSubcategories.map((subcat) => (
+              <Button
+                key={subcat}
+                variant={typeFilter === subcat ? "secondary" : "ghost"}
+                size="sm"
+                className="h-7 text-xs"
+                onClick={() => setTypeFilter(subcat)}
+              >
+                {subcategoryLabels[subcat] || subcat}
+              </Button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Model type filter chips */}
+      {availableModelTypes.length > 1 && (
+        <div className="flex flex-col gap-1">
+          <Label className="text-xs text-muted-foreground">Model Family</Label>
+          <div className="flex flex-wrap gap-1 max-h-32 overflow-y-auto">
+            <Button
+              variant={modelTypeFilter === "all" ? "secondary" : "ghost"}
+              size="sm"
+              className="h-7 text-xs"
+              onClick={() => setModelTypeFilter("all")}
+            >
+              All Models
+            </Button>
+            {availableModelTypes.map((modelType) => (
+              <Button
+                key={modelType}
+                variant={modelTypeFilter === modelType ? "secondary" : "ghost"}
+                size="sm"
+                className="h-7 text-xs"
+                onClick={() => setModelTypeFilter(modelType)}
+              >
+                {modelType}
+              </Button>
+            ))}
+          </div>
         </div>
       )}
 
@@ -309,12 +441,12 @@ function ModelEndpointPicker({
             <CommandList>
               <CommandEmpty>No model found</CommandEmpty>
               {Object.entries(groupedEndpoints).map(
-                ([subcategory, subcategoryEndpoints]) => (
+                ([modelType, modelTypeEndpoints]) => (
                   <CommandGroup
-                    key={subcategory}
-                    heading={subcategoryLabels[subcategory] || subcategory}
+                    key={modelType}
+                    heading={modelType}
                   >
-                    {subcategoryEndpoints.map((endpoint) => {
+                    {modelTypeEndpoints.map((endpoint) => {
                       let displayCost: string | null = null;
 
                       if (endpoint.provider === "fal") {
