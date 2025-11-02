@@ -87,7 +87,9 @@ export const prepareRunwareImageAsset = async ({
 
     try {
       const uploaded = await runware.imageUpload({ image: value });
-      const uploadedUrl = uploaded?.imageURL || value;
+      const url = uploaded?.imageURL || value;
+      // Ensure URL is a string
+      const uploadedUrl = typeof url === "string" ? url : String(url);
       runwareUploadCache.set(value, uploadedUrl);
       return uploadedUrl;
     } catch (error) {
@@ -137,11 +139,14 @@ export const prepareRunwareImageAsset = async ({
       );
 
       const uploaded = await runware.imageUpload({ image: base64DataUri });
-      const uploadedUuid = uploaded?.imageUUID || uploaded?.imageURL;
+      const uuid = uploaded?.imageUUID || uploaded?.imageURL;
 
-      if (!uploadedUuid) {
+      if (!uuid) {
         throw new Error("imageUpload did not return imageUUID or imageURL");
       }
+
+      // Ensure UUID is a string (Runware SDK types might allow string | number)
+      const uploadedUuid = typeof uuid === "string" ? uuid : String(uuid);
 
       console.log("[DEBUG] Runware upload result UUID:", uploadedUuid);
       runwareUploadCache.set(cacheKeyForBlob, uploadedUuid);
