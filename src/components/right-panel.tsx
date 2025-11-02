@@ -383,6 +383,50 @@ function ModelEndpointPicker({
 
 import { useTranslations } from "next-intl";
 
+// Helper function to find the closest available dimension based on uploaded image
+function findClosestDimension(
+  imageWidth: number,
+  imageHeight: number,
+  availableDimensions: Array<{ width: number; height: number; label: string; preset?: string }>,
+): { width: number; height: number; label: string; preset?: string } | null {
+  if (!availableDimensions || availableDimensions.length === 0) {
+    return null;
+  }
+
+  const imageAspectRatio = imageWidth / imageHeight;
+  const isLandscape = imageAspectRatio > 1;
+  const isPortrait = imageAspectRatio < 1;
+  const isSquare = Math.abs(imageAspectRatio - 1) < 0.1;
+
+  // Filter dimensions by orientation to preserve image layout
+  let filteredDimensions = availableDimensions;
+  if (isLandscape) {
+    filteredDimensions = availableDimensions.filter(dim => dim.width > dim.height);
+    if (filteredDimensions.length === 0) filteredDimensions = availableDimensions;
+  } else if (isPortrait) {
+    filteredDimensions = availableDimensions.filter(dim => dim.height > dim.width);
+    if (filteredDimensions.length === 0) filteredDimensions = availableDimensions;
+  } else if (isSquare) {
+    filteredDimensions = availableDimensions.filter(dim => Math.abs(dim.width / dim.height - 1) < 0.1);
+    if (filteredDimensions.length === 0) filteredDimensions = availableDimensions;
+  }
+
+  // Find the closest match by aspect ratio
+  let closestDim = filteredDimensions[0];
+  let smallestDiff = Math.abs(closestDim.width / closestDim.height - imageAspectRatio);
+
+  for (const dim of filteredDimensions) {
+    const dimAspectRatio = dim.width / dim.height;
+    const diff = Math.abs(dimAspectRatio - imageAspectRatio);
+    if (diff < smallestDiff) {
+      smallestDiff = diff;
+      closestDim = dim;
+    }
+  }
+
+  return closestDim;
+}
+
 export default function RightPanel({
   onOpenChange,
 }: {
@@ -932,6 +976,23 @@ export default function RightPanel({
     }
 
     setGenerateData({ [getAssetKey(asset)]: mediaUrl });
+
+    // Auto-select closest dimension for images with availableDimensions
+    if (media.mediaType === "image" && endpoint?.availableDimensions && media.metadata?.width && media.metadata?.height) {
+      const closestDim = findClosestDimension(
+        media.metadata.width,
+        media.metadata.height,
+        endpoint.availableDimensions,
+      );
+
+      if (closestDim) {
+        setGenerateData({
+          width: closestDim.width,
+          height: closestDim.height,
+        });
+      }
+    }
+
     setTab("generation");
   };
 
@@ -1014,13 +1075,28 @@ export default function RightPanel({
       const media = await db.media.find(mediaId as string);
 
       if (media) {
-        if (media.mediaType !== "image") {
-          const mediaMetadata = await getMediaMetadata(media as MediaItem);
+        // Extract metadata for all media types (including images)
+        const mediaMetadata = await getMediaMetadata(media as MediaItem);
 
-          await db.media.update(media.id, {
-            ...media,
-            metadata: mediaMetadata?.media || {},
-          });
+        await db.media.update(media.id, {
+          ...media,
+          metadata: mediaMetadata?.media || {},
+        });
+
+        // Auto-select closest dimension for images with availableDimensions
+        if (media.mediaType === "image" && endpoint?.availableDimensions && mediaMetadata?.media?.width && mediaMetadata?.media?.height) {
+          const closestDim = findClosestDimension(
+            mediaMetadata.media.width,
+            mediaMetadata.media.height,
+            endpoint.availableDimensions,
+          );
+
+          if (closestDim) {
+            setGenerateData({
+              width: closestDim.width,
+              height: closestDim.height,
+            });
+          }
         }
 
         queryClient.invalidateQueries({
@@ -1183,6 +1259,27 @@ export default function RightPanel({
                 dataWithDefaults.video_url = currentVideoUrl;
                 dataWithDefaults.audio_url = currentAudioUrl;
                 dataWithDefaults.reference_audio_url = currentReferenceAudioUrl;
+
+                // Auto-select closest dimension if image is present and model has availableDimensions
+                if (currentImage && endpoint?.availableDimensions && mediaType === "image") {
+                  // Find the media item with matching URL
+                  const imageMedia = mediaItems.find(
+                    (item) => item.url === currentImage || resolveMediaUrl(item) === currentImage
+                  );
+
+                  if (imageMedia?.metadata?.width && imageMedia?.metadata?.height) {
+                    const closestDim = findClosestDimension(
+                      imageMedia.metadata.width,
+                      imageMedia.metadata.height,
+                      endpoint.availableDimensions,
+                    );
+
+                    if (closestDim) {
+                      dataWithDefaults.width = closestDim.width;
+                      dataWithDefaults.height = closestDim.height;
+                    }
+                  }
+                }
 
                 setGenerateData(dataWithDefaults);
               }}
