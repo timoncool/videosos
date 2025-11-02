@@ -5,9 +5,10 @@ import { queryKeys } from "@/data/queries";
 import type { MediaItem } from "@/data/schema";
 import { useProjectId, useVideoProjectStore } from "@/data/store";
 import { useToast } from "@/hooks/use-toast";
-import { calculateModelCost, fal } from "@/lib/fal";
+import { calculateModelCost, fal, getEnhancedApiInfo } from "@/lib/fal";
 import { extractVideoThumbnail, getMediaMetadata } from "@/lib/ffmpeg";
 import { getRunwareClient } from "@/lib/runware";
+import { RUNWARE_ENDPOINTS } from "@/lib/runware-models";
 import {
   cn,
   downloadUrlAsBlob,
@@ -542,6 +543,31 @@ export function MediaItemRow({
         : data.metadata?.start_frame_url || data?.metadata?.end_frame_url
       : resolveMediaUrl(data);
 
+  // Get model name for generated items
+  const getModelName = () => {
+    if (data.kind !== "generated" || !data.endpointId) {
+      return null;
+    }
+
+    // Try to find in FAL endpoints first
+    const falEndpoint = getEnhancedApiInfo(data.endpointId);
+    if (falEndpoint?.label) {
+      return falEndpoint.label;
+    }
+
+    // Try to find in Runware endpoints
+    const runwareEndpoint = RUNWARE_ENDPOINTS.find(
+      (e) => e.endpointId === data.endpointId
+    );
+    if (runwareEndpoint?.label) {
+      return runwareEndpoint.label;
+    }
+
+    return null;
+  };
+
+  const modelName = getModelName();
+
   return (
     <div
       className={cn(
@@ -621,8 +647,14 @@ export function MediaItemRow({
               } as React.ComponentProps<
                 (typeof trackIcons)[keyof typeof trackIcons]
               >)}
-              <span>{data.kind === "generated" ? "Job" : "File"}</span>
-              <code className="text-muted-foreground">#{mediaId}</code>
+              {data.kind === "generated" ? (
+                <span>{modelName || `Job #${mediaId}`}</span>
+              ) : (
+                <>
+                  <span>File</span>
+                  <code className="text-muted-foreground">#{mediaId}</code>
+                </>
+              )}
               {data.kind === "uploaded" ? (
                 <Badge variant="outline" className="text-xs ml-1">
                   Uploaded
