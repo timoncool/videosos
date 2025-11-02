@@ -181,7 +181,9 @@ export function MediaItemRow({
               try {
                 const resultResponse = await fetch(responseUrl);
                 if (!resultResponse.ok) {
-                  throw new Error(`Result fetch failed: ${resultResponse.status}`);
+                  throw new Error(
+                    `Result fetch failed: ${resultResponse.status}`,
+                  );
                 }
                 result = await resultResponse.json();
                 console.log("[DEBUG] FAL result from response_url:", result);
