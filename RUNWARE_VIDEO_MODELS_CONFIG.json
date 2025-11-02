@@ -1,0 +1,1090 @@
+[
+  {
+    "id": "bytedance:2@2",
+    "name": "Seedance 1.0 Pro Fast",
+    "description": "Fast variant of Seedance 1.0 Pro for high-speed video generation",
+    "provider_id": 3,
+    "family_name": "Seedream",
+    "mode": 3,
+    "cost": null,
+    "image_url": null,
+    "subscription": 3,
+    "performance_level": 1,
+    "is_popular": true,
+    "category_id": 1,
+    "metadata": {
+      "durations": [5, 10],
+      "resolutions": [
+        "864x480",
+        "736x544",
+        "640x640",
+        "544x736",
+        "480x864",
+        "1920x1088",
+        "1664x1248",
+        "1440x1440",
+        "1248x1664",
+        "1088x1920",
+        "928x2176",
+        "2176x928"
+      ],
+      "fps": [24],
+      "default_duration": 5,
+      "default_resolution": "1920x1088",
+      "default_fps": 24,
+      "provider_settings": {
+        "seed": "Range: 0-9007199254740991, default: random",
+        "outputQuality": "Range: 1-100, default: 99",
+        "frameImages": "Optional, for image-to-video"
+      }
+    }
+  },
+  {
+    "id": "bytedance:2@1",
+    "name": "Seedance 1.0 Pro",
+    "description": "High-quality video generation with advanced features",
+    "provider_id": 3,
+    "family_name": "Seedream",
+    "mode": 3,
+    "cost": null,
+    "image_url": null,
+    "subscription": 3,
+    "performance_level": 3,
+    "is_popular": true,
+    "category_id": 1,
+    "metadata": {
+      "durations": [5, 10],
+      "resolutions": [
+        "864x480",
+        "736x544",
+        "640x640",
+        "544x736",
+        "480x864",
+        "1920x1088",
+        "1664x1248",
+        "1440x1440",
+        "1248x1664",
+        "1088x1920",
+        "928x2176",
+        "2176x928"
+      ],
+      "fps": [24],
+      "default_duration": 5,
+      "default_resolution": "1920x1088",
+      "default_fps": 24,
+      "provider_settings": {
+        "seed": "Range: 0-9007199254740991, default: random",
+        "outputQuality": "Range: 1-100, default: 99",
+        "frameImages": "Optional, for image-to-video"
+      }
+    }
+  },
+  {
+    "id": "bytedance:1@1",
+    "name": "Seedance 1.0 Lite",
+    "description": "Lightweight video generation model",
+    "provider_id": 3,
+    "family_name": "Seedream",
+    "mode": 3,
+    "cost": null,
+    "image_url": null,
+    "subscription": 1,
+    "performance_level": 1,
+    "is_popular": false,
+    "category_id": 2,
+    "metadata": {
+      "durations": [5, 10],
+      "resolutions": [
+        "864x480",
+        "736x544",
+        "640x640",
+        "960x416",
+        "416x960",
+        "1248x704",
+        "1120x832",
+        "960x960",
+        "1504x640",
+        "640x1504"
+      ],
+      "fps": [24],
+      "default_duration": 5,
+      "default_resolution": "864x480",
+      "default_fps": 24,
+      "provider_settings": {
+        "seed": "Range: 0-9007199254740991, default: random",
+        "outputQuality": "Range: 1-100, default: 99",
+        "frameImages": "Optional, for image-to-video"
+      }
+    }
+  },
+  {
+    "id": "bytedance:5@1",
+    "name": "OmniHuman-1",
+    "description": "Human animation from image and audio",
+    "provider_id": 3,
+    "family_name": "Seedream",
+    "mode": 2,
+    "cost": null,
+    "image_url": null,
+    "subscription": 3,
+    "performance_level": 3,
+    "is_popular": false,
+    "category_id": 5,
+    "metadata": {
+      "durations": [],
+      "resolutions": [],
+      "fps": [],
+      "provider_settings": {
+        "referenceImages": "Required: image input",
+        "inputAudios": "Required: audio input for lip-sync"
+      }
+    }
+  },
+  {
+    "id": "lightricks:2@0",
+    "name": "LTX-2 Pro",
+    "description": "Professional cinematic video generation with realistic motion and precise lighting control",
+    "provider_id": 3,
+    "family_name": "LTX",
+    "mode": 3,
+    "cost": null,
+    "image_url": null,
+    "subscription": 4,
+    "performance_level": 3,
+    "is_popular": true,
+    "category_id": 1,
+    "metadata": {
+      "durations": [6, 8, 10],
+      "resolutions": [
+        "1920x1080",
+        "2560x1440",
+        "3840x2160"
+      ],
+      "fps": [25, 50],
+      "default_duration": 6,
+      "default_resolution": "1920x1080",
+      "default_fps": 25,
+      "provider_settings": {
+        "seed": "Range: 0-2147483647, default: random",
+        "cfgScale": "Range: 1-10, default: 2",
+        "outputQuality": "Range: 1-100, default: 99",
+        "frameImages": "Optional, for image-to-video"
+      }
+    }
+  },
+  {
+    "id": "lightricks:2@1",
+    "name": "LTX-2 Fast",
+    "description": "High-speed cinematic video generation with efficient motion rendering",
+    "provider_id": 3,
+    "family_name": "LTX",
+    "mode": 3,
+    "cost": null,
+    "image_url": null,
+    "subscription": 3,
+    "performance_level": 1,
+    "is_popular": true,
+    "category_id": 1,
+    "metadata": {
+      "durations": [6, 8, 10],
+      "resolutions": [
+        "1920x1080",
+        "2560x1440",
+        "3840x2160"
+      ],
+      "fps": [25, 50],
+      "default_duration": 6,
+      "default_resolution": "1920x1080",
+      "default_fps": 25,
+      "provider_settings": {
+        "seed": "Range: 0-2147483647, default: random",
+        "cfgScale": "Range: 1-10, default: 2",
+        "outputQuality": "Range: 1-100, default: 99",
+        "frameImages": "Optional, for image-to-video"
+      }
+    }
+  },
+  {
+    "id": "klingai:6@0",
+    "name": "KlingAI 2.5 Turbo Standard",
+    "description": "Efficient cinematic image-to-video generation",
+    "provider_id": 3,
+    "family_name": "Kling",
+    "mode": 2,
+    "cost": null,
+    "image_url": null,
+    "subscription": 3,
+    "performance_level": 2,
+    "is_popular": true,
+    "category_id": 1,
+    "metadata": {
+      "durations": [5, 10],
+      "resolutions": [],
+      "fps": [30],
+      "default_duration": 5,
+      "default_fps": 30,
+      "provider_settings": {
+        "seed": "Range: 0-2147483647, default: random",
+        "cfgScale": "Range: 0-1, default: 0.5",
+        "movementAmplitude": "Default: medium, options: small/medium/large",
+        "outputQuality": "Range: 1-100, default: 99",
+        "frameImages": "Required for image-to-video"
+      }
+    }
+  },
+  {
+    "id": "klingai:6@1",
+    "name": "KlingAI 2.5 Turbo Pro",
+    "description": "Next-level creativity with turbocharged motion",
+    "provider_id": 3,
+    "family_name": "Kling",
+    "mode": 3,
+    "cost": null,
+    "image_url": null,
+    "subscription": 4,
+    "performance_level": 3,
+    "is_popular": true,
+    "category_id": 1,
+    "metadata": {
+      "durations": [5, 10],
+      "resolutions": [
+        "1280x720",
+        "720x720",
+        "720x1280"
+      ],
+      "fps": [30],
+      "default_duration": 5,
+      "default_resolution": "1280x720",
+      "default_fps": 30,
+      "provider_settings": {
+        "seed": "Range: 0-2147483647, default: random",
+        "cfgScale": "Range: 0-1, default: 0.5",
+        "movementAmplitude": "Default: medium, options: small/medium/large",
+        "outputQuality": "Range: 1-100, default: 99",
+        "frameImages": "Optional for image-to-video"
+      }
+    }
+  },
+  {
+    "id": "klingai:5@3",
+    "name": "KlingAI 2.1 Master",
+    "description": "Master quality video generation",
+    "provider_id": 3,
+    "family_name": "Kling",
+    "mode": 3,
+    "cost": null,
+    "image_url": null,
+    "subscription": 4,
+    "performance_level": 3,
+    "is_popular": true,
+    "category_id": 1,
+    "metadata": {
+      "durations": [5, 10],
+      "resolutions": [
+        "1280x720",
+        "720x720",
+        "720x1280"
+      ],
+      "fps": [30],
+      "default_duration": 5,
+      "default_resolution": "1280x720",
+      "default_fps": 30,
+      "provider_settings": {
+        "seed": "Range: 0-2147483647, default: random",
+        "cfgScale": "Range: 0-1, default: 0.5",
+        "movementAmplitude": "Default: medium, options: small/medium/large",
+        "outputQuality": "Range: 1-100, default: 99",
+        "frameImages": "Optional for image-to-video"
+      }
+    }
+  },
+  {
+    "id": "klingai:5@2",
+    "name": "KlingAI 2.1 Pro",
+    "description": "Pro quality image-to-video generation",
+    "provider_id": 3,
+    "family_name": "Kling",
+    "mode": 2,
+    "cost": null,
+    "image_url": null,
+    "subscription": 3,
+    "performance_level": 3,
+    "is_popular": true,
+    "category_id": 1,
+    "metadata": {
+      "durations": [5, 10],
+      "resolutions": [
+        "1280x720",
+        "720x720",
+        "720x1280"
+      ],
+      "fps": [30],
+      "default_duration": 5,
+      "default_resolution": "1280x720",
+      "default_fps": 30,
+      "provider_settings": {
+        "seed": "Range: 0-2147483647, default: random",
+        "cfgScale": "Range: 0-1, default: 0.5",
+        "movementAmplitude": "Default: medium, options: small/medium/large",
+        "outputQuality": "Range: 1-100, default: 99",
+        "frameImages": "Required for image-to-video"
+      }
+    }
+  },
+  {
+    "id": "klingai:5@1",
+    "name": "KlingAI 2.1 Standard",
+    "description": "Standard quality image-to-video generation",
+    "provider_id": 3,
+    "family_name": "Kling",
+    "mode": 2,
+    "cost": null,
+    "image_url": null,
+    "subscription": 3,
+    "performance_level": 2,
+    "is_popular": false,
+    "category_id": 1,
+    "metadata": {
+      "durations": [5, 10],
+      "resolutions": [
+        "1280x720",
+        "720x720",
+        "720x1280"
+      ],
+      "fps": [30],
+      "default_duration": 5,
+      "default_resolution": "1280x720",
+      "default_fps": 30,
+      "provider_settings": {
+        "seed": "Range: 0-2147483647, default: random",
+        "cfgScale": "Range: 0-1, default: 0.5",
+        "movementAmplitude": "Default: medium, options: small/medium/large",
+        "outputQuality": "Range: 1-100, default: 99",
+        "frameImages": "Required for image-to-video"
+      }
+    }
+  },
+  {
+    "id": "klingai:4@3",
+    "name": "KlingAI 2.0 Master",
+    "description": "Master quality video generation",
+    "provider_id": 3,
+    "family_name": "Kling",
+    "mode": 3,
+    "cost": null,
+    "image_url": null,
+    "subscription": 4,
+    "performance_level": 3,
+    "is_popular": false,
+    "category_id": 1,
+    "metadata": {
+      "durations": [5, 10],
+      "resolutions": [
+        "1280x720",
+        "720x720",
+        "720x1280"
+      ],
+      "fps": [30],
+      "default_duration": 5,
+      "default_resolution": "1280x720",
+      "default_fps": 30,
+      "provider_settings": {
+        "seed": "Range: 0-2147483647, default: random",
+        "cfgScale": "Range: 0-1, default: 0.5",
+        "movementAmplitude": "Default: medium, options: small/medium/large",
+        "outputQuality": "Range: 1-100, default: 99",
+        "frameImages": "Optional for image-to-video"
+      }
+    }
+  },
+  {
+    "id": "klingai:3@2",
+    "name": "KlingAI 1.6 Pro",
+    "description": "Pro quality image-to-video generation",
+    "provider_id": 3,
+    "family_name": "Kling",
+    "mode": 2,
+    "cost": null,
+    "image_url": null,
+    "subscription": 3,
+    "performance_level": 3,
+    "is_popular": false,
+    "category_id": 1,
+    "metadata": {
+      "durations": [5, 10],
+      "resolutions": [
+        "1280x720",
+        "720x720",
+        "720x1280"
+      ],
+      "fps": [30],
+      "default_duration": 5,
+      "default_resolution": "1280x720",
+      "default_fps": 30,
+      "provider_settings": {
+        "seed": "Range: 0-2147483647, default: random",
+        "cfgScale": "Range: 0-1, default: 0.5",
+        "movementAmplitude": "Default: medium, options: small/medium/large",
+        "outputQuality": "Range: 1-100, default: 99",
+        "frameImages": "Required for image-to-video"
+      }
+    }
+  },
+  {
+    "id": "klingai:3@1",
+    "name": "KlingAI 1.6 Standard",
+    "description": "Standard quality video generation",
+    "provider_id": 3,
+    "family_name": "Kling",
+    "mode": 3,
+    "cost": null,
+    "image_url": null,
+    "subscription": 3,
+    "performance_level": 2,
+    "is_popular": false,
+    "category_id": 1,
+    "metadata": {
+      "durations": [5, 10],
+      "resolutions": [
+        "1280x720",
+        "720x720",
+        "720x1280"
+      ],
+      "fps": [30],
+      "default_duration": 5,
+      "default_resolution": "1280x720",
+      "default_fps": 30,
+      "provider_settings": {
+        "seed": "Range: 0-2147483647, default: random",
+        "cfgScale": "Range: 0-1, default: 0.5",
+        "movementAmplitude": "Default: medium, options: small/medium/large",
+        "outputQuality": "Range: 1-100, default: 99",
+        "frameImages": "Optional for image-to-video"
+      }
+    }
+  },
+  {
+    "id": "minimax:4@1",
+    "name": "MiniMax Hailuo 2.3",
+    "description": "Latest MiniMax Hailuo video generation model",
+    "provider_id": 3,
+    "family_name": "Hailuo",
+    "mode": 3,
+    "cost": null,
+    "image_url": null,
+    "subscription": 4,
+    "performance_level": 3,
+    "is_popular": true,
+    "category_id": 2,
+    "metadata": {
+      "durations": [6, 10],
+      "resolutions": [
+        "1366x768",
+        "1920x1080"
+      ],
+      "fps": [24],
+      "default_duration": 6,
+      "default_resolution": "1366x768",
+      "default_fps": 24,
+      "provider_settings": {
+        "seed": "Range: 0-2147483647, default: random",
+        "enhancePrompt": "Boolean, default: false",
+        "outputQuality": "Range: 1-100, default: 99",
+        "frameImages": "Optional for image-to-video"
+      }
+    }
+  },
+  {
+    "id": "minimax:4@2",
+    "name": "MiniMax Hailuo 2.3 Fast",
+    "description": "Fast variant of MiniMax Hailuo 2.3",
+    "provider_id": 3,
+    "family_name": "Hailuo",
+    "mode": 3,
+    "cost": null,
+    "image_url": null,
+    "subscription": 3,
+    "performance_level": 1,
+    "is_popular": true,
+    "category_id": 2,
+    "metadata": {
+      "durations": [6, 10],
+      "resolutions": [
+        "1366x768",
+        "1920x1080"
+      ],
+      "fps": [24],
+      "default_duration": 6,
+      "default_resolution": "1366x768",
+      "default_fps": 24,
+      "provider_settings": {
+        "seed": "Range: 0-2147483647, default: random",
+        "enhancePrompt": "Boolean, default: false",
+        "outputQuality": "Range: 1-100, default: 99",
+        "frameImages": "Optional for image-to-video"
+      }
+    }
+  },
+  {
+    "id": "minimax:3@1",
+    "name": "MiniMax 02 Hailuo",
+    "description": "MiniMax Hailuo 02 text-to-video model",
+    "provider_id": 3,
+    "family_name": "Hailuo",
+    "mode": 1,
+    "cost": null,
+    "image_url": null,
+    "subscription": 3,
+    "performance_level": 2,
+    "is_popular": true,
+    "category_id": 2,
+    "metadata": {
+      "durations": [6, 10],
+      "resolutions": [
+        "1366x768",
+        "1920x1080"
+      ],
+      "fps": [25],
+      "default_duration": 6,
+      "default_resolution": "1366x768",
+      "default_fps": 25,
+      "provider_settings": {
+        "seed": "Range: 0-2147483647, default: random",
+        "enhancePrompt": "Boolean, default: false",
+        "outputQuality": "Range: 1-100, default: 99"
+      }
+    }
+  },
+  {
+    "id": "minimax:2@1",
+    "name": "MiniMax 01 Director",
+    "description": "MiniMax Hailuo 01 Director",
+    "provider_id": 3,
+    "family_name": "Hailuo",
+    "mode": 3,
+    "cost": null,
+    "image_url": null,
+    "subscription": 3,
+    "performance_level": 3,
+    "is_popular": false,
+    "category_id": 2,
+    "metadata": {
+      "durations": [6],
+      "resolutions": [
+        "1366x768"
+      ],
+      "fps": [25],
+      "default_duration": 6,
+      "default_resolution": "1366x768",
+      "default_fps": 25,
+      "provider_settings": {
+        "seed": "Range: 0-2147483647, default: random",
+        "enhancePrompt": "Boolean, default: false",
+        "outputQuality": "Range: 1-100, default: 99",
+        "frameImages": "Optional for image-to-video"
+      }
+    }
+  },
+  {
+    "id": "vidu:3@2",
+    "name": "Vidu Q2 Turbo",
+    "description": "High-speed Vidu Q2 video generation with reference support",
+    "provider_id": 3,
+    "family_name": "Vidu",
+    "mode": 2,
+    "cost": null,
+    "image_url": null,
+    "subscription": 3,
+    "performance_level": 1,
+    "is_popular": true,
+    "category_id": 1,
+    "metadata": {
+      "durations": [1, 2, 3, 4, 5, 6, 7, 8],
+      "resolutions": [
+        "640x360",
+        "960x540",
+        "1280x720",
+        "1920x1080"
+      ],
+      "fps": [24],
+      "default_duration": 5,
+      "default_resolution": "1280x720",
+      "default_fps": 24,
+      "provider_settings": {
+        "seed": "Range: 0-2147483647, default: random",
+        "enhancePrompt": "Boolean, default: false",
+        "outputQuality": "Range: 1-100, default: 99",
+        "referenceImages": "Supports up to 7 reference images"
+      }
+    }
+  },
+  {
+    "id": "vidu:3@1",
+    "name": "Vidu Q2 Pro",
+    "description": "Professional Vidu Q2 video generation with enhanced quality",
+    "provider_id": 3,
+    "family_name": "Vidu",
+    "mode": 2,
+    "cost": null,
+    "image_url": null,
+    "subscription": 4,
+    "performance_level": 3,
+    "is_popular": true,
+    "category_id": 1,
+    "metadata": {
+      "durations": [1, 2, 3, 4, 5, 6, 7, 8],
+      "resolutions": [
+        "640x360",
+        "960x540",
+        "1280x720",
+        "1920x1080"
+      ],
+      "fps": [24],
+      "default_duration": 5,
+      "default_resolution": "1280x720",
+      "default_fps": 24,
+      "provider_settings": {
+        "seed": "Range: 0-2147483647, default: random",
+        "enhancePrompt": "Boolean, default: false",
+        "outputQuality": "Range: 1-100, default: 99",
+        "referenceImages": "Supports up to 7 reference images"
+      }
+    }
+  },
+  {
+    "id": "vidu:1@1",
+    "name": "Vidu Q1",
+    "description": "Vidu Q1 video generation",
+    "provider_id": 3,
+    "family_name": "Vidu",
+    "mode": 3,
+    "cost": null,
+    "image_url": null,
+    "subscription": 3,
+    "performance_level": 2,
+    "is_popular": false,
+    "category_id": 1,
+    "metadata": {
+      "durations": [5],
+      "resolutions": [
+        "1920x1080",
+        "1080x1080",
+        "1080x1920"
+      ],
+      "fps": [24],
+      "default_duration": 5,
+      "default_resolution": "1920x1080",
+      "default_fps": 24,
+      "provider_settings": {
+        "seed": "Range: 0-2147483647, default: random",
+        "enhancePrompt": "Boolean, default: false",
+        "outputQuality": "Range: 1-100, default: 99",
+        "frameImages": "Optional for image-to-video"
+      }
+    }
+  },
+  {
+    "id": "google:3@3",
+    "name": "Google Veo 3.1 Fast",
+    "description": "Optimized variant of Veo 3.1 for high-speed generation with cinematic quality",
+    "provider_id": 3,
+    "family_name": "Veo",
+    "mode": 3,
+    "cost": null,
+    "image_url": null,
+    "subscription": 3,
+    "performance_level": 1,
+    "is_popular": true,
+    "category_id": 1,
+    "metadata": {
+      "durations": [4, 6, 8],
+      "resolutions": [
+        "1280x720",
+        "720x1280",
+        "1920x1080",
+        "1080x1920"
+      ],
+      "fps": [24],
+      "default_duration": 4,
+      "default_resolution": "1280x720",
+      "default_fps": 24,
+      "provider_settings": {
+        "seed": "Range: 0-2147483647, default: random",
+        "generateAudio": "Boolean, default: false",
+        "outputQuality": "Range: 1-100, default: 99",
+        "frameImages": "Optional for image-to-video"
+      }
+    }
+  },
+  {
+    "id": "google:3@2",
+    "name": "Google Veo 3.1",
+    "description": "Google's newest Veo model for cinematic video generation with natural sound",
+    "provider_id": 3,
+    "family_name": "Veo",
+    "mode": 3,
+    "cost": null,
+    "image_url": null,
+    "subscription": 4,
+    "performance_level": 3,
+    "is_popular": true,
+    "category_id": 1,
+    "metadata": {
+      "durations": [8],
+      "resolutions": [
+        "1280x720",
+        "720x1280",
+        "1920x1080",
+        "1080x1920"
+      ],
+      "fps": [24],
+      "default_duration": 8,
+      "default_resolution": "1280x720",
+      "default_fps": 24,
+      "provider_settings": {
+        "seed": "Range: 0-2147483647, default: random",
+        "generateAudio": "Boolean, default: false",
+        "outputQuality": "Range: 1-100, default: 99",
+        "frameImages": "Optional for image-to-video"
+      }
+    }
+  },
+  {
+    "id": "google:3@1",
+    "name": "Google Veo 3 Fast",
+    "description": "Faster and more cost-effective variant of Veo 3",
+    "provider_id": 3,
+    "family_name": "Veo",
+    "mode": 3,
+    "cost": null,
+    "image_url": null,
+    "subscription": 3,
+    "performance_level": 1,
+    "is_popular": true,
+    "category_id": 1,
+    "metadata": {
+      "durations": [8],
+      "resolutions": [
+        "1280x720",
+        "720x1280",
+        "1920x1080",
+        "1080x1920"
+      ],
+      "fps": [24],
+      "default_duration": 8,
+      "default_resolution": "1280x720",
+      "default_fps": 24,
+      "provider_settings": {
+        "seed": "Range: 0-2147483647, default: random",
+        "generateAudio": "Boolean, default: false",
+        "outputQuality": "Range: 1-100, default: 99",
+        "frameImages": "Optional for image-to-video"
+      }
+    }
+  },
+  {
+    "id": "google:3@0",
+    "name": "Google Veo 3",
+    "description": "Google Veo 3 video generation with text and image support",
+    "provider_id": 3,
+    "family_name": "Veo",
+    "mode": 3,
+    "cost": null,
+    "image_url": null,
+    "subscription": 4,
+    "performance_level": 3,
+    "is_popular": true,
+    "category_id": 1,
+    "metadata": {
+      "durations": [8],
+      "resolutions": [
+        "1280x720",
+        "720x1280",
+        "1920x1080",
+        "1080x1920"
+      ],
+      "fps": [24],
+      "default_duration": 8,
+      "default_resolution": "1280x720",
+      "default_fps": 24,
+      "provider_settings": {
+        "seed": "Range: 0-2147483647, default: random",
+        "generateAudio": "Boolean, default: false",
+        "outputQuality": "Range: 1-100, default: 99",
+        "frameImages": "Optional for image-to-video"
+      }
+    }
+  },
+  {
+    "id": "google:2@0",
+    "name": "Google Veo 2.0",
+    "description": "Google Veo 2.0 video generation model",
+    "provider_id": 3,
+    "family_name": "Veo",
+    "mode": 3,
+    "cost": null,
+    "image_url": null,
+    "subscription": 3,
+    "performance_level": 2,
+    "is_popular": true,
+    "category_id": 1,
+    "metadata": {
+      "durations": [8],
+      "resolutions": [
+        "1280x720",
+        "720x1280",
+        "1920x1080",
+        "1080x1920"
+      ],
+      "fps": [24],
+      "default_duration": 8,
+      "default_resolution": "1280x720",
+      "default_fps": 24,
+      "provider_settings": {
+        "seed": "Range: 0-2147483647, default: random",
+        "generateAudio": "Boolean, default: false",
+        "outputQuality": "Range: 1-100, default: 99",
+        "frameImages": "Optional for image-to-video"
+      }
+    }
+  },
+  {
+    "id": "openai:3@2",
+    "name": "Sora 2 Pro",
+    "description": "OpenAI's Sora 2 Pro with enhanced quality and resolution",
+    "provider_id": 3,
+    "family_name": "Sora",
+    "mode": 3,
+    "cost": 600,
+    "image_url": null,
+    "subscription": 4,
+    "performance_level": 3,
+    "is_popular": true,
+    "category_id": 1,
+    "metadata": {
+      "durations": [4, 8, 12],
+      "resolutions": [
+        "1280x720",
+        "720x1280",
+        "1792x1024",
+        "1024x1792"
+      ],
+      "fps": [24],
+      "default_duration": 8,
+      "default_resolution": "1280x720",
+      "default_fps": 24,
+      "provider_settings": {
+        "seed": "Range: 0-2147483647, default: random",
+        "outputQuality": "Range: 1-100, default: 99",
+        "frameImages": "Optional for image-to-video"
+      }
+    }
+  },
+  {
+    "id": "openai:3@1",
+    "name": "Sora 2",
+    "description": "OpenAI's Sora 2 video generation model",
+    "provider_id": 3,
+    "family_name": "Sora",
+    "mode": 3,
+    "cost": 450,
+    "image_url": null,
+    "subscription": 4,
+    "performance_level": 3,
+    "is_popular": true,
+    "category_id": 1,
+    "metadata": {
+      "durations": [4, 8, 12],
+      "resolutions": [
+        "1280x720",
+        "720x1280"
+      ],
+      "fps": [24, 30],
+      "default_duration": 4,
+      "default_resolution": "1280x720",
+      "default_fps": 30,
+      "provider_settings": {
+        "seed": "Range: 0-2147483647, default: random",
+        "outputQuality": "Range: 1-100, default: 99",
+        "frameImages": "Optional for image-to-video"
+      }
+    }
+  },
+  {
+    "id": "pixverse:1@5",
+    "name": "PixVerse v5",
+    "description": "Latest PixVerse video generation",
+    "provider_id": 3,
+    "family_name": "PixVerse",
+    "mode": 3,
+    "cost": null,
+    "image_url": null,
+    "subscription": 3,
+    "performance_level": 3,
+    "is_popular": true,
+    "category_id": 4,
+    "metadata": {
+      "durations": [5, 8],
+      "resolutions": [
+        "640x360",
+        "960x540",
+        "1280x720",
+        "1920x1080",
+        "480x360",
+        "720x540",
+        "960x720",
+        "1440x1080",
+        "360x360",
+        "540x540",
+        "720x720",
+        "1080x1080",
+        "360x480",
+        "540x720",
+        "720x960",
+        "1080x1440",
+        "360x640",
+        "540x960",
+        "720x1280",
+        "1080x1920"
+      ],
+      "fps": [],
+      "default_duration": 5,
+      "provider_settings": {
+        "seed": "Range: 0-2147483647, default: random",
+        "negativePrompt": "Optional negative prompt",
+        "style": "Options: realistic/anime",
+        "outputQuality": "Range: 1-100, default: 99",
+        "frameImages": "Optional for image-to-video"
+      }
+    }
+  },
+  {
+    "id": "pixverse:1@3",
+    "name": "PixVerse v4.5",
+    "description": "PixVerse v4.5 video generation",
+    "provider_id": 3,
+    "family_name": "PixVerse",
+    "mode": 3,
+    "cost": null,
+    "image_url": null,
+    "subscription": 3,
+    "performance_level": 2,
+    "is_popular": false,
+    "category_id": 4,
+    "metadata": {
+      "durations": [],
+      "resolutions": [],
+      "fps": [],
+      "provider_settings": {
+        "seed": "Range: 0-2147483647, default: random",
+        "negativePrompt": "Optional negative prompt",
+        "style": "Options: realistic/anime",
+        "outputQuality": "Range: 1-100, default: 99",
+        "frameImages": "Optional for image-to-video"
+      }
+    }
+  },
+  {
+    "id": "pixverse:lipsync@1",
+    "name": "PixVerse LipSync",
+    "description": "Lip sync for video avatars",
+    "provider_id": 3,
+    "family_name": "PixVerse",
+    "mode": 2,
+    "cost": null,
+    "image_url": null,
+    "subscription": 3,
+    "performance_level": 2,
+    "is_popular": false,
+    "category_id": 5,
+    "metadata": {
+      "durations": [],
+      "resolutions": [],
+      "fps": [],
+      "provider_settings": {
+        "inputVideos": "Required: video input",
+        "inputAudios": "Required: audio input for lip-sync"
+      }
+    }
+  },
+  {
+    "id": "runware:201@1",
+    "name": "Wan2.5-Preview",
+    "description": "Preview of Runware Wan 2.5 video model",
+    "provider_id": 3,
+    "family_name": "Runware",
+    "mode": 1,
+    "cost": null,
+    "image_url": null,
+    "subscription": 3,
+    "performance_level": 2,
+    "is_popular": true,
+    "category_id": 1,
+    "metadata": {
+      "durations": [],
+      "resolutions": [],
+      "fps": [],
+      "provider_settings": {}
+    }
+  },
+  {
+    "id": "runware:200@8",
+    "name": "Wan2.2 A14B Turbo",
+    "description": "Turbo variant of Runware Wan 2.2 A14B for high-speed generation",
+    "provider_id": 3,
+    "family_name": "Runware",
+    "mode": 1,
+    "cost": null,
+    "image_url": null,
+    "subscription": 3,
+    "performance_level": 1,
+    "is_popular": true,
+    "category_id": 1,
+    "metadata": {
+      "durations": [],
+      "resolutions": [],
+      "fps": [],
+      "provider_settings": {}
+    }
+  },
+  {
+    "id": "runware:200@6",
+    "name": "Wan2.2 A14B",
+    "description": "Runware Wan 2.2 A14B video generation model",
+    "provider_id": 3,
+    "family_name": "Runware",
+    "mode": 1,
+    "cost": null,
+    "image_url": null,
+    "subscription": 3,
+    "performance_level": 2,
+    "is_popular": true,
+    "category_id": 1,
+    "metadata": {
+      "durations": [],
+      "resolutions": [],
+      "fps": [],
+      "provider_settings": {}
+    }
+  },
+  {
+    "id": "runware:190@1",
+    "name": "Ovi",
+    "description": "Runware Ovi video generation model",
+    "provider_id": 3,
+    "family_name": "Runware",
+    "mode": 1,
+    "cost": null,
+    "image_url": null,
+    "subscription": 3,
+    "performance_level": 2,
+    "is_popular": true,
+    "category_id": 1,
+    "metadata": {
+      "durations": [],
+      "resolutions": [],
+      "fps": [],
+      "provider_settings": {}
+    }
+  }
+]
