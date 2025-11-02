@@ -425,6 +425,7 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     description: "Professional FLUX with context",
     popularity: 5,
     category: "image",
+    inputAsset: ["image"],
     availableDimensions: [
       { width: 1568, height: 672, label: "1568×672 (21:9)" },
       { width: 1392, height: 752, label: "1392×752 (16:9)" },
@@ -444,6 +445,7 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     description: "Maximum quality FLUX with context",
     popularity: 5,
     category: "image",
+    inputAsset: ["image"],
     availableDimensions: [
       { width: 1568, height: 672, label: "1568×672 (21:9)" },
       { width: 1392, height: 752, label: "1392×752 (16:9)" },
