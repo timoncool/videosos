@@ -329,15 +329,19 @@ export const useJobCreator = ({
             return;
           }
 
-          // Prepare blob/file image if needed - upload to Runware
+          // Convert File/Blob to base64 if needed
           if (hasBlobOrFileImage && blobOrFileImageValue) {
-            console.log("[DEBUG] Uploading File/Blob to Runware via imageUpload API");
-            const uploadedUuid = await prepareRunwareImageAsset({
-              value: blobOrFileImageValue,
-              runware,
-              cacheKey: blobOrFileImageKey,
+            console.log("[DEBUG] Converting File/Blob to base64 data URI");
+
+            // Convert File/Blob to base64 data URI
+            const base64DataUri = await new Promise<string>((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onload = () => resolve(reader.result as string);
+              reader.onerror = () => reject(reader.error);
+              reader.readAsDataURL(blobOrFileImageValue);
             });
-            console.log("[DEBUG] Upload complete, UUID:", uploadedUuid);
+
+            console.log("[DEBUG] Converted to base64, length:", base64DataUri.substring(0, 50) + "...");
 
             // Determine which parameter to use based on model capabilities
             const { getModelCapabilities } = await import("@/lib/runware-capabilities");
@@ -345,11 +349,11 @@ export const useJobCreator = ({
             const paramName = capabilities.imageInputParam || "seedImage";
 
             if (paramName === "referenceImages") {
-              imageParams.referenceImages = [uploadedUuid];
-              console.log("[DEBUG] Set referenceImages:", imageParams.referenceImages);
+              imageParams.referenceImages = [base64DataUri];
+              console.log("[DEBUG] Set referenceImages with base64");
             } else {
-              imageParams.seedImage = uploadedUuid;
-              console.log("[DEBUG] Set seedImage:", imageParams.seedImage);
+              imageParams.seedImage = base64DataUri;
+              console.log("[DEBUG] Set seedImage with base64");
             }
           }
 
