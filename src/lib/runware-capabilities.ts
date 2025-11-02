@@ -21,7 +21,12 @@ export type ModelCapabilities = {
   outputType: boolean;
   dimensionRule: "multiples_of_64" | "fixed_set";
   availableDimensions?: Array<{ width: number; height: number; label: string }>;
-  imageInputParam?: "seedImage" | "referenceImages"; // Parameter name for input images
+  imageInputParam?:
+    | "seedImage"
+    | "referenceImages"
+    | "inputs.image"
+    | "inputs.references"
+    | "seedImage+referenceImages"; // Parameter name for input images
 };
 
 const DEFAULT_CAPABILITIES: ModelCapabilities = {
