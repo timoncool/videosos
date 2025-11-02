@@ -233,10 +233,18 @@ export const useJobCreator = ({
 
       if (mediaType === "image") {
         const { buildRunwarePayload } = await import("@/lib/runware-capabilities");
-        
+
+        // Get endpoint info for default parameters
+        const endpointInfo = endpoint ? {
+          defaultSteps: endpoint.defaultSteps,
+          defaultScheduler: endpoint.defaultScheduler,
+          defaultAcceleration: endpoint.defaultAcceleration,
+          defaultGuidanceScale: endpoint.defaultGuidanceScale,
+        } : undefined;
+
         let imageParams: any;
         try {
-          imageParams = buildRunwarePayload(endpointId, input, "image");
+          imageParams = buildRunwarePayload(endpointId, input, "image", endpointInfo);
           // Add required fields that Runware API expects
           imageParams.taskType = "imageInference";
           imageParams.taskUUID = taskUUID;
