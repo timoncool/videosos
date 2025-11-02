@@ -21,6 +21,7 @@ export type ModelCapabilities = {
   outputType: boolean;
   dimensionRule: "multiples_of_64" | "fixed_set";
   availableDimensions?: Array<{ width: number; height: number; label: string }>;
+  imageInputParam?: "seedImage" | "referenceImages"; // Parameter name for input images
 };
 
 const DEFAULT_CAPABILITIES: ModelCapabilities = {
@@ -91,6 +92,7 @@ export const FAMILY_CAPABILITIES: Record<string, ModelCapabilities> = {
       { width: 1248, height: 832, label: "3:2 (Classic Landscape)" },
       { width: 832, height: 1248, label: "2:3 (Classic Portrait)" },
     ],
+    imageInputParam: "referenceImages",
   },
 
   openai: {
@@ -121,6 +123,7 @@ export const FAMILY_CAPABILITIES: Record<string, ModelCapabilities> = {
     ...DEFAULT_CAPABILITIES,
     steps: { supported: true, min: 1, max: 50, default: 20 },
     cfgScale: { supported: true, min: 1, max: 20, default: 3.5 },
+    imageInputParam: "referenceImages",
   },
 
   "flux-pro": {
@@ -147,6 +150,7 @@ export const FAMILY_CAPABILITIES: Record<string, ModelCapabilities> = {
     steps: { supported: true, min: 1, max: 100, default: 20 },
     cfgScale: { supported: true, min: 0, max: 50, default: 2.5 },
     dimensionRule: "multiples_of_64",
+    imageInputParam: "referenceImages",
   },
 
   sdxl: {
@@ -172,6 +176,7 @@ export const FAMILY_CAPABILITIES: Record<string, ModelCapabilities> = {
     outputFormats: ["PNG", "JPEG", "WEBP"],
     outputType: true,
     dimensionRule: "multiples_of_64",
+    imageInputParam: "referenceImages",
   },
 
   klingai: {
@@ -209,7 +214,7 @@ export function getEndpointFamily(endpointId: string): string {
       return "qwen-image";
     }
 
-    if (modelNumber === "107" || modelNumber === "111") {
+    if (modelNumber === "106" || modelNumber === "107" || modelNumber === "111") {
       return "flux";
     }
 
@@ -366,7 +371,14 @@ export function buildRunwarePayload(
         (typeof Blob !== "undefined" && candidate instanceof Blob);
 
       if (isValid) {
-        payload.seedImage = candidate;
+        // Use the correct parameter name based on model capabilities
+        const paramName = capabilities.imageInputParam || "seedImage";
+        if (paramName === "referenceImages") {
+          // referenceImages expects an array
+          payload.referenceImages = [candidate];
+        } else {
+          payload.seedImage = candidate;
+        }
         break;
       }
     }
