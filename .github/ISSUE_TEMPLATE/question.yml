@@ -1,5 +1,5 @@
 name: ❓ Question
-description: Ask a question about using VideosOS
+description: Ask a question about using VideoSOS
 title: "[Question]: "
 labels: ["question"]
 body:
@@ -37,7 +37,7 @@ body:
       description: Provide information about your setup if it's relevant to the question
       placeholder: |
         - OS: [e.g. macOS, Windows, Linux]
-        - VideosOS version: [e.g. 1.0.0]
+        - VideoSOS version: [e.g. 1.0.0]
     validations:
       required: false
 
