@@ -162,9 +162,20 @@ export const useJobCreator = ({
   const prepareFalInput = async (
     rawInput: Record<string, unknown>,
   ): Promise<Record<string, unknown>> => {
+    let mappedInput = rawInput;
+    if (endpoint?.inputMap) {
+      const { mapInputKey } = await import("@/lib/utils");
+      mappedInput = mapInputKey(rawInput, endpoint.inputMap);
+    }
+
     const entries = await Promise.all(
-      Object.entries(rawInput).map(async ([key, value]) => {
+      Object.entries(mappedInput).map(async ([key, value]) => {
         const resolvedValue = await uploadValueIfNeeded(key, value);
+        
+        if (key === "image_urls" && typeof resolvedValue === "string") {
+          return [key, [resolvedValue]] as const;
+        }
+        
         return [key, resolvedValue] as const;
       }),
     );
