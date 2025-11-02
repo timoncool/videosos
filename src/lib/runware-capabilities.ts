@@ -75,6 +75,26 @@ export const FAMILY_CAPABILITIES: Record<string, ModelCapabilities> = {
     ],
   },
 
+  google: {
+    prompt: "required",
+    negativePrompt: true,
+    seed: true,
+    seedImage: true,
+    maskImage: false,
+    outpainting: false,
+    steps: { supported: false },
+    cfgScale: { supported: false },
+    scheduler: false,
+    clipSkip: false,
+    checkNSFW: false,
+    numberResults: true,
+    outputQuality: true,
+    outputFormats: ["PNG", "JPEG", "WEBP"],
+    outputType: true,
+    dimensionRule: "multiples_of_64",
+    imageInputParam: "referenceImages", // Google uses referenceImages
+  },
+
   ideogram: {
     prompt: "required",
     negativePrompt: false,
@@ -135,7 +155,7 @@ export const FAMILY_CAPABILITIES: Record<string, ModelCapabilities> = {
     prompt: "required",
     negativePrompt: true,
     seed: true,
-    seedImage: true, // BFL FLUX Kontext uses seedImage for img2img
+    seedImage: false, // BFL FLUX Kontext does NOT support img2img
     maskImage: false,
     outpainting: false,
     steps: { supported: false },
@@ -148,7 +168,6 @@ export const FAMILY_CAPABILITIES: Record<string, ModelCapabilities> = {
     outputFormats: ["PNG", "WEBP", "JPG"],
     outputType: true,
     dimensionRule: "multiples_of_64",
-    imageInputParam: "seedImage", // BFL uses seedImage, not referenceImages
   },
 
   "qwen-image": {

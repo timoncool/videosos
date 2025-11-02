@@ -214,6 +214,21 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
   },
   {
     provider: "runware",
+    endpointId: "bria:20@1",
+    label: "Bria 2.0 Fast",
+    description: "Fast image editing from Bria",
+    popularity: 4,
+    category: "image",
+    inputAsset: ["image"],
+    minSteps: 1,
+    maxSteps: 50,
+    defaultSteps: 50,
+    minGuidanceScale: 1,
+    maxGuidanceScale: 20,
+    defaultGuidanceScale: 5,
+  },
+  {
+    provider: "runware",
     endpointId: "ideogram:4@1",
     label: "Ideogram 3.0",
     description: "Text-to-image with superior text rendering",
@@ -315,7 +330,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     description: "Professional FLUX with context",
     popularity: 5,
     category: "image",
-    inputAsset: ["image"],
     availableDimensions: [
       { width: 1568, height: 672, label: "1568×672 (21:9)" },
       { width: 1392, height: 752, label: "1392×752 (16:9)" },
@@ -335,7 +349,6 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     description: "Maximum quality FLUX with context",
     popularity: 5,
     category: "image",
-    inputAsset: ["image"],
     availableDimensions: [
       { width: 1568, height: 672, label: "1568×672 (21:9)" },
       { width: 1392, height: 752, label: "1392×752 (16:9)" },
