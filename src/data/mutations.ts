@@ -249,9 +249,9 @@ export const useJobCreator = ({
           "image",
           "image_url",
         ];
-        let hasBlobImage = false;
-        let blobImageKey = "";
-        let blobImageValue: Blob | null = null;
+        let hasBlobOrFileImage = false;
+        let blobOrFileImageKey = "";
+        let blobOrFileImageValue: Blob | File | null = null;
 
         for (const key of runwareSeedImageKeys) {
           const candidate = input[key];
@@ -279,16 +279,18 @@ export const useJobCreator = ({
           }
 
           if (typeof File !== "undefined" && candidate instanceof File) {
-            console.log(`[DEBUG] Found File ${key}:`, candidate.name);
-            imageParams.seedImage = candidate;
+            console.log(`[DEBUG] Found File ${key}:`, candidate.name, "- will upload to Runware");
+            hasBlobOrFileImage = true;
+            blobOrFileImageKey = key;
+            blobOrFileImageValue = candidate;
             break;
           }
 
           if (typeof Blob !== "undefined" && candidate instanceof Blob) {
-            console.log(`[DEBUG] Found Blob ${key}, will prepare for upload`);
-            hasBlobImage = true;
-            blobImageKey = key;
-            blobImageValue = candidate;
+            console.log(`[DEBUG] Found Blob ${key}, will upload to Runware`);
+            hasBlobOrFileImage = true;
+            blobOrFileImageKey = key;
+            blobOrFileImageValue = candidate;
             break;
           }
         }
@@ -331,13 +333,15 @@ export const useJobCreator = ({
             return;
           }
 
-          // Prepare blob image if needed
-          if (hasBlobImage && blobImageValue) {
+          // Prepare blob/file image if needed - upload to Runware
+          if (hasBlobOrFileImage && blobOrFileImageValue) {
+            console.log("[DEBUG] Uploading File/Blob to Runware via imageUpload API");
             imageParams.seedImage = await prepareRunwareImageAsset({
-              value: blobImageValue,
+              value: blobOrFileImageValue,
               runware,
-              cacheKey: blobImageKey,
+              cacheKey: blobOrFileImageKey,
             });
+            console.log("[DEBUG] Upload complete, seedImage UUID:", imageParams.seedImage);
           }
 
           return runware.requestImages(imageParams);
@@ -499,21 +503,40 @@ export const useJobCreator = ({
           };
         }
 
-        if (input.inputImage) {
-          // Only include inputImage if it's a valid type (string URL, File, or Blob)
-          const inputImageValue = input.inputImage;
-          const isValidInputImage =
-            typeof inputImageValue === "string" ||
-            (typeof File !== "undefined" && inputImageValue instanceof File) ||
-            (typeof Blob !== "undefined" && inputImageValue instanceof Blob);
+        // Prepare inputImage if needed (File/Blob need upload)
+        let hasInputImageBlobOrFile = false;
+        let inputImageBlobOrFileValue: Blob | File | null = null;
 
-          if (isValidInputImage) {
-            videoParams.inputImage = input.inputImage;
-          } else {
+        if (input.inputImage) {
+          const inputImageValue = input.inputImage;
+
+          // Skip invalid values (objects, arrays, etc that are not File/Blob)
+          if (
+            typeof inputImageValue === "object" &&
+            !(typeof File !== "undefined" && inputImageValue instanceof File) &&
+            !(typeof Blob !== "undefined" && inputImageValue instanceof Blob)
+          ) {
             console.warn(
               "[DEBUG] Skipping invalid inputImage value:",
               inputImageValue,
             );
+          } else if (typeof inputImageValue === "string") {
+            console.log("[DEBUG] Found string inputImage:", inputImageValue.substring(0, 100));
+            videoParams.inputImage = inputImageValue;
+          } else if (
+            typeof File !== "undefined" &&
+            inputImageValue instanceof File
+          ) {
+            console.log("[DEBUG] Found File inputImage:", inputImageValue.name, "- will upload to Runware");
+            hasInputImageBlobOrFile = true;
+            inputImageBlobOrFileValue = inputImageValue;
+          } else if (
+            typeof Blob !== "undefined" &&
+            inputImageValue instanceof Blob
+          ) {
+            console.log("[DEBUG] Found Blob inputImage, will upload to Runware");
+            hasInputImageBlobOrFile = true;
+            inputImageBlobOrFileValue = inputImageValue;
           }
         }
 
@@ -550,6 +573,17 @@ export const useJobCreator = ({
               queryKey: queryKeys.projectMediaItems(projectId),
             });
             return;
+          }
+
+          // Upload inputImage File/Blob if needed
+          if (hasInputImageBlobOrFile && inputImageBlobOrFileValue) {
+            console.log("[DEBUG] Uploading inputImage File/Blob to Runware via imageUpload API");
+            videoParams.inputImage = await prepareRunwareImageAsset({
+              value: inputImageBlobOrFileValue,
+              runware,
+              cacheKey: "inputImage",
+            });
+            console.log("[DEBUG] Upload complete, inputImage UUID:", videoParams.inputImage);
           }
 
           return runware.videoInference(videoParams);
