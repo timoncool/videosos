@@ -42,7 +42,7 @@ const DEFAULT_CAPABILITIES: ModelCapabilities = {
   cfgScale: { supported: true, min: 1, max: 20, default: 3.5 },
   scheduler: true,
   clipSkip: true,
-  checkNSFW: true,
+  checkNSFW: false, // Default to false - only enable for specific families that support it
   numberResults: true,
   outputQuality: true,
   outputFormats: ["JPG", "PNG", "WEBP"],
@@ -125,6 +125,7 @@ export const FAMILY_CAPABILITIES: Record<string, ModelCapabilities> = {
     ...DEFAULT_CAPABILITIES,
     steps: { supported: true, min: 1, max: 50, default: 20 },
     cfgScale: { supported: true, min: 1, max: 20, default: 3.5 },
+    checkNSFW: false, // FLUX models do not support checkNSFW
     imageInputParam: "referenceImages",
   },
 
@@ -132,7 +133,7 @@ export const FAMILY_CAPABILITIES: Record<string, ModelCapabilities> = {
     prompt: "required",
     negativePrompt: true,
     seed: true,
-    seedImage: false, // BFL FLUX Kontext does NOT support img2img
+    seedImage: true, // BFL FLUX Kontext supports reference-to-image via referenceImages
     maskImage: false,
     outpainting: false,
     steps: { supported: false },
@@ -145,12 +146,14 @@ export const FAMILY_CAPABILITIES: Record<string, ModelCapabilities> = {
     outputFormats: ["PNG", "WEBP", "JPG"],
     outputType: true,
     dimensionRule: "multiples_of_64",
+    imageInputParam: "referenceImages", // BFL uses referenceImages for reference-to-image
   },
 
   "qwen-image": {
     ...DEFAULT_CAPABILITIES,
     steps: { supported: true, min: 1, max: 100, default: 20 },
     cfgScale: { supported: true, min: 0, max: 50, default: 2.5 },
+    checkNSFW: true, // Qwen supports checkNSFW (verified in working examples)
     dimensionRule: "multiples_of_64",
     imageInputParam: "referenceImages",
     maxPixels: 1048576,
@@ -173,7 +176,7 @@ export const FAMILY_CAPABILITIES: Record<string, ModelCapabilities> = {
     cfgScale: { supported: false },
     scheduler: false,
     clipSkip: false,
-    checkNSFW: true,
+    checkNSFW: false, // Bytedance does not support checkNSFW
     numberResults: true,
     outputQuality: true,
     outputFormats: ["PNG", "JPEG", "WEBP"],
@@ -486,9 +489,8 @@ export function buildRunwarePayload(
     payload.acceleration = endpointInfo.defaultAcceleration;
   }
 
-  if (capabilities.seedImage) {
-    // Look for seedImage in multiple possible input keys
-    // Models with inputAsset: ["image"] might use "image" or "image_url" instead of "seedImage"
+  if (capabilities.imageInputParam) {
+    // Look for image in multiple possible input keys
     const seedImageKeys = ["seedImage", "inputImage", "image", "image_url"];
 
     for (const key of seedImageKeys) {
@@ -511,7 +513,7 @@ export function buildRunwarePayload(
       // Only string URL/UUID/base64 should be added to payload
       if (typeof candidate === "string") {
         // Use the correct parameter name based on model capabilities
-        const paramName = capabilities.imageInputParam || "seedImage";
+        const paramName = capabilities.imageInputParam;
 
         if (paramName === "referenceImages") {
           // referenceImages expects an array
@@ -526,8 +528,8 @@ export function buildRunwarePayload(
           // Ideogram img2img uses BOTH seedImage and referenceImages
           payload.seedImage = candidate;
           payload.referenceImages = [candidate];
-        } else {
-          // Default: seedImage
+        } else if (paramName === "seedImage") {
+          // Only send seedImage if explicitly configured
           payload.seedImage = candidate;
         }
         break;
