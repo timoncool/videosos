@@ -167,14 +167,18 @@ const getModelType = (endpoint: (typeof ALL_ENDPOINTS)[number]): string => {
   if (lowerLabel.includes("bria") || lowerEndpoint.includes("bria")) return "Bria";
   if (lowerLabel.includes("gpt") && lowerLabel.includes("image")) return "GPT Image";
   if (lowerLabel.includes("recraft") || lowerEndpoint.includes("recraft")) return "Recraft";
+
+  // SDXL models - group together
+  if (lowerLabel.includes("juggernaut") || lowerEndpoint.includes("juggernaut")) return "SDXL";
+  if (lowerLabel.includes("realistic vision") || lowerEndpoint.includes("realistic")) return "SDXL";
+  if (lowerLabel.includes("dreamshaper") || lowerEndpoint.includes("dreamshaper")) return "SDXL";
+  if (lowerLabel.includes("meinamix") || lowerEndpoint.includes("meinamix")) return "SDXL";
+  if (lowerLabel.includes("epic realism") || lowerEndpoint.includes("epic")) return "SDXL";
+
+  // Regular Stable Diffusion (non-XL)
   if (lowerLabel.includes("stable diffusion") || lowerEndpoint.includes("stable-diffusion")) return "Stable Diffusion";
   if (lowerLabel.includes("hidream") || lowerEndpoint.includes("hidream")) return "HiDream";
   if (lowerLabel.includes("vidu") || lowerEndpoint.includes("vidu")) return "Vidu";
-  if (lowerLabel.includes("juggernaut") || lowerEndpoint.includes("juggernaut")) return "Juggernaut";
-  if (lowerLabel.includes("realistic vision") || lowerEndpoint.includes("realistic")) return "Realistic Vision";
-  if (lowerLabel.includes("dreamshaper") || lowerEndpoint.includes("dreamshaper")) return "DreamShaper";
-  if (lowerLabel.includes("meinamix") || lowerEndpoint.includes("meinamix")) return "MeinaMix";
-  if (lowerLabel.includes("epic realism") || lowerEndpoint.includes("epic")) return "Epic Realism";
   if (lowerLabel.includes("riverflow") || lowerEndpoint.includes("riverflow") || lowerEndpoint.includes("sourceful")) return "Riverflow";
   if (lowerLabel.includes("luma") || lowerEndpoint.includes("luma")) return "Luma";
   if (lowerLabel.includes("pika") || lowerEndpoint.includes("pika")) return "Pika";
