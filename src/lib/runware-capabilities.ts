@@ -26,7 +26,9 @@ export type ModelCapabilities = {
     | "referenceImages"
     | "inputs.image"
     | "inputs.references"
-    | "seedImage+referenceImages"; // Parameter name for input images
+    | "seedImage+referenceImages";
+  maxPixels?: number;
+  supportsDimensions?: boolean;
 };
 
 const DEFAULT_CAPABILITIES: ModelCapabilities = {
@@ -91,7 +93,8 @@ export const FAMILY_CAPABILITIES: Record<string, ModelCapabilities> = {
       { width: 1248, height: 832, label: "3:2 (Classic Landscape)" },
       { width: 832, height: 1248, label: "2:3 (Classic Portrait)" },
     ],
-    imageInputParam: "seedImage+referenceImages", // Ideogram img2img uses BOTH
+    imageInputParam: "seedImage+referenceImages",
+    supportsDimensions: false,
   },
 
   openai: {
@@ -150,6 +153,7 @@ export const FAMILY_CAPABILITIES: Record<string, ModelCapabilities> = {
     cfgScale: { supported: true, min: 0, max: 50, default: 2.5 },
     dimensionRule: "multiples_of_64",
     imageInputParam: "referenceImages",
+    maxPixels: 1048576,
   },
 
   sdxl: {
@@ -201,7 +205,8 @@ export const FAMILY_CAPABILITIES: Record<string, ModelCapabilities> = {
     outputFormats: ["PNG", "JPEG", "WEBP"],
     outputType: false,
     dimensionRule: "multiples_of_64",
-    imageInputParam: "inputs.image", // Bria uses inputs.image
+    imageInputParam: "inputs.image",
+    maxPixels: 1048576,
   },
 
   sourceful: {
@@ -241,7 +246,11 @@ export function getEndpointFamily(endpointId: string): string {
       return "qwen-image";
     }
 
-    if (modelNumber === "106" || modelNumber === "107" || modelNumber === "111") {
+    if (
+      modelNumber === "106" ||
+      modelNumber === "107" ||
+      modelNumber === "111"
+    ) {
       return "flux";
     }
 
@@ -274,7 +283,22 @@ export function buildRunwarePayload(
   endpointId: string,
   input: Record<string, unknown>,
   mediaType: "image" | "video",
-  endpointInfo?: { defaultSteps?: number; defaultScheduler?: string; defaultAcceleration?: string; defaultGuidanceScale?: number },
+  endpointInfo?: {
+    defaultSteps?: number;
+    defaultScheduler?: string;
+    defaultAcceleration?: string;
+    defaultGuidanceScale?: number;
+    availableDimensions?: Array<{
+      width: number;
+      height: number;
+      label: string;
+    }>;
+    supportedAspectRatios?: Array<{
+      width: number;
+      height: number;
+      label: string;
+    }>;
+  },
 ): Record<string, unknown> {
   const capabilities = getModelCapabilities(endpointId);
 
@@ -292,34 +316,95 @@ export function buildRunwarePayload(
   let width = (input.width as number) || 1024;
   let height = (input.height as number) || 1024;
 
-  if (capabilities.dimensionRule === "multiples_of_64") {
-    width = roundToMultipleOf64(width);
-    height = roundToMultipleOf64(height);
-  } else if (
-    capabilities.dimensionRule === "fixed_set" &&
-    capabilities.availableDimensions
-  ) {
-    const requestedRatio = width / height;
-    let closestMatch = capabilities.availableDimensions[0];
-    let smallestDiff = Math.abs(
-      closestMatch.width / closestMatch.height - requestedRatio,
-    );
+  const shouldIncludeDimensions = capabilities.supportsDimensions !== false;
 
-    for (const dim of capabilities.availableDimensions) {
-      const diff = Math.abs(dim.width / dim.height - requestedRatio);
-      if (diff < smallestDiff) {
-        smallestDiff = diff;
-        closestMatch = dim;
+  if (shouldIncludeDimensions) {
+    if (
+      endpointInfo?.availableDimensions &&
+      endpointInfo.availableDimensions.length > 0
+    ) {
+      const requestedRatio = width / height;
+      let closestMatch = endpointInfo.availableDimensions[0];
+      let smallestDiff = Math.abs(
+        closestMatch.width / closestMatch.height - requestedRatio,
+      );
+
+      for (const dim of endpointInfo.availableDimensions) {
+        const diff = Math.abs(dim.width / dim.height - requestedRatio);
+        if (diff < smallestDiff) {
+          smallestDiff = diff;
+          closestMatch = dim;
+        }
       }
+
+      width = closestMatch.width;
+      height = closestMatch.height;
+    } else if (
+      endpointInfo?.supportedAspectRatios &&
+      endpointInfo.supportedAspectRatios.length > 0
+    ) {
+      const requestedRatio = width / height;
+      let closestRatio = endpointInfo.supportedAspectRatios[0];
+      let smallestDiff = Math.abs(
+        closestRatio.width / closestRatio.height - requestedRatio,
+      );
+
+      for (const ratio of endpointInfo.supportedAspectRatios) {
+        const diff = Math.abs(ratio.width / ratio.height - requestedRatio);
+        if (diff < smallestDiff) {
+          smallestDiff = diff;
+          closestRatio = ratio;
+        }
+      }
+
+      const targetRatio = closestRatio.width / closestRatio.height;
+
+      if (width >= height) {
+        height = Math.round(width / targetRatio);
+      } else {
+        width = Math.round(height * targetRatio);
+      }
+
+      width = roundToMultipleOf64(width);
+      height = roundToMultipleOf64(height);
+    }
+    // Priority 3: Use family-level capabilities
+    else if (capabilities.dimensionRule === "multiples_of_64") {
+      width = roundToMultipleOf64(width);
+      height = roundToMultipleOf64(height);
+    } else if (
+      capabilities.dimensionRule === "fixed_set" &&
+      capabilities.availableDimensions
+    ) {
+      const requestedRatio = width / height;
+      let closestMatch = capabilities.availableDimensions[0];
+      let smallestDiff = Math.abs(
+        closestMatch.width / closestMatch.height - requestedRatio,
+      );
+
+      for (const dim of capabilities.availableDimensions) {
+        const diff = Math.abs(dim.width / dim.height - requestedRatio);
+        if (diff < smallestDiff) {
+          smallestDiff = diff;
+          closestMatch = dim;
+        }
+      }
+
+      width = closestMatch.width;
+      height = closestMatch.height;
     }
 
-    width = closestMatch.width;
-    height = closestMatch.height;
+    if (capabilities.maxPixels && width * height > capabilities.maxPixels) {
+      throw new Error(
+        `Image dimensions ${width}x${height} (${width * height} pixels) exceed the maximum allowed ${capabilities.maxPixels} pixels for this model. Please reduce the image size.`,
+      );
+    }
   }
 
-  // For img2img models, default to JPEG format
-  const hasInputImage = input.image || input.image_url || input.seedImage || input.inputImage;
-  let outputFormat = (input.outputFormat || (hasInputImage ? "JPEG" : "PNG")) as string;
+  const hasInputImage =
+    input.image || input.image_url || input.seedImage || input.inputImage;
+  let outputFormat = (input.outputFormat ||
+    (hasInputImage ? "JPEG" : "PNG")) as string;
   if (outputFormat === "JPG") {
     outputFormat = "JPEG";
   }
@@ -329,20 +414,23 @@ export function buildRunwarePayload(
       outputFormat as "JPG" | "JPEG" | "PNG" | "WEBP",
     )
   ) {
-    outputFormat = hasInputImage ? "JPEG" : "PNG"; // img2img uses JPEG
+    outputFormat = hasInputImage ? "JPEG" : "PNG";
   }
 
-  const outputType = input.outputType ?? ["dataURI", "URL"];
+  const outputType = input.outputType ?? ["URL"];
   const payload: Record<string, unknown> = {
     positivePrompt: input.prompt || "",
     model: endpointId,
-    height,
-    width,
     numberResults: capabilities.numberResults ? input.numberResults || 1 : 1,
     outputType: Array.isArray(outputType) ? outputType : [outputType],
     outputFormat: outputFormat as "PNG" | "JPEG" | "WEBP",
     includeCost: input.includeCost !== undefined ? input.includeCost : true,
   };
+
+  if (shouldIncludeDimensions) {
+    payload.height = height;
+    payload.width = width;
+  }
 
   if (capabilities.negativePrompt && input.negativePrompt) {
     payload.negativePrompt = input.negativePrompt;

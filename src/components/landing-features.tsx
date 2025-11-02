@@ -1,6 +1,15 @@
 "use client";
 
-import { Bot, DollarSign, Film, Globe, Lock, Palette, Search, Zap } from "lucide-react";
+import {
+  Bot,
+  DollarSign,
+  Film,
+  Globe,
+  Lock,
+  Palette,
+  Search,
+  Zap,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 
 export default function Features() {

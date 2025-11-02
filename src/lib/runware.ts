@@ -135,7 +135,7 @@ export const prepareRunwareImageAsset = async ({
 
       console.log(
         "[DEBUG] Converted to base64 data URI, length:",
-        base64DataUri.substring(0, 50) + "...",
+        `${base64DataUri.substring(0, 50)}...`,
       );
 
       const uploaded = await runware.imageUpload({ image: base64DataUri });

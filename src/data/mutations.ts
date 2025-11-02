@@ -240,6 +240,8 @@ export const useJobCreator = ({
           defaultScheduler: endpoint.defaultScheduler,
           defaultAcceleration: endpoint.defaultAcceleration,
           defaultGuidanceScale: endpoint.defaultGuidanceScale,
+          availableDimensions: endpoint.availableDimensions,
+          supportedAspectRatios: (endpoint as any).supportedAspectRatios,
         } : undefined;
 
         let imageParams: any;
