@@ -41,6 +41,14 @@
       "international": {
         "title": "International & Accessible",
         "description": "Full internationalization support (English/Russian) with keyboard shortcuts for power users. Intuitive UI designed for both beginners and professionals."
+      },
+      "costTracking": {
+        "title": "Cost Tracking & Project Statistics",
+        "description": "Built-in cost tracking and comprehensive project analytics help you stay within budget. Track generation costs per media item, view total project expenses, and get detailed breakdowns by media type, AI provider, and model usage."
+      },
+      "modelSelection": {
+        "title": "Advanced Model Selection",
+        "description": "Enhanced model selection interface with intelligent search, filtering by provider (FAL/Runware), and categorization by type. Real-time pricing display for FAL models helps you make informed decisions before generating content."
       }
     },
     "community": {

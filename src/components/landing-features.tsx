@@ -1,6 +1,6 @@
 "use client";
 
-import { Bot, Film, Globe, Lock, Palette, Zap } from "lucide-react";
+import { Bot, DollarSign, Film, Globe, Lock, Palette, Search, Zap } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 export default function Features() {
@@ -24,6 +24,18 @@ export default function Features() {
       icon: Film,
       title: t("timeline.title"),
       description: t("timeline.description"),
+    },
+    {
+      id: "costTracking",
+      icon: DollarSign,
+      title: t("costTracking.title"),
+      description: t("costTracking.description"),
+    },
+    {
+      id: "modelSelection",
+      icon: Search,
+      title: t("modelSelection.title"),
+      description: t("modelSelection.description"),
     },
     {
       id: "multiModal",
