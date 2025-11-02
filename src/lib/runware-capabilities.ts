@@ -281,6 +281,7 @@ export function buildRunwarePayload(
   endpointId: string,
   input: Record<string, unknown>,
   mediaType: "image" | "video",
+  endpointInfo?: { defaultSteps?: number; defaultScheduler?: string; defaultAcceleration?: string; defaultGuidanceScale?: number },
 ): Record<string, unknown> {
   const capabilities = getModelCapabilities(endpointId);
 
@@ -336,7 +337,7 @@ export function buildRunwarePayload(
     outputFormat = "PNG"; // Safe default
   }
 
-  const outputType = input.outputType ?? ["URL"];
+  const outputType = input.outputType ?? (capabilities.outputType ? ["dataURI", "URL"] : ["URL"]);
   const payload: Record<string, unknown> = {
     positivePrompt: input.prompt || "",
     model: endpointId,
@@ -361,19 +362,33 @@ export function buildRunwarePayload(
   }
 
   if (capabilities.cfgScale.supported) {
-    payload.CFGScale = input.CFGScale || capabilities.cfgScale.default || 3.5;
+    payload.CFGScale =
+      input.CFGScale ||
+      endpointInfo?.defaultGuidanceScale ||
+      capabilities.cfgScale.default ||
+      3.5;
   }
 
-  if (capabilities.outputQuality && input.outputQuality !== undefined) {
-    payload.outputQuality = input.outputQuality;
+  // outputQuality should default to 85 for img2img models
+  if (capabilities.outputQuality) {
+    payload.outputQuality = input.outputQuality ?? 85;
   }
 
-  if (capabilities.steps.supported && input.steps !== undefined) {
-    payload.steps = input.steps;
+  // Add steps - use input value, or endpoint default, or capability default
+  if (capabilities.steps.supported) {
+    payload.steps =
+      input.steps ||
+      endpointInfo?.defaultSteps ||
+      capabilities.steps.default ||
+      20;
   }
 
-  if (capabilities.scheduler && input.scheduler) {
-    payload.scheduler = input.scheduler;
+  // Add scheduler - use input value or endpoint default
+  if (capabilities.scheduler) {
+    const schedulerValue = input.scheduler || endpointInfo?.defaultScheduler;
+    if (schedulerValue) {
+      payload.scheduler = schedulerValue;
+    }
   }
 
   if (capabilities.clipSkip && input.clipSkip !== undefined) {
@@ -381,8 +396,8 @@ export function buildRunwarePayload(
   }
 
   // Add acceleration if supported (used by some Qwen models)
-  if (input.acceleration !== undefined) {
-    payload.acceleration = input.acceleration;
+  if (input.acceleration || endpointInfo?.defaultAcceleration) {
+    payload.acceleration = input.acceleration || endpointInfo?.defaultAcceleration;
   }
 
   if (capabilities.seedImage) {
