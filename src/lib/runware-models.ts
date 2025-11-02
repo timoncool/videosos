@@ -558,7 +558,8 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "sourceful:1@1",
     label: "Riverflow 1",
-    description: "Versatile daily image editing model supporting up to 10 input images",
+    description:
+      "Versatile daily image editing model supporting up to 10 input images",
     popularity: 3,
     category: "image",
     inputAsset: ["image"],
@@ -580,7 +581,8 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "sourceful:1@2",
     label: "Riverflow 1 Pro",
-    description: "Advanced image editing model with superior quality and accuracy",
+    description:
+      "Advanced image editing model with superior quality and accuracy",
     popularity: 3,
     category: "image",
     inputAsset: ["image"],
