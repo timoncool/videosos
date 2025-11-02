@@ -150,6 +150,9 @@ const getModelType = (endpoint: (typeof ALL_ENDPOINTS)[number]): string => {
   const lowerEndpoint = endpointId.toLowerCase();
 
   // Check for model families in order of specificity
+  // Check for FLUX Kontext before general FLUX
+  if (lowerLabel.includes("kontext") || lowerLabel.includes("context") ||
+      lowerEndpoint.includes("kontext") || lowerEndpoint.includes("context")) return "FLUX Kontext";
   if (lowerLabel.includes("flux") || lowerEndpoint.includes("flux")) return "FLUX";
   if (lowerLabel.includes("veo") || lowerEndpoint.includes("veo")) return "Veo";
   if (lowerLabel.includes("sora") || lowerEndpoint.includes("sora")) return "Sora";
@@ -251,6 +254,9 @@ function ModelEndpointPicker({
   const [typeFilter, setTypeFilter] = useState<string>("all");
   const [modelTypeFilter, setModelTypeFilter] = useState<string>("all");
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeftPos, setScrollLeftPos] = useState(0);
 
   const scrollLeft = () => {
     scrollContainerRef.current?.scrollBy({ left: -200, behavior: "smooth" });
@@ -258,6 +264,31 @@ function ModelEndpointPicker({
 
   const scrollRight = () => {
     scrollContainerRef.current?.scrollBy({ left: 200, behavior: "smooth" });
+  };
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!scrollContainerRef.current) return;
+    setIsDragging(true);
+    setStartX(e.pageX - scrollContainerRef.current.offsetLeft);
+    setScrollLeftPos(scrollContainerRef.current.scrollLeft);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isDragging || !scrollContainerRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - scrollContainerRef.current.offsetLeft;
+    const walk = (x - startX) * 2; // Multiply by 2 for faster scrolling
+    scrollContainerRef.current.scrollLeft = scrollLeftPos - walk;
+  };
+
+  const handleMouseUpOrLeave = () => {
+    setIsDragging(false);
+  };
+
+  const resetFilters = () => {
+    setProviderFilter("all");
+    setTypeFilter("all");
+    setModelTypeFilter("all");
   };
 
   const allEndpoints = useMemo(
@@ -422,6 +453,46 @@ function ModelEndpointPicker({
           <Command>
             <CommandInput placeholder="Search models..." className="h-9" />
 
+            {/* Reset filters button */}
+            {(providerFilter !== "all" || typeFilter !== "all" || modelTypeFilter !== "all") && (
+              <div className="flex items-center justify-end px-2 pt-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 text-xs"
+                  onClick={resetFilters}
+                >
+                  <XIcon className="h-3 w-3 mr-1" />
+                  Reset filters
+                </Button>
+              </div>
+            )}
+
+            {/* Subcategory filter (text-to-image, image-to-image, etc.) */}
+            {availableSubcategories.length > 1 && (
+              <div className="flex items-center gap-1 px-2 py-2 border-b overflow-x-auto scrollbar-hide">
+                <Button
+                  variant={typeFilter === "all" ? "secondary" : "ghost"}
+                  size="sm"
+                  className="h-7 text-xs whitespace-nowrap shrink-0"
+                  onClick={() => setTypeFilter("all")}
+                >
+                  All
+                </Button>
+                {availableSubcategories.map((subcat) => (
+                  <Button
+                    key={subcat}
+                    variant={typeFilter === subcat ? "secondary" : "ghost"}
+                    size="sm"
+                    className="h-7 text-xs whitespace-nowrap shrink-0"
+                    onClick={() => setTypeFilter(subcat)}
+                  >
+                    {subcategoryLabels[subcat] || subcat}
+                  </Button>
+                ))}
+              </div>
+            )}
+
             {/* Provider filter buttons inside dropdown */}
             <div className="flex items-center gap-1 px-2 py-2 border-b">
               <Button
@@ -464,7 +535,11 @@ function ModelEndpointPicker({
                 <div
                   ref={scrollContainerRef}
                   className="flex items-center gap-1 overflow-x-auto scrollbar-hide scroll-smooth flex-1"
-                  style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+                  style={{ scrollbarWidth: "none", msOverflowStyle: "none", cursor: isDragging ? "grabbing" : "grab" }}
+                  onMouseDown={handleMouseDown}
+                  onMouseMove={handleMouseMove}
+                  onMouseUp={handleMouseUpOrLeave}
+                  onMouseLeave={handleMouseUpOrLeave}
                 >
                   <Button
                     variant={modelTypeFilter === "all" ? "secondary" : "ghost"}
