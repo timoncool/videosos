@@ -39,6 +39,7 @@ export type ApiInfo = {
   cameraControl?: boolean;
   imageForFrame?: boolean;
   category: "image" | "video" | "music" | "voiceover";
+  modelType?: string; // Model family/type for categorization (e.g., "FLUX", "Stable Diffusion", "Veo", "Sora")
   prompt?: boolean;
 
   // Model-specific constraints for UI options
