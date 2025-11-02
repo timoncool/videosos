@@ -40,15 +40,6 @@ export default function Footer() {
                   ArtGeneration.me
                 </Link>
               </li>
-              <li>
-                <Link
-                  href="https://github.com/fal-ai-community/video-starter-kit"
-                  className="hover:text-white transition-colors"
-                  target="_blank"
-                >
-                  Original fal.ai Kit
-                </Link>
-              </li>
             </ul>
           </div>
 
