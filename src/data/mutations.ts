@@ -332,12 +332,25 @@ export const useJobCreator = ({
           // Prepare blob/file image if needed - upload to Runware
           if (hasBlobOrFileImage && blobOrFileImageValue) {
             console.log("[DEBUG] Uploading File/Blob to Runware via imageUpload API");
-            imageParams.seedImage = await prepareRunwareImageAsset({
+            const uploadedUuid = await prepareRunwareImageAsset({
               value: blobOrFileImageValue,
               runware,
               cacheKey: blobOrFileImageKey,
             });
-            console.log("[DEBUG] Upload complete, seedImage UUID:", imageParams.seedImage);
+            console.log("[DEBUG] Upload complete, UUID:", uploadedUuid);
+
+            // Determine which parameter to use based on model capabilities
+            const { getModelCapabilities } = await import("@/lib/runware-capabilities");
+            const capabilities = getModelCapabilities(endpointId);
+            const paramName = capabilities.imageInputParam || "seedImage";
+
+            if (paramName === "referenceImages") {
+              imageParams.referenceImages = [uploadedUuid];
+              console.log("[DEBUG] Set referenceImages:", imageParams.referenceImages);
+            } else {
+              imageParams.seedImage = uploadedUuid;
+              console.log("[DEBUG] Set seedImage:", imageParams.seedImage);
+            }
           }
 
           // Log final params AFTER preparing assets

@@ -355,22 +355,21 @@ export function buildRunwarePayload(
       const candidate = input[key];
       if (!candidate) continue;
 
-      // Skip invalid values (plain objects, arrays, etc - not File/Blob)
+      // Skip File/Blob objects - they will be uploaded in mutations.ts
       if (
-        typeof candidate === "object" &&
-        !(typeof File !== "undefined" && candidate instanceof File) &&
-        !(typeof Blob !== "undefined" && candidate instanceof Blob)
+        (typeof File !== "undefined" && candidate instanceof File) ||
+        (typeof Blob !== "undefined" && candidate instanceof Blob)
       ) {
         continue;
       }
 
-      // Valid types: string URL/UUID/base64, File, or Blob
-      const isValid =
-        typeof candidate === "string" ||
-        (typeof File !== "undefined" && candidate instanceof File) ||
-        (typeof Blob !== "undefined" && candidate instanceof Blob);
+      // Skip invalid values (plain objects, arrays, etc)
+      if (typeof candidate === "object") {
+        continue;
+      }
 
-      if (isValid) {
+      // Only string URL/UUID/base64 should be added to payload
+      if (typeof candidate === "string") {
         // Use the correct parameter name based on model capabilities
         const paramName = capabilities.imageInputParam || "seedImage";
         if (paramName === "referenceImages") {
@@ -385,14 +384,15 @@ export function buildRunwarePayload(
   }
 
   if (capabilities.maskImage && input.maskImage) {
-    // Only include maskImage if it's a valid type (string URL/UUID/base64, File, or Blob)
     const maskImageValue = input.maskImage;
-    const isValidMaskImage =
-      typeof maskImageValue === "string" ||
+
+    // Skip File/Blob objects - they will be uploaded in mutations.ts
+    const isFileOrBlob =
       (typeof File !== "undefined" && maskImageValue instanceof File) ||
       (typeof Blob !== "undefined" && maskImageValue instanceof Blob);
 
-    if (isValidMaskImage) {
+    // Only include string URL/UUID/base64 (not File/Blob)
+    if (!isFileOrBlob && typeof maskImageValue === "string") {
       payload.maskImage = input.maskImage;
     }
   }
