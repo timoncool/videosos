@@ -97,20 +97,42 @@ export const prepareRunwareImageAsset = async ({
     }
   }
 
-  if (isFile(value)) {
-    return value;
-  }
+  // File/Blob need to be uploaded to Runware to get UUID
+  if (isFile(value) || isBlob(value)) {
+    if (!runware || typeof runware.imageUpload !== "function") {
+      console.warn(
+        "Runware client not available or imageUpload not supported, returning File/Blob as-is",
+      );
+      return value;
+    }
 
-  if (isBlob(value)) {
-    const type = value.type || "application/octet-stream";
-    const extension = guessExtensionFromMime(type);
-    const nameBase = cacheKey ? `runware-${cacheKey}` : "runware-asset";
-    const fileName = extension ? `${nameBase}.${extension}` : nameBase;
+    const cacheKeyForBlob = isBlob(value)
+      ? `blob-${value.size}-${value.type}`
+      : `file-${(value as File).name}`;
+
+    if (runwareUploadCache.has(cacheKeyForBlob)) {
+      console.log("[DEBUG] Using cached Runware upload UUID:", cacheKeyForBlob);
+      return runwareUploadCache.get(cacheKeyForBlob) as string;
+    }
 
     try {
-      return new File([value], fileName, { type });
+      console.log(
+        "[DEBUG] Uploading File/Blob to Runware:",
+        isFile(value) ? (value as File).name : "blob",
+      );
+
+      // SDK might accept File/Blob directly, or we might need to convert to base64
+      // Try passing directly first
+      const uploaded = await runware.imageUpload({ image: value as any });
+      const uploadedUuid =
+        uploaded?.imageUUID || uploaded?.imageURL || (value as any);
+
+      console.log("[DEBUG] Runware upload result:", uploadedUuid);
+      runwareUploadCache.set(cacheKeyForBlob, uploadedUuid);
+      return uploadedUuid;
     } catch (error) {
-      console.warn("Failed to convert blob to File for Runware", error);
+      console.error("Failed to upload File/Blob to Runware:", error);
+      // Fallback: return as-is and let Runware SDK handle it
       return value;
     }
   }

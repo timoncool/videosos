@@ -249,9 +249,9 @@ export const useJobCreator = ({
           "image",
           "image_url",
         ];
-        let hasBlobImage = false;
-        let blobImageKey = "";
-        let blobImageValue: Blob | null = null;
+        let hasBlobOrFileImage = false;
+        let blobOrFileImageKey = "";
+        let blobOrFileImageValue: Blob | File | null = null;
 
         for (const key of runwareSeedImageKeys) {
           const candidate = input[key];
@@ -279,16 +279,18 @@ export const useJobCreator = ({
           }
 
           if (typeof File !== "undefined" && candidate instanceof File) {
-            console.log(`[DEBUG] Found File ${key}:`, candidate.name);
-            imageParams.seedImage = candidate;
+            console.log(`[DEBUG] Found File ${key}:`, candidate.name, "- will upload to Runware");
+            hasBlobOrFileImage = true;
+            blobOrFileImageKey = key;
+            blobOrFileImageValue = candidate;
             break;
           }
 
           if (typeof Blob !== "undefined" && candidate instanceof Blob) {
-            console.log(`[DEBUG] Found Blob ${key}, will prepare for upload`);
-            hasBlobImage = true;
-            blobImageKey = key;
-            blobImageValue = candidate;
+            console.log(`[DEBUG] Found Blob ${key}, will upload to Runware`);
+            hasBlobOrFileImage = true;
+            blobOrFileImageKey = key;
+            blobOrFileImageValue = candidate;
             break;
           }
         }
@@ -331,13 +333,15 @@ export const useJobCreator = ({
             return;
           }
 
-          // Prepare blob image if needed
-          if (hasBlobImage && blobImageValue) {
+          // Prepare blob/file image if needed - upload to Runware
+          if (hasBlobOrFileImage && blobOrFileImageValue) {
+            console.log("[DEBUG] Uploading File/Blob to Runware via imageUpload API");
             imageParams.seedImage = await prepareRunwareImageAsset({
-              value: blobImageValue,
+              value: blobOrFileImageValue,
               runware,
-              cacheKey: blobImageKey,
+              cacheKey: blobOrFileImageKey,
             });
+            console.log("[DEBUG] Upload complete, seedImage UUID:", imageParams.seedImage);
           }
 
           return runware.requestImages(imageParams);
