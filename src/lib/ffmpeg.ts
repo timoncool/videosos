@@ -443,6 +443,32 @@ export async function getMediaMetadata(media: MediaItem) {
       return { media: {} };
     }
 
+    // Handle images separately to extract dimensions
+    if (media.mediaType === "image") {
+      return new Promise<{ media: any }>((resolve) => {
+        const img = document.createElement("img");
+
+        img.addEventListener("load", () => {
+          const metadata = {
+            width: img.naturalWidth,
+            height: img.naturalHeight,
+          };
+          resolve({ media: metadata });
+        });
+
+        img.addEventListener("error", () => {
+          console.error("Failed to load image metadata");
+          resolve({ media: {} });
+        });
+
+        if (mediaUrl.startsWith("blob:")) {
+          img.src = mediaUrl;
+        } else {
+          img.src = `${window.location.origin}/api/download?url=${encodeURIComponent(mediaUrl)}`;
+        }
+      });
+    }
+
     return new Promise<{ media: any }>((resolve) => {
       const mediaElement =
         media.mediaType === "video"
