@@ -341,16 +341,34 @@ export function buildRunwarePayload(
     payload.clipSkip = input.clipSkip;
   }
 
-  if (capabilities.seedImage && input.seedImage) {
-    // Only include seedImage if it's a valid type (string URL/UUID/base64, File, or Blob)
-    const seedImageValue = input.seedImage;
-    const isValidSeedImage =
-      typeof seedImageValue === "string" ||
-      (typeof File !== "undefined" && seedImageValue instanceof File) ||
-      (typeof Blob !== "undefined" && seedImageValue instanceof Blob);
+  if (capabilities.seedImage) {
+    // Look for seedImage in multiple possible input keys
+    // Models with inputAsset: ["image"] might use "image" or "image_url" instead of "seedImage"
+    const seedImageKeys = ["seedImage", "inputImage", "image", "image_url"];
 
-    if (isValidSeedImage) {
-      payload.seedImage = input.seedImage;
+    for (const key of seedImageKeys) {
+      const candidate = input[key];
+      if (!candidate) continue;
+
+      // Skip invalid values (plain objects, arrays, etc - not File/Blob)
+      if (
+        typeof candidate === "object" &&
+        !(typeof File !== "undefined" && candidate instanceof File) &&
+        !(typeof Blob !== "undefined" && candidate instanceof Blob)
+      ) {
+        continue;
+      }
+
+      // Valid types: string URL/UUID/base64, File, or Blob
+      const isValid =
+        typeof candidate === "string" ||
+        (typeof File !== "undefined" && candidate instanceof File) ||
+        (typeof Blob !== "undefined" && candidate instanceof Blob);
+
+      if (isValid) {
+        payload.seedImage = candidate;
+        break;
+      }
     }
   }
 

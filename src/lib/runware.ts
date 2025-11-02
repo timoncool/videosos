@@ -121,19 +121,37 @@ export const prepareRunwareImageAsset = async ({
         isFile(value) ? (value as File).name : "blob",
       );
 
-      // SDK might accept File/Blob directly, or we might need to convert to base64
-      // Try passing directly first
-      const uploaded = await runware.imageUpload({ image: value as any });
-      const uploadedUuid =
-        uploaded?.imageUUID || uploaded?.imageURL || (value as any);
+      // Convert File/Blob to base64 data URI for imageUpload API
+      // According to Runware docs, imageUpload accepts: data URI, base64, or URL string
+      // NOT File/Blob objects!
+      const base64DataUri = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = () => reject(reader.error);
+        reader.readAsDataURL(value);
+      });
 
-      console.log("[DEBUG] Runware upload result:", uploadedUuid);
+      console.log(
+        "[DEBUG] Converted to base64 data URI, length:",
+        base64DataUri.substring(0, 50) + "...",
+      );
+
+      const uploaded = await runware.imageUpload({ image: base64DataUri });
+      const uploadedUuid = uploaded?.imageUUID || uploaded?.imageURL;
+
+      if (!uploadedUuid) {
+        throw new Error("imageUpload did not return imageUUID or imageURL");
+      }
+
+      console.log("[DEBUG] Runware upload result UUID:", uploadedUuid);
       runwareUploadCache.set(cacheKeyForBlob, uploadedUuid);
       return uploadedUuid;
     } catch (error) {
       console.error("Failed to upload File/Blob to Runware:", error);
-      // Fallback: return as-is and let Runware SDK handle it
-      return value;
+      // Cannot return File/Blob as-is - they don't work with Runware API
+      throw new Error(
+        `Failed to upload image to Runware: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
     }
   }
 
