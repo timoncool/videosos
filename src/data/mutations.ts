@@ -296,10 +296,6 @@ export const useJobCreator = ({
         }
 
         console.log("[DEBUG] Runware requestImages - endpointId:", endpointId);
-        console.log(
-          "[DEBUG] Runware requestImages - params:",
-          JSON.stringify(imageParams, null, 2),
-        );
 
         // Create pending MediaItem IMMEDIATELY (before API call)
         // Use taskUUID as id so we can find it later for updates
@@ -343,6 +339,12 @@ export const useJobCreator = ({
             });
             console.log("[DEBUG] Upload complete, seedImage UUID:", imageParams.seedImage);
           }
+
+          // Log final params AFTER preparing assets
+          console.log(
+            "[DEBUG] Runware requestImages - final params:",
+            JSON.stringify(imageParams, null, 2),
+          );
 
           return runware.requestImages(imageParams);
         })()
@@ -540,10 +542,7 @@ export const useJobCreator = ({
           }
         }
 
-        console.log(
-          "[DEBUG] Calling runware.videoInference with:",
-          videoParams,
-        );
+        console.log("[DEBUG] Calling runware.videoInference");
 
         // Create pending MediaItem IMMEDIATELY (BEFORE getting runware client)
         // Use taskUUID as id so we can find it later for updates
@@ -585,6 +584,12 @@ export const useJobCreator = ({
             });
             console.log("[DEBUG] Upload complete, inputImage UUID:", videoParams.inputImage);
           }
+
+          // Log final params AFTER preparing assets
+          console.log(
+            "[DEBUG] Runware videoInference - final params:",
+            JSON.stringify(videoParams, null, 2),
+          );
 
           return runware.videoInference(videoParams);
         })()
