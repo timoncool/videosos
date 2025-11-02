@@ -324,7 +324,9 @@ export function buildRunwarePayload(
     height = closestMatch.height;
   }
 
-  let outputFormat = (input.outputFormat || "PNG") as string;
+  // For img2img models, default to JPEG format
+  const hasInputImage = input.image || input.image_url || input.seedImage || input.inputImage;
+  let outputFormat = (input.outputFormat || (hasInputImage ? "JPEG" : "PNG")) as string;
   if (outputFormat === "JPG") {
     outputFormat = "JPEG";
   }
@@ -334,10 +336,10 @@ export function buildRunwarePayload(
       outputFormat as "JPG" | "JPEG" | "PNG" | "WEBP",
     )
   ) {
-    outputFormat = "PNG"; // Safe default
+    outputFormat = hasInputImage ? "JPEG" : "PNG"; // img2img uses JPEG
   }
 
-  const outputType = input.outputType ?? ["URL"];
+  const outputType = input.outputType ?? ["dataURI", "URL"];
   const payload: Record<string, unknown> = {
     positivePrompt: input.prompt || "",
     model: endpointId,
@@ -369,9 +371,9 @@ export function buildRunwarePayload(
       3.5;
   }
 
-  // Only add outputQuality if explicitly provided in input
-  if (capabilities.outputQuality && input.outputQuality !== undefined) {
-    payload.outputQuality = input.outputQuality;
+  // outputQuality defaults to 85 for img2img models
+  if (capabilities.outputQuality) {
+    payload.outputQuality = input.outputQuality ?? 85;
   }
 
   // Only add steps if explicitly provided OR if endpoint has defaultSteps configured
