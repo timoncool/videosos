@@ -1145,8 +1145,12 @@ export default function RightPanel({
               mediaType={mediaType}
               value={endpointId}
               onValueChange={(endpointId) => {
-                // Preserve the current prompt before resetting
+                // Preserve the current prompt and assets before resetting
                 const currentPrompt = generateData.prompt;
+                const currentImage = generateData.image;
+                const currentVideoUrl = generateData.video_url;
+                const currentAudioUrl = generateData.audio_url;
+                const currentReferenceAudioUrl = generateData.reference_audio_url;
                 resetGenerateData();
                 setEndpointId(endpointId);
 
@@ -1173,8 +1177,12 @@ export default function RightPanel({
                   }
                 }
 
-                // Restore the preserved prompt
+                // Restore the preserved prompt and assets
                 dataWithDefaults.prompt = currentPrompt;
+                dataWithDefaults.image = currentImage;
+                dataWithDefaults.video_url = currentVideoUrl;
+                dataWithDefaults.audio_url = currentAudioUrl;
+                dataWithDefaults.reference_audio_url = currentReferenceAudioUrl;
 
                 setGenerateData(dataWithDefaults);
               }}
