@@ -242,10 +242,16 @@ export function MediaItemRow({
           } catch (error: any) {
             console.error("[DEBUG] FAL job FAILED during result fetch");
             console.error("[DEBUG] FAL job failure error object:", error);
-            console.error("[DEBUG] FAL job failure error message:", error?.message);
+            console.error(
+              "[DEBUG] FAL job failure error message:",
+              error?.message,
+            );
             console.error("[DEBUG] FAL job failure error body:", error?.body);
-            console.error("[DEBUG] FAL job failure error response:", error?.response);
-            
+            console.error(
+              "[DEBUG] FAL job failure error response:",
+              error?.response,
+            );
+
             await db.media.update(data.id, {
               ...data,
               status: "failed",
