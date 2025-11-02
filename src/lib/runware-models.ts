@@ -49,6 +49,13 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     popularity: 5,
     category: "image",
     inputAsset: ["image"],
+    availableDimensions: [
+      { width: 1024, height: 1024, label: "1024×1024 (1:1)" },
+      { width: 1152, height: 896, label: "1152×896" },
+      { width: 768, height: 1344, label: "768×1344 (9:16)" },
+      { width: 1344, height: 768, label: "1344×768 (16:9)" },
+      { width: 1536, height: 672, label: "1536×672 (21:9)" },
+    ],
   },
   {
     provider: "runware",
@@ -343,10 +350,9 @@ export const RUNWARE_ENDPOINTS: ApiInfo[] = [
     provider: "runware",
     endpointId: "ideogram:4@3",
     label: "Ideogram 3.0 Edit",
-    description: "Precise image editing capabilities",
+    description: "Inpainting for precise image editing (requires mask)",
     popularity: 5,
     category: "image",
-    inputAsset: ["image"],
   },
   {
     provider: "runware",
