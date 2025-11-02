@@ -468,31 +468,6 @@ function ModelEndpointPicker({
               </div>
             )}
 
-            {/* Subcategory filter (text-to-image, image-to-image, etc.) */}
-            {availableSubcategories.length > 1 && (
-              <div className="flex items-center gap-1 px-2 py-2 border-b overflow-x-auto scrollbar-hide">
-                <Button
-                  variant={typeFilter === "all" ? "secondary" : "ghost"}
-                  size="sm"
-                  className="h-7 text-xs whitespace-nowrap shrink-0"
-                  onClick={() => setTypeFilter("all")}
-                >
-                  All
-                </Button>
-                {availableSubcategories.map((subcat) => (
-                  <Button
-                    key={subcat}
-                    variant={typeFilter === subcat ? "secondary" : "ghost"}
-                    size="sm"
-                    className="h-7 text-xs whitespace-nowrap shrink-0"
-                    onClick={() => setTypeFilter(subcat)}
-                  >
-                    {subcategoryLabels[subcat] || subcat}
-                  </Button>
-                ))}
-              </div>
-            )}
-
             {/* Provider filter buttons inside dropdown */}
             <div className="flex items-center gap-1 px-2 py-2 border-b">
               <Button
@@ -572,6 +547,31 @@ function ModelEndpointPicker({
                 >
                   <ChevronRight className="h-4 w-4" />
                 </Button>
+              </div>
+            )}
+
+            {/* Subcategory filter (text-to-image, image-to-image, etc.) */}
+            {availableSubcategories.length > 1 && (
+              <div className="flex items-center gap-1 px-2 py-2 border-b overflow-x-auto scrollbar-hide">
+                <Button
+                  variant={typeFilter === "all" ? "secondary" : "ghost"}
+                  size="sm"
+                  className="h-7 text-xs whitespace-nowrap shrink-0"
+                  onClick={() => setTypeFilter("all")}
+                >
+                  All
+                </Button>
+                {availableSubcategories.map((subcat) => (
+                  <Button
+                    key={subcat}
+                    variant={typeFilter === subcat ? "secondary" : "ghost"}
+                    size="sm"
+                    className="h-7 text-xs whitespace-nowrap shrink-0"
+                    onClick={() => setTypeFilter(subcat)}
+                  >
+                    {subcategoryLabels[subcat] || subcat}
+                  </Button>
+                ))}
               </div>
             )}
 
