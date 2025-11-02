@@ -1,6 +1,6 @@
 # GitHub Discussions Setup Guide
 
-This document provides guidance on setting up GitHub Discussions for VideosOS.
+This document provides guidance on setting up GitHub Discussions for VideoSOS.
 
 ## Enabling Discussions
 
@@ -13,7 +13,7 @@ This document provides guidance on setting up GitHub Discussions for VideosOS.
 
 ### 📣 Announcements
 **Type:** Announcement
-**Description:** Updates, releases, and important news about VideosOS
+**Description:** Updates, releases, and important news about VideoSOS
 **Who can post:** Maintainers only
 
 ### 💡 Ideas
@@ -24,21 +24,21 @@ This document provides guidance on setting up GitHub Discussions for VideosOS.
 ### 🙏 Q&A
 **Type:** Question/Answer
 **Description:** Ask the community for help
-**Purpose:** Get help with using VideosOS, troubleshooting, and best practices
+**Purpose:** Get help with using VideoSOS, troubleshooting, and best practices
 
 ### 🎨 Show and Tell
 **Type:** Open-ended discussion
-**Description:** Share what you've built with VideosOS
+**Description:** Share what you've built with VideoSOS
 **Purpose:** Showcase projects, demos, and creative uses
 
 ### 🛠️ Development
 **Type:** Open-ended discussion
-**Description:** Technical discussions about contributing to VideosOS
+**Description:** Technical discussions about contributing to VideoSOS
 **Purpose:** Discuss implementation details, architecture, and code reviews
 
 ### 🌟 General
 **Type:** Open-ended discussion
-**Description:** General discussions about VideosOS and video generation
+**Description:** General discussions about VideoSOS and video generation
 **Purpose:** Community conversation and off-topic discussions
 
 ## Discussion Guidelines
@@ -47,21 +47,21 @@ Create a welcoming message for your discussions area:
 
 ---
 
-### Welcome to VideosOS Discussions! 🎬
+### Welcome to VideoSOS Discussions! 🎬
 
-This is a place to connect with other members of the VideosOS community. We hope you:
+This is a place to connect with other members of the VideoSOS community. We hope you:
 
 - **Ask questions** you're wondering about
 - **Share ideas** for new features
 - **Engage** with other community members
-- **Show off** what you've built with VideosOS
+- **Show off** what you've built with VideoSOS
 - **Help** others who have questions
 
 ### Before You Post
 
 - **Search first** - Your question might already be answered
 - **Be respectful** - Everyone is here to learn and help
-- **Stay on topic** - Keep discussions relevant to VideosOS
+- **Stay on topic** - Keep discussions relevant to VideoSOS
 - **Be specific** - Provide details, code samples, and context
 
 ### Code of Conduct

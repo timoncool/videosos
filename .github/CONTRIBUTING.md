@@ -1,6 +1,6 @@
-# Contributing to VideosOS
+# Contributing to VideoSOS
 
-Thank you for your interest in contributing to VideosOS! We welcome contributions from the community.
+Thank you for your interest in contributing to VideoSOS! We welcome contributions from the community.
 
 ## How Can I Contribute?
 
@@ -25,7 +25,7 @@ Feature suggestions are welcome! Please use the feature request template and pro
 
 ### Asking Questions
 
-For questions about using VideosOS:
+For questions about using VideoSOS:
 - Check the [documentation](https://github.com/timoncool/videosos#readme) first
 - Search [existing discussions](https://github.com/timoncool/videosos/discussions)
 - If you still need help, start a new discussion in Q&A
@@ -133,4 +133,4 @@ If you have questions about contributing:
 - Search [Discussions](https://github.com/timoncool/videosos/discussions)
 - Ask in the Development category of Discussions
 
-Thank you for contributing to VideosOS! 🎬
+Thank you for contributing to VideoSOS! 🎬

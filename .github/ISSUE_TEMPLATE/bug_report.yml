@@ -1,5 +1,5 @@
 name: 🐛 Bug Report
-description: Report a bug or unexpected behavior in VideosOS
+description: Report a bug or unexpected behavior in VideoSOS
 title: "[Bug]: "
 labels: ["bug", "triage"]
 body:
@@ -57,7 +57,7 @@ body:
         - OS: [e.g. macOS 14.0, Ubuntu 22.04]
         - Browser: [e.g. Chrome 120, Safari 17]
         - Node.js version: [e.g. 20.10.0]
-        - VideosOS version: [e.g. 1.0.0]
+        - VideoSOS version: [e.g. 1.0.0]
     validations:
       required: true
 
