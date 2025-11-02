@@ -151,59 +151,142 @@ const getModelType = (endpoint: (typeof ALL_ENDPOINTS)[number]): string => {
 
   // Check for model families in order of specificity
   // Check for FLUX Kontext before general FLUX
-  if (lowerLabel.includes("kontext") || lowerLabel.includes("context") ||
-      lowerEndpoint.includes("kontext") || lowerEndpoint.includes("context")) return "FLUX Kontext";
-  if (lowerLabel.includes("flux") || lowerEndpoint.includes("flux")) return "FLUX";
+  if (
+    lowerLabel.includes("kontext") ||
+    lowerLabel.includes("context") ||
+    lowerEndpoint.includes("kontext") ||
+    lowerEndpoint.includes("context")
+  )
+    return "FLUX Kontext";
+  if (lowerLabel.includes("flux") || lowerEndpoint.includes("flux"))
+    return "FLUX";
   if (lowerLabel.includes("veo") || lowerEndpoint.includes("veo")) return "Veo";
-  if (lowerLabel.includes("sora") || lowerEndpoint.includes("sora")) return "Sora";
-  if (lowerLabel.includes("kling") || lowerEndpoint.includes("kling")) return "Kling";
-  if (lowerLabel.includes("ideogram") || lowerEndpoint.includes("ideogram")) return "Ideogram";
-  if (lowerLabel.includes("imagen") || lowerEndpoint.includes("imagen")) return "Imagen";
-  if (lowerLabel.includes("gemini") || lowerEndpoint.includes("gemini")) return "Gemini";
-  if (lowerLabel.includes("seedream") || lowerLabel.includes("seedance") || lowerEndpoint.includes("seedream") || lowerEndpoint.includes("seedance")) return "Seedream";
-  if (lowerLabel.includes("qwen") || lowerEndpoint.includes("qwen")) return "Qwen";
-  if (lowerLabel.includes("hunyuan") || lowerEndpoint.includes("hunyuan")) return "Hunyuan";
-  if (lowerLabel.includes("kolors") || lowerEndpoint.includes("kolors")) return "Kolors";
-  if (lowerLabel.includes("bria") || lowerEndpoint.includes("bria")) return "Bria";
-  if (lowerLabel.includes("gpt") && lowerLabel.includes("image")) return "GPT Image";
-  if (lowerLabel.includes("recraft") || lowerEndpoint.includes("recraft")) return "Recraft";
+  if (lowerLabel.includes("sora") || lowerEndpoint.includes("sora"))
+    return "Sora";
+  if (lowerLabel.includes("kling") || lowerEndpoint.includes("kling"))
+    return "Kling";
+  if (lowerLabel.includes("ideogram") || lowerEndpoint.includes("ideogram"))
+    return "Ideogram";
+  if (lowerLabel.includes("imagen") || lowerEndpoint.includes("imagen"))
+    return "Imagen";
+  if (lowerLabel.includes("gemini") || lowerEndpoint.includes("gemini"))
+    return "Gemini";
+  if (
+    lowerLabel.includes("seedream") ||
+    lowerLabel.includes("seedance") ||
+    lowerEndpoint.includes("seedream") ||
+    lowerEndpoint.includes("seedance")
+  )
+    return "Seedream";
+  if (lowerLabel.includes("qwen") || lowerEndpoint.includes("qwen"))
+    return "Qwen";
+  if (lowerLabel.includes("hunyuan") || lowerEndpoint.includes("hunyuan"))
+    return "Hunyuan";
+  if (lowerLabel.includes("kolors") || lowerEndpoint.includes("kolors"))
+    return "Kolors";
+  if (lowerLabel.includes("bria") || lowerEndpoint.includes("bria"))
+    return "Bria";
+  if (lowerLabel.includes("gpt") && lowerLabel.includes("image"))
+    return "GPT Image";
+  if (lowerLabel.includes("recraft") || lowerEndpoint.includes("recraft"))
+    return "Recraft";
 
   // SDXL models - group together
-  if (lowerLabel.includes("juggernaut") || lowerEndpoint.includes("juggernaut")) return "SDXL";
-  if (lowerLabel.includes("realistic vision") || lowerEndpoint.includes("realistic")) return "SDXL";
-  if (lowerLabel.includes("dreamshaper") || lowerEndpoint.includes("dreamshaper")) return "SDXL";
-  if (lowerLabel.includes("meinamix") || lowerEndpoint.includes("meinamix")) return "SDXL";
-  if (lowerLabel.includes("epic realism") || lowerEndpoint.includes("epic")) return "SDXL";
+  if (lowerLabel.includes("juggernaut") || lowerEndpoint.includes("juggernaut"))
+    return "SDXL";
+  if (
+    lowerLabel.includes("realistic vision") ||
+    lowerEndpoint.includes("realistic")
+  )
+    return "SDXL";
+  if (
+    lowerLabel.includes("dreamshaper") ||
+    lowerEndpoint.includes("dreamshaper")
+  )
+    return "SDXL";
+  if (lowerLabel.includes("meinamix") || lowerEndpoint.includes("meinamix"))
+    return "SDXL";
+  if (lowerLabel.includes("epic realism") || lowerEndpoint.includes("epic"))
+    return "SDXL";
 
   // Regular Stable Diffusion (non-XL)
-  if (lowerLabel.includes("stable diffusion") || lowerEndpoint.includes("stable-diffusion")) return "Stable Diffusion";
-  if (lowerLabel.includes("hidream") || lowerEndpoint.includes("hidream")) return "HiDream";
-  if (lowerLabel.includes("vidu") || lowerEndpoint.includes("vidu")) return "Vidu";
-  if (lowerLabel.includes("riverflow") || lowerEndpoint.includes("riverflow") || lowerEndpoint.includes("sourceful")) return "Riverflow";
-  if (lowerLabel.includes("luma") || lowerEndpoint.includes("luma")) return "Luma";
-  if (lowerLabel.includes("pika") || lowerEndpoint.includes("pika")) return "Pika";
-  if (lowerLabel.includes("minimax") || lowerLabel.includes("hailuo") || lowerEndpoint.includes("minimax")) return "MiniMax";
-  if (lowerLabel.includes("ltx") || lowerEndpoint.includes("ltx") || lowerEndpoint.includes("lightricks")) return "LTX";
-  if (lowerLabel.includes("pixverse") || lowerEndpoint.includes("pixverse")) return "PixVerse";
+  if (
+    lowerLabel.includes("stable diffusion") ||
+    lowerEndpoint.includes("stable-diffusion")
+  )
+    return "Stable Diffusion";
+  if (lowerLabel.includes("hidream") || lowerEndpoint.includes("hidream"))
+    return "HiDream";
+  if (lowerLabel.includes("vidu") || lowerEndpoint.includes("vidu"))
+    return "Vidu";
+  if (
+    lowerLabel.includes("riverflow") ||
+    lowerEndpoint.includes("riverflow") ||
+    lowerEndpoint.includes("sourceful")
+  )
+    return "Riverflow";
+  if (lowerLabel.includes("luma") || lowerEndpoint.includes("luma"))
+    return "Luma";
+  if (lowerLabel.includes("pika") || lowerEndpoint.includes("pika"))
+    return "Pika";
+  if (
+    lowerLabel.includes("minimax") ||
+    lowerLabel.includes("hailuo") ||
+    lowerEndpoint.includes("minimax")
+  )
+    return "MiniMax";
+  if (
+    lowerLabel.includes("ltx") ||
+    lowerEndpoint.includes("ltx") ||
+    lowerEndpoint.includes("lightricks")
+  )
+    return "LTX";
+  if (lowerLabel.includes("pixverse") || lowerEndpoint.includes("pixverse"))
+    return "PixVerse";
   if (lowerLabel.includes("wan") || lowerEndpoint.includes("wan")) return "Wan";
   if (lowerLabel.includes("ovi") || lowerEndpoint.includes("ovi")) return "OVI";
-  if (lowerLabel.includes("stable audio") || lowerEndpoint.includes("stable-audio")) return "Stable Audio";
-  if (lowerLabel.includes("mirelo") || lowerEndpoint.includes("mirelo")) return "Mirelo";
-  if (lowerLabel.includes("elevenlabs") || lowerEndpoint.includes("elevenlabs")) return "ElevenLabs";
-  if (lowerLabel.includes("playht") || lowerEndpoint.includes("playht")) return "PlayHT";
-  if (lowerLabel.includes("playai") || lowerEndpoint.includes("playai")) return "PlayAI";
-  if (lowerLabel.includes("dia") && lowerLabel.includes("tts")) return "Dia TTS";
-  if (lowerLabel.includes("chatterbox") || lowerEndpoint.includes("chatterbox")) return "Chatterbox";
+  if (
+    lowerLabel.includes("stable audio") ||
+    lowerEndpoint.includes("stable-audio")
+  )
+    return "Stable Audio";
+  if (lowerLabel.includes("mirelo") || lowerEndpoint.includes("mirelo"))
+    return "Mirelo";
+  if (lowerLabel.includes("elevenlabs") || lowerEndpoint.includes("elevenlabs"))
+    return "ElevenLabs";
+  if (lowerLabel.includes("playht") || lowerEndpoint.includes("playht"))
+    return "PlayHT";
+  if (lowerLabel.includes("playai") || lowerEndpoint.includes("playai"))
+    return "PlayAI";
+  if (lowerLabel.includes("dia") && lowerLabel.includes("tts"))
+    return "Dia TTS";
+  if (lowerLabel.includes("chatterbox") || lowerEndpoint.includes("chatterbox"))
+    return "Chatterbox";
   if (lowerLabel.includes("f5") && lowerLabel.includes("tts")) return "F5 TTS";
-  if (lowerLabel.includes("topaz") || lowerEndpoint.includes("topaz")) return "Topaz";
-  if (lowerLabel.includes("nano banana") || lowerEndpoint.includes("nano-banana")) return "Nano Banana";
-  if (lowerLabel.includes("reve") || lowerEndpoint.includes("reve")) return "Reve";
-  if (lowerLabel.includes("lynx") || lowerEndpoint.includes("lynx")) return "Lynx";
-  if (lowerLabel.includes("infinitalk") || lowerEndpoint.includes("infinitalk")) return "Infinitalk";
-  if (lowerLabel.includes("lucy") || lowerEndpoint.includes("lucy")) return "Lucy";
-  if (lowerLabel.includes("omnihuman") || lowerEndpoint.includes("omnihuman")) return "OmniHuman";
-  if (lowerLabel.includes("mmaudio") || lowerEndpoint.includes("mmaudio")) return "MMAudio";
-  if (lowerLabel.includes("sync") && (lowerLabel.includes("lipsync") || lowerEndpoint.includes("sync-lipsync"))) return "sync.so";
+  if (lowerLabel.includes("topaz") || lowerEndpoint.includes("topaz"))
+    return "Topaz";
+  if (
+    lowerLabel.includes("nano banana") ||
+    lowerEndpoint.includes("nano-banana")
+  )
+    return "Nano Banana";
+  if (lowerLabel.includes("reve") || lowerEndpoint.includes("reve"))
+    return "Reve";
+  if (lowerLabel.includes("lynx") || lowerEndpoint.includes("lynx"))
+    return "Lynx";
+  if (lowerLabel.includes("infinitalk") || lowerEndpoint.includes("infinitalk"))
+    return "Infinitalk";
+  if (lowerLabel.includes("lucy") || lowerEndpoint.includes("lucy"))
+    return "Lucy";
+  if (lowerLabel.includes("omnihuman") || lowerEndpoint.includes("omnihuman"))
+    return "OmniHuman";
+  if (lowerLabel.includes("mmaudio") || lowerEndpoint.includes("mmaudio"))
+    return "MMAudio";
+  if (
+    lowerLabel.includes("sync") &&
+    (lowerLabel.includes("lipsync") || lowerEndpoint.includes("sync-lipsync"))
+  )
+    return "sync.so";
 
   return "Other";
 };
@@ -379,7 +462,8 @@ function ModelEndpointPicker({
     for (const endpoint of allEndpoints) {
       if (endpoint.category === mediaType) {
         // Apply provider filter
-        if (providerFilter !== "all" && endpoint.provider !== providerFilter) continue;
+        if (providerFilter !== "all" && endpoint.provider !== providerFilter)
+          continue;
         // Apply subcategory filter
         if (typeFilter !== "all") {
           const subcat = getModelSubcategory(endpoint);
@@ -396,6 +480,26 @@ function ModelEndpointPicker({
     });
   }, [allEndpoints, mediaType, providerFilter, typeFilter]);
 
+  // Calculate counts for each model type (without modelTypeFilter)
+  const modelTypeCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const endpoint of allEndpoints) {
+      if (endpoint.category === mediaType) {
+        // Apply provider filter
+        if (providerFilter !== "all" && endpoint.provider !== providerFilter)
+          continue;
+        // Apply subcategory filter
+        if (typeFilter !== "all") {
+          const subcat = getModelSubcategory(endpoint);
+          if (subcat !== typeFilter) continue;
+        }
+        const modelType = getModelType(endpoint);
+        counts[modelType] = (counts[modelType] || 0) + 1;
+      }
+    }
+    return counts;
+  }, [allEndpoints, mediaType, providerFilter, typeFilter]);
+
   const selectedEndpoint = allEndpoints.find((e) => e.endpointId === value);
 
   // Calculate display cost for selected endpoint
@@ -403,20 +507,18 @@ function ModelEndpointPicker({
     if (!selectedEndpoint) return null;
 
     if (selectedEndpoint.provider === "fal") {
-      const estimatedCost = calculateModelCost(
-        selectedEndpoint.endpointId,
-        {
-          duration: selectedEndpoint.defaultDuration || 5,
-          width: selectedEndpoint.defaultWidth || 1024,
-          height: selectedEndpoint.defaultHeight || 1024,
-          textLength: 100,
-          quantity: 1,
-        },
-      );
+      const estimatedCost = calculateModelCost(selectedEndpoint.endpointId, {
+        duration: selectedEndpoint.defaultDuration || 5,
+        width: selectedEndpoint.defaultWidth || 1024,
+        height: selectedEndpoint.defaultHeight || 1024,
+        textLength: 100,
+        quantity: 1,
+      });
 
       if (estimatedCost !== null) {
         return formatCost(estimatedCost);
-      } else if (selectedEndpoint.cost) {
+      }
+      if (selectedEndpoint.cost) {
         return selectedEndpoint.cost;
       }
     }
@@ -435,7 +537,9 @@ function ModelEndpointPicker({
           >
             {selectedEndpoint ? (
               <div className="flex items-center justify-between w-full gap-2 min-w-0">
-                <span className="font-semibold truncate">{selectedEndpoint.label}</span>
+                <span className="font-semibold truncate">
+                  {selectedEndpoint.label}
+                </span>
                 <div className="flex items-center gap-2 shrink-0">
                   <Badge variant="outline" className="text-xs">
                     {selectedEndpoint.provider}
@@ -458,7 +562,9 @@ function ModelEndpointPicker({
             <CommandInput placeholder="Search models..." className="h-9" />
 
             {/* Reset filters button */}
-            {(providerFilter !== "all" || typeFilter !== "all" || modelTypeFilter !== "all") && (
+            {(providerFilter !== "all" ||
+              typeFilter !== "all" ||
+              modelTypeFilter !== "all") && (
               <div className="flex items-center justify-end px-2 pt-2">
                 <Button
                   variant="ghost"
@@ -539,7 +645,11 @@ function ModelEndpointPicker({
                 <div
                   ref={scrollContainerRef}
                   className="flex items-center gap-1 overflow-x-auto scrollbar-hide scroll-smooth flex-1"
-                  style={{ scrollbarWidth: "none", msOverflowStyle: "none", cursor: isDragging ? "grabbing" : "grab" }}
+                  style={{
+                    scrollbarWidth: "none",
+                    msOverflowStyle: "none",
+                    cursor: isDragging ? "grabbing" : "grab",
+                  }}
                   onMouseDown={handleMouseDown}
                   onMouseMove={handleMouseMove}
                   onMouseUp={handleMouseUpOrLeave}
@@ -554,11 +664,13 @@ function ModelEndpointPicker({
                     All ({endpoints.length})
                   </Button>
                   {availableModelTypes.map((modelType) => {
-                    const count = groupedEndpoints[modelType]?.length || 0;
+                    const count = modelTypeCounts[modelType] || 0;
                     return (
                       <Button
                         key={modelType}
-                        variant={modelTypeFilter === modelType ? "secondary" : "ghost"}
+                        variant={
+                          modelTypeFilter === modelType ? "secondary" : "ghost"
+                        }
                         size="sm"
                         className="h-7 text-xs whitespace-nowrap shrink-0"
                         onClick={() => setModelTypeFilter(modelType)}
@@ -660,7 +772,12 @@ import { useTranslations } from "next-intl";
 function findClosestDimension(
   imageWidth: number,
   imageHeight: number,
-  availableDimensions: Array<{ width: number; height: number; label: string; preset?: string }>,
+  availableDimensions: Array<{
+    width: number;
+    height: number;
+    label: string;
+    preset?: string;
+  }>,
 ): { width: number; height: number; label: string; preset?: string } | null {
   if (!availableDimensions || availableDimensions.length === 0) {
     return null;
@@ -674,19 +791,30 @@ function findClosestDimension(
   // Filter dimensions by orientation to preserve image layout
   let filteredDimensions = availableDimensions;
   if (isLandscape) {
-    filteredDimensions = availableDimensions.filter(dim => dim.width > dim.height);
-    if (filteredDimensions.length === 0) filteredDimensions = availableDimensions;
+    filteredDimensions = availableDimensions.filter(
+      (dim) => dim.width > dim.height,
+    );
+    if (filteredDimensions.length === 0)
+      filteredDimensions = availableDimensions;
   } else if (isPortrait) {
-    filteredDimensions = availableDimensions.filter(dim => dim.height > dim.width);
-    if (filteredDimensions.length === 0) filteredDimensions = availableDimensions;
+    filteredDimensions = availableDimensions.filter(
+      (dim) => dim.height > dim.width,
+    );
+    if (filteredDimensions.length === 0)
+      filteredDimensions = availableDimensions;
   } else if (isSquare) {
-    filteredDimensions = availableDimensions.filter(dim => Math.abs(dim.width / dim.height - 1) < 0.1);
-    if (filteredDimensions.length === 0) filteredDimensions = availableDimensions;
+    filteredDimensions = availableDimensions.filter(
+      (dim) => Math.abs(dim.width / dim.height - 1) < 0.1,
+    );
+    if (filteredDimensions.length === 0)
+      filteredDimensions = availableDimensions;
   }
 
   // Find the closest match by aspect ratio
   let closestDim = filteredDimensions[0];
-  let smallestDiff = Math.abs(closestDim.width / closestDim.height - imageAspectRatio);
+  let smallestDiff = Math.abs(
+    closestDim.width / closestDim.height - imageAspectRatio,
+  );
 
   for (const dim of filteredDimensions) {
     const dimAspectRatio = dim.width / dim.height;
@@ -1251,7 +1379,12 @@ export default function RightPanel({
     setGenerateData({ [getAssetKey(asset)]: mediaUrl });
 
     // Auto-select closest dimension for images with availableDimensions
-    if (media.mediaType === "image" && endpoint?.availableDimensions && media.metadata?.width && media.metadata?.height) {
+    if (
+      media.mediaType === "image" &&
+      endpoint?.availableDimensions &&
+      media.metadata?.width &&
+      media.metadata?.height
+    ) {
       const closestDim = findClosestDimension(
         media.metadata.width,
         media.metadata.height,
@@ -1357,7 +1490,12 @@ export default function RightPanel({
         });
 
         // Auto-select closest dimension for images with availableDimensions
-        if (media.mediaType === "image" && endpoint?.availableDimensions && mediaMetadata?.media?.width && mediaMetadata?.media?.height) {
+        if (
+          media.mediaType === "image" &&
+          endpoint?.availableDimensions &&
+          mediaMetadata?.media?.width &&
+          mediaMetadata?.media?.height
+        ) {
           const closestDim = findClosestDimension(
             mediaMetadata.media.width,
             mediaMetadata.media.height,
@@ -1499,7 +1637,8 @@ export default function RightPanel({
                 const currentImage = generateData.image;
                 const currentVideoUrl = generateData.video_url;
                 const currentAudioUrl = generateData.audio_url;
-                const currentReferenceAudioUrl = generateData.reference_audio_url;
+                const currentReferenceAudioUrl =
+                  generateData.reference_audio_url;
                 resetGenerateData();
                 setEndpointId(endpointId);
 
@@ -1534,13 +1673,22 @@ export default function RightPanel({
                 dataWithDefaults.reference_audio_url = currentReferenceAudioUrl;
 
                 // Auto-select closest dimension if image is present and model has availableDimensions
-                if (currentImage && endpoint?.availableDimensions && mediaType === "image") {
+                if (
+                  currentImage &&
+                  endpoint?.availableDimensions &&
+                  mediaType === "image"
+                ) {
                   // Find the media item with matching URL
                   const imageMedia = mediaItems.find(
-                    (item) => item.url === currentImage || resolveMediaUrl(item) === currentImage
+                    (item) =>
+                      item.url === currentImage ||
+                      resolveMediaUrl(item) === currentImage,
                   );
 
-                  if (imageMedia?.metadata?.width && imageMedia?.metadata?.height) {
+                  if (
+                    imageMedia?.metadata?.width &&
+                    imageMedia?.metadata?.height
+                  ) {
                     const closestDim = findClosestDimension(
                       imageMedia.metadata.width,
                       imageMedia.metadata.height,
