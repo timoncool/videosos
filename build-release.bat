@@ -3,7 +3,7 @@ chcp 65001 >nul
 title VideoSOS - Build Release
 
 echo ========================================
-echo   VideoSOS Release Builder v1.0.2
+echo   VideoSOS Release Builder v1.0.3
 echo ========================================
 echo.
 
@@ -141,10 +141,10 @@ echo Next steps:
 echo 1. Open release folder in Windows Explorer
 echo 2. Select all files (Ctrl+A)
 echo 3. Right-click ^> Send to ^> Compressed (zipped) folder
-echo 4. Name it: videosos-v1.0.2-portable.zip
-echo 5. Upload to: https://github.com/timoncool/videosos/releases/tag/v1.0.2-portable
+echo 4. Name it: videosos-v1.0.3-portable.zip
+echo 5. Upload to: https://github.com/timoncool/videosos/releases/tag/v1.0.3-portable
 echo.
 echo OR use PowerShell to create ZIP:
-echo   Compress-Archive -Path release\* -DestinationPath videosos-v1.0.2-portable.zip
+echo   Compress-Archive -Path release\* -DestinationPath videosos-v1.0.3-portable.zip
 echo.
 pause

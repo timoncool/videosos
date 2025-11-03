@@ -19,9 +19,9 @@ if not exist "release" (
 )
 
 REM Delete old archive if exists
-if exist "videosos-v1.0.2-portable.zip" (
+if exist "videosos-v1.0.3-portable.zip" (
     echo Deleting old archive...
-    del "videosos-v1.0.2-portable.zip"
+    del "videosos-v1.0.3-portable.zip"
 )
 
 echo Creating ZIP archive...
@@ -29,7 +29,7 @@ echo This may take a minute...
 echo.
 
 REM Create ZIP using PowerShell
-powershell -command "Compress-Archive -Path release\* -DestinationPath videosos-v1.0.2-portable.zip -CompressionLevel Optimal"
+powershell -command "Compress-Archive -Path release\* -DestinationPath videosos-v1.0.3-portable.zip -CompressionLevel Optimal"
 
 if errorlevel 1 (
     echo ERROR: Failed to create archive
@@ -44,14 +44,14 @@ echo ========================================
 echo.
 
 REM Show file size
-for %%A in (videosos-v1.0.2-portable.zip) do echo Archive size: %%~zA bytes (~70 MB)
+for %%A in (videosos-v1.0.3-portable.zip) do echo Archive size: %%~zA bytes (~70 MB)
 echo.
-echo File: videosos-v1.0.2-portable.zip
+echo File: videosos-v1.0.3-portable.zip
 echo.
 echo Next steps:
-echo 1. Go to: https://github.com/timoncool/videosos/releases/tag/v1.0.2-portable
+echo 1. Go to: https://github.com/timoncool/videosos/releases/tag/v1.0.3-portable
 echo 2. Click "Edit" button
-echo 3. Drag and drop videosos-v1.0.2-portable.zip to "Attach binaries"
+echo 3. Drag and drop videosos-v1.0.3-portable.zip to "Attach binaries"
 echo 4. Click "Update release"
 echo.
 pause
