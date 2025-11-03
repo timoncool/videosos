@@ -13,11 +13,11 @@ Create professional videos with AI in your browser. Free, open-source video edit
 
 ## Screenshots
 
-### Landing Page
-![VideoSOS Landing Page](./public/screenshot-landing.png)
+### Video Editor — Main Interface
+![VideoSOS Video Editor - Main Interface](./public/screenshot-app.png)
 
-### Video Editor
-![VideoSOS Video Editor](./public/screenshot-app.png)
+### Video Editor — Export Dialog
+![VideoSOS Video Editor - Export Dialog](./public/screenshot-export.png)
 
 ---
 

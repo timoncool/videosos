@@ -13,11 +13,11 @@
 
 ## Скриншоты
 
-### Главная страница
-![VideoSOS Главная страница](./public/screenshot-landing.png)
+### Видеоредактор — Основной интерфейс
+![VideoSOS Видеоредактор - Основной интерфейс](./public/screenshot-app.png)
 
-### Видеоредактор
-![VideoSOS Видеоредактор](./public/screenshot-app.png)
+### Видеоредактор — Окно экспорта
+![VideoSOS Видеоредактор - Окно экспорта](./public/screenshot-export.png)
 
 ---
 
