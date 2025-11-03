@@ -16,8 +16,8 @@ Create professional videos with AI in your browser. Free, open-source video edit
 ### Video Editor — Main Interface
 ![VideoSOS Video Editor - Main Interface](./public/screenshot-app.png)
 
-### Video Editor — Export Dialog
-![VideoSOS Video Editor - Export Dialog](./public/screenshot-export.png)
+### Video Editor — Project Statistics
+![VideoSOS Video Editor - Project Statistics](./public/screenshot-stats.png)
 
 ---
 
