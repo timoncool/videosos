@@ -62,7 +62,7 @@ export default function Hero() {
           <div className="absolute inset-0 bg-gradient-to-r from-purple-500/40 to-blue-500/40 blur-3xl opacity-20" />
           <LaptopMockup>
             <Image
-              src="/hero-app.png"
+              src="/hero-app-v2.png"
               width={1200}
               height={800}
               alt={t("imageAlt")}
