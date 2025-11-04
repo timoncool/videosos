@@ -29,7 +29,7 @@ export type ApiInfo = {
   provider: "fal" | "runware";
   endpointId: string;
   label: string;
-  description: string;
+  description?: string;
   cost?: string; // Deprecated: Use getPricingInfo() or calculateModelCost() instead
   popularity: number;
   inferenceTime?: string;
