@@ -145,6 +145,10 @@ const getProviderForEndpoint = (
 
 // Helper function to determine model type/family
 const getModelType = (endpoint: (typeof ALL_ENDPOINTS)[number]): string => {
+  if (endpoint.modelType) {
+    return endpoint.modelType;
+  }
+
   const { endpointId, label } = endpoint;
   const lowerLabel = label.toLowerCase();
   const lowerEndpoint = endpointId.toLowerCase();
