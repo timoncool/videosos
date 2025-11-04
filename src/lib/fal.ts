@@ -39,6 +39,7 @@ export type ApiInfo = {
   cameraControl?: boolean;
   imageForFrame?: boolean;
   category: "image" | "video" | "music" | "voiceover";
+  architecture?: string; // Raw architecture from bundle (e.g., "sdxl", "flux", "imagen")
   modelType?: string; // Model family/type for categorization (e.g., "FLUX", "Stable Diffusion", "Veo", "Sora")
   prompt?: boolean;
 
