@@ -2,14 +2,14 @@
 
 # VideoSOS
 
-**Open-source AI video editor with 100+ models вЂ” text-to-video, image-to-video, lip sync, music, voiceover.**
+**Open-source AI video editor with 100+ models — text-to-video, image-to-video, lip sync, music, voiceover.**
 
 [![Stars](https://img.shields.io/github/stars/timoncool/videosos?style=flat-square)](https://github.com/timoncool/videosos/stargazers)
 [![License](https://img.shields.io/github/license/timoncool/videosos?style=flat-square)](LICENSE)
 [![Last Commit](https://img.shields.io/github/last-commit/timoncool/videosos?style=flat-square)](https://github.com/timoncool/videosos/commits)
 [![Demo](https://img.shields.io/badge/demo-live-brightgreen?style=flat-square)](https://videosos.vercel.app/)
 
-**[Try the Live Demo](https://videosos.vercel.app/)** В· **[Р СѓСЃСЃРєР°СЏ РІРµСЂСЃРёСЏ](./README.ru.md)**
+**[Try the Live Demo](https://videosos.vercel.app/)** · **[Русская версия](./README.ru.md)**
 
 </div>
 
@@ -17,46 +17,46 @@ Create professional videos with AI in your browser. Free, open-source video edit
 
 ## Screenshots
 
-### Video Editor вЂ” Main Interface
+### Video Editor — Main Interface
 ![VideoSOS Video Editor - Main Interface](./public/screenshot-app.png)
 
-### Video Editor вЂ” Project Statistics
+### Video Editor — Project Statistics
 ![VideoSOS Video Editor - Project Statistics](./public/screenshot-stats.png)
 
 ---
 
 ## Key Features
 
-### рџ¤– 100+ AI Models
+### 🤖 100+ AI Models
 
 VideoSOS integrates with **fal.ai** and **Runware.ai** to bring you cutting-edge AI generation capabilities:
 
-- **рџЋ¬ Video Generation**: Text-to-video and image-to-video with state-of-the-art models including Google Veo 3.1, Kling 2.5, and Hailuo-02
-- **рџЋЁ Image Generation**: Text-to-image with cutting-edge models including Gemini 2.5 Flash, Imagen 4.0, FLUX.1 Pro, and Ideogram V3
-- **вњЏпёЏ Image Editing**: AI-powered photo editing with leading models including Gemini 2.5 Flash Edit, FLUX.1 Kontext, and Qwen Image Edit
-- **рџЋµ Audio Generation**: Music composition with Stable Audio and natural voiceovers with multiple voices
+- **🎬 Video Generation**: Text-to-video and image-to-video with state-of-the-art models including Google Veo 3.1, Kling 2.5, and Hailuo-02
+- **🎨 Image Generation**: Text-to-image with cutting-edge models including Gemini 2.5 Flash, Imagen 4.0, FLUX.1 Pro, and Ideogram V3
+- **✏️ Image Editing**: AI-powered photo editing with leading models including Gemini 2.5 Flash Edit, FLUX.1 Kontext, and Qwen Image Edit
+- **🎵 Audio Generation**: Music composition with Stable Audio and natural voiceovers with multiple voices
 
 Switch between providers seamlessly or use both simultaneously for maximum flexibility. [See complete model list below](#supported-ai-models).
 
-### рџ”’ 100% Privacy-First Architecture
+### 🔒 100% Privacy-First Architecture
 Everything runs locally in your browser. Your projects, media, and API keys are stored in IndexedDB on your device. No uploads, no tracking, no data collection.
 
-### рџЋ¬ Timeline Editor
+### 🎬 Timeline Editor
 Advanced multi-track video editing with drag-and-drop functionality, precise keyframe control, audio waveform visualization, and real-time preview. Support for multiple aspect ratios (16:9, 9:16, 1:1) perfect for social media platforms.
 
-### рџ’° Cost Tracking & Project Statistics
+### 💰 Cost Tracking & Project Statistics
 Built-in cost tracking and comprehensive project analytics help you stay within budget. Track generation costs per media item, view total project expenses, and get detailed breakdowns by media type, AI provider, and model usage. Perfect for managing your AI generation budget and analyzing usage patterns.
 
-### рџ”Ќ Advanced Model Selection
+### 🔍 Advanced Model Selection
 Enhanced model selection interface with intelligent search, filtering by provider (FAL/Runware), and categorization by type (text-to-video, image-to-video, text-to-image, image editing). Real-time pricing display for FAL models helps you make informed decisions before generating content.
 
-### рџЋЁ Multi-Modal Content Generation
+### 🎨 Multi-Modal Content Generation
 Create complete video projects with AI-generated images, videos, background music, and voiceovers. Advanced features include camera movement controls, video upscaling with Topaz, and automatic lip-sync for voiceovers.
 
-### вљЎ Client-Side Video Processing
+### ⚡ Client-Side Video Processing
 Powered by **FFmpeg.wasm** and **Remotion** for high-quality video rendering entirely in the browser. No server uploads, no waiting in queues. Export videos with proper audio mixing and precise timing control.
 
-### рџЊЌ International & Accessible
+### 🌍 International & Accessible
 Full internationalization support (English/Russian) with keyboard shortcuts for power users. Intuitive UI designed for both beginners and professionals.
 
 ## Supported AI Models
@@ -159,8 +159,8 @@ For Runware models, manually enrich model configurations in `src/lib/runware-mod
   label: "Gemini Flash Image 2.5",
   hasNegativePrompt: true,
   availableDimensions: [
-    { width: 1024, height: 1024, label: "1024Г—1024 (1:1)" },
-    { width: 1824, height: 1024, label: "1824Г—1024 (16:9)" },
+    { width: 1024, height: 1024, label: "1024×1024 (1:1)" },
+    { width: 1824, height: 1024, label: "1824×1024 (16:9)" },
     // ... more dimensions
   ],
 }
@@ -234,6 +234,17 @@ To stop services:
 docker compose down
 ```
 
+## Other Projects by [@timoncool](https://github.com/timoncool)
+
+| Project | Description |
+|---------|-------------|
+| [ACE-Step Studio](https://github.com/timoncool/ACE-Step-Studio) | AI music studio — songs, vocals, covers, videos |
+| [Bulka](https://github.com/timoncool/Bulka) | Live-coding music platform |
+| [GitLife](https://github.com/timoncool/gitlife) | Your life in weeks — interactive calendar |
+| [telegram-api-mcp](https://github.com/timoncool/telegram-api-mcp) | Full Telegram Bot API as MCP server |
+| [civitai-mcp-ultimate](https://github.com/timoncool/civitai-mcp-ultimate) | Civitai API as MCP server |
+| [ScreenSavy.com](https://github.com/timoncool/ScreenSavy.com) | Ambient screen generator |
+
 ## Support the Author
 
 I build open-source software and do AI research. Most of what I create is free and available to everyone. Your donations help me keep creating without worrying about where the next meal comes from =)
@@ -243,18 +254,6 @@ I build open-source software and do AI research. Most of what I create is free a
 - **BTC:** `1E7dHL22RpyhJGVpcvKdbyZgksSYkYeEBC`
 - **ETH (ERC20):** `0xb5db65adf478983186d4897ba92fe2c25c594a0c`
 - **USDT (TRC20):** `TQST9Lp2TjK6FiVkn4fwfGUee7NmkxEE7C`
-
-
-## Other Projects by [@timoncool](https://github.com/timoncool)
-
-| Project | Description |
-|---------|-------------|
-| [ACE-Step Studio](https://github.com/timoncool/ACE-Step-Studio) | AI music studio вЂ” songs, vocals, covers, videos |
-| [Bulka](https://github.com/timoncool/Bulka) | Live-coding music platform |
-| [GitLife](https://github.com/timoncool/gitlife) | Your life in weeks вЂ” interactive calendar |
-| [telegram-api-mcp](https://github.com/timoncool/telegram-api-mcp) | Full Telegram Bot API as MCP server |
-| [civitai-mcp-ultimate](https://github.com/timoncool/civitai-mcp-ultimate) | Civitai API as MCP server |
-| [ScreenSavy.com](https://github.com/timoncool/ScreenSavy.com) | Ambient screen generator |
 
 ## Star History
 
@@ -271,11 +270,11 @@ I build open-source software and do AI research. Most of what I create is free a
 We welcome contributions from developers of all skill levels! Whether you're fixing bugs, adding features, improving documentation, or sharing ideas, your help makes VideoSOS better for everyone.
 
 **How to contribute:**
-1. в­ђ Star this repository to show your support
-2. рџђ› Report bugs or suggest features in [Issues](https://github.com/timoncool/videosos/issues)
-3. рџ”§ Submit pull requests - see our [Contributing Guide](CONTRIBUTING.md)
-4. рџ“– Improve documentation
-5. рџ’¬ Join discussions and help other users
+1. ⭐ Star this repository to show your support
+2. 🐛 Report bugs or suggest features in [Issues](https://github.com/timoncool/videosos/issues)
+3. 🔧 Submit pull requests - see our [Contributing Guide](CONTRIBUTING.md)
+4. 📖 Improve documentation
+5. 💬 Join discussions and help other users
 
 Every contribution counts, no matter how small! Let's build the best open-source AI video editor together.
 
