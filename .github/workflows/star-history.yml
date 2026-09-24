@@ -1,9 +1,15 @@
 name: Star History
 
 on:
+  watch:
+    types: [started]       # every new star redraws the chart at once
   schedule:
-    - cron: "17 3 * * 1"   # еженедельно, пн 03:17 UTC
+    - cron: "17 3 * * *"   # daily, in case a star event was missed
   workflow_dispatch:
+
+concurrency:
+  group: star-history
+  cancel-in-progress: true
 
 permissions:
   contents: write
