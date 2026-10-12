@@ -1,0 +1,56 @@
+{
+  "export": {
+    "renderQueue": {
+      "title": "Fila de renderização",
+      "dialogTitle": "Exportações",
+      "tabQueue": "Fila",
+      "tabExports": "Exportações salvas",
+      "description": "As exportações na fila são renderizadas uma de cada vez e salvas na pasta de exportações do seu espaço de trabalho.",
+      "addToQueue": "Adicionar à fila",
+      "addCurrentRange": "Intervalo atual",
+      "segmentsHeading": "Dividir em segmentos",
+      "perMarker": "Um segmento por marcador",
+      "splitChunks": "Dividir em blocos de {{seconds}}s",
+      "partLabel": "Segmento {{n}}",
+      "addedToast_one": "{{count}} tarefa adicionada à fila de renderização",
+      "addedToast_other": "{{count}} tarefas adicionadas à fila de renderização",
+      "noMarkers": "Adicione marcadores à linha do tempo para dividir por marcador.",
+      "nothingToRender": "Nada para renderizar neste intervalo.",
+      "buildFailed": "Não foi possível adicionar à fila de renderização.",
+      "empty": "Nenhuma tarefa de renderização ainda. Adicione uma pelo diálogo de exportação.",
+      "exportsEmpty": "Nenhum arquivo exportado ainda.",
+      "exportsLocation": "Os arquivos estão na pasta local deste projeto ({{folder}}).",
+      "exportsLocationGeneric": "Os arquivos estão na pasta local deste projeto, no seu espaço de trabalho.",
+      "pause": "Pausar",
+      "resume": "Retomar",
+      "paused": "Fila pausada — retome para continuar renderizando.",
+      "clearFinished": "Limpar concluídas",
+      "clearAll": "Limpar tudo",
+      "refresh": "Atualizar",
+      "wholeProject": "Projeto inteiro",
+      "savedTo": "Salvo em {{path}}",
+      "remove": "Remover",
+      "cancel": "Cancelar",
+      "retry": "Tentar novamente",
+      "moveUp": "Mover para cima",
+      "moveDown": "Mover para baixo",
+      "download": "Baixar",
+      "delete": "Excluir",
+      "deleted": "{{name}} excluído",
+      "missingFile": "Arquivo não encontrado — pode ter sido movido ou excluído.",
+      "downloadFailed": "Falha no download.",
+      "deleteFailed": "Falha ao excluir.",
+      "status": {
+        "queued": "Na fila",
+        "rendering": "Renderizando",
+        "completed": "Concluído",
+        "failed": "Falhou",
+        "cancelled": "Cancelado"
+      }
+    }
+  },
+  "toolbar": {
+    "renderQueue": "Fila de renderização",
+    "renderQueueAria": "Abrir fila de renderização"
+  }
+}

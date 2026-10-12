@@ -1,0 +1,226 @@
+// @vitest-environment node
+
+import { beforeEach, describe, expect, it, vi } from 'vite-plus/test'
+
+const indexedDbMocks = vi.hoisted(() => ({
+  createMedia: vi.fn(),
+  deleteMedia: vi.fn(),
+  saveThumbnail: vi.fn(),
+  deleteThumbnailsByMediaId: vi.fn(),
+  associateMediaWithProject: vi.fn(),
+  writeMediaSource: vi.fn(async () => undefined),
+}))
+
+const opfsMocks = vi.hoisted(() => ({
+  saveFile: vi.fn(),
+  deleteFile: vi.fn(),
+}))
+
+const thumbnailMocks = vi.hoisted(() => ({
+  generateThumbnail: vi.fn(),
+}))
+
+const mediaProcessorMocks = vi.hoisted(() => ({
+  processMedia: vi.fn(),
+}))
+
+const proxyMocks = vi.hoisted(() => ({
+  onStatusChange: vi.fn(),
+  deleteProxy: vi.fn(),
+  clearProxyKey: vi.fn(),
+}))
+
+const gifFrameCacheMocks = vi.hoisted(() => ({
+  getGifFrames: vi.fn(),
+  clearMedia: vi.fn(),
+}))
+
+const filmstripCacheMocks = vi.hoisted(() => ({
+  prewarmPriorityWindow: vi.fn(async () => undefined),
+  clearMedia: vi.fn(async () => undefined),
+}))
+
+const waveformCacheMocks = vi.hoisted(() => ({
+  clearMedia: vi.fn(async () => undefined),
+}))
+
+vi.mock('@/infrastructure/storage', () => ({
+  getAllMedia: vi.fn(),
+  getAllMediaMetadata: vi.fn(),
+  getMedia: vi.fn(),
+  getTranscript: vi.fn(),
+  getTranscriptMediaIds: vi.fn(),
+  createMedia: indexedDbMocks.createMedia,
+  updateMedia: vi.fn(),
+  deleteMedia: indexedDbMocks.deleteMedia,
+  saveThumbnail: indexedDbMocks.saveThumbnail,
+  getThumbnailByMediaId: vi.fn(),
+  deleteThumbnailsByMediaId: indexedDbMocks.deleteThumbnailsByMediaId,
+  incrementContentRef: vi.fn(),
+  decrementContentRef: vi.fn(),
+  deleteContent: vi.fn(),
+  associateMediaWithProject: indexedDbMocks.associateMediaWithProject,
+  removeMediaBatchFromProject: vi.fn(),
+  removeMediaFromProject: vi.fn(),
+  getProjectMediaIds: vi.fn(),
+  getProjectsUsingMedia: vi.fn(),
+  getMediaForProject: vi.fn(),
+  deleteTranscript: vi.fn(),
+  saveTranscript: vi.fn(),
+  writeMediaSource: indexedDbMocks.writeMediaSource,
+}))
+
+vi.mock('./opfs-service', () => ({
+  opfsService: opfsMocks,
+}))
+
+vi.mock('./proxy-service', () => ({
+  proxyService: proxyMocks,
+}))
+
+vi.mock('./background-media-work', async () => {
+  const { createBackgroundMediaWorkMocks } =
+    await import('../test-utils/background-media-work-test-mocks')
+  return createBackgroundMediaWorkMocks(vi)
+})
+
+vi.mock('../utils/thumbnail-generator', () => ({
+  generateThumbnail: thumbnailMocks.generateThumbnail,
+}))
+
+vi.mock('./media-processor-service', () => ({
+  mediaProcessorService: mediaProcessorMocks,
+}))
+
+vi.mock('@/features/media-library/deps/timeline-services', () => ({
+  gifFrameCache: gifFrameCacheMocks,
+  importGifFrameCache: vi.fn(async () => ({ gifFrameCache: gifFrameCacheMocks })),
+  filmstripCache: filmstripCacheMocks,
+  importFilmstripCache: vi.fn(async () => ({ filmstripCache: filmstripCacheMocks })),
+  MAX_FILMSTRIP_TARGET_FRAMES: 72,
+  IMPORT_FILMSTRIP_HUGE_FILE_BYTES: 1000 * 1024 * 1024,
+  IMPORT_FILMSTRIP_LARGE_FILE_BYTES: 500 * 1024 * 1024,
+  IMPORT_FILMSTRIP_LARGE_TARGET_FRAMES: 16,
+  IMPORT_FILMSTRIP_LONG_DURATION_SEC: 900,
+  IMPORT_FILMSTRIP_MEDIUM_TARGET_FRAMES: 32,
+  IMPORT_FILMSTRIP_NORMAL_TARGET_FRAMES: 48,
+  IMPORT_FILMSTRIP_PREP_TIMEOUT_MS: 8000,
+  IMPORT_FILMSTRIP_SLOW_CONTAINER_MIME_TYPES: new Set([
+    'video/webm',
+    'video/x-matroska',
+    'video/matroska',
+  ]),
+  IMPORT_FILMSTRIP_SLOW_PREP_TIMEOUT_MS: 6000,
+  IMPORT_FILMSTRIP_TINY_TARGET_FRAMES: 8,
+  IMPORT_FILMSTRIP_VERY_LONG_DURATION_SEC: 1800,
+  waveformCache: waveformCacheMocks,
+  importWaveformCache: vi.fn(async () => ({ waveformCache: waveformCacheMocks })),
+}))
+
+import { mediaLibraryService } from './media-library-service'
+
+describe('MediaLibraryService.importGeneratedImage', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    indexedDbMocks.createMedia.mockImplementation(async (metadata) => metadata)
+    thumbnailMocks.generateThumbnail.mockResolvedValue(
+      new Blob(['thumbnail-bytes'], { type: 'image/webp' }),
+    )
+  })
+
+  it('persists a generated still to the workspace folder and associates it with the project', async () => {
+    const file = new File(['frame-bytes'], 'frame.png', { type: 'image/png' })
+
+    const result = await mediaLibraryService.importGeneratedImage(file, 'project-1', {
+      width: 1920,
+      height: 1080,
+      tags: ['frame-capture'],
+      codec: 'png',
+    })
+
+    expect(opfsMocks.saveFile).not.toHaveBeenCalled()
+    expect(indexedDbMocks.writeMediaSource).toHaveBeenCalledWith(result.id, file, 'frame.png', {
+      strict: true,
+    })
+    expect(indexedDbMocks.saveThumbnail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        mediaId: result.id,
+        width: 320,
+        height: 180,
+      }),
+    )
+    expect(indexedDbMocks.createMedia).toHaveBeenCalledWith(
+      expect.objectContaining({
+        id: result.id,
+        storageType: 'workspace',
+        fileName: 'frame.png',
+        mimeType: 'image/png',
+        width: 1920,
+        height: 1080,
+        codec: 'png',
+        tags: ['frame-capture'],
+        thumbnailId: expect.any(String),
+      }),
+    )
+    expect(indexedDbMocks.associateMediaWithProject).toHaveBeenCalledWith('project-1', result.id)
+  })
+})
+
+describe('MediaLibraryService.importGeneratedAudio', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    indexedDbMocks.createMedia.mockImplementation(async (metadata) => metadata)
+    mediaProcessorMocks.processMedia.mockResolvedValue({
+      metadata: {
+        type: 'audio',
+        duration: 2.75,
+        codec: 'pcm_s16le',
+        bitrate: 384000,
+      },
+      thumbnail: new Blob(['waveform'], { type: 'image/webp' }),
+    })
+  })
+
+  it('persists generated audio to the workspace folder with a waveform thumbnail', async () => {
+    const file = new File(['wav-bytes'], 'ai-voice.wav', { type: 'audio/wav' })
+
+    const result = await mediaLibraryService.importGeneratedAudio(file, 'project-1', {
+      tags: ['ai-generated', 'kokoro-tts'],
+    })
+
+    expect(mediaProcessorMocks.processMedia).toHaveBeenCalledWith(
+      file,
+      'audio/wav',
+      expect.objectContaining({
+        generateThumbnail: true,
+        thumbnailMaxSize: 320,
+        thumbnailQuality: 0.6,
+      }),
+    )
+    expect(opfsMocks.saveFile).not.toHaveBeenCalled()
+    expect(indexedDbMocks.writeMediaSource).toHaveBeenCalledWith(result.id, file, 'ai-voice.wav', {
+      strict: true,
+    })
+    expect(indexedDbMocks.saveThumbnail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        mediaId: result.id,
+        width: 320,
+        height: 180,
+      }),
+    )
+    expect(indexedDbMocks.createMedia).toHaveBeenCalledWith(
+      expect.objectContaining({
+        id: result.id,
+        storageType: 'workspace',
+        fileName: 'ai-voice.wav',
+        mimeType: 'audio/wav',
+        duration: 2.75,
+        codec: 'pcm_s16le',
+        bitrate: 384000,
+        tags: ['ai-generated', 'kokoro-tts'],
+        thumbnailId: expect.any(String),
+      }),
+    )
+    expect(indexedDbMocks.associateMediaWithProject).toHaveBeenCalledWith('project-1', result.id)
+  })
+})

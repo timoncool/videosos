@@ -1,0 +1,36 @@
+{
+  "recording": {
+    "rec": "REC",
+    "record": "Gravar locução",
+    "recordTooltip": "Grave uma locução sincronizada com a linha de reprodução",
+    "pause": "Pausar gravação",
+    "resume": "Retomar gravação",
+    "stop": "Parar e salvar",
+    "stopTooltip": "Pare a gravação e adicione a gravação à linha do tempo",
+    "cancel": "Cancelar gravação",
+    "cancelTooltip": "Descartar esta gravação",
+    "saving": "Salvando…",
+    "chooseDevice": "Configurações do microfone",
+    "microphone": "Microfone",
+    "systemDefault": "Padrão do sistema",
+    "settings": "Configurações de gravação",
+    "noiseSuppression": "Supressão de ruído",
+    "autoGain": "Ganho automático",
+    "muteWhileRecording": "Silenciar a linha do tempo durante a gravação",
+    "syncOffset": "Ajuste de sincronização",
+    "syncOffsetEarlier": "Adiantar a gravação",
+    "syncOffsetLater": "Atrasar a gravação",
+    "headphonesHint": "Use fones de ouvido para que o áudio da linha do tempo não seja captado pelo microfone.",
+    "fileNamePrefix": "voiceover",
+    "errors": {
+      "unsupported": "A gravação por microfone não é compatível com este navegador.",
+      "noProject": "Abra um projeto antes de gravar.",
+      "permissionDenied": "O acesso ao microfone foi bloqueado. Permita o acesso ao microfone no seu navegador e tente novamente.",
+      "noDevice": "Nenhum microfone foi encontrado. Conecte um microfone e tente novamente.",
+      "deviceBusy": "O microfone está sendo usado por outro aplicativo.",
+      "startFailed": "Não foi possível iniciar a gravação. Tente novamente.",
+      "failed": "A gravação falhou. Tente novamente.",
+      "saveFailed": "Não foi possível salvar a gravação."
+    }
+  }
+}

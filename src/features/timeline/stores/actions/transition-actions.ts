@@ -1,0 +1,181 @@
+/**
+ * Transition Actions - cut-centered handle-based transitions.
+ *
+ * Transitions stay attached to the cut between adjacent clips. Adding,
+ * updating, or removing a transition never moves clip timeline positions.
+ */
+
+import type {
+  Transition,
+  TransitionType,
+  TransitionPresentation,
+  WipeDirection,
+  SlideDirection,
+  FlipDirection,
+} from '@/types/transition'
+import { TRANSITION_CONFIGS } from '@/types/transition'
+import { useItemsStore } from '../items-store'
+import { useTransitionsStore } from '../transitions-store'
+import { useTimelineSettingsStore } from '../timeline-settings-store'
+import {
+  canAddTransition,
+  areFramesAligned,
+  getMaxTransitionDurationForHandles,
+} from '../../utils/transition-utils'
+import { execute, getLogger } from './shared'
+
+export function addTransition(
+  leftClipId: string,
+  rightClipId: string,
+  type: TransitionType = 'crossfade',
+  durationInFrames?: number,
+  presentation?: TransitionPresentation,
+  direction?: WipeDirection | SlideDirection | FlipDirection,
+  alignment: number = 0.5,
+): boolean {
+  return execute(
+    'ADD_TRANSITION',
+    () => {
+      const items = useItemsStore.getState().items
+      const transitions = useTransitionsStore.getState().transitions
+      // Find the clips
+      const leftClip = items.find((i) => i.id === leftClipId)
+      const rightClip = items.find((i) => i.id === rightClipId)
+
+      if (!leftClip || !rightClip) {
+        getLogger().warn('[addTransition] Clips not found')
+        return false
+      }
+
+      const maxByClipDuration = Math.floor(
+        Math.min(leftClip.durationInFrames, rightClip.durationInFrames) - 1,
+      )
+      if (maxByClipDuration < 1) {
+        getLogger().warn('[addTransition] Cannot add transition: clips are too short')
+        return false
+      }
+
+      const config = TRANSITION_CONFIGS[type]
+      const requestedDuration = durationInFrames ?? config.defaultDuration
+      let duration = Math.max(1, Math.min(Math.round(requestedDuration), maxByClipDuration))
+
+      const leftEnd = leftClip.from + leftClip.durationInFrames
+      const isAdjacent = areFramesAligned(leftEnd, rightClip.from)
+      const timelineFps = useTimelineSettingsStore.getState().fps
+      if (isAdjacent) {
+        const maxHandleDuration = getMaxTransitionDurationForHandles(
+          leftClip,
+          rightClip,
+          alignment,
+          timelineFps,
+        )
+        if (maxHandleDuration < 1) {
+          getLogger().warn(
+            '[addTransition] Cannot add transition: insufficient source handle at cut',
+          )
+          return false
+        }
+        duration = Math.min(duration, maxHandleDuration)
+      }
+
+      // Validate that transition can be added (includes handle check)
+      const validation = canAddTransition(leftClip, rightClip, duration, alignment, timelineFps)
+      if (!validation.canAdd) {
+        getLogger().warn('[addTransition] Cannot add transition:', validation.reason)
+        return false
+      }
+
+      // Check if transition already exists
+      const existingTransition = transitions.find(
+        (t) => t.leftClipId === leftClipId && t.rightClipId === rightClipId,
+      )
+      if (existingTransition) {
+        getLogger().warn('[addTransition] Transition already exists between these clips')
+        return false
+      }
+
+      // Create transition record
+      useTransitionsStore
+        .getState()
+        ._addTransition(
+          leftClipId,
+          rightClipId,
+          leftClip.trackId,
+          type,
+          duration,
+          presentation,
+          direction,
+          alignment,
+        )
+
+      useTimelineSettingsStore.getState().markDirty()
+      return true
+    },
+    { leftClipId, rightClipId, type },
+  )
+}
+
+type TransitionUpdates = Partial<
+  Pick<
+    Transition,
+    | 'durationInFrames'
+    | 'type'
+    | 'presentation'
+    | 'direction'
+    | 'timing'
+    | 'alignment'
+    | 'bezierPoints'
+    | 'presetId'
+    | 'properties'
+  >
+>
+
+function _validateAndUpdateTransition(id: string, updates: TransitionUpdates): boolean {
+  const transitions = useTransitionsStore.getState().transitions
+  const transition = transitions.find((t) => t.id === id)
+  if (!transition) return false
+  const items = useItemsStore.getState().items
+  const leftClip = items.find((i) => i.id === transition.leftClipId)
+  const rightClip = items.find((i) => i.id === transition.rightClipId)
+  const nextTransition = { ...transition, ...updates }
+
+  if (leftClip && rightClip) {
+    const validation = canAddTransition(
+      leftClip,
+      rightClip,
+      nextTransition.durationInFrames,
+      nextTransition.alignment,
+      useTimelineSettingsStore.getState().fps,
+    )
+    if (!validation.canAdd) {
+      getLogger().warn('[updateTransition] Cannot update transition:', validation.reason)
+      return false
+    }
+  }
+
+  useTransitionsStore.getState()._updateTransition(id, updates)
+  return true
+}
+
+export function updateTransition(id: string, updates: TransitionUpdates): void {
+  execute(
+    'UPDATE_TRANSITION',
+    () => {
+      if (_validateAndUpdateTransition(id, updates)) {
+        useTimelineSettingsStore.getState().markDirty()
+      }
+    },
+    { id, updates },
+  )
+}
+
+export function removeTransition(id: string): void {
+  execute(
+    'REMOVE_TRANSITION',
+    () => {
+      useTransitionsStore.getState()._removeTransition(id)
+      useTimelineSettingsStore.getState().markDirty()
+    },
+    { id },
+  )
+}

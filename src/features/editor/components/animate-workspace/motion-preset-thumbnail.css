@@ -1,0 +1,383 @@
+/**
+ * Animated thumbnails for the built-in motion presets. Each tile shows a small
+ * shape that demonstrates the motion. Animations are paused by default and only
+ * run while the tile (or its group) is hovered, so a grid of ~25 thumbnails
+ * costs nothing at rest.
+ */
+
+.mp-thumb {
+  position: relative;
+  display: flex;
+  height: 28px;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.mp-shape {
+  height: 13px;
+  width: 13px;
+  border-radius: 3px;
+  background: currentColor;
+  opacity: 0.85;
+  animation-duration: 1.1s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  animation-play-state: paused;
+  will-change: transform, opacity;
+}
+
+.group:hover .mp-shape,
+.mp-thumb:hover .mp-shape {
+  animation-play-state: running;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mp-shape {
+    animation: none !important;
+  }
+}
+
+.mp-fade {
+  animation-name: mp-fade;
+}
+@keyframes mp-fade {
+  0%,
+  100% {
+    opacity: 0.15;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.mp-slide {
+  animation-name: mp-slide;
+}
+@keyframes mp-slide {
+  0%,
+  100% {
+    transform: translate(
+      calc(cos(var(--mp-angle, 0deg)) * -7px),
+      calc(sin(var(--mp-angle, 0deg)) * -7px)
+    );
+    opacity: 0.3;
+  }
+  50% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+
+.mp-scale-up {
+  animation-name: mp-scale-up;
+}
+@keyframes mp-scale-up {
+  0%,
+  100% {
+    transform: scale(0.5);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.mp-scale-down {
+  animation-name: mp-scale-down;
+}
+@keyframes mp-scale-down {
+  0%,
+  100% {
+    transform: scale(1.3);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.mp-spin {
+  animation-name: mp-spin;
+  animation-timing-function: linear;
+}
+@keyframes mp-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.mp-bounce {
+  animation-name: mp-bounce;
+}
+@keyframes mp-bounce {
+  0%,
+  100% {
+    transform: translateY(-8px);
+    opacity: 0.4;
+  }
+  55% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  72% {
+    transform: translateY(-3px);
+  }
+}
+
+.mp-pulse {
+  animation-name: mp-pulse;
+}
+@keyframes mp-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.28);
+  }
+}
+
+.mp-shake {
+  animation-name: mp-shake;
+  animation-duration: 0.55s;
+}
+@keyframes mp-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-4px);
+  }
+  40% {
+    transform: translateX(4px);
+  }
+  60% {
+    transform: translateX(-3px);
+  }
+  80% {
+    transform: translateX(2px);
+  }
+}
+
+/* Micro shake = the modulator (distinct from the bigger .mp-shake preset). A
+   small, fast, organic 2D jitter matching evaluateMicroShake's smooth value
+   noise: x wander ~1.8x wider than y, a tiny ±2° rotation, kept deliberately
+   small so it reads as "micro". Built from summed integer-harmonic sines so it
+   loops with no seam. */
+.mp-micro-shake {
+  animation-name: mp-micro-shake;
+  animation-duration: 0.8s;
+  animation-timing-function: linear;
+}
+@keyframes mp-micro-shake {
+  0% {
+    transform: translate(0.89px, 0.73px) rotate(1.26deg);
+  }
+  4.167% {
+    transform: translate(0.43px, -0.03px) rotate(0.24deg);
+  }
+  8.333% {
+    transform: translate(0.39px, -0.98px) rotate(0.51deg);
+  }
+  12.5% {
+    transform: translate(1.49px, 0.04px) rotate(-0.88deg);
+  }
+  16.667% {
+    transform: translate(0.35px, -0.16px) rotate(-1.77deg);
+  }
+  20.833% {
+    transform: translate(-1.67px, 0.48px) rotate(0.64deg);
+  }
+  25% {
+    transform: translate(-0.98px, 0.86px) rotate(1.26deg);
+  }
+  29.167% {
+    transform: translate(0.05px, -0.61px) rotate(0.24deg);
+  }
+  33.333% {
+    transform: translate(-0.55px, -0.3px) rotate(0.51deg);
+  }
+  37.5% {
+    transform: translate(0.23px, -0.36px) rotate(-0.88deg);
+  }
+  41.667% {
+    transform: translate(1.93px, -0.29px) rotate(-1.77deg);
+  }
+  45.833% {
+    transform: translate(0.9px, 1.06px) rotate(0.64deg);
+  }
+  50% {
+    transform: translate(-0.89px, 0.17px) rotate(1.26deg);
+  }
+  54.167% {
+    transform: translate(-0.43px, -0.21px) rotate(0.24deg);
+  }
+  58.333% {
+    transform: translate(-0.39px, -0.17px) rotate(0.51deg);
+  }
+  62.5% {
+    transform: translate(-1.49px, -0.94px) rotate(-0.88deg);
+  }
+  66.667% {
+    transform: translate(-0.35px, 0.4px) rotate(-1.77deg);
+  }
+  70.833% {
+    transform: translate(1.67px, 0.67px) rotate(0.64deg);
+  }
+  75% {
+    transform: translate(0.98px, 0.04px) rotate(1.26deg);
+  }
+  79.167% {
+    transform: translate(-0.05px, 0.36px) rotate(0.24deg);
+  }
+  83.333% {
+    transform: translate(0.55px, -0.85px) rotate(0.51deg);
+  }
+  87.5% {
+    transform: translate(-0.23px, -0.54px) rotate(-0.88deg);
+  }
+  91.667% {
+    transform: translate(-1.93px, 0.53px) rotate(-1.77deg);
+  }
+  95.833% {
+    transform: translate(-0.9px, 0.09px) rotate(0.64deg);
+  }
+  100% {
+    transform: translate(0.89px, 0.73px) rotate(1.26deg);
+  }
+}
+
+.mp-wobble {
+  animation-name: mp-wobble;
+}
+@keyframes mp-wobble {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(12deg);
+  }
+  75% {
+    transform: rotate(-12deg);
+  }
+}
+
+/* Float drift = a gentle SWAY around the center pivot (rotation, the dominant
+   visual on a full-frame clip — a tiny tilt sweeps the edges further than the
+   positional drift) plus a subtle float. Rotation pivots around the shape center
+   (default transform-origin) and runs at HALF the float frequency (real motion is
+   rot = -sin(ωt/2)), so the loop spans two float circles per sway cycle. The
+   tilt is amplified to read on a 13px glyph; the float is kept small. */
+.mp-drift {
+  animation-name: mp-drift;
+  animation-duration: 3.2s;
+  animation-timing-function: linear;
+}
+@keyframes mp-drift {
+  0% {
+    transform: translate(3px, 0px) rotate(0deg);
+  }
+  4.167% {
+    transform: translate(2.6px, 1.5px) rotate(-4.14deg);
+  }
+  8.333% {
+    transform: translate(1.5px, 2.6px) rotate(-8deg);
+  }
+  12.5% {
+    transform: translate(0px, 3px) rotate(-11.31deg);
+  }
+  16.667% {
+    transform: translate(-1.5px, 2.6px) rotate(-13.86deg);
+  }
+  20.833% {
+    transform: translate(-2.6px, 1.5px) rotate(-15.45deg);
+  }
+  25% {
+    transform: translate(-3px, 0px) rotate(-16deg);
+  }
+  29.167% {
+    transform: translate(-2.6px, -1.5px) rotate(-15.45deg);
+  }
+  33.333% {
+    transform: translate(-1.5px, -2.6px) rotate(-13.86deg);
+  }
+  37.5% {
+    transform: translate(0px, -3px) rotate(-11.31deg);
+  }
+  41.667% {
+    transform: translate(1.5px, -2.6px) rotate(-8deg);
+  }
+  45.833% {
+    transform: translate(2.6px, -1.5px) rotate(-4.14deg);
+  }
+  50% {
+    transform: translate(3px, 0px) rotate(0deg);
+  }
+  54.167% {
+    transform: translate(2.6px, 1.5px) rotate(4.14deg);
+  }
+  58.333% {
+    transform: translate(1.5px, 2.6px) rotate(8deg);
+  }
+  62.5% {
+    transform: translate(0px, 3px) rotate(11.31deg);
+  }
+  66.667% {
+    transform: translate(-1.5px, 2.6px) rotate(13.86deg);
+  }
+  70.833% {
+    transform: translate(-2.6px, 1.5px) rotate(15.45deg);
+  }
+  75% {
+    transform: translate(-3px, 0px) rotate(16deg);
+  }
+  79.167% {
+    transform: translate(-2.6px, -1.5px) rotate(15.45deg);
+  }
+  83.333% {
+    transform: translate(-1.5px, -2.6px) rotate(13.86deg);
+  }
+  87.5% {
+    transform: translate(0px, -3px) rotate(11.31deg);
+  }
+  91.667% {
+    transform: translate(1.5px, -2.6px) rotate(8deg);
+  }
+  95.833% {
+    transform: translate(2.6px, -1.5px) rotate(4.14deg);
+  }
+  100% {
+    transform: translate(3px, 0px) rotate(0deg);
+  }
+}
+
+.mp-wiggle {
+  animation-name: mp-wiggle;
+  animation-duration: 0.7s;
+}
+@keyframes mp-wiggle {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(3px, -2px);
+  }
+  50% {
+    transform: translate(-2px, 2px);
+  }
+  75% {
+    transform: translate(2px, 3px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}

@@ -1,0 +1,189 @@
+{
+  "export": {
+    "audioContainer": {
+      "aac": "AAC",
+      "mp3": "MP3",
+      "wav": "WAV"
+    },
+    "cancelled": {
+      "message": "Dışa aktarma iptal edildi. Dosya kaydedilmedi."
+    },
+    "complete": {
+      "audioSuccess": "Sesiniz indirilmeye hazır.",
+      "download": "İndir",
+      "fileSizeLabel": "Boyut",
+      "timeTakenLabel": "Süre",
+      "videoSuccess": "Videonuz indirilmeye hazır."
+    },
+    "dialog": {
+      "descCancelled": "Dışa aktarma tamamlanmadan iptal edildi.",
+      "descComplete": "Dosyanız hazır.",
+      "descError": "Dışa aktarma sırasında bir sorun oluştu.",
+      "descProgress": "Videonuz işleniyor.",
+      "descSettings": "Dışa aktarma seçeneklerini yapılandırın.",
+      "titleCancelled": "Dışa aktarma iptal edildi",
+      "titleComplete": "Dışa aktarma tamamlandı",
+      "titleError": "Dışa aktarma başarısız",
+      "titleProgress": "Dışa aktarılıyor",
+      "titleSettings": "Dışa aktar"
+    },
+    "errors": {
+      "verifyCodec": "Mevcut ayarlar için codec desteği doğrulanamadı."
+    },
+    "progress": {
+      "cancelExport": "Dışa aktarmayı iptal et",
+      "elapsedLabel": "Geçen süre",
+      "encoding": "Kodlanıyor…",
+      "finalizing": "Tamamlanıyor…",
+      "framesLabel": "Kareler",
+      "keepTabOpen": "Lütfen bu sekmeyi açık tutun.",
+      "preparing": "Hazırlanıyor…",
+      "rendering": "İşleniyor…"
+    },
+    "settings": {
+      "audio": "Ses",
+      "audioOnlyNote": "Yalnızca ses dışa aktarılacak — video dahil edilmeyecek.",
+      "audioQualityHigh": "Yüksek",
+      "audioQualityLow": "Düşük",
+      "audioQualityMedium": "Orta",
+      "audioQualityUltra": "Ultra",
+      "cannotEncode": "Seçilen kalitede {{width}}×{{height}} için desteklenen bir kodlayıcı yok.",
+      "codec": "Codec",
+      "codecSupportUnverified": "Codec desteği doğrulanamadı. Dışa aktarma çalışabilir ancak uyumluluk garanti edilmez.",
+      "duration": "Süre",
+      "embedSubtitles": "Altyazıları göm",
+      "embedSubtitlesDescription": "Transkripsiyon altyazılarını dışa aktarılan dosyaya bir altyazı izi olarak ekle.",
+      "embedSubtitlesMp4Note": "MP4 altyazıları ayrı bir iz olarak saklar. Bazı oynatıcılar varsayılan olarak göstermeyebilir.",
+      "embedSubtitlesUnsupported": "{{container}} gömülü altyazıları desteklemiyor. MP4, MKV veya WebM seçin.",
+      "exportAudio": "Sesi dışa aktar",
+      "exportRange": "Dışa aktarma aralığı",
+      "exportType": "Dışa aktarma türü",
+      "exportVideo": "Videoyu dışa aktar",
+      "format": "Biçim",
+      "in": "Giriş",
+      "inOutRangeHint": "Yalnızca seçili giriş/çıkış aralığı dışa aktarılacak.",
+      "noTranscriptSegments": "Gömülecek transkripsiyon altyazısı bulunamadı.",
+      "out": "Çıkış",
+      "presetBalanced": "Dengeli",
+      "presetCustom": "Özel",
+      "presetLabel": "Hazır ayar",
+      "presetMax": "En yüksek",
+      "presetRecommended": "Önerilen",
+      "presetSmall": "Küçük dosya",
+      "quality": "Kalite",
+      "qualityHigh": "Yüksek",
+      "qualityLow": "Düşük",
+      "qualityMedium": "Orta",
+      "qualityUltra": "Ultra",
+      "quicktimeMov": "QuickTime MOV",
+      "renderWholeProject": "Projenin tamamını işle",
+      "resolution": "Çözünürlük",
+      "resolutionSameAsProject": "Proje ile aynı ({{width}}×{{height}})",
+      "resolutionScaled": "{{p}}p ({{width}}×{{height}})",
+      "selectCodec": "Codec seçin",
+      "selectFormat": "Biçim seçin",
+      "selectQuality": "Kalite seçin",
+      "selectResolution": "Çözünürlük seçin",
+      "sequence": "Sekans",
+      "subtitleMode": {
+        "off": "Kapalı",
+        "burn": "Göm",
+        "sidecar": ".srt dosyası",
+        "embedded": "Gömülü parça",
+        "offDescription": "Dışa aktarılan videoda altyazı yok.",
+        "burnDescription": "Altyazılar videoya işlenir — her oynatıcıda görünür.",
+        "sidecarDescription": "Temiz video ve ayrı bir .srt altyazı dosyası.",
+        "embeddedDescription": "Açılıp kapatılabilir altyazı parçası (WebM/MKV)."
+      },
+      "subtitles": "Altyazılar",
+      "video": "Video"
+    },
+    "videoContainer": {
+      "mp4": "Geniş uyumluluk, paylaşmak için ideal",
+      "mov": "Apple ekosistemi, Final Cut ve QuickTime için ideal",
+      "webm": "Web oynatma için açık ve modern bir kapsayıcı",
+      "mkv": "Esnek bir kapsayıcı, güçlü altyazı desteği"
+    },
+    "preflight": {
+      "checking": "Dışa aktarma ön denetimi yapılıyor…",
+      "title": "Dışa aktarma ön denetimi",
+      "workerPath": "Worker yolu",
+      "fallback": "Ana iş parçacığına geri dönüş",
+      "checks": {
+        "empty-range": {
+          "title": "Dışa aktarılacak bir şey yok",
+          "detail": "Seçilen dışa aktarma aralığında kare yok.",
+          "fix": "Zaman çizelgesine içerik ekleyin veya boş olmayan bir giriş/çıkış aralığı seçin."
+        },
+        "export-range-ready": {
+          "title": "Dışa aktarma aralığı hazır",
+          "detail": "{{frames}} kare ({{seconds}} sn) dışa aktarılacak."
+        },
+        "video-codec-unavailable": {
+          "title": "Seçilen biçim kodlanamıyor",
+          "detail": "Bu tarayıcı seçilen dışa aktarma ayarlarını kodlayamıyor.",
+          "detailWithError": "{{error}}",
+          "fix": "Farklı bir biçim/kodek seçin veya güncel bir Chromium tarayıcı deneyin."
+        },
+        "audio-export-ready": {
+          "title": "Ses dışa aktarımı hazır",
+          "detail": "{{container}} sesi {{codec}} kullanacak.",
+          "detailDefaultCodec": "{{container}} sesi varsayılan ses kodeğini kullanacak."
+        },
+        "video-codec-fallback": {
+          "title": "Kodek geri dönüşü kullanılacak",
+          "detail": "Seçilen kodek burada kullanılamıyor. FreeCut bunun yerine {{container}} içinde {{codec}} dışa aktaracak.",
+          "fix": "Bu geri dönüşü koruyun veya desteklenen başka bir kodeği elle seçin."
+        },
+        "video-codec-supported": {
+          "title": "Video kodeği destekleniyor",
+          "detail": "{{codec}} bu tarayıcıda {{container}} olarak kodlanabilir."
+        },
+        "audio-codec-supported": {
+          "title": "Ses kodeği destekleniyor",
+          "detail": "{{codec}} ses bu tarayıcıda {{container}} içinde kodlanabilir."
+        },
+        "audio-codec-unavailable": {
+          "title": "Ses kodeği kullanılamıyor",
+          "detail": "Bu tarayıcı {{container}} için {{codec}} ses kodlayamıyor.",
+          "fix": "Opus ses için WebM veya MKV seçin ya da desteklenen bir tarayıcıya güncelleyin."
+        },
+        "worker-unavailable-fallback": {
+          "title": "Worker ile dışa aktarma kullanılamıyor",
+          "detail": "Bu tarayıcı/oturum dışa aktarma worker’larını başlatamıyor, bu yüzden render ana iş parçacığında çalışacak.",
+          "fix": "Sekmeyi odakta tutun ve dışa aktarma sırasında ağır etkileşimlerden kaçının."
+        },
+        "worker-animated-image-fallback": {
+          "title": "Animasyonlu görseller ana iş parçacığında dışa aktarma gerektirir",
+          "detail": "GIF/WebP görsel öğeleri henüz dışa aktarma worker’ında render edilemiyor. FreeCut otomatik olarak geri dönüş yolunu kullanacak.",
+          "fix": "Daha hızlı worker dışa aktarımı için, dışa aktarmadan önce animasyonlu görselleri video kliplerle değiştirin."
+        },
+        "worker-audio-context-fallback": {
+          "title": "Ses miksajı ana iş parçacığına geri dönüş gerektirir",
+          "detail": "OfflineAudioContext dışa aktarma worker’ında kullanılamıyor, bu nedenle ses render’ı ana iş parçacığında çalışacak."
+        },
+        "missing-media-blocks-export": {
+          "title": "Eksik medya dışa aktarmayı engelliyor",
+          "detail": "{{count}} başvurulan medya dosyası eksik veya izin gerekiyor.",
+          "detail_one": "{{count}} başvurulan medya dosyası eksik veya izin gerekiyor.",
+          "detail_other": "{{count}} başvurulan medya dosyası eksik veya izin gerekiyor.",
+          "fix": "Dışa aktarmadan önce eksik medyayı Medya Kitaplığı’ndan yeniden bağlayın."
+        },
+        "large-file-risk": {
+          "title": "Büyük dışa aktarma dosyası bekleniyor",
+          "detail": "Bu dışa aktarma, kapsayıcı farkları öncesinde yaklaşık {{size}} olarak tahmin ediliyor.",
+          "fix": "Disk alanı sınırlıysa Dengeli veya Küçük Dosya kullanın, çözünürlüğü düşürün ya da daha kısa bir aralık dışa aktarın."
+        },
+        "long-export-risk": {
+          "title": "Uzun dışa aktarma zaman alabilir",
+          "detail": "Bu dışa aktarma yaklaşık {{minutes}} dakika uzunluğunda.",
+          "fix": "Hızlı doğrulama için önce daha kısa bir giriş/çıkış aralığı dışa aktarın."
+        },
+        "worker-export-ready": {
+          "title": "Worker dışa aktarma yolu hazır",
+          "detail": "Dışa aktarma worker’ı bu kompozisyonu bilinen bir ana iş parçacığı geri dönüşü olmadan render edebilir."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,189 @@
+{
+  "export": {
+    "audioContainer": {
+      "aac": "AAC",
+      "mp3": "MP3",
+      "wav": "WAV"
+    },
+    "cancelled": {
+      "message": "导出已取消，未保存任何文件。"
+    },
+    "complete": {
+      "audioSuccess": "音频已准备好下载。",
+      "download": "下载",
+      "fileSizeLabel": "大小",
+      "timeTakenLabel": "用时",
+      "videoSuccess": "视频已准备好下载。"
+    },
+    "dialog": {
+      "descCancelled": "导出在完成前已被取消。",
+      "descComplete": "您的文件已就绪。",
+      "descError": "导出过程中发生错误。",
+      "descProgress": "正在渲染您的视频，这可能需要几分钟。",
+      "descSettings": "配置导出选项。",
+      "titleCancelled": "导出已取消",
+      "titleComplete": "导出完成",
+      "titleError": "导出失败",
+      "titleProgress": "正在导出视频",
+      "titleSettings": "导出"
+    },
+    "errors": {
+      "verifyCodec": "无法验证当前设置的编解码器支持情况。"
+    },
+    "progress": {
+      "cancelExport": "取消",
+      "elapsedLabel": "已用时间",
+      "encoding": "正在编码…",
+      "finalizing": "正在完成…",
+      "framesLabel": "帧",
+      "keepTabOpen": "请保持此标签页打开，直至导出完成。",
+      "preparing": "正在准备…",
+      "rendering": "正在渲染…"
+    },
+    "settings": {
+      "audio": "音频",
+      "audioOnlyNote": "仅导出音频 — 不会包含视频。",
+      "audioQualityHigh": "高",
+      "audioQualityLow": "低",
+      "audioQualityMedium": "中",
+      "audioQualityUltra": "超高",
+      "cannotEncode": "在所选画质下，没有可用于 {{width}}×{{height}} 的编码器。",
+      "codec": "编解码器",
+      "codecSupportUnverified": "无法验证编解码器支持情况。仍可尝试导出，但兼容性无法保证。",
+      "duration": "时长",
+      "embedSubtitles": "嵌入字幕",
+      "embedSubtitlesDescription": "将转录字幕作为字幕轨道嵌入导出的文件。",
+      "embedSubtitlesMp4Note": "MP4 将字幕保存为独立轨道。某些播放器默认可能不会显示。",
+      "embedSubtitlesUnsupported": "{{container}} 不支持嵌入字幕。请选择 MP4、MKV 或 WebM。",
+      "exportAudio": "导出音频",
+      "exportRange": "导出范围",
+      "exportType": "导出类型",
+      "exportVideo": "导出视频",
+      "format": "格式",
+      "in": "入点",
+      "inOutRangeHint": "仅会导出所选的入/出点范围。",
+      "noTranscriptSegments": "没有可嵌入的转录字幕。",
+      "out": "出点",
+      "presetBalanced": "平衡",
+      "presetCustom": "自定义",
+      "presetLabel": "预设",
+      "presetMax": "最高质量",
+      "presetRecommended": "推荐",
+      "presetSmall": "小文件",
+      "quality": "画质",
+      "qualityHigh": "高",
+      "qualityLow": "低",
+      "qualityMedium": "中",
+      "qualityUltra": "超高",
+      "quicktimeMov": "QuickTime MOV",
+      "renderWholeProject": "渲染整个项目",
+      "resolution": "分辨率",
+      "resolutionSameAsProject": "与项目相同 ({{width}}×{{height}})",
+      "resolutionScaled": "{{p}}p ({{width}}×{{height}})",
+      "selectCodec": "选择编解码器",
+      "selectFormat": "选择格式",
+      "selectQuality": "选择画质",
+      "selectResolution": "选择分辨率",
+      "sequence": "序列",
+      "subtitleMode": {
+        "off": "关闭",
+        "burn": "烧录",
+        "sidecar": "独立 .srt",
+        "embedded": "内嵌轨道",
+        "offDescription": "导出的视频中不含字幕。",
+        "burnDescription": "字幕烧录进视频，任何播放器都能显示。",
+        "sidecarDescription": "干净的视频加一个独立的 .srt 字幕文件。",
+        "embeddedDescription": "可开关的软字幕轨道（WebM/MKV）。"
+      },
+      "subtitles": "字幕",
+      "video": "视频"
+    },
+    "videoContainer": {
+      "mp4": "兼容性广，适合分享",
+      "mov": "Apple 生态系统，最适合 Final Cut 与 QuickTime",
+      "webm": "面向网页播放的开放式现代容器",
+      "mkv": "灵活容器，字幕支持出色"
+    },
+    "preflight": {
+      "checking": "正在检查导出预检…",
+      "title": "导出预检",
+      "workerPath": "Worker 路径",
+      "fallback": "主线程回退",
+      "checks": {
+        "empty-range": {
+          "title": "没有可导出的内容",
+          "detail": "所选导出范围没有帧。",
+          "fix": "向时间线添加内容，或选择非空的入点/出点范围。"
+        },
+        "export-range-ready": {
+          "title": "导出范围已就绪",
+          "detail": "将导出 {{frames}} 帧（{{seconds}} 秒）。"
+        },
+        "video-codec-unavailable": {
+          "title": "无法编码所选格式",
+          "detail": "此浏览器无法编码所选导出设置。",
+          "detailWithError": "{{error}}",
+          "fix": "请选择其他格式/编解码器，或尝试较新的 Chromium 浏览器。"
+        },
+        "audio-export-ready": {
+          "title": "音频导出已就绪",
+          "detail": "{{container}} 音频将使用 {{codec}}。",
+          "detailDefaultCodec": "{{container}} 音频将使用默认音频编解码器。"
+        },
+        "video-codec-fallback": {
+          "title": "将使用编解码器回退",
+          "detail": "所选编解码器在此处不可用。FreeCut 将改为以 {{container}} 导出 {{codec}}。",
+          "fix": "保留此回退，或手动选择其他受支持的编解码器。"
+        },
+        "video-codec-supported": {
+          "title": "支持视频编解码器",
+          "detail": "{{codec}} 可在此浏览器中编码为 {{container}}。"
+        },
+        "audio-codec-supported": {
+          "title": "支持音频编解码器",
+          "detail": "此浏览器可将 {{codec}} 音频编码到 {{container}}。"
+        },
+        "audio-codec-unavailable": {
+          "title": "音频编解码器不可用",
+          "detail": "此浏览器无法为 {{container}} 编码 {{codec}} 音频。",
+          "fix": "请选择 WebM 或 MKV 以使用 Opus 音频，或更新到受支持的浏览器。"
+        },
+        "worker-unavailable-fallback": {
+          "title": "Worker 导出不可用",
+          "detail": "此浏览器/会话无法启动导出 worker，因此渲染将在主线程运行。",
+          "fix": "导出期间保持标签页处于焦点，并避免繁重操作。"
+        },
+        "worker-animated-image-fallback": {
+          "title": "动画图片需要主线程导出",
+          "detail": "GIF/WebP 图片项目尚无法在导出 worker 中渲染。FreeCut 将自动回退。",
+          "fix": "如需更快的 worker 导出，请在导出前将动画图片替换为视频片段。"
+        },
+        "worker-audio-context-fallback": {
+          "title": "音频混音需要主线程回退",
+          "detail": "导出 worker 中无法使用 OfflineAudioContext，因此音频渲染将在主线程运行。"
+        },
+        "missing-media-blocks-export": {
+          "title": "缺失媒体会阻止导出",
+          "detail": "{{count}} 个引用的媒体文件缺失或需要权限。",
+          "detail_one": "{{count}} 个引用的媒体文件缺失或需要权限。",
+          "detail_other": "{{count}} 个引用的媒体文件缺失或需要权限。",
+          "fix": "导出前请在媒体库中重新链接缺失媒体。"
+        },
+        "large-file-risk": {
+          "title": "预计导出文件较大",
+          "detail": "此导出在容器差异前预计约为 {{size}}。",
+          "fix": "如果磁盘空间紧张，请使用平衡或小文件、降低分辨率，或导出更短的范围。"
+        },
+        "long-export-risk": {
+          "title": "长时间导出可能耗时较久",
+          "detail": "此导出约 {{minutes}} 分钟。",
+          "fix": "如果想快速验证，请先导出较短的入点/出点范围。"
+        },
+        "worker-export-ready": {
+          "title": "Worker 导出路径已就绪",
+          "detail": "导出 worker 可以渲染此合成，且没有已知的主线程回退。"
+        }
+      }
+    }
+  }
+}

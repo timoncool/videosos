@@ -1,0 +1,36 @@
+{
+  "recording": {
+    "rec": "REC",
+    "record": "Grabar voz en off",
+    "recordTooltip": "Graba una voz en off sincronizada con el cabezal de reproducción",
+    "pause": "Pausar grabación",
+    "resume": "Reanudar grabación",
+    "stop": "Detener y guardar",
+    "stopTooltip": "Detén la grabación y añade la toma a la línea de tiempo",
+    "cancel": "Cancelar grabación",
+    "cancelTooltip": "Descartar esta toma",
+    "saving": "Guardando…",
+    "chooseDevice": "Configuración del micrófono",
+    "microphone": "Micrófono",
+    "systemDefault": "Predeterminado del sistema",
+    "settings": "Configuración de grabación",
+    "noiseSuppression": "Supresión de ruido",
+    "autoGain": "Ganancia automática",
+    "muteWhileRecording": "Silenciar la línea de tiempo durante la grabación",
+    "syncOffset": "Desfase de sincronización",
+    "syncOffsetEarlier": "Adelantar la toma",
+    "syncOffsetLater": "Retrasar la toma",
+    "headphonesHint": "Usa auriculares para que el audio de la línea de tiempo no sea captado por el micrófono.",
+    "fileNamePrefix": "voiceover",
+    "errors": {
+      "unsupported": "La grabación con micrófono no es compatible con este navegador.",
+      "noProject": "Abre un proyecto antes de grabar.",
+      "permissionDenied": "Se bloqueó el acceso al micrófono. Permite el acceso al micrófono en tu navegador e inténtalo de nuevo.",
+      "noDevice": "No se encontró ningún micrófono. Conecta uno e inténtalo de nuevo.",
+      "deviceBusy": "El micrófono está siendo usado por otra aplicación.",
+      "startFailed": "No se pudo iniciar la grabación. Inténtalo de nuevo.",
+      "failed": "La grabación falló. Inténtalo de nuevo.",
+      "saveFailed": "No se pudo guardar la grabación."
+    }
+  }
+}

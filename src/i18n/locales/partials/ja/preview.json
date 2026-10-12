@@ -1,0 +1,105 @@
+{
+  "preview": {
+    "mediaOffline": {
+      "title": "メディアがオフライン",
+      "relink": "メディアパネルで再リンクしてください",
+      "loading": "読み込み中…"
+    },
+    "align": {
+      "left": "左揃え",
+      "centerH": "水平方向に中央揃え",
+      "right": "右揃え",
+      "top": "上揃え",
+      "centerV": "垂直方向に中央揃え",
+      "bottom": "下揃え",
+      "distributeH": "水平方向に均等配置",
+      "distributeV": "垂直方向に均等配置",
+      "disableCanvasSnap": "キャンバスへのスナップを無効化",
+      "enableCanvasSnap": "キャンバスへのスナップを有効化",
+      "toggleCanvasSnap": "キャンバススナップを切り替え"
+    },
+    "controls": {
+      "captureFailed": "現在のフレームをキャプチャできませんでした。",
+      "disableProxyPlayback": "プロキシ再生を無効化",
+      "enableProxyPlayback": "プロキシ再生を有効化",
+      "frameDownloadedNoProject": "フレームをダウンロードしました — メディアライブラリに保存するにはプロジェクトを開いてください。",
+      "frameDownloadedNotSaved": "フレームはダウンロードしましたが、メディアライブラリに保存できませんでした: {{message}}",
+      "frameSaved": "「{{name}}」をメディアライブラリに保存しました。",
+      "goToEnd": "末尾へ",
+      "goToEndTooltip": "末尾へ",
+      "goToStart": "先頭へ",
+      "goToStartTooltip": "先頭へ",
+      "nextFrame": "次のフレーム",
+      "nextFrameTooltip": "次のフレーム",
+      "pauseTooltip": "一時停止",
+      "playTooltip": "再生",
+      "prevFrame": "前のフレーム",
+      "prevFrameTooltip": "前のフレーム",
+      "proxyPlaybackOff": "プロキシ再生はオフ",
+      "proxyPlaybackOn": "プロキシ再生はオン",
+      "saveFrame": "フレームを保存",
+      "saveFrameFailed": "フレームを保存できませんでした。",
+      "saveFrameTooltip": "フレームを保存",
+      "savingFrame": "フレームを保存中…",
+      "savingFrameTooltip": "フレームを保存中…"
+    },
+    "monitor": {
+      "mute": "ミュート",
+      "muteShort": "ミュート",
+      "muted": "ミュート中",
+      "percent": "{{value}}%",
+      "previewOnlyNote": "ローカル再生にのみ反映されます。書き出しはプロジェクトミックスを使用します。",
+      "thisDeviceOnly": "このデバイスのみ",
+      "title": "プレビュー音声",
+      "unmute": "ミュート解除",
+      "volume": "音量"
+    },
+    "player": {
+      "exitFullscreen": "全画面表示を終了",
+      "fullscreen": "全画面表示",
+      "mute": "ミュート",
+      "pause": "一時停止",
+      "play": "再生",
+      "seek": "シーク",
+      "unmute": "ミュート解除",
+      "volume": "音量"
+    },
+    "stage": {
+      "loadingMedia": "メディアを読み込み中…",
+      "videoPreview": "動画プレビュー",
+      "emptyTitle": "タイムラインにはまだ何もありません",
+      "emptyDescription": "メディアをインポートし、クリップをタイムラインにドラッグしてから、Space キーでプレビューします。"
+    },
+    "zoom": {
+      "ariaLabel": "ズーム倍率: {{label}}",
+      "auto": "自動",
+      "tooltip": "ズーム: {{label}}"
+    },
+    "canvasDrop": {
+      "dropOnTimeline": "タイムラインにドロップ",
+      "compoundClipsTimeline": "コンパウンドクリップはタイムラインに配置するのが最適です。",
+      "presetsTimeline": "テキストと図形のプリセットはタイムラインに配置するのが最適です。",
+      "adjustmentLayersTimeline": "調整レイヤーはフレーム全体に適用されます。タイムラインに配置してください。",
+      "placeLayerDescription": "このレイヤーをドロップ位置に配置します。",
+      "dropOneItem": "1項目をドロップ",
+      "oneMediaAtATime": "キャンバスにはメディアを1つずつ配置してください。",
+      "audioGoesOnTimeline": "音声はタイムラインへ",
+      "visualLayersOnly": "キャンバスへのドロップはビジュアルレイヤーのみ配置します。",
+      "dropToPlace": "ドロップして配置",
+      "addAtPlayhead": "このメディアを再生ヘッドとドロップ位置に追加します。",
+      "dropOneFile": "1ファイルをドロップ",
+      "oneVisualFileAtATime": "キャンバスへのドロップではビジュアルファイルを1つずつ読み込みます。",
+      "importAndPlace": "読み込んで配置",
+      "importAndPlaceDescription": "このファイルを読み込み、キャンバスに配置します。",
+      "noCompatibleTrack": "このドロップに使えるロック解除済みの互換トラックがありません。",
+      "unableToLoadMedia": "ドロップしたメディアを読み込めませんでした。",
+      "mediaNoLongerAvailable": "ドロップしたメディアはもう利用できません。",
+      "dragDropUnsupported": "このブラウザーはドラッグ＆ドロップに対応していません。Chrome または Edge を使用してください。",
+      "filesRejected": "一部のファイルが拒否されました: {{errors}}",
+      "dropAudioOnTimeline": "音声はタイムラインにドロップしてください。",
+      "unableToInspectVideo": "ドロップした動画を検査できませんでした。",
+      "unableToInspectFile": "ドロップしたファイルを検査できませんでした。",
+      "unableToImportFile": "ドロップしたファイルを読み込めませんでした。"
+    }
+  }
+}

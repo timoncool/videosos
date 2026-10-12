@@ -1,0 +1,28 @@
+{
+  "transcript": {
+    "sourceAnalyzed": "ソース全体を解析済み",
+    "detectedRange": "音声を{{start}}〜{{end}}で検出しました。無音または音楽のみの区間は表示されません。",
+    "title": "文字起こし",
+    "tabLabel": "文字起こし",
+    "emptySelection": "文字起こしを編集するには、動画または音声クリップを選択してください。",
+    "searchPlaceholder": "文字起こしを検索",
+    "nextMatch": "次の一致",
+    "previousMatch": "前の一致",
+    "clearSearch": "検索をクリア",
+    "noTranscript": "このクリップにはまだ文字起こしがありません。",
+    "transcriptionFailed": "文字起こしに失敗しました。",
+    "tryAgain": "再試行",
+    "largeTurboFallback": "Large Turbo のメモリが不足しました。Whisper Small で再試行しています…",
+    "generate": "文字起こしを生成",
+    "transcribing": "文字起こし中…",
+    "loading": "文字起こしを読み込み中…",
+    "wordsSelected_one": "{{count}} 語を選択中",
+    "wordsSelected_other": "{{count}} 語を選択中",
+    "selectHint": "単語をクリックするとその位置へ移動し、ドラッグで選択します。",
+    "deleteSelection": "削除",
+    "toastRemoved": "{{count}} 個のクリップを削除しました",
+    "toastNothingRemoved": "削除されたものはありません",
+    "toastRemoveFailed": "選択した単語を削除できませんでした",
+    "toastTranscribeFailed": "文字起こしに失敗しました"
+  }
+}

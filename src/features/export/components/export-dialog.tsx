@@ -1,0 +1,708 @@
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { toast } from 'sonner'
+import type {
+  ExportSettings,
+  ExportMode,
+  ExtendedExportSettings,
+  CompositionInputProps,
+  SubtitleExportMode,
+} from '@/types/export'
+import { useClientRender } from '../hooks/use-client-render'
+import { useExportDialogView } from '../hooks/use-export-dialog-view'
+import {
+  buildRenderJob,
+  buildSegmentJobs,
+  rangesFromFixedDuration,
+  rangesFromMarkers,
+} from '../utils/build-render-job'
+import { useRenderQueueStore, type RenderJob } from '../stores/render-queue-store'
+import {
+  getActiveExportSequenceId,
+  getExportableSequence,
+  listExportableSequences,
+  type ExportableSequence,
+} from '@/features/export/deps/timeline-compositions'
+import { framesToSeconds } from '@/shared/utils/time-utils'
+import type { ExportPreflightResult } from '../utils/export-preflight'
+import { assessExportPreflight } from '../utils/export-preflight'
+import {
+  getDefaultVideoCodec,
+  estimateFileSize,
+  mapToClientSettings,
+  type ClientCodec,
+  type ClientVideoContainer,
+  type ClientAudioContainer,
+} from '../deps/renderer'
+import { ExportDialogHeading } from './export-dialog-heading'
+import { ExportSettingsView } from './export-settings-view'
+import { ExportProgressView } from './export-progress-view'
+import { ExportCompleteView } from './export-complete-view'
+import { ExportNoticeView } from './export-notice-view'
+import { useBrokenMediaIds, useMediaMetadataById } from '../deps/media-library'
+import { assessSmartCopyEligibility } from '../utils/smart-copy'
+import { resolveVideoBitrate } from '../deps/renderer'
+import { detectTranscriptSubtitles, getSubtitleModeOptions } from '../utils/export-subtitles'
+import {
+  findDominantVideoMediaId,
+  getExportRange,
+  getQueueRange,
+  getSegmentWindow,
+  getTimelineDurationFrames,
+  hasInOutRange,
+} from '../utils/export-range'
+import {
+  areExportActionsDisabled,
+  doesPreflightBlockExport,
+  resolveFallbackCodec,
+  resolveSupportedContainer,
+} from '../utils/export-capabilities'
+import {
+  EXPORT_PRESETS,
+  findActivePresetId,
+  getResolutionOptions,
+  getVideoCodecOptions,
+  getVideoContainerOptions,
+  scaledResolution,
+  type ExportPreset,
+} from '../utils/export-options'
+
+export interface ExportDialogProps {
+  open: boolean
+  onClose: () => void
+  /** Open the render queue panel (called after jobs are added to the queue). */
+  onOpenRenderQueue?: () => void
+}
+
+function getDefaultCodecForFormat(format: 'mp4' | 'webm'): ExportSettings['codec'] {
+  return getDefaultVideoCodec(format)
+}
+
+export function ExportDialog({ open, onClose, onOpenRenderQueue }: ExportDialogProps) {
+  const { t } = useTranslation()
+  // Which sequence to export (Main or a standalone tab). Snapshotted when the
+  // dialog opens (reset to the active tab) and re-read when the picker changes.
+  // Sourced read-only so the editor view is never disturbed; the timeline isn't
+  // edited while the modal is up, so a snapshot on open is sufficient.
+  const [selectedSequenceId, setSelectedSequenceId] = useState<string | null>(null)
+  const [sequenceOptions, setSequenceOptions] = useState<
+    Array<{ id: string | null; name: string }>
+  >([])
+  const [exportable, setExportable] = useState<ExportableSequence>(() =>
+    getExportableSequence(null),
+  )
+  useEffect(() => {
+    if (!open) return
+    const id = getActiveExportSequenceId()
+    setSelectedSequenceId(id)
+    setSequenceOptions(listExportableSequences())
+    setExportable(getExportableSequence(id))
+  }, [open])
+  const handleSelectSequence = useCallback((id: string | null) => {
+    setSelectedSequenceId(id)
+    setExportable(getExportableSequence(id))
+  }, [])
+
+  // Resolution + timeline data all follow the selected sequence.
+  const projectWidth = exportable.width
+  const projectHeight = exportable.height
+  const fps = exportable.fps
+  const tracks = exportable.tracks
+  const items = exportable.items
+  const transitions = exportable.transitions
+  const keyframes = exportable.keyframes
+  const inPoint = exportable.inPoint
+  const outPoint = exportable.outPoint
+  const brokenMediaIds = useBrokenMediaIds()
+  const enqueueJobs = useRenderQueueStore((s) => s.enqueueJobs)
+
+  const [settings, setSettings] = useState<ExportSettings>({
+    codec: getDefaultCodecForFormat('mp4'),
+    quality: 'medium',
+    resolution: { width: projectWidth, height: projectHeight },
+    rateControl: 'auto',
+    smartCopy: true,
+  })
+
+  const [exportMode, setExportMode] = useState<ExportMode>('video')
+  const [videoContainer, setVideoContainer] = useState<ClientVideoContainer>('mp4')
+  const [audioContainer, setAudioContainer] = useState<ClientAudioContainer>('mp3')
+  const [subtitleMode, setSubtitleMode] = useState<SubtitleExportMode>('burn')
+  const [renderWholeProject, setRenderWholeProject] = useState(false)
+  const wasOpenRef = useRef(false)
+
+  const dominantVideoMediaId = useMemo(() => findDominantVideoMediaId(items), [items])
+  const sourceMedia = useMediaMetadataById(dominantVideoMediaId)
+  const sourceVideo = useMemo(
+    () =>
+      sourceMedia && sourceMedia.bitrate > 0
+        ? {
+            bitrate: sourceMedia.bitrate,
+            fps: sourceMedia.fps,
+            codec: sourceMedia.codec,
+          }
+        : undefined,
+    [sourceMedia],
+  )
+
+  // Check if in/out points are set
+  const hasInOutPoints = hasInOutRange(inPoint, outPoint)
+  const hasTranscriptSubtitles = useMemo(() => detectTranscriptSubtitles(items), [items])
+  // Soft (toggleable) subtitle tracks only work for Matroska (WebM/MKV). MP4/MOV
+  // can't — mediabunny's WebVTT-in-ISOBMFF muxing is broken and players barely
+  // support it anyway — so the "Embedded track" option is hidden there.
+  const subtitleModeOptions = useMemo(
+    () => getSubtitleModeOptions(videoContainer),
+    [videoContainer],
+  )
+  // Coerce away a now-unavailable mode (e.g. "embedded" after switching to MP4).
+  const effectiveSubtitleMode = subtitleModeOptions.includes(subtitleMode) ? subtitleMode : 'burn'
+
+  // Calculate export range
+  const exportRange = useMemo(
+    () =>
+      getExportRange({
+        renderWholeProject,
+        inPoint,
+        outPoint,
+        timelineDurationFrames: getTimelineDurationFrames(items),
+      }),
+    [items, inPoint, outPoint, renderWholeProject],
+  )
+
+  const resolvedVideoBitrate = useMemo(
+    () =>
+      resolveVideoBitrate({
+        codec: settings.codec,
+        quality: settings.quality,
+        width: settings.resolution.width,
+        height: settings.resolution.height,
+        fps,
+        rateControl: settings.rateControl,
+        customBitrate: settings.videoBitrate,
+        sourceVideo,
+      }),
+    [
+      fps,
+      settings.codec,
+      settings.quality,
+      settings.rateControl,
+      settings.resolution.height,
+      settings.resolution.width,
+      settings.videoBitrate,
+      sourceVideo,
+    ],
+  )
+
+  const previewClientSettings = useMemo(() => {
+    const mapped = mapToClientSettings({ ...settings, sourceVideo }, fps)
+    mapped.container = videoContainer
+    return mapped
+  }, [fps, settings, sourceVideo, videoContainer])
+
+  const smartCopyAssessment = useMemo(
+    () =>
+      assessSmartCopyEligibility({
+        settings: previewClientSettings,
+        tracks,
+        items,
+        transitions,
+        keyframes,
+        fps,
+        width: projectWidth,
+        height: projectHeight,
+        inPoint: renderWholeProject || !hasInOutPoints ? null : inPoint,
+        outPoint: renderWholeProject || !hasInOutPoints ? null : outPoint,
+        source: sourceMedia,
+      }),
+    [
+      fps,
+      hasInOutPoints,
+      inPoint,
+      items,
+      keyframes,
+      outPoint,
+      previewClientSettings,
+      projectHeight,
+      projectWidth,
+      renderWholeProject,
+      sourceMedia,
+      tracks,
+      transitions,
+    ],
+  )
+
+  const smartCopyWillRun = settings.smartCopy !== false && smartCopyAssessment.eligible
+  const estimatedFileSizeBytes = useMemo(
+    () =>
+      smartCopyWillRun && sourceMedia
+        ? sourceMedia.fileSize
+        : estimateFileSize(previewClientSettings, framesToSeconds(exportRange.duration, fps)),
+    [exportRange.duration, fps, previewClientSettings, smartCopyWillRun, sourceMedia],
+  )
+
+  const preflightComposition = useMemo<CompositionInputProps>(
+    () => ({
+      fps,
+      durationInFrames: exportRange.duration,
+      width: projectWidth,
+      height: projectHeight,
+      tracks,
+      transitions,
+      keyframes,
+    }),
+    [exportRange.duration, fps, keyframes, projectHeight, projectWidth, tracks, transitions],
+  )
+
+  const resolutionOptions = useMemo(
+    () => getResolutionOptions(projectWidth, projectHeight, t),
+    [projectWidth, projectHeight, t],
+  )
+
+  // Which preset (if any) the current settings exactly match. null = "Custom".
+  const activePresetId = useMemo(
+    () => findActivePresetId(videoContainer, settings, projectWidth, projectHeight),
+    [videoContainer, settings, projectWidth, projectHeight],
+  )
+
+  const applyPreset = (preset: ExportPreset) => {
+    setVideoContainer(preset.container)
+    setSettings((prev) => ({
+      ...prev,
+      codec: preset.codec,
+      quality: preset.quality,
+      rateControl: 'auto',
+      videoBitrate: undefined,
+      smartCopy: true,
+      resolution: scaledResolution(projectWidth, projectHeight, preset.scale),
+    }))
+  }
+
+  // Sync resolution when project dimensions change
+  useEffect(() => {
+    setSettings((prev) => ({
+      ...prev,
+      resolution: { width: projectWidth, height: projectHeight },
+    }))
+  }, [projectWidth, projectHeight])
+
+  // Render hook
+  const clientRender = useClientRender()
+
+  const {
+    progress,
+    progressMessage,
+    renderedFrames,
+    totalFrames,
+    status,
+    error,
+    startExport,
+    cancelExport,
+    downloadVideo,
+    resetState,
+    getSupportedCodecs,
+  } = clientRender
+
+  const [supportedVideoCodecs, setSupportedVideoCodecs] = useState<ClientCodec[] | null>(null)
+  const [isCheckingVideoSupport, setIsCheckingVideoSupport] = useState(false)
+  const [videoSupportError, setVideoSupportError] = useState<string | null>(null)
+  const [preflight, setPreflight] = useState<ExportPreflightResult | null>(null)
+
+  const {
+    view,
+    setView,
+    elapsedSeconds,
+    previewUrl,
+    isVideoResult,
+    preventClose,
+    handleClose,
+    resetView,
+  } = useExportDialogView({ status, result: clientRender.result, resetState, onClose })
+
+  // Assemble the extended settings the render pipeline expects from the dialog
+  // state. Shared by "Export now" and the "Add to queue" actions.
+  const buildExtendedSettings = (): ExtendedExportSettings => ({
+    ...settings,
+    sourceVideo,
+    mode: exportMode,
+    videoContainer: exportMode === 'video' ? videoContainer : undefined,
+    audioContainer: exportMode === 'audio' ? audioContainer : undefined,
+    subtitleMode: exportMode === 'video' ? effectiveSubtitleMode : undefined,
+    renderWholeProject,
+  })
+
+  // Start export
+  const handleStartExport = async () => {
+    setView('progress')
+    await startExport(buildExtendedSettings())
+  }
+
+  // Close the export dialog and open the queue panel. Called BEFORE building
+  // jobs so picking an option gives instant feedback while the (single) codec
+  // probe + job assembly run.
+  const revealQueue = () => {
+    onClose()
+    onOpenRenderQueue?.()
+  }
+
+  // Capture settings synchronously (the dialog unmounts on reveal), reveal the
+  // queue, then build + enqueue. One codec probe covers the whole batch.
+  const enqueueAndReveal = async (
+    build: (settings: ExtendedExportSettings) => Promise<RenderJob[]>,
+  ) => {
+    const settings = buildExtendedSettings()
+    revealQueue()
+    try {
+      const jobs = await build(settings)
+      if (jobs.length === 0) return
+      enqueueJobs(jobs)
+      toast.success(t('export.renderQueue.addedToast', { count: jobs.length }))
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : t('export.renderQueue.buildFailed'))
+    }
+  }
+
+  // Re-read the selected sequence at click time so a queued export always
+  // reflects the current timeline, not a snapshot that went stale while the
+  // dialog stayed open.
+  const captureSelection = () => getExportableSequence(selectedSequenceId)
+
+  const handleAddCurrentRange = () => {
+    const seq = captureSelection()
+    void enqueueAndReveal(async (settings) => [
+      await buildRenderJob({ settings, ...getQueueRange(seq, renderWholeProject), sequence: seq }),
+    ])
+  }
+
+  const handleAddMarkerSegments = () => {
+    const seq = captureSelection()
+    const { start, end } = getSegmentWindow(seq, renderWholeProject)
+    const ranges = rangesFromMarkers(seq.markers, start, end)
+    if (ranges.length <= 1) {
+      toast.info(t('export.renderQueue.noMarkers'))
+      return
+    }
+    void enqueueAndReveal((settings) =>
+      buildSegmentJobs(
+        settings,
+        ranges,
+        (i) => t('export.renderQueue.partLabel', { n: i + 1 }),
+        seq,
+      ),
+    )
+  }
+
+  const handleSplitChunks = (seconds: number) => {
+    const seq = captureSelection()
+    const { start, end } = getSegmentWindow(seq, renderWholeProject)
+    const ranges = rangesFromFixedDuration(start, end, Math.max(1, Math.round(seconds * seq.fps)))
+    if (ranges.length === 0) {
+      toast.info(t('export.renderQueue.nothingToRender'))
+      return
+    }
+    void enqueueAndReveal((settings) =>
+      buildSegmentJobs(
+        settings,
+        ranges,
+        (i) => t('export.renderQueue.partLabel', { n: i + 1 }),
+        seq,
+      ),
+    )
+  }
+
+  // Reset when dialog closes
+  useEffect(() => {
+    if (open && !wasOpenRef.current) {
+      resetView()
+      setExportMode('video')
+      setVideoContainer('mp4')
+      setAudioContainer('mp3')
+      setSubtitleMode('burn')
+      setRenderWholeProject(false)
+      setSettings({
+        codec: getDefaultCodecForFormat('mp4'),
+        quality: 'medium',
+        resolution: { width: projectWidth, height: projectHeight },
+        rateControl: 'auto',
+        smartCopy: true,
+      })
+      resetState()
+      setPreflight(null)
+    }
+
+    if (!open && wasOpenRef.current) {
+      resetView()
+      resetState()
+      setPreflight(null)
+    }
+
+    wasOpenRef.current = open
+  }, [open, projectHeight, projectWidth, resetState, resetView])
+
+  useEffect(() => {
+    if (!open || view !== 'settings' || exportMode !== 'video') return
+
+    let cancelled = false
+    setIsCheckingVideoSupport(true)
+    setVideoSupportError(null)
+    setSupportedVideoCodecs(null)
+
+    void getSupportedCodecs({
+      resolution: settings.resolution,
+      bitrate: resolvedVideoBitrate,
+    })
+      .then((codecs) => {
+        if (cancelled) return
+        setSupportedVideoCodecs(codecs)
+      })
+      .catch((err) => {
+        if (cancelled) return
+        const message = err instanceof Error ? err.message : t('export.errors.verifyCodec')
+        setVideoSupportError(message)
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setIsCheckingVideoSupport(false)
+        }
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [exportMode, getSupportedCodecs, open, resolvedVideoBitrate, settings.resolution, view, t])
+
+  const videoContainerOptions = useMemo(
+    () => getVideoContainerOptions(supportedVideoCodecs, t),
+    [supportedVideoCodecs, t],
+  )
+
+  const codecOptions = useMemo(
+    () => getVideoCodecOptions(supportedVideoCodecs, videoContainer),
+    [supportedVideoCodecs, videoContainer],
+  )
+
+  const hasCapabilityData = supportedVideoCodecs !== null && !videoSupportError
+  const hasSupportedVideoPath = videoContainerOptions.some((option) => option.supported)
+  useEffect(() => {
+    if (exportMode !== 'video' || !hasCapabilityData) return
+
+    const nextContainer = resolveSupportedContainer(videoContainerOptions, videoContainer)
+    if (nextContainer === null) return
+
+    setVideoContainer(nextContainer)
+  }, [exportMode, hasCapabilityData, videoContainer, videoContainerOptions])
+
+  // Codec the probe rules out: fall back to one it can encode, unless smart
+  // copy keeps the source bytes (and their codec) untouched.
+  const fallbackCodec = smartCopyWillRun ? null : resolveFallbackCodec(codecOptions, settings.codec)
+  useEffect(() => {
+    if (fallbackCodec === null) return
+
+    setSettings((prev) => ({ ...prev, codec: fallbackCodec }))
+  }, [fallbackCodec])
+
+  useEffect(() => {
+    if (!open || view !== 'settings') {
+      setPreflight(null)
+      return
+    }
+
+    if (exportMode === 'video' && supportedVideoCodecs === null && !videoSupportError) {
+      setPreflight(null)
+      return
+    }
+
+    let cancelled = false
+    const settingsForPreflight: ExtendedExportSettings = {
+      ...settings,
+      sourceVideo,
+      mode: exportMode,
+      videoContainer: exportMode === 'video' ? videoContainer : undefined,
+      audioContainer: exportMode === 'audio' ? audioContainer : undefined,
+      subtitleMode: exportMode === 'video' ? effectiveSubtitleMode : undefined,
+      renderWholeProject,
+    }
+
+    void assessExportPreflight({
+      settings: settingsForPreflight,
+      fps,
+      composition: preflightComposition,
+      durationFrames: exportRange.duration,
+      supportedVideoCodecs: supportedVideoCodecs ?? [],
+      brokenMediaIds,
+      smartCopyAssessment,
+    }).then((result) => {
+      if (!cancelled) setPreflight(result)
+    })
+
+    return () => {
+      cancelled = true
+    }
+  }, [
+    audioContainer,
+    brokenMediaIds,
+    effectiveSubtitleMode,
+    exportMode,
+    exportRange.duration,
+    fps,
+    hasTranscriptSubtitles,
+    open,
+    preflightComposition,
+    renderWholeProject,
+    settings,
+    smartCopyAssessment,
+    sourceVideo,
+    supportedVideoCodecs,
+    videoContainer,
+    videoSupportError,
+    view,
+  ])
+
+  const preflightBlocksExport = doesPreflightBlockExport(preflight)
+  const exportActionsDisabled = areExportActionsDisabled({
+    exportMode,
+    smartCopyWillRun,
+    hasSupportedVideoPath,
+    isCheckingVideoSupport,
+    preflightBlocksExport,
+  })
+
+  const fileSize = clientRender.result?.fileSize
+
+  return (
+    <Dialog open={open} onOpenChange={handleClose} modal>
+      <DialogContent
+        className={`overflow-hidden ${
+          view === 'settings'
+            ? 'sm:max-w-[900px]'
+            : view === 'complete' && isVideoResult
+              ? 'sm:max-w-[640px]'
+              : 'sm:max-w-[500px]'
+        }`}
+        hideCloseButton={preventClose}
+        onPointerDownOutside={(e) => preventClose && e.preventDefault()}
+        onEscapeKeyDown={(e) => preventClose && e.preventDefault()}
+      >
+        <ExportDialogHeading view={view} />
+
+        {/* Settings View */}
+        {view === 'settings' && (
+          <ExportSettingsView
+            sequencePicker={{
+              options: sequenceOptions,
+              selectedId: selectedSequenceId,
+              onSelect: handleSelectSequence,
+            }}
+            modeToggle={{ mode: exportMode, onChange: setExportMode }}
+            rangeSummary={{
+              range: exportRange,
+              fps,
+              hasInOutPoints,
+              renderWholeProject,
+              onRenderWholeProjectChange: setRenderWholeProject,
+            }}
+            preflight={preflight}
+            video={{
+              presets: {
+                presets: EXPORT_PRESETS,
+                activePresetId,
+                onApplyPreset: applyPreset,
+              },
+              alerts: {
+                isCheckingSupport: isCheckingVideoSupport,
+                supportError: videoSupportError,
+                hasSupportedPath: hasSupportedVideoPath,
+                width: settings.resolution.width,
+                height: settings.resolution.height,
+              },
+              format: {
+                settings,
+                setSettings,
+                container: videoContainer,
+                setContainer: setVideoContainer,
+                containerOptions: videoContainerOptions,
+                codecOptions,
+                resolutionOptions,
+                projectWidth,
+                projectHeight,
+              },
+              rateControl: {
+                settings,
+                setSettings,
+                resolvedVideoBitrate,
+                sourceVideo,
+              },
+              smartCopy: {
+                settings,
+                setSettings,
+                assessment: smartCopyAssessment,
+                willRun: smartCopyWillRun,
+                resolvedVideoBitrate,
+                estimatedFileSizeBytes,
+                sourceVideo,
+              },
+              subtitles: {
+                mode: effectiveSubtitleMode,
+                onModeChange: setSubtitleMode,
+                modeOptions: subtitleModeOptions,
+                hasTranscriptSubtitles,
+              },
+            }}
+            audio={{
+              settings,
+              setSettings,
+              container: audioContainer,
+              setContainer: setAudioContainer,
+            }}
+            footer={{
+              mode: exportMode,
+              actionsDisabled: exportActionsDisabled,
+              onClose: handleClose,
+              onExport: handleStartExport,
+              onAddCurrentRange: handleAddCurrentRange,
+              onAddMarkerSegments: handleAddMarkerSegments,
+              onSplitChunks: handleSplitChunks,
+            }}
+          />
+        )}
+
+        {/* Progress View */}
+        {view === 'progress' && (
+          <ExportProgressView
+            progress={progress}
+            progressMessage={progressMessage}
+            renderedFrames={renderedFrames}
+            totalFrames={totalFrames}
+            status={status}
+            elapsedSeconds={elapsedSeconds}
+            onCancel={cancelExport}
+          />
+        )}
+
+        {/* Complete View */}
+        {view === 'complete' && (
+          <ExportCompleteView
+            mode={exportMode}
+            previewUrl={previewUrl}
+            isVideoResult={isVideoResult}
+            fileSize={fileSize}
+            elapsedSeconds={elapsedSeconds}
+            onClose={handleClose}
+            onDownload={downloadVideo}
+          />
+        )}
+
+        {/* Error View */}
+        {view === 'error' && (
+          <ExportNoticeView variant="error" message={error} onClose={handleClose} />
+        )}
+
+        {/* Cancelled View */}
+        {view === 'cancelled' && (
+          <ExportNoticeView variant="cancelled" message={null} onClose={handleClose} />
+        )}
+      </DialogContent>
+    </Dialog>
+  )
+}

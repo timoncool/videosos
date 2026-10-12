@@ -1,0 +1,16 @@
+{
+  "changelog": {
+    "homeAria": "FreeCut ana sayfası",
+    "backToHome": "Ana sayfaya dön",
+    "releaseNotes": "Sürüm notları",
+    "title": "FreeCut'taki yenilikler",
+    "description": "Yeni düzenleme araçları, iş akışı iyileştirmeleri ve düzeltmelerden oluşan haftalık bir derleme. En yeni sürüm açık; değişikliklerin tam listesini görmek için önceki haftalardan birini genişletin.",
+    "latest": "En yeni",
+    "changeCount_one": "{{count}} değişiklik",
+    "changeCount_other": "{{count}} değişiklik",
+    "initialRelease": "İlk sürüm",
+    "ctaTitle": "Bir şeyler üretmeye hazır mısınız?",
+    "ctaDescription": "FreeCut'i açın ve en yeni araçları kullanmaya başlayın.",
+    "openFreeCut": "FreeCut'i aç"
+  }
+}

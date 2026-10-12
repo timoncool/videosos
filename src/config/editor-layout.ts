@@ -1,0 +1,195 @@
+/**
+ * Editor density presets.
+ *
+ * `compact` is tuned to keep more of the editor visible on a 1920x1080 display.
+ *
+ * Prefer changing presets here before editing one-off component sizes.
+ */
+const EDIT_DOPESHEET_COLUMN_WIDTH = 288
+
+const EDITOR_DENSITY_PRESETS = {
+  compact: {
+    toolbarHeight: 48,
+    sidebarRailWidth: 44,
+    sidebarHeaderHeight: 36,
+    sidebarHeaderButtonSize: 20,
+    toolbarButtonSize: 20,
+    leftSidebarDefaultWidth: 320,
+    leftSidebarMinWidth: 240,
+    leftSidebarMaxWidth: 560,
+    rightSidebarDefaultWidth: 288,
+    rightSidebarMinWidth: 280,
+    rightSidebarMaxWidth: 420,
+    previewPadding: 32,
+    previewSplitHeaderHeight: 32,
+    previewControlsHeight: 32,
+    previewControlButtonSize: 30,
+    timelineDefaultSize: 28,
+    timelineMinSize: 14,
+    timelineMaxSize: 80,
+    graphPanelSizeIncrease: 10,
+    timelineHeaderHeight: 40,
+    // Ruler + its left-column header are kept equal so track rows align on both
+    // sides. The ruler now hosts a top IO lane (12px) + a shorter tick ruler.
+    timelineTracksHeaderHeight: 34,
+    timelineRulerHeight: 34,
+    // The Edit track header follows the classic dopesheet property column so
+    // both timeline surfaces share the same ruler and playhead origin.
+    timelineSidebarWidth: EDIT_DOPESHEET_COLUMN_WIDTH,
+    timelineMeterWidth: 84,
+    timelineMixerWidth: 260,
+    timelineTrackHeight: 100,
+    timelineClipLabelRowHeight: 24,
+    timelineWaveformRowHeight: 24,
+  },
+} as const
+
+export type EditorDensityPresetName = keyof typeof EDITOR_DENSITY_PRESETS
+export type EditorLayout = (typeof EDITOR_DENSITY_PRESETS)[EditorDensityPresetName]
+type LeftSidebarLayoutBounds = { leftSidebarMinWidth: number; leftSidebarMaxWidth: number }
+type RightSidebarLayoutBounds = { rightSidebarMinWidth: number; rightSidebarMaxWidth: number }
+
+export const DEFAULT_EDITOR_DENSITY_PRESET: EditorDensityPresetName = 'compact'
+
+export function normalizeEditorDensityPreset(value: unknown): EditorDensityPresetName {
+  return value === 'compact' ? value : DEFAULT_EDITOR_DENSITY_PRESET
+}
+
+export function getEditorLayout(preset: unknown = DEFAULT_EDITOR_DENSITY_PRESET): EditorLayout {
+  return EDITOR_DENSITY_PRESETS[normalizeEditorDensityPreset(preset)]
+}
+
+export const EDITOR_LAYOUT = getEditorLayout()
+
+const EDITOR_LAYOUT_CSS_VAR_NAMES = {
+  toolbarHeight: '--editor-toolbar-height',
+  sidebarRailWidth: '--editor-sidebar-rail-width',
+  sidebarHeaderHeight: '--editor-sidebar-header-height',
+  sidebarHeaderButtonSize: '--editor-sidebar-header-button-size',
+  toolbarButtonSize: '--editor-toolbar-button-size',
+  previewPadding: '--editor-preview-padding',
+  previewSplitHeaderHeight: '--editor-preview-split-header-height',
+  previewControlsHeight: '--editor-preview-controls-height',
+  previewControlButtonSize: '--editor-preview-control-button-size',
+  timelineHeaderHeight: '--editor-timeline-header-height',
+  timelineTracksHeaderHeight: '--editor-timeline-tracks-header-height',
+  timelineRulerHeight: '--editor-timeline-ruler-height',
+  timelineSidebarWidth: '--editor-timeline-sidebar-width',
+  timelineMeterWidth: '--editor-timeline-meter-width',
+  timelineMixerWidth: '--editor-timeline-mixer-width',
+  timelineTrackHeight: '--editor-timeline-track-height',
+  timelineClipLabelRowHeight: '--editor-timeline-clip-label-row-height',
+  timelineWaveformRowHeight: '--editor-timeline-waveform-row-height',
+} as const
+
+export const EDITOR_LAYOUT_CSS_VALUES = {
+  toolbarHeight: `var(${EDITOR_LAYOUT_CSS_VAR_NAMES.toolbarHeight})`,
+  sidebarRailWidth: `var(${EDITOR_LAYOUT_CSS_VAR_NAMES.sidebarRailWidth})`,
+  sidebarHeaderHeight: `var(${EDITOR_LAYOUT_CSS_VAR_NAMES.sidebarHeaderHeight})`,
+  sidebarHeaderButtonSize: `var(${EDITOR_LAYOUT_CSS_VAR_NAMES.sidebarHeaderButtonSize})`,
+  toolbarButtonSize: `var(${EDITOR_LAYOUT_CSS_VAR_NAMES.toolbarButtonSize})`,
+  previewPadding: `var(${EDITOR_LAYOUT_CSS_VAR_NAMES.previewPadding})`,
+  previewSplitHeaderHeight: `var(${EDITOR_LAYOUT_CSS_VAR_NAMES.previewSplitHeaderHeight})`,
+  previewControlsHeight: `var(${EDITOR_LAYOUT_CSS_VAR_NAMES.previewControlsHeight})`,
+  previewControlButtonSize: `var(${EDITOR_LAYOUT_CSS_VAR_NAMES.previewControlButtonSize})`,
+  timelineHeaderHeight: `var(${EDITOR_LAYOUT_CSS_VAR_NAMES.timelineHeaderHeight})`,
+  timelineTracksHeaderHeight: `var(${EDITOR_LAYOUT_CSS_VAR_NAMES.timelineTracksHeaderHeight})`,
+  timelineRulerHeight: `var(${EDITOR_LAYOUT_CSS_VAR_NAMES.timelineRulerHeight})`,
+  timelineSidebarWidth: `var(${EDITOR_LAYOUT_CSS_VAR_NAMES.timelineSidebarWidth})`,
+  timelineMeterWidth: `var(${EDITOR_LAYOUT_CSS_VAR_NAMES.timelineMeterWidth})`,
+  timelineMixerWidth: `var(${EDITOR_LAYOUT_CSS_VAR_NAMES.timelineMixerWidth})`,
+  timelineTrackHeight: `var(${EDITOR_LAYOUT_CSS_VAR_NAMES.timelineTrackHeight})`,
+  timelineClipLabelRowHeight: `var(${EDITOR_LAYOUT_CSS_VAR_NAMES.timelineClipLabelRowHeight})`,
+  timelineWaveformRowHeight: `var(${EDITOR_LAYOUT_CSS_VAR_NAMES.timelineWaveformRowHeight})`,
+} as const
+
+export function getEditorLayoutCssVars(layout = EDITOR_LAYOUT): Record<string, string> {
+  return {
+    [EDITOR_LAYOUT_CSS_VAR_NAMES.toolbarHeight]: `${layout.toolbarHeight}px`,
+    [EDITOR_LAYOUT_CSS_VAR_NAMES.sidebarRailWidth]: `${layout.sidebarRailWidth}px`,
+    [EDITOR_LAYOUT_CSS_VAR_NAMES.sidebarHeaderHeight]: `${layout.sidebarHeaderHeight}px`,
+    [EDITOR_LAYOUT_CSS_VAR_NAMES.sidebarHeaderButtonSize]: `${layout.sidebarHeaderButtonSize}px`,
+    [EDITOR_LAYOUT_CSS_VAR_NAMES.toolbarButtonSize]: `${layout.toolbarButtonSize}px`,
+    [EDITOR_LAYOUT_CSS_VAR_NAMES.previewPadding]: `${layout.previewPadding}px`,
+    [EDITOR_LAYOUT_CSS_VAR_NAMES.previewSplitHeaderHeight]: `${layout.previewSplitHeaderHeight}px`,
+    [EDITOR_LAYOUT_CSS_VAR_NAMES.previewControlsHeight]: `${layout.previewControlsHeight}px`,
+    [EDITOR_LAYOUT_CSS_VAR_NAMES.previewControlButtonSize]: `${layout.previewControlButtonSize}px`,
+    [EDITOR_LAYOUT_CSS_VAR_NAMES.timelineHeaderHeight]: `${layout.timelineHeaderHeight}px`,
+    [EDITOR_LAYOUT_CSS_VAR_NAMES.timelineTracksHeaderHeight]: `${layout.timelineTracksHeaderHeight}px`,
+    [EDITOR_LAYOUT_CSS_VAR_NAMES.timelineRulerHeight]: `${layout.timelineRulerHeight}px`,
+    [EDITOR_LAYOUT_CSS_VAR_NAMES.timelineSidebarWidth]: `${layout.timelineSidebarWidth}px`,
+    [EDITOR_LAYOUT_CSS_VAR_NAMES.timelineMeterWidth]: `${layout.timelineMeterWidth}px`,
+    [EDITOR_LAYOUT_CSS_VAR_NAMES.timelineMixerWidth]: `${layout.timelineMixerWidth}px`,
+    [EDITOR_LAYOUT_CSS_VAR_NAMES.timelineTrackHeight]: `${layout.timelineTrackHeight}px`,
+    [EDITOR_LAYOUT_CSS_VAR_NAMES.timelineClipLabelRowHeight]: `${layout.timelineClipLabelRowHeight}px`,
+    [EDITOR_LAYOUT_CSS_VAR_NAMES.timelineWaveformRowHeight]: `${layout.timelineWaveformRowHeight}px`,
+  }
+}
+
+const LEFT_SIDEBAR_MAX_VIEWPORT_RATIO = 0.45
+
+function clampSidebarWidth(width: number, bounds: { minWidth: number; maxWidth: number }): number {
+  return Math.min(bounds.maxWidth, Math.max(bounds.minWidth, width))
+}
+
+function getViewportWidth(): number | null {
+  if (
+    typeof window !== 'undefined' &&
+    Number.isFinite(window.innerWidth) &&
+    window.innerWidth > 0
+  ) {
+    return window.innerWidth
+  }
+
+  if (typeof document !== 'undefined') {
+    const documentWidth = document.documentElement?.clientWidth
+    if (Number.isFinite(documentWidth) && documentWidth > 0) {
+      return documentWidth
+    }
+  }
+
+  return null
+}
+
+export function getLeftEditorSidebarBounds(
+  layoutOrPreset: EditorLayout | LeftSidebarLayoutBounds | EditorDensityPresetName = EDITOR_LAYOUT,
+): { minWidth: number; maxWidth: number } {
+  const layout =
+    typeof layoutOrPreset === 'string' ? getEditorLayout(layoutOrPreset) : layoutOrPreset
+  const viewportWidth = getViewportWidth()
+  const viewportMaxWidth =
+    viewportWidth === null
+      ? layout.leftSidebarMaxWidth
+      : Math.floor(viewportWidth * LEFT_SIDEBAR_MAX_VIEWPORT_RATIO)
+
+  return {
+    minWidth: layout.leftSidebarMinWidth,
+    maxWidth: Math.max(layout.leftSidebarMinWidth, viewportMaxWidth),
+  }
+}
+
+export function getRightEditorSidebarBounds(
+  layoutOrPreset: EditorLayout | RightSidebarLayoutBounds | EditorDensityPresetName = EDITOR_LAYOUT,
+): { minWidth: number; maxWidth: number } {
+  const layout =
+    typeof layoutOrPreset === 'string' ? getEditorLayout(layoutOrPreset) : layoutOrPreset
+
+  return {
+    minWidth: layout.rightSidebarMinWidth,
+    maxWidth: layout.rightSidebarMaxWidth,
+  }
+}
+
+export function clampLeftEditorSidebarWidth(
+  width: number,
+  layoutOrPreset: EditorLayout | EditorDensityPresetName = EDITOR_LAYOUT,
+): number {
+  return clampSidebarWidth(width, getLeftEditorSidebarBounds(layoutOrPreset))
+}
+
+export function clampRightEditorSidebarWidth(
+  width: number,
+  layoutOrPreset: EditorLayout | EditorDensityPresetName = EDITOR_LAYOUT,
+): number {
+  return clampSidebarWidth(width, getRightEditorSidebarBounds(layoutOrPreset))
+}

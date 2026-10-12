@@ -1,0 +1,170 @@
+{
+  "appShell": {
+    "newVersionAvailable": "新しいバージョンが利用可能です。作業を保存して再読み込みしてください。",
+    "saveAndReload": "保存して再読み込み",
+    "reloadWithoutSaving": "保存せずに再読み込み",
+    "dockPanel": "パネルをドック",
+    "installPrompt": {
+      "label": "FreeCut をインストール",
+      "title": "FreeCut をインストール",
+      "description": "デスクトップまたはホーム画面から起動できます。",
+      "install": "インストール",
+      "notNow": "今はしない",
+      "dismiss": "インストール案内を閉じる"
+    }
+  },
+  "common": {
+    "save": "保存",
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "discard": "破棄",
+    "close": "閉じる",
+    "reset": "リセット",
+    "done": "完了",
+    "loading": "読み込み中...",
+    "saving": "保存中...",
+    "deleting": "削除中...",
+    "clearing": "クリア中...",
+    "queueing": "キューに追加中...",
+    "partial": "一部",
+    "untitledProject": "無題のプロジェクト"
+  },
+  "language": {
+    "label": "言語",
+    "description": "アプリ全体で使用する言語を選択します。",
+    "ariaLabel": "インターフェースの言語"
+  },
+  "toolbar": {
+    "ariaLabel": "エディターツールバー",
+    "workspaces": {
+      "motion": "Motion",
+      "label": "ワークスペース",
+      "edit": "編集",
+      "color": "カラー",
+      "animate": "アニメート"
+    },
+    "backToProjects": "プロジェクトに戻る",
+    "backToProjectsAria": "プロジェクトに戻る",
+    "specs": "{{width}}x{{height}} | {{fps}} fps",
+    "specsDetailed": "{{width}}x{{height}} | {{fps}} fps | {{duration}} | {{clips}} クリップ | {{media}} メディア | 不明 {{missing}}",
+    "whatsNew": "新着情報",
+    "whatsNewAria": "新着情報",
+    "settings": "設定",
+    "keyboardShortcuts": "キーボードショートカット",
+    "keyboardShortcutsAria": "キーボードショートカット",
+    "viewOnGitHub": "GitHub で表示",
+    "joinDiscord": "Discord に参加",
+    "debugPanel": "デバッグパネル",
+    "debugPanelAria": "デバッグパネル",
+    "save": "保存",
+    "saveAria": "プロジェクトを保存",
+    "export": "書き出し",
+    "exportVideo": "動画を書き出し",
+    "downloadProjectZip": "プロジェクトをダウンロード (.zip)"
+  },
+  "unsavedChanges": {
+    "title": "未保存の変更",
+    "descriptionWithName": "<strong>{{name}}</strong> に未保存の変更があります。終了する前に保存しますか？",
+    "description": "未保存の変更があります。終了する前に保存しますか？",
+    "discard": "破棄",
+    "saveAndExit": "保存して終了",
+    "saving": "保存中..."
+  },
+  "settings": {
+    "title": "エディター設定",
+    "sections": {
+      "general": "一般",
+      "timeline": "タイムライン",
+      "ai": "AI",
+      "storage": "ストレージ"
+    },
+    "general": {
+      "autoSave": "自動保存",
+      "interval": "間隔",
+      "intervalMinutes": "{{count}} 分",
+      "undoHistoryDepth": "元に戻す履歴の深さ",
+      "uiSounds": "インターフェースサウンド",
+      "uiSoundVolume": "サウンド音量",
+      "uiSoundVoice": "サウンドテーマ",
+      "uiSoundPreview": "プレビュー"
+    },
+    "ai": {
+      "captionSampleInterval": "字幕のサンプリング間隔",
+      "captionSampleIntervalDescription": "「AI で分析」が字幕用にフレームをサンプリングする頻度です。",
+      "seconds": "秒",
+      "frames": "フレーム",
+      "unitSec": "秒",
+      "unitFrames": "フレーム",
+      "enterIntervalAboveZero": "0 より大きい間隔を入力してください。",
+      "captionEstimate": "{{fps}} fps の 1 分間のクリップあたり約 {{sceneCount}} {{scenes}}",
+      "scene_one": "シーン",
+      "scene_other": "シーン",
+      "captionIntervalHint": "{{estimate}}。間隔が小さいほどシーンは密になりますが、生成に時間がかかります。",
+      "defaultCaptionStyle": "デフォルトの字幕スタイル",
+      "defaultCaptionStyleDescription": "文字起こしまたはAI字幕から生成された字幕に適用されるスタイル。"
+    },
+    "timeline": {
+      "snapByDefault": "デフォルトでスナップ",
+      "snapByDefaultDescription": "プロジェクトを開いたときの初期スナップ状態を設定します。",
+      "showWaveforms": "波形を表示",
+      "showFilmstrips": "動画のサムネイル帯を表示",
+      "enableFilmstripExtraction": "フィルムストリップを抽出",
+      "enableFilmstripExtractionDescription": "インポート時とタイムライン表示時に動画のサムネイル帯を生成します。"
+    },
+    "storage": {
+      "generateMissingProxies": "不足しているプロキシを生成",
+      "generateMissingProxiesDescription": "このプロジェクトでまだプロキシのない動画のプロキシ生成をキューに追加します",
+      "queued": "キュー済み",
+      "generateWithCount": "生成 ({{count}})",
+      "upToDate": "最新です",
+      "clearProjectCache": "プロジェクトのキャッシュをクリア",
+      "clearProjectCacheDescription": "波形、動画サムネイル帯、GIF フレーム、デコード済みオーディオ",
+      "clear": "クリア",
+      "cleared": "クリア済み",
+      "regenerateThumbnails": "サムネイルを再生成",
+      "regenerateThumbnailsDescription": "このプロジェクトのメディアライブラリのサムネイルを再作成します",
+      "regenerate": "再生成",
+      "deleteProxies": "プロキシを削除",
+      "deleteProxiesDescription": "このプロジェクト用に生成されたプロキシ動画を削除します",
+      "deleted": "削除済み",
+      "localAi": "ローカル AI",
+      "localAiDescription": "常駐ランタイムをアンロードするか、キャッシュされたモデルのダウンロードをクリアします。",
+      "clearCacheConfirmTitle": "プロジェクトのキャッシュをクリアしますか？",
+      "clearCacheConfirmDescription": "現在のプロジェクト ({{count}} 件のメディア) のキャッシュされた波形、動画サムネイル帯、GIF フレーム、デコード済みオーディオを削除します。必要に応じて自動的に再生成されます。プロジェクトデータ、メディアファイル、サムネイル、プロキシは影響を受けません。",
+      "clearCache": "キャッシュをクリア"
+    },
+    "toasts": {
+      "projectCacheCleared": "プロジェクトのキャッシュをクリアしました",
+      "projectCachePartiallyCleared": "プロジェクトのキャッシュを一部クリアしました",
+      "projectCacheNotCleared": "プロジェクトのキャッシュをクリアできませんでした",
+      "thumbnailsRegenerated": "サムネイルを再生成しました",
+      "thumbnailsPartiallyRegenerated": "サムネイルを一部再生成しました",
+      "thumbnailsNotRegenerated": "サムネイルを再生成できませんでした",
+      "proxiesDeleted": "プロキシを削除しました",
+      "proxiesPartiallyDeleted": "プロキシを一部削除しました",
+      "proxiesNotDeleted": "プロキシを削除できませんでした",
+      "failedToClearCache": "プロジェクトのキャッシュをクリアできませんでした",
+      "failedToRegenerateThumbnails": "サムネイルを再生成できませんでした",
+      "failedToDeleteProxies": "プロキシを削除できませんでした",
+      "itemsUpdated_one": "{{count}} 件を更新しました。",
+      "itemsUpdated_other": "{{count}} 件を更新しました。",
+      "itemsUpdatedFailed_one": "{{count}} 件を更新しました。失敗: {{failed}}",
+      "itemsUpdatedFailed_other": "{{count}} 件を更新しました。失敗: {{failed}}"
+    },
+    "feedback": {
+      "couldntClearCache": "プロジェクトのキャッシュをクリアできませんでした。",
+      "couldntRegenerateThumbnails": "サムネイルを再生成できませんでした。",
+      "couldntDeleteProxies": "プロキシを削除できませんでした。",
+      "completedForItems_one": "{{count}} 件で{{action}}が完了しました。",
+      "completedForItems_other": "{{count}} 件で{{action}}が完了しました。",
+      "moreItems": "{{items}}、ほか {{count}} 件",
+      "actionClearCache": "キャッシュをクリア",
+      "actionRegenerateThumbnails": "サムネイルを再生成",
+      "actionDeleteProxies": "プロキシを削除",
+      "noMediaNeededUpdating": "No project media needed updating.",
+      "couldntProcessItems_one": "{{action}}: couldn't process {{count}} item{{detail}}",
+      "couldntProcessItems_other": "{{action}}: couldn't process {{count}} items{{detail}}",
+      "partialOutcome": "{{action}}: {{succeeded}}/{{total}} done. Needs attention: {{failed}}."
+    }
+  }
+}

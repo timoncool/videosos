@@ -1,0 +1,170 @@
+{
+  "appShell": {
+    "newVersionAvailable": "Uma nova versão está disponível. Salve seu trabalho e recarregue.",
+    "saveAndReload": "Salvar e recarregar",
+    "reloadWithoutSaving": "Recarregar sem salvar",
+    "dockPanel": "Encaixar painel",
+    "installPrompt": {
+      "label": "Instalar FreeCut",
+      "title": "Instalar FreeCut",
+      "description": "Abra pelo desktop ou pela tela inicial.",
+      "install": "Instalar",
+      "notNow": "Agora não",
+      "dismiss": "Dispensar aviso de instalação"
+    }
+  },
+  "common": {
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "discard": "Descartar",
+    "close": "Fechar",
+    "reset": "Redefinir",
+    "done": "Concluído",
+    "loading": "Carregando...",
+    "saving": "Salvando...",
+    "deleting": "Excluindo...",
+    "clearing": "Limpando...",
+    "queueing": "Enfileirando...",
+    "partial": "Parcial",
+    "untitledProject": "Projeto sem título"
+  },
+  "language": {
+    "label": "Idioma",
+    "description": "Escolha o idioma usado em todo o aplicativo.",
+    "ariaLabel": "Idioma da interface"
+  },
+  "toolbar": {
+    "ariaLabel": "Barra de ferramentas do editor",
+    "workspaces": {
+      "motion": "Motion",
+      "label": "Espaços de trabalho",
+      "edit": "Edição",
+      "color": "Cor",
+      "animate": "Animação"
+    },
+    "backToProjects": "Voltar aos projetos",
+    "backToProjectsAria": "Voltar aos projetos",
+    "specs": "{{width}}x{{height}} | {{fps}} fps",
+    "specsDetailed": "{{width}}x{{height}} | {{fps}} fps | {{duration}} | {{clips}} clipes | {{media}} mídias | {{missing}} ausentes",
+    "whatsNew": "Novidades",
+    "whatsNewAria": "Novidades",
+    "settings": "Configurações",
+    "keyboardShortcuts": "Atalhos de teclado",
+    "keyboardShortcutsAria": "Atalhos de teclado",
+    "viewOnGitHub": "Ver no GitHub",
+    "joinDiscord": "Entrar no Discord",
+    "debugPanel": "Painel de depuração",
+    "debugPanelAria": "Painel de depuração",
+    "save": "Salvar",
+    "saveAria": "Salvar projeto",
+    "export": "Exportar",
+    "exportVideo": "Exportar vídeo",
+    "downloadProjectZip": "Baixar projeto (.zip)"
+  },
+  "unsavedChanges": {
+    "title": "Alterações não salvas",
+    "descriptionWithName": "Você tem alterações não salvas em <strong>{{name}}</strong>. Deseja salvar antes de sair?",
+    "description": "Você tem alterações não salvas. Deseja salvar antes de sair?",
+    "discard": "Descartar",
+    "saveAndExit": "Salvar e sair",
+    "saving": "Salvando..."
+  },
+  "settings": {
+    "title": "Configurações do editor",
+    "sections": {
+      "general": "Geral",
+      "timeline": "Linha do tempo",
+      "ai": "IA",
+      "storage": "Armazenamento"
+    },
+    "general": {
+      "autoSave": "Salvamento automático",
+      "interval": "Intervalo",
+      "intervalMinutes": "{{count}} min",
+      "undoHistoryDepth": "Profundidade do histórico de desfazer",
+      "uiSounds": "Sons da interface",
+      "uiSoundVolume": "Volume do som",
+      "uiSoundVoice": "Tema de som",
+      "uiSoundPreview": "Prévia"
+    },
+    "ai": {
+      "captionSampleInterval": "Intervalo de amostragem de legendas",
+      "captionSampleIntervalDescription": "Com que frequência o Analisar com IA captura um quadro para legendar.",
+      "seconds": "Segundos",
+      "frames": "Quadros",
+      "unitSec": "s",
+      "unitFrames": "quadros",
+      "enterIntervalAboveZero": "Informe um intervalo maior que zero.",
+      "captionEstimate": "~{{sceneCount}} {{scenes}} por clipe de 1 min a {{fps}} fps",
+      "scene_one": "cena",
+      "scene_other": "cenas",
+      "captionIntervalHint": "{{estimate}}. Intervalos menores produzem cenas mais densas, mas levam mais tempo para gerar.",
+      "defaultCaptionStyle": "Estilo de legenda padrão",
+      "defaultCaptionStyleDescription": "Estilo aplicado a legendas geradas a partir de transcrições ou legendagem por IA."
+    },
+    "timeline": {
+      "snapByDefault": "Encaixe por padrão",
+      "snapByDefaultDescription": "Define o estado inicial do encaixe quando um projeto é aberto.",
+      "showWaveforms": "Mostrar formas de onda",
+      "showFilmstrips": "Mostrar miniaturas de vídeo",
+      "enableFilmstripExtraction": "Extrair tiras de quadros",
+      "enableFilmstripExtractionDescription": "Gera tiras de miniaturas de vídeo durante a importação e a exibição na linha do tempo."
+    },
+    "storage": {
+      "generateMissingProxies": "Gerar proxies ausentes",
+      "generateMissingProxiesDescription": "Enfileira a geração de proxies para vídeos deste projeto que ainda não têm um",
+      "queued": "Na fila",
+      "generateWithCount": "Gerar ({{count}})",
+      "upToDate": "Atualizado",
+      "clearProjectCache": "Limpar cache do projeto",
+      "clearProjectCacheDescription": "Formas de onda, miniaturas de vídeo, quadros de GIF, áudio decodificado",
+      "clear": "Limpar",
+      "cleared": "Limpo",
+      "regenerateThumbnails": "Regerar miniaturas",
+      "regenerateThumbnailsDescription": "Recria as miniaturas da biblioteca de mídia deste projeto",
+      "regenerate": "Regerar",
+      "deleteProxies": "Excluir proxies",
+      "deleteProxiesDescription": "Remove os vídeos proxy gerados para este projeto",
+      "deleted": "Excluído",
+      "localAi": "IA local",
+      "localAiDescription": "Descarrega os runtimes residentes ou limpa os downloads de modelos em cache.",
+      "clearCacheConfirmTitle": "Limpar o cache do projeto?",
+      "clearCacheConfirmDescription": "Isso excluirá as formas de onda, miniaturas de vídeo, quadros de GIF e áudio decodificado em cache do projeto atual ({{count}} itens de mídia). Eles serão regerados automaticamente quando necessário. Seus dados de projeto, arquivos de mídia, miniaturas e proxies não serão afetados.",
+      "clearCache": "Limpar cache"
+    },
+    "toasts": {
+      "projectCacheCleared": "Cache do projeto limpo",
+      "projectCachePartiallyCleared": "Cache do projeto parcialmente limpo",
+      "projectCacheNotCleared": "Cache do projeto não limpo",
+      "thumbnailsRegenerated": "Miniaturas regeradas",
+      "thumbnailsPartiallyRegenerated": "Miniaturas parcialmente regeradas",
+      "thumbnailsNotRegenerated": "Miniaturas não regeradas",
+      "proxiesDeleted": "Proxies excluídos",
+      "proxiesPartiallyDeleted": "Proxies parcialmente excluídos",
+      "proxiesNotDeleted": "Proxies não excluídos",
+      "failedToClearCache": "Falha ao limpar o cache do projeto",
+      "failedToRegenerateThumbnails": "Falha ao regerar as miniaturas",
+      "failedToDeleteProxies": "Falha ao excluir os proxies",
+      "itemsUpdated_one": "{{count}} item atualizado.",
+      "itemsUpdated_other": "{{count}} itens atualizados.",
+      "itemsUpdatedFailed_one": "{{count}} item atualizado. Falhou: {{failed}}",
+      "itemsUpdatedFailed_other": "{{count}} itens atualizados. Falharam: {{failed}}"
+    },
+    "feedback": {
+      "couldntClearCache": "Não foi possível limpar o cache do projeto.",
+      "couldntRegenerateThumbnails": "Não foi possível regerar as miniaturas.",
+      "couldntDeleteProxies": "Não foi possível excluir os proxies.",
+      "completedForItems_one": "{{action}} concluído para {{count}} item.",
+      "completedForItems_other": "{{action}} concluído para {{count}} itens.",
+      "moreItems": "{{items}}, +{{count}} mais",
+      "actionClearCache": "Limpar cache",
+      "actionRegenerateThumbnails": "Regerar miniaturas",
+      "actionDeleteProxies": "Excluir proxies",
+      "noMediaNeededUpdating": "No project media needed updating.",
+      "couldntProcessItems_one": "{{action}}: couldn't process {{count}} item{{detail}}",
+      "couldntProcessItems_other": "{{action}}: couldn't process {{count}} items{{detail}}",
+      "partialOutcome": "{{action}}: {{succeeded}}/{{total}} done. Needs attention: {{failed}}."
+    }
+  }
+}

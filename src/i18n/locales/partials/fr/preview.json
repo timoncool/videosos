@@ -1,0 +1,105 @@
+{
+  "preview": {
+    "mediaOffline": {
+      "title": "Média hors ligne",
+      "relink": "Reliez-le dans le panneau Médias",
+      "loading": "Chargement…"
+    },
+    "align": {
+      "left": "Aligner à gauche",
+      "centerH": "Centrer horizontalement",
+      "right": "Aligner à droite",
+      "top": "Aligner en haut",
+      "centerV": "Centrer verticalement",
+      "bottom": "Aligner en bas",
+      "distributeH": "Répartir horizontalement",
+      "distributeV": "Répartir verticalement",
+      "disableCanvasSnap": "Désactiver l'aimantation",
+      "enableCanvasSnap": "Activer l'aimantation",
+      "toggleCanvasSnap": "Basculer l'aimantation"
+    },
+    "controls": {
+      "captureFailed": "Impossible de capturer l'image actuelle.",
+      "disableProxyPlayback": "Désactiver la lecture proxy",
+      "enableProxyPlayback": "Activer la lecture proxy",
+      "frameDownloadedNoProject": "Image téléchargée — ouvrez un projet pour l'ajouter à la médiathèque.",
+      "frameDownloadedNotSaved": "Image téléchargée, mais impossible de l'enregistrer dans la médiathèque : {{message}}",
+      "frameSaved": "« {{name}} » enregistré dans la médiathèque.",
+      "goToEnd": "Aller à la fin",
+      "goToEndTooltip": "Aller à la fin",
+      "goToStart": "Aller au début",
+      "goToStartTooltip": "Aller au début",
+      "nextFrame": "Image suivante",
+      "nextFrameTooltip": "Image suivante",
+      "pauseTooltip": "Pause",
+      "playTooltip": "Lecture",
+      "prevFrame": "Image précédente",
+      "prevFrameTooltip": "Image précédente",
+      "proxyPlaybackOff": "Lecture proxy désactivée",
+      "proxyPlaybackOn": "Lecture proxy activée",
+      "saveFrame": "Enregistrer l'image",
+      "saveFrameFailed": "Impossible d'enregistrer l'image.",
+      "saveFrameTooltip": "Enregistrer l'image",
+      "savingFrame": "Enregistrement de l'image…",
+      "savingFrameTooltip": "Enregistrement de l'image…"
+    },
+    "monitor": {
+      "mute": "Couper le son",
+      "muteShort": "Muet",
+      "muted": "Muet",
+      "percent": "{{value}} %",
+      "previewOnlyNote": "Concerne uniquement la lecture locale — l'exportation utilise le mixage du projet.",
+      "thisDeviceOnly": "Cet appareil uniquement",
+      "title": "Audio de prévisualisation",
+      "unmute": "Réactiver le son",
+      "volume": "Volume"
+    },
+    "player": {
+      "exitFullscreen": "Quitter le plein écran",
+      "fullscreen": "Plein écran",
+      "mute": "Couper le son",
+      "pause": "Pause",
+      "play": "Lecture",
+      "seek": "Rechercher",
+      "unmute": "Réactiver le son",
+      "volume": "Volume"
+    },
+    "stage": {
+      "loadingMedia": "Chargement des médias…",
+      "videoPreview": "Prévisualisation vidéo",
+      "emptyTitle": "Rien sur la timeline pour l’instant",
+      "emptyDescription": "Importez des médias, faites glisser un clip sur la timeline, puis appuyez sur Espace pour prévisualiser."
+    },
+    "zoom": {
+      "ariaLabel": "Niveau de zoom : {{label}}",
+      "auto": "Auto",
+      "tooltip": "Zoom : {{label}}"
+    },
+    "canvasDrop": {
+      "dropOnTimeline": "Déposer sur la timeline",
+      "compoundClipsTimeline": "Les clips composés se placent toujours mieux sur la timeline.",
+      "presetsTimeline": "Les préréglages de texte et de forme se placent toujours mieux sur la timeline.",
+      "adjustmentLayersTimeline": "Les calques de réglage s'appliquent à toute l'image — placez-les sur la timeline.",
+      "placeLayerDescription": "Placez ce calque à la position de dépôt.",
+      "dropOneItem": "Déposer un élément",
+      "oneMediaAtATime": "Placez un média à la fois sur le canevas.",
+      "audioGoesOnTimeline": "L'audio va sur la timeline",
+      "visualLayersOnly": "Le dépôt sur le canevas place uniquement des calques visuels.",
+      "dropToPlace": "Déposer pour placer",
+      "addAtPlayhead": "Ajoutez ce média à la tête de lecture et à la position de dépôt.",
+      "dropOneFile": "Déposer un fichier",
+      "oneVisualFileAtATime": "Le dépôt sur le canevas importe un fichier visuel à la fois.",
+      "importAndPlace": "Importer et placer",
+      "importAndPlaceDescription": "Importez ce fichier et placez-le sur le canevas.",
+      "noCompatibleTrack": "Aucune piste compatible déverrouillée n'est disponible pour ce dépôt.",
+      "unableToLoadMedia": "Impossible de charger le média déposé.",
+      "mediaNoLongerAvailable": "Le média déposé n'est plus disponible.",
+      "dragDropUnsupported": "Le glisser-déposer n'est pas pris en charge par ce navigateur. Utilisez Chrome ou Edge.",
+      "filesRejected": "Certains fichiers ont été refusés : {{errors}}",
+      "dropAudioOnTimeline": "Déposez plutôt l'audio sur la timeline.",
+      "unableToInspectVideo": "Impossible d'inspecter la vidéo déposée.",
+      "unableToInspectFile": "Impossible d'inspecter le fichier déposé.",
+      "unableToImportFile": "Impossible d'importer le fichier déposé."
+    }
+  }
+}

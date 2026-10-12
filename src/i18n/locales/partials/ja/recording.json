@@ -1,0 +1,36 @@
+{
+  "recording": {
+    "rec": "REC",
+    "record": "ボイスオーバーを録音",
+    "recordTooltip": "再生ヘッドに同期したボイスオーバーを録音します",
+    "pause": "録音を一時停止",
+    "resume": "録音を再開",
+    "stop": "停止して保存",
+    "stopTooltip": "録音を停止してテイクをタイムラインに追加します",
+    "cancel": "録音をキャンセル",
+    "cancelTooltip": "このテイクを破棄",
+    "saving": "保存中…",
+    "chooseDevice": "マイク設定",
+    "microphone": "マイク",
+    "systemDefault": "システムのデフォルト",
+    "settings": "録音設定",
+    "noiseSuppression": "ノイズ抑制",
+    "autoGain": "自動ゲイン",
+    "muteWhileRecording": "録音中はタイムラインをミュート",
+    "syncOffset": "同期オフセット",
+    "syncOffsetEarlier": "テイクを早める",
+    "syncOffsetLater": "テイクを遅らせる",
+    "headphonesHint": "タイムラインの音声がマイクに録音されないよう、ヘッドホンを使用してください。",
+    "fileNamePrefix": "voiceover",
+    "errors": {
+      "unsupported": "このブラウザではマイク録音がサポートされていません。",
+      "noProject": "録音する前にプロジェクトを開いてください。",
+      "permissionDenied": "マイクへのアクセスがブロックされました。ブラウザでマイクへのアクセスを許可してから、もう一度お試しください。",
+      "noDevice": "マイクが見つかりませんでした。マイクを接続してから、もう一度お試しください。",
+      "deviceBusy": "マイクは他のアプリで使用されています。",
+      "startFailed": "録音を開始できませんでした。もう一度お試しください。",
+      "failed": "録音に失敗しました。もう一度お試しください。",
+      "saveFailed": "録音を保存できませんでした。"
+    }
+  }
+}

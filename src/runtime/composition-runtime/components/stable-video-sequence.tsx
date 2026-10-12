@@ -1,0 +1,469 @@
+/**
+ * Stable Video Sequence
+ *
+ * A wrapper around Composition's Sequence that uses a stable key based on
+ * originId for video items. This prevents video remounting when clips
+ * are split, as split clips share the same originId.
+ *
+ * The key insight: React's reconciliation won't remount a component if
+ * its key stays the same. By keying video Sequences by originId instead
+ * of item.id, split clips reuse the same Sequence/video element.
+ */
+
+import React, { useEffect, useMemo } from 'react'
+import { Sequence, useSequenceContext } from '@/runtime/composition-runtime/deps/player'
+import { useVideoSourcePool } from '@/runtime/composition-runtime/deps/player'
+import {
+  DEFAULT_SPEED,
+  getSafeTrimBefore,
+  timelineToSourceFrames,
+} from '@/runtime/composition-runtime/deps/timeline'
+import { useVideoConfig } from '../hooks/use-player-compat'
+import { useTransitionParticipantSync } from '../hooks/use-transition-participant-sync'
+import type { TimelineItem, VideoItem } from '@/types/timeline'
+import type { AudioEqSettings } from '@/types/audio'
+import type { ResolvedTransitionWindow } from '@/shared/timeline/transitions/transition-planner'
+import { VideoContent } from './video-content'
+import {
+  findActiveVideoItemIndex,
+  groupStableVideoItems,
+  type StableVideoGroup,
+} from '../utils/video-scene'
+import {
+  buildTransitionShadowItems,
+  collectTransitionParticipantClipIds,
+  resolveSameOriginTransitionActiveIndex,
+  resolveTransitionParticipantIndexKey,
+  resolveTransitionParticipantItems,
+} from '../utils/transition-scene'
+import { buildTransitionShadowWarmupRequests } from '../utils/transition-shadow-warmup'
+import { createLogger } from '@/shared/logging/logger'
+import { acquireProResSession } from '@/infrastructure/browser/prores-sink-cache'
+import { useMediaLibraryStore } from '@/runtime/composition-runtime/deps/stores'
+import { appendResolvedAudioEqSources, getAudioEqSettings } from '@/shared/utils/audio-eq'
+import { resolveReverseConformedVideoItem } from '@/shared/utils/reverse-conform-item'
+import { useNestedMediaResolutionMode } from '../contexts/nested-media-resolution-context'
+import { areGroupPropsEqual } from './stable-video-sequence-comparator'
+
+const warmupLog = createLogger('StableVideoWarmup')
+const SAME_ORIGIN_SHADOW_MOUNT_MIN_LOOKAHEAD_FRAMES = 8
+const SHADOW_UNMOUNT_COOLDOWN_FRAMES = 18
+const TRANSITION_SYNC_COOLDOWN_FRAMES = 18
+const TRANSITION_WARMUP_LOOKAHEAD_SECONDS = 1.5
+
+/** Video item with additional properties added by MainComposition */
+export type StableVideoSequenceItem = VideoItem & {
+  zIndex: number
+  muted: boolean
+  trackAudioEq?: AudioEqSettings
+  trackOrder: number
+  trackVisible: boolean
+  _sequenceFrameOffset?: number
+  _poolClipId?: string
+  _sharedTransitionSync?: boolean
+}
+
+interface StableVideoSequenceProps {
+  /** All video items that might share the same origin */
+  items: StableVideoSequenceItem[]
+  /** Shared transition windows for current composition */
+  transitionWindows?: ResolvedTransitionWindow<TimelineItem>[]
+  /** Render function for the video content */
+  renderItem: (item: StableVideoSequenceItem) => React.ReactNode
+  /** Number of frames to premount */
+  premountFor?: number
+}
+
+/**
+ * Renders the active item from a group based on current frame.
+ *
+ * CRITICAL for halftone/canvas effects:
+ * 1. Memoizes adjustedItem so it only changes when crossing split boundaries
+ * 2. Memoizes the RENDERED OUTPUT so renderItem isn't called every frame
+ * This prevents re-renders of canvas-based effects like halftone on every frame.
+ */
+const SHADOW_STYLE: React.CSSProperties = {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
+  visibility: 'hidden',
+  pointerEvents: 'none',
+}
+
+const HiddenShadowVideoBridge = React.memo(({ item }: { item: StableVideoSequenceItem }) => {
+  const { fps } = useVideoConfig()
+  const nestedMediaResolutionMode = useNestedMediaResolutionMode()
+  item = resolveReverseConformedVideoItem(item, fps, {
+    useProxy: nestedMediaResolutionMode === 'proxy',
+  })
+  const mediaSourceFps = useMediaLibraryStore((s) =>
+    item.mediaId ? s.mediaById[item.mediaId]?.fps : undefined,
+  )
+
+  const audioEqStages = useMemo(
+    () => appendResolvedAudioEqSources(undefined, item.trackAudioEq, getAudioEqSettings(item)),
+    [item],
+  )
+
+  if (!item.src) {
+    return null
+  }
+
+  const trimBefore = item.sourceStart ?? item.trimStart ?? item.offset ?? 0
+  const sourceFps = item.sourceFps ?? mediaSourceFps ?? fps
+  const playbackRate = item.speed ?? DEFAULT_SPEED
+  const sourceFramesNeeded = timelineToSourceFrames(
+    item.durationInFrames,
+    playbackRate,
+    fps,
+    sourceFps,
+  )
+  const reverseSourceEnd = item.sourceEnd ?? trimBefore + sourceFramesNeeded
+  const safeTrimBefore = getSafeTrimBefore(
+    trimBefore,
+    item.durationInFrames,
+    playbackRate,
+    item.sourceDuration || undefined,
+    fps,
+    sourceFps,
+  )
+
+  return (
+    <div style={SHADOW_STYLE} data-shadow-bridge={item.id}>
+      <VideoContent
+        item={item}
+        muted={true}
+        safeTrimBefore={safeTrimBefore}
+        playbackRate={playbackRate}
+        sourceFps={sourceFps}
+        isReversed={item.isReversed === true}
+        reverseSourceEnd={reverseSourceEnd}
+        audioEqStages={audioEqStages}
+      />
+    </div>
+  )
+})
+
+HiddenShadowVideoBridge.displayName = 'HiddenShadowVideoBridge'
+
+/**
+ * Invisible side-effect component: warms the turbores decoder for an upcoming ProRes clip
+ * during the premount window. ProRes can't decode through a `<video>` element, so the
+ * preview canvas only mounts (and cold-starts its decoder) when the clip goes active —
+ * crossing into it during playback then shows black until the ~100ms worker spawn +
+ * first decode complete. Holding a warm sink lease here (and decoding one frame) ahead of
+ * time means the active canvas reuses the warm decoder and paints within a frame. Renders
+ * nothing, so it never shows the clip's start frame during premount.
+ */
+const ProResDecoderPrewarm: React.FC<{ src: string }> = ({ src }) => {
+  useEffect(() => {
+    let cancelled = false
+    const lease = acquireProResSession(src)
+    void lease.session
+      .then((session) => {
+        if (cancelled || !session) return
+        // Decode one frame so the decoder worker pool is fully warm before the active
+        // canvas requests the entering frame. The sample is borrowed (owned by the shared
+        // session), so we don't close it here.
+        return session.getSampleForTime(0)
+      })
+      .catch(() => {
+        // Best-effort; the active canvas surfaces real open/decode failures.
+      })
+    return () => {
+      cancelled = true
+      lease.release()
+    }
+  }, [src])
+  return null
+}
+
+const GroupRenderer: React.FC<{
+  group: StableVideoGroup<StableVideoSequenceItem>
+  transitionWindows?: ResolvedTransitionWindow<TimelineItem>[]
+  renderItem: (item: StableVideoSequenceItem) => React.ReactNode
+}> = React.memo(({ group, transitionWindows = [], renderItem }) => {
+  // Get local frame from Sequence context (0-based within this Sequence)
+  // The Sequence component provides this via SequenceContext
+  const sequenceContext = useSequenceContext()
+  const localFrame = sequenceContext?.localFrame ?? 0
+
+  // CRITICAL: Don't render during premount phase (localFrame < 0)
+  // Premount is for keeping React tree mounted, not for showing content.
+  // Without this check, clips with gaps would show their start frame
+  // before the playhead actually reaches them.
+  const isPremounted = localFrame < 0
+
+  // Convert to global frame for comparison with item.from (which is global)
+  const globalFrame = localFrame + group.minFrom
+
+  // During premount, warm the decoder for an upcoming ProRes clip so crossing into it
+  // during playback paints immediately instead of cold-starting to black. Returns the
+  // src of the nearest upcoming browser-undecodable (ProRes) clip, or null.
+  const prewarmSrc = useMemo(() => {
+    if (!isPremounted) return null
+    const mediaById = useMediaLibraryStore.getState().mediaById
+    const upcoming = group.items
+      .filter((it) => it.src && it.mediaId && it.from + it.durationInFrames > globalFrame)
+      .sort((a, b) => a.from - b.from)[0]
+    if (!upcoming?.mediaId || !upcoming.src) return null
+    return mediaById[upcoming.mediaId]?.videoCodecSupported === false ? upcoming.src : null
+  }, [isPremounted, group.items, globalFrame])
+
+  // Find the active item ID for current frame
+  // During premount, don't find any active item - we shouldn't render.
+  const rawActiveItemIndex = isPremounted ? -1 : findActiveVideoItemIndex(group.items, globalFrame)
+
+  // Stabilize active index during same-origin transitions.
+  // When two items in the same group participate in a transition (Aâ†’A clip,
+  // same media/origin split), the active index switches mid-transition at
+  // the cut point. This causes the primary pool lane's video element to
+  // seek to a different source position and the shadow to remount — both
+  // stalling frame delivery for 200-500ms. Keep the LEFT clip as active
+  // throughout the transition so pool lanes and shadows stay stable.
+  const activeItemIndex = useMemo(
+    () =>
+      resolveSameOriginTransitionActiveIndex({
+        rawActiveItemIndex,
+        items: group.items,
+        transitionWindows,
+        frame: globalFrame,
+      }),
+    [rawActiveItemIndex, globalFrame, group.items, transitionWindows],
+  )
+
+  const activeItem = activeItemIndex >= 0 ? group.items[activeItemIndex] : null
+
+  const { fps } = useVideoConfig()
+  const pool = useVideoSourcePool()
+
+  const transitionWarmupClipIds = useMemo(() => {
+    if (isPremounted || activeItemIndex < 0 || group.items.length <= 1) return ''
+    const transitionClipIds = collectTransitionParticipantClipIds({
+      transitionWindows,
+      frame: globalFrame,
+      lookaheadFrames: Math.round(fps * TRANSITION_WARMUP_LOOKAHEAD_SECONDS),
+    })
+    return resolveTransitionParticipantIndexKey({
+      items: group.items,
+      activeItemIndex,
+      transitionClipIds,
+    })
+  }, [activeItemIndex, fps, globalFrame, group.items, isPremounted, transitionWindows])
+
+  // Mount hidden transition shadows only a few frames before the overlap.
+  // Pool lane warmup happens earlier; hidden DOM activation should stay late so
+  // normal playback keeps using the simple single-clip path until near the cut.
+  const overlapKey = useMemo(() => {
+    if (isPremounted || activeItemIndex < 0 || group.items.length <= 1) return ''
+    const shadowMountLookaheadFrames = Math.max(
+      SAME_ORIGIN_SHADOW_MOUNT_MIN_LOOKAHEAD_FRAMES,
+      Math.ceil(fps * TRANSITION_WARMUP_LOOKAHEAD_SECONDS),
+    )
+    const transitionClipIds = collectTransitionParticipantClipIds({
+      transitionWindows,
+      frame: globalFrame,
+      lookaheadFrames: shadowMountLookaheadFrames,
+      lookbehindFrames: SHADOW_UNMOUNT_COOLDOWN_FRAMES,
+    })
+    return resolveTransitionParticipantIndexKey({
+      items: group.items,
+      activeItemIndex,
+      transitionClipIds,
+    })
+  }, [isPremounted, activeItemIndex, fps, group.items, transitionWindows, globalFrame])
+
+  // Build adjusted shadow items — only recalculated when overlap composition changes.
+  // String comparison is by value, so stable overlapKey prevents rebuilds every frame.
+  const activeTransitionClipIds = useMemo(
+    () =>
+      collectTransitionParticipantClipIds({
+        transitionWindows,
+        frame: globalFrame,
+        lookaheadFrames: 0,
+        lookbehindFrames: TRANSITION_SYNC_COOLDOWN_FRAMES,
+      }),
+    [globalFrame, transitionWindows],
+  )
+
+  const warmupShadows = useMemo(
+    () =>
+      resolveTransitionParticipantItems({ items: group.items, indexKey: transitionWarmupClipIds }),
+    [group.items, transitionWarmupClipIds],
+  )
+
+  const adjustedShadows = useMemo(
+    () =>
+      buildTransitionShadowItems({
+        items: group.items,
+        indexKey: overlapKey,
+        groupMinFrom: group.minFrom,
+        activeTransitionClipIds,
+      }),
+    [activeTransitionClipIds, group.items, group.minFrom, overlapKey],
+  )
+
+  // Memoize the adjusted item based on active item identity.
+  // Only recalculates when crossing split boundaries or when item/group properties change.
+  const adjustedItem = useMemo(() => {
+    if (!activeItem) return null
+
+    // Keep source metadata absolute/stable.
+    // Shared Sequence frame-origin differences are handled downstream via
+    // _sequenceFrameOffset in video timing calculations.
+    const itemOffset = activeItem.from - group.minFrom
+
+    return {
+      ...activeItem,
+      // Pass the frame offset so fades can be calculated correctly within shared Sequences
+      // Without this, useCurrentFrame() returns the frame relative to the shared Sequence,
+      // not relative to this specific item, causing fades to misbehave on split clips
+      _sequenceFrameOffset: itemOffset,
+      // Keep a stable pool identity across split boundaries so preview video
+      // playback does not release/reacquire the element on item.id changes.
+      _poolClipId: `group-${group.originKey}`,
+      _sharedTransitionSync: activeTransitionClipIds.has(activeItem.id),
+    }
+  }, [activeItem, activeTransitionClipIds, group.minFrom, group.originKey])
+
+  // CRITICAL: Also memoize the RENDERED OUTPUT.
+  // This prevents calling renderItem (which creates new React elements) every frame.
+  // Without this, canvas-based effects like halftone would re-render on every frame.
+  const renderedContent = useMemo(() => {
+    if (!adjustedItem) return null
+    return renderItem(adjustedItem)
+  }, [adjustedItem, renderItem])
+
+  // Memoize shadow content — only changes at transition boundaries
+  const shadowContent = useMemo(() => {
+    if (adjustedShadows.length === 0) return null
+    return adjustedShadows.map((shadow) => (
+      <HiddenShadowVideoBridge key={shadow.id} item={shadow} />
+    ))
+  }, [adjustedShadows])
+
+  const transitionWarmupRequests = useMemo(
+    () => buildTransitionShadowWarmupRequests(adjustedItem, warmupShadows),
+    [adjustedItem, warmupShadows],
+  )
+
+  const syncShadows = useMemo(
+    () => adjustedShadows.filter((item) => activeTransitionClipIds.has(item.id)),
+    [activeTransitionClipIds, adjustedShadows],
+  )
+
+  const transitionSyncParticipants = useMemo(() => {
+    if (
+      !adjustedItem ||
+      syncShadows.length === 0 ||
+      !activeTransitionClipIds.has(adjustedItem.id)
+    ) {
+      return []
+    }
+
+    const mediaById = useMediaLibraryStore.getState().mediaById
+    const toParticipant = (item: StableVideoSequenceItem, role: 'leader' | 'follower') => {
+      const trimBefore = item.sourceStart ?? item.trimStart ?? item.offset ?? 0
+      const mediaSourceFps = item.mediaId ? mediaById[item.mediaId]?.fps : undefined
+      const sourceFps = item.sourceFps ?? mediaSourceFps ?? fps
+      const playbackRate = item.speed ?? DEFAULT_SPEED
+      const safeTrimBefore = getSafeTrimBefore(
+        trimBefore,
+        item.durationInFrames,
+        playbackRate,
+        item.sourceDuration || undefined,
+        fps,
+        sourceFps,
+      )
+
+      return {
+        poolClipId: item._poolClipId ?? item.id,
+        safeTrimBefore,
+        sourceFps,
+        playbackRate,
+        sequenceFrameOffset: item._sequenceFrameOffset ?? 0,
+        role,
+      }
+    }
+
+    return [
+      toParticipant(adjustedItem, 'leader'),
+      ...syncShadows.map((item) => toParticipant(item, 'follower')),
+    ]
+  }, [activeTransitionClipIds, adjustedItem, fps, syncShadows])
+
+  useTransitionParticipantSync(transitionSyncParticipants, group.minFrom, fps)
+
+  useEffect(() => {
+    if (transitionWarmupRequests.length === 0) {
+      return
+    }
+
+    let cancelled = false
+
+    for (const request of transitionWarmupRequests) {
+      void pool
+        .ensureReadyLanes(request.sourceUrl, request.minTotalLanes, {
+          targetTimeSeconds: request.targetTimeSeconds,
+          warmDecode: true,
+        })
+        .catch((error) => {
+          if (cancelled) return
+          warmupLog.debug('Transition shadow warmup failed:', request.sourceUrl, error)
+        })
+    }
+
+    return () => {
+      cancelled = true
+    }
+  }, [pool, transitionWarmupRequests])
+
+  return (
+    <>
+      {renderedContent}
+      {shadowContent}
+      {prewarmSrc ? <ProResDecoderPrewarm src={prewarmSrc} /> : null}
+    </>
+  )
+}, areGroupPropsEqual)
+
+GroupRenderer.displayName = 'GroupRenderer'
+
+/**
+ * Renders video items with stable keys based on origin.
+ *
+ * Items sharing the same originId are grouped into a single Sequence
+ * with a stable key. This prevents remounting when clips are split.
+ */
+export const StableVideoSequence: React.FC<StableVideoSequenceProps> = ({
+  items,
+  transitionWindows,
+  renderItem,
+  premountFor = 0,
+}) => {
+  const { fps } = useVideoConfig()
+  const defaultPremount = premountFor || Math.round(fps * 2)
+
+  const groups = useMemo(() => groupStableVideoItems(items), [items])
+
+  return (
+    <>
+      {groups.map((group) => (
+        <Sequence
+          key={group.originKey} // Stable key - doesn't change on split!
+          from={group.minFrom}
+          durationInFrames={group.maxEnd - group.minFrom}
+          premountFor={defaultPremount}
+        >
+          <GroupRenderer
+            group={group}
+            transitionWindows={transitionWindows}
+            renderItem={renderItem}
+          />
+        </Sequence>
+      ))}
+    </>
+  )
+}

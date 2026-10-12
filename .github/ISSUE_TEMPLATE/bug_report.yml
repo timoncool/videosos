@@ -1,0 +1,69 @@
+name: Bug report
+description: Report something that is not working as expected.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve FreeCut. Please include enough detail for us to reproduce the problem.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe the problem and what you expected to happen.
+      placeholder: Tell us what went wrong and what you expected instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: List the smallest sequence of steps that consistently triggers the issue.
+      placeholder: |
+        1. Open ...
+        2. Add ...
+        3. Click or drag ...
+        4. See the problem
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Screenshots or recordings
+      description: Add screenshots, screen recordings, console errors, or other useful evidence.
+      placeholder: Drag files here, or paste relevant errors and logs.
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser
+      description: Include the browser name and version.
+      placeholder: "Chrome 136"
+    validations:
+      required: true
+
+  - type: input
+    id: operating-system
+    attributes:
+      label: Operating system
+      placeholder: "Windows 11, macOS 15, or Ubuntu 24.04"
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: FreeCut version
+      description: Share the deployed version, release, or commit when known.
+      placeholder: "freecut.net, release tag, or commit SHA"
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues for a duplicate.
+          required: true

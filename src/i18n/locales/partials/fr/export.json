@@ -1,0 +1,189 @@
+{
+  "export": {
+    "audioContainer": {
+      "aac": "AAC",
+      "mp3": "MP3",
+      "wav": "WAV"
+    },
+    "cancelled": {
+      "message": "L'exportation a été annulée. Aucun fichier n'a été enregistré."
+    },
+    "complete": {
+      "audioSuccess": "Votre audio est prêt à être téléchargé.",
+      "download": "Télécharger",
+      "fileSizeLabel": "Taille",
+      "timeTakenLabel": "Durée",
+      "videoSuccess": "Votre vidéo est prête à être téléchargée."
+    },
+    "dialog": {
+      "descCancelled": "L'exportation a été annulée avant d'être terminée.",
+      "descComplete": "Votre fichier est prêt.",
+      "descError": "Une erreur est survenue lors de l'exportation.",
+      "descProgress": "Rendu de votre vidéo en cours. Cela peut prendre quelques minutes.",
+      "descSettings": "Configurez les options d'exportation.",
+      "titleCancelled": "Exportation annulée",
+      "titleComplete": "Exportation terminée",
+      "titleError": "Échec de l'exportation",
+      "titleProgress": "Exportation de la vidéo",
+      "titleSettings": "Exporter"
+    },
+    "errors": {
+      "verifyCodec": "Impossible de vérifier la prise en charge du codec pour ces paramètres."
+    },
+    "progress": {
+      "cancelExport": "Annuler",
+      "elapsedLabel": "Écoulé",
+      "encoding": "Encodage…",
+      "finalizing": "Finalisation…",
+      "framesLabel": "Images",
+      "keepTabOpen": "Gardez cet onglet ouvert jusqu'à la fin de l'exportation.",
+      "preparing": "Préparation…",
+      "rendering": "Rendu en cours…"
+    },
+    "settings": {
+      "audio": "Audio",
+      "audioOnlyNote": "Exportation audio uniquement — aucune vidéo ne sera incluse.",
+      "audioQualityHigh": "Haute",
+      "audioQualityLow": "Basse",
+      "audioQualityMedium": "Moyenne",
+      "audioQualityUltra": "Ultra",
+      "cannotEncode": "Aucun encodeur compatible pour {{width}}×{{height}} à la qualité choisie.",
+      "codec": "Codec",
+      "codecSupportUnverified": "Impossible de vérifier la prise en charge du codec. L'exportation peut fonctionner, mais sans garantie.",
+      "duration": "Durée",
+      "embedSubtitles": "Intégrer les sous-titres",
+      "embedSubtitlesDescription": "Incluez les sous-titres de la transcription en tant que piste dans le fichier exporté.",
+      "embedSubtitlesMp4Note": "MP4 enregistre les sous-titres dans une piste distincte. Certains lecteurs ne les affichent pas par défaut.",
+      "embedSubtitlesUnsupported": "{{container}} ne prend pas en charge les sous-titres intégrés. Choisissez MP4, MKV ou WebM.",
+      "exportAudio": "Exporter l'audio",
+      "exportRange": "Plage d'exportation",
+      "exportType": "Type d'exportation",
+      "exportVideo": "Exporter la vidéo",
+      "format": "Format",
+      "in": "Entrée",
+      "inOutRangeHint": "Seule la plage entrée/sortie sélectionnée sera exportée.",
+      "noTranscriptSegments": "Aucun sous-titre de transcription à intégrer.",
+      "out": "Sortie",
+      "presetBalanced": "Équilibré",
+      "presetCustom": "Personnalisé",
+      "presetLabel": "Préréglage",
+      "presetMax": "Maximale",
+      "presetRecommended": "Recommandé",
+      "presetSmall": "Fichier léger",
+      "quality": "Qualité",
+      "qualityHigh": "Haute",
+      "qualityLow": "Basse",
+      "qualityMedium": "Moyenne",
+      "qualityUltra": "Ultra",
+      "quicktimeMov": "QuickTime MOV",
+      "renderWholeProject": "Rendre le projet entier",
+      "resolution": "Résolution",
+      "resolutionSameAsProject": "Identique au projet ({{width}}×{{height}})",
+      "resolutionScaled": "{{p}}p ({{width}}×{{height}})",
+      "selectCodec": "Sélectionner un codec",
+      "selectFormat": "Sélectionner un format",
+      "selectQuality": "Sélectionner une qualité",
+      "selectResolution": "Sélectionner une résolution",
+      "sequence": "Séquence",
+      "subtitleMode": {
+        "off": "Désactivé",
+        "burn": "Incrustés",
+        "sidecar": "Fichier .srt",
+        "embedded": "Piste intégrée",
+        "offDescription": "Aucun sous-titre dans la vidéo exportée.",
+        "burnDescription": "Les sous-titres sont incrustés dans la vidéo, visibles sur tous les lecteurs.",
+        "sidecarDescription": "Vidéo sans incrustation et un fichier de sous-titres .srt séparé.",
+        "embeddedDescription": "Une piste de sous-titres activable (WebM/MKV)."
+      },
+      "subtitles": "Sous-titres",
+      "video": "Vidéo"
+    },
+    "videoContainer": {
+      "mp4": "Très large compatibilité, idéal pour le partage",
+      "mov": "Écosystème Apple, idéal pour Final Cut et QuickTime",
+      "webm": "Conteneur ouvert et moderne pour le web",
+      "mkv": "Conteneur flexible avec prise en charge avancée des sous-titres"
+    },
+    "preflight": {
+      "checking": "Vérification préalable de l’exportation…",
+      "title": "Vérification préalable de l’exportation",
+      "workerPath": "Chemin du worker",
+      "fallback": "Repli sur le thread principal",
+      "checks": {
+        "empty-range": {
+          "title": "Rien à exporter",
+          "detail": "La plage d’exportation sélectionnée ne contient aucune image.",
+          "fix": "Ajoutez du contenu à la timeline ou choisissez une plage entrée/sortie non vide."
+        },
+        "export-range-ready": {
+          "title": "Plage d’exportation prête",
+          "detail": "{{frames}} images ({{seconds}} s) seront exportées."
+        },
+        "video-codec-unavailable": {
+          "title": "Le format sélectionné ne peut pas être encodé",
+          "detail": "Ce navigateur ne peut pas encoder les paramètres d’exportation sélectionnés.",
+          "detailWithError": "{{error}}",
+          "fix": "Choisissez un autre format/codec ou essayez un navigateur Chromium récent."
+        },
+        "audio-export-ready": {
+          "title": "Exportation audio prête",
+          "detail": "L’audio {{container}} utilisera {{codec}}.",
+          "detailDefaultCodec": "L’audio {{container}} utilisera le codec audio par défaut."
+        },
+        "video-codec-fallback": {
+          "title": "Un codec de repli sera utilisé",
+          "detail": "Le codec sélectionné n’est pas disponible ici. FreeCut exportera plutôt {{codec}} dans {{container}}.",
+          "fix": "Conservez ce repli ou choisissez manuellement un autre codec pris en charge."
+        },
+        "video-codec-supported": {
+          "title": "Codec vidéo pris en charge",
+          "detail": "{{codec}} peut être encodé en {{container}} dans ce navigateur."
+        },
+        "audio-codec-supported": {
+          "title": "Codec audio pris en charge",
+          "detail": "L’audio {{codec}} peut être encodé dans {{container}} avec ce navigateur."
+        },
+        "audio-codec-unavailable": {
+          "title": "Codec audio indisponible",
+          "detail": "Ce navigateur ne peut pas encoder l’audio {{codec}} pour {{container}}.",
+          "fix": "Choisissez WebM ou MKV pour utiliser l’audio Opus, ou mettez à jour votre navigateur."
+        },
+        "worker-unavailable-fallback": {
+          "title": "Exportation par worker indisponible",
+          "detail": "Ce navigateur ou cette session ne peut pas démarrer les workers d’exportation ; le rendu s’exécutera donc sur le thread principal.",
+          "fix": "Gardez l’onglet au premier plan et évitez les interactions lourdes pendant l’exportation."
+        },
+        "worker-animated-image-fallback": {
+          "title": "Les images animées nécessitent l’exportation sur le thread principal",
+          "detail": "Les éléments GIF/WebP ne peuvent pas encore être rendus dans le worker d’exportation. FreeCut basculera automatiquement en repli.",
+          "fix": "Pour une exportation par worker plus rapide, remplacez les images animées par des clips vidéo avant d’exporter."
+        },
+        "worker-audio-context-fallback": {
+          "title": "Le mixage audio nécessite un repli sur le thread principal",
+          "detail": "OfflineAudioContext n’est pas disponible dans le worker d’exportation ; le rendu audio s’exécutera donc sur le thread principal."
+        },
+        "missing-media-blocks-export": {
+          "title": "Les médias manquants bloquent l’exportation",
+          "detail": "{{count}} fichier média référencé est manquant ou nécessite une autorisation.",
+          "detail_one": "{{count}} fichier média référencé est manquant ou nécessite une autorisation.",
+          "detail_other": "{{count}} fichiers média référencés sont manquants ou nécessitent une autorisation.",
+          "fix": "Reliez les médias manquants depuis la médiathèque avant d’exporter."
+        },
+        "large-file-risk": {
+          "title": "Fichier d’export volumineux attendu",
+          "detail": "Cette exportation est estimée à environ {{size}} avant variation du conteneur.",
+          "fix": "Utilisez Équilibré ou Petit fichier, réduisez la résolution ou exportez une plage plus courte si l’espace disque est limité."
+        },
+        "long-export-risk": {
+          "title": "Une longue exportation peut prendre du temps",
+          "detail": "Cette exportation dure environ {{minutes}} minutes.",
+          "fix": "Exportez d’abord une plage d’entrée/sortie plus courte pour une validation rapide."
+        },
+        "worker-export-ready": {
+          "title": "Chemin d’exportation par worker prêt",
+          "detail": "Le worker d’exportation peut rendre cette composition sans repli connu sur le thread principal."
+        }
+      }
+    }
+  }
+}

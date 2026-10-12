@@ -1,0 +1,170 @@
+{
+  "appShell": {
+    "newVersionAvailable": "Eine neue Version ist verfügbar. Speichere deine Arbeit und lade neu.",
+    "saveAndReload": "Speichern und neu laden",
+    "reloadWithoutSaving": "Ohne Speichern neu laden",
+    "dockPanel": "Panel andocken",
+    "installPrompt": {
+      "label": "FreeCut installieren",
+      "title": "FreeCut installieren",
+      "description": "Starte es vom Desktop oder Startbildschirm.",
+      "install": "Installieren",
+      "notNow": "Jetzt nicht",
+      "dismiss": "Installationshinweis ausblenden"
+    }
+  },
+  "common": {
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "discard": "Verwerfen",
+    "close": "Schließen",
+    "reset": "Zurücksetzen",
+    "done": "Fertig",
+    "loading": "Wird geladen...",
+    "saving": "Wird gespeichert...",
+    "deleting": "Wird gelöscht...",
+    "clearing": "Wird geleert...",
+    "queueing": "Wird eingereiht...",
+    "partial": "Teilweise",
+    "untitledProject": "Unbenanntes Projekt"
+  },
+  "language": {
+    "label": "Sprache",
+    "description": "Wähle die in der gesamten App verwendete Sprache.",
+    "ariaLabel": "Sprache der Benutzeroberfläche"
+  },
+  "toolbar": {
+    "ariaLabel": "Editor-Symbolleiste",
+    "workspaces": {
+      "motion": "Motion",
+      "label": "Arbeitsbereiche",
+      "edit": "Schnitt",
+      "color": "Farbe",
+      "animate": "Animation"
+    },
+    "backToProjects": "Zurück zu Projekten",
+    "backToProjectsAria": "Zurück zu Projekten",
+    "specs": "{{width}}x{{height}} | {{fps}} fps",
+    "specsDetailed": "{{width}}x{{height}} | {{fps}} fps | {{duration}} | {{clips}} Clips | {{media}} Medien | {{missing}} fehlend",
+    "whatsNew": "Neuigkeiten",
+    "whatsNewAria": "Neuigkeiten",
+    "settings": "Einstellungen",
+    "keyboardShortcuts": "Tastenkürzel",
+    "keyboardShortcutsAria": "Tastenkürzel",
+    "viewOnGitHub": "Auf GitHub ansehen",
+    "joinDiscord": "Discord beitreten",
+    "debugPanel": "Debug-Bereich",
+    "debugPanelAria": "Debug-Bereich",
+    "save": "Speichern",
+    "saveAria": "Projekt speichern",
+    "export": "Exportieren",
+    "exportVideo": "Video exportieren",
+    "downloadProjectZip": "Projekt herunterladen (.zip)"
+  },
+  "unsavedChanges": {
+    "title": "Nicht gespeicherte Änderungen",
+    "descriptionWithName": "Du hast nicht gespeicherte Änderungen in <strong>{{name}}</strong>. Möchtest du vor dem Verlassen speichern?",
+    "description": "Du hast nicht gespeicherte Änderungen. Möchtest du vor dem Verlassen speichern?",
+    "discard": "Verwerfen",
+    "saveAndExit": "Speichern und verlassen",
+    "saving": "Wird gespeichert..."
+  },
+  "settings": {
+    "title": "Editor-Einstellungen",
+    "sections": {
+      "general": "Allgemein",
+      "timeline": "Zeitleiste",
+      "ai": "KI",
+      "storage": "Speicher"
+    },
+    "general": {
+      "autoSave": "Automatisches Speichern",
+      "interval": "Intervall",
+      "intervalMinutes": "{{count}} Min.",
+      "undoHistoryDepth": "Tiefe des Rückgängig-Verlaufs",
+      "uiSounds": "Interface-Sounds",
+      "uiSoundVolume": "Lautstärke",
+      "uiSoundVoice": "Sound-Thema",
+      "uiSoundPreview": "Vorschau"
+    },
+    "ai": {
+      "captionSampleInterval": "Untertitel-Abtastintervall",
+      "captionSampleIntervalDescription": "Wie oft „Mit KI analysieren\" ein Bild für Untertitel abtastet.",
+      "seconds": "Sekunden",
+      "frames": "Bilder",
+      "unitSec": "Sek.",
+      "unitFrames": "Bilder",
+      "enterIntervalAboveZero": "Gib ein Intervall größer als null ein.",
+      "captionEstimate": "~{{sceneCount}} {{scenes}} pro 1-Minuten-Clip bei {{fps}} fps",
+      "scene_one": "Szene",
+      "scene_other": "Szenen",
+      "captionIntervalHint": "{{estimate}}. Kleinere Intervalle erzeugen dichtere Szenen, brauchen aber länger zur Generierung.",
+      "defaultCaptionStyle": "Standard-Untertitelstil",
+      "defaultCaptionStyleDescription": "Stil für Untertitel, die aus Transkripten oder KI-Untertitelung erzeugt werden."
+    },
+    "timeline": {
+      "snapByDefault": "Standardmäßig einrasten",
+      "snapByDefaultDescription": "Legt den anfänglichen Einrast-Status beim Öffnen eines Projekts fest.",
+      "showWaveforms": "Wellenformen anzeigen",
+      "showFilmstrips": "Video-Vorschaubilder anzeigen",
+      "enableFilmstripExtraction": "Filmstreifen extrahieren",
+      "enableFilmstripExtractionDescription": "Erstellt Video-Miniaturstreifen beim Import und bei der Anzeige in der Timeline."
+    },
+    "storage": {
+      "generateMissingProxies": "Fehlende Proxys generieren",
+      "generateMissingProxiesDescription": "Reiht die Proxy-Generierung für Videos in diesem Projekt ein, die noch keinen haben",
+      "queued": "Eingereiht",
+      "generateWithCount": "Generieren ({{count}})",
+      "upToDate": "Aktuell",
+      "clearProjectCache": "Projekt-Cache leeren",
+      "clearProjectCacheDescription": "Wellenformen, Video-Vorschaubilder, GIF-Bilder, dekodiertes Audio",
+      "clear": "Leeren",
+      "cleared": "Geleert",
+      "regenerateThumbnails": "Vorschaubilder neu generieren",
+      "regenerateThumbnailsDescription": "Erstellt die Vorschaubilder der Medienbibliothek für dieses Projekt neu",
+      "regenerate": "Neu generieren",
+      "deleteProxies": "Proxys löschen",
+      "deleteProxiesDescription": "Entfernt die für dieses Projekt generierten Proxy-Videos",
+      "deleted": "Gelöscht",
+      "localAi": "Lokale KI",
+      "localAiDescription": "Lade speicherresidente Laufzeiten aus oder lösche zwischengespeicherte Modell-Downloads.",
+      "clearCacheConfirmTitle": "Projekt-Cache leeren?",
+      "clearCacheConfirmDescription": "Dadurch werden zwischengespeicherte Wellenformen, Video-Vorschaubilder, GIF-Bilder und dekodiertes Audio für das aktuelle Projekt ({{count}} Medienelemente) gelöscht. Sie werden bei Bedarf automatisch neu generiert. Deine Projektdaten, Mediendateien, Vorschaubilder und Proxys sind nicht betroffen.",
+      "clearCache": "Cache leeren"
+    },
+    "toasts": {
+      "projectCacheCleared": "Projekt-Cache geleert",
+      "projectCachePartiallyCleared": "Projekt-Cache teilweise geleert",
+      "projectCacheNotCleared": "Projekt-Cache nicht geleert",
+      "thumbnailsRegenerated": "Vorschaubilder neu generiert",
+      "thumbnailsPartiallyRegenerated": "Vorschaubilder teilweise neu generiert",
+      "thumbnailsNotRegenerated": "Vorschaubilder nicht neu generiert",
+      "proxiesDeleted": "Proxys gelöscht",
+      "proxiesPartiallyDeleted": "Proxys teilweise gelöscht",
+      "proxiesNotDeleted": "Proxys nicht gelöscht",
+      "failedToClearCache": "Projekt-Cache konnte nicht geleert werden",
+      "failedToRegenerateThumbnails": "Vorschaubilder konnten nicht neu generiert werden",
+      "failedToDeleteProxies": "Proxys konnten nicht gelöscht werden",
+      "itemsUpdated_one": "{{count}} Element aktualisiert.",
+      "itemsUpdated_other": "{{count}} Elemente aktualisiert.",
+      "itemsUpdatedFailed_one": "{{count}} Element aktualisiert. Fehlgeschlagen: {{failed}}",
+      "itemsUpdatedFailed_other": "{{count}} Elemente aktualisiert. Fehlgeschlagen: {{failed}}"
+    },
+    "feedback": {
+      "couldntClearCache": "Projekt-Cache konnte nicht geleert werden.",
+      "couldntRegenerateThumbnails": "Vorschaubilder konnten nicht neu generiert werden.",
+      "couldntDeleteProxies": "Proxys konnten nicht gelöscht werden.",
+      "completedForItems_one": "{{action}} für {{count}} Element abgeschlossen.",
+      "completedForItems_other": "{{action}} für {{count}} Elemente abgeschlossen.",
+      "moreItems": "{{items}}, +{{count}} weitere",
+      "actionClearCache": "Cache leeren",
+      "actionRegenerateThumbnails": "Vorschaubilder neu generieren",
+      "actionDeleteProxies": "Proxys löschen",
+      "noMediaNeededUpdating": "No project media needed updating.",
+      "couldntProcessItems_one": "{{action}}: couldn't process {{count}} item{{detail}}",
+      "couldntProcessItems_other": "{{action}}: couldn't process {{count}} items{{detail}}",
+      "partialOutcome": "{{action}}: {{succeeded}}/{{total}} done. Needs attention: {{failed}}."
+    }
+  }
+}

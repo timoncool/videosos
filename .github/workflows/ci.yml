@@ -1,0 +1,190 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  schedule:
+    # Nightly soak for the preview-sync stress job (catches ordering flakes
+    # introduced via indirect deps that the PR path-filter would miss).
+    - cron: '0 7 * * *'
+
+jobs:
+  quality:
+    name: Quality Checks
+    # The nightly `schedule` trigger only exists for the preview-sync soak;
+    # skip the full quality suite (already run on every PR and push to main).
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Full history so the fallow ratchet can diff against the PR base branch.
+          fetch-depth: 0
+
+      - name: Setup Vite+
+        uses: voidzero-dev/setup-vp@v1
+        with:
+          node-version: '22'
+          cache: true
+
+      - name: Install dependencies
+        run: vp install
+
+      - name: Check feature boundaries
+        run: vp run check:boundaries
+
+      - name: Check deps contract seams
+        run: vp run check:deps-contracts
+
+      - name: Check layer boundaries
+        run: vp run check:layer-boundaries
+
+      - name: Check deps wrapper health
+        run: vp run check:deps-wrapper-health
+
+      # Both dead-code ratchets run against allowlists that are reviewed
+      # baselines, and must stay green on every PR. Invoked through node like
+      # the changed-health ratchet below, because they shell out to the pinned
+      # fallow version and must not depend on the task runner's environment.
+      - name: Check unused exports
+        run: node scripts/check-fallow-unused-exports.mjs
+
+      - name: Check unused class members
+        run: node scripts/check-fallow-unused-class-members.mjs
+
+      - name: Generate feature-edge report
+        run: node scripts/report-feature-edges.mjs --json > feature-edges-report.json
+
+      - name: Generate deps-wrapper health report
+        run: node scripts/check-deps-wrapper-health.mjs --json > deps-wrapper-health-report.json
+
+      - name: Check feature-edge budgets
+        run: node scripts/check-feature-edge-budgets.mjs --input feature-edges-report.json
+
+      - name: Upload feature-edge report
+        uses: actions/upload-artifact@v4
+        with:
+          name: feature-edges-report
+          path: feature-edges-report.json
+
+      - name: Upload deps-wrapper health report
+        uses: actions/upload-artifact@v4
+        with:
+          name: deps-wrapper-health-report
+          path: deps-wrapper-health-report.json
+
+      - name: Check
+        run: vp run check
+
+      - name: Unit tests (with coverage floor)
+        run: vp test run --coverage
+
+      - name: Build
+        run: vp build
+
+      # lifecycle-e2e synthesises the clip its final-render checkpoint renders,
+      # and the runner image does not ship ffmpeg.
+      - name: Install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
+
+      # Portable Node, Chrome, edit-operation, and generated-media/audio
+      # contracts. Reuses dist/ from Build and never requires WebGPU.
+      - name: Portable headless contract suite
+        run: npm run headless:test:portable
+        env:
+          # Collected here so the quality ratchet below can score headless code
+          # against real coverage instead of assuming zero; the suite is minutes
+          # long, so it must not run a second time just for coverage.
+          NODE_V8_COVERAGE: .coverage/v8
+
+      - name: Convert headless coverage for the ratchet
+        run: node scripts/headless-coverage.mjs --from .coverage/v8
+
+      # Quality ratchet: fails only on dead code / complexity / duplication
+      # INTRODUCED by the PR (gate new-only), never on inherited issues.
+      #
+      # Advisory (continue-on-error) because the new-only attribution is
+      # file-scoped, so a refactor that moves files re-attributes their whole
+      # content. Re-measured 2026-09-21 on the engine/facade pass, per scope:
+      #   origin/staging..HEAD (533 changed files)  dead_code=19 complexity=148 dup=1
+      #   9f109fb6..HEAD     (318 changed files)    dead_code=13 complexity=68  dup=1
+      # Attribution of the 68: 63 are `src/runtime/renderer/**` functions that
+      # only MOVED (unchanged cyclomatic, and CRAP inflates because coverage is
+      # keyed by the old paths); 3 are a new boundary-checker script; the rest
+      # are unchanged functions inside touched files. The 13 dead-code findings
+      # are 10 class members whose call sites go through receivers typed as
+      # interfaces (spot-checked live: edit-2up-panels.tsx, client-render-engine
+      # .ts) and which scripts/fallow-unused-class-members.allowlist.json already
+      # reviews, plus 3 real unused types that this pass then deleted.
+      # duplication=1 is a clone pair inside src/runtime/composition-runtime/
+      # utils/audio-scene.ts, last changed in 39b89488 - an ancestor of the base,
+      # i.e. present before the changeset.
+      # So the verdict cannot go green for a move-heavy PR, and dropping
+      # continue-on-error would block refactors on artifacts rather than on
+      # quality. The blocking gates for this dimension are the two allowlist
+      # ratchets above (check:unused-exports / check:unused-class-members) and
+      # check:layer-boundaries; revisit this flag only with a per-symbol
+      # (rename-aware) metric.
+      - name: Fallow quality ratchet
+        if: github.event_name == 'pull_request'
+        continue-on-error: true
+        # Goes through the repo script so the pinned Fallow version and the
+        # headless coverage feed are the same ones developers get locally.
+        run: node scripts/check-fallow-changed-health.mjs --base "origin/${{ github.base_ref }}"
+
+  # Repeatedly re-runs the preview-sync suite from cold to surface ordering /
+  # stale-render flakes in the fast-scrub state machine. Kept OFF the common PR
+  # critical path: it only runs nightly (full soak) or on PRs that actually
+  # touch preview code. See scripts/preview-sync-stress.mjs.
+  preview-sync-stress:
+    name: Preview Sync Stress
+    runs-on: ubuntu-latest
+    # ~27s/run × 10 nightly runs ≈ 5min of work; cap well above that so a
+    # hung fast-scrub deadlock is killed fast instead of holding the runner
+    # for the 6h GitHub default.
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Full history so the PR path-filter can diff against the base branch.
+          fetch-depth: 0
+
+      - name: Decide whether to run
+        id: gate
+        run: |
+          if [ "${{ github.event_name }}" != "pull_request" ]; then
+            # Nightly schedule and pushes to main soak the whole thing.
+            echo "run=true" >> "$GITHUB_OUTPUT"
+            echo "runs=10" >> "$GITHUB_OUTPUT"
+            echo "Non-PR event (${{ github.event_name }}) — full soak (10x)."
+            exit 0
+          fi
+          base="origin/${{ github.base_ref }}"
+          if git diff --name-only "$base"...HEAD \
+            | grep -qE '^(src/features/preview/|scripts/preview-sync-stress\.mjs$)'; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+            echo "runs=5" >> "$GITHUB_OUTPUT"
+            echo "Preview code changed — running stress (5x)."
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "No preview changes — skipping stress (nightly soak still covers it)."
+          fi
+
+      - name: Setup Vite+
+        if: steps.gate.outputs.run == 'true'
+        uses: voidzero-dev/setup-vp@v1
+        with:
+          node-version: '22'
+          cache: true
+
+      - name: Install dependencies
+        if: steps.gate.outputs.run == 'true'
+        run: vp install
+
+      - name: Preview Sync Stress
+        if: steps.gate.outputs.run == 'true'
+        run: vp run test:preview-sync:stress -- --runs ${{ steps.gate.outputs.runs }}

@@ -1,0 +1,189 @@
+{
+  "export": {
+    "audioContainer": {
+      "aac": "AAC",
+      "mp3": "MP3",
+      "wav": "WAV"
+    },
+    "cancelled": {
+      "message": "내보내기가 취소되었습니다. 파일이 저장되지 않았습니다."
+    },
+    "complete": {
+      "audioSuccess": "오디오를 다운로드할 준비가 되었습니다.",
+      "download": "다운로드",
+      "fileSizeLabel": "크기",
+      "timeTakenLabel": "소요 시간",
+      "videoSuccess": "동영상을 다운로드할 준비가 되었습니다."
+    },
+    "dialog": {
+      "descCancelled": "내보내기가 완료되기 전에 취소되었습니다.",
+      "descComplete": "파일이 준비되었습니다.",
+      "descError": "내보내는 중 문제가 발생했습니다.",
+      "descProgress": "동영상을 렌더링하는 중입니다. 몇 분 정도 걸릴 수 있습니다.",
+      "descSettings": "내보내기 옵션을 구성합니다.",
+      "titleCancelled": "내보내기가 취소됨",
+      "titleComplete": "내보내기 완료",
+      "titleError": "내보내기 실패",
+      "titleProgress": "동영상 내보내는 중",
+      "titleSettings": "내보내기"
+    },
+    "errors": {
+      "verifyCodec": "현재 설정에 대한 코덱 지원 여부를 확인할 수 없습니다."
+    },
+    "progress": {
+      "cancelExport": "취소",
+      "elapsedLabel": "경과 시간",
+      "encoding": "인코딩 중…",
+      "finalizing": "마무리하는 중…",
+      "framesLabel": "프레임",
+      "keepTabOpen": "내보내기가 완료될 때까지 이 탭을 열어 두세요.",
+      "preparing": "준비 중…",
+      "rendering": "렌더링 중…"
+    },
+    "settings": {
+      "audio": "오디오",
+      "audioOnlyNote": "오디오만 내보내며 동영상은 포함되지 않습니다.",
+      "audioQualityHigh": "높음",
+      "audioQualityLow": "낮음",
+      "audioQualityMedium": "보통",
+      "audioQualityUltra": "최고",
+      "cannotEncode": "선택한 품질의 {{width}}×{{height}} 인코더를 사용할 수 없습니다.",
+      "codec": "코덱",
+      "codecSupportUnverified": "코덱 지원 여부를 확인할 수 없습니다. 내보내기는 가능할 수 있지만 호환성은 보장되지 않습니다.",
+      "duration": "길이",
+      "embedSubtitles": "자막 포함",
+      "embedSubtitlesDescription": "전사 자막을 내보낸 파일에 자막 트랙으로 포함합니다.",
+      "embedSubtitlesMp4Note": "MP4는 자막을 별도 트랙으로 저장합니다. 일부 플레이어에서는 기본적으로 표시되지 않을 수 있습니다.",
+      "embedSubtitlesUnsupported": "{{container}}는 자막 포함을 지원하지 않습니다. MP4, MKV 또는 WebM을 선택하세요.",
+      "exportAudio": "오디오 내보내기",
+      "exportRange": "내보내기 범위",
+      "exportType": "내보내기 형식",
+      "exportVideo": "동영상 내보내기",
+      "format": "형식",
+      "in": "시작",
+      "inOutRangeHint": "선택한 시작/종료 구간만 내보내집니다.",
+      "noTranscriptSegments": "포함할 전사 자막이 없습니다.",
+      "out": "끝",
+      "presetBalanced": "균형",
+      "presetCustom": "사용자 지정",
+      "presetLabel": "사전 설정",
+      "presetMax": "최고 품질",
+      "presetRecommended": "권장",
+      "presetSmall": "작은 파일",
+      "quality": "품질",
+      "qualityHigh": "높음",
+      "qualityLow": "낮음",
+      "qualityMedium": "보통",
+      "qualityUltra": "최고",
+      "quicktimeMov": "QuickTime MOV",
+      "renderWholeProject": "프로젝트 전체 렌더링",
+      "resolution": "해상도",
+      "resolutionSameAsProject": "프로젝트와 동일 ({{width}}×{{height}})",
+      "resolutionScaled": "{{p}}p ({{width}}×{{height}})",
+      "selectCodec": "코덱 선택",
+      "selectFormat": "형식 선택",
+      "selectQuality": "품질 선택",
+      "selectResolution": "해상도 선택",
+      "sequence": "시퀀스",
+      "subtitleMode": {
+        "off": "끄기",
+        "burn": "굽기",
+        "sidecar": "사이드카 .srt",
+        "embedded": "내장 트랙",
+        "offDescription": "내보낸 영상에 자막이 없습니다.",
+        "burnDescription": "자막을 영상에 새겨 넣습니다 — 모든 플레이어에서 보입니다.",
+        "sidecarDescription": "자막 없는 영상과 별도의 .srt 자막 파일.",
+        "embeddedDescription": "켜고 끌 수 있는 자막 트랙 (WebM/MKV)."
+      },
+      "subtitles": "자막",
+      "video": "동영상"
+    },
+    "videoContainer": {
+      "mp4": "광범위한 지원, 공유에 적합",
+      "mov": "Apple 생태계, Final Cut 및 QuickTime에 적합",
+      "webm": "웹 재생을 위한 개방형 최신 컨테이너",
+      "mkv": "자막 지원이 강력한 유연한 컨테이너"
+    },
+    "preflight": {
+      "checking": "내보내기 사전 점검 중…",
+      "title": "내보내기 사전 점검",
+      "workerPath": "워커 경로",
+      "fallback": "메인 스레드 폴백",
+      "checks": {
+        "empty-range": {
+          "title": "내보낼 항목이 없습니다",
+          "detail": "선택한 내보내기 범위에 프레임이 없습니다.",
+          "fix": "타임라인에 콘텐츠를 추가하거나 비어 있지 않은 인/아웃 범위를 선택하세요."
+        },
+        "export-range-ready": {
+          "title": "내보내기 범위 준비 완료",
+          "detail": "{{frames}}프레임({{seconds}}초)이 내보내집니다."
+        },
+        "video-codec-unavailable": {
+          "title": "선택한 형식을 인코딩할 수 없습니다",
+          "detail": "이 브라우저는 선택한 내보내기 설정을 인코딩할 수 없습니다.",
+          "detailWithError": "{{error}}",
+          "fix": "다른 형식/코덱을 선택하거나 최신 Chromium 브라우저를 사용해 보세요."
+        },
+        "audio-export-ready": {
+          "title": "오디오 내보내기 준비 완료",
+          "detail": "{{container}} 오디오는 {{codec}}을(를) 사용합니다.",
+          "detailDefaultCodec": "{{container}} 오디오는 기본 오디오 코덱을 사용합니다."
+        },
+        "video-codec-fallback": {
+          "title": "대체 코덱이 사용됩니다",
+          "detail": "선택한 코덱을 여기에서 사용할 수 없습니다. FreeCut은 대신 {{container}}에서 {{codec}}로 내보냅니다.",
+          "fix": "이 대체 설정을 유지하거나 지원되는 다른 코덱을 직접 선택하세요."
+        },
+        "video-codec-supported": {
+          "title": "비디오 코덱 지원됨",
+          "detail": "{{codec}}은(는) 이 브라우저에서 {{container}}로 인코딩할 수 있습니다."
+        },
+        "audio-codec-supported": {
+          "title": "오디오 코덱 지원됨",
+          "detail": "이 브라우저에서 {{codec}} 오디오를 {{container}}로 인코딩할 수 있습니다."
+        },
+        "audio-codec-unavailable": {
+          "title": "오디오 코덱을 사용할 수 없음",
+          "detail": "이 브라우저는 {{container}}용 {{codec}} 오디오를 인코딩할 수 없습니다.",
+          "fix": "Opus 오디오를 사용하려면 WebM 또는 MKV를 선택하거나 지원되는 브라우저로 업데이트하세요."
+        },
+        "worker-unavailable-fallback": {
+          "title": "워커 내보내기를 사용할 수 없습니다",
+          "detail": "이 브라우저/세션은 내보내기 워커를 시작할 수 없어 렌더링이 메인 스레드에서 실행됩니다.",
+          "fix": "내보내기 중에는 탭을 활성 상태로 유지하고 무거운 작업을 피하세요."
+        },
+        "worker-animated-image-fallback": {
+          "title": "애니메이션 이미지는 메인 스레드 내보내기가 필요합니다",
+          "detail": "GIF/WebP 이미지 항목은 아직 내보내기 워커에서 렌더링할 수 없습니다. FreeCut이 자동으로 폴백합니다.",
+          "fix": "더 빠른 워커 내보내기를 위해 내보내기 전에 애니메이션 이미지를 비디오 클립으로 바꾸세요."
+        },
+        "worker-audio-context-fallback": {
+          "title": "오디오 믹스에는 메인 스레드 폴백이 필요합니다",
+          "detail": "OfflineAudioContext를 내보내기 워커에서 사용할 수 없어 오디오 렌더링이 메인 스레드에서 실행됩니다."
+        },
+        "missing-media-blocks-export": {
+          "title": "누락된 미디어가 내보내기를 막고 있습니다",
+          "detail": "참조된 미디어 파일 {{count}}개가 없거나 권한이 필요합니다.",
+          "detail_one": "참조된 미디어 파일 {{count}}개가 없거나 권한이 필요합니다.",
+          "detail_other": "참조된 미디어 파일 {{count}}개가 없거나 권한이 필요합니다.",
+          "fix": "내보내기 전에 미디어 라이브러리에서 누락된 미디어를 다시 연결하세요."
+        },
+        "large-file-risk": {
+          "title": "큰 내보내기 파일이 예상됩니다",
+          "detail": "이 내보내기는 컨테이너 차이를 제외하고 약 {{size}}로 예상됩니다.",
+          "fix": "디스크 공간이 부족하면 균형 또는 작은 파일, 낮은 해상도, 짧은 범위를 사용하세요."
+        },
+        "long-export-risk": {
+          "title": "긴 내보내기는 시간이 걸릴 수 있습니다",
+          "detail": "이 내보내기는 약 {{minutes}}분입니다.",
+          "fix": "빠른 확인이 필요하면 먼저 짧은 인/아웃 범위를 내보내세요."
+        },
+        "worker-export-ready": {
+          "title": "워커 내보내기 경로 준비 완료",
+          "detail": "내보내기 워커가 알려진 메인 스레드 폴백 없이 이 컴포지션을 렌더링할 수 있습니다."
+        }
+      }
+    }
+  }
+}

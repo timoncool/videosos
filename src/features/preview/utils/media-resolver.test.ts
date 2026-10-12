@@ -1,0 +1,481 @@
+// @vitest-environment node
+
+import { describe, expect, it, beforeEach, vi, type Mock } from 'vite-plus/test'
+import { resolveMediaUrl, resolveMediaUrls } from './media-resolver'
+import { blobUrlManager } from '@/infrastructure/browser/blob-url-manager'
+import { clearPendingMediaRequests, FileAccessError } from '@/features/preview/deps/media-library'
+import type { TimelineTrack, VideoItem } from '@/types/timeline'
+
+const mockMarkMediaBroken = vi.fn()
+const mockMarkMediaHealthy = vi.fn()
+const mediaLibraryService = vi.hoisted(() => ({
+  getMedia: vi.fn(),
+  getMediaFile: vi.fn(),
+}))
+
+// Mock dependencies used by the underlying media resolver implementation.
+vi.mock('@/features/media-library/services/media-library-service', async () => {
+  const { FileAccessError } = await import('@/features/preview/deps/media-library')
+  return {
+    mediaLibraryService,
+    FileAccessError,
+  }
+})
+
+const mockValidateMediaHandle = vi.fn()
+vi.mock('@/infrastructure/storage', () => ({
+  validateMediaHandle: (...args: unknown[]) => mockValidateMediaHandle(...args),
+}))
+
+vi.mock('@/features/media-library/services/proxy-service', () => ({
+  proxyService: {
+    getProxyKey: vi.fn(() => undefined),
+    setProxyKey: vi.fn(),
+    getProxyBlobUrl: vi.fn(() => null),
+  },
+}))
+
+vi.mock('@/features/media-library/stores/media-library-store', () => ({
+  useMediaLibraryStore: {
+    getState: () => ({
+      markMediaBroken: mockMarkMediaBroken,
+      markMediaHealthy: mockMarkMediaHealthy,
+      mediaById: {},
+    }),
+  },
+}))
+
+let blobUrlCounter = 0
+
+beforeEach(() => {
+  vi.clearAllMocks()
+  blobUrlManager.releaseAll()
+  clearPendingMediaRequests()
+  blobUrlCounter = 0
+
+  vi.stubGlobal('URL', {
+    ...URL,
+    createObjectURL: () => `blob:test-${++blobUrlCounter}`,
+    revokeObjectURL: vi.fn(),
+  })
+})
+
+type MockMediaRecord = {
+  id: string
+  fileName: string
+  storageType?: string
+}
+
+async function expectResolveToMarkMediaBroken({
+  media,
+  error,
+  getMediaTwice = false,
+}: {
+  media: MockMediaRecord
+  error: FileAccessError
+  getMediaTwice?: boolean
+}) {
+  const getMediaMock = mediaLibraryService.getMedia as Mock
+  if (getMediaTwice) {
+    getMediaMock.mockResolvedValueOnce(media).mockResolvedValueOnce(media)
+  } else {
+    getMediaMock.mockResolvedValue(media)
+  }
+  ;(mediaLibraryService.getMediaFile as Mock).mockRejectedValue(error)
+
+  const url = await resolveMediaUrl(media.id)
+
+  expect(url).toBe('')
+  expect(mockMarkMediaBroken).toHaveBeenCalledWith(media.id, {
+    mediaId: media.id,
+    fileName: media.fileName,
+    errorType: error.type,
+  })
+}
+
+describe('resolveMediaUrl', () => {
+  it('returns cached blob URL from blobUrlManager', async () => {
+    blobUrlManager.acquire('media-1', new Blob(['cached']))
+
+    const url = await resolveMediaUrl('media-1')
+
+    expect(url).toBe('blob:test-1')
+    // Should not hit the service
+    expect(mediaLibraryService.getMedia).not.toHaveBeenCalled()
+  })
+
+  it('resolves media from service when not cached', async () => {
+    ;(mediaLibraryService.getMedia as Mock).mockResolvedValue({
+      id: 'media-1',
+      fileName: 'video.mp4',
+    })
+    ;(mediaLibraryService.getMediaFile as Mock).mockResolvedValue(new Blob(['video-data']))
+
+    const url = await resolveMediaUrl('media-1')
+
+    expect(url).toMatch(/^blob:test-/)
+    expect(mediaLibraryService.getMedia).toHaveBeenCalledWith('media-1')
+    expect(mediaLibraryService.getMediaFile).toHaveBeenCalledWith({
+      id: 'media-1',
+      fileName: 'video.mp4',
+    })
+  })
+
+  it('returns empty string when media not found', async () => {
+    ;(mediaLibraryService.getMedia as Mock).mockResolvedValue(null)
+
+    const url = await resolveMediaUrl('missing-media')
+
+    expect(url).toBe('')
+  })
+
+  it('returns empty string and marks media broken when blob is null', async () => {
+    ;(mediaLibraryService.getMedia as Mock).mockResolvedValue({
+      id: 'media-1',
+      fileName: 'video.mp4',
+    })
+    ;(mediaLibraryService.getMediaFile as Mock).mockResolvedValue(null)
+
+    const url = await resolveMediaUrl('media-1')
+
+    expect(url).toBe('')
+    // Unresolvable source (no valid storage path) must surface as broken so the
+    // clip shows a relink state instead of failing silently.
+    expect(mockMarkMediaBroken).toHaveBeenCalledWith('media-1', {
+      mediaId: 'media-1',
+      fileName: 'video.mp4',
+      errorType: 'file_missing',
+    })
+    expect(mockMarkMediaHealthy).not.toHaveBeenCalled()
+  })
+
+  it('marks media broken when handle-backed reads report a missing file', async () => {
+    const mockError = new FileAccessError('File not found', 'file_missing')
+    await expectResolveToMarkMediaBroken({
+      media: {
+        id: 'media-1',
+        fileName: 'moved.mp4',
+        storageType: 'handle',
+      },
+      error: mockError,
+    })
+    // No decode attempt — validation short-circuited before getMediaFile.
+    expect(mockValidateMediaHandle).not.toHaveBeenCalled()
+  })
+
+  it('marks media broken with permission_denied when file reads lose permission', async () => {
+    const mockError = new FileAccessError('Permission denied', 'permission_denied')
+    await expectResolveToMarkMediaBroken({
+      media: {
+        id: 'media-1',
+        fileName: 'locked.mp4',
+        storageType: 'handle',
+      },
+      error: mockError,
+    })
+    expect(mockValidateMediaHandle).not.toHaveBeenCalled()
+  })
+
+  it('delegates changed handle validation to getMediaFile reads', async () => {
+    ;(mediaLibraryService.getMedia as Mock).mockResolvedValue({
+      id: 'media-1',
+      fileName: 'edited-externally.mp4',
+      storageType: 'handle',
+    })
+    ;(mediaLibraryService.getMediaFile as Mock).mockResolvedValue(new Blob(['data']))
+
+    const url = await resolveMediaUrl('media-1')
+
+    expect(url).toMatch(/^blob:test-/)
+    expect(mockValidateMediaHandle).not.toHaveBeenCalled()
+    expect(mediaLibraryService.getMediaFile).toHaveBeenCalledWith({
+      id: 'media-1',
+      fileName: 'edited-externally.mp4',
+      storageType: 'handle',
+    })
+  })
+
+  it('skips handle validation for non-handle storage types', async () => {
+    ;(mediaLibraryService.getMedia as Mock).mockResolvedValue({
+      id: 'media-1',
+      fileName: 'opfs-media.mp4',
+      storageType: 'opfs',
+    })
+    ;(mediaLibraryService.getMediaFile as Mock).mockResolvedValue(new Blob(['data']))
+
+    await resolveMediaUrl('media-1')
+
+    expect(mockValidateMediaHandle).not.toHaveBeenCalled()
+    expect(mediaLibraryService.getMediaFile).toHaveBeenCalledWith({
+      id: 'media-1',
+      fileName: 'opfs-media.mp4',
+      storageType: 'opfs',
+    })
+  })
+
+  it('marks media broken on FileAccessError (file_missing)', async () => {
+    const mockError = new FileAccessError('File not found', 'file_missing')
+    await expectResolveToMarkMediaBroken({
+      media: { id: 'media-1', fileName: 'video.mp4' },
+      error: mockError,
+      getMediaTwice: true,
+    })
+  })
+
+  it('resolves fresh URL after blobUrlManager invalidation', async () => {
+    // First resolution
+    ;(mediaLibraryService.getMedia as Mock).mockResolvedValue({
+      id: 'media-1',
+      fileName: 'video.mp4',
+    })
+    ;(mediaLibraryService.getMediaFile as Mock).mockResolvedValue(new Blob(['old-data']))
+
+    const url1 = await resolveMediaUrl('media-1')
+    expect(url1).toBe('blob:test-1')
+
+    // Simulate relinking: invalidate the cached URL
+    blobUrlManager.invalidate('media-1')
+
+    // Second resolution should fetch fresh data
+    ;(mediaLibraryService.getMediaFile as Mock).mockResolvedValue(new Blob(['new-data']))
+
+    const url2 = await resolveMediaUrl('media-1')
+    expect(url2).toBe('blob:test-2') // new URL, not the cached one
+    expect(mediaLibraryService.getMediaFile).toHaveBeenCalledTimes(2)
+  })
+
+  it('deduplicates concurrent requests for same mediaId', async () => {
+    ;(mediaLibraryService.getMedia as Mock).mockResolvedValue({
+      id: 'media-1',
+      fileName: 'video.mp4',
+    })
+    ;(mediaLibraryService.getMediaFile as Mock).mockResolvedValue(new Blob(['data']))
+
+    const [url1, url2] = await Promise.all([resolveMediaUrl('media-1'), resolveMediaUrl('media-1')])
+
+    expect(url1).toBe(url2)
+    // Service should only be called once (second call uses pending promise)
+    expect(mediaLibraryService.getMedia).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('resolveMediaUrls', () => {
+  it('resolves src for video, audio, and image items', async () => {
+    ;(mediaLibraryService.getMedia as Mock).mockResolvedValue({
+      id: 'media-1',
+      fileName: 'video.mp4',
+    })
+    ;(mediaLibraryService.getMediaFile as Mock).mockResolvedValue(new Blob(['data']))
+
+    const tracks: TimelineTrack[] = [
+      {
+        id: 'track-1',
+        name: 'Track 1',
+        height: 40,
+        locked: false,
+        visible: true,
+        muted: false,
+        solo: false,
+        order: 0,
+        items: [
+          {
+            id: 'item-1',
+            type: 'video',
+            trackId: 'track-1',
+            from: 0,
+            durationInFrames: 30,
+            mediaId: 'media-1',
+            src: '',
+            label: 'clip',
+          },
+          {
+            id: 'item-2',
+            type: 'text',
+            trackId: 'track-1',
+            from: 0,
+            durationInFrames: 30,
+            text: 'test',
+            color: '#ffffff',
+            label: 'text',
+          },
+        ],
+      },
+    ]
+
+    const resolved = await resolveMediaUrls(tracks, { useProxy: false })
+
+    // Video item should have src resolved
+    expect((resolved[0]!.items[0]! as VideoItem).src).toMatch(/^blob:test-/)
+    expect((resolved[0]!.items[0]! as VideoItem).audioSrc).toMatch(/^blob:test-/)
+    // Text item should be unchanged (no mediaId)
+    expect('src' in resolved[0]!.items[1]!).toBe(false)
+  })
+
+  it('resolves src for lottie items (fixes stale blob URL after reload)', async () => {
+    ;(mediaLibraryService.getMedia as Mock).mockResolvedValue({
+      id: 'media-lottie',
+      fileName: 'spinner.lottie',
+    })
+    ;(mediaLibraryService.getMediaFile as Mock).mockResolvedValue(new Blob(['data']))
+
+    const tracks: TimelineTrack[] = [
+      {
+        id: 'track-1',
+        name: 'Track 1',
+        height: 40,
+        locked: false,
+        visible: true,
+        muted: false,
+        solo: false,
+        order: 0,
+        items: [
+          {
+            id: 'item-1',
+            type: 'lottie',
+            trackId: 'track-1',
+            from: 0,
+            durationInFrames: 90,
+            mediaId: 'media-lottie',
+            // A dead blob URL from a previous session, as loaded from disk.
+            src: 'blob:stale-url',
+            frameRate: 30,
+            totalFrames: 90,
+            label: 'spinner.lottie',
+          },
+        ],
+      },
+    ]
+
+    const resolved = await resolveMediaUrls(tracks, { useProxy: false })
+    const lottie = resolved[0]!.items[0]!
+    expect('src' in lottie && lottie.src).toMatch(/^blob:test-/)
+  })
+
+  it('keeps video audio on the original source when proxy playback is enabled', async () => {
+    const { proxyService } = await import('@/features/preview/deps/media-library-contract')
+    ;(mediaLibraryService.getMedia as Mock).mockResolvedValue({
+      id: 'media-1',
+      fileName: 'video.mp4',
+    })
+    ;(mediaLibraryService.getMediaFile as Mock).mockResolvedValue(new Blob(['data']))
+    ;(proxyService.getProxyBlobUrl as Mock).mockReturnValue('proxy://video')
+
+    const tracks: TimelineTrack[] = [
+      {
+        id: 'track-1',
+        name: 'Track 1',
+        height: 40,
+        locked: false,
+        visible: true,
+        muted: false,
+        solo: false,
+        order: 0,
+        items: [
+          {
+            id: 'item-1',
+            type: 'video',
+            trackId: 'track-1',
+            from: 0,
+            durationInFrames: 30,
+            mediaId: 'media-1',
+            src: '',
+            label: 'clip',
+          },
+        ],
+      },
+    ]
+
+    const resolved = await resolveMediaUrls(tracks, { useProxy: true })
+    const resolvedVideo = resolved[0]!.items[0]! as VideoItem
+    expect(resolvedVideo.src).toBe('proxy://video')
+    expect(resolvedVideo.audioSrc).toMatch(/^blob:test-/)
+  })
+
+  it('does not mutate original tracks', async () => {
+    ;(mediaLibraryService.getMedia as Mock).mockResolvedValue({
+      id: 'media-1',
+      fileName: 'video.mp4',
+    })
+    ;(mediaLibraryService.getMediaFile as Mock).mockResolvedValue(new Blob(['data']))
+
+    const tracks: TimelineTrack[] = [
+      {
+        id: 'track-1',
+        name: 'Track 1',
+        height: 40,
+        locked: false,
+        visible: true,
+        muted: false,
+        solo: false,
+        order: 0,
+        items: [
+          {
+            id: 'item-1',
+            type: 'video',
+            trackId: 'track-1',
+            from: 0,
+            durationInFrames: 30,
+            mediaId: 'media-1',
+            src: '',
+            label: 'clip',
+          },
+        ],
+      },
+    ]
+
+    await resolveMediaUrls(tracks, { useProxy: false })
+
+    // Original should not be mutated
+    expect((tracks[0]!.items[0]! as VideoItem).src).toBe('')
+  })
+})
+
+describe('relinking regression', () => {
+  it('resolves URL after failed initial resolution + blobUrlManager invalidation', async () => {
+    // Step 1: Initial resolution fails (file missing)
+    const mockError = new FileAccessError('Not found', 'file_missing')
+    ;(mediaLibraryService.getMedia as Mock).mockResolvedValue({
+      id: 'media-1',
+      fileName: 'video.mp4',
+    })
+    ;(mediaLibraryService.getMediaFile as Mock).mockRejectedValue(mockError)
+
+    const failedUrl = await resolveMediaUrl('media-1')
+    expect(failedUrl).toBe('')
+    expect(blobUrlManager.has('media-1')).toBe(false)
+
+    // Step 2: User relinks — invalidate is called (no-op since nothing cached)
+    blobUrlManager.invalidate('media-1')
+
+    // Step 3: Re-resolve with the new (working) file handle
+    ;(mediaLibraryService.getMediaFile as Mock).mockResolvedValue(new Blob(['relinked-data']))
+
+    const relinkedUrl = await resolveMediaUrl('media-1')
+    expect(relinkedUrl).toMatch(/^blob:test-/)
+    expect(relinkedUrl).not.toBe('')
+    expect(blobUrlManager.has('media-1')).toBe(true)
+  })
+
+  it('resolves fresh URL after successful resolution + invalidation + re-resolve', async () => {
+    // Step 1: Initial resolution succeeds
+    ;(mediaLibraryService.getMedia as Mock).mockResolvedValue({
+      id: 'media-1',
+      fileName: 'video.mp4',
+    })
+    ;(mediaLibraryService.getMediaFile as Mock).mockResolvedValue(new Blob(['original']))
+
+    const originalUrl = await resolveMediaUrl('media-1')
+    expect(originalUrl).toBe('blob:test-1')
+
+    // Step 2: Media becomes inaccessible, user relinks, blob cache invalidated
+    blobUrlManager.invalidate('media-1')
+    expect(blobUrlManager.has('media-1')).toBe(false)
+
+    // Step 3: Re-resolve — should create new blob URL from new file handle
+    ;(mediaLibraryService.getMediaFile as Mock).mockResolvedValue(new Blob(['relinked']))
+
+    const relinkedUrl = await resolveMediaUrl('media-1')
+    expect(relinkedUrl).toBe('blob:test-2')
+    expect(relinkedUrl).not.toBe(originalUrl)
+  })
+})

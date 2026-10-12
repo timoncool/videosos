@@ -1,0 +1,18 @@
+/**
+ * Adapter exports for keyframe-layer dependencies.
+ */
+
+export {
+  resolveAnimatedTransform,
+  hasKeyframeAnimation,
+} from '@/features/keyframes/utils/animated-transform-resolver'
+export type { LinkedPropertyEvaluationContext } from '@/features/keyframes/utils/animated-transform-resolver'
+export { applyMotionModifiers } from '@/features/keyframes/utils/motion-modifier-eval'
+export { applyMotionAnimationLayers } from '@/features/keyframes/utils/motion-layer-eval'
+export { resolveAnimatedCrop } from '@/features/keyframes/utils/animated-crop-resolver'
+export {
+  getPropertyKeyframes,
+  interpolatePropertyValue,
+} from '@/features/keyframes/utils/interpolation'
+export { resolveAnimatedTextItem } from '@/features/keyframes/utils/animated-text-item'
+export { resolveAnimatedShapeItem } from '@/features/keyframes/utils/animated-shape-item'

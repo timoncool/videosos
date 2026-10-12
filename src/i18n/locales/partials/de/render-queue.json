@@ -1,0 +1,56 @@
+{
+  "export": {
+    "renderQueue": {
+      "title": "Render-Warteschlange",
+      "dialogTitle": "Exporte",
+      "tabQueue": "Warteschlange",
+      "tabExports": "Gespeicherte Exporte",
+      "description": "Exporte in der Warteschlange werden nacheinander gerendert und im Exporte-Ordner deines Arbeitsbereichs gespeichert.",
+      "addToQueue": "Zur Warteschlange hinzufügen",
+      "addCurrentRange": "Aktueller Bereich",
+      "segmentsHeading": "In Segmente aufteilen",
+      "perMarker": "Ein Segment pro Marker",
+      "splitChunks": "In {{seconds}}s-Abschnitte aufteilen",
+      "partLabel": "Segment {{n}}",
+      "addedToast_one": "{{count}} Auftrag zur Render-Warteschlange hinzugefügt",
+      "addedToast_other": "{{count}} Aufträge zur Render-Warteschlange hinzugefügt",
+      "noMarkers": "Füge Marker zur Timeline hinzu, um nach Marker aufzuteilen.",
+      "nothingToRender": "In diesem Bereich gibt es nichts zu rendern.",
+      "buildFailed": "Konnte nicht zur Render-Warteschlange hinzugefügt werden.",
+      "empty": "Noch keine Render-Aufträge. Füge einen über den Export-Dialog hinzu.",
+      "exportsEmpty": "Noch keine exportierten Dateien.",
+      "exportsLocation": "Die Dateien liegen im lokalen Ordner dieses Projekts ({{folder}}).",
+      "exportsLocationGeneric": "Die Dateien liegen im lokalen Ordner dieses Projekts in deinem Arbeitsbereich.",
+      "pause": "Pausieren",
+      "resume": "Fortsetzen",
+      "paused": "Warteschlange pausiert — zum Weiterrendern fortsetzen.",
+      "clearFinished": "Abgeschlossene löschen",
+      "clearAll": "Alle löschen",
+      "refresh": "Aktualisieren",
+      "wholeProject": "Gesamtes Projekt",
+      "savedTo": "Gespeichert in {{path}}",
+      "remove": "Entfernen",
+      "cancel": "Abbrechen",
+      "retry": "Wiederholen",
+      "moveUp": "Nach oben",
+      "moveDown": "Nach unten",
+      "download": "Herunterladen",
+      "delete": "Löschen",
+      "deleted": "{{name}} gelöscht",
+      "missingFile": "Datei nicht gefunden — sie wurde möglicherweise verschoben oder gelöscht.",
+      "downloadFailed": "Download fehlgeschlagen.",
+      "deleteFailed": "Löschen fehlgeschlagen.",
+      "status": {
+        "queued": "In Warteschlange",
+        "rendering": "Wird gerendert",
+        "completed": "Fertig",
+        "failed": "Fehlgeschlagen",
+        "cancelled": "Abgebrochen"
+      }
+    }
+  },
+  "toolbar": {
+    "renderQueue": "Render-Warteschlange",
+    "renderQueueAria": "Render-Warteschlange öffnen"
+  }
+}

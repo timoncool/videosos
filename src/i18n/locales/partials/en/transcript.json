@@ -1,0 +1,28 @@
+{
+  "transcript": {
+    "sourceAnalyzed": "Full source analyzed",
+    "detectedRange": "Voice detected from {{start}} to {{end}}. Silent and music-only sections are omitted.",
+    "title": "Transcript",
+    "tabLabel": "Transcript",
+    "emptySelection": "Select a video or audio clip to edit its transcript.",
+    "searchPlaceholder": "Search transcript",
+    "nextMatch": "Next match",
+    "previousMatch": "Previous match",
+    "clearSearch": "Clear search",
+    "noTranscript": "This clip has no transcript yet.",
+    "transcriptionFailed": "Transcript generation failed.",
+    "tryAgain": "Try again",
+    "largeTurboFallback": "Large Turbo ran out of memory. Retrying with Whisper Small…",
+    "generate": "Generate transcript",
+    "transcribing": "Transcribing…",
+    "loading": "Loading transcript…",
+    "wordsSelected_one": "{{count}} word selected",
+    "wordsSelected_other": "{{count}} words selected",
+    "selectHint": "Click a word to jump there; drag to select.",
+    "deleteSelection": "Delete",
+    "toastRemoved": "Removed {{count}} clip(s)",
+    "toastNothingRemoved": "Nothing was removed",
+    "toastRemoveFailed": "Could not remove the selected words",
+    "toastTranscribeFailed": "Transcription failed"
+  }
+}

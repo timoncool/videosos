@@ -1,0 +1,48 @@
+{
+  "textMotion": {
+    "sectionTitle": "Animation du texte",
+    "hint": "Animez le texte par caractère, mot ou ligne. Entrée et Sortie jouent aux bords du clip ; Boucle tourne en continu entre les deux.",
+    "slots": {
+      "in": "Entrée",
+      "out": "Sortie",
+      "loop": "Boucle"
+    },
+    "duration": "Durée",
+    "stagger": "Décalage",
+    "intensity": "Intensité",
+    "order": "Ordre",
+    "orders": {
+      "forward": "Vers l’avant",
+      "backward": "Vers l’arrière",
+      "center": "Depuis le centre",
+      "random": "Aléatoire"
+    },
+    "removePreset": "Retirer {{name}}",
+    "presets": {
+      "typewriter": "Machine à écrire",
+      "fade-up": "Fondu montant",
+      "rise": "Montée",
+      "cascade": "Cascade",
+      "pop": "Pop",
+      "blur-in": "Flou d’entrée",
+      "slide-mask": "Glissement révélé",
+      "wave-in": "Vague d’entrée",
+      "fade-down": "Fondu descendant",
+      "sink": "Enfoncement",
+      "pop-out": "Pop de sortie",
+      "blur-out": "Flou de sortie",
+      "typewriter-erase": "Effacement",
+      "pulse": "Pulsation",
+      "wave": "Vague",
+      "shimmer": "Scintillement",
+      "swing": "Balancement"
+    },
+    "unit": "Appliquer à",
+    "units": {
+      "character": "Caractère",
+      "word": "Mot",
+      "line": "Ligne",
+      "whole-clip": "Clip entier"
+    }
+  }
+}

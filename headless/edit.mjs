@@ -1,0 +1,143 @@
+// FreeCut headless edit CLI.
+//
+// Applies a list of edit ops to a project by driving the real timeline action
+// modules inside headless Chrome (via window.freecut.editProject), then writes
+// the edited project back out. No rendering, no media needed.
+//
+// Usage:
+//   node headless/edit.mjs --workspace <dir> --project <id|project.json> --ops <ops.json> [--out <path> | --in-place]
+//
+// Options:
+//   --ops <file.json>   JSON file with an array of edit ops (or a single op object)
+//   --out <path>        Write the edited project JSON here
+//   --in-place          Overwrite the source project.json (destructive — explicit opt-in)
+//   --build             Build dist/ first if the harness isn't built
+//   --harness-url <url> Dev mode: drive a running Vite dev server instead of dist/
+//   --head              Run headed (visible browser) for debugging
+//
+// With neither --out nor --in-place this is a DRY RUN: it applies the ops and
+// prints the result summary without writing anything.
+//
+// Ops (JSON): each is { "op": "<name>", ... }
+//   addText      { text, from, durationInFrames, trackId?, color?, fontSize?, fontWeight?, textAlign?, verticalAlign? }
+//   addItem      { item: <full TimelineItem> }
+//   updateItem   { id, updates: <partial TimelineItem> }
+//   moveItem     { id, from, trackId? }
+//   removeItems  { ids: [<id>...] }
+//   split        { id, frame }
+//   trimStart    { id, amount }
+//   trimEnd      { id, amount }
+//   addTransition{ leftClipId, rightClipId, type?, durationInFrames? }
+//   updateTransition { id, durationInFrames?, presentation?, direction?, timing?, alignment?, properties? }
+//   removeTransition { id }
+//   setTransformParent { id, parentItemId, behavior?, frame? }
+import fs from 'node:fs'
+import path from 'node:path'
+import { loadProject, collectAddClipMedia } from './lib/workspace.mjs'
+import { parseArgs } from './lib/cli.mjs'
+import { withHarnessPage } from './lib/page-session.mjs'
+import { startHarness } from './lib/render-core.mjs'
+import { editRequestSchema, validate } from './lib/contract.mjs'
+
+const EDIT_OPTIONS = new Set([
+  'workspace',
+  'project',
+  'ops',
+  'out',
+  'in-place',
+  'build',
+  'harness-url',
+  'head',
+  'help',
+  'json',
+])
+const HELP = `Usage: node headless/edit.mjs --workspace <dir> --project <id|project.json> --ops <ops.json> [--out <path> | --in-place] [--json]\n`
+
+function loadOps(args) {
+  if (!args.ops) throw new Error('Missing --ops <file.json>')
+  const opsPath = path.resolve(args.ops)
+  if (!fs.existsSync(opsPath)) throw new Error(`Ops file not found: ${opsPath}`)
+  const parsed = JSON.parse(fs.readFileSync(opsPath, 'utf8'))
+  const ops = Array.isArray(parsed) ? parsed : [parsed]
+  if (ops.length === 0) throw new Error('Ops file is empty')
+  return ops
+}
+
+async function main() {
+  const args = parseArgs(process.argv.slice(2), { allowed: EDIT_OPTIONS })
+  if (args.help) {
+    console.log(HELP)
+    return
+  }
+  if (!args.workspace) throw new Error('Missing --workspace <dir>')
+  if (!args.project) throw new Error('Missing --project <id|project.json>')
+
+  const ops = validate(editRequestSchema, { project: args.project, ops: loadOps(args) }).ops
+  const { project, projectJsonPath } = loadProject(args.workspace, args.project)
+  if (!args.json) console.log(`Project: ${project.name ?? project.id} (${projectJsonPath})`)
+  if (!args.json) console.log(`Ops: ${ops.length}`)
+
+  // Collect metadata for media referenced by addClip ops (for duration/fps/codec).
+  const media = collectAddClipMedia(args.workspace, ops)
+  const missingMeta = media.filter((m) => !m.metadata).map((m) => m.mediaId)
+  if (missingMeta.length > 0) {
+    throw new Error(`addClip media not found in workspace: ${missingMeta.join(', ')}`)
+  }
+
+  // Edit needs no media serving (no rendering) — omit workspace.
+  const { harnessUrl, closeServers } = await startHarness({
+    devUrl: args['harness-url'],
+    build: args.build,
+  })
+  let result
+  try {
+    result = await withHarnessPage(
+      {
+        harnessUrl,
+        headless: !args.head,
+        ignoreConsoleError: (text) => text.includes('favicon'),
+      },
+      (page) =>
+        page.evaluate((payload) => window.freecut.editProject(payload), {
+          project,
+          ops,
+          media,
+        }),
+    )
+  } finally {
+    await closeServers()
+  }
+
+  if (!args.json) console.log('\nApplied ops:')
+  for (const r of result.results) {
+    if (!args.json)
+      console.log(
+        `  ${r.ok ? 'ok ' : 'ERR'} ${r.op}${r.detail ? ' ' + JSON.stringify(r.detail) : ''}`,
+      )
+  }
+  const edited = result.project
+  const itemCount = edited.timeline?.items?.length ?? 0
+  if (!args.json)
+    console.log(`Result: ${itemCount} items, ${edited.timeline?.tracks?.length ?? 0} tracks`)
+
+  // Write back (safe by default: dry run unless --out or --in-place).
+  let outPath = null
+  if (args.out) outPath = path.resolve(args.out)
+  else if (args['in-place']) outPath = projectJsonPath
+
+  if (!outPath) {
+    if (args.json) console.log(JSON.stringify({ ...result, written: null }))
+    else console.log('\nDRY RUN (no --out / --in-place): nothing written.')
+    return
+  }
+
+  const toWrite = { ...edited, updatedAt: Date.now() }
+  fs.writeFileSync(outPath, JSON.stringify(toWrite, null, 2))
+  if (args.json) console.log(JSON.stringify({ ...result, written: outPath }))
+  else console.log(`\nWrote: ${outPath}`)
+}
+
+main().catch((e) => {
+  console.error('\nEdit failed:', e.message ?? e)
+  process.exit(1)
+})

@@ -1,0 +1,105 @@
+{
+  "preview": {
+    "mediaOffline": {
+      "title": "Medya çevrimdışı",
+      "relink": "Medya panelinden yeniden bağlayın",
+      "loading": "Yükleniyor…"
+    },
+    "align": {
+      "left": "Sola hizala",
+      "centerH": "Yatay ortala",
+      "right": "Sağa hizala",
+      "top": "Üste hizala",
+      "centerV": "Dikey ortala",
+      "bottom": "Alta hizala",
+      "distributeH": "Yatay dağıt",
+      "distributeV": "Dikey dağıt",
+      "disableCanvasSnap": "Tuval yakalamayı kapat",
+      "enableCanvasSnap": "Tuval yakalamayı aç",
+      "toggleCanvasSnap": "Tuval yakalamayı aç/kapat"
+    },
+    "controls": {
+      "captureFailed": "Geçerli kare yakalanamadı.",
+      "disableProxyPlayback": "Proxy oynatmayı kapat",
+      "enableProxyPlayback": "Proxy oynatmayı aç",
+      "frameDownloadedNoProject": "Kare indirildi — kütüphaneye kaydetmek için bir proje açın.",
+      "frameDownloadedNotSaved": "Kare indirildi ancak kütüphaneye kaydedilemedi: {{message}}",
+      "frameSaved": "\"{{name}}\" kütüphaneye kaydedildi.",
+      "goToEnd": "Sona git",
+      "goToEndTooltip": "Sona git",
+      "goToStart": "Başa git",
+      "goToStartTooltip": "Başa git",
+      "nextFrame": "Sonraki kare",
+      "nextFrameTooltip": "Sonraki kare",
+      "pauseTooltip": "Duraklat",
+      "playTooltip": "Oynat",
+      "prevFrame": "Önceki kare",
+      "prevFrameTooltip": "Önceki kare",
+      "proxyPlaybackOff": "Proxy oynatma kapalı",
+      "proxyPlaybackOn": "Proxy oynatma açık",
+      "saveFrame": "Kareyi kaydet",
+      "saveFrameFailed": "Kare kaydedilemedi.",
+      "saveFrameTooltip": "Kareyi kaydet",
+      "savingFrame": "Kare kaydediliyor",
+      "savingFrameTooltip": "Kare kaydediliyor"
+    },
+    "monitor": {
+      "mute": "Sessize al",
+      "muteShort": "Sessiz",
+      "muted": "Sessiz",
+      "percent": "Yüzde",
+      "previewOnlyNote": "Yalnızca yerel oynatmayı etkiler — dışa aktarmada proje miksi kullanılır.",
+      "thisDeviceOnly": "Yalnızca bu cihaz",
+      "title": "Önizleme sesi",
+      "unmute": "Sesi aç",
+      "volume": "Ses düzeyi"
+    },
+    "player": {
+      "exitFullscreen": "Tam ekrandan çık",
+      "fullscreen": "Tam ekran",
+      "mute": "Sessize al",
+      "pause": "Duraklat",
+      "play": "Oynat",
+      "seek": "Ara",
+      "unmute": "Sesi aç",
+      "volume": "Ses düzeyi"
+    },
+    "stage": {
+      "loadingMedia": "Medya yükleniyor",
+      "videoPreview": "Video önizlemesi",
+      "emptyTitle": "Zaman çizelgesinde henüz bir şey yok",
+      "emptyDescription": "Medya içe aktarın, bir klibi zaman çizelgesine sürükleyin, ardından önizlemek için Boşluk tuşuna basın."
+    },
+    "zoom": {
+      "ariaLabel": "Önizleme yakınlaştırması",
+      "auto": "Otomatik",
+      "tooltip": "Yakınlaştırma: {{label}}"
+    },
+    "canvasDrop": {
+      "dropOnTimeline": "Zaman çizelgesine bırak",
+      "compoundClipsTimeline": "Bileşik klipler hâlâ en iyi zaman çizelgesine yerleşir.",
+      "presetsTimeline": "Metin ve şekil ön ayarları hâlâ en iyi zaman çizelgesine yerleşir.",
+      "adjustmentLayersTimeline": "Ayar katmanları tüm kareye uygulanır — bunları zaman çizelgesine yerleştirin.",
+      "placeLayerDescription": "Bu katmanı bırakma konumuna yerleştirin.",
+      "dropOneItem": "Bir öğe bırak",
+      "oneMediaAtATime": "Tuvale tek seferde bir medya öğesi yerleştirin.",
+      "audioGoesOnTimeline": "Ses zaman çizelgesine gider",
+      "visualLayersOnly": "Tuvale bırakma yalnızca görsel katmanları yerleştirir.",
+      "dropToPlace": "Yerleştirmek için bırak",
+      "addAtPlayhead": "Bu medyayı oynatma kafasında ve bırakma konumunda ekle.",
+      "dropOneFile": "Bir dosya bırak",
+      "oneVisualFileAtATime": "Tuvale bırakma tek seferde bir görsel dosya içe aktarır.",
+      "importAndPlace": "İçe aktar ve yerleştir",
+      "importAndPlaceDescription": "Bu dosyayı içe aktar ve tuvale yerleştir.",
+      "noCompatibleTrack": "Bu bırakma için kilidi açık uyumlu iz yok.",
+      "unableToLoadMedia": "Bırakılan medya yüklenemedi.",
+      "mediaNoLongerAvailable": "Bırakılan medya artık kullanılamıyor.",
+      "dragDropUnsupported": "Bu tarayıcıda sürükle-bırak desteklenmiyor. Chrome veya Edge kullanın.",
+      "filesRejected": "Bazı dosyalar reddedildi: {{errors}}",
+      "dropAudioOnTimeline": "Sesi bunun yerine zaman çizelgesine bırakın.",
+      "unableToInspectVideo": "Bırakılan video incelenemedi.",
+      "unableToInspectFile": "Bırakılan dosya incelenemedi.",
+      "unableToImportFile": "Bırakılan dosya içe aktarılamadı."
+    }
+  }
+}
