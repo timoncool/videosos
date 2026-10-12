@@ -1,0 +1,15 @@
+/**
+ * Adapter exports for shared store dependencies.
+ * Composition runtime modules should import store hooks/types from here.
+ */
+
+export { useMediaLibraryStore } from '@/features/media-library/stores/media-library-store'
+export { useGizmoStore } from '@/features/preview/stores/gizmo-store'
+export { useItemGizmoPreview } from '@/features/preview/stores/use-item-gizmo-preview'
+export type { ItemPropertiesPreview } from '@/features/preview/stores/gizmo-store'
+export { useCornerPinStore } from '@/features/preview/stores/corner-pin-store'
+export { useMaskEditorStore } from '@/features/preview/stores/mask-editor-store'
+export { usePlaybackStore } from '@/shared/state/playback'
+export { useKeyframesStore } from '@/features/timeline/stores/keyframes-store'
+export { useCompositionsStore } from '@/features/timeline/stores/compositions-store'
+export { useDebugStore } from '@/features/editor/stores/debug-store'

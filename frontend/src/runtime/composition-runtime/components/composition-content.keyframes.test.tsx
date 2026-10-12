@@ -1,0 +1,441 @@
+import React from 'react'
+import { describe, it, expect, beforeEach, vi } from 'vite-plus/test'
+import { act, render, screen } from '@testing-library/react'
+import { VideoConfigProvider } from '@/runtime/composition-runtime/deps/player'
+import { blobUrlManager } from '@/infrastructure/browser/blob-url-manager'
+import { useCompositionsStore } from '@/runtime/composition-runtime/deps/stores'
+import type { CompositionItem, ShapeItem, TimelineTrack } from '@/types/timeline'
+import { CompositionContent } from './composition-content'
+import {
+  makeNestedAudioItem,
+  makeNestedTimelineTrack,
+  makeNestedVideoItem,
+  makeParentCompositionItem,
+  makeTestSubComposition,
+  resetCompositionContentRuntimeState,
+  storeTestSubComposition,
+  type TestSubComposition,
+} from './composition-content-test-helpers'
+const blobUrlManagerGetSpy = vi.spyOn(blobUrlManager, 'get')
+
+vi.mock('@/runtime/composition-runtime/deps/player', async () => {
+  const React = await import('react')
+
+  const VideoConfigContext = React.createContext({
+    fps: 30,
+    width: 1280,
+    height: 720,
+    durationInFrames: 120,
+    id: 'test',
+  })
+  const SequenceContext = React.createContext<{
+    from: number
+    durationInFrames: number
+    localFrame: number
+    parentFrom: number
+  } | null>(null)
+
+  return {
+    AbsoluteFill: ({
+      children,
+      style,
+    }: {
+      children: React.ReactNode
+      style?: React.CSSProperties
+    }) => <div style={style}>{children}</div>,
+    Sequence: ({
+      children,
+      from,
+      durationInFrames,
+    }: {
+      children: React.ReactNode
+      from: number
+      durationInFrames: number
+    }) => (
+      <SequenceContext.Provider value={{ from, durationInFrames, localFrame: 0, parentFrom: 0 }}>
+        <div data-sequence-from={from} data-sequence-duration={durationInFrames}>
+          {children}
+        </div>
+      </SequenceContext.Provider>
+    ),
+    useSequenceContext: () => React.useContext(SequenceContext),
+    useVideoSourcePool: () => ({ ensureReadyLanes: vi.fn(() => Promise.resolve()) }),
+    VideoConfigProvider: ({
+      children,
+      fps,
+      width,
+      height,
+      durationInFrames,
+      id = 'test',
+    }: {
+      children: React.ReactNode
+      fps: number
+      width: number
+      height: number
+      durationInFrames: number
+      id?: string
+    }) => (
+      <VideoConfigContext.Provider value={{ fps, width, height, durationInFrames, id }}>
+        {children}
+      </VideoConfigContext.Provider>
+    ),
+    useVideoConfig: () => React.useContext(VideoConfigContext),
+  }
+})
+
+vi.mock('../hooks/use-transition-participant-sync', () => ({
+  useTransitionParticipantSync: vi.fn(),
+}))
+
+vi.mock('./item-content', async () => {
+  const { useItemKeyframesFromContext } = await import('../contexts/keyframes-context')
+
+  return {
+    ItemContent: ({
+      item,
+      muted,
+    }: {
+      item: { id: string; src?: string; audioSrc?: string }
+      muted?: boolean
+    }) => {
+      const keyframes = useItemKeyframesFromContext(item.id)
+      const keyframeCount =
+        keyframes?.properties.reduce((count, property) => count + property.keyframes.length, 0) ?? 0
+
+      return (
+        <div
+          data-testid={`sub-item-${item.id}`}
+          data-muted={muted ? 'true' : 'false'}
+          data-keyframe-count={String(keyframeCount)}
+          data-src={item.src ?? ''}
+          data-audio-src={item.audioSrc ?? ''}
+        />
+      )
+    },
+  }
+})
+
+describe('CompositionContent keyframes', () => {
+  beforeEach(() => {
+    blobUrlManagerGetSpy.mockImplementation(() => null)
+    resetCompositionContentRuntimeState()
+  })
+
+  it('provides sub-comp keyframes to nested items during parent timeline render', () => {
+    const subTracks: TimelineTrack[] = [
+      {
+        id: 'sub-track-content',
+        name: 'Content',
+        height: 60,
+        locked: false,
+        visible: true,
+        muted: false,
+        solo: false,
+        order: 0,
+        items: [],
+      },
+    ]
+
+    const contentItem: ShapeItem = {
+      id: 'sub-content',
+      type: 'shape',
+      trackId: 'sub-track-content',
+      from: 0,
+      durationInFrames: 60,
+      label: 'Content shape',
+      shapeType: 'rectangle',
+      fillColor: '#ff0000',
+      transform: {
+        x: 0,
+        y: 0,
+        width: 640,
+        height: 360,
+        rotation: 0,
+        opacity: 1,
+      },
+    }
+
+    const subComp: TestSubComposition = {
+      id: 'sub-comp-1',
+      name: 'Animated precomp',
+      items: [contentItem],
+      tracks: subTracks,
+      transitions: [],
+      keyframes: [
+        {
+          itemId: contentItem.id,
+          properties: [
+            {
+              property: 'x',
+              keyframes: [{ id: 'kf-1', frame: 0, value: 120, easing: 'linear' }],
+            },
+          ],
+        },
+      ],
+      fps: 30,
+      width: 1280,
+      height: 720,
+      durationInFrames: 60,
+    }
+
+    useCompositionsStore.setState({
+      compositions: [subComp],
+      compositionById: { [subComp.id]: subComp },
+      mediaDependencyIds: [],
+      mediaDependencyVersion: 0,
+    })
+
+    const compositionItem: CompositionItem = {
+      id: 'parent-comp-item',
+      type: 'composition',
+      compositionId: subComp.id,
+      trackId: 'parent-track',
+      from: 0,
+      durationInFrames: 60,
+      label: 'Nested comp',
+      compositionWidth: 1280,
+      compositionHeight: 720,
+    }
+
+    render(
+      <VideoConfigProvider fps={30} width={1280} height={720} durationInFrames={120}>
+        <CompositionContent item={compositionItem} />
+      </VideoConfigProvider>,
+    )
+
+    expect(screen.getByTestId('sub-item-sub-content')).toHaveAttribute('data-keyframe-count', '1')
+  })
+
+  it('mutes linked video items inside a precomp when a paired audio item exists', () => {
+    const subComp = makeTestSubComposition({
+      id: 'sub-comp-audio-owned',
+      name: 'Audio owned precomp',
+      items: [
+        makeNestedVideoItem({ linkedGroupId: 'group-1' }),
+        makeNestedAudioItem({ linkedGroupId: 'group-1' }),
+      ],
+    })
+
+    storeTestSubComposition(subComp)
+
+    const compositionItem = makeParentCompositionItem({
+      id: 'parent-comp-item-audio-owned',
+      compositionId: subComp.id,
+    })
+
+    render(
+      <VideoConfigProvider fps={30} width={1280} height={720} durationInFrames={120}>
+        <CompositionContent item={compositionItem} />
+      </VideoConfigProvider>,
+    )
+
+    expect(screen.getByTestId('sub-item-sub-video')).toHaveAttribute('data-muted', 'true')
+    expect(screen.getByTestId('sub-item-sub-audio')).toHaveAttribute('data-muted', 'false')
+  })
+
+  it('renders only visual sub-items in visual-only mode', () => {
+    const subComp = makeTestSubComposition({
+      id: 'sub-comp-visual-only',
+      name: 'Visual only precomp',
+      items: [
+        makeNestedVideoItem({
+          id: 'sub-video-visual-only',
+        }),
+        makeNestedAudioItem({
+          id: 'sub-audio-visual-only',
+        }),
+      ],
+    })
+
+    storeTestSubComposition(subComp)
+
+    const compositionItem = makeParentCompositionItem({
+      id: 'parent-comp-item-visual-only',
+      compositionId: subComp.id,
+    })
+
+    render(
+      <VideoConfigProvider fps={30} width={1280} height={720} durationInFrames={120}>
+        <CompositionContent item={compositionItem} renderMode="visual-only" />
+      </VideoConfigProvider>,
+    )
+
+    expect(screen.getByTestId('sub-item-sub-video-visual-only')).toBeInTheDocument()
+    expect(screen.queryByTestId('sub-item-sub-audio-visual-only')).toBeNull()
+  })
+
+  it('renders only audio sub-items for compound audio wrappers in audio-only mode', () => {
+    const subComp = makeTestSubComposition({
+      id: 'sub-comp-audio-only',
+      name: 'Audio only precomp',
+      items: [
+        makeNestedVideoItem({
+          id: 'sub-video-audio-only',
+        }),
+        makeNestedAudioItem({
+          id: 'sub-audio-audio-only',
+        }),
+      ],
+    })
+
+    storeTestSubComposition(subComp)
+
+    render(
+      <VideoConfigProvider fps={30} width={1280} height={720} durationInFrames={120}>
+        <CompositionContent
+          item={{
+            id: 'parent-comp-audio-wrapper',
+            type: 'audio',
+            trackId: 'parent-audio-track',
+            from: 0,
+            durationInFrames: 60,
+            label: 'Nested comp audio',
+            compositionId: subComp.id,
+            src: '',
+          }}
+          renderMode="audio-only"
+        />
+      </VideoConfigProvider>,
+    )
+
+    expect(screen.queryByTestId('sub-item-sub-video-audio-only')).toBeNull()
+    expect(screen.getByTestId('sub-item-sub-audio-audio-only')).toBeInTheDocument()
+  })
+
+  it('clears stale nested media src until fresh blob urls exist', () => {
+    const subComp = makeTestSubComposition({
+      id: 'sub-comp-stale-audio',
+      name: 'Stale audio precomp',
+      items: [
+        makeNestedVideoItem({
+          id: 'sub-video-stale',
+          trackId: 'sub-track-video-stale',
+          src: 'blob:stale-video',
+          audioSrc: 'blob:stale-video-audio',
+          mediaId: 'media-video-stale',
+        }),
+        makeNestedAudioItem({
+          id: 'sub-audio-stale',
+          trackId: 'sub-track-audio-stale',
+          src: 'blob:stale-audio',
+          mediaId: 'media-stale',
+        }),
+      ],
+      tracks: [
+        makeNestedTimelineTrack({ id: 'sub-track-video-stale', name: 'V1', kind: 'video' }),
+        makeNestedTimelineTrack({ id: 'sub-track-audio-stale', name: 'A1', kind: 'audio' }),
+      ],
+    })
+
+    storeTestSubComposition(subComp)
+
+    const { rerender } = render(
+      <VideoConfigProvider fps={30} width={1280} height={720} durationInFrames={120}>
+        <CompositionContent
+          item={{
+            id: 'parent-comp-stale-wrapper',
+            type: 'composition',
+            trackId: 'parent-video-track',
+            from: 0,
+            durationInFrames: 60,
+            label: 'Nested stale comp',
+            compositionId: subComp.id,
+            compositionWidth: 1280,
+            compositionHeight: 720,
+          }}
+        />
+      </VideoConfigProvider>,
+    )
+
+    expect(screen.getByTestId('sub-item-sub-video-stale')).toHaveAttribute('data-src', '')
+    expect(screen.getByTestId('sub-item-sub-video-stale')).toHaveAttribute('data-audio-src', '')
+    expect(screen.getByTestId('sub-item-sub-audio-stale')).toHaveAttribute('data-src', '')
+
+    blobUrlManagerGetSpy.mockImplementation((mediaId: string) =>
+      mediaId === 'media-stale'
+        ? 'blob:fresh-stale-audio'
+        : mediaId === 'media-video-stale'
+          ? 'blob:fresh-stale-video'
+          : null,
+    )
+
+    const refreshedSubComp: TestSubComposition = {
+      ...subComp,
+      items: [...subComp.items],
+    }
+    act(() => {
+      useCompositionsStore.setState({
+        compositions: [refreshedSubComp],
+        compositionById: { [refreshedSubComp.id]: refreshedSubComp },
+        mediaDependencyIds: [],
+        mediaDependencyVersion: 1,
+      })
+    })
+
+    rerender(
+      <VideoConfigProvider fps={30} width={1280} height={720} durationInFrames={120}>
+        <CompositionContent
+          item={{
+            id: 'parent-comp-stale-wrapper',
+            type: 'composition',
+            trackId: 'parent-video-track',
+            from: 0,
+            durationInFrames: 60,
+            label: 'Nested stale comp',
+            compositionId: subComp.id,
+            compositionWidth: 1280,
+            compositionHeight: 720,
+          }}
+        />
+      </VideoConfigProvider>,
+    )
+
+    expect(screen.getByTestId('sub-item-sub-video-stale')).toHaveAttribute(
+      'data-src',
+      'blob:fresh-stale-video',
+    )
+    expect(screen.getByTestId('sub-item-sub-video-stale')).toHaveAttribute(
+      'data-audio-src',
+      'blob:fresh-stale-video',
+    )
+    expect(screen.getByTestId('sub-item-sub-audio-stale')).toHaveAttribute(
+      'data-src',
+      'blob:fresh-stale-audio',
+    )
+  })
+
+  it('keeps nested compound visuals hidden when the parent wrapper is hidden', () => {
+    const subComp = makeTestSubComposition({
+      id: 'sub-comp-hidden-parent',
+      name: 'Hidden parent precomp',
+      items: [
+        makeNestedVideoItem({ id: 'sub-video-hidden-parent', trackId: 'sub-track-video-hidden' }),
+      ],
+      tracks: [
+        makeNestedTimelineTrack({ id: 'sub-track-video-hidden', name: 'V1', kind: 'video' }),
+      ],
+    })
+
+    storeTestSubComposition(subComp)
+
+    const compositionItem = makeParentCompositionItem({
+      id: 'parent-comp-item-hidden',
+      compositionId: subComp.id,
+    })
+
+    const { container } = render(
+      <VideoConfigProvider fps={30} width={1280} height={720} durationInFrames={120}>
+        <CompositionContent item={compositionItem} parentVisible={false} />
+      </VideoConfigProvider>,
+    )
+
+    expect(screen.getByTestId('sub-item-sub-video-hidden-parent')).toBeInTheDocument()
+
+    const visibilityStyles = Array.from(container.querySelectorAll('div[style]'))
+      .map((element) => element.getAttribute('style') ?? '')
+      .filter((style) => style.includes('visibility:'))
+
+    expect(visibilityStyles.length).toBeGreaterThan(0)
+    expect(visibilityStyles.every((style) => style.includes('visibility: hidden'))).toBe(true)
+  })
+})

@@ -1,0 +1,253 @@
+/**
+ * Media metadata store backed by the workspace folder.
+ *
+ * Each media gets `media/{id}/metadata.json`. The non-serializable
+ * `FileSystemFileHandle` (present when `storageType === 'handle'`) is
+ * stashed in the handles-db under kind='media', id=mediaId and
+ * re-attached on read.
+ */
+
+import type { MediaMetadata } from '@/types/storage'
+import { createLogger } from '@/shared/logging/logger'
+import { deleteHandle, getHandle, saveHandle } from '@/infrastructure/storage/handles-db'
+import { mapWithConcurrency } from '@/shared/utils/async-utils'
+
+import { requireWorkspaceRoot } from './root'
+import {
+  listDirectory,
+  readJson,
+  removeEntry,
+  writeJsonAtomic,
+  WorkspaceFileCorruptError,
+} from './fs-primitives'
+import { MEDIA_DIR, mediaDir, mediaMetadataPath } from './paths'
+
+const logger = createLogger('WorkspaceFS:Media')
+
+type SerializedMedia = Omit<MediaMetadata, 'fileHandle'>
+
+async function stashFileHandle(media: MediaMetadata): Promise<SerializedMedia> {
+  const { fileHandle, ...rest } = media
+  if (fileHandle) {
+    await saveHandle({
+      kind: 'media',
+      id: media.id,
+      handle: fileHandle,
+      name: fileHandle.name,
+      pickedAt: Date.now(),
+      lastSeenSize: media.fileSize,
+      lastSeenMtime: media.fileLastModified,
+    })
+  } else {
+    await deleteHandle('media', media.id).catch((error) => {
+      logger.warn(`Failed to clean media handle for ${media.id}`, error)
+    })
+  }
+  return rest
+}
+
+async function restoreFileHandle(serialized: SerializedMedia): Promise<MediaMetadata> {
+  const record = await getHandle('media', serialized.id)
+  if (record) {
+    return {
+      ...serialized,
+      fileHandle: record.handle as FileSystemFileHandle,
+    }
+  }
+  return serialized as MediaMetadata
+}
+
+/**
+ * Outcome of validating a stored `FileSystemFileHandle` against the
+ * `lastSeenSize` / `lastSeenMtime` captured at import time.
+ *
+ * - `ok`           — handle resolves to a file with matching size+mtime.
+ * - `no-handle`    — this media doesn't use a handle (OPFS or content-
+ *                    addressable storage); nothing to validate.
+ * - `permission`   — the browser rejected the handle with NotAllowedError
+ *                    (user revoked access at the OS/picker level).
+ * - `missing`      — handle can't resolve to a file (renamed, moved, or
+ *                    deleted on disk).
+ * - `changed`      — handle resolves but the byte size differs from what
+ *                    we recorded. Callers should offer a relink flow
+ *                    because downstream caches (thumbnails, waveforms)
+ *                    may no longer match the current file bytes.
+ */
+export type MediaHandleValidation =
+  | { kind: 'ok' }
+  | { kind: 'no-handle' }
+  | { kind: 'permission' }
+  | { kind: 'missing' }
+  | { kind: 'changed'; currentSize: number; currentMtime: number }
+
+/**
+ * Validate a stored media file handle against its last-seen stats.
+ *
+ * Calls `handle.getFile()` which forces the browser to resolve the
+ * underlying file on disk. If the user renamed/moved/deleted the file
+ * externally, this throws NotFoundError. If the file exists but size or
+ * size changed, we flag `changed` so callers can rebuild caches. We do
+ * not treat mtime-only drift as broken because network filesystems can
+ * normalize or wobble modification timestamps while returning the same
+ * underlying file bytes.
+ *
+ * Cheap enough to call on project open for every handle-backed media
+ * (one stat per file). Do NOT call in hot paths.
+ */
+export async function validateMediaHandle(mediaId: string): Promise<MediaHandleValidation> {
+  const record = await getHandle('media', mediaId)
+  if (!record) return { kind: 'no-handle' }
+
+  const handle = record.handle as FileSystemFileHandle
+  try {
+    const file = await handle.getFile()
+    const expectedSize = record.lastSeenSize
+    if (typeof expectedSize === 'number' && file.size !== expectedSize) {
+      return {
+        kind: 'changed',
+        currentSize: file.size,
+        currentMtime: file.lastModified,
+      }
+    }
+    return { kind: 'ok' }
+  } catch (error) {
+    if (error instanceof DOMException && error.name === 'NotAllowedError') {
+      return { kind: 'permission' }
+    }
+    if (error instanceof DOMException && error.name === 'NotFoundError') {
+      return { kind: 'missing' }
+    }
+    logger.warn(`validateMediaHandle(${mediaId}) unexpected error`, error)
+    return { kind: 'missing' }
+  }
+}
+
+/* ──────────────────────── Parallel metadata read ────────────────────── */
+
+const METADATA_READ_CONCURRENCY = 8
+
+type MediaReadResult =
+  | { kind: 'ok'; serialized: SerializedMedia }
+  | { kind: 'skip' }
+  | { kind: 'error'; error: unknown }
+
+async function readAllSerializedMedia(
+  root: FileSystemDirectoryHandle,
+  context: string,
+): Promise<SerializedMedia[]> {
+  const dirs = await listDirectory(root, [MEDIA_DIR])
+  const directories = dirs.filter((entry) => entry.kind === 'directory')
+  const results = await mapWithConcurrency(
+    directories,
+    METADATA_READ_CONCURRENCY,
+    async (entry): Promise<MediaReadResult> => {
+      try {
+        const serialized = await readJson<SerializedMedia>(root, mediaMetadataPath(entry.name))
+        if (!serialized) return { kind: 'skip' }
+        return { kind: 'ok', serialized }
+      } catch (error) {
+        if (error instanceof WorkspaceFileCorruptError) {
+          logger.warn(`${context}: skipping corrupt metadata.json for ${entry.name}`, error)
+          return { kind: 'skip' }
+        }
+        return { kind: 'error', error }
+      }
+    },
+  )
+  const serialized: SerializedMedia[] = []
+  for (const result of results) {
+    if (!result) continue // mapWithConcurrency internal failure — already logged
+    if (result.kind === 'error') throw result.error
+    if (result.kind === 'ok') serialized.push(result.serialized)
+  }
+  return serialized
+}
+
+/* ────────────────────────────── Public API ───────────────────────────── */
+
+export async function getAllMedia(): Promise<MediaMetadata[]> {
+  const root = requireWorkspaceRoot()
+  try {
+    const serialized = await readAllSerializedMedia(root, 'getAllMedia')
+    return await Promise.all(serialized.map((s) => restoreFileHandle(s)))
+  } catch (error) {
+    logger.error('getAllMedia failed', error)
+    throw new Error('Failed to load media from workspace')
+  }
+}
+
+export async function getAllMediaMetadata(): Promise<MediaMetadata[]> {
+  const root = requireWorkspaceRoot()
+  try {
+    return (await readAllSerializedMedia(root, 'getAllMediaMetadata')) as MediaMetadata[]
+  } catch (error) {
+    logger.error('getAllMediaMetadata failed', error)
+    throw new Error('Failed to load media metadata from workspace')
+  }
+}
+
+export async function getMedia(id: string): Promise<MediaMetadata | undefined> {
+  const root = requireWorkspaceRoot()
+  try {
+    const serialized = await readJson<SerializedMedia>(root, mediaMetadataPath(id))
+    if (!serialized) return undefined
+    return restoreFileHandle(serialized)
+  } catch (error) {
+    logger.error(`getMedia(${id}) failed`, error)
+    throw new Error(`Failed to load media: ${id}`)
+  }
+}
+
+export async function createMedia(media: MediaMetadata): Promise<MediaMetadata> {
+  const root = requireWorkspaceRoot()
+  try {
+    const existing = await readJson<SerializedMedia>(root, mediaMetadataPath(media.id))
+    if (existing) {
+      throw new Error(`Media already exists: ${media.id}`)
+    }
+    const serialized = await stashFileHandle(media)
+    await writeJsonAtomic(root, mediaMetadataPath(media.id), serialized)
+    return media
+  } catch (error) {
+    logger.error('createMedia failed', error)
+    throw error
+  }
+}
+
+export async function updateMedia(
+  id: string,
+  updates: Partial<MediaMetadata>,
+): Promise<MediaMetadata> {
+  const root = requireWorkspaceRoot()
+  try {
+    const existingSerialized = await readJson<SerializedMedia>(root, mediaMetadataPath(id))
+    if (!existingSerialized) {
+      throw new Error(`Media not found: ${id}`)
+    }
+    const existing = await restoreFileHandle(existingSerialized)
+    const updated: MediaMetadata = {
+      ...existing,
+      ...updates,
+      id,
+    }
+    const nextSerialized = await stashFileHandle(updated)
+    await writeJsonAtomic(root, mediaMetadataPath(id), nextSerialized)
+    return updated
+  } catch (error) {
+    logger.error(`updateMedia(${id}) failed`, error)
+    throw error
+  }
+}
+
+export async function deleteMedia(id: string): Promise<void> {
+  const root = requireWorkspaceRoot()
+  try {
+    await removeEntry(root, mediaDir(id), { recursive: true })
+    await deleteHandle('media', id).catch((error) => {
+      logger.warn(`Failed to clean media handle for ${id}`, error)
+    })
+  } catch (error) {
+    logger.error(`deleteMedia(${id}) failed`, error)
+    throw new Error(`Failed to delete media: ${id}`)
+  }
+}

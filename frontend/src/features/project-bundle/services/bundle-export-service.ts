@@ -1,0 +1,467 @@
+/**
+ * Project Bundle Export Service
+ *
+ * Exports a project with all its media as a .freecut.zip bundle
+ */
+
+import { Zip, ZipPassThrough, ZipDeflate } from 'fflate'
+import type { MediaMetadata } from '@/types/storage'
+import {
+  BundleManifest,
+  BundleProject,
+  ExportProgress,
+  ExportResult,
+  BUNDLE_VERSION,
+  BUNDLE_EXTENSION,
+  BUNDLE_ANIMATION_PRESETS_PATH,
+} from '../types/bundle'
+import {
+  getProject,
+  getProjectMediaIds,
+  loadProjectThumbnail,
+  readAnimationPresets,
+} from '@/infrastructure/storage'
+import {
+  importMediaLibraryService,
+  computeContentHashFromBuffer,
+} from '@/features/project-bundle/deps/media-library'
+
+import { createLogger } from '@/shared/logging/logger'
+import { convertTimelineForBundle } from './bundle-timeline'
+import {
+  computeBundleManifestChecksum,
+  getUniqueBundleFileName,
+  sanitizeDownloadFilename,
+} from './pure-utils'
+
+const logger = createLogger('BundleExportService')
+
+// App version - should be imported from a config
+const APP_VERSION = '1.0.0'
+
+/**
+ * Read the project's animation presets and, when at least one exists, add the
+ * sidecar file to the zip and record a manifest entry. The file is omitted
+ * entirely when the project has no presets — import tolerates its absence.
+ *
+ * Mirrors the per-media independently-collected-file path: a stable bundle
+ * path plus a manifest entry folded into the checksum.
+ */
+async function addAnimationPresetsToBundle(
+  projectId: string,
+  manifest: BundleManifest,
+  addFile: (relativePath: string, contents: Uint8Array) => void,
+): Promise<number> {
+  const presets = await readAnimationPresets(projectId)
+  if (presets.length === 0) return 0
+
+  // Write the same `{ version, presets }` envelope the storage layer uses so
+  // the import sanitizer accepts the file unchanged.
+  const contents = new TextEncoder().encode(JSON.stringify({ version: 4, presets }, null, 2))
+  addFile(BUNDLE_ANIMATION_PRESETS_PATH, contents)
+
+  manifest.animationPresets = {
+    relativePath: BUNDLE_ANIMATION_PRESETS_PATH,
+    count: presets.length,
+  }
+  return presets.length
+}
+
+/**
+ * Export a project as a bundle
+ */
+export async function exportProjectBundle(
+  projectId: string,
+  onProgress?: (progress: ExportProgress) => void,
+): Promise<ExportResult> {
+  onProgress?.({ percent: 0, stage: 'collecting' })
+
+  // Step 1: Get project data
+  const project = await getProject(projectId)
+  if (!project) {
+    throw new Error(`Project not found: ${projectId}`)
+  }
+
+  // Step 2: Get all media IDs for this project
+  const mediaIds = await getProjectMediaIds(projectId)
+  const { mediaLibraryService } = await importMediaLibraryService()
+  onProgress?.({ percent: 10, stage: 'collecting' })
+
+  // Step 3: Collect media metadata
+  const mediaItems: MediaMetadata[] = []
+  for (const mediaId of mediaIds) {
+    const media = await mediaLibraryService.getMedia(mediaId)
+    if (media) {
+      mediaItems.push(media)
+    }
+  }
+
+  const totalItems = mediaItems.length
+  onProgress?.({ percent: 15, stage: 'hashing' })
+
+  // Step 4: Build manifest and prepare ZIP
+  const chunks: Uint8Array[] = []
+  let zipError: Error | null = null
+  const zip = new Zip((err, chunk) => {
+    if (err) {
+      zipError = err
+      return
+    }
+    if (chunk) chunks.push(chunk)
+  })
+
+  const manifest: BundleManifest = {
+    version: BUNDLE_VERSION,
+    createdAt: Date.now(),
+    editorVersion: APP_VERSION,
+    projectId: project.id,
+    projectName: project.name,
+    media: [],
+    checksum: '', // Computed at end
+  }
+
+  // Track unique filenames in bundle
+  const usedFilenames = new Set<string>()
+
+  // Step 5: Add media files to ZIP
+  onProgress?.({ percent: 20, stage: 'packaging' })
+
+  for (let i = 0; i < mediaItems.length; i++) {
+    if (zipError) break
+
+    const media = mediaItems[i]
+    if (!media) continue
+
+    const progress = 20 + ((i + 1) / totalItems) * 60
+
+    onProgress?.({
+      percent: progress,
+      stage: 'packaging',
+      currentFile: media.fileName,
+    })
+
+    // Get media file content
+    const blob = await mediaLibraryService.getMediaFile(media.id)
+    if (!blob) {
+      logger.warn(`Could not get file for media: ${media.id}`)
+      continue
+    }
+
+    const buffer = await blob.arrayBuffer()
+
+    // Use content hash for dedup within bundle
+    const hash = media.contentHash || (await computeContentHashFromBuffer(buffer))
+
+    // Ensure unique filename within bundle
+    const bundleFileName = getUniqueBundleFileName(usedFilenames, hash, media.fileName)
+    usedFilenames.add(`${hash}/${bundleFileName}`)
+
+    const relativePath = `media/${hash}/${bundleFileName}`
+
+    // Add to manifest
+    manifest.media.push({
+      originalId: media.id,
+      relativePath,
+      fileName: media.fileName,
+      fileSize: media.fileSize,
+      sha256: hash,
+      mimeType: media.mimeType,
+      metadata: {
+        duration: media.duration,
+        width: media.width,
+        height: media.height,
+        fps: media.fps,
+        codec: media.codec,
+        bitrate: media.bitrate,
+      },
+    })
+
+    // Add file to ZIP (no compression for media - already compressed)
+    const mediaFile = new ZipPassThrough(relativePath)
+    zip.add(mediaFile)
+    mediaFile.push(new Uint8Array(buffer), true)
+  }
+
+  if (zipError) throw zipError
+
+  onProgress?.({ percent: 85, stage: 'packaging' })
+
+  // Step 6: Create project.json with mediaRef instead of mediaId
+  const bundleProject: BundleProject = {
+    ...project,
+    timeline: project.timeline ? convertTimelineForBundle(project.timeline) : undefined,
+  }
+
+  const projectFile = new ZipDeflate('project.json')
+  zip.add(projectFile)
+  projectFile.push(new TextEncoder().encode(JSON.stringify(bundleProject, null, 2)), true)
+
+  // Step 7: Add project cover thumbnail if exists
+  if (project.thumbnailId) {
+    try {
+      const thumbnailBlob = await loadProjectThumbnail(project.id)
+      if (thumbnailBlob) {
+        const thumbnailBuffer = await thumbnailBlob.arrayBuffer()
+        const thumbnailFile = new ZipPassThrough('cover.jpg')
+        zip.add(thumbnailFile)
+        thumbnailFile.push(new Uint8Array(thumbnailBuffer), true)
+      }
+    } catch (err) {
+      // Thumbnail is optional, continue without it
+      logger.warn('Could not export project thumbnail:', err)
+    }
+  }
+
+  // Step 7b: Add animation presets sidecar if the project has any
+  await addAnimationPresetsToBundle(project.id, manifest, (relativePath, contents) => {
+    const presetsFile = new ZipDeflate(relativePath)
+    zip.add(presetsFile)
+    presetsFile.push(contents, true)
+  })
+
+  // Step 8: Compute manifest checksum and add manifest.json
+  manifest.checksum = await computeBundleManifestChecksum(manifest)
+
+  const manifestFile = new ZipDeflate('manifest.json')
+  zip.add(manifestFile)
+  manifestFile.push(new TextEncoder().encode(JSON.stringify(manifest, null, 2)), true)
+
+  // Step 9: Finalize ZIP
+  zip.end()
+
+  if (zipError) throw zipError
+
+  onProgress?.({ percent: 100, stage: 'complete' })
+
+  // Combine chunks into final blob
+  const totalSize = chunks.reduce((acc, chunk) => acc + chunk.length, 0)
+  const result = new Uint8Array(totalSize)
+  let offset = 0
+  for (const chunk of chunks) {
+    result.set(chunk, offset)
+    offset += chunk.length
+  }
+
+  const blob = new Blob([result], { type: 'application/zip' })
+  const filename =
+    sanitizeDownloadFilename(project.name, { fallback: 'untitled' }) + BUNDLE_EXTENSION
+
+  return {
+    blob,
+    filename,
+    size: blob.size,
+    mediaCount: manifest.media.length,
+  }
+}
+
+/**
+ * Export a project bundle using streaming write to disk.
+ * Requires File System Access API (Chrome/Edge).
+ * The file handle must be obtained before calling this function.
+ */
+export async function exportProjectBundleStreaming(
+  projectId: string,
+  fileHandle: FileSystemFileHandle,
+  onProgress?: (progress: ExportProgress) => void,
+): Promise<ExportResult> {
+  const writable = await fileHandle.createWritable()
+  let totalSize = 0
+  const writePromises: Promise<void>[] = []
+  let zipError: Error | null = null
+
+  try {
+    onProgress?.({ percent: 0, stage: 'collecting' })
+
+    // Step 1: Get project data
+    const project = await getProject(projectId)
+    if (!project) {
+      throw new Error(`Project not found: ${projectId}`)
+    }
+
+    // Step 2: Get all media IDs for this project
+    const mediaIds = await getProjectMediaIds(projectId)
+    const { mediaLibraryService } = await importMediaLibraryService()
+    onProgress?.({ percent: 10, stage: 'collecting' })
+
+    // Step 3: Collect media metadata
+    const mediaItems: MediaMetadata[] = []
+    for (const mediaId of mediaIds) {
+      const media = await mediaLibraryService.getMedia(mediaId)
+      if (media) {
+        mediaItems.push(media)
+      }
+    }
+
+    const totalItems = mediaItems.length
+    onProgress?.({ percent: 15, stage: 'hashing' })
+
+    // Step 4: Build manifest and prepare ZIP — stream chunks to disk
+    // Collect write promises since fflate's Zip callback is synchronous and won't await
+    const zip = new Zip((err, chunk) => {
+      if (err) {
+        zipError = err
+        return
+      }
+      if (chunk) {
+        totalSize += chunk.length
+        writePromises.push(writable.write(chunk as Uint8Array<ArrayBuffer>))
+      }
+    })
+
+    const manifest: BundleManifest = {
+      version: BUNDLE_VERSION,
+      createdAt: Date.now(),
+      editorVersion: APP_VERSION,
+      projectId: project.id,
+      projectName: project.name,
+      media: [],
+      checksum: '',
+    }
+
+    const usedFilenames = new Set<string>()
+
+    // Step 5: Add media files to ZIP
+    onProgress?.({ percent: 20, stage: 'packaging' })
+
+    for (let i = 0; i < mediaItems.length; i++) {
+      const media = mediaItems[i]
+      if (!media) continue
+
+      const progress = 20 + ((i + 1) / totalItems) * 60
+      onProgress?.({
+        percent: progress,
+        stage: 'packaging',
+        currentFile: media.fileName,
+      })
+
+      const blob = await mediaLibraryService.getMediaFile(media.id)
+      if (!blob) {
+        logger.warn(`Could not get file for media: ${media.id}`)
+        continue
+      }
+
+      const buffer = await blob.arrayBuffer()
+      const hash = media.contentHash || (await computeContentHashFromBuffer(buffer))
+
+      const bundleFileName = getUniqueBundleFileName(usedFilenames, hash, media.fileName)
+      usedFilenames.add(`${hash}/${bundleFileName}`)
+
+      const relativePath = `media/${hash}/${bundleFileName}`
+
+      manifest.media.push({
+        originalId: media.id,
+        relativePath,
+        fileName: media.fileName,
+        fileSize: media.fileSize,
+        sha256: hash,
+        mimeType: media.mimeType,
+        metadata: {
+          duration: media.duration,
+          width: media.width,
+          height: media.height,
+          fps: media.fps,
+          codec: media.codec,
+          bitrate: media.bitrate,
+        },
+      })
+
+      const mediaFile = new ZipPassThrough(relativePath)
+      zip.add(mediaFile)
+      mediaFile.push(new Uint8Array(buffer), true)
+
+      // Stop processing remaining media if zip encountered an error
+      if (zipError) break
+    }
+
+    if (zipError) throw zipError
+
+    onProgress?.({ percent: 85, stage: 'packaging' })
+
+    // Step 6: Create project.json
+    const bundleProject: BundleProject = {
+      ...project,
+      timeline: project.timeline ? convertTimelineForBundle(project.timeline) : undefined,
+    }
+
+    const projectFile = new ZipDeflate('project.json')
+    zip.add(projectFile)
+    projectFile.push(new TextEncoder().encode(JSON.stringify(bundleProject, null, 2)), true)
+
+    // Step 7: Add project cover thumbnail if exists
+    if (project.thumbnailId) {
+      try {
+        const thumbnailBlob = await loadProjectThumbnail(project.id)
+        if (thumbnailBlob) {
+          const thumbnailBuffer = await thumbnailBlob.arrayBuffer()
+          const thumbnailFile = new ZipPassThrough('cover.jpg')
+          zip.add(thumbnailFile)
+          thumbnailFile.push(new Uint8Array(thumbnailBuffer), true)
+        }
+      } catch (err) {
+        logger.warn('Could not export project thumbnail:', err)
+      }
+    }
+
+    // Step 7b: Add animation presets sidecar if the project has any
+    await addAnimationPresetsToBundle(project.id, manifest, (relativePath, contents) => {
+      const presetsFile = new ZipDeflate(relativePath)
+      zip.add(presetsFile)
+      presetsFile.push(contents, true)
+    })
+
+    // Step 8: Compute manifest checksum and add manifest.json
+    manifest.checksum = await computeBundleManifestChecksum(manifest)
+
+    const manifestFile = new ZipDeflate('manifest.json')
+    zip.add(manifestFile)
+    manifestFile.push(new TextEncoder().encode(JSON.stringify(manifest, null, 2)), true)
+
+    // Step 9: Finalize ZIP
+    zip.end()
+
+    if (zipError) throw zipError
+
+    // Wait for all writes to flush, then close the stream
+    await Promise.all(writePromises)
+    await writable.close()
+
+    onProgress?.({ percent: 100, stage: 'complete' })
+
+    const filename =
+      sanitizeDownloadFilename(project.name, { fallback: 'untitled' }) + BUNDLE_EXTENSION
+
+    return {
+      filename,
+      size: totalSize,
+      mediaCount: manifest.media.length,
+    }
+  } catch (err) {
+    // Settle any pending writes to avoid unhandled rejections
+    if (writePromises.length > 0) {
+      await Promise.allSettled(writePromises)
+    }
+    // Clean up partial file on error
+    try {
+      await writable.abort()
+    } catch {
+      // Ignore abort errors
+    }
+    throw err
+  }
+}
+
+/**
+ * Trigger browser download of exported bundle
+ */
+export function downloadBundle(result: ExportResult): void {
+  if (!result.blob) return // Streaming export already saved to disk
+
+  const url = URL.createObjectURL(result.blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = result.filename
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
+}

@@ -1,0 +1,552 @@
+import { describe, expect, it, vi } from 'vite-plus/test'
+import { createGpuRenderPipelineMocks } from '@/infrastructure/gpu-test-helpers'
+import {
+  GlyphAtlasTextPipeline,
+  transformGlyphQuadCorners,
+  type GpuTextRenderParams,
+} from './glyph-atlas-text-pipeline'
+import type { TextItem } from '@/types/timeline'
+import type { TextMotionSpec } from '@/types/text-motion'
+import { createTextMotionEffect } from '@/shared/typography/text-motion'
+
+class MockOffscreenCanvas {
+  width: number
+  height: number
+
+  constructor(width: number, height: number) {
+    this.width = width
+    this.height = height
+  }
+
+  getContext() {
+    return {
+      clearRect: vi.fn(),
+      fillText: vi.fn(),
+      getImageData: vi.fn((_x: number, _y: number, width: number, height: number) => ({
+        data: createGlyphPixels(width, height),
+      })),
+      measureText: vi.fn((text: string) => ({
+        width: text.length * 12,
+        actualBoundingBoxAscent: 16,
+        actualBoundingBoxDescent: 4,
+        actualBoundingBoxLeft: 0,
+        actualBoundingBoxRight: Math.max(1, text.length * 12),
+      })),
+      set fillStyle(_value: string) {},
+      set font(_value: string) {},
+      set textBaseline(_value: string) {},
+    }
+  }
+}
+
+function createGlyphPixels(width: number, height: number): Uint8ClampedArray {
+  const data = new Uint8ClampedArray(width * height * 4)
+  for (let y = 4; y < height - 4; y++) {
+    for (let x = 4; x < width - 4; x++) {
+      const index = (y * width + x) * 4
+      data[index] = 255
+      data[index + 1] = 255
+      data[index + 2] = 255
+      data[index + 3] = 255
+    }
+  }
+  return data
+}
+
+function createPipelineHarness() {
+  vi.stubGlobal('OffscreenCanvas', MockOffscreenCanvas)
+  vi.stubGlobal('GPUShaderStage', { FRAGMENT: 2, VERTEX: 1 })
+  vi.stubGlobal('GPUBufferUsage', { COPY_DST: 8, UNIFORM: 64, VERTEX: 32 })
+  vi.stubGlobal('GPUTextureUsage', { COPY_DST: 2, TEXTURE_BINDING: 4 })
+  const atlasView = {}
+  const atlasTexture = {
+    createView: vi.fn(() => atlasView),
+    destroy: vi.fn(),
+  }
+  const outputView = {}
+  const outputTexture = {
+    createView: vi.fn(() => outputView),
+    width: 640,
+    height: 180,
+  } as unknown as GPUTexture
+  const uniformBuffer = { destroy: vi.fn(), label: 'uniform-buffer' }
+  const vertexBuffer = { destroy: vi.fn(), label: 'vertex-buffer' }
+  const { commandEncoder, device, pass, queue } = createGpuRenderPipelineMocks({
+    device: {
+      createBuffer: vi.fn((descriptor: GPUBufferDescriptor) =>
+        descriptor.usage === (GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST)
+          ? uniformBuffer
+          : vertexBuffer,
+      ),
+      createTexture: vi.fn(() => atlasTexture),
+    },
+    pass: { setVertexBuffer: vi.fn() },
+    queue: { writeTexture: vi.fn() },
+  })
+  const pipeline = new GlyphAtlasTextPipeline(device as unknown as GPUDevice)
+
+  return {
+    atlasTexture,
+    commandEncoder,
+    device,
+    outputTexture,
+    pass,
+    pipeline,
+    queue,
+    uniformBuffer,
+    vertexBuffer,
+  }
+}
+
+describe('transformGlyphQuadCorners', () => {
+  const IDENTITY = { dx: 0, dy: 0, scale: 1, rotation: 0 }
+
+  it('returns the raw quad corners for the identity state', () => {
+    expect(transformGlyphQuadCorners(10, 20, 30, 40, IDENTITY)).toEqual([
+      [10, 20],
+      [40, 20],
+      [10, 60],
+      [40, 60],
+    ])
+  })
+
+  it('translates all corners by dx/dy', () => {
+    expect(transformGlyphQuadCorners(10, 20, 30, 40, { ...IDENTITY, dx: 5, dy: -3 })).toEqual([
+      [15, 17],
+      [45, 17],
+      [15, 57],
+      [45, 57],
+    ])
+  })
+
+  it('scales about the quad center', () => {
+    // Center (25, 40); scale 0.5 halves each corner's distance to it.
+    expect(transformGlyphQuadCorners(10, 20, 30, 40, { ...IDENTITY, scale: 0.5 })).toEqual([
+      [17.5, 30],
+      [32.5, 30],
+      [17.5, 50],
+      [32.5, 50],
+    ])
+  })
+
+  it('rotates 90° about the quad center', () => {
+    const corners = transformGlyphQuadCorners(10, 20, 30, 40, {
+      ...IDENTITY,
+      rotation: Math.PI / 2,
+    })
+    // Center (25, 40); TL (-15, -20) center-local → (20, -15) → (45, 25) etc.
+    const expected = [
+      [45, 25],
+      [45, 55],
+      [5, 25],
+      [5, 55],
+    ]
+    corners.forEach((corner, index) => {
+      expect(corner[0]).toBeCloseTo(expected[index]![0]!, 10)
+      expect(corner[1]).toBeCloseTo(expected[index]![1]!, 10)
+    })
+  })
+
+  it('composes scale, rotation and translation (scale/rotate about center, then translate)', () => {
+    const corners = transformGlyphQuadCorners(0, 0, 10, 10, {
+      dx: 100,
+      dy: 50,
+      scale: 2,
+      rotation: Math.PI,
+    })
+    // Center (5, 5); TL (-5, -5) → scaled (-10, -10) → rotated 180° (10, 10)
+    // → (15, 15) → translated (115, 65).
+    expect(corners[0][0]).toBeCloseTo(115, 10)
+    expect(corners[0][1]).toBeCloseTo(65, 10)
+    expect(corners[3][0]).toBeCloseTo(95, 10)
+    expect(corners[3][1]).toBeCloseTo(45, 10)
+  })
+})
+
+describe('GlyphAtlasTextPipeline', () => {
+  it('uploads glyphs into the atlas and renders glyph quads', () => {
+    const { commandEncoder, outputTexture, pass, pipeline, queue, vertexBuffer } =
+      createPipelineHarness()
+
+    const rendered = pipeline.renderTextToTexture(outputTexture, {
+      outputWidth: 640,
+      outputHeight: 180,
+      width: 640,
+      height: 180,
+      item: {
+        id: 'text',
+        type: 'text',
+        trackId: 'track',
+        from: 0,
+        durationInFrames: 30,
+        text: 'AB',
+        color: '#336699',
+        fontSize: 48,
+        fontFamily: 'Inter',
+      } as TextItem,
+    })
+
+    expect(rendered).toBe(true)
+    expect(queue.writeTexture).toHaveBeenCalledTimes(2)
+    expect(queue.writeBuffer).toHaveBeenCalledWith(
+      vertexBuffer,
+      0,
+      expect.any(Float32Array),
+      0,
+      240,
+    )
+    const vertexData = queue.writeBuffer.mock.calls[0]?.[2] as Float32Array
+    expect(vertexData[4]).toBeCloseTo(0.2)
+    expect(vertexData[5]).toBeCloseTo(0.4)
+    expect(vertexData[6]).toBeCloseTo(0.6)
+    expect(vertexData[7]).toBeCloseTo(1)
+    expect(commandEncoder.beginRenderPass).toHaveBeenCalledWith({
+      colorAttachments: [{ view: {}, loadOp: 'clear', storeOp: 'store' }],
+    })
+    expect(pass.setPipeline).toHaveBeenCalledWith('render-pipeline')
+    expect(pass.setBindGroup).toHaveBeenCalledWith(0, 'bind-group')
+    expect(pass.setVertexBuffer).toHaveBeenCalledWith(0, vertexBuffer)
+    expect(pass.draw).toHaveBeenCalledWith(12)
+    expect(queue.submit).toHaveBeenCalledWith(['finished-command-buffer'])
+  })
+
+  it('reuses cached glyph atlas entries across renders', () => {
+    const { outputTexture, pipeline, queue } = createPipelineHarness()
+    const params = {
+      outputWidth: 640,
+      outputHeight: 180,
+      width: 640,
+      height: 180,
+      item: {
+        id: 'text',
+        type: 'text',
+        trackId: 'track',
+        from: 0,
+        durationInFrames: 30,
+        text: 'AA',
+        color: '#ffffff',
+        fontSize: 48,
+        fontFamily: 'Inter',
+      } as TextItem,
+    }
+
+    expect(pipeline.renderTextToTexture(outputTexture, params)).toBe(true)
+    expect(pipeline.renderTextToTexture(outputTexture, params)).toBe(true)
+
+    expect(queue.writeTexture).toHaveBeenCalledTimes(1)
+  })
+
+  it('packs per-span colors into glyph vertices', () => {
+    const { outputTexture, pipeline, queue } = createPipelineHarness()
+
+    const rendered = pipeline.renderTextToTexture(outputTexture, {
+      outputWidth: 640,
+      outputHeight: 180,
+      width: 640,
+      height: 180,
+      item: {
+        id: 'text',
+        type: 'text',
+        trackId: 'track',
+        from: 0,
+        durationInFrames: 30,
+        textSpans: [
+          { text: 'A', color: '#ff0000', fontSize: 48 },
+          { text: 'B', color: '#00ff00', fontSize: 32 },
+        ],
+        color: '#ffffff',
+        fontFamily: 'Inter',
+      } as TextItem,
+    })
+
+    expect(rendered).toBe(true)
+    const vertexData = queue.writeBuffer.mock.calls[0]?.[2] as Float32Array
+    expect(vertexData[4]).toBeCloseTo(1)
+    expect(vertexData[5]).toBeCloseTo(0)
+    expect(vertexData[6]).toBeCloseTo(0)
+    expect(vertexData[124]).toBeCloseTo(0)
+    expect(vertexData[125]).toBeCloseTo(1)
+    expect(vertexData[126]).toBeCloseTo(0)
+  })
+
+  it('renders flat backgrounds and underlines as solid GPU quads', () => {
+    const { outputTexture, pass, pipeline, queue, vertexBuffer } = createPipelineHarness()
+
+    const rendered = pipeline.renderTextToTexture(outputTexture, {
+      outputWidth: 640,
+      outputHeight: 180,
+      width: 640,
+      height: 180,
+      item: {
+        id: 'text',
+        type: 'text',
+        trackId: 'track',
+        from: 0,
+        durationInFrames: 30,
+        text: 'A',
+        color: '#ffffff',
+        backgroundColor: '#112233',
+        backgroundRadius: 8,
+        fontSize: 48,
+        fontFamily: 'Inter',
+        textPadding: 0,
+        underline: true,
+      } as TextItem,
+    })
+
+    expect(rendered).toBe(true)
+    expect(queue.writeTexture).toHaveBeenCalledTimes(2)
+    expect(queue.writeBuffer).toHaveBeenCalledWith(
+      vertexBuffer,
+      0,
+      expect.any(Float32Array),
+      0,
+      360,
+    )
+    const vertexData = queue.writeBuffer.mock.calls[0]?.[2] as Float32Array
+    expect(vertexData[0]).toBeCloseTo(314)
+    expect(vertexData[1]).toBeCloseTo(61.2)
+    expect(vertexData[4]).toBeCloseTo(0x11 / 255)
+    expect(vertexData[5]).toBeCloseTo(0x22 / 255)
+    expect(vertexData[6]).toBeCloseTo(0x33 / 255)
+    expect(vertexData[8]).toBeCloseTo(1)
+    expect(vertexData[13]).toBeCloseTo(6)
+    expect(vertexData[124]).toBeCloseTo(1)
+    expect(vertexData[125]).toBeCloseTo(1)
+    expect(vertexData[126]).toBeCloseTo(1)
+    expect(vertexData[244]).toBeCloseTo(1)
+    expect(vertexData[245]).toBeCloseTo(1)
+    expect(vertexData[246]).toBeCloseTo(1)
+    expect(vertexData[248]).toBeCloseTo(1)
+    expect(vertexData[253]).toBeCloseTo(0)
+    expect(pass.draw).toHaveBeenCalledWith(18)
+  })
+
+  it('packs text stroke color and width for SDF outline rendering', () => {
+    const { outputTexture, pipeline, queue } = createPipelineHarness()
+
+    const rendered = pipeline.renderTextToTexture(outputTexture, {
+      outputWidth: 640,
+      outputHeight: 180,
+      width: 640,
+      height: 180,
+      item: {
+        id: 'text',
+        type: 'text',
+        trackId: 'track',
+        from: 0,
+        durationInFrames: 30,
+        text: 'A',
+        color: '#ffffff',
+        fontSize: 48,
+        fontFamily: 'Inter',
+        stroke: { width: 3, color: '#0000ff' },
+      } as TextItem,
+    })
+
+    expect(rendered).toBe(true)
+    const vertexData = queue.writeBuffer.mock.calls[0]?.[2] as Float32Array
+    expect(vertexData[14]).toBeCloseTo(0)
+    expect(vertexData[15]).toBeCloseTo(0)
+    expect(vertexData[16]).toBeCloseTo(1)
+    expect(vertexData[17]).toBeCloseTo(1)
+    expect(vertexData[18]).toBeCloseTo(3)
+  })
+
+  it('emits shadow glyphs before foreground text glyphs', () => {
+    const { outputTexture, pass, pipeline, queue, vertexBuffer } = createPipelineHarness()
+
+    const rendered = pipeline.renderTextToTexture(outputTexture, {
+      outputWidth: 640,
+      outputHeight: 180,
+      width: 640,
+      height: 180,
+      item: {
+        id: 'text',
+        type: 'text',
+        trackId: 'track',
+        from: 0,
+        durationInFrames: 30,
+        text: 'A',
+        color: '#ffffff',
+        fontSize: 48,
+        fontFamily: 'Inter',
+        textShadow: { offsetX: 4, offsetY: 5, blur: 6, color: '#00000080' },
+      } as TextItem,
+    })
+
+    expect(rendered).toBe(true)
+    expect(queue.writeBuffer).toHaveBeenCalledWith(
+      vertexBuffer,
+      0,
+      expect.any(Float32Array),
+      0,
+      240,
+    )
+    const vertexData = queue.writeBuffer.mock.calls[0]?.[2] as Float32Array
+    expect(vertexData[4]).toBeCloseTo(0)
+    expect(vertexData[5]).toBeCloseTo(0)
+    expect(vertexData[6]).toBeCloseTo(0)
+    expect(vertexData[7]).toBeCloseTo(0x80 / 255)
+    expect(vertexData[19]).toBeCloseTo(6)
+    expect(vertexData[124]).toBeCloseTo(1)
+    expect(vertexData[125]).toBeCloseTo(1)
+    expect(vertexData[126]).toBeCloseTo(1)
+    expect(vertexData[139]).toBeCloseTo(0)
+    expect(pass.draw).toHaveBeenCalledWith(12)
+  })
+
+  describe('motion text', () => {
+    function makeTextItem(overrides: Partial<TextItem> = {}): TextItem {
+      return {
+        id: 'text',
+        type: 'text',
+        trackId: 'track',
+        from: 0,
+        durationInFrames: 300,
+        text: 'A',
+        color: '#ffffff',
+        fontSize: 48,
+        fontFamily: 'Inter',
+        textPadding: 0,
+        ...overrides,
+      } as TextItem
+    }
+
+    function renderVertices(
+      item: TextItem,
+      motion?: GpuTextRenderParams['motion'],
+    ): { vertexData: Float32Array; pass: ReturnType<typeof createPipelineHarness>['pass'] } {
+      const { outputTexture, pass, pipeline, queue } = createPipelineHarness()
+      const rendered = pipeline.renderTextToTexture(outputTexture, {
+        outputWidth: 640,
+        outputHeight: 180,
+        width: 640,
+        height: 180,
+        item,
+        ...(motion ? { motion } : {}),
+      })
+      expect(rendered).toBe(true)
+      return { vertexData: queue.writeBuffer.mock.calls[0]?.[2] as Float32Array, pass }
+    }
+
+    // fade-up (word unit) at linear p = 0.5: alpha 0.5, dy = 0.5·0.25·48 = 6.
+    const fadeUpSpec: TextMotionSpec = {
+      in: {
+        ...createTextMotionEffect('fade-up'),
+        durationFrames: 10,
+        staggerFrames: 0,
+        easing: 'linear',
+      },
+    }
+    const fadeUpMidMotion = { spec: fadeUpSpec, relativeFrame: 5, fps: 30, durationInFrames: 300 }
+
+    it('skips fully hidden glyphs during a typewriter reveal', () => {
+      // typewriter (char unit, duration 1, stagger 2) at frame 1: 'A' (unit 0)
+      // revealed, 'B' (unit 1, delay 2) still hidden — only one glyph packed,
+      // so the vertex write count and draw count both drop to a single quad.
+      const item = makeTextItem({ text: 'AB' })
+      const spec: TextMotionSpec = { in: createTextMotionEffect('typewriter') }
+      const { vertexData, pass } = renderVertices(item, {
+        spec,
+        relativeFrame: 1,
+        fps: 30,
+        durationInFrames: 300,
+      })
+      expect(pass.draw).toHaveBeenCalledWith(6)
+      // The surviving glyph is fully revealed (identity — alpha untouched).
+      expect(vertexData[7]).toBeCloseTo(1)
+    })
+
+    it('applies per-glyph motion offset and alpha to fill and shadow twin', () => {
+      const item = makeTextItem({
+        textShadow: { offsetX: 4, offsetY: 5, blur: 6, color: '#00000080' },
+      })
+      const settled = renderVertices(item)
+      const moving = renderVertices(item, fadeUpMidMotion)
+      // Shadow twin (first glyph) follows its parent glyph's motion…
+      expect(moving.vertexData[0]).toBeCloseTo(settled.vertexData[0]!)
+      expect(moving.vertexData[1]).toBeCloseTo(settled.vertexData[1]! + 6)
+      // …and its alpha multiplies the shadow alpha.
+      expect(moving.vertexData[7]).toBeCloseTo((0x80 / 255) * 0.5)
+      // Shadow blur is the shadow's own blur plus soften (0 for fade-up).
+      expect(moving.vertexData[19]).toBeCloseTo(6)
+      // Fill glyph (second, floats 120+) gets the same offset and alpha.
+      expect(moving.vertexData[121]).toBeCloseTo(settled.vertexData[121]! + 6)
+      expect(moving.vertexData[127]).toBeCloseTo(0.5)
+    })
+
+    it('animates underlines with their line unit, tracking the solid rect', () => {
+      const item = makeTextItem({ underline: true })
+      const settled = renderVertices(item)
+      const moving = renderVertices(item, fadeUpMidMotion)
+      // Glyph 0 is 'A', glyph 1 (floats 120+) is the underline solid quad:
+      // position AND the rect-SDF attributes must both move with the motion.
+      expect(moving.vertexData[121]).toBeCloseTo(settled.vertexData[121]! + 6)
+      expect(moving.vertexData[130]).toBeCloseTo(settled.vertexData[130]! + 6)
+      expect(moving.vertexData[127]).toBeCloseTo(0.5)
+    })
+
+    it('adds soften to the SDF edge-widening band', () => {
+      // blur-in at linear p = 0.5: soften = 0.5·0.4·48 = 9.6 on a fill glyph
+      // whose own shadowBlur is 0.
+      const spec: TextMotionSpec = {
+        in: {
+          ...createTextMotionEffect('blur-in'),
+          durationFrames: 10,
+          staggerFrames: 0,
+          easing: 'linear',
+        },
+      }
+      const { vertexData } = renderVertices(makeTextItem(), {
+        spec,
+        relativeFrame: 5,
+        fps: 30,
+        durationInFrames: 300,
+      })
+      expect(vertexData[19]).toBeCloseTo(9.6)
+      expect(vertexData[7]).toBeCloseTo(0.5)
+    })
+
+    it('renders settled frames bit-identically to a motion-less render', () => {
+      // Frame 150 is far outside the in window: the slot dispatch resolves to
+      // null, no segmentation runs, and vertices match a motion-less render.
+      const item = makeTextItem()
+      const plain = renderVertices(item)
+      const settled = renderVertices(item, {
+        spec: fadeUpSpec,
+        relativeFrame: 150,
+        fps: 30,
+        durationInFrames: 300,
+      })
+      expect(Array.from(settled.vertexData)).toEqual(Array.from(plain.vertexData))
+    })
+  })
+
+  it('rejects text that would overflow the fixed vertex buffer', () => {
+    const { outputTexture, pass, pipeline, queue } = createPipelineHarness()
+
+    const rendered = pipeline.renderTextToTexture(outputTexture, {
+      outputWidth: 640,
+      outputHeight: 180,
+      width: 100000,
+      height: 180,
+      item: {
+        id: 'text',
+        type: 'text',
+        trackId: 'track',
+        from: 0,
+        durationInFrames: 30,
+        text: 'A'.repeat(4097),
+        color: '#ffffff',
+        fontSize: 48,
+        fontFamily: 'Inter',
+        textPadding: 0,
+      } as TextItem,
+    })
+
+    expect(rendered).toBe(false)
+    expect(pass.draw).not.toHaveBeenCalled()
+    expect(queue.submit).not.toHaveBeenCalled()
+  })
+})

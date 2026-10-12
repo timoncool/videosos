@@ -1,0 +1,109 @@
+{
+  "preview": {
+    "mediaOffline": {
+      "title": "Media offline",
+      "relink": "Relink it in the Media panel",
+      "loading": "Loading…"
+    },
+    "align": {
+      "left": "Align Left",
+      "centerH": "Align Center Horizontally",
+      "right": "Align Right",
+      "top": "Align Top",
+      "centerV": "Align Center Vertically",
+      "bottom": "Align Bottom",
+      "distributeH": "Distribute Horizontally",
+      "distributeV": "Distribute Vertically",
+      "disableCanvasSnap": "Disable Canvas Snap",
+      "enableCanvasSnap": "Enable Canvas Snap",
+      "toggleCanvasSnap": "Toggle Canvas Snap"
+    },
+    "controls": {
+      "captureFailed": "Couldn't capture the current frame.",
+      "disableProxyPlayback": "Disable Proxy Playback",
+      "enableProxyPlayback": "Enable Proxy Playback",
+      "frameDownloadedNoProject": "Frame downloaded — open a project to save it to the media library.",
+      "frameDownloadedNotSaved": "Frame downloaded, but couldn't save to the media library: {{message}}",
+      "frameSaved": "Saved \"{{name}}\" to the media library.",
+      "goToEnd": "Go To End",
+      "goToEndTooltip": "Go To End",
+      "goToStart": "Go To Start",
+      "goToStartTooltip": "Go To Start",
+      "nextFrame": "Next Frame",
+      "nextFrameTooltip": "Next Frame",
+      "pauseTooltip": "Pause",
+      "playTooltip": "Play",
+      "prevFrame": "Prev Frame",
+      "prevFrameTooltip": "Prev Frame",
+      "proxyPlaybackOff": "Proxy Playback Off",
+      "proxyPlaybackOn": "Proxy Playback On",
+      "saveFrame": "Save frame",
+      "saveFrameFailed": "Couldn't save the frame.",
+      "saveFrameTooltip": "Save frame",
+      "savingFrame": "Saving frame",
+      "savingFrameTooltip": "Saving frame"
+    },
+    "monitor": {
+      "mute": "Mute",
+      "muteShort": "Mute Short",
+      "muted": "Muted",
+      "percent": "Percent",
+      "previewOnlyNote": "Only affects local playback — exports use the project mix.",
+      "thisDeviceOnly": "This Device Only",
+      "title": "Preview audio",
+      "unmute": "Unmute",
+      "volume": "Volume"
+    },
+    "player": {
+      "exitFullscreen": "Exit Fullscreen",
+      "fullscreen": "Fullscreen",
+      "mute": "Mute",
+      "pause": "Pause",
+      "play": "Play",
+      "seek": "Seek",
+      "unmute": "Unmute",
+      "volume": "Volume"
+    },
+    "stage": {
+      "loadingMedia": "Loading Media",
+      "videoPreview": "Video Preview",
+      "emptyTitle": "Nothing on the timeline yet",
+      "emptyDescription": "Import media, drag a clip to the timeline, then press Space to preview.",
+      "gradeComparisonSplit": "Split grade comparison",
+      "gradeComparisonBefore": "Before",
+      "gradeComparisonAfter": "After",
+      "gradeComparisonWipe": "Adjust split comparison"
+    },
+    "zoom": {
+      "ariaLabel": "Zoom level: {{label}}",
+      "auto": "Auto",
+      "tooltip": "Zoom: {{label}}"
+    },
+    "canvasDrop": {
+      "dropOnTimeline": "Drop on timeline",
+      "compoundClipsTimeline": "Compound clips still place best on the timeline.",
+      "presetsTimeline": "Text and shape presets still place best on the timeline.",
+      "adjustmentLayersTimeline": "Adjustment layers apply to the whole frame — place them on the timeline.",
+      "placeLayerDescription": "Place this layer at the drop position.",
+      "dropOneItem": "Drop one item",
+      "oneMediaAtATime": "Place one media item at a time on the canvas.",
+      "audioGoesOnTimeline": "Audio goes on timeline",
+      "visualLayersOnly": "Canvas drop places visual layers only.",
+      "dropToPlace": "Drop to place",
+      "addAtPlayhead": "Add this media at the playhead and drop position.",
+      "dropOneFile": "Drop one file",
+      "oneVisualFileAtATime": "Canvas drop imports one visual file at a time.",
+      "importAndPlace": "Import and place",
+      "importAndPlaceDescription": "Import this file and place it on the canvas.",
+      "noCompatibleTrack": "No unlocked compatible track is available for this drop.",
+      "unableToLoadMedia": "Unable to load dropped media.",
+      "mediaNoLongerAvailable": "Dropped media is no longer available.",
+      "dragDropUnsupported": "Drag-drop is not supported in this browser. Use Chrome or Edge.",
+      "filesRejected": "Some files were rejected: {{errors}}",
+      "dropAudioOnTimeline": "Drop audio on the timeline instead.",
+      "unableToInspectVideo": "Unable to inspect dropped video.",
+      "unableToInspectFile": "Unable to inspect dropped file.",
+      "unableToImportFile": "Unable to import dropped file."
+    }
+  }
+}

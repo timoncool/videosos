@@ -1,0 +1,36 @@
+{
+  "recording": {
+    "rec": "REC",
+    "record": "Voiceover aufnehmen",
+    "recordTooltip": "Nimm ein mit dem Abspielkopf synchronisiertes Voiceover auf",
+    "pause": "Aufnahme pausieren",
+    "resume": "Aufnahme fortsetzen",
+    "stop": "Stoppen und speichern",
+    "stopTooltip": "Aufnahme stoppen und die Take zur Zeitleiste hinzufügen",
+    "cancel": "Aufnahme abbrechen",
+    "cancelTooltip": "Diese Aufnahme verwerfen",
+    "saving": "Wird gespeichert…",
+    "chooseDevice": "Mikrofoneinstellungen",
+    "microphone": "Mikrofon",
+    "systemDefault": "Systemstandard",
+    "settings": "Aufnahmeeinstellungen",
+    "noiseSuppression": "Rauschunterdrückung",
+    "autoGain": "Automatische Verstärkung",
+    "muteWhileRecording": "Zeitleiste während der Aufnahme stummschalten",
+    "syncOffset": "Sync-Versatz",
+    "syncOffsetEarlier": "Aufnahme früher verschieben",
+    "syncOffsetLater": "Aufnahme später verschieben",
+    "headphonesHint": "Verwende Kopfhörer, damit der Ton der Zeitleiste nicht vom Mikrofon aufgenommen wird.",
+    "fileNamePrefix": "voiceover",
+    "errors": {
+      "unsupported": "Die Mikrofonaufnahme wird von diesem Browser nicht unterstützt.",
+      "noProject": "Öffne ein Projekt, bevor du aufnimmst.",
+      "permissionDenied": "Der Mikrofonzugriff wurde blockiert. Erlaube den Mikrofonzugriff in deinem Browser und versuche es erneut.",
+      "noDevice": "Es wurde kein Mikrofon gefunden. Schließe ein Mikrofon an und versuche es erneut.",
+      "deviceBusy": "Das Mikrofon wird von einer anderen App verwendet.",
+      "startFailed": "Die Aufnahme konnte nicht gestartet werden. Bitte versuche es erneut.",
+      "failed": "Die Aufnahme ist fehlgeschlagen. Bitte versuche es erneut.",
+      "saveFailed": "Die Aufnahme konnte nicht gespeichert werden."
+    }
+  }
+}

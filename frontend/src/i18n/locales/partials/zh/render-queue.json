@@ -1,0 +1,56 @@
+{
+  "export": {
+    "renderQueue": {
+      "title": "渲染队列",
+      "dialogTitle": "导出",
+      "tabQueue": "队列",
+      "tabExports": "已保存",
+      "description": "队列中的导出会逐个渲染，并保存到工作区的导出文件夹中。",
+      "addToQueue": "添加到队列",
+      "addCurrentRange": "当前范围",
+      "segmentsHeading": "分割为片段",
+      "perMarker": "每个标记一个片段",
+      "splitChunks": "按 {{seconds}} 秒分割",
+      "partLabel": "片段 {{n}}",
+      "addedToast_one": "已将 {{count}} 个任务添加到渲染队列",
+      "addedToast_other": "已将 {{count}} 个任务添加到渲染队列",
+      "noMarkers": "在时间轴上添加标记以按标记分割。",
+      "nothingToRender": "此范围内没有可渲染的内容。",
+      "buildFailed": "无法添加到渲染队列。",
+      "empty": "暂无渲染任务。从导出对话框添加一个。",
+      "exportsEmpty": "暂无导出文件。",
+      "exportsLocation": "文件位于此项目的本地文件夹（{{folder}}）中。",
+      "exportsLocationGeneric": "文件位于工作区中此项目的本地文件夹中。",
+      "pause": "暂停",
+      "resume": "继续",
+      "paused": "队列已暂停 — 继续以恢复渲染。",
+      "clearFinished": "清除已完成",
+      "clearAll": "清除全部",
+      "refresh": "刷新",
+      "wholeProject": "整个项目",
+      "savedTo": "已保存到 {{path}}",
+      "remove": "移除",
+      "cancel": "取消",
+      "retry": "重试",
+      "moveUp": "上移",
+      "moveDown": "下移",
+      "download": "下载",
+      "delete": "删除",
+      "deleted": "已删除 {{name}}",
+      "missingFile": "未找到文件 — 可能已被移动或删除。",
+      "downloadFailed": "下载失败。",
+      "deleteFailed": "删除失败。",
+      "status": {
+        "queued": "排队中",
+        "rendering": "渲染中",
+        "completed": "完成",
+        "failed": "失败",
+        "cancelled": "已取消"
+      }
+    }
+  },
+  "toolbar": {
+    "renderQueue": "渲染队列",
+    "renderQueueAria": "打开渲染队列"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "textMotion": {
+    "sectionTitle": "テキストアニメーション",
+    "hint": "文字・単語・行ごとにテキストをアニメーションします。インとアウトはクリップの両端で再生され、ループはその間ずっと動き続けます。",
+    "slots": {
+      "in": "イン",
+      "out": "アウト",
+      "loop": "ループ"
+    },
+    "duration": "長さ",
+    "stagger": "ずらし",
+    "intensity": "強さ",
+    "order": "順序",
+    "orders": {
+      "forward": "前から",
+      "backward": "後ろから",
+      "center": "中央から",
+      "random": "ランダム"
+    },
+    "removePreset": "{{name}}を削除",
+    "presets": {
+      "typewriter": "タイプライター",
+      "fade-up": "フェードアップ",
+      "rise": "ライズ",
+      "cascade": "カスケード",
+      "pop": "ポップ",
+      "blur-in": "ブラーイン",
+      "slide-mask": "スライドリビール",
+      "wave-in": "ウェーブイン",
+      "fade-down": "フェードダウン",
+      "sink": "シンク",
+      "pop-out": "ポップアウト",
+      "blur-out": "ブラーアウト",
+      "typewriter-erase": "タイプ消去",
+      "pulse": "パルス",
+      "wave": "ウェーブ",
+      "shimmer": "シマー",
+      "swing": "スイング"
+    },
+    "unit": "適用対象",
+    "units": {
+      "character": "文字",
+      "word": "単語",
+      "line": "行",
+      "whole-clip": "クリップ全体"
+    }
+  }
+}

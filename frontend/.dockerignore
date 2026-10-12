@@ -1,0 +1,47 @@
+# Dependencies
+node_modules
+
+# Build output
+dist
+
+# Environment files (use environment variables in production)
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Test
+coverage
+
+# Temp files
+server/temp/media/*
+server/temp/output/*
+
+# Headless scratch / outputs / sample workspace (rebuilt or not needed in image)
+headless/output
+headless/assets
+tmp-workspace
+tmp
+*.mp4
+
+# Git
+.git
+.gitignore
+
+# Documentation
+*.md
+!README.md
+.claude

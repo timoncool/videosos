@@ -1,0 +1,56 @@
+{
+  "export": {
+    "renderQueue": {
+      "title": "レンダリングキュー",
+      "dialogTitle": "エクスポート",
+      "tabQueue": "キュー",
+      "tabExports": "保存済み",
+      "description": "キュー内のエクスポートは1つずつレンダリングされ、ワークスペースのエクスポートフォルダーに保存されます。",
+      "addToQueue": "キューに追加",
+      "addCurrentRange": "現在の範囲",
+      "segmentsHeading": "セグメントに分割",
+      "perMarker": "マーカーごとに1セグメント",
+      "splitChunks": "{{seconds}}秒ごとに分割",
+      "partLabel": "セグメント {{n}}",
+      "addedToast_one": "{{count}} 件のジョブをレンダリングキューに追加しました",
+      "addedToast_other": "{{count}} 件のジョブをレンダリングキューに追加しました",
+      "noMarkers": "マーカーで分割するには、タイムラインにマーカーを追加してください。",
+      "nothingToRender": "この範囲にレンダリングする対象がありません。",
+      "buildFailed": "レンダリングキューに追加できませんでした。",
+      "empty": "レンダリングジョブはまだありません。エクスポートダイアログから追加してください。",
+      "exportsEmpty": "エクスポート済みのファイルはまだありません。",
+      "exportsLocation": "ファイルはこのプロジェクトのローカルフォルダー（{{folder}}）にあります。",
+      "exportsLocationGeneric": "ファイルはワークスペース内のこのプロジェクトのローカルフォルダーにあります。",
+      "pause": "一時停止",
+      "resume": "再開",
+      "paused": "キューを一時停止中 — 再開するとレンダリングを続けます。",
+      "clearFinished": "完了分をクリア",
+      "clearAll": "すべてクリア",
+      "refresh": "更新",
+      "wholeProject": "プロジェクト全体",
+      "savedTo": "{{path}} に保存しました",
+      "remove": "削除",
+      "cancel": "キャンセル",
+      "retry": "再試行",
+      "moveUp": "上へ移動",
+      "moveDown": "下へ移動",
+      "download": "ダウンロード",
+      "delete": "削除",
+      "deleted": "{{name}} を削除しました",
+      "missingFile": "ファイルが見つかりません。移動または削除された可能性があります。",
+      "downloadFailed": "ダウンロードに失敗しました。",
+      "deleteFailed": "削除に失敗しました。",
+      "status": {
+        "queued": "待機中",
+        "rendering": "レンダリング中",
+        "completed": "完了",
+        "failed": "失敗",
+        "cancelled": "キャンセル"
+      }
+    }
+  },
+  "toolbar": {
+    "renderQueue": "レンダリングキュー",
+    "renderQueueAria": "レンダリングキューを開く"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "changelog": {
+    "homeAria": "FreeCut 首页",
+    "backToHome": "返回首页",
+    "releaseNotes": "版本说明",
+    "title": "FreeCut 新功能",
+    "description": "每周汇总新的编辑工具、工作流程改进和问题修复。最新版本已展开；展开之前的任意一周即可查看完整变更列表。",
+    "latest": "最新",
+    "changeCount_one": "{{count}} 项变更",
+    "changeCount_other": "{{count}} 项变更",
+    "initialRelease": "初始版本",
+    "ctaTitle": "准备好创作了吗？",
+    "ctaDescription": "打开 FreeCut，使用最新工具开始创作。",
+    "openFreeCut": "打开 FreeCut"
+  }
+}

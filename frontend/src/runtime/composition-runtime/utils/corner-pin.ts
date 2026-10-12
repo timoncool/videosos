@@ -1,0 +1,555 @@
+/**
+ * Corner Pin Utilities
+ *
+ * Computes CSS matrix3d transforms and Canvas2D mesh-based rendering
+ * for perspective warp (4-corner pin distortion).
+ *
+ * Corner pin offsets are in pin-target-local pixel space:
+ * - topLeft: offset from (0, 0)
+ * - topRight: offset from (width, 0)
+ * - bottomRight: offset from (width, height)
+ * - bottomLeft: offset from (0, height)
+ *
+ * For normal items, the pin target is the full item box.
+ * For contain-fit media, the pin target is the contained media rect.
+ * When all offsets are [0, 0], there is no distortion.
+ */
+
+import type { TimelineItemCornerPin } from '@/types/timeline'
+import type { CropSettings } from '@/types/transform'
+import {
+  calculateMediaCropLayout,
+  type MediaCropFitMode,
+  type Rect,
+} from '@/shared/utils/media-crop'
+
+export interface CornerPinOffsets {
+  topLeft: [number, number]
+  topRight: [number, number]
+  bottomRight: [number, number]
+  bottomLeft: [number, number]
+}
+
+export interface CornerPinTargetRectOptions {
+  sourceWidth?: number
+  sourceHeight?: number
+  crop?: CropSettings
+  fitMode?: MediaCropFitMode
+}
+
+export type CornerPinHomography = [
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+]
+
+/** Check if corner pin has any non-zero offset */
+export function hasCornerPin(pin: CornerPinOffsets | undefined): boolean {
+  if (!pin) return false
+  return (
+    pin.topLeft[0] !== 0 ||
+    pin.topLeft[1] !== 0 ||
+    pin.topRight[0] !== 0 ||
+    pin.topRight[1] !== 0 ||
+    pin.bottomRight[0] !== 0 ||
+    pin.bottomRight[1] !== 0 ||
+    pin.bottomLeft[0] !== 0 ||
+    pin.bottomLeft[1] !== 0
+  )
+}
+
+export function resolveCornerPinForSize(
+  pin: TimelineItemCornerPin | undefined,
+  width: number,
+  height: number,
+): CornerPinOffsets | undefined {
+  if (!pin) return undefined
+
+  const referenceWidth =
+    pin.referenceWidth && pin.referenceWidth > 1e-6 ? pin.referenceWidth : width
+  const referenceHeight =
+    pin.referenceHeight && pin.referenceHeight > 1e-6 ? pin.referenceHeight : height
+  const scaleX = referenceWidth > 1e-6 ? width / referenceWidth : 1
+  const scaleY = referenceHeight > 1e-6 ? height / referenceHeight : 1
+  const scaleCorner = ([x, y]: [number, number]): [number, number] => [x * scaleX, y * scaleY]
+
+  return {
+    topLeft: scaleCorner(pin.topLeft),
+    topRight: scaleCorner(pin.topRight),
+    bottomRight: scaleCorner(pin.bottomRight),
+    bottomLeft: scaleCorner(pin.bottomLeft),
+  }
+}
+
+export function withCornerPinReferenceSize(
+  pin: CornerPinOffsets,
+  width: number,
+  height: number,
+): TimelineItemCornerPin {
+  return {
+    ...pin,
+    referenceWidth: width > 0 ? width : undefined,
+    referenceHeight: height > 0 ? height : undefined,
+  }
+}
+
+export function resolveCornerPinTargetRect(
+  containerWidth: number,
+  containerHeight: number,
+  options?: CornerPinTargetRectOptions,
+): Rect {
+  if (
+    options?.sourceWidth !== undefined &&
+    options.sourceWidth > 0 &&
+    options.sourceHeight !== undefined &&
+    options.sourceHeight > 0
+  ) {
+    return calculateMediaCropLayout(
+      options.sourceWidth,
+      options.sourceHeight,
+      containerWidth,
+      containerHeight,
+      options.crop,
+      options.fitMode,
+    ).mediaRect
+  }
+
+  return {
+    x: 0,
+    y: 0,
+    width: containerWidth,
+    height: containerHeight,
+  }
+}
+
+/**
+ * Compute 3x3 homography matrix (flattened as 9-element array)
+ * that maps from source rect (0,0)-(w,h) to corner-pinned quad.
+ */
+export function computeCornerPinHomography(
+  w: number,
+  h: number,
+  pin: CornerPinOffsets,
+): CornerPinHomography {
+  // Destination corners
+  const x0 = pin.topLeft[0]
+  const y0 = pin.topLeft[1]
+  const x1 = w + pin.topRight[0]
+  const y1 = pin.topRight[1]
+  const x2 = w + pin.bottomRight[0]
+  const y2 = h + pin.bottomRight[1]
+  const x3 = pin.bottomLeft[0]
+  const y3 = h + pin.bottomLeft[1]
+
+  // Compute unit-square-to-quad homography
+  const dx1 = x1 - x2
+  const dx2 = x3 - x2
+  const sx = x0 - x1 + x2 - x3
+  const dy1 = y1 - y2
+  const dy2 = y3 - y2
+  const sy = y0 - y1 + y2 - y3
+
+  const det = dx1 * dy2 - dy1 * dx2
+  if (Math.abs(det) < 1e-10) {
+    return [1, 0, 0, 0, 1, 0, 0, 0, 1] // Identity (degenerate)
+  }
+
+  const g = (sx * dy2 - sy * dx2) / det
+  const hCoeff = (dx1 * sy - dy1 * sx) / det
+
+  // Scale from rect to unit square: divide column 0 by w, column 1 by h
+  const a = (x1 - x0 + g * x1) / w
+  const b = (x3 - x0 + hCoeff * x3) / h
+  const c = x0
+  const d = (y1 - y0 + g * y1) / w
+  const e = (y3 - y0 + hCoeff * y3) / h
+  const f = y0
+
+  return [a, b, c, d, e, f, g / w, hCoeff / h, 1]
+}
+
+export function invertCornerPinHomography(m: CornerPinHomography): CornerPinHomography | null {
+  const [a, b, c, d, e, f, g, h, i] = m
+  const A = e * i - f * h
+  const B = c * h - b * i
+  const C = b * f - c * e
+  const D = f * g - d * i
+  const E = a * i - c * g
+  const F = c * d - a * f
+  const G = d * h - e * g
+  const H = b * g - a * h
+  const I = a * e - b * d
+  const det = a * A + b * D + c * G
+  if (Math.abs(det) < 1e-10) return null
+  const invDet = 1 / det
+  return [
+    A * invDet,
+    B * invDet,
+    C * invDet,
+    D * invDet,
+    E * invDet,
+    F * invDet,
+    G * invDet,
+    H * invDet,
+    I * invDet,
+  ]
+}
+
+/**
+ * Compute CSS matrix3d string for a corner pin distortion.
+ *
+ * The returned matrix3d should be used with transformOrigin: '0 0'.
+ */
+export function computeCornerPinMatrix3d(w: number, h: number, pin: CornerPinOffsets): string {
+  const H = computeCornerPinHomography(w, h, pin)
+  // CSS matrix3d (column-major):
+  // matrix3d(m00, m10, 0, m20, m01, m11, 0, m21, 0, 0, 1, 0, m02, m12, 0, m22)
+  return `matrix3d(${H[0]},${H[3]},0,${H[6]},${H[1]},${H[4]},0,${H[7]},0,0,1,0,${H[2]},${H[5]},0,${H[8]})`
+}
+
+/**
+ * Apply a 3x3 homography to a 2D point.
+ */
+function projectPoint(H: number[], x: number, y: number): [number, number] {
+  const pw = H[6]! * x + H[7]! * y + H[8]!
+  if (Math.abs(pw) < 1e-10) return [x, y]
+  return [(H[0]! * x + H[1]! * y + H[2]!) / pw, (H[3]! * x + H[4]! * y + H[5]!) / pw]
+}
+
+/**
+ * Draw a textured triangle by computing the affine transform
+ * that maps source triangle to destination triangle, then clipping and drawing.
+ */
+function drawTexturedTriangle(
+  ctx: OffscreenCanvasRenderingContext2D,
+  source: CanvasImageSource,
+  sx0: number,
+  sy0: number,
+  sx1: number,
+  sy1: number,
+  sx2: number,
+  sy2: number,
+  dx0: number,
+  dy0: number,
+  dx1: number,
+  dy1: number,
+  dx2: number,
+  dy2: number,
+): void {
+  ctx.save()
+
+  // Expand clip triangle slightly outward from centroid to eliminate
+  // anti-aliasing seams between adjacent mesh triangles.
+  const cx = (dx0 + dx1 + dx2) / 3
+  const cy = (dy0 + dy1 + dy2) / 3
+  const EXPAND = 1.5
+  const expand = (vx: number, vy: number): [number, number] => {
+    const ox = vx - cx
+    const oy = vy - cy
+    const len = Math.sqrt(ox * ox + oy * oy)
+    if (len < 1e-6) return [vx, vy]
+    return [vx + (ox / len) * EXPAND, vy + (oy / len) * EXPAND]
+  }
+  const [ex0, ey0] = expand(dx0, dy0)
+  const [ex1, ey1] = expand(dx1, dy1)
+  const [ex2, ey2] = expand(dx2, dy2)
+
+  // Clip to expanded destination triangle
+  ctx.beginPath()
+  ctx.moveTo(ex0, ey0)
+  ctx.lineTo(ex1, ey1)
+  ctx.lineTo(ex2, ey2)
+  ctx.closePath()
+  ctx.clip()
+
+  // Solve for affine: [dx] = [a c e] * [sx, sy, 1]^T
+  const det = sx0 * (sy1 - sy2) + sx1 * (sy2 - sy0) + sx2 * (sy0 - sy1)
+  if (Math.abs(det) < 1e-10) {
+    ctx.restore()
+    return
+  }
+  const invDet = 1 / det
+
+  const a = (dx0 * (sy1 - sy2) + dx1 * (sy2 - sy0) + dx2 * (sy0 - sy1)) * invDet
+  const b = (dy0 * (sy1 - sy2) + dy1 * (sy2 - sy0) + dy2 * (sy0 - sy1)) * invDet
+  const c = (dx0 * (sx2 - sx1) + dx1 * (sx0 - sx2) + dx2 * (sx1 - sx0)) * invDet
+  const d = (dy0 * (sx2 - sx1) + dy1 * (sx0 - sx2) + dy2 * (sx1 - sx0)) * invDet
+  const e2 =
+    (dx0 * (sx1 * sy2 - sx2 * sy1) +
+      dx1 * (sx2 * sy0 - sx0 * sy2) +
+      dx2 * (sx0 * sy1 - sx1 * sy0)) *
+    invDet
+  const f =
+    (dy0 * (sx1 * sy2 - sx2 * sy1) +
+      dy1 * (sx2 * sy0 - sx0 * sy2) +
+      dy2 * (sx0 * sy1 - sx1 * sy0)) *
+    invDet
+
+  ctx.setTransform(a, b, c, d, e2, f)
+  ctx.drawImage(source, 0, 0)
+  ctx.restore()
+}
+
+/**
+ * Draw an image warped by corner pin onto a canvas using mesh subdivision.
+ *
+ * @param ctx - Destination canvas context
+ * @param source - Source image/canvas to warp
+ * @param srcW - Source width
+ * @param srcH - Source height
+ * @param dstX - Destination X offset (item position on canvas)
+ * @param dstY - Destination Y offset
+ * @param pin - Corner pin offsets
+ * @param subdivisions - Grid subdivision count (higher = smoother, 16 is good)
+ */
+export function drawCornerPinImage(
+  ctx: OffscreenCanvasRenderingContext2D,
+  source: CanvasImageSource,
+  srcW: number,
+  srcH: number,
+  dstX: number,
+  dstY: number,
+  pin: CornerPinOffsets,
+  subdivisions: number = 16,
+  renderer: 'mesh' | 'projective' = 'mesh',
+): void {
+  if (renderer === 'projective') {
+    drawCornerPinImageProjective(ctx, source, srcW, srcH, dstX, dstY, pin)
+    return
+  }
+
+  const H = computeCornerPinHomography(srcW, srcH, pin)
+
+  for (let row = 0; row < subdivisions; row++) {
+    for (let col = 0; col < subdivisions; col++) {
+      const sx0 = (col / subdivisions) * srcW
+      const sy0 = (row / subdivisions) * srcH
+      const sx1 = ((col + 1) / subdivisions) * srcW
+      const sy1 = ((row + 1) / subdivisions) * srcH
+
+      const [px0, py0] = projectPoint(H, sx0, sy0)
+      const [px1, py1] = projectPoint(H, sx1, sy0)
+      const [px2, py2] = projectPoint(H, sx1, sy1)
+      const [px3, py3] = projectPoint(H, sx0, sy1)
+
+      // Triangle 1: top-left diagonal
+      drawTexturedTriangle(
+        ctx,
+        source,
+        sx0,
+        sy0,
+        sx1,
+        sy0,
+        sx1,
+        sy1,
+        dstX + px0,
+        dstY + py0,
+        dstX + px1,
+        dstY + py1,
+        dstX + px2,
+        dstY + py2,
+      )
+      // Triangle 2: bottom-right diagonal
+      drawTexturedTriangle(
+        ctx,
+        source,
+        sx0,
+        sy0,
+        sx1,
+        sy1,
+        sx0,
+        sy1,
+        dstX + px0,
+        dstY + py0,
+        dstX + px2,
+        dstY + py2,
+        dstX + px3,
+        dstY + py3,
+      )
+    }
+  }
+}
+
+/** Upper bound on a warp canvas edge — the widely-supported 2D canvas max. */
+const MAX_WARP_DIMENSION = 16384
+
+function createWarpCanvas(
+  width: number,
+  height: number,
+): { canvas: OffscreenCanvas | HTMLCanvasElement; ctx: OffscreenCanvasRenderingContext2D } | null {
+  const w = Math.max(1, Math.ceil(width))
+  const h = Math.max(1, Math.ceil(height))
+
+  if (typeof OffscreenCanvas !== 'undefined') {
+    const canvas = new OffscreenCanvas(w, h)
+    const ctx = canvas.getContext('2d')
+    return ctx ? { canvas, ctx } : null
+  }
+
+  if (typeof document === 'undefined') {
+    return null
+  }
+
+  const canvas = document.createElement('canvas')
+  canvas.width = w
+  canvas.height = h
+  const ctx = canvas.getContext('2d')
+  return ctx ? { canvas, ctx: ctx as unknown as OffscreenCanvasRenderingContext2D } : null
+}
+
+function sampleBilinear(
+  sourceData: Uint8ClampedArray,
+  width: number,
+  x: number,
+  y: number,
+): number[] {
+  const x0 = Math.floor(x)
+  const y0 = Math.floor(y)
+  const x1 = Math.min(width - 1, x0 + 1)
+  const y1 = Math.min(Math.floor(sourceData.length / (width * 4)) - 1, y0 + 1)
+  const tx = x - x0
+  const ty = y - y0
+
+  const i00 = (y0 * width + x0) * 4
+  const i10 = (y0 * width + x1) * 4
+  const i01 = (y1 * width + x0) * 4
+  const i11 = (y1 * width + x1) * 4
+
+  // Premultiplied bilinear: interpolating straight RGBA across an alpha
+  // discontinuity bleeds opaque colors into transparent pixels (visible as
+  // dark halos on text/shape edges). Premultiply RGB by alpha first,
+  // interpolate, then unpremultiply.
+  const a00 = sourceData[i00 + 3]! / 255
+  const a10 = sourceData[i10 + 3]! / 255
+  const a01 = sourceData[i01 + 3]! / 255
+  const a11 = sourceData[i11 + 3]! / 255
+
+  const interp = (v00: number, v10: number, v01: number, v11: number): number => {
+    const top = v00 * (1 - tx) + v10 * tx
+    const bottom = v01 * (1 - tx) + v11 * tx
+    return top * (1 - ty) + bottom * ty
+  }
+
+  const r = interp(
+    sourceData[i00]! * a00,
+    sourceData[i10]! * a10,
+    sourceData[i01]! * a01,
+    sourceData[i11]! * a11,
+  )
+  const g = interp(
+    sourceData[i00 + 1]! * a00,
+    sourceData[i10 + 1]! * a10,
+    sourceData[i01 + 1]! * a01,
+    sourceData[i11 + 1]! * a11,
+  )
+  const b = interp(
+    sourceData[i00 + 2]! * a00,
+    sourceData[i10 + 2]! * a10,
+    sourceData[i01 + 2]! * a01,
+    sourceData[i11 + 2]! * a11,
+  )
+  const aOut = interp(a00, a10, a01, a11)
+
+  if (aOut <= 0) {
+    return [0, 0, 0, 0]
+  }
+  return [r / aOut, g / aOut, b / aOut, aOut * 255]
+}
+
+/**
+ * Result of a projective corner-pin warp, in source-local space (computed as if
+ * the source were drawn at the origin). `offsetX/offsetY` are where the warped
+ * bitmap's top-left sits relative to the destination origin — so the caller
+ * places it at `(dstX + offsetX, dstY + offsetY)`. Because the warp is computed
+ * position-independently, the returned bitmap depends only on the source pixels,
+ * size and pin offsets — making it safe to cache across frames for static
+ * content (e.g. corner-pinned text during scrub).
+ */
+export interface ProjectiveCornerPinWarp {
+  canvas: OffscreenCanvas | HTMLCanvasElement
+  offsetX: number
+  offsetY: number
+}
+
+export function computeProjectiveCornerPinWarp(
+  source: CanvasImageSource,
+  srcW: number,
+  srcH: number,
+  pin: CornerPinOffsets,
+): ProjectiveCornerPinWarp | null {
+  const sourceCanvas = createWarpCanvas(srcW, srcH)
+  if (!sourceCanvas) return null
+
+  sourceCanvas.ctx.clearRect(0, 0, srcW, srcH)
+  sourceCanvas.ctx.drawImage(source, 0, 0, srcW, srcH)
+
+  let sourceImage: ImageData
+  try {
+    sourceImage = sourceCanvas.ctx.getImageData(0, 0, srcW, srcH)
+  } catch {
+    return null
+  }
+
+  // Corners computed with the destination origin at (0, 0); the caller offsets.
+  const corners: [number, number][] = [
+    [pin.topLeft[0], pin.topLeft[1]],
+    [srcW + pin.topRight[0], pin.topRight[1]],
+    [srcW + pin.bottomRight[0], srcH + pin.bottomRight[1]],
+    [pin.bottomLeft[0], srcH + pin.bottomLeft[1]],
+  ]
+  const minX = Math.floor(Math.min(...corners.map(([x]) => x))) - 1
+  const minY = Math.floor(Math.min(...corners.map(([, y]) => y))) - 1
+  const maxX = Math.ceil(Math.max(...corners.map(([x]) => x))) + 1
+  const maxY = Math.ceil(Math.max(...corners.map(([, y]) => y))) + 1
+  const outW = Math.max(1, maxX - minX)
+  const outH = Math.max(1, maxY - minY)
+  // Pin offsets are user-controlled and can balloon the output far beyond any
+  // real canvas size; bail before allocating (createWarpCanvas would throw on an
+  // oversized OffscreenCanvas, and the per-pixel loop below would freeze).
+  if (outW > MAX_WARP_DIMENSION || outH > MAX_WARP_DIMENSION) return null
+  const outputCanvas = createWarpCanvas(outW, outH)
+  if (!outputCanvas) return null
+
+  const outputImage = outputCanvas.ctx.createImageData(outW, outH)
+  const inverse = invertCornerPinHomography(computeCornerPinHomography(srcW, srcH, pin))
+  if (!inverse) return null
+
+  for (let y = 0; y < outH; y++) {
+    const dy = minY + y + 0.5
+    for (let x = 0; x < outW; x++) {
+      const dx = minX + x + 0.5
+      const [sx, sy] = projectPoint(inverse, dx, dy)
+      if (sx < 0 || sy < 0 || sx > srcW - 1 || sy > srcH - 1) continue
+
+      const sample = sampleBilinear(sourceImage.data, srcW, sx, sy)
+      const outOffset = (y * outW + x) * 4
+      outputImage.data[outOffset] = sample[0]!
+      outputImage.data[outOffset + 1] = sample[1]!
+      outputImage.data[outOffset + 2] = sample[2]!
+      outputImage.data[outOffset + 3] = sample[3]!
+    }
+  }
+
+  outputCanvas.ctx.putImageData(outputImage, 0, 0)
+  return { canvas: outputCanvas.canvas, offsetX: minX, offsetY: minY }
+}
+
+function drawCornerPinImageProjective(
+  ctx: OffscreenCanvasRenderingContext2D,
+  source: CanvasImageSource,
+  srcW: number,
+  srcH: number,
+  dstX: number,
+  dstY: number,
+  pin: CornerPinOffsets,
+): void {
+  const warp = computeProjectiveCornerPinWarp(source, srcW, srcH, pin)
+  if (!warp) return
+  ctx.drawImage(warp.canvas, dstX + warp.offsetX, dstY + warp.offsetY)
+}

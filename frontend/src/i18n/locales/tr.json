@@ -1,0 +1,170 @@
+{
+  "appShell": {
+    "newVersionAvailable": "Yeni bir sürüm mevcut. Çalışmanızı kaydedip yeniden yükleyin.",
+    "saveAndReload": "Kaydet ve Yeniden Yükle",
+    "reloadWithoutSaving": "Kaydetmeden Yeniden Yükle",
+    "dockPanel": "Paneli sabitle",
+    "installPrompt": {
+      "label": "FreeCut’ı yükle",
+      "title": "FreeCut’ı yükle",
+      "description": "Masaüstünden veya ana ekrandan aç.",
+      "install": "Yükle",
+      "notNow": "Şimdi değil",
+      "dismiss": "Yükleme istemini kapat"
+    }
+  },
+  "common": {
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "delete": "Sil",
+    "discard": "Vazgeç",
+    "close": "Kapat",
+    "reset": "Sıfırla",
+    "done": "Tamam",
+    "loading": "Yükleniyor...",
+    "saving": "Kaydediliyor...",
+    "deleting": "Siliniyor...",
+    "clearing": "Temizleniyor...",
+    "queueing": "Sıraya alınıyor...",
+    "partial": "Kısmi",
+    "untitledProject": "Adsız Proje"
+  },
+  "language": {
+    "label": "Dil",
+    "description": "Uygulamada kullanılacak dili seçin.",
+    "ariaLabel": "Arayüz dili"
+  },
+  "toolbar": {
+    "ariaLabel": "Editör araç çubuğu",
+    "workspaces": {
+      "motion": "Motion",
+      "label": "Çalışma alanları",
+      "edit": "Kurgu",
+      "color": "Renk",
+      "animate": "Animasyon"
+    },
+    "backToProjects": "Projelere Dön",
+    "backToProjectsAria": "Projelere dön",
+    "specs": "{{width}}x{{height}} | {{fps}}fps",
+    "specsDetailed": "{{width}}x{{height}} | {{fps}}fps | {{duration}} | {{clips}} klip | {{media}} medya | {{missing}} eksik",
+    "whatsNew": "Yenilikler",
+    "whatsNewAria": "Yenilikler",
+    "settings": "Ayarlar",
+    "keyboardShortcuts": "Klavye Kısayolları",
+    "keyboardShortcutsAria": "Klavye kısayolları",
+    "viewOnGitHub": "GitHub'da Görüntüle",
+    "joinDiscord": "Discord'a Katıl",
+    "debugPanel": "Hata Ayıklama Paneli",
+    "debugPanelAria": "Hata ayıklama paneli",
+    "save": "Kaydet",
+    "saveAria": "Projeyi kaydet",
+    "export": "Dışa Aktar",
+    "exportVideo": "Videoyu Dışa Aktar",
+    "downloadProjectZip": "Projeyi İndir (.zip)"
+  },
+  "unsavedChanges": {
+    "title": "Kaydedilmemiş Değişiklikler",
+    "descriptionWithName": "<strong>{{name}}</strong> içinde kaydedilmemiş değişiklikler var. Çıkmadan önce kaydetmek ister misiniz?",
+    "description": "Kaydedilmemiş değişiklikleriniz var. Çıkmadan önce kaydetmek ister misiniz?",
+    "discard": "Vazgeç",
+    "saveAndExit": "Kaydet ve Çık",
+    "saving": "Kaydediliyor..."
+  },
+  "settings": {
+    "title": "Editör Ayarları",
+    "sections": {
+      "general": "Genel",
+      "timeline": "Zaman Çizelgesi",
+      "ai": "YZ",
+      "storage": "Depolama"
+    },
+    "general": {
+      "autoSave": "Otomatik kaydet",
+      "interval": "Aralık",
+      "intervalMinutes": "{{count}} dk",
+      "undoHistoryDepth": "Geri Alma Geçmişi Derinliği",
+      "uiSounds": "Arayüz sesleri",
+      "uiSoundVolume": "Ses düzeyi",
+      "uiSoundVoice": "Ses teması",
+      "uiSoundPreview": "Önizleme"
+    },
+    "ai": {
+      "captionSampleInterval": "Altyazı örnekleme aralığı",
+      "captionSampleIntervalDescription": "YZ ile Analiz et sırasında altyazı için karelerin ne sıklıkta örnekleneceği.",
+      "seconds": "Saniye",
+      "frames": "Kare",
+      "unitSec": "sn",
+      "unitFrames": "kare",
+      "enterIntervalAboveZero": "Sıfırdan büyük bir aralık girin.",
+      "captionEstimate": "{{fps}}fps hızında 1 dakikalık klip başına yaklaşık {{sceneCount}} {{scenes}}",
+      "scene_one": "sahne",
+      "scene_other": "sahne",
+      "captionIntervalHint": "{{estimate}}. Daha küçük aralıklar daha yoğun sahneler üretir ancak oluşturma daha uzun sürer.",
+      "defaultCaptionStyle": "Varsayılan altyazı stili",
+      "defaultCaptionStyleDescription": "Transkripsiyonlardan veya yapay zekâ altyazısından oluşturulan altyazılara uygulanan stil."
+    },
+    "timeline": {
+      "snapByDefault": "Varsayılan olarak yapıştır",
+      "snapByDefaultDescription": "Bir proje açıldığında başlangıç yapıştırma durumunu ayarlar.",
+      "showWaveforms": "Dalga formlarını göster",
+      "showFilmstrips": "Film şeritlerini göster",
+      "enableFilmstripExtraction": "Film şeritlerini çıkar",
+      "enableFilmstripExtractionDescription": "İçe aktarma ve zaman çizelgesinde görüntüleme sırasında video küçük resim şeritleri oluşturur."
+    },
+    "storage": {
+      "generateMissingProxies": "Eksik Proxy'leri Oluştur",
+      "generateMissingProxiesDescription": "Bu projede proxy'si olmayan videolar için proxy oluşturmayı sıraya al",
+      "queued": "Sıraya alındı",
+      "generateWithCount": "Oluştur ({{count}})",
+      "upToDate": "Güncel",
+      "clearProjectCache": "Proje Önbelleğini Temizle",
+      "clearProjectCacheDescription": "Dalga formları, film şeritleri, GIF kareleri, çözülmüş ses",
+      "clear": "Temizle",
+      "cleared": "Temizlendi",
+      "regenerateThumbnails": "Küçük Resimleri Yeniden Oluştur",
+      "regenerateThumbnailsDescription": "Bu proje için medya kitaplığı küçük resimlerini yeniden oluştur",
+      "regenerate": "Yeniden oluştur",
+      "deleteProxies": "Proxy'leri Sil",
+      "deleteProxiesDescription": "Bu proje için oluşturulan proxy videolarını kaldır",
+      "deleted": "Silindi",
+      "localAi": "Yerel YZ",
+      "localAiDescription": "Bellekte kalan çalışma zamanlarını boşalt veya önbelleğe alınmış model indirmelerini temizle.",
+      "clearCacheConfirmTitle": "Proje önbelleği temizlensin mi?",
+      "clearCacheConfirmDescription": "Bu işlem, mevcut projenin ({{count}} medya öğesi) önbelleğe alınmış dalga formlarını, film şeritlerini, GIF karelerini ve çözülmüş sesini siler. Gerektiğinde otomatik olarak yeniden oluşturulurlar. Proje verileriniz, medya dosyalarınız, küçük resimleriniz ve proxy'leriniz etkilenmez.",
+      "clearCache": "Önbelleği Temizle"
+    },
+    "toasts": {
+      "projectCacheCleared": "Proje önbelleği temizlendi",
+      "projectCachePartiallyCleared": "Proje önbelleği kısmen temizlendi",
+      "projectCacheNotCleared": "Proje önbelleği temizlenmedi",
+      "thumbnailsRegenerated": "Küçük resimler yeniden oluşturuldu",
+      "thumbnailsPartiallyRegenerated": "Küçük resimler kısmen yeniden oluşturuldu",
+      "thumbnailsNotRegenerated": "Küçük resimler yeniden oluşturulmadı",
+      "proxiesDeleted": "Proxy'ler silindi",
+      "proxiesPartiallyDeleted": "Proxy'ler kısmen silindi",
+      "proxiesNotDeleted": "Proxy'ler silinmedi",
+      "failedToClearCache": "Proje önbelleği temizlenemedi",
+      "failedToRegenerateThumbnails": "Küçük resimler yeniden oluşturulamadı",
+      "failedToDeleteProxies": "Proxy'ler silinemedi",
+      "itemsUpdated_one": "{{count}} öğe güncellendi.",
+      "itemsUpdated_other": "{{count}} öğe güncellendi.",
+      "itemsUpdatedFailed_one": "{{count}} öğe güncellendi. Başarısız: {{failed}}",
+      "itemsUpdatedFailed_other": "{{count}} öğe güncellendi. Başarısız: {{failed}}"
+    },
+    "feedback": {
+      "couldntClearCache": "Proje önbelleği temizlenemedi.",
+      "couldntRegenerateThumbnails": "Küçük resimler yeniden oluşturulamadı.",
+      "couldntDeleteProxies": "Proxy'ler silinemedi.",
+      "noMediaNeededUpdating": "Güncellenmesi gereken proje medyası yok.",
+      "completedForItems_one": "{{action}}: {{count}} öğe için tamamlandı.",
+      "completedForItems_other": "{{action}}: {{count}} öğe için tamamlandı.",
+      "couldntProcessItems_one": "{{action}}: {{count}} öğe işlenemedi{{detail}}",
+      "couldntProcessItems_other": "{{action}}: {{count}} öğe işlenemedi{{detail}}",
+      "partialOutcome": "{{action}}: {{succeeded}}/{{total}} tamamlandı. Dikkat gerekiyor: {{failed}}.",
+      "moreItems": "{{items}}, +{{count}} daha",
+      "actionClearCache": "Önbelleği temizle",
+      "actionRegenerateThumbnails": "Küçük resimleri yeniden oluştur",
+      "actionDeleteProxies": "Proxy'leri sil"
+    }
+  }
+}

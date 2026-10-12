@@ -1,0 +1,245 @@
+import { describe, expect, it } from 'vite-plus/test'
+import type { ItemKeyframes } from '@/types/keyframe'
+import type { TimelineTrack } from '@/types/timeline'
+import { shouldPreferPlayerForStyledTextScrub } from './text-render-guard'
+
+const BASE_TRACK: TimelineTrack = {
+  id: 'track-1',
+  name: 'Track 1',
+  height: 60,
+  locked: false,
+  visible: true,
+  muted: false,
+  solo: false,
+  order: 0,
+  items: [],
+}
+
+describe('shouldPreferPlayerForStyledTextScrub', () => {
+  it('returns true for visible glow text with animation', () => {
+    const tracks: TimelineTrack[] = [
+      {
+        ...BASE_TRACK,
+        items: [
+          {
+            id: 'text-1',
+            type: 'text',
+            trackId: 'track-1',
+            from: 0,
+            durationInFrames: 90,
+            label: 'Glow text',
+            text: 'Glow',
+            color: '#ffffff',
+            textShadow: {
+              offsetX: 0,
+              offsetY: 0,
+              blur: 18,
+              color: '#00ffff',
+            },
+          },
+        ],
+      },
+    ]
+    const keyframes: ItemKeyframes[] = [
+      {
+        itemId: 'text-1',
+        properties: [
+          {
+            property: 'opacity',
+            keyframes: [
+              { id: 'kf-1', frame: 0, value: 0, easing: 'linear' },
+              { id: 'kf-2', frame: 12, value: 1, easing: 'linear' },
+            ],
+          },
+        ],
+      },
+    ]
+
+    expect(shouldPreferPlayerForStyledTextScrub(tracks, keyframes)).toBe(true)
+  })
+
+  it('returns true for styled text even without animation (unified renderer)', () => {
+    const tracks: TimelineTrack[] = [
+      {
+        ...BASE_TRACK,
+        items: [
+          {
+            id: 'text-1',
+            type: 'text',
+            trackId: 'track-1',
+            from: 0,
+            durationInFrames: 90,
+            label: 'Glow text',
+            text: 'Glow',
+            color: '#ffffff',
+            textShadow: {
+              offsetX: 0,
+              offsetY: 0,
+              blur: 18,
+              color: '#00ffff',
+            },
+          },
+        ],
+      },
+    ]
+
+    // Static styled text must stay on the DOM Player during scrub too, so it
+    // doesn't shift vs. the at-rest render.
+    expect(shouldPreferPlayerForStyledTextScrub(tracks, [])).toBe(true)
+  })
+
+  it('returns true for plain text so scrub and rest use the same rasterizer', () => {
+    const tracks: TimelineTrack[] = [
+      {
+        ...BASE_TRACK,
+        items: [
+          {
+            id: 'text-1',
+            type: 'text',
+            trackId: 'track-1',
+            from: 0,
+            durationInFrames: 90,
+            label: 'Plain text',
+            text: 'Plain',
+            color: '#ffffff',
+          },
+        ],
+      },
+    ]
+
+    expect(shouldPreferPlayerForStyledTextScrub(tracks, [])).toBe(true)
+  })
+
+  it('returns true for stroked text without animation', () => {
+    const tracks: TimelineTrack[] = [
+      {
+        ...BASE_TRACK,
+        items: [
+          {
+            id: 'text-1',
+            type: 'text',
+            trackId: 'track-1',
+            from: 0,
+            durationInFrames: 90,
+            label: 'Outlined text',
+            text: 'Outline',
+            color: '#ffffff',
+            stroke: { width: 2, color: '#000000' },
+          },
+        ],
+      },
+    ]
+
+    expect(shouldPreferPlayerForStyledTextScrub(tracks, [])).toBe(true)
+  })
+
+  it('returns true for visible generated captions even without styling or animation', () => {
+    const tracks: TimelineTrack[] = [
+      {
+        ...BASE_TRACK,
+        items: [
+          {
+            id: 'caption-1',
+            type: 'text',
+            trackId: 'track-1',
+            from: 0,
+            durationInFrames: 90,
+            label: 'Caption',
+            text: 'Hello world',
+            color: '#fff',
+            textRole: 'caption',
+            captionSource: {
+              type: 'transcript',
+              clipId: 'video-1',
+              mediaId: 'media-1',
+            },
+          },
+        ],
+      },
+    ]
+
+    expect(shouldPreferPlayerForStyledTextScrub(tracks, [])).toBe(true)
+  })
+
+  it('returns false for motion-text clips even when styled (canvas-only rendering)', () => {
+    const tracks: TimelineTrack[] = [
+      {
+        ...BASE_TRACK,
+        items: [
+          {
+            id: 'text-1',
+            type: 'text',
+            trackId: 'track-1',
+            from: 0,
+            durationInFrames: 90,
+            label: 'Motion text',
+            text: 'Motion',
+            color: '#ffffff',
+            textShadow: {
+              offsetX: 0,
+              offsetY: 0,
+              blur: 18,
+              color: '#00ffff',
+            },
+            textMotion: {
+              in: {
+                presetId: 'fade-up',
+                durationFrames: 12,
+                staggerFrames: 2,
+                intensity: 1,
+                order: 'forward',
+                easing: 'ease-out',
+                seed: 0,
+              },
+            },
+          },
+        ],
+      },
+    ]
+
+    expect(shouldPreferPlayerForStyledTextScrub(tracks, [])).toBe(false)
+  })
+
+  it('ignores hidden tracks', () => {
+    const tracks: TimelineTrack[] = [
+      {
+        ...BASE_TRACK,
+        visible: false,
+        items: [
+          {
+            id: 'text-1',
+            type: 'text',
+            trackId: 'track-1',
+            from: 0,
+            durationInFrames: 90,
+            label: 'Glow text',
+            text: 'Glow',
+            color: '#ffffff',
+            textShadow: {
+              offsetX: 0,
+              offsetY: 0,
+              blur: 18,
+              color: '#00ffff',
+            },
+          },
+        ],
+      },
+    ]
+    const keyframes: ItemKeyframes[] = [
+      {
+        itemId: 'text-1',
+        properties: [
+          {
+            property: 'opacity',
+            keyframes: [
+              { id: 'kf-1', frame: 0, value: 0, easing: 'linear' },
+              { id: 'kf-2', frame: 12, value: 1, easing: 'linear' },
+            ],
+          },
+        ],
+      },
+    ]
+
+    expect(shouldPreferPlayerForStyledTextScrub(tracks, keyframes)).toBe(false)
+  })
+})

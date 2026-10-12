@@ -1,0 +1,28 @@
+{
+  "transcript": {
+    "sourceAnalyzed": "已分析完整源文件",
+    "detectedRange": "在 {{start}}–{{end}} 检测到人声。静音和纯音乐片段不会显示。",
+    "title": "字幕稿",
+    "tabLabel": "字幕稿",
+    "emptySelection": "选择一个视频或音频片段以编辑其字幕稿。",
+    "searchPlaceholder": "搜索字幕稿",
+    "nextMatch": "下一个匹配",
+    "previousMatch": "上一个匹配",
+    "clearSearch": "清除搜索",
+    "noTranscript": "此片段尚无字幕稿。",
+    "transcriptionFailed": "转写失败。",
+    "tryAgain": "重试",
+    "largeTurboFallback": "Large Turbo 内存不足。正在改用 Whisper Small 重试…",
+    "generate": "生成字幕稿",
+    "transcribing": "转写中…",
+    "loading": "正在加载字幕稿…",
+    "wordsSelected_one": "已选择 {{count}} 个词",
+    "wordsSelected_other": "已选择 {{count}} 个词",
+    "selectHint": "点击词语跳转到该处；拖动以选择。",
+    "deleteSelection": "删除",
+    "toastRemoved": "已移除 {{count}} 个片段",
+    "toastNothingRemoved": "未移除任何内容",
+    "toastRemoveFailed": "无法移除所选词语",
+    "toastTranscribeFailed": "转写失败"
+  }
+}

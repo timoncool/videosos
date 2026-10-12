@@ -1,0 +1,398 @@
+{
+  "editor": {
+    "mediaSidebar": {
+      "media": "Medya",
+      "text": "Metin",
+      "shapes": "Şekiller",
+      "effects": "Efektler",
+      "transitions": "Geçişler",
+      "ai": "YZ",
+      "collapsePanel": "Paneli daralt",
+      "expandPanel": "Paneli genişlet",
+      "keyframeEditor": "Anahtar kare düzenleyici",
+      "hideKeyframeEditor": "Anahtar kare düzenleyiciyi gizle",
+      "showKeyframeEditor": "Anahtar kare düzenleyiciyi göster",
+      "templates": "Şablonlar",
+      "textGroupSingle": "Tek",
+      "textGroupTwoSpans": "2 aralık",
+      "textGroupThreeSpans": "3 aralık",
+      "addText": "Metin ekle",
+      "pen": "Kalem",
+      "penToolHint": "Kalem aracıyla özel bir yol şekli çizin",
+      "adjustmentLayer": "Ayar katmanı",
+      "blankAdjustmentLayer": "Boş ayar katmanı",
+      "presets": "Ön Ayarlar"
+    },
+    "textSection": {
+      "sectionTitle": "Metin",
+      "content": "İçerik",
+      "single": "Tek",
+      "twoSpans": "2 aralık",
+      "threeSpans": "3 aralık",
+      "mixedNone": "Karışık / Yok",
+      "selectPreset": "Ön ayar seç",
+      "span": "Aralık {{count}}",
+      "spanText": "Aralık {{count}} metni",
+      "eyebrow": "Üst başlık",
+      "eyebrowText": "Üst başlık metni",
+      "title": "Başlık",
+      "titleText": "Başlık metni",
+      "subtitle": "Alt başlık",
+      "subtitleText": "Alt başlık metni",
+      "text": "Metin",
+      "enterText": "Metin gir...",
+      "defaultText": "Metninizi buraya yazın",
+      "selectFont": "Yazı tipi seç",
+      "size": "Boyut",
+      "spacing": "Aralık",
+      "scale": "Ölçek",
+      "font": "Yazı tipi",
+      "weight": "Ağırlık",
+      "style": "Stil",
+      "align": "Hizala",
+      "color": "Renk",
+      "background": "Arka plan",
+      "clear": "Temizle",
+      "clearBackground": "Arka planı temizle",
+      "lineHeightShort": "Satır y.",
+      "padding": "Dolgu",
+      "radius": "Yarıçap",
+      "mixed": "Karışık",
+      "selectWeight": "Ağırlık seç",
+      "bold": "Kalın",
+      "boldUnavailable": "Bu yazı tipinde kalın kullanılamaz",
+      "italic": "İtalik",
+      "underline": "Altı çizili",
+      "italicSpan": "{{label}} italik",
+      "underlineSpan": "{{label}} altı çizili",
+      "alignLeft": "Sola hizala",
+      "alignCenter": "Ortala",
+      "alignRight": "Sağa hizala",
+      "alignTop": "Üste hizala",
+      "alignMiddle": "Ortaya hizala",
+      "alignBottom": "Alta hizala",
+      "effects": "Efektler",
+      "presets": "Ön Ayarlar",
+      "fontWeights": {
+        "regular": "Normal",
+        "medium": "Orta",
+        "semibold": "Yarı kalın",
+        "bold": "Kalın"
+      },
+      "effectPresets": {
+        "none": "Yok",
+        "shadow": "Gölge",
+        "outline": "Kontur",
+        "glow": "Parıltı"
+      },
+      "shadow": "Gölge",
+      "shadowX": "Gölge X",
+      "shadowY": "Gölge Y",
+      "shadowBlur": "Gölge bul.",
+      "strokeWidth": "Kontur k.",
+      "stroke": "Kontur",
+      "animation": "Animasyon",
+      "intro": "Giriş",
+      "outro": "Çıkış",
+      "animationFooter": "Seçili her klibin başına veya sonuna kısa bir ease-out metin hareketi uygular.",
+      "animationPresets": {
+        "none": "Yok",
+        "fade": "Soldur",
+        "rise": "Yüksel",
+        "drop": "Düş",
+        "left": "Sol",
+        "right": "Sağ",
+        "tilt": "Eğ",
+        "pop": "Pop",
+        "swing": "Salla"
+      }
+    },
+    "tts": {
+      "seek": "Git",
+      "dialogTitle": "Metinden ses oluştur",
+      "dialogDescription": "Konuşma oluşturup metin klibinin konumuna ekleyin.",
+      "kokoroUnsupported": "Bu tarayıcıda WebGPU kullanılamıyor. Kokoro TTS için Chrome 113+, Edge 113+ veya Safari 26+ gerekir.",
+      "mossUnsupported": "Bu tarayıcıda tarayıcı tarafından yönetilen depolama kullanılamıyor. MOSS çok dilli TTS en iyi güncel bir Chromium tarayıcıda çalışır.",
+      "engine": "Motor",
+      "engineSupportDetails": "TTS motoru destek ayrıntıları",
+      "kokoroDescription": "WebGPU üzerinde İngilizce sesler.",
+      "supportedLanguages": "Desteklenen diller: {{languages}}.",
+      "kokoroOption": "Kokoro (İngilizce, WebGPU)",
+      "mossOption": "MOSS Nano (20 dil, CPU)",
+      "voice": "Ses",
+      "text": "Metin",
+      "textPlaceholder": "Seslendirilmesini istediğiniz metni girin...",
+      "speed": "Hız",
+      "progressPreparing": "Yerel TTS hazırlanıyor...",
+      "insertedAndLinked": "Eklendi ve bağlandı",
+      "generate": "Oluştur",
+      "generating": "Oluşturuluyor...",
+      "regenerate": "Yeniden oluştur",
+      "insertAndLink": "Ekle ve bağla",
+      "inserting": "Ekleniyor...",
+      "errors": {
+        "openProject": "Ses oluşturmadan önce bir proje açın.",
+        "enterText": "Sentezlemek için metin girin.",
+        "kokoroUnsupported": "Kokoro TTS için WebGPU gerekir. Chrome 113+, Edge 113+ veya Safari 26+ deneyin.",
+        "mossUnsupported": "MOSS çok dilli TTS için tarayıcı tarafından yönetilen depolama gerekir. Güncel bir Chromium tarayıcı deneyin.",
+        "generateFailed": "Konuşma oluşturulamadı.",
+        "insertFailed": "Ses kaydedilip eklenemedi.",
+        "supertonicUnsupported": "Bu tarayıcı yerel Supertonic TTS çalışma zamanını çalıştıramıyor. Güncel bir Chrome veya Edge deneyin."
+      },
+      "notifications": {
+        "addedAndLinked": "\"{{fileName}}\" zaman çizelgesine eklendi ve metinle bağlandı.",
+        "savedNoTrack": "\"{{fileName}}\" kaydedildi ancak kullanılabilir ses izi yok."
+      },
+      "supertonicUnsupported": "Bu tarayıcı yerel Supertonic TTS çalışma zamanını çalıştıramıyor. Güncel bir Chrome veya Edge deneyin.",
+      "supertonicDescription": "WebGPU veya WASM üzerinde 31 dilde yerel ONNX sesleri.",
+      "supertonicOption": "Supertonic 3 (31 dil, yerel ONNX)",
+      "language": "Dil",
+      "autoDetectLanguage": "Otomatik algıla",
+      "expressiveTags": "İfade etiketleri"
+    },
+    "aiPanel": {
+      "textToSpeech": "Metinden Sese",
+      "collapseTextToSpeech": "Metinden sese bölümünü daralt",
+      "expandTextToSpeech": "Metinden sese bölümünü genişlet",
+      "runsLocally": "{{runtime}}, tarayıcıda {{backend}} üzerinde yerel çalışır.",
+      "history": "Geçmiş ({{count}}) - {{size}}",
+      "clearAll": "Tümünü temizle",
+      "musicGeneration": "Müzik Oluşturma",
+      "collapseMusicGeneration": "Müzik oluşturmayı daralt",
+      "expandMusicGeneration": "Müzik oluşturmayı genişlet",
+      "musicGenerationInfo": "Müzik oluşturma bilgisi",
+      "musicgenDescription": "Transformers.js üzerinden Xenova'nın tarayıcıya hazır MusicGen modelini kullanır. İlk indirme büyüktür, sonra yerelde önbellekte kalır.",
+      "musicgenPromptHint": "Tür, ruh hali, tempo ve enstrümantasyon içeren istem yazın. Daha kısa klipler çok daha hızlı biter.",
+      "musicgenUnsupported": "Bu tarayıcıda WebGPU kullanılamıyor. MusicGen için Chrome 113+, Edge 113+ veya Safari 26+ gerekir.",
+      "prompt": "İstem",
+      "presets": "Ön Ayarlar",
+      "musicPromptPlaceholder": "Oluşturmak istediğiniz müziği açıklayın...",
+      "length": "Uzunluk",
+      "generateMusic": "Müzik Oluştur",
+      "musicHistory": "Müzik Geçmişi ({{count}}) - {{size}}",
+      "remove": "Kaldır",
+      "saved": "Kaydedildi",
+      "saving": "Kaydediliyor...",
+      "saveAndInsert": "Kaydet ve Ekle",
+      "saveToLibrary": "Kitaplığa Kaydet",
+      "progressPreparingMusic": "Yerel müzik oluşturma hazırlanıyor...",
+      "errors": {
+        "describeMusic": "Oluşturmak istediğiniz müziği açıklayın.",
+        "musicgenUnsupported": "MusicGen için WebGPU gerekir. Chrome 113+, Edge 113+ veya Safari 26+ deneyin.",
+        "generateMusicFailed": "Müzik oluşturulamadı.",
+        "saveAudioFailed": "Ses medya kitaplığına kaydedilemedi."
+      },
+      "notifications": {
+        "savedToLibrary": "\"{{fileName}}\" medya kitaplığına kaydedildi.",
+        "savedAndAdded": "\"{{fileName}}\" kaydedildi ve zaman çizelgesine eklendi."
+      },
+      "defaultTtsPrompt": "FreeCut'a hoş geldiniz. Bu ses tarayıcıda yerel olarak oluşturuldu.",
+      "musicPresets": {
+        "lofiChillLabel": "Lo-fi Rahat",
+        "lofiChillPrompt": "Tozlu davullar, yumuşak bas ve rüya gibi synth melodisiyle sıcak lo-fi beat",
+        "pop80sLabel": "80'ler Pop",
+        "pop80sPrompt": "Baslı davullar ve synth içeren 80'ler pop parçası",
+        "rock90sLabel": "90'lar Rock",
+        "rock90sPrompt": "Gür gitarlar ve güçlü davullarla 90'lar rock şarkısı",
+        "upbeatEdmLabel": "Enerjik EDM",
+        "upbeatEdmPrompt": "Senkoplu davullar, havadar pad'ler ve güçlü duygular içeren hafif ve neşeli EDM parçası bpm: 130",
+        "countryLabel": "Country",
+        "countryPrompt": "Akustik gitarlarla neşeli bir country şarkısı",
+        "lofiElectroLabel": "Lo-fi Elektro",
+        "lofiElectroPrompt": "Organik örneklerle yavaş bpm lo-fi elektro chill"
+      }
+    },
+    "clearKeyframesDialog": {
+      "descriptionProperty": "{{count}} seçili öğeden {{property}} anahtar kareleri temizlensin mi?",
+      "descriptionAll": "{{count}} seçili öğeden tüm anahtar kareler temizlensin mi?"
+    },
+    "localInferencePill": {
+      "jobs": "{{count}} iş"
+    },
+    "subtitleSection": {
+      "cueCount": "{{count}} ipucu"
+    },
+    "propertiesSidebar": {
+      "clipsSelected": "{{count}} klip seçildi"
+    }
+  },
+  "preview": {
+    "canvasDrop": {
+      "dropOnTimeline": "Zaman çizelgesine bırak",
+      "compoundClipsTimeline": "Bileşik klipler hâlâ en iyi zaman çizelgesine yerleşir.",
+      "presetsTimeline": "Metin ve şekil ön ayarları hâlâ en iyi zaman çizelgesine yerleşir.",
+      "dropOneItem": "Bir öğe bırak",
+      "oneMediaAtATime": "Tuvale tek seferde bir medya öğesi yerleştirin.",
+      "audioGoesOnTimeline": "Ses zaman çizelgesine gider",
+      "visualLayersOnly": "Tuvale bırakma yalnızca görsel katmanları yerleştirir.",
+      "dropToPlace": "Yerleştirmek için bırak",
+      "addAtPlayhead": "Bu medyayı oynatma kafasında ve bırakma konumunda ekle.",
+      "dropOneFile": "Bir dosya bırak",
+      "oneVisualFileAtATime": "Tuvale bırakma tek seferde bir görsel dosya içe aktarır.",
+      "importAndPlace": "İçe aktar ve yerleştir",
+      "importAndPlaceDescription": "Bu dosyayı içe aktar ve tuvale yerleştir.",
+      "noCompatibleTrack": "Bu bırakma için kilidi açık uyumlu iz yok.",
+      "unableToLoadMedia": "Bırakılan medya yüklenemedi.",
+      "mediaNoLongerAvailable": "Bırakılan medya artık kullanılamıyor.",
+      "dragDropUnsupported": "Bu tarayıcıda sürükle-bırak desteklenmiyor. Chrome veya Edge kullanın.",
+      "filesRejected": "Bazı dosyalar reddedildi: {{errors}}",
+      "dropAudioOnTimeline": "Sesi bunun yerine zaman çizelgesine bırakın.",
+      "unableToInspectVideo": "Bırakılan video incelenemedi.",
+      "unableToInspectFile": "Bırakılan dosya incelenemedi.",
+      "unableToImportFile": "Bırakılan dosya içe aktarılamadı."
+    }
+  },
+  "settings": {
+    "ai": {
+      "scene": "{{count}} sahne"
+    },
+    "feedback": {
+      "completedForItems": "{{action}} {{count}} öğe için tamamlandı.",
+      "couldntProcessItems": "{{count}} öğe için {{action}} yapılamadı{{detail}}"
+    },
+    "toasts": {
+      "itemsUpdated": "{{count}} öğe güncellendi.",
+      "itemsUpdatedFailed": "{{count}} öğe güncellendi. Başarısız: {{failed}}"
+    }
+  },
+  "projects": {
+    "legacyMigration": {
+      "errorsLogged": "{{count}} hata kaydedildi"
+    },
+    "legacyMigrationErrors": {
+      "retryStillFailing": "Yeniden deneme hâlâ {{count}} hata içeriyor.",
+      "failedCount": "{{count}} taşıma hatası"
+    },
+    "list": {
+      "movedToTrashCount": "{{count}} proje çöp kutusuna taşındı.",
+      "selectedCount": "{{count}} seçili",
+      "deleteN": "{{count}} sil",
+      "projectCount": "{{count}} proje",
+      "bulkDeleteTitle": "{{count}} seçili proje silinsin mi?"
+    },
+    "trash": {
+      "emptiedTrash": "Çöp kutusundan {{count}} proje boşaltıldı.",
+      "emptiedTrashWithFailures": "{{count}} proje silinemedi."
+    },
+    "relativeTime": {
+      "minutesAgo": "{{count}} dk önce",
+      "hoursAgo": "{{count}} sa önce",
+      "daysAgo": "{{count}} gün önce",
+      "weeksAgo": "{{count}} hafta önce",
+      "monthsAgo": "{{count}} ay önce",
+      "yearsAgo": "{{count}} yıl önce"
+    },
+    "settings": {
+      "hotkeys": {
+        "importedCommands": "{{count}} komut içe aktarıldı",
+        "remappedCount": "{{count}} yeniden eşlendi",
+        "ignoredCount": "{{count}} yok sayıldı",
+        "customCount": "{{count}} özel"
+      },
+      "localInference": {
+        "activeJobs": "{{count}} etkin iş",
+        "unloadedToast": "{{count}} yerel çalışma zamanı boşaltıldı."
+      }
+    }
+  },
+  "sceneBrowser": {
+    "counts": {
+      "clip_one": "{{count}} klip",
+      "clip_other": "{{count}} klip",
+      "scene_one": "{{count}} sahne",
+      "scene_other": "{{count}} sahne",
+      "match_one": "{{count}} eşleşme",
+      "match_other": "{{count}} eşleşme"
+    },
+    "sort": {
+      "label": "Sırala",
+      "relevance": "Alaka düzeyi",
+      "time": "Zaman damgası",
+      "name": "Medya adı"
+    },
+    "scope": {
+      "placeholder": "Kapsam",
+      "allMedia": "Tüm medya",
+      "scopedTo": "Kapsam: {{name}}",
+      "scopedToAll": "Kapsam: tüm medya"
+    },
+    "banners": {
+      "downloadingSemanticModel": "Semantik model indiriliyor (~22 MB, yalnızca ilk çalıştırma)...",
+      "indexingCaptions": "Semantik arama için altyazılar indeksleniyor - {{current}}/{{total}} klip",
+      "reanalyzing": "<strong>{{label}}</strong> yeniden analiz ediliyor - tamamlanınca sahneler yenilenecek."
+    },
+    "analyze": {
+      "title": "Medyayı AI ile analiz et",
+      "button": "Analiz et",
+      "scope": "\"{{name}}\" analiz et",
+      "newMedia": "Yeni medyayı analiz et",
+      "reanalyzeAll": "Tümünü yeniden analiz et"
+    },
+    "view": {
+      "list": "Liste görünümü",
+      "grid": "Izgara görünümü"
+    },
+    "empty": {
+      "noCaptionsTitle": "Henüz AI altyazısı yok.",
+      "noCaptionsPrefix": "Aranabilir sahne altyazıları oluşturmak için medya kitaplığındaki bir klipte",
+      "noCaptionsSuffix": "çalıştırın.",
+      "noMatchesTitle": "Aramanızla eşleşen sahne yok.",
+      "noMatchesPrefix": "Daha kısa bir sorgu deneyin veya kapsamı şuna değiştirin:"
+    },
+    "search": {
+      "exitColorMode": "Renk modundan çık",
+      "colorTitle": "Renge göre ara",
+      "color": "Renk",
+      "semanticTitle": "Semantik arama (anlama göre)",
+      "keywordTitle": "Anahtar kelime araması (tam eşleşme)",
+      "semanticLabel": "Semantik arama",
+      "keywordLabel": "Anahtar kelime araması",
+      "semantic": "Semantik",
+      "keyword": "Anahtar kelime",
+      "keywordDescription": "Tam kelime eşleşmeleri",
+      "semanticDescription": "Anlama göre eşleştir",
+      "clearReference": "Referansı temizle ve başka renk seç",
+      "findingSimilarPalette": "Benzer palete sahip sahneler aranıyor...",
+      "semanticPlaceholder": "Anlama göre ara - \"suyun üstünde gün batımı\", \"gülen insanlar\"...",
+      "keywordPlaceholder": "Sahneleri gördüğünüz şeye göre arayın...",
+      "clearSearch": "Aramayı temizle",
+      "similarPaletteTo": "{{label}} benzeri palet - temizlemek için tıklayın"
+    },
+    "matchTiers": {
+      "strong": "Güçlü",
+      "good": "İyi",
+      "fair": "Orta"
+    },
+    "match": {
+      "keyword": "Anahtar kelime",
+      "keywordHint": "Anahtar kelime eşleşmesi · kosinüs {{score}}",
+      "meaningWithTier": "Anlam · {{tier}}",
+      "textEmbeddingHint": "Metin gömme kosinüsü: {{score}}",
+      "visualWithTier": "Görsel · {{tier}}",
+      "clipHint": "CLIP kosinüsü: {{score}}",
+      "colorWithName": "Renk · {{color}}",
+      "paletteColorHint": "{{color}} üzerinde palet eşleşmesi (ΔE 2000)",
+      "paletteDistance": "Palet · ΔE {{distance}}",
+      "paletteDistanceHint": "Referans palete ağırlıklı ortalama ΔE 2000",
+      "belowThreshold": "Eşiğin altında",
+      "cosineHint": "kosinüs {{score}}",
+      "top": "En iyi",
+      "topHint": "En yüksek puanlı eşleşme"
+    },
+    "palette": {
+      "libraryColor": "Kitaplık rengi",
+      "empty": "Henüz indekslenmiş palet yok - doldurmak için AI altyazılarını çalıştırın.",
+      "moreColors_one": "{{count}} renk daha",
+      "moreColors_other": "{{count}} renk daha",
+      "showMoreColors_one": "{{count}} renk daha göster",
+      "showMoreColors_other": "{{count}} renk daha göster",
+      "moreColorsTitle": "Daha fazla renk",
+      "findColor": "Bu renkte sahneler bul (kitaplığın %{{percent}} kadarı)",
+      "findSimilar": "Benzer palete sahip sahneleri bul",
+      "pickedSwatch": "Seçilen örnek"
+    },
+    "scene": {
+      "previewAndDragHint": "Kaynak monitörde önizlemek için tıklayın - zaman çizelgesine eklemek için sürükleyin"
+    }
+  }
+}

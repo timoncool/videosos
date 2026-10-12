@@ -1,0 +1,105 @@
+{
+  "preview": {
+    "mediaOffline": {
+      "title": "Mídia off-line",
+      "relink": "Revincule-a no painel de mídia",
+      "loading": "Carregando…"
+    },
+    "align": {
+      "left": "Alinhar à esquerda",
+      "centerH": "Centralizar horizontalmente",
+      "right": "Alinhar à direita",
+      "top": "Alinhar ao topo",
+      "centerV": "Centralizar verticalmente",
+      "bottom": "Alinhar à base",
+      "distributeH": "Distribuir horizontalmente",
+      "distributeV": "Distribuir verticalmente",
+      "disableCanvasSnap": "Desativar encaixe no canvas",
+      "enableCanvasSnap": "Ativar encaixe no canvas",
+      "toggleCanvasSnap": "Alternar encaixe no canvas"
+    },
+    "controls": {
+      "captureFailed": "Não foi possível capturar o quadro atual.",
+      "disableProxyPlayback": "Desativar reproducao por proxy",
+      "enableProxyPlayback": "Ativar reproducao por proxy",
+      "frameDownloadedNoProject": "Quadro baixado — abra um projeto para salvar na biblioteca.",
+      "frameDownloadedNotSaved": "Quadro baixado, mas não foi possível salvar na biblioteca: {{message}}",
+      "frameSaved": "\"{{name}}\" salvo na biblioteca de mídia.",
+      "goToEnd": "Ir para o fim",
+      "goToEndTooltip": "Ir para o fim",
+      "goToStart": "Ir para o inicio",
+      "goToStartTooltip": "Ir para o inicio",
+      "nextFrame": "Proximo quadro",
+      "nextFrameTooltip": "Proximo quadro",
+      "pauseTooltip": "Pausar",
+      "playTooltip": "Reproduzir",
+      "prevFrame": "Quadro anterior",
+      "prevFrameTooltip": "Quadro anterior",
+      "proxyPlaybackOff": "Reproducao por proxy desativada",
+      "proxyPlaybackOn": "Reproducao por proxy ativada",
+      "saveFrame": "Salvar quadro",
+      "saveFrameFailed": "Não foi possível salvar o quadro.",
+      "saveFrameTooltip": "Salvar quadro",
+      "savingFrame": "Salvando quadro",
+      "savingFrameTooltip": "Salvando quadro"
+    },
+    "monitor": {
+      "mute": "Silenciar",
+      "muteShort": "Silenciar",
+      "muted": "Silenciado",
+      "percent": "Porcentagem",
+      "previewOnlyNote": "Afeta apenas a reprodução local — a exportação usa a mixagem do projeto.",
+      "thisDeviceOnly": "Somente este dispositivo",
+      "title": "Áudio da prévia",
+      "unmute": "Ativar som",
+      "volume": "Volume de som"
+    },
+    "player": {
+      "exitFullscreen": "Sair da tela cheia",
+      "fullscreen": "Tela cheia",
+      "mute": "Silenciar",
+      "pause": "Pausar",
+      "play": "Reproduzir",
+      "seek": "Buscar",
+      "unmute": "Ativar som",
+      "volume": "Volume de som"
+    },
+    "stage": {
+      "loadingMedia": "Carregando midia",
+      "videoPreview": "Pre-visualizacao de video",
+      "emptyTitle": "Ainda não há nada na linha do tempo",
+      "emptyDescription": "Importe mídia, arraste um clipe para a linha do tempo e pressione Espaço para visualizar."
+    },
+    "zoom": {
+      "ariaLabel": "Nível de zoom: {{label}}",
+      "auto": "Automático",
+      "tooltip": "Zoom: {{label}}"
+    },
+    "canvasDrop": {
+      "dropOnTimeline": "Soltar na linha do tempo",
+      "compoundClipsTimeline": "Clipes compostos ainda ficam melhor na linha do tempo.",
+      "presetsTimeline": "Predefinições de texto e forma ainda ficam melhor na linha do tempo.",
+      "adjustmentLayersTimeline": "As camadas de ajuste se aplicam a todo o quadro — coloque-as na linha do tempo.",
+      "placeLayerDescription": "Coloque esta camada na posição de soltura.",
+      "dropOneItem": "Solte um item",
+      "oneMediaAtATime": "Coloque um item de mídia por vez na tela.",
+      "audioGoesOnTimeline": "Áudio vai na linha do tempo",
+      "visualLayersOnly": "Soltar na tela coloca apenas camadas visuais.",
+      "dropToPlace": "Soltar para posicionar",
+      "addAtPlayhead": "Adicione esta mídia no indicador de reprodução e na posição de soltura.",
+      "dropOneFile": "Solte um arquivo",
+      "oneVisualFileAtATime": "Soltar na tela importa um arquivo visual por vez.",
+      "importAndPlace": "Importar e posicionar",
+      "importAndPlaceDescription": "Importe este arquivo e coloque-o na tela.",
+      "noCompatibleTrack": "Nenhuma faixa compatível desbloqueada está disponível para este item.",
+      "unableToLoadMedia": "Não foi possível carregar a mídia solta.",
+      "mediaNoLongerAvailable": "A mídia solta não está mais disponível.",
+      "dragDropUnsupported": "Arrastar e soltar não é compatível com este navegador. Use Chrome ou Edge.",
+      "filesRejected": "Alguns arquivos foram rejeitados: {{errors}}",
+      "dropAudioOnTimeline": "Solte o áudio na linha do tempo.",
+      "unableToInspectVideo": "Não foi possível inspecionar o vídeo solto.",
+      "unableToInspectFile": "Não foi possível inspecionar o arquivo solto.",
+      "unableToImportFile": "Não foi possível importar o arquivo solto."
+    }
+  }
+}

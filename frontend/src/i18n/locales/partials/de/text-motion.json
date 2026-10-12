@@ -1,0 +1,48 @@
+{
+  "textMotion": {
+    "sectionTitle": "Textanimation",
+    "hint": "Animiere Text pro Zeichen, Wort oder Zeile. Eingang und Ausgang laufen an den Clip-Rändern; die Schleife läuft dazwischen durchgehend.",
+    "slots": {
+      "in": "Eingang",
+      "out": "Ausgang",
+      "loop": "Schleife"
+    },
+    "duration": "Dauer",
+    "stagger": "Versatz",
+    "intensity": "Intensität",
+    "order": "Reihenfolge",
+    "orders": {
+      "forward": "Vorwärts",
+      "backward": "Rückwärts",
+      "center": "Von der Mitte",
+      "random": "Zufällig"
+    },
+    "removePreset": "{{name}} entfernen",
+    "presets": {
+      "typewriter": "Schreibmaschine",
+      "fade-up": "Einblenden nach oben",
+      "rise": "Aufsteigen",
+      "cascade": "Kaskade",
+      "pop": "Pop",
+      "blur-in": "Unschärfe ein",
+      "slide-mask": "Maskiertes Gleiten",
+      "wave-in": "Welle ein",
+      "fade-down": "Ausblenden nach unten",
+      "sink": "Absinken",
+      "pop-out": "Pop aus",
+      "blur-out": "Unschärfe aus",
+      "typewriter-erase": "Löschen",
+      "pulse": "Pulsieren",
+      "wave": "Welle",
+      "shimmer": "Schimmern",
+      "swing": "Schwingen"
+    },
+    "unit": "Anwenden auf",
+    "units": {
+      "character": "Zeichen",
+      "word": "Wort",
+      "line": "Zeile",
+      "whole-clip": "Ganzer Clip"
+    }
+  }
+}

@@ -1,0 +1,170 @@
+{
+  "appShell": {
+    "newVersionAvailable": "有新版本可用。请保存你的工作并重新加载。",
+    "saveAndReload": "保存并重新加载",
+    "reloadWithoutSaving": "不保存直接重新加载",
+    "dockPanel": "停靠面板",
+    "installPrompt": {
+      "label": "安装 FreeCut",
+      "title": "安装 FreeCut",
+      "description": "从桌面或主屏幕启动。",
+      "install": "安装",
+      "notNow": "暂不",
+      "dismiss": "关闭安装提示"
+    }
+  },
+  "common": {
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "discard": "放弃",
+    "close": "关闭",
+    "reset": "重置",
+    "done": "完成",
+    "loading": "加载中...",
+    "saving": "保存中...",
+    "deleting": "删除中...",
+    "clearing": "清除中...",
+    "queueing": "正在排队...",
+    "partial": "部分",
+    "untitledProject": "未命名项目"
+  },
+  "language": {
+    "label": "语言",
+    "description": "选择整个应用使用的语言。",
+    "ariaLabel": "界面语言"
+  },
+  "toolbar": {
+    "ariaLabel": "编辑器工具栏",
+    "workspaces": {
+      "motion": "Motion",
+      "label": "工作区",
+      "edit": "剪辑",
+      "color": "调色",
+      "animate": "动画"
+    },
+    "backToProjects": "返回项目",
+    "backToProjectsAria": "返回项目",
+    "specs": "{{width}}x{{height}} | {{fps}} fps",
+    "specsDetailed": "{{width}}x{{height}} | {{fps}} fps | {{duration}} | {{clips}} 个片段 | {{media}} 个媒体 | 缺失 {{missing}} 个",
+    "whatsNew": "新功能",
+    "whatsNewAria": "新功能",
+    "settings": "设置",
+    "keyboardShortcuts": "键盘快捷键",
+    "keyboardShortcutsAria": "键盘快捷键",
+    "viewOnGitHub": "在 GitHub 上查看",
+    "joinDiscord": "加入 Discord",
+    "debugPanel": "调试面板",
+    "debugPanelAria": "调试面板",
+    "save": "保存",
+    "saveAria": "保存项目",
+    "export": "导出",
+    "exportVideo": "导出视频",
+    "downloadProjectZip": "下载项目 (.zip)"
+  },
+  "unsavedChanges": {
+    "title": "未保存的更改",
+    "descriptionWithName": "<strong>{{name}}</strong> 中有未保存的更改。是否在离开前保存？",
+    "description": "有未保存的更改。是否在离开前保存？",
+    "discard": "放弃",
+    "saveAndExit": "保存并退出",
+    "saving": "保存中..."
+  },
+  "settings": {
+    "title": "编辑器设置",
+    "sections": {
+      "general": "常规",
+      "timeline": "时间线",
+      "ai": "AI",
+      "storage": "存储"
+    },
+    "general": {
+      "autoSave": "自动保存",
+      "interval": "间隔",
+      "intervalMinutes": "{{count}} 分钟",
+      "undoHistoryDepth": "撤销历史深度",
+      "uiSounds": "界面音效",
+      "uiSoundVolume": "音效音量",
+      "uiSoundVoice": "音效主题",
+      "uiSoundPreview": "试听"
+    },
+    "ai": {
+      "captionSampleInterval": "字幕采样间隔",
+      "captionSampleIntervalDescription": "\"使用 AI 分析\"采样一帧用于字幕的频率。",
+      "seconds": "秒",
+      "frames": "帧",
+      "unitSec": "秒",
+      "unitFrames": "帧",
+      "enterIntervalAboveZero": "请输入大于零的间隔。",
+      "captionEstimate": "在 {{fps}} fps 下每 1 分钟片段约 {{sceneCount}} 个{{scenes}}",
+      "scene_one": "场景",
+      "scene_other": "场景",
+      "captionIntervalHint": "{{estimate}}。间隔越小场景越密集，但生成耗时越长。",
+      "defaultCaptionStyle": "默认字幕样式",
+      "defaultCaptionStyleDescription": "应用于由转录或 AI 字幕生成的字幕的样式。"
+    },
+    "timeline": {
+      "snapByDefault": "默认吸附",
+      "snapByDefaultDescription": "设置打开项目时的初始吸附状态。",
+      "showWaveforms": "显示波形",
+      "showFilmstrips": "显示视频缩略图条",
+      "enableFilmstripExtraction": "提取缩略图条",
+      "enableFilmstripExtractionDescription": "在导入和时间线显示时生成视频缩略图条。"
+    },
+    "storage": {
+      "generateMissingProxies": "生成缺失的代理",
+      "generateMissingProxiesDescription": "为本项目中尚无代理的视频排队生成代理",
+      "queued": "已排队",
+      "generateWithCount": "生成 ({{count}})",
+      "upToDate": "已是最新",
+      "clearProjectCache": "清除项目缓存",
+      "clearProjectCacheDescription": "波形、视频缩略图条、GIF 帧、已解码音频",
+      "clear": "清除",
+      "cleared": "已清除",
+      "regenerateThumbnails": "重新生成缩略图",
+      "regenerateThumbnailsDescription": "为本项目重新创建媒体库缩略图",
+      "regenerate": "重新生成",
+      "deleteProxies": "删除代理",
+      "deleteProxiesDescription": "移除为本项目生成的代理视频",
+      "deleted": "已删除",
+      "localAi": "本地 AI",
+      "localAiDescription": "卸载常驻运行时或清除已缓存的模型下载。",
+      "clearCacheConfirmTitle": "清除项目缓存？",
+      "clearCacheConfirmDescription": "这将删除当前项目（{{count}} 个媒体项）的缓存波形、视频缩略图条、GIF 帧和已解码音频。需要时会自动重新生成。你的项目数据、媒体文件、缩略图和代理不会受到影响。",
+      "clearCache": "清除缓存"
+    },
+    "toasts": {
+      "projectCacheCleared": "已清除项目缓存",
+      "projectCachePartiallyCleared": "已部分清除项目缓存",
+      "projectCacheNotCleared": "未清除项目缓存",
+      "thumbnailsRegenerated": "已重新生成缩略图",
+      "thumbnailsPartiallyRegenerated": "已部分重新生成缩略图",
+      "thumbnailsNotRegenerated": "未重新生成缩略图",
+      "proxiesDeleted": "已删除代理",
+      "proxiesPartiallyDeleted": "已部分删除代理",
+      "proxiesNotDeleted": "未删除代理",
+      "failedToClearCache": "清除项目缓存失败",
+      "failedToRegenerateThumbnails": "重新生成缩略图失败",
+      "failedToDeleteProxies": "删除代理失败",
+      "itemsUpdated_one": "已更新 {{count}} 项。",
+      "itemsUpdated_other": "已更新 {{count}} 项。",
+      "itemsUpdatedFailed_one": "已更新 {{count}} 项。失败：{{failed}}",
+      "itemsUpdatedFailed_other": "已更新 {{count}} 项。失败：{{failed}}"
+    },
+    "feedback": {
+      "couldntClearCache": "无法清除项目缓存。",
+      "couldntRegenerateThumbnails": "无法重新生成缩略图。",
+      "couldntDeleteProxies": "无法删除代理。",
+      "completedForItems_one": "已为 {{count}} 项完成{{action}}。",
+      "completedForItems_other": "已为 {{count}} 项完成{{action}}。",
+      "moreItems": "{{items}}，另有 {{count}} 项",
+      "actionClearCache": "清除缓存",
+      "actionRegenerateThumbnails": "重新生成缩略图",
+      "actionDeleteProxies": "删除代理",
+      "noMediaNeededUpdating": "No project media needed updating.",
+      "couldntProcessItems_one": "{{action}}: couldn't process {{count}} item{{detail}}",
+      "couldntProcessItems_other": "{{action}}: couldn't process {{count}} items{{detail}}",
+      "partialOutcome": "{{action}}: {{succeeded}}/{{total}} done. Needs attention: {{failed}}."
+    }
+  }
+}

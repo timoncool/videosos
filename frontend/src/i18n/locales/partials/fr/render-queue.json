@@ -1,0 +1,56 @@
+{
+  "export": {
+    "renderQueue": {
+      "title": "File de rendu",
+      "dialogTitle": "Exports",
+      "tabQueue": "File de rendu",
+      "tabExports": "Exports enregistrés",
+      "description": "Les exports en file sont rendus un par un et enregistrés dans le dossier d'exports de votre espace de travail.",
+      "addToQueue": "Ajouter à la file",
+      "addCurrentRange": "Plage actuelle",
+      "segmentsHeading": "Diviser en segments",
+      "perMarker": "Un segment par marqueur",
+      "splitChunks": "Diviser en tronçons de {{seconds}}s",
+      "partLabel": "Segment {{n}}",
+      "addedToast_one": "{{count}} tâche ajoutée à la file de rendu",
+      "addedToast_other": "{{count}} tâches ajoutées à la file de rendu",
+      "noMarkers": "Ajoutez des marqueurs à la timeline pour découper par marqueur.",
+      "nothingToRender": "Rien à rendre dans cette plage.",
+      "buildFailed": "Impossible d'ajouter à la file de rendu.",
+      "empty": "Aucune tâche de rendu. Ajoutez-en une depuis la fenêtre d'export.",
+      "exportsEmpty": "Aucun fichier exporté pour l'instant.",
+      "exportsLocation": "Les fichiers se trouvent dans le dossier local de ce projet ({{folder}}).",
+      "exportsLocationGeneric": "Les fichiers se trouvent dans le dossier local de ce projet, dans votre espace de travail.",
+      "pause": "Pause",
+      "resume": "Reprendre",
+      "paused": "File en pause — reprenez pour continuer le rendu.",
+      "clearFinished": "Effacer les terminées",
+      "clearAll": "Tout effacer",
+      "refresh": "Actualiser",
+      "wholeProject": "Tout le projet",
+      "savedTo": "Enregistré dans {{path}}",
+      "remove": "Supprimer",
+      "cancel": "Annuler",
+      "retry": "Réessayer",
+      "moveUp": "Monter",
+      "moveDown": "Descendre",
+      "download": "Télécharger",
+      "delete": "Supprimer",
+      "deleted": "{{name}} supprimé",
+      "missingFile": "Fichier introuvable — il a peut-être été déplacé ou supprimé.",
+      "downloadFailed": "Échec du téléchargement.",
+      "deleteFailed": "Échec de la suppression.",
+      "status": {
+        "queued": "En file",
+        "rendering": "Rendu en cours",
+        "completed": "Terminé",
+        "failed": "Échec",
+        "cancelled": "Annulé"
+      }
+    }
+  },
+  "toolbar": {
+    "renderQueue": "File de rendu",
+    "renderQueueAria": "Ouvrir la file de rendu"
+  }
+}

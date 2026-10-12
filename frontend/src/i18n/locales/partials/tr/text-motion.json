@@ -1,0 +1,48 @@
+{
+  "textMotion": {
+    "sectionTitle": "Metin animasyonu",
+    "hint": "Metni karakter, kelime veya satır bazında canlandırın. Giriş ve Çıkış klibin kenarlarında oynar; Döngü aralarında sürekli çalışır.",
+    "slots": {
+      "in": "Giriş",
+      "out": "Çıkış",
+      "loop": "Döngü"
+    },
+    "duration": "Süre",
+    "stagger": "Kademelendirme",
+    "intensity": "Yoğunluk",
+    "order": "Sıra",
+    "orders": {
+      "forward": "İleri",
+      "backward": "Geri",
+      "center": "Merkezden",
+      "random": "Rastgele"
+    },
+    "removePreset": "{{name}} efektini kaldır",
+    "presets": {
+      "typewriter": "Daktilo",
+      "fade-up": "Yukarı belirme",
+      "rise": "Yükselme",
+      "cascade": "Çağlayan",
+      "pop": "Pop",
+      "blur-in": "Bulanık giriş",
+      "slide-mask": "Maskeli kayma",
+      "wave-in": "Dalga girişi",
+      "fade-down": "Aşağı solma",
+      "sink": "Batma",
+      "pop-out": "Pop çıkışı",
+      "blur-out": "Bulanık çıkış",
+      "typewriter-erase": "Silme",
+      "pulse": "Nabız",
+      "wave": "Dalga",
+      "shimmer": "Parıltı",
+      "swing": "Salınım"
+    },
+    "unit": "Uygulama",
+    "units": {
+      "character": "Karakter",
+      "word": "Kelime",
+      "line": "Satır",
+      "whole-clip": "Tüm klip"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "lottieBrowser": {
+    "tabLabel": "Lottie",
+    "searchPlaceholder": "Animasyon ara",
+    "clearSearch": "Aramayı temizle",
+    "categories": {
+      "featured": "Öne çıkanlar",
+      "popular": "Popüler",
+      "recent": "Yeni"
+    },
+    "addToMedia": "Medya kitaplığına ekle",
+    "added": "Medya kitaplığına eklendi",
+    "importFailed": "İçe aktarma başarısız — yeniden denemek için tıklayın",
+    "by": "{{author}} tarafından",
+    "empty": "Animasyon bulunamadı",
+    "error": "Animasyonlar yüklenemedi",
+    "retry": "Tekrar dene",
+    "previous": "Önceki sayfa",
+    "next": "Sonraki sayfa",
+    "goToPage": "Sayfaya git",
+    "ofTotal": "/ {{total}}",
+    "attributionNote": "LottieFiles kaynaklı ücretsiz animasyonlar, <license>Lottie Simple Lisansı</license> kapsamında. Yayınlarken orijinal oluşturana kredi verin."
+  }
+}

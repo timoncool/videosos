@@ -1,0 +1,232 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-06-06T00:00:00.000Z",
+  "title": "Design System: FreeCut",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Signal Orange",
+        "canonical": "oklch(0.68 0.19 45)",
+        "tonalRamp": [
+          "oklch(0.22 0.08 45)",
+          "oklch(0.32 0.12 45)",
+          "oklch(0.42 0.15 45)",
+          "oklch(0.52 0.17 45)",
+          "oklch(0.62 0.19 45)",
+          "oklch(0.68 0.19 45)",
+          "oklch(0.78 0.15 45)",
+          "oklch(0.9 0.08 45)"
+        ]
+      },
+      "background": {
+        "role": "neutral",
+        "displayName": "Canvas Black",
+        "canonical": "oklch(0.15 0 0)",
+        "tonalRamp": [
+          "oklch(0.12 0 0)",
+          "oklch(0.15 0 0)",
+          "oklch(0.18 0 0)",
+          "oklch(0.24 0 0)",
+          "oklch(0.32 0 0)",
+          "oklch(0.45 0 0)",
+          "oklch(0.6 0 0)",
+          "oklch(0.95 0 0)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Panel Surface",
+        "canonical": "oklch(0.18 0 0)",
+        "tonalRamp": [
+          "oklch(0.12 0 0)",
+          "oklch(0.14 0 0)",
+          "oklch(0.16 0 0)",
+          "oklch(0.18 0 0)",
+          "oklch(0.22 0 0)",
+          "oklch(0.25 0 0)",
+          "oklch(0.4 0 0)",
+          "oklch(0.6 0 0)"
+        ]
+      },
+      "clip-video": {
+        "role": "tertiary",
+        "displayName": "Video Slate-Blue",
+        "canonical": "oklch(0.3991 0.0401 250)"
+      },
+      "clip-audio": {
+        "role": "tertiary",
+        "displayName": "Audio Violet",
+        "canonical": "oklch(0.22 0.02 302)"
+      },
+      "mark-in": {
+        "role": "tertiary",
+        "displayName": "Mark-In Green",
+        "canonical": "oklch(0.65 0.18 142)"
+      },
+      "mark-out": {
+        "role": "tertiary",
+        "displayName": "Mark-Out Red",
+        "canonical": "oklch(0.61 0.22 29)"
+      }
+    },
+    "typographyMeta": {
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Dialog titles and major section headers."
+      },
+      "title": { "displayName": "Title", "purpose": "Panel titles, card headers, primary labels." },
+      "body": { "displayName": "Body", "purpose": "Default UI text, descriptions, menu items." },
+      "label": { "displayName": "Label", "purpose": "Control labels, badges, secondary captions." },
+      "mono": {
+        "displayName": "Mono",
+        "purpose": "Timecode, frames, FPS, dimensions — any precise value."
+      }
+    },
+    "shadows": [
+      {
+        "name": "floating-layer",
+        "value": "0 4px 24px oklch(0 0 0 / 0.5)",
+        "purpose": "Popovers, dropdowns, dialogs lifting off the panel plane."
+      },
+      {
+        "name": "signal-glow",
+        "value": "0 0 12px oklch(0.68 0.19 45 / 0.3)",
+        "purpose": "Soft orange halo on active/playing elements only."
+      },
+      {
+        "name": "signal-glow-sm",
+        "value": "0 0 6px oklch(0.68 0.19 45 / 0.25)",
+        "purpose": "Smaller active-state glow for compact controls."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-standard",
+        "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Default easing for panel and state transitions."
+      },
+      {
+        "name": "duration-fast",
+        "value": "150ms",
+        "purpose": "Color/hover transitions on controls."
+      },
+      {
+        "name": "duration-panel",
+        "value": "200ms",
+        "purpose": "Panel show/hide and accordion transitions."
+      }
+    ],
+    "breakpoints": []
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The single emphasis action; uses the orange signal. Use sparingly, one per region.",
+      "html": "<button class=\"ds-btn-primary\">Export video</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 8px 16px; border: none; border-radius: 6px; background: oklch(0.68 0.19 45); color: oklch(0.12 0 0); font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; font-weight: 500; box-shadow: 0 1px 2px oklch(0 0 0 / 0.3); transition: background 150ms cubic-bezier(0.4,0,0.2,1); cursor: pointer; } .ds-btn-primary:hover { background: oklch(0.68 0.19 45 / 0.9); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 1px oklch(0.68 0.19 45); }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Neutral action on a raised-graphite fill.",
+      "html": "<button class=\"ds-btn-secondary\">Cancel</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 8px 16px; border: none; border-radius: 6px; background: oklch(0.22 0 0); color: oklch(0.95 0 0); font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; font-weight: 500; transition: background 150ms cubic-bezier(0.4,0,0.2,1); cursor: pointer; } .ds-btn-secondary:hover { background: oklch(0.22 0 0 / 0.8); } .ds-btn-secondary:focus-visible { outline: none; box-shadow: 0 0 0 1px oklch(0.68 0.19 45); }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Default for toolbar and icon actions; no fill until hover.",
+      "html": "<button class=\"ds-btn-ghost\" aria-label=\"Split clip\"><svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"6\" cy=\"6\" r=\"3\"/><path d=\"M8.12 8.12 12 12\"/><path d=\"M20 4 8.12 15.88\"/><circle cx=\"6\" cy=\"18\" r=\"3\"/><path d=\"M14.8 14.8 20 20\"/></svg></button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; justify-content: center; height: 36px; width: 36px; border: none; border-radius: 6px; background: transparent; color: oklch(0.95 0 0); transition: background 150ms cubic-bezier(0.4,0,0.2,1); cursor: pointer; } .ds-btn-ghost:hover { background: oklch(0.24 0 0); } .ds-btn-ghost:focus-visible { outline: none; box-shadow: 0 0 0 1px oklch(0.68 0.19 45); }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Transparent field with a 1px border; orange ring on focus.",
+      "html": "<input class=\"ds-input\" type=\"text\" placeholder=\"Project name\" />",
+      "css": ".ds-input { display: flex; height: 36px; width: 100%; padding: 4px 12px; border: 1px solid oklch(0.24 0 0); border-radius: 6px; background: transparent; color: oklch(0.95 0 0); font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; transition: border-color 150ms cubic-bezier(0.4,0,0.2,1); } .ds-input::placeholder { color: oklch(0.6 0 0); } .ds-input:focus-visible { outline: none; border-color: oklch(0.68 0.19 45); box-shadow: 0 0 0 1px oklch(0.68 0.19 45); }"
+    },
+    {
+      "name": "Panel Card",
+      "kind": "card",
+      "refersTo": null,
+      "description": "Default flat panel surface with a header bar one value-step darker.",
+      "html": "<div class=\"ds-panel\"><div class=\"ds-panel__header\">Effects</div><div class=\"ds-panel__body\">Panel content</div></div>",
+      "css": ".ds-panel { border: 1px solid oklch(0.25 0 0); border-radius: 8px; background: oklch(0.18 0 0); overflow: hidden; } .ds-panel__header { padding: 8px 12px; background: oklch(0.14 0 0); color: oklch(0.95 0 0); font-family: 'IBM Plex Sans', sans-serif; font-size: 16px; font-weight: 600; } .ds-panel__body { padding: 16px; color: oklch(0.95 0 0); font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; }"
+    },
+    {
+      "name": "Timecode Readout",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Signature mono readout for precise values; tabular digits that don't jump width.",
+      "html": "<span class=\"ds-timecode\">00:01:24<span class=\"ds-timecode__frames\">:18</span></span>",
+      "css": ".ds-timecode { font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-variant-numeric: tabular-nums; color: oklch(0.95 0 0); letter-spacing: 0; } .ds-timecode__frames { color: oklch(0.68 0.19 45); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Quiet Instrument",
+    "overview": "FreeCut is a precision tool that recedes. The visual system behaves like a well-machined instrument in a darkened room: graphite panels, restrained chrome, no decoration that doesn't earn its pixels. The footage in the preview is the brightest, most saturated thing on the screen; everything else stays out of its way. Depth is carried by tonal layering, not drop shadows: panels sit at different lightness steps so the eye reads hierarchy from value alone. A single warm orange is the one signal color (playback, active state, focus, the playhead), and its rarity is what makes it legible. It rejects the consumer-editor look, the flashy SaaS dashboard, and cramped legacy-NLE chrome; density is high but always clean.",
+    "keyCharacteristics": [
+      "Dark-only, neutral graphite ramp; value carries hierarchy",
+      "One warm-orange signal color, used sparingly for active/playback/focus",
+      "Tonal layering, not shadows, for depth",
+      "IBM Plex Sans for UI, IBM Plex Mono for all technical/numeric data",
+      "Density without noise: dense panels that stay legible at a glance"
+    ],
+    "rules": [
+      {
+        "name": "The One Signal Rule",
+        "body": "Orange means active. Reserve oklch(0.68 0.19 45) for playback, the playhead, focus, and active/selected state. It should occupy a small fraction of any screen; the moment it decorates a static element it stops reading as a signal.",
+        "section": "colors"
+      },
+      {
+        "name": "The Value-Hierarchy Rule",
+        "body": "Depth comes from lightness steps in the neutral ramp (floor 0.12 to header 0.14 to popover 0.16 to panel 0.18), not from borders or shadows. When two surfaces must read as distinct, separate them by value before reaching for a border.",
+        "section": "colors"
+      },
+      {
+        "name": "The Meaning-Bearing Hue Rule",
+        "body": "Clip and marker colors are part of the data, not the styling. Never repurpose Audio Violet or Mark-In Green for decoration, and never rely on these hues alone to convey state.",
+        "section": "colors"
+      },
+      {
+        "name": "The Mono-For-Data Rule",
+        "body": "Every number an editor must read or compare (timecode, frame, FPS, resolution, dB) is set in IBM Plex Mono so digits align and don't jump width. Prose and labels stay in Plex Sans.",
+        "section": "typography"
+      },
+      {
+        "name": "The No-Caps-Body Rule",
+        "body": "Uppercase is for short badges and 4-words-or-fewer labels only. Never set sentences or menu items in all-caps; at 12-14px on dark it becomes unreadable.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-By-Default Rule",
+        "body": "Panels and cards are flat at rest. If a surface needs to feel raised, raise its lightness one step before adding a shadow. Shadows are for things that genuinely float (menus, modals) and for the orange signal glow on active elements.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do keep orange (oklch(0.68 0.19 45)) for active/playback/focus only; treat it as a signal, not a brand splash.",
+      "Do separate surfaces by stepping the neutral ramp's lightness before reaching for a border or shadow.",
+      "Do set every timecode, frame count, FPS, and dimension in IBM Plex Mono.",
+      "Do verify body and placeholder text clears 4.5:1 on its panel; muted-foreground (oklch(0.6 0 0)) is borderline — bump toward ink where it fails.",
+      "Do keep components flat and quiet; affordance via a small color/value shift.",
+      "Do let the preview/footage be the brightest, most saturated thing on screen."
+    ],
+    "donts": [
+      "Don't make it look like a consumer editor (CapCut/iMovie): no playful candy buttons, no emoji, no gamified flourishes, no pill-shaped buttons.",
+      "Don't drift toward a flashy SaaS dashboard: no gradient hero text, no glassmorphism as default, no big-number metric cards inside the working UI.",
+      "Don't reproduce cramped legacy-NLE chrome: no beveled gray toolbars, no illegible sub-12px labels, no noise-level density.",
+      "Don't use a border-left/border-right greater than 1px as a colored accent stripe.",
+      "Don't use background-clip: text gradient text anywhere; emphasis is by weight and size.",
+      "Don't repurpose the clip/marker hues for decoration, or rely on color alone to signal state.",
+      "Don't add a light theme; contrast work happens within the dark ramp."
+    ]
+  }
+}

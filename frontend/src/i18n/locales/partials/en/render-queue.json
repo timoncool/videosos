@@ -1,0 +1,56 @@
+{
+  "export": {
+    "renderQueue": {
+      "title": "Render queue",
+      "dialogTitle": "Exports",
+      "tabQueue": "Render queue",
+      "tabExports": "Saved exports",
+      "description": "Queued exports render one at a time and save to your workspace exports folder.",
+      "addToQueue": "Add to queue",
+      "addCurrentRange": "Current range",
+      "segmentsHeading": "Split into segments",
+      "perMarker": "One segment per marker",
+      "splitChunks": "Split into {{seconds}}s chunks",
+      "partLabel": "Segment {{n}}",
+      "addedToast_one": "Added {{count}} job to the render queue",
+      "addedToast_other": "Added {{count}} jobs to the render queue",
+      "noMarkers": "Add markers to the timeline to split by marker.",
+      "nothingToRender": "Nothing to render in this range.",
+      "buildFailed": "Couldn't add to the render queue.",
+      "empty": "No render jobs yet. Add one from the Export dialog.",
+      "exportsEmpty": "No exported files yet.",
+      "exportsLocation": "The files can be found in this project's local folder ({{folder}}).",
+      "exportsLocationGeneric": "The files can be found in this project's local folder in your workspace.",
+      "pause": "Pause",
+      "resume": "Resume",
+      "paused": "Queue paused — resume to keep rendering.",
+      "clearFinished": "Clear finished",
+      "clearAll": "Clear all",
+      "refresh": "Refresh",
+      "wholeProject": "Whole project",
+      "savedTo": "Saved to {{path}}",
+      "remove": "Remove",
+      "cancel": "Cancel",
+      "retry": "Retry",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "download": "Download",
+      "delete": "Delete",
+      "deleted": "Deleted {{name}}",
+      "missingFile": "File not found — it may have been moved or deleted.",
+      "downloadFailed": "Download failed.",
+      "deleteFailed": "Delete failed.",
+      "status": {
+        "queued": "Queued",
+        "rendering": "Rendering",
+        "completed": "Done",
+        "failed": "Failed",
+        "cancelled": "Cancelled"
+      }
+    }
+  },
+  "toolbar": {
+    "renderQueue": "Render queue",
+    "renderQueueAria": "Open render queue"
+  }
+}

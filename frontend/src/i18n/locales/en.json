@@ -1,0 +1,170 @@
+{
+  "appShell": {
+    "newVersionAvailable": "A new version is available. Save your work and reload.",
+    "saveAndReload": "Save & Reload",
+    "reloadWithoutSaving": "Reload without saving",
+    "dockPanel": "Dock panel",
+    "installPrompt": {
+      "label": "Install FreeCut",
+      "title": "Install FreeCut",
+      "description": "Launch it from your desktop or home screen.",
+      "install": "Install",
+      "notNow": "Not now",
+      "dismiss": "Dismiss install prompt"
+    }
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "discard": "Discard",
+    "close": "Close",
+    "reset": "Reset",
+    "done": "Done",
+    "loading": "Loading...",
+    "saving": "Saving...",
+    "deleting": "Deleting...",
+    "clearing": "Clearing...",
+    "queueing": "Queueing...",
+    "partial": "Partial",
+    "untitledProject": "Untitled Project"
+  },
+  "language": {
+    "label": "Language",
+    "description": "Choose the language used throughout the app.",
+    "ariaLabel": "Interface language"
+  },
+  "toolbar": {
+    "ariaLabel": "Editor toolbar",
+    "workspaces": {
+      "motion": "Motion",
+      "label": "Workspaces",
+      "edit": "Edit",
+      "color": "Color",
+      "animate": "Animate"
+    },
+    "backToProjects": "Back to Projects",
+    "backToProjectsAria": "Back to projects",
+    "specs": "{{width}}x{{height}} | {{fps}}fps",
+    "specsDetailed": "{{width}}x{{height}} | {{fps}}fps | {{duration}} | {{clips}} clips | {{media}} media | {{missing}} missing",
+    "whatsNew": "What's New",
+    "whatsNewAria": "What's new",
+    "settings": "Settings",
+    "keyboardShortcuts": "Keyboard Shortcuts",
+    "keyboardShortcutsAria": "Keyboard shortcuts",
+    "viewOnGitHub": "View on GitHub",
+    "joinDiscord": "Join Discord",
+    "debugPanel": "Debug Panel",
+    "debugPanelAria": "Debug panel",
+    "save": "Save",
+    "saveAria": "Save project",
+    "export": "Export",
+    "exportVideo": "Export Video",
+    "downloadProjectZip": "Download Project (.zip)"
+  },
+  "unsavedChanges": {
+    "title": "Unsaved Changes",
+    "descriptionWithName": "You have unsaved changes in <strong>{{name}}</strong>. Would you like to save before leaving?",
+    "description": "You have unsaved changes. Would you like to save before leaving?",
+    "discard": "Discard",
+    "saveAndExit": "Save & Exit",
+    "saving": "Saving..."
+  },
+  "settings": {
+    "title": "Editor Settings",
+    "sections": {
+      "general": "General",
+      "timeline": "Timeline",
+      "ai": "AI",
+      "storage": "Storage"
+    },
+    "general": {
+      "autoSave": "Auto-save",
+      "interval": "Interval",
+      "intervalMinutes": "{{count}}m",
+      "undoHistoryDepth": "Undo History Depth",
+      "uiSounds": "Interface sounds",
+      "uiSoundVolume": "Sound volume",
+      "uiSoundVoice": "Sound theme",
+      "uiSoundPreview": "Preview"
+    },
+    "ai": {
+      "captionSampleInterval": "Caption sample interval",
+      "captionSampleIntervalDescription": "How often Analyze with AI samples a frame for captioning.",
+      "seconds": "Seconds",
+      "frames": "Frames",
+      "unitSec": "sec",
+      "unitFrames": "frames",
+      "enterIntervalAboveZero": "Enter an interval above zero.",
+      "captionEstimate": "~{{sceneCount}} {{scenes}} per 1-min clip at {{fps}}fps",
+      "scene_one": "scene",
+      "scene_other": "scenes",
+      "captionIntervalHint": "{{estimate}}. Smaller intervals produce denser scenes but take longer to generate.",
+      "defaultCaptionStyle": "Default caption style",
+      "defaultCaptionStyleDescription": "Style applied to captions generated from transcripts or AI captioning."
+    },
+    "timeline": {
+      "snapByDefault": "Snap by Default",
+      "snapByDefaultDescription": "Sets the initial snap state when a project opens.",
+      "showWaveforms": "Show Waveforms",
+      "showFilmstrips": "Show Filmstrips",
+      "enableFilmstripExtraction": "Extract Filmstrips",
+      "enableFilmstripExtractionDescription": "Generate video thumbnail strips during import and timeline display."
+    },
+    "storage": {
+      "generateMissingProxies": "Generate Missing Proxies",
+      "generateMissingProxiesDescription": "Queue proxy generation for video in this project that does not have one yet",
+      "queued": "Queued",
+      "generateWithCount": "Generate ({{count}})",
+      "upToDate": "Up to date",
+      "clearProjectCache": "Clear Project Cache",
+      "clearProjectCacheDescription": "Waveforms, filmstrips, GIF frames, decoded audio",
+      "clear": "Clear",
+      "cleared": "Cleared",
+      "regenerateThumbnails": "Regenerate Thumbnails",
+      "regenerateThumbnailsDescription": "Re-create media library thumbnails for this project",
+      "regenerate": "Regenerate",
+      "deleteProxies": "Delete Proxies",
+      "deleteProxiesDescription": "Remove generated proxy videos for this project",
+      "deleted": "Deleted",
+      "localAi": "Local AI",
+      "localAiDescription": "Unload resident runtimes or clear cached model downloads.",
+      "clearCacheConfirmTitle": "Clear project cache?",
+      "clearCacheConfirmDescription": "This will delete cached waveforms, filmstrips, GIF frames, and decoded audio for the current project ({{count}} media items). These will be regenerated automatically when needed. Your project data, media files, thumbnails, and proxies will not be affected.",
+      "clearCache": "Clear Cache"
+    },
+    "toasts": {
+      "projectCacheCleared": "Project cache cleared",
+      "projectCachePartiallyCleared": "Project cache partially cleared",
+      "projectCacheNotCleared": "Project cache not cleared",
+      "thumbnailsRegenerated": "Thumbnails regenerated",
+      "thumbnailsPartiallyRegenerated": "Thumbnails partially regenerated",
+      "thumbnailsNotRegenerated": "Thumbnails not regenerated",
+      "proxiesDeleted": "Proxies deleted",
+      "proxiesPartiallyDeleted": "Proxies partially deleted",
+      "proxiesNotDeleted": "Proxies not deleted",
+      "failedToClearCache": "Failed to clear project cache",
+      "failedToRegenerateThumbnails": "Failed to regenerate thumbnails",
+      "failedToDeleteProxies": "Failed to delete proxies",
+      "itemsUpdated_one": "{{count}} item updated.",
+      "itemsUpdated_other": "{{count}} items updated.",
+      "itemsUpdatedFailed_one": "{{count}} item updated. Failed: {{failed}}",
+      "itemsUpdatedFailed_other": "{{count}} items updated. Failed: {{failed}}"
+    },
+    "feedback": {
+      "couldntClearCache": "Couldn't clear project cache.",
+      "couldntRegenerateThumbnails": "Couldn't regenerate thumbnails.",
+      "couldntDeleteProxies": "Couldn't delete proxies.",
+      "noMediaNeededUpdating": "No project media needed updating.",
+      "completedForItems_one": "{{action}}: completed for {{count}} item.",
+      "completedForItems_other": "{{action}}: completed for {{count}} items.",
+      "couldntProcessItems_one": "{{action}}: couldn't process {{count}} item{{detail}}",
+      "couldntProcessItems_other": "{{action}}: couldn't process {{count}} items{{detail}}",
+      "partialOutcome": "{{action}}: {{succeeded}}/{{total}} done. Needs attention: {{failed}}.",
+      "moreItems": "{{items}}, +{{count}} more",
+      "actionClearCache": "Clear cache",
+      "actionRegenerateThumbnails": "Regenerate thumbnails",
+      "actionDeleteProxies": "Delete proxies"
+    }
+  }
+}

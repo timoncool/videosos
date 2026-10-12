@@ -1,0 +1,36 @@
+{
+  "recording": {
+    "rec": "REC",
+    "record": "录制配音",
+    "recordTooltip": "录制与播放头同步的配音",
+    "pause": "暂停录制",
+    "resume": "继续录制",
+    "stop": "停止并保存",
+    "stopTooltip": "停止录制并将该片段添加到时间轴",
+    "cancel": "取消录制",
+    "cancelTooltip": "放弃此次录制",
+    "saving": "保存中…",
+    "chooseDevice": "麦克风设置",
+    "microphone": "麦克风",
+    "systemDefault": "系统默认",
+    "settings": "录制设置",
+    "noiseSuppression": "噪声抑制",
+    "autoGain": "自动增益",
+    "muteWhileRecording": "录制时静音时间轴",
+    "syncOffset": "同步偏移",
+    "syncOffsetEarlier": "提前该片段",
+    "syncOffsetLater": "延后该片段",
+    "headphonesHint": "使用耳机，避免麦克风录入时间轴音频。",
+    "fileNamePrefix": "voiceover",
+    "errors": {
+      "unsupported": "此浏览器不支持麦克风录制。",
+      "noProject": "请先打开一个项目再进行录制。",
+      "permissionDenied": "麦克风访问已被阻止。请在浏览器中允许麦克风访问权限后重试。",
+      "noDevice": "未找到麦克风。请连接麦克风后重试。",
+      "deviceBusy": "麦克风正被其他应用程序使用。",
+      "startFailed": "无法开始录制。请重试。",
+      "failed": "录制失败。请重试。",
+      "saveFailed": "无法保存录制内容。"
+    }
+  }
+}

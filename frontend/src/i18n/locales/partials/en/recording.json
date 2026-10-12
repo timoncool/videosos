@@ -1,0 +1,36 @@
+{
+  "recording": {
+    "rec": "REC",
+    "record": "Record voiceover",
+    "recordTooltip": "Record a voiceover synced to the playhead",
+    "pause": "Pause recording",
+    "resume": "Resume recording",
+    "stop": "Stop and save",
+    "stopTooltip": "Stop and add the take to the timeline",
+    "cancel": "Cancel recording",
+    "cancelTooltip": "Discard this take",
+    "saving": "Saving…",
+    "chooseDevice": "Microphone settings",
+    "microphone": "Microphone",
+    "systemDefault": "System default",
+    "settings": "Recording settings",
+    "noiseSuppression": "Noise suppression",
+    "autoGain": "Auto gain",
+    "muteWhileRecording": "Mute timeline while recording",
+    "syncOffset": "Sync offset",
+    "syncOffsetEarlier": "Shift take earlier",
+    "syncOffsetLater": "Shift take later",
+    "headphonesHint": "Use headphones so timeline audio is not captured by the mic.",
+    "fileNamePrefix": "voiceover",
+    "errors": {
+      "unsupported": "Microphone recording is not supported in this browser.",
+      "noProject": "Open a project before recording.",
+      "permissionDenied": "Microphone access was blocked. Allow mic access in your browser and try again.",
+      "noDevice": "No microphone was found. Connect a mic and try again.",
+      "deviceBusy": "The microphone is being used by another app.",
+      "startFailed": "Could not start recording. Please try again.",
+      "failed": "Recording failed. Please try again.",
+      "saveFailed": "Could not save the recording."
+    }
+  }
+}

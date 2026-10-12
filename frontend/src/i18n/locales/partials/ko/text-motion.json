@@ -1,0 +1,48 @@
+{
+  "textMotion": {
+    "sectionTitle": "텍스트 애니메이션",
+    "hint": "글자, 단어, 줄 단위로 텍스트에 애니메이션을 적용합니다. 인과 아웃은 클립 양 끝에서 재생되고 루프는 그 사이에서 계속 반복됩니다.",
+    "slots": {
+      "in": "인",
+      "out": "아웃",
+      "loop": "루프"
+    },
+    "duration": "길이",
+    "stagger": "지연 간격",
+    "intensity": "강도",
+    "order": "순서",
+    "orders": {
+      "forward": "앞에서부터",
+      "backward": "뒤에서부터",
+      "center": "가운데부터",
+      "random": "무작위"
+    },
+    "removePreset": "{{name}} 제거",
+    "presets": {
+      "typewriter": "타자기",
+      "fade-up": "페이드 업",
+      "rise": "라이즈",
+      "cascade": "캐스케이드",
+      "pop": "팝",
+      "blur-in": "블러 인",
+      "slide-mask": "슬라이드 리빌",
+      "wave-in": "웨이브 인",
+      "fade-down": "페이드 다운",
+      "sink": "싱크",
+      "pop-out": "팝 아웃",
+      "blur-out": "블러 아웃",
+      "typewriter-erase": "타자기 지우기",
+      "pulse": "펄스",
+      "wave": "웨이브",
+      "shimmer": "쉬머",
+      "swing": "스윙"
+    },
+    "unit": "적용 대상",
+    "units": {
+      "character": "문자",
+      "word": "단어",
+      "line": "줄",
+      "whole-clip": "전체 클립"
+    }
+  }
+}

@@ -1,0 +1,398 @@
+{
+  "editor": {
+    "mediaSidebar": {
+      "media": "미디어",
+      "text": "텍스트",
+      "shapes": "도형",
+      "effects": "효과",
+      "transitions": "전환",
+      "ai": "AI",
+      "collapsePanel": "패널 접기",
+      "expandPanel": "패널 펼치기",
+      "keyframeEditor": "키프레임 편집기",
+      "hideKeyframeEditor": "키프레임 편집기 숨기기",
+      "showKeyframeEditor": "키프레임 편집기 표시",
+      "templates": "템플릿",
+      "textGroupSingle": "단일",
+      "textGroupTwoSpans": "2개 구간",
+      "textGroupThreeSpans": "3개 구간",
+      "addText": "텍스트 추가",
+      "pen": "펜",
+      "penToolHint": "펜 도구로 사용자 지정 경로 도형 그리기",
+      "adjustmentLayer": "조정 레이어",
+      "blankAdjustmentLayer": "빈 조정 레이어",
+      "presets": "프리셋"
+    },
+    "textSection": {
+      "sectionTitle": "텍스트",
+      "content": "내용",
+      "single": "단일",
+      "twoSpans": "2개 구간",
+      "threeSpans": "3개 구간",
+      "mixedNone": "혼합 / 없음",
+      "selectPreset": "프리셋 선택",
+      "span": "구간 {{count}}",
+      "spanText": "구간 {{count}} 텍스트",
+      "eyebrow": "보조 제목",
+      "eyebrowText": "보조 제목 텍스트",
+      "title": "제목",
+      "titleText": "제목 텍스트",
+      "subtitle": "부제목",
+      "subtitleText": "부제목 텍스트",
+      "text": "텍스트",
+      "enterText": "텍스트 입력...",
+      "defaultText": "여기에 텍스트 입력",
+      "selectFont": "글꼴 선택",
+      "size": "크기",
+      "spacing": "간격",
+      "scale": "배율",
+      "font": "글꼴",
+      "weight": "두께",
+      "style": "스타일",
+      "align": "정렬",
+      "color": "색상",
+      "background": "배경",
+      "clear": "지우기",
+      "clearBackground": "배경 지우기",
+      "lineHeightShort": "줄 높이",
+      "padding": "여백",
+      "radius": "반경",
+      "mixed": "혼합",
+      "selectWeight": "두께 선택",
+      "bold": "굵게",
+      "boldUnavailable": "이 글꼴에서는 굵게를 사용할 수 없습니다",
+      "italic": "기울임",
+      "underline": "밑줄",
+      "italicSpan": "{{label}} 기울임",
+      "underlineSpan": "{{label}} 밑줄",
+      "alignLeft": "왼쪽 정렬",
+      "alignCenter": "가운데 정렬",
+      "alignRight": "오른쪽 정렬",
+      "alignTop": "위쪽 정렬",
+      "alignMiddle": "세로 가운데 정렬",
+      "alignBottom": "아래쪽 정렬",
+      "effects": "효과",
+      "presets": "프리셋",
+      "fontWeights": {
+        "regular": "일반",
+        "medium": "중간",
+        "semibold": "세미볼드",
+        "bold": "굵게"
+      },
+      "effectPresets": {
+        "none": "없음",
+        "shadow": "그림자",
+        "outline": "외곽선",
+        "glow": "광선"
+      },
+      "shadow": "그림자",
+      "shadowX": "그림자 X",
+      "shadowY": "그림자 Y",
+      "shadowBlur": "그림자 흐림",
+      "strokeWidth": "외곽선 굵기",
+      "stroke": "외곽선",
+      "animation": "애니메이션",
+      "intro": "인트로",
+      "outro": "아웃트로",
+      "animationFooter": "선택한 각 클립의 시작 또는 끝에 짧은 이즈아웃 텍스트 모션을 적용합니다.",
+      "animationPresets": {
+        "none": "없음",
+        "fade": "페이드",
+        "rise": "위로",
+        "drop": "아래로",
+        "left": "왼쪽",
+        "right": "오른쪽",
+        "tilt": "기울임",
+        "pop": "팝",
+        "swing": "스윙"
+      }
+    },
+    "tts": {
+      "seek": "탐색",
+      "dialogTitle": "텍스트에서 오디오 생성",
+      "dialogDescription": "음성을 생성하고 텍스트 클립 위치에 삽입합니다.",
+      "kokoroUnsupported": "이 브라우저에서는 WebGPU를 사용할 수 없습니다. Kokoro TTS에는 Chrome 113+, Edge 113+ 또는 Safari 26+가 필요합니다.",
+      "mossUnsupported": "이 브라우저에서는 브라우저 관리 저장소를 사용할 수 없습니다. MOSS 다국어 TTS는 최신 Chromium 브라우저에서 가장 잘 작동합니다.",
+      "engine": "엔진",
+      "engineSupportDetails": "TTS 엔진 지원 정보",
+      "kokoroDescription": "WebGPU 기반 영어 음성입니다.",
+      "supportedLanguages": "지원 언어: {{languages}}.",
+      "kokoroOption": "Kokoro (영어, WebGPU)",
+      "mossOption": "MOSS Nano (20개 언어, CPU)",
+      "voice": "음성",
+      "text": "텍스트",
+      "textPlaceholder": "읽어 줄 텍스트를 입력하세요...",
+      "speed": "속도",
+      "progressPreparing": "로컬 TTS 준비 중...",
+      "insertedAndLinked": "삽입 및 연결됨",
+      "generate": "생성",
+      "generating": "생성 중...",
+      "regenerate": "다시 생성",
+      "insertAndLink": "삽입 및 연결",
+      "inserting": "삽입 중...",
+      "errors": {
+        "openProject": "오디오를 생성하기 전에 프로젝트를 여세요.",
+        "enterText": "합성할 텍스트를 입력하세요.",
+        "kokoroUnsupported": "Kokoro TTS에는 WebGPU가 필요합니다. Chrome 113+, Edge 113+ 또는 Safari 26+를 사용해 보세요.",
+        "mossUnsupported": "MOSS 다국어 TTS에는 브라우저 관리 저장소가 필요합니다. 최신 Chromium 브라우저를 사용해 보세요.",
+        "generateFailed": "음성을 생성하지 못했습니다.",
+        "insertFailed": "오디오를 저장하고 삽입하지 못했습니다.",
+        "supertonicUnsupported": "이 브라우저에서는 로컬 Supertonic TTS 런타임을 실행할 수 없습니다. 최신 Chrome 또는 Edge를 사용해 보세요."
+      },
+      "notifications": {
+        "addedAndLinked": "\"{{fileName}}\"을(를) 타임라인에 추가하고 텍스트와 연결했습니다.",
+        "savedNoTrack": "\"{{fileName}}\"을(를) 저장했지만 사용 가능한 오디오 트랙이 없습니다."
+      },
+      "supertonicUnsupported": "이 브라우저에서는 로컬 Supertonic TTS 런타임을 실행할 수 없습니다. 최신 Chrome 또는 Edge를 사용해 보세요.",
+      "supertonicDescription": "WebGPU 또는 WASM에서 실행되는 31개 언어 로컬 ONNX 음성입니다.",
+      "supertonicOption": "Supertonic 3 (31개 언어, 로컬 ONNX)",
+      "language": "언어",
+      "autoDetectLanguage": "자동 감지",
+      "expressiveTags": "표현 태그"
+    },
+    "aiPanel": {
+      "textToSpeech": "텍스트 음성 변환",
+      "collapseTextToSpeech": "텍스트 음성 변환 접기",
+      "expandTextToSpeech": "텍스트 음성 변환 펼치기",
+      "runsLocally": "{{runtime}}은(는) 브라우저에서 {{backend}}로 로컬 실행됩니다.",
+      "history": "기록 ({{count}}) - {{size}}",
+      "clearAll": "모두 지우기",
+      "musicGeneration": "음악 생성",
+      "collapseMusicGeneration": "음악 생성 접기",
+      "expandMusicGeneration": "음악 생성 펼치기",
+      "musicGenerationInfo": "음악 생성 정보",
+      "musicgenDescription": "Transformers.js를 통해 Xenova의 브라우저용 MusicGen 모델을 사용합니다. 첫 다운로드는 크지만 이후에는 로컬에 캐시됩니다.",
+      "musicgenPromptHint": "장르, 분위기, 템포, 악기 구성을 입력하세요. 짧은 클립일수록 훨씬 빠르게 끝납니다.",
+      "musicgenUnsupported": "이 브라우저에서는 WebGPU를 사용할 수 없습니다. MusicGen에는 Chrome 113+, Edge 113+ 또는 Safari 26+가 필요합니다.",
+      "prompt": "프롬프트",
+      "presets": "프리셋",
+      "musicPromptPlaceholder": "생성할 음악의 종류를 설명하세요...",
+      "length": "길이",
+      "generateMusic": "음악 생성",
+      "musicHistory": "음악 기록 ({{count}}) - {{size}}",
+      "remove": "제거",
+      "saved": "저장됨",
+      "saving": "저장 중...",
+      "saveAndInsert": "저장 및 삽입",
+      "saveToLibrary": "라이브러리에 저장",
+      "progressPreparingMusic": "로컬 음악 생성을 준비 중...",
+      "errors": {
+        "describeMusic": "생성할 음악을 설명하세요.",
+        "musicgenUnsupported": "MusicGen에는 WebGPU가 필요합니다. Chrome 113+, Edge 113+ 또는 Safari 26+를 사용해 보세요.",
+        "generateMusicFailed": "음악을 생성하지 못했습니다.",
+        "saveAudioFailed": "오디오를 미디어 라이브러리에 저장하지 못했습니다."
+      },
+      "notifications": {
+        "savedToLibrary": "\"{{fileName}}\"이(가) 미디어 라이브러리에 저장되었습니다.",
+        "savedAndAdded": "\"{{fileName}}\"이(가) 저장되어 타임라인에 추가되었습니다."
+      },
+      "defaultTtsPrompt": "Welcome to freecut. This voice was generated locally in the browser.",
+      "musicPresets": {
+        "lofiChillLabel": "Lo-fi 칠",
+        "lofiChillPrompt": "따뜻한 lo-fi 비트, 먼지 느낌의 드럼, 부드러운 베이스, 꿈같은 신스 리드",
+        "pop80sLabel": "80년대 팝",
+        "pop80sPrompt": "묵직한 드럼과 신스가 있는 80년대 팝 트랙",
+        "rock90sLabel": "90년대 록",
+        "rock90sPrompt": "큰 기타와 묵직한 드럼이 있는 90년대 록 노래",
+        "upbeatEdmLabel": "신나는 EDM",
+        "upbeatEdmPrompt": "밝고 경쾌한 EDM 트랙, 싱코페이트 드럼, 포근한 패드, 강한 감정 bpm: 130",
+        "countryLabel": "컨트리",
+        "countryPrompt": "어쿠스틱 기타가 있는 밝은 컨트리 노래",
+        "lofiElectroLabel": "Lo-fi 일렉트로",
+        "lofiElectroPrompt": "오가닉 샘플이 있는 느린 BPM의 lo-fi 일렉트로 칠"
+      }
+    },
+    "clearKeyframesDialog": {
+      "descriptionProperty": "선택한 {{count}}개 항목에서 {{property}} 키프레임을 지우시겠습니까?",
+      "descriptionAll": "선택한 {{count}}개 항목에서 모든 키프레임을 지우시겠습니까?"
+    },
+    "localInferencePill": {
+      "jobs": "{{count}}개 작업"
+    },
+    "subtitleSection": {
+      "cueCount": "{{count}}개 큐"
+    },
+    "propertiesSidebar": {
+      "clipsSelected": "{{count}}개 클립 선택됨"
+    }
+  },
+  "preview": {
+    "canvasDrop": {
+      "dropOnTimeline": "타임라인에 놓기",
+      "compoundClipsTimeline": "컴파운드 클립은 타임라인에 배치하는 것이 가장 좋습니다.",
+      "presetsTimeline": "텍스트 및 도형 프리셋은 타임라인에 배치하는 것이 가장 좋습니다.",
+      "dropOneItem": "항목 하나 놓기",
+      "oneMediaAtATime": "캔버스에는 미디어 항목을 한 번에 하나씩 배치하세요.",
+      "audioGoesOnTimeline": "오디오는 타임라인으로",
+      "visualLayersOnly": "캔버스 드롭은 시각 레이어만 배치합니다.",
+      "dropToPlace": "놓아서 배치",
+      "addAtPlayhead": "이 미디어를 재생 헤드와 드롭 위치에 추가합니다.",
+      "dropOneFile": "파일 하나 놓기",
+      "oneVisualFileAtATime": "캔버스 드롭은 시각 파일을 한 번에 하나씩 가져옵니다.",
+      "importAndPlace": "가져와서 배치",
+      "importAndPlaceDescription": "이 파일을 가져와 캔버스에 배치합니다.",
+      "noCompatibleTrack": "이 드롭에 사용할 수 있는 잠금 해제된 호환 트랙이 없습니다.",
+      "unableToLoadMedia": "드롭한 미디어를 불러올 수 없습니다.",
+      "mediaNoLongerAvailable": "드롭한 미디어를 더 이상 사용할 수 없습니다.",
+      "dragDropUnsupported": "이 브라우저는 드래그 앤 드롭을 지원하지 않습니다. Chrome 또는 Edge를 사용하세요.",
+      "filesRejected": "일부 파일이 거부되었습니다: {{errors}}",
+      "dropAudioOnTimeline": "오디오는 타임라인에 놓으세요.",
+      "unableToInspectVideo": "드롭한 비디오를 검사할 수 없습니다.",
+      "unableToInspectFile": "드롭한 파일을 검사할 수 없습니다.",
+      "unableToImportFile": "드롭한 파일을 가져올 수 없습니다."
+    }
+  },
+  "settings": {
+    "ai": {
+      "scene": "{{count}}개 장면"
+    },
+    "feedback": {
+      "completedForItems": "{{count}}개 항목에 대한 {{action}} 완료.",
+      "couldntProcessItems": "{{count}}개 항목에 대한 {{action}}을(를) 수행할 수 없습니다{{detail}}"
+    },
+    "toasts": {
+      "itemsUpdated": "{{count}}개 항목이 업데이트되었습니다.",
+      "itemsUpdatedFailed": "{{count}}개 항목이 업데이트되었습니다. 실패: {{failed}}"
+    }
+  },
+  "projects": {
+    "legacyMigration": {
+      "errorsLogged": "{{count}}개 오류 기록됨"
+    },
+    "legacyMigrationErrors": {
+      "retryStillFailing": "재시도에 {{count}}개 오류가 남아 있습니다.",
+      "failedCount": "{{count}}개 마이그레이션 오류"
+    },
+    "list": {
+      "movedToTrashCount": "{{count}}개 프로젝트를 휴지통으로 이동했습니다.",
+      "selectedCount": "{{count}}개 선택됨",
+      "deleteN": "{{count}}개 삭제",
+      "projectCount": "{{count}}개 프로젝트",
+      "bulkDeleteTitle": "선택한 {{count}}개 프로젝트를 삭제하시겠습니까?"
+    },
+    "trash": {
+      "emptiedTrash": "휴지통에서 {{count}}개 프로젝트를 비웠습니다.",
+      "emptiedTrashWithFailures": "{{count}}개 프로젝트를 삭제할 수 없습니다."
+    },
+    "relativeTime": {
+      "minutesAgo": "{{count}}분 전",
+      "hoursAgo": "{{count}}시간 전",
+      "daysAgo": "{{count}}일 전",
+      "weeksAgo": "{{count}}주 전",
+      "monthsAgo": "{{count}}개월 전",
+      "yearsAgo": "{{count}}년 전"
+    },
+    "settings": {
+      "hotkeys": {
+        "importedCommands": "{{count}}개 명령 가져옴",
+        "remappedCount": "{{count}}개 재매핑됨",
+        "ignoredCount": "{{count}}개 무시됨",
+        "customCount": "{{count}}개 사용자 지정"
+      },
+      "localInference": {
+        "activeJobs": "{{count}}개 활성 작업",
+        "unloadedToast": "{{count}}개 로컬 런타임을 언로드했습니다."
+      }
+    }
+  },
+  "sceneBrowser": {
+    "counts": {
+      "clip_one": "클립 {{count}}개",
+      "clip_other": "클립 {{count}}개",
+      "scene_one": "장면 {{count}}개",
+      "scene_other": "장면 {{count}}개",
+      "match_one": "일치 {{count}}건",
+      "match_other": "일치 {{count}}건"
+    },
+    "sort": {
+      "label": "정렬",
+      "relevance": "관련성",
+      "time": "타임스탬프",
+      "name": "미디어 이름"
+    },
+    "scope": {
+      "placeholder": "범위",
+      "allMedia": "모든 미디어",
+      "scopedTo": "범위: {{name}}",
+      "scopedToAll": "범위: 모든 미디어"
+    },
+    "banners": {
+      "downloadingSemanticModel": "시맨틱 모델 다운로드 중(~22MB, 최초 1회)...",
+      "indexingCaptions": "시맨틱 검색을 위해 캡션 인덱싱 중 - {{current}}/{{total}}개 클립",
+      "reanalyzing": "<strong>{{label}}</strong> 재분석 중 - 완료되면 장면이 업데이트됩니다."
+    },
+    "analyze": {
+      "title": "AI로 미디어 분석",
+      "button": "분석",
+      "scope": "\"{{name}}\" 분석",
+      "newMedia": "새 미디어 분석",
+      "reanalyzeAll": "모두 다시 분석"
+    },
+    "view": {
+      "list": "목록 보기",
+      "grid": "그리드 보기"
+    },
+    "empty": {
+      "noCaptionsTitle": "아직 AI 캡션이 없습니다.",
+      "noCaptionsPrefix": "미디어 라이브러리의 클립에서",
+      "noCaptionsSuffix": "을(를) 실행하면 검색 가능한 장면 캡션을 생성할 수 있습니다.",
+      "noMatchesTitle": "검색과 일치하는 장면이 없습니다.",
+      "noMatchesPrefix": "더 짧은 쿼리를 시도하거나 범위를 다음으로 전환하세요:"
+    },
+    "search": {
+      "exitColorMode": "색상 모드 종료",
+      "colorTitle": "색상으로 검색",
+      "color": "색상",
+      "semanticTitle": "시맨틱 검색(의미 기반)",
+      "keywordTitle": "키워드 검색(정확한 일치)",
+      "semanticLabel": "시맨틱 검색",
+      "keywordLabel": "키워드 검색",
+      "semantic": "시맨틱",
+      "keyword": "키워드",
+      "keywordDescription": "정확한 단어 일치",
+      "semanticDescription": "의미로 매칭",
+      "clearReference": "참조를 지우고 다른 색상 선택",
+      "findingSimilarPalette": "비슷한 팔레트를 가진 장면 찾는 중...",
+      "semanticPlaceholder": "의미로 검색 - \"물 위의 노을\", \"웃는 사람들\"...",
+      "keywordPlaceholder": "보이는 내용으로 장면 검색...",
+      "clearSearch": "검색 지우기",
+      "similarPaletteTo": "{{label}}와 비슷한 팔레트 - 클릭하여 지우기"
+    },
+    "matchTiers": {
+      "strong": "강함",
+      "good": "양호",
+      "fair": "보통"
+    },
+    "match": {
+      "keyword": "키워드",
+      "keywordHint": "키워드 일치 · 코사인 {{score}}",
+      "meaningWithTier": "의미 · {{tier}}",
+      "textEmbeddingHint": "텍스트 임베딩 코사인: {{score}}",
+      "visualWithTier": "비주얼 · {{tier}}",
+      "clipHint": "CLIP 코사인: {{score}}",
+      "colorWithName": "색상 · {{color}}",
+      "paletteColorHint": "{{color}} 팔레트 일치(ΔE 2000)",
+      "paletteDistance": "팔레트 · ΔE {{distance}}",
+      "paletteDistanceHint": "참조 팔레트에 대한 가중 평균 ΔE 2000",
+      "belowThreshold": "임계값 미만",
+      "cosineHint": "코사인 {{score}}",
+      "top": "최상",
+      "topHint": "가장 높은 점수의 일치"
+    },
+    "palette": {
+      "libraryColor": "라이브러리 색상",
+      "empty": "아직 인덱싱된 팔레트가 없습니다 - AI 캡션을 실행해 채우세요.",
+      "moreColors_one": "추가 {{count}}개 색상",
+      "moreColors_other": "추가 {{count}}개 색상",
+      "showMoreColors_one": "추가 {{count}}개 색상 표시",
+      "showMoreColors_other": "추가 {{count}}개 색상 표시",
+      "moreColorsTitle": "더 많은 색상",
+      "findColor": "이 색상의 장면 찾기(라이브러리의 {{percent}}%)",
+      "findSimilar": "비슷한 팔레트의 장면 찾기",
+      "pickedSwatch": "선택한 색상"
+    },
+    "scene": {
+      "previewAndDragHint": "클릭하여 소스 모니터에서 미리보기 - 드래그하여 타임라인에 추가"
+    }
+  }
+}

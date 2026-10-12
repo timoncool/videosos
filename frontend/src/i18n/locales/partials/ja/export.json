@@ -1,0 +1,189 @@
+{
+  "export": {
+    "audioContainer": {
+      "aac": "AAC",
+      "mp3": "MP3",
+      "wav": "WAV"
+    },
+    "cancelled": {
+      "message": "書き出しはキャンセルされました。ファイルは保存されていません。"
+    },
+    "complete": {
+      "audioSuccess": "オーディオのダウンロード準備が整いました。",
+      "download": "ダウンロード",
+      "fileSizeLabel": "サイズ",
+      "timeTakenLabel": "経過時間",
+      "videoSuccess": "動画のダウンロード準備が整いました。"
+    },
+    "dialog": {
+      "descCancelled": "書き出しが完了する前にキャンセルされました。",
+      "descComplete": "ファイルの準備ができました。",
+      "descError": "書き出し中に問題が発生しました。",
+      "descProgress": "動画をレンダリングしています。数分かかる場合があります。",
+      "descSettings": "書き出しオプションを設定します。",
+      "titleCancelled": "書き出しをキャンセルしました",
+      "titleComplete": "書き出しが完了しました",
+      "titleError": "書き出しに失敗しました",
+      "titleProgress": "動画を書き出し中",
+      "titleSettings": "書き出し"
+    },
+    "errors": {
+      "verifyCodec": "現在の設定でコーデックのサポート状況を確認できませんでした。"
+    },
+    "progress": {
+      "cancelExport": "キャンセル",
+      "elapsedLabel": "経過時間",
+      "encoding": "エンコード中…",
+      "finalizing": "仕上げ中…",
+      "framesLabel": "フレーム",
+      "keepTabOpen": "書き出しが完了するまでこのタブを開いたままにしてください。",
+      "preparing": "準備中…",
+      "rendering": "レンダリング中…"
+    },
+    "settings": {
+      "audio": "オーディオ",
+      "audioOnlyNote": "オーディオのみの書き出しです。動画は含まれません。",
+      "audioQualityHigh": "高",
+      "audioQualityLow": "低",
+      "audioQualityMedium": "中",
+      "audioQualityUltra": "ウルトラ",
+      "cannotEncode": "選択した品質で {{width}}×{{height}} に対応するエンコーダーがありません。",
+      "codec": "コーデック",
+      "codecSupportUnverified": "コーデックのサポート状況を確認できませんでした。書き出しは可能かもしれませんが、互換性は保証されません。",
+      "duration": "長さ",
+      "embedSubtitles": "字幕を埋め込む",
+      "embedSubtitlesDescription": "文字起こしの字幕を書き出しファイルの字幕トラックとして埋め込みます。",
+      "embedSubtitlesMp4Note": "MP4 は字幕を別トラックとして保存します。プレーヤーによっては既定で表示されない場合があります。",
+      "embedSubtitlesUnsupported": "{{container}} は字幕の埋め込みに対応していません。MP4、MKV、または WebM を選択してください。",
+      "exportAudio": "オーディオを書き出す",
+      "exportRange": "書き出し範囲",
+      "exportType": "書き出しタイプ",
+      "exportVideo": "動画を書き出す",
+      "format": "形式",
+      "in": "イン",
+      "inOutRangeHint": "選択したイン/アウト範囲のみが書き出されます。",
+      "noTranscriptSegments": "埋め込み可能な文字起こし字幕がありません。",
+      "out": "アウト",
+      "presetBalanced": "バランス",
+      "presetCustom": "カスタム",
+      "presetLabel": "プリセット",
+      "presetMax": "最高品質",
+      "presetRecommended": "推奨",
+      "presetSmall": "小サイズ",
+      "quality": "品質",
+      "qualityHigh": "高",
+      "qualityLow": "低",
+      "qualityMedium": "中",
+      "qualityUltra": "ウルトラ",
+      "quicktimeMov": "QuickTime MOV",
+      "renderWholeProject": "プロジェクト全体を書き出す",
+      "resolution": "解像度",
+      "resolutionSameAsProject": "プロジェクトと同じ ({{width}}×{{height}})",
+      "resolutionScaled": "{{p}}p ({{width}}×{{height}})",
+      "selectCodec": "コーデックを選択",
+      "selectFormat": "形式を選択",
+      "selectQuality": "品質を選択",
+      "selectResolution": "解像度を選択",
+      "sequence": "シーケンス",
+      "subtitleMode": {
+        "off": "オフ",
+        "burn": "焼き込み",
+        "sidecar": "外部 .srt",
+        "embedded": "埋め込みトラック",
+        "offDescription": "書き出した動画に字幕は入りません。",
+        "burnDescription": "字幕を動画に焼き込みます。すべてのプレーヤーで表示されます。",
+        "sidecarDescription": "字幕なしの動画と別の .srt 字幕ファイル。",
+        "embeddedDescription": "オン/オフ切り替え可能な字幕トラック（WebM/MKV）。"
+      },
+      "subtitles": "字幕",
+      "video": "動画"
+    },
+    "videoContainer": {
+      "mp4": "対応プレーヤーが多く、共有に最適",
+      "mov": "Apple 環境向け、Final Cut や QuickTime に最適",
+      "webm": "ウェブ再生向けのオープンで先進的なコンテナ",
+      "mkv": "字幕サポートが優れた柔軟なコンテナ"
+    },
+    "preflight": {
+      "checking": "書き出しの事前チェック中…",
+      "title": "書き出し事前チェック",
+      "workerPath": "ワーカーのパス",
+      "fallback": "メインスレッドへのフォールバック",
+      "checks": {
+        "empty-range": {
+          "title": "書き出す内容がありません",
+          "detail": "選択した書き出し範囲にフレームがありません。",
+          "fix": "タイムラインにコンテンツを追加するか、空ではないイン/アウト範囲を選択してください。"
+        },
+        "export-range-ready": {
+          "title": "書き出し範囲の準備完了",
+          "detail": "{{frames}} フレーム（{{seconds}} 秒）を書き出します。"
+        },
+        "video-codec-unavailable": {
+          "title": "選択した形式をエンコードできません",
+          "detail": "このブラウザーでは選択した書き出し設定をエンコードできません。",
+          "detailWithError": "{{error}}",
+          "fix": "別の形式/コーデックを選ぶか、最近の Chromium ブラウザーを試してください。"
+        },
+        "audio-export-ready": {
+          "title": "音声の書き出し準備完了",
+          "detail": "{{container}} 音声は {{codec}} を使用します。",
+          "detailDefaultCodec": "{{container}} 音声は既定の音声コーデックを使用します。"
+        },
+        "video-codec-fallback": {
+          "title": "代替コーデックを使用します",
+          "detail": "選択したコーデックはここでは使用できません。FreeCut は代わりに {{container}} で {{codec}} を書き出します。",
+          "fix": "この代替設定を使うか、対応している別のコーデックを手動で選択してください。"
+        },
+        "video-codec-supported": {
+          "title": "動画コーデックに対応しています",
+          "detail": "{{codec}} はこのブラウザーで {{container}} としてエンコードできます。"
+        },
+        "audio-codec-supported": {
+          "title": "音声コーデックに対応しています",
+          "detail": "このブラウザーでは {{codec}} 音声を {{container}} にエンコードできます。"
+        },
+        "audio-codec-unavailable": {
+          "title": "音声コーデックを利用できません",
+          "detail": "このブラウザーでは {{container}} 用の {{codec}} 音声をエンコードできません。",
+          "fix": "Opus 音声を使用するには WebM または MKV を選ぶか、対応ブラウザーに更新してください。"
+        },
+        "worker-unavailable-fallback": {
+          "title": "ワーカー書き出しを利用できません",
+          "detail": "このブラウザー/セッションでは書き出しワーカーを開始できないため、レンダリングはメインスレッドで実行されます。",
+          "fix": "書き出し中はタブをアクティブに保ち、重い操作を避けてください。"
+        },
+        "worker-animated-image-fallback": {
+          "title": "アニメーション画像はメインスレッド書き出しが必要です",
+          "detail": "GIF/WebP 画像アイテムはまだ書き出しワーカーでレンダリングできません。FreeCut は自動的にフォールバックします。",
+          "fix": "より高速なワーカー書き出しのため、書き出す前にアニメーション画像を動画クリップに置き換えてください。"
+        },
+        "worker-audio-context-fallback": {
+          "title": "音声ミックスにはメインスレッドへのフォールバックが必要です",
+          "detail": "OfflineAudioContext は書き出しワーカーで利用できないため、音声レンダリングはメインスレッドで実行されます。"
+        },
+        "missing-media-blocks-export": {
+          "title": "見つからないメディアが書き出しをブロックしています",
+          "detail": "参照中のメディアファイル {{count}} 件が見つからないか、権限が必要です。",
+          "detail_one": "参照中のメディアファイル {{count}} 件が見つからないか、権限が必要です。",
+          "detail_other": "参照中のメディアファイル {{count}} 件が見つからないか、権限が必要です。",
+          "fix": "書き出す前に、メディアライブラリで見つからないメディアを再リンクしてください。"
+        },
+        "large-file-risk": {
+          "title": "大きな書き出しファイルが予想されます",
+          "detail": "この書き出しはコンテナ差分を除いて約 {{size}} と推定されます。",
+          "fix": "空き容量が少ない場合は、バランスまたは小さいファイル、低い解像度、短い範囲を使ってください。"
+        },
+        "long-export-risk": {
+          "title": "長い書き出しには時間がかかる可能性があります",
+          "detail": "この書き出しは約 {{minutes}} 分です。",
+          "fix": "すばやく確認したい場合は、先に短いイン/アウト範囲を書き出してください。"
+        },
+        "worker-export-ready": {
+          "title": "ワーカー書き出しパスの準備完了",
+          "detail": "書き出しワーカーは、既知のメインスレッドフォールバックなしでこのコンポジションをレンダリングできます。"
+        }
+      }
+    }
+  }
+}

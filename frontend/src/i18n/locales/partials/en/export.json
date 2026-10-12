@@ -1,0 +1,217 @@
+{
+  "export": {
+    "audioContainer": {
+      "aac": "AAC",
+      "mp3": "MP3",
+      "wav": "WAV"
+    },
+    "cancelled": {
+      "message": "The export was cancelled. No file was saved."
+    },
+    "complete": {
+      "audioSuccess": "Your audio is ready to download.",
+      "download": "Download",
+      "fileSizeLabel": "Size",
+      "timeTakenLabel": "Time",
+      "videoSuccess": "Your video is ready to download."
+    },
+    "dialog": {
+      "descCancelled": "The export was cancelled before it finished.",
+      "descComplete": "Your file is ready.",
+      "descError": "Something went wrong while exporting.",
+      "descProgress": "Rendering your video. This can take a few minutes.",
+      "descSettings": "Configure your export options.",
+      "titleCancelled": "Export cancelled",
+      "titleComplete": "Export complete",
+      "titleError": "Export failed",
+      "titleProgress": "Exporting video",
+      "titleSettings": "Export"
+    },
+    "errors": {
+      "verifyCodec": "Couldn't verify codec support for the current settings."
+    },
+    "progress": {
+      "cancelExport": "Cancel",
+      "elapsedLabel": "Elapsed",
+      "encoding": "Encoding…",
+      "finalizing": "Finalizing…",
+      "framesLabel": "Frames",
+      "keepTabOpen": "Keep this tab open until the export finishes.",
+      "preparing": "Preparing…",
+      "rendering": "Rendering…"
+    },
+    "settings": {
+      "audio": "Audio",
+      "audioOnlyNote": "Audio-only export — no video will be included.",
+      "audioQualityHigh": "High",
+      "audioQualityLow": "Low",
+      "audioQualityMedium": "Medium",
+      "audioQualityUltra": "Ultra",
+      "cannotEncode": "No supported encoder for {{width}}×{{height}} at the selected quality.",
+      "codec": "Codec",
+      "codecSupportUnverified": "Couldn't verify codec support. Exporting may still work, but compatibility isn't guaranteed.",
+      "duration": "Duration",
+      "embedSubtitles": "Embed subtitles",
+      "embedSubtitlesDescription": "Include transcript captions as a subtitle track in the exported file.",
+      "embedSubtitlesMp4Note": "MP4 stores subtitles as a separate track. Some players may not show them by default.",
+      "embedSubtitlesUnsupported": "{{container}} doesn't support embedded subtitles. Choose MP4, MKV, or WebM.",
+      "exportAudio": "Export Audio",
+      "exportRange": "Export range",
+      "exportType": "Export type",
+      "exportVideo": "Export Video",
+      "format": "Format",
+      "in": "In",
+      "inOutRangeHint": "Only the selected in/out range will be exported.",
+      "noTranscriptSegments": "No transcript captions available to embed.",
+      "out": "Out",
+      "presetBalanced": "Balanced",
+      "presetCustom": "Custom",
+      "presetLabel": "Preset",
+      "presetMax": "Maximum",
+      "presetRecommended": "Recommended",
+      "presetSmall": "Small file",
+      "quality": "Quality",
+      "qualityHigh": "High",
+      "qualityLow": "Low",
+      "qualityMedium": "Medium",
+      "qualityUltra": "Ultra",
+      "quicktimeMov": "QuickTime MOV",
+      "rateControl": "Rate control",
+      "rateControlAuto": "Auto (source-aware)",
+      "rateControlCbr": "CBR (constant bitrate)",
+      "rateControlVbr": "VBR (variable bitrate)",
+      "renderWholeProject": "Render whole project",
+      "resolution": "Resolution",
+      "resolutionSameAsProject": "Same as project ({{width}}×{{height}})",
+      "resolutionScaled": "{{p}}p ({{width}}×{{height}})",
+      "selectCodec": "Select codec",
+      "selectFormat": "Select format",
+      "selectQuality": "Select quality",
+      "selectResolution": "Select resolution",
+      "sequence": "Sequence",
+      "targetBitrate": "Target bitrate",
+      "useSourceBitrate": "Use source",
+      "smartCopy": "Smart copy when possible",
+      "smartCopyPath": "Smart copy · no re-encoding",
+      "estimatedSize": "Estimated {{size}}",
+      "sourceBitrate": "Source {{bitrate}} Mbps",
+      "smartCopyStatus": {
+        "eligible": "Available: the original media will be copied byte-for-byte.",
+        "disabled": "Disabled. The timeline will be rendered and encoded.",
+        "not-video": "Available only for video exports.",
+        "range": "Unavailable when exporting an in/out range.",
+        "timeline-layout": "Requires one full source clip with no additional layers.",
+        "source-unavailable": "The original source file or metadata is unavailable.",
+        "trimmed-or-retimed": "Unavailable because the source is trimmed, split, reversed, or retimed.",
+        "visual-processing": "Unavailable because visual edits, captions, transitions, or keyframes must be rendered.",
+        "audio-processing": "Unavailable because the audio or track mix has been changed.",
+        "project-mismatch": "Project resolution or frame rate does not match the source.",
+        "format-mismatch": "Selected format or codec does not match the source."
+      },
+      "subtitleMode": {
+        "off": "Off",
+        "burn": "Burn in",
+        "sidecar": "Sidecar .srt",
+        "embedded": "Embedded track",
+        "offDescription": "No captions in the exported video.",
+        "burnDescription": "Captions are drawn into the video — visible in every player.",
+        "sidecarDescription": "Clean video plus a separate .srt subtitle file.",
+        "embeddedDescription": "A soft, toggleable subtitle track (WebM/MKV)."
+      },
+      "subtitles": "Subtitles",
+      "video": "Video"
+    },
+    "videoContainer": {
+      "mp4": "Widely supported, great for sharing",
+      "mov": "Apple ecosystem, best in Final Cut and QuickTime",
+      "webm": "Open, modern container for web playback",
+      "mkv": "Flexible container with strong subtitle support"
+    },
+    "preflight": {
+      "checking": "Checking export preflight…",
+      "title": "Export preflight",
+      "workerPath": "Worker path",
+      "smartCopyPath": "Smart copy path",
+      "fallback": "Main-thread fallback",
+      "checks": {
+        "empty-range": {
+          "title": "Nothing to export",
+          "detail": "The selected export range has no frames.",
+          "fix": "Add timeline content or choose a non-empty in/out range."
+        },
+        "export-range-ready": {
+          "title": "Export range ready",
+          "detail": "{{frames}} frames ({{seconds}}s) will be exported."
+        },
+        "video-codec-unavailable": {
+          "title": "Selected format cannot be encoded",
+          "detail": "This browser cannot encode the selected export settings.",
+          "detailWithError": "{{error}}",
+          "fix": "Choose a different format/codec or try a recent Chromium browser."
+        },
+        "audio-export-ready": {
+          "title": "Audio export ready",
+          "detail": "{{container}} audio will use {{codec}}.",
+          "detailDefaultCodec": "{{container}} audio will use the default audio codec."
+        },
+        "video-codec-fallback": {
+          "title": "Codec fallback will be used",
+          "detail": "The selected codec is unavailable here. FreeCut will export {{codec}} in {{container}} instead.",
+          "fix": "Keep this fallback or choose another supported codec manually."
+        },
+        "video-codec-supported": {
+          "title": "Video codec supported",
+          "detail": "{{codec}} can be encoded as {{container}} in this browser."
+        },
+        "smart-copy-ready": {
+          "title": "Smart copy ready",
+          "detail": "The original media will be copied without rendering or re-encoding."
+        },
+        "audio-codec-supported": {
+          "title": "Audio codec supported",
+          "detail": "{{codec}} audio can be encoded in {{container}} in this browser."
+        },
+        "audio-codec-unavailable": {
+          "title": "Audio codec unavailable",
+          "detail": "This browser cannot encode {{codec}} audio for {{container}}.",
+          "fix": "Choose WebM or MKV to use Opus audio, or update to a supported browser."
+        },
+        "worker-unavailable-fallback": {
+          "title": "Worker export unavailable",
+          "detail": "This browser/session cannot start export workers, so rendering will run on the main thread.",
+          "fix": "Keep the tab focused and avoid heavy interaction during export."
+        },
+        "worker-animated-image-fallback": {
+          "title": "Animated images require main-thread export",
+          "detail": "GIF/WebP image items cannot render in the export worker yet. FreeCut will fall back automatically.",
+          "fix": "For faster worker export, replace animated images with video clips before exporting."
+        },
+        "worker-audio-context-fallback": {
+          "title": "Audio mix requires main-thread fallback",
+          "detail": "OfflineAudioContext is not available in the export worker, so audio rendering will run on the main thread."
+        },
+        "missing-media-blocks-export": {
+          "title": "Missing media blocks export",
+          "detail": "{{count}} referenced media file is missing or needs permission.",
+          "detail_one": "{{count}} referenced media file is missing or needs permission.",
+          "detail_other": "{{count}} referenced media files are missing or need permission.",
+          "fix": "Relink missing media from the Media Library before exporting."
+        },
+        "large-file-risk": {
+          "title": "Large export file expected",
+          "detail": "This export is estimated around {{size}} before container variance.",
+          "fix": "Use Balanced or Small, lower resolution, or export a shorter range if disk space is tight."
+        },
+        "long-export-risk": {
+          "title": "Long export may take a while",
+          "detail": "This export is about {{minutes}} minutes long.",
+          "fix": "Export a shorter in/out range first if you want a quick validation render."
+        },
+        "worker-export-ready": {
+          "title": "Worker export path ready",
+          "detail": "The export worker can render this composition without a known main-thread fallback."
+        }
+      }
+    }
+  }
+}

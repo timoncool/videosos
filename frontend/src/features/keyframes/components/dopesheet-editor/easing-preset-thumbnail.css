@@ -1,0 +1,50 @@
+/**
+ * Square easing-preset thumbnails. Each tile shows a muted dot grid, a white
+ * easing curve, and an orange marker resting at the curve's start. On hover the
+ * marker rides the curve (via CSS motion path) to preview the timing. The
+ * animation is paused at rest, so a grid of ~25 thumbnails costs nothing until
+ * hovered — matching motion-preset-thumbnail.css.
+ */
+
+.ep-thumb {
+  --ep-grid: color-mix(in oklab, var(--muted-foreground) 42%, transparent);
+  position: relative;
+  background-image: radial-gradient(circle, var(--ep-grid) 0.7px, transparent 0.7px);
+  background-size: 5px 5px;
+  background-position: center;
+}
+
+.ep-dot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 7px;
+  width: 7px;
+  border-radius: 9999px;
+  background: #fb923c; /* orange-400 */
+  offset-anchor: center;
+  offset-distance: 0%;
+  animation: ep-run 1.15s ease-in-out infinite alternate;
+  animation-play-state: paused;
+  will-change: offset-distance;
+}
+
+.group:hover .ep-dot,
+.ep-thumb:hover .ep-dot {
+  animation-play-state: running;
+}
+
+@keyframes ep-run {
+  from {
+    offset-distance: 0%;
+  }
+  to {
+    offset-distance: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ep-dot {
+    animation: none !important;
+  }
+}

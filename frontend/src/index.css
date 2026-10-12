@@ -1,0 +1,386 @@
+@import 'tailwindcss';
+
+@plugin "tailwindcss-animate";
+
+/* Feature-specific theme extensions */
+@import './features/timeline/theme.css';
+
+body.canvas-translate-cursor-not-allowed,
+body.canvas-translate-cursor-not-allowed * {
+  cursor: not-allowed !important;
+}
+
+@custom-variant dark (&:is(.dark *));
+
+/* Shared easing tokens — strong custom curves, not the weak CSS built-ins.
+   Non-inline @theme so the values are both emitted to :root (usable as
+   `var(--ease-out-strong)` in raw CSS / inline styles) AND generate Tailwind
+   utilities: `ease-out-strong`, `ease-in-out-strong`, `ease-drawer`. Reference
+   these instead of hand-rolling cubic-beziers so "feels right" is the default. */
+@theme {
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1); /* UI entrances/exits */
+  --ease-in-out-strong: cubic-bezier(0.77, 0, 0.175, 1); /* on-screen movement */
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1); /* iOS-like drawer/panel slide */
+}
+
+@layer base {
+  :root {
+    /* Professional Video Editor Dark Theme - OKLCH Colors */
+    /* Inspired by Premiere Pro & DaVinci Resolve */
+
+    /* Base - Very dark, reduced eye strain */
+    --background: oklch(0.15 0 0); /* #262626 - Main canvas */
+    --foreground: oklch(0.95 0 0); /* #f2f2f2 - Primary text */
+
+    /* Panels - Layered depth */
+    --card: oklch(0.18 0 0); /* #2e2e2e - Panel backgrounds */
+    --card-foreground: oklch(0.92 0 0); /* #ebebeb - Panel text */
+
+    --popover: oklch(0.16 0 0); /* #292929 - Dropdowns */
+    --popover-foreground: oklch(0.92 0 0);
+
+    /* Primary - Orange accent (playback, active states) */
+    --primary: oklch(0.68 0.19 45); /* #FF8C3A - Vibrant orange */
+    --primary-foreground: oklch(0.12 0 0); /* Dark text on primary */
+
+    /* Secondary - Subtle panel variation */
+    --secondary: oklch(0.22 0 0); /* #383838 - Secondary surfaces */
+    --secondary-foreground: oklch(0.88 0 0);
+
+    /* Muted - Backgrounds and disabled states */
+    --muted: oklch(0.2 0 0); /* #333333 - Muted backgrounds */
+    --muted-foreground: oklch(0.6 0 0); /* #999999 - Muted text */
+
+    /* Accent - Hover states and highlights */
+    --accent: oklch(0.24 0 0); /* #3d3d3d - Hover backgrounds */
+    --accent-foreground: oklch(0.95 0 0);
+
+    /* Destructive - Red for delete/errors */
+    --destructive: oklch(0.58 0.22 25); /* #E53E3E - Error red */
+    --destructive-foreground: oklch(0.98 0 0);
+
+    /* Borders - Subtle separators */
+    --border: oklch(0.25 0 0); /* #404040 - Borders */
+    --input: oklch(0.24 0 0); /* #3d3d3d - Input borders */
+    --ring: oklch(0.68 0.19 45); /* Orange focus ring */
+
+    /* Panel system - Layered depth */
+    --panel-bg: oklch(0.18 0 0); /* #2e2e2e - Panels */
+    --panel-header: oklch(0.14 0 0); /* #242424 - Panel headers */
+    --timeline-bg: oklch(0.12 0 0); /* #1f1f1f - Timeline darker */
+
+    /* Sidebar */
+    --sidebar: oklch(0.18 0 0);
+    --sidebar-foreground: oklch(0.92 0 0);
+    --sidebar-primary: oklch(0.68 0.19 45);
+    --sidebar-primary-foreground: oklch(0.12 0 0);
+    --sidebar-accent: oklch(0.22 0 0);
+    --sidebar-accent-foreground: oklch(0.92 0 0);
+    --sidebar-border: oklch(0.25 0 0);
+    --sidebar-ring: oklch(0.68 0.19 45);
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  *:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+    --tw-ring-shadow: none !important;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family:
+      'IBM Plex Sans',
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  }
+
+  /* Force dark mode always */
+  html {
+    color-scheme: dark;
+  }
+
+  /* Monospace for technical data */
+  code,
+  pre,
+  .font-mono,
+  [data-mono] {
+    font-family: 'IBM Plex Mono', 'Consolas', 'Monaco', monospace;
+  }
+
+  /* Disable smooth scrolling globally - timeline needs instant response for zoom */
+  * {
+    scroll-behavior: auto;
+  }
+
+  /* Professional scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: oklch(0.15 0 0);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: oklch(0.3 0 0);
+    border-radius: 6px;
+    border: 2px solid oklch(0.15 0 0);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.35 0 0);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: oklch(0.15 0 0);
+  }
+
+  /* Timeline keyframe sheets reserve a custom overlay rail matching the main
+     timeline, so their native scrollbar must not consume a second gutter. */
+  [data-dopesheet-scroll-viewport]::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* Map CSS variables to Tailwind */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Video editor custom colors */
+  --color-panel-bg: var(--panel-bg);
+  --color-panel-header: var(--panel-header);
+  --color-timeline-bg: var(--timeline-bg);
+
+  /* Sidebar */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+/* Professional video editor utility classes */
+@layer utilities {
+  .panel-bg {
+    background-color: oklch(var(--panel-bg));
+  }
+
+  .panel-header {
+    background-color: oklch(var(--panel-header));
+  }
+
+  .timeline-bg {
+    background-color: oklch(var(--timeline-bg));
+  }
+
+  /* Subtle glow for active elements */
+  .glow-primary {
+    box-shadow: 0 0 12px oklch(var(--primary) / 0.3);
+  }
+
+  .glow-primary-sm {
+    box-shadow: 0 0 6px oklch(var(--primary) / 0.25);
+  }
+
+  /* Text shadows for better readability on dark */
+  .text-shadow {
+    text-shadow: 0 1px 2px oklch(0 0 0 / 0.8);
+  }
+}
+
+/* Accordion animations */
+@keyframes accordion-down {
+  from {
+    height: 0;
+    opacity: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+    opacity: 1;
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+    opacity: 1;
+  }
+  to {
+    height: 0;
+    opacity: 0;
+  }
+}
+
+.animate-accordion-down {
+  animation: accordion-down 0.3s ease-out;
+}
+
+.animate-accordion-up {
+  animation: accordion-up 0.3s ease-out;
+}
+
+/* Animations for professional feel */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.timeline-marquee-preview::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  border: 1px solid var(--primary);
+  border-radius: inherit;
+  background: color-mix(in oklab, var(--primary) 14%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--primary) 35%, transparent);
+}
+
+[data-media-id].media-marquee-preview > * {
+  border-color: oklch(var(--primary));
+  box-shadow: 0 0 0 1px oklch(var(--primary) / 0.2);
+}
+
+[data-composition-id].composition-marquee-preview {
+  border-color: oklch(0.65 0.2 300);
+  box-shadow: 0 0 0 1px oklch(0.65 0.2 300 / 0.2);
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-subtle {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Media library cinematic animations */
+@keyframes scan {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s var(--ease-out-strong);
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.2s var(--ease-out-strong);
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.2s var(--ease-out-strong);
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-scan {
+  animation: scan 2s linear infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+/* Reduced motion: keep opacity-based entrances for comprehension, but strip the
+   positional movement (slide/translate). Looping decorative motion (scan,
+   shimmer, pulse) is also stilled. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-slide-in-right,
+  .animate-slide-in-left {
+    animation: fadeIn 0.2s var(--ease-out-strong);
+  }
+
+  .animate-scan,
+  .animate-shimmer,
+  .animate-pulse-subtle {
+    animation: none;
+  }
+}

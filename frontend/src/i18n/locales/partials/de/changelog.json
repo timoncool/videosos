@@ -1,0 +1,16 @@
+{
+  "changelog": {
+    "homeAria": "FreeCut-Startseite",
+    "backToHome": "Zurück zur Startseite",
+    "releaseNotes": "Versionshinweise",
+    "title": "Neu in FreeCut",
+    "description": "Ein wöchentlicher Überblick über neue Bearbeitungswerkzeuge, Verbesserungen am Arbeitsablauf und Fehlerbehebungen. Die neueste Version ist geöffnet; klappe eine frühere Woche auf, um die vollständige Änderungsliste zu sehen.",
+    "latest": "Neueste",
+    "changeCount_one": "{{count}} Änderung",
+    "changeCount_other": "{{count}} Änderungen",
+    "initialRelease": "Erstveröffentlichung",
+    "ctaTitle": "Bereit, etwas zu erstellen?",
+    "ctaDescription": "Öffne FreeCut und setze die neuesten Werkzeuge ein.",
+    "openFreeCut": "FreeCut öffnen"
+  }
+}

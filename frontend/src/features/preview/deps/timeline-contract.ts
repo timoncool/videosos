@@ -1,0 +1,53 @@
+/**
+ * Single import seam for preview -> timeline dependencies.
+ */
+
+export type { DroppableMediaType, SubComposition } from '@/features/timeline/contracts/preview'
+export {
+  addItem,
+  addItemOnNewTrack,
+  addItemWithLinkedAudio,
+  applyAutoKeyframeOperations,
+  buildDroppedMediaTimelineItem,
+  buildSubCompositionInput,
+  buildSubCompositionPreviewSignature,
+  commitMaskEdit,
+  createClassicTrack,
+  createOverlayLayerTrack,
+  createScrubThrottleState,
+  createTimelineTemplateItem,
+  findBestCanvasDropPlacement,
+  getDefaultGeneratedLayerDurationInFrames,
+  getDroppedMediaDurationInFrames,
+  getSynchronizedLinkedItems,
+  getTrackKind,
+  isTimelineTemplateDragData,
+  performInsertEdit,
+  performOverwriteEdit,
+  resolveEffectiveTrackStates,
+  resolveSourceEditTrackTargets,
+  setItemEffects,
+  setTracks,
+  shouldCommitScrubFrame,
+  timelineToSourceFrames,
+  updateEffect,
+  updateItem,
+  updateItemTransform,
+  updateItemsTransformMap,
+  updateVectorKeyframe,
+  useCompositionNavigationStore,
+  useCompositionsStore,
+  useItemsStore,
+  useKeyframesStore,
+  useMediaDependencyStore,
+  useRippleEditPreviewStore,
+  useRollingEditPreviewStore,
+  useSlideEditPreviewStore,
+  useSlipEditPreviewStore,
+  useTimelineSettingsStore,
+  useTimelineViewportStore,
+  useTransitionsStore,
+  useWaveform,
+} from '@/features/timeline/contracts/preview'
+
+export const importFilmstripCache = () => import('@/features/timeline/services/filmstrip-cache')

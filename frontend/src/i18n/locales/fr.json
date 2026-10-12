@@ -1,0 +1,170 @@
+{
+  "appShell": {
+    "newVersionAvailable": "Une nouvelle version est disponible. Enregistrez votre travail et rechargez.",
+    "saveAndReload": "Enregistrer et recharger",
+    "reloadWithoutSaving": "Recharger sans enregistrer",
+    "dockPanel": "Ancrer le panneau",
+    "installPrompt": {
+      "label": "Installer FreeCut",
+      "title": "Installer FreeCut",
+      "description": "Lancez-le depuis votre bureau ou écran d’accueil.",
+      "install": "Installer",
+      "notNow": "Pas maintenant",
+      "dismiss": "Masquer l’invite d’installation"
+    }
+  },
+  "common": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "discard": "Abandonner",
+    "close": "Fermer",
+    "reset": "Réinitialiser",
+    "done": "Terminé",
+    "loading": "Chargement...",
+    "saving": "Enregistrement...",
+    "deleting": "Suppression...",
+    "clearing": "Effacement...",
+    "queueing": "Mise en file...",
+    "partial": "Partiel",
+    "untitledProject": "Projet sans titre"
+  },
+  "language": {
+    "label": "Langue",
+    "description": "Choisissez la langue utilisée dans toute l'application.",
+    "ariaLabel": "Langue de l'interface"
+  },
+  "toolbar": {
+    "ariaLabel": "Barre d'outils de l'éditeur",
+    "workspaces": {
+      "motion": "Motion",
+      "label": "Espaces de travail",
+      "edit": "Montage",
+      "color": "Étalonnage",
+      "animate": "Animation"
+    },
+    "backToProjects": "Retour aux projets",
+    "backToProjectsAria": "Retour aux projets",
+    "specs": "{{width}}x{{height}} | {{fps}} ips",
+    "specsDetailed": "{{width}}x{{height}} | {{fps}} ips | {{duration}} | {{clips}} clips | {{media}} médias | {{missing}} manquants",
+    "whatsNew": "Nouveautés",
+    "whatsNewAria": "Nouveautés",
+    "settings": "Paramètres",
+    "keyboardShortcuts": "Raccourcis clavier",
+    "keyboardShortcutsAria": "Raccourcis clavier",
+    "viewOnGitHub": "Voir sur GitHub",
+    "joinDiscord": "Rejoindre Discord",
+    "debugPanel": "Panneau de débogage",
+    "debugPanelAria": "Panneau de débogage",
+    "save": "Enregistrer",
+    "saveAria": "Enregistrer le projet",
+    "export": "Exporter",
+    "exportVideo": "Exporter la vidéo",
+    "downloadProjectZip": "Télécharger le projet (.zip)"
+  },
+  "unsavedChanges": {
+    "title": "Modifications non enregistrées",
+    "descriptionWithName": "Vous avez des modifications non enregistrées dans <strong>{{name}}</strong>. Voulez-vous enregistrer avant de quitter ?",
+    "description": "Vous avez des modifications non enregistrées. Voulez-vous enregistrer avant de quitter ?",
+    "discard": "Abandonner",
+    "saveAndExit": "Enregistrer et quitter",
+    "saving": "Enregistrement..."
+  },
+  "settings": {
+    "title": "Paramètres de l'éditeur",
+    "sections": {
+      "general": "Général",
+      "timeline": "Montage",
+      "ai": "IA",
+      "storage": "Stockage"
+    },
+    "general": {
+      "autoSave": "Enregistrement automatique",
+      "interval": "Intervalle",
+      "intervalMinutes": "{{count}} min",
+      "undoHistoryDepth": "Profondeur de l'historique d'annulation",
+      "uiSounds": "Sons de l'interface",
+      "uiSoundVolume": "Volume du son",
+      "uiSoundVoice": "Thème sonore",
+      "uiSoundPreview": "Aperçu"
+    },
+    "ai": {
+      "captionSampleInterval": "Intervalle d'échantillonnage des sous-titres",
+      "captionSampleIntervalDescription": "Fréquence à laquelle Analyser avec l'IA échantillonne une image pour le sous-titrage.",
+      "seconds": "Secondes",
+      "frames": "Images",
+      "unitSec": "s",
+      "unitFrames": "images",
+      "enterIntervalAboveZero": "Saisissez un intervalle supérieur à zéro.",
+      "captionEstimate": "~{{sceneCount}} {{scenes}} par clip d'1 min à {{fps}} ips",
+      "scene_one": "scène",
+      "scene_other": "scènes",
+      "captionIntervalHint": "{{estimate}}. Des intervalles plus petits produisent des scènes plus denses mais prennent plus de temps à générer.",
+      "defaultCaptionStyle": "Style de sous-titres par défaut",
+      "defaultCaptionStyleDescription": "Style appliqué aux sous-titres générés à partir de transcriptions ou du sous-titrage par IA."
+    },
+    "timeline": {
+      "snapByDefault": "Aimantation par défaut",
+      "snapByDefaultDescription": "Définit l'état initial de l'aimantation à l'ouverture d'un projet.",
+      "showWaveforms": "Afficher les formes d'onde",
+      "showFilmstrips": "Afficher les vignettes vidéo",
+      "enableFilmstripExtraction": "Extraire les bandes d’images",
+      "enableFilmstripExtractionDescription": "Génère des bandes de vignettes vidéo pendant l’importation et l’affichage dans la timeline."
+    },
+    "storage": {
+      "generateMissingProxies": "Générer les proxys manquants",
+      "generateMissingProxiesDescription": "Met en file la génération de proxys pour les vidéos de ce projet qui n'en ont pas encore",
+      "queued": "En file",
+      "generateWithCount": "Générer ({{count}})",
+      "upToDate": "À jour",
+      "clearProjectCache": "Vider le cache du projet",
+      "clearProjectCacheDescription": "Formes d'onde, vignettes vidéo, images GIF, audio décodé",
+      "clear": "Vider",
+      "cleared": "Vidé",
+      "regenerateThumbnails": "Régénérer les vignettes",
+      "regenerateThumbnailsDescription": "Recrée les vignettes de la bibliothèque de médias de ce projet",
+      "regenerate": "Régénérer",
+      "deleteProxies": "Supprimer les proxys",
+      "deleteProxiesDescription": "Supprime les vidéos proxy générées pour ce projet",
+      "deleted": "Supprimé",
+      "localAi": "IA locale",
+      "localAiDescription": "Décharge les runtimes résidents ou efface les modèles téléchargés en cache.",
+      "clearCacheConfirmTitle": "Vider le cache du projet ?",
+      "clearCacheConfirmDescription": "Cela supprimera les formes d'onde, vignettes vidéo, images GIF et audio décodé en cache du projet actuel ({{count}} éléments multimédias). Ils seront régénérés automatiquement si nécessaire. Vos données de projet, fichiers multimédias, vignettes et proxys ne seront pas affectés.",
+      "clearCache": "Vider le cache"
+    },
+    "toasts": {
+      "projectCacheCleared": "Cache du projet vidé",
+      "projectCachePartiallyCleared": "Cache du projet partiellement vidé",
+      "projectCacheNotCleared": "Cache du projet non vidé",
+      "thumbnailsRegenerated": "Vignettes régénérées",
+      "thumbnailsPartiallyRegenerated": "Vignettes partiellement régénérées",
+      "thumbnailsNotRegenerated": "Vignettes non régénérées",
+      "proxiesDeleted": "Proxys supprimés",
+      "proxiesPartiallyDeleted": "Proxys partiellement supprimés",
+      "proxiesNotDeleted": "Proxys non supprimés",
+      "failedToClearCache": "Échec du vidage du cache du projet",
+      "failedToRegenerateThumbnails": "Échec de la régénération des vignettes",
+      "failedToDeleteProxies": "Échec de la suppression des proxys",
+      "itemsUpdated_one": "{{count}} élément mis à jour.",
+      "itemsUpdated_other": "{{count}} éléments mis à jour.",
+      "itemsUpdatedFailed_one": "{{count}} élément mis à jour. Échec : {{failed}}",
+      "itemsUpdatedFailed_other": "{{count}} éléments mis à jour. Échec : {{failed}}"
+    },
+    "feedback": {
+      "couldntClearCache": "Impossible de vider le cache du projet.",
+      "couldntRegenerateThumbnails": "Impossible de régénérer les vignettes.",
+      "couldntDeleteProxies": "Impossible de supprimer les proxys.",
+      "completedForItems_one": "{{action}} terminé pour {{count}} élément.",
+      "completedForItems_other": "{{action}} terminé pour {{count}} éléments.",
+      "moreItems": "{{items}}, +{{count}} de plus",
+      "actionClearCache": "Vider le cache",
+      "actionRegenerateThumbnails": "Régénérer les vignettes",
+      "actionDeleteProxies": "Supprimer les proxys",
+      "noMediaNeededUpdating": "No project media needed updating.",
+      "couldntProcessItems_one": "{{action}}: couldn't process {{count}} item{{detail}}",
+      "couldntProcessItems_other": "{{action}}: couldn't process {{count}} items{{detail}}",
+      "partialOutcome": "{{action}}: {{succeeded}}/{{total}} done. Needs attention: {{failed}}."
+    }
+  }
+}
