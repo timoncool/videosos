@@ -217,9 +217,9 @@ export function GeneratePanel() {
         values,
         project_id: projectId,
         repeat,
+        place: placeOnTimeline,
       })
       for (const job of created) useGenerateStore.getState().upsertJob(job)
-      if (placeOnTimeline) useGenerateStore.getState().markToPlace(created.map((job) => job.id))
     } catch (error) {
       setSubmitError(error instanceof Error ? error.message : String(error))
     } finally {

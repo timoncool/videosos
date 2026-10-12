@@ -53,6 +53,8 @@ pub struct Job {
     pub cost_source: Option<String>,
     pub outputs: Vec<OutputFile>,
     pub imported: Value,
+    /// The results go onto the open project's timeline at the playhead once imported.
+    pub place: bool,
     pub origin: String,
     pub created: i64,
     pub updated: i64,
@@ -74,7 +76,7 @@ fn now_ms() -> i64 {
     chrono::Utc::now().timestamp_millis()
 }
 
-const COLUMNS: &str = "id, project_id, provider, model, model_name, task, values_json, status, progress, error, estimate, cost, cost_source, outputs, imported, origin, created, updated, handle";
+const COLUMNS: &str = "id, project_id, provider, model, model_name, task, values_json, status, progress, error, estimate, cost, cost_source, outputs, imported, origin, created, updated, handle, place";
 
 fn row_to_job(row: &rusqlite::Row) -> rusqlite::Result<Job> {
     let parse = |text: Option<String>| text.and_then(|text| serde_json::from_str::<Value>(&text).ok());
@@ -98,6 +100,7 @@ fn row_to_job(row: &rusqlite::Row) -> rusqlite::Result<Job> {
         created: row.get(16)?,
         updated: row.get(17)?,
         handle: parse(row.get(18)?),
+        place: row.get::<_, i64>(19)? != 0,
     })
 }
 
@@ -123,9 +126,13 @@ impl Jobs {
                 id TEXT PRIMARY KEY, project_id TEXT, provider TEXT NOT NULL, model TEXT NOT NULL, model_name TEXT NOT NULL,
                 task TEXT NOT NULL, values_json TEXT NOT NULL, status TEXT NOT NULL, progress REAL, error TEXT,
                 estimate REAL, cost REAL, cost_source TEXT, outputs TEXT, imported TEXT, origin TEXT NOT NULL,
-                created INTEGER NOT NULL, updated INTEGER NOT NULL, handle TEXT);
+                created INTEGER NOT NULL, updated INTEGER NOT NULL, handle TEXT, place INTEGER NOT NULL DEFAULT 0);
              CREATE INDEX IF NOT EXISTS jobs_project ON jobs(project_id, created);",
         )?;
+        let columns: Vec<String> = db.prepare("PRAGMA table_info(jobs)")?.query_map([], |row| row.get::<_, String>(1))?.collect::<rusqlite::Result<_>>()?;
+        if !columns.iter().any(|column| column == "place") {
+            db.execute_batch("ALTER TABLE jobs ADD COLUMN place INTEGER NOT NULL DEFAULT 0;")?;
+        }
         let limits = HashMap::from([
             (Provider::Fal, Arc::new(Semaphore::new(2))),
             (Provider::Runware, Arc::new(Semaphore::new(3))),
@@ -185,7 +192,7 @@ impl Jobs {
 
     fn insert(&self, job: &Job) -> rusqlite::Result<()> {
         self.db().execute(
-            &format!("INSERT INTO jobs ({COLUMNS}) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19)"),
+            &format!("INSERT INTO jobs ({COLUMNS}) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20)"),
             params![
                 job.id,
                 job.project_id,
@@ -206,6 +213,7 @@ impl Jobs {
                 job.created,
                 job.updated,
                 Option::<String>::None,
+                i64::from(job.place),
             ],
         )?;
         Ok(())
@@ -281,6 +289,7 @@ impl Jobs {
                 cost_source: None,
                 outputs: Vec::new(),
                 imported: json!([]),
+                place: request.place,
                 origin: request.origin.clone().unwrap_or_else(|| "window".into()),
                 created: now,
                 updated: now,
@@ -641,6 +650,8 @@ pub struct CreateRequest {
     pub repeat: u32,
     #[serde(default)]
     pub origin: Option<String>,
+    #[serde(default)]
+    pub place: bool,
 }
 
 fn one() -> u32 {
@@ -722,6 +733,7 @@ async fn retry(State(state): State<AppState>, UrlPath(id): UrlPath<String>) -> R
         project_id: job.project_id.clone(),
         repeat: 1,
         origin: Some(job.origin.clone()),
+        place: job.place,
     };
     create(State(state), Json(request)).await
 }

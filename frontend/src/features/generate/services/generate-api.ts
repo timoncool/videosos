@@ -158,6 +158,7 @@ export interface Job {
   cost_source: 'provider' | 'estimate' | null
   outputs: OutputFile[]
   imported: string[]
+  place: boolean
   origin: string
   created: number
   updated: number
@@ -226,6 +227,7 @@ export const generateApi = {
     values: Record<string, unknown>
     project_id: string | null
     repeat: number
+    place: boolean
   }) => request<{ jobs: Job[] }>('/api/jobs', { method: 'POST', body: JSON.stringify(body) }),
   jobs: (projectId: string | null) =>
     request<{ jobs: Job[] }>(`/api/jobs?${new URLSearchParams({ project: projectId ?? '' })}`),

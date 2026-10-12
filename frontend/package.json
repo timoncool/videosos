@@ -91,6 +91,7 @@
     "kokoro-js": "1.2.1",
     "lucide-react": "0.468.0",
     "mediabunny": "1.54.0",
+    "modern-screenshot": "4.7.0",
     "motion": "12.40.0",
     "onnxruntime-web": "1.26.0-dev.20260410-5e55544225",
     "react": "19.2.5",

@@ -14,6 +14,7 @@ pub mod fs_api;
 pub mod hub;
 pub mod jobs;
 mod keys;
+pub mod mcp;
 pub mod process_group;
 pub mod service;
 pub mod settings;
@@ -102,6 +103,23 @@ async fn info(State(state): State<AppState>) -> Json<Value> {
     }))
 }
 
+/// Refuses a request another site sends through the person's browser (its Origin is not this program) or
+/// one that reaches the server under a foreign host name (DNS rebinding): generations spend the person's
+/// money, so only the window and agents on this computer may ask for them.
+async fn local_only(request: axum::extract::Request, next: axum::middleware::Next) -> axum::response::Response {
+    use axum::response::IntoResponse;
+    let headers = request.headers();
+    let host_ok = headers
+        .get(header::HOST)
+        .and_then(|value| value.to_str().ok())
+        .map(|host| host.rsplit_once(':').map(|(name, _)| name).unwrap_or(host).to_ascii_lowercase())
+        .is_none_or(|name| matches!(name.as_str(), "127.0.0.1" | "localhost" | "[::1]" | "tauri.localhost"));
+    if !host_ok || !mcp::local_origin(headers) {
+        return (StatusCode::FORBIDDEN, "VideoSOS answers only its own window and agents on this computer.").into_response();
+    }
+    next.run(request).await
+}
+
 /// The API and the window on one origin. Every answer carries the cross-origin isolation headers the
 /// editor needs for SharedArrayBuffer (decoding and export workers).
 pub fn app(state: AppState) -> Router {
@@ -117,7 +135,10 @@ pub fn app(state: AppState) -> Router {
         .merge(settings::router())
         .with_state(state.clone())
         .merge(hub::router());
-    api.merge(spa::router(&state.repo_root))
+    mcp::install(api.clone());
+    api.merge(mcp::router().with_state(state.clone()))
+        .merge(spa::router(&state.repo_root))
+        .layer(axum::middleware::from_fn(local_only))
         .layer(SetResponseHeaderLayer::overriding(
             HeaderName::from_static("cross-origin-opener-policy"),
             HeaderValue::from_static("same-origin"),

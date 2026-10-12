@@ -1,27 +1,17 @@
 import { Suspense, lazy, useEffect, useState } from 'react'
-import { RouterProvider, createRouter } from '@tanstack/react-router'
+import { RouterProvider } from '@tanstack/react-router'
 import { GlobalTooltip } from '@/components/ui/global-tooltip'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { ErrorBoundary } from '@/components/error-boundary'
 import { PwaInstallPrompt } from '@/app/pwa-install-prompt'
-import { RouteErrorScreen } from '@/app/route-error'
 import { WorkspaceGate } from '@/features/workspace-gate/workspace-gate'
-import { routeTree } from './routeTree.gen'
+import { router } from '@/app/router'
+import { AgentBridgeHost } from '@/features/agent-bridge/components/agent-bridge-host'
 
-// Route errors (thrown from beforeLoad/loader) never reach the React
-// ErrorBoundary below — TanStack catches them first. Without this, they render
-// its untranslated built-in fallback with the message hidden in production.
-const router = createRouter({ routeTree, defaultErrorComponent: RouteErrorScreen })
 const LazyToaster = lazy(async () => {
   const { Toaster } = await import('@/components/ui/sonner')
   return { default: Toaster }
 })
-
-declare module '@tanstack/react-router' {
-  interface Register {
-    router: typeof router
-  }
-}
 
 export function App() {
   const [showToaster, setShowToaster] = useState(false)
@@ -80,6 +70,7 @@ export function App() {
         <WorkspaceGate>
           <RouterProvider router={router} />
         </WorkspaceGate>
+        <AgentBridgeHost />
         <GlobalTooltip />
         <PwaInstallPrompt />
         {showToaster && (

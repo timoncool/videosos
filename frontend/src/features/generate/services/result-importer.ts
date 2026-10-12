@@ -9,7 +9,7 @@
 import { createLogger } from '@/shared/logging/logger'
 import { i18n } from '@/i18n'
 import { generateApi, type Job } from './generate-api'
-import { mediaLibraryService, useMediaLibraryStore, useProjectStore } from '../deps/editor'
+import { mediaLibraryService, saveTimeline, useMediaLibraryStore, useProjectStore } from '../deps/editor'
 import { useGenerateStore } from '../stores/generate-store'
 import { placeMediaAtPlayhead } from './timeline-actions'
 
@@ -50,9 +50,10 @@ async function importJob(job: Job, projectId: string): Promise<void> {
   await useMediaLibraryStore.getState().loadMediaItems()
   const updated = await generateApi.markImported(job.id, mediaIds)
   useGenerateStore.getState().upsertJob(updated)
-  if (useGenerateStore.getState().toPlace.includes(job.id)) {
+  if (job.place || useGenerateStore.getState().toPlace.includes(job.id)) {
     useGenerateStore.getState().placed(job.id)
     for (const mediaId of mediaIds) placeMediaAtPlayhead(mediaId)
+    await saveTimeline(projectId)
   }
 }
 

@@ -8,3 +8,4 @@ export { useMediaLibraryStore } from '@/features/media-library/stores/media-libr
 export { mediaLibraryService } from '@/features/media-library/services/media-library-service'
 export { getMediaDragData } from '@/features/media-library/utils/drag-data-cache'
 export { useProjectStore } from '@/features/projects/stores/project-store'
+export { saveTimeline } from '@/features/timeline/stores/timeline-persistence'

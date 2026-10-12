@@ -149,7 +149,7 @@ const DEFAULT_SETTINGS: AppSettings = {
 
   // Performance
   maxUndoHistory: 50,
-  autoSaveInterval: 5, // Auto-save every 5 min by default — guards against tab crashes / lost work
+  autoSaveInterval: 1, // Auto-save every minute by default — guards against crashes / lost work
 
   // Whisper defaults
   defaultWhisperModel: DEFAULT_WHISPER_MODEL,

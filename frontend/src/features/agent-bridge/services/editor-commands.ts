@@ -1,0 +1,202 @@
+/**
+ * The editor's commands for an agent: what is open, the live timeline and its edits (each an undoable step of
+ * the editor), the media library of the open project, the playhead and the sidebar. Registered once at
+ * start; a command that needs an open project says so when none is.
+ */
+
+import { applyEditOpsLive } from '@/headless/edit'
+import type { EditOp } from '@/headless/edit-op-support'
+import { setEditCanvas } from '@/headless/edit-op-support'
+import { useEditorStore } from '@/shared/state/editor'
+import { usePlaybackStore } from '@/shared/state/playback'
+import type { EditorSidebarTab } from '@/config/editor-workspaces'
+import { router } from '@/app/router'
+import {
+  mediaLibraryService,
+  saveTimeline,
+  useItemsStore,
+  useMediaLibraryStore,
+  useProjectStore,
+  useTimelineCommandStore,
+  useTransitionsStore,
+} from '../deps/editor'
+import { bridgeError, failed, numberArg, registerBridgeCommand, takeArgs, textArg } from './bridge'
+
+const TABS: EditorSidebarTab[] = ['generate', 'media', 'text', 'shapes', 'effects', 'transitions', 'lottie', 'transcript', 'ai']
+
+function openProject() {
+  const project = useProjectStore.getState().currentProject
+  if (!project || !window.location.pathname.startsWith('/editor/')) throw bridgeError('no_project')
+  return project
+}
+
+function fpsOf(project: { metadata?: { fps?: number } }): number {
+  return project.metadata?.fps || 30
+}
+
+const round = (value: number) => Math.round(value * 100) / 100
+
+/** An agent's edit is saved at once: the person may close the window right after it. */
+async function save(projectId: string): Promise<void> {
+  try {
+    await saveTimeline(projectId)
+  } catch (problem) {
+    throw failed('save', problem)
+  }
+}
+
+function timeline() {
+  const project = openProject()
+  const fps = fpsOf(project)
+  const { items, tracks } = useItemsStore.getState()
+  const media = useMediaLibraryStore.getState().mediaById
+  return {
+    project: { id: project.id, name: project.name, ...project.metadata },
+    tracks: tracks.map((track) => ({ id: track.id, name: track.name, kind: track.kind, order: track.order, muted: track.muted, visible: track.visible, locked: track.locked })),
+    items: items.map((item) => ({
+      id: item.id,
+      type: item.type,
+      trackId: item.trackId,
+      from: item.from,
+      durationInFrames: item.durationInFrames,
+      start_s: round(item.from / fps),
+      length_s: round(item.durationInFrames / fps),
+      mediaId: 'mediaId' in item ? item.mediaId : undefined,
+      media: 'mediaId' in item && item.mediaId ? media[item.mediaId]?.fileName : undefined,
+      text: 'text' in item ? item.text : undefined,
+      label: item.label,
+    })),
+    transitions: useTransitionsStore.getState().transitions,
+  }
+}
+
+export function registerEditorCommands(): void {
+  registerBridgeCommand('editor_state', (args) => {
+    takeArgs('editor_state', args, [])
+    const project = useProjectStore.getState().currentProject
+    const playback = usePlaybackStore.getState()
+    const open = !!project && window.location.pathname.startsWith('/editor/')
+    return {
+      screen: window.location.pathname,
+      project: open ? { id: project.id, name: project.name, ...project.metadata } : null,
+      playhead: open ? { frame: playback.currentFrame, seconds: round(playback.currentFrame / fpsOf(project)) } : null,
+      playing: playback.isPlaying,
+      sidebar_tab: useEditorStore.getState().activeTab,
+      clips: open ? useItemsStore.getState().items.length : null,
+      media: open ? useMediaLibraryStore.getState().mediaItems.length : null,
+    }
+  })
+
+  registerBridgeCommand('timeline_get', (args) => {
+    takeArgs('timeline_get', args, [])
+    return timeline()
+  })
+
+  registerBridgeCommand('timeline_edit', async (args) => {
+    takeArgs('timeline_edit', args, ['ops'])
+    if (!Array.isArray(args.ops) || args.ops.length === 0) throw bridgeError('missing', { command: 'timeline_edit', field: 'ops' })
+    const project = openProject()
+    setEditCanvas({ width: project.metadata?.width ?? 1920, height: project.metadata?.height ?? 1080, fps: fpsOf(project) })
+    try {
+      const results = applyEditOpsLive(args.ops as EditOp[])
+      await save(project.id)
+      return { applied: results.length, results, timeline: timeline() }
+    } catch (problem) {
+      throw failed('timeline_edit', problem)
+    }
+  })
+
+  registerBridgeCommand('timeline_undo', async (args) => {
+    takeArgs('timeline_undo', args, [])
+    const project = openProject()
+    const commands = useTimelineCommandStore.getState()
+    if (!commands.canUndo) throw bridgeError('nothing_to_undo')
+    commands.undo()
+    await save(project.id)
+    return { text: 'Undone.' }
+  })
+
+  registerBridgeCommand('timeline_redo', async (args) => {
+    takeArgs('timeline_redo', args, [])
+    const project = openProject()
+    const commands = useTimelineCommandStore.getState()
+    if (!commands.canRedo) throw bridgeError('nothing_to_redo')
+    commands.redo()
+    await save(project.id)
+    return { text: 'Redone.' }
+  })
+
+  registerBridgeCommand('media_list', (args) => {
+    takeArgs('media_list', args, [])
+    openProject()
+    return {
+      media: useMediaLibraryStore.getState().mediaItems.map((item) => ({
+        id: item.id,
+        file_name: item.fileName,
+        mime: item.mimeType,
+        duration_s: round(item.duration),
+        width: item.width,
+        height: item.height,
+        size: item.fileSize,
+        tags: item.tags,
+      })),
+    }
+  })
+
+  registerBridgeCommand('media_import', async (args) => {
+    takeArgs('media_import', args, ['url'])
+    const url = textArg('media_import', args, 'url')
+    if (!url) throw bridgeError('missing', { command: 'media_import', field: 'url' })
+    const project = openProject()
+    try {
+      const media = await mediaLibraryService.importMediaFromUrl(url, project.id)
+      await useMediaLibraryStore.getState().loadMediaItems()
+      return { media_id: media.id, file_name: media.fileName, mime: media.mimeType, duration_s: round(media.duration) }
+    } catch (problem) {
+      throw failed('media_import', problem)
+    }
+  })
+
+  registerBridgeCommand('playhead_seek', (args) => {
+    takeArgs('playhead_seek', args, ['seconds', 'frame'])
+    const project = openProject()
+    const frame = numberArg('playhead_seek', args, 'frame') ?? Math.round((numberArg('playhead_seek', args, 'seconds') ?? 0) * fpsOf(project))
+    usePlaybackStore.getState().setCurrentFrame(Math.max(0, Math.round(frame)))
+    return { frame: usePlaybackStore.getState().currentFrame }
+  })
+
+  registerBridgeCommand('playback', (args) => {
+    takeArgs('playback', args, ['action'])
+    openProject()
+    const action = textArg('playback', args, 'action')
+    if (action === 'play') usePlaybackStore.getState().play()
+    else if (action === 'pause') usePlaybackStore.getState().pause()
+    else throw bridgeError('bad_value', { command: 'playback', field: 'action', expected: 'play or pause' })
+    return { playing: usePlaybackStore.getState().isPlaying }
+  })
+
+  registerBridgeCommand('editor_tab', (args) => {
+    takeArgs('editor_tab', args, ['tab'])
+    const tab = textArg('editor_tab', args, 'tab') as EditorSidebarTab | undefined
+    if (!tab || !TABS.includes(tab)) throw bridgeError('bad_value', { command: 'editor_tab', field: 'tab', expected: TABS.join(', ') })
+    openProject()
+    useEditorStore.getState().setActiveTab(tab)
+    return { tab }
+  })
+
+  registerBridgeCommand('project_open', async (args) => {
+    takeArgs('project_open', args, ['project_id'])
+    const id = textArg('project_open', args, 'project_id')
+    try {
+      if (id) await router.navigate({ to: '/editor/$projectId', params: { projectId: id } })
+      else await router.navigate({ to: '/projects' })
+    } catch (problem) {
+      throw failed('project_open', problem)
+    }
+    for (let wait = 0; wait < 40 && id && useProjectStore.getState().currentProject?.id !== id; wait += 1) {
+      await new Promise((resolve) => setTimeout(resolve, 250))
+    }
+    if (id && useProjectStore.getState().currentProject?.id !== id) throw failed('project_open', `the editor did not open ${id}`)
+    return { screen: window.location.pathname }
+  })
+}
