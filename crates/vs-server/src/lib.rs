@@ -7,10 +7,18 @@
 
 #[macro_use]
 pub mod i18n;
+pub mod catalog;
+pub mod credentials;
+pub mod events;
 pub mod fs_api;
+pub mod hub;
+pub mod jobs;
+mod keys;
 pub mod process_group;
 pub mod service;
+pub mod settings;
 mod spa;
+mod spend;
 
 use std::net::TcpListener;
 use std::path::{Path, PathBuf};
@@ -37,6 +45,9 @@ pub struct Inner {
     pub workspace: PathBuf,
     /// The folder the server keeps its own files in.
     pub data: PathBuf,
+    pub http: vs_providers::http::Http,
+    pub catalog: Arc<catalog::Catalog>,
+    pub jobs: Arc<jobs::Jobs>,
 }
 
 impl std::ops::Deref for AppState {
@@ -47,11 +58,25 @@ impl std::ops::Deref for AppState {
 }
 
 impl AppState {
+    /// Opens the data folders, the catalogue and the jobs; call inside the runtime (background work starts).
     pub fn new(repo_root: &Path) -> anyhow::Result<Self> {
         let data = repo_root.join("data");
         let workspace = data.join("workspace");
         std::fs::create_dir_all(&workspace)?;
-        Ok(Self { inner: Arc::new(Inner { repo_root: repo_root.to_path_buf(), workspace, data }) })
+        credentials::init(repo_root);
+        settings::init(&data);
+        let http = vs_providers::http::Http::new(reqwest::Client::builder()).map_err(|e| anyhow::anyhow!(e.to_string()))?;
+        let catalog = catalog::Catalog::open(&data, http.clone());
+        let jobs = jobs::Jobs::open(&data, &workspace, http.clone(), catalog.clone())?;
+        spend::init(jobs.clone());
+        hub::start(&data, http.client.clone());
+        Ok(Self { inner: Arc::new(Inner { repo_root: repo_root.to_path_buf(), workspace, data, http, catalog, jobs }) })
+    }
+
+    /// Work left from the last run and the catalogue read afresh.
+    pub fn start_background(&self) {
+        self.jobs.resume();
+        self.catalog.refresh_all();
     }
 }
 
@@ -63,6 +88,7 @@ struct LanguageBody {
 /// The window says which language it shows: the server's own messages follow it.
 async fn set_language(Json(body): Json<LanguageBody>) -> Result<StatusCode, (StatusCode, String)> {
     i18n::set_language(&body.language).map_err(|e| (StatusCode::BAD_REQUEST, e))?;
+    hub::set_language(&body.language);
     Ok(StatusCode::NO_CONTENT)
 }
 
@@ -83,8 +109,14 @@ pub fn app(state: AppState) -> Router {
         .route("/health", get(service::health))
         .route("/api/info", get(info))
         .route("/api/ui-language", post(set_language))
+        .route("/api/events", get(events::stream))
         .merge(fs_api::router())
-        .with_state(state.clone());
+        .merge(catalog::router())
+        .merge(jobs::router())
+        .merge(keys::router())
+        .merge(settings::router())
+        .with_state(state.clone())
+        .merge(hub::router());
     api.merge(spa::router(&state.repo_root))
         .layer(SetResponseHeaderLayer::overriding(
             HeaderName::from_static("cross-origin-opener-policy"),
@@ -109,6 +141,7 @@ pub fn serve_blocking(repo_root: &Path, listener: TcpListener) -> anyhow::Result
         let port = listener.local_addr()?.port();
         service::record_port(port);
         let state = AppState::new(repo_root)?;
+        state.start_background();
         let listener = tokio::net::TcpListener::from_std(listener)?;
         tracing::info!("VideoSOS {} on http://127.0.0.1:{port}/", service::app_version());
         axum::serve(listener, app(state)).await?;

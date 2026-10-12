@@ -21,3 +21,28 @@ jobs-variants = { $count ->
     [few] { $count } варианта
    *[many] { $count } вариантов
 }
+jobs-interrupted-sending = Программа закрылась, пока задача отправлялась; повторно она не отправлена, чтобы не заплатить дважды. Запустите её снова, если результат не пришёл.
+jobs-busy = Провайдер сейчас занят: { $reason }. Запустите снова через минуту.
+jobs-too-many-files = { $field }: не больше { $max } файлов.
+jobs-bad-media = Это не медиа рабочей папки: { $media }
+jobs-media-not-in-workspace = Файла медиа { $media } нет в рабочей папке. Импортируйте его с копированием и попробуйте снова.
+jobs-no-such-output = Нет такого результата задачи { $job }
+jobs-lost-contact = Провайдер перестал отвечать по этой задаче: { $reason }
+jobs-too-long = Провайдер работает над задачей больше трёх часов; её больше не ждём.
+jobs-download-failed = Результат не скачался: { $reason }
+jobs-cancelled = Отменено.
+jobs-cancelled-not-waiting = Ожидание остановлено. Этот провайдер не умеет отменять задачи, поэтому она может завершиться и быть оплачена.
+jobs-field-required = Заполните: { $field }
+jobs-not-found = Нет задачи { $job }
+jobs-still-running = Задача ещё идёт; сначала отмените её.
+
+## catalogue and keys
+catalog-empty = Провайдер вернул пустой каталог.
+catalog-unknown-model = У { $provider } в каталоге нет модели { $model }.
+catalog-no-schema = У модели нет описания, из которого строится форма.
+catalog-unknown-provider = Неизвестный провайдер: { $provider }
+keys-env-wins = Задана переменная окружения { $variable }, она важнее; уберите её, чтобы хранить ключ здесь.
+keys-one-line = Ключ — одна строка.
+settings-bad-budget = Дневной лимит — число от 0 до 10000.
+spend-agent-limit = Агенты потратили сегодня ${ $spent }; эта задача стоит около ${ $cost } и превысит дневной лимит ${ $budget }. Поднимите лимит в Настройках, раздел «Провайдеры».
+spend-agent-limit-reached = Агенты исчерпали сегодняшний лимит ${ $budget }.

@@ -1,0 +1,1062 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Runware API - Seedream 5.0 Flash",
+    "summary": "Fast, cost-efficient image generation and multi-reference editing with layer decomposition",
+    "description": "Seedream 5.0 Flash is the fast, cost-efficient model in ByteDance's Seedream 5.0 family for image generation and editing. It supports text-to-image and reference-guided editing with up to 10 input images, precise local edits targeted with point and bounding-box coordinates in the prompt, transparent-background output, and decomposition of an image into separate transparent layers. It outputs from 1K to 2K and suits high-volume workflows such as ad concepts, thumbnails, social visuals, and rapid design iteration.",
+    "version": "1.0.0",
+    "x-model-id": "bytedance-seedream-5-0-flash",
+    "x-air-id": "bytedance:seedream@5.0-flash",
+    "x-status": "live",
+    "x-creator": {
+      "id": "bytedance",
+      "name": "ByteDance",
+      "logo": "https://assets.runware.ai/a370f11f-f8f3-4af2-b0dc-755bac69f620.png"
+    },
+    "x-capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "x-modes": [
+      {
+        "id": "text",
+        "inputs": []
+      },
+      {
+        "id": "reference-images",
+        "inputs": [
+          "referenceImages"
+        ]
+      }
+    ],
+    "x-released-at": "2026-09-28T00:00:00Z",
+    "x-cover-image": "https://assets.runware.ai/covers/bytedance-seedream-5-0-flash.jpg",
+    "x-examples": "https://runware.ai/docs/models/bytedance-seedream-5-0-flash/examples.json",
+    "x-pricing": {
+      "currency": "USD",
+      "docs": "https://runware.ai/docs/models-api/pricing",
+      "rates": [
+        {
+          "amount": 0.01926,
+          "unit": "output",
+          "display": "$0.0193 per image"
+        }
+      ],
+      "examples": [
+        {
+          "id": "fresnel-lens-museum-wall-art",
+          "configuration": "transparent-background · 1024×1024",
+          "price": 0.0193,
+          "latencyMs": 20338
+        },
+        {
+          "id": "subsea-cable-repair-blog-hero",
+          "configuration": "text-to-image · 1536×1024",
+          "price": 0.0193,
+          "latencyMs": 18880
+        },
+        {
+          "id": "forensic-entomologist-profile-avatar",
+          "configuration": "reference-to-image · 1024×1536",
+          "price": 0.0193,
+          "latencyMs": 19076
+        },
+        {
+          "id": "kissaten-listening-room-wall-print",
+          "configuration": "layer-decomposition · 2K",
+          "price": 0.193,
+          "latencyMs": 86919
+        }
+      ]
+    }
+  },
+  "externalDocs": {
+    "description": "Seedream 5.0 Flash on Runware",
+    "url": "https://runware.ai/docs/models/bytedance-seedream-5-0-flash"
+  },
+  "servers": [
+    {
+      "url": "https://api.runware.ai/v1",
+      "description": "Runware REST API"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "apiKeyAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Runware API Key (e.g., Bearer <your-key>)"
+      }
+    },
+    "schemas": {
+      "AuthenticationTask": {
+        "title": "Authentication",
+        "description": "Authenticates a connection using an API key. Can be sent as the first element of the request array as an alternative to using the Authorization header.",
+        "type": "object",
+        "x-response-schema": "https://schemas.runware.ai/responses/utilities/authentication.json",
+        "properties": {
+          "taskType": {
+            "title": "Task Type",
+            "description": "Identifier for the type of task being performed.",
+            "type": "string",
+            "const": "authentication"
+          },
+          "apiKey": {
+            "title": "API Key",
+            "description": "Your Runware API key.",
+            "type": "string"
+          },
+          "connectionSessionUUID": {
+            "title": "Connection Session UUID",
+            "description": "Optional session UUID to resume a previous connection and receive any buffered results.",
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "taskType",
+          "apiKey"
+        ],
+        "additionalProperties": false
+      },
+      "RequestBody": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "x-constraints": [
+            {
+              "operation": "area",
+              "parameters": [
+                "width",
+                "height"
+              ],
+              "minimum": 921600,
+              "maximum": 4624220
+            },
+            {
+              "operation": "ratio",
+              "parameters": [
+                "width",
+                "height"
+              ],
+              "minimum": 0.0625,
+              "maximum": 16
+            },
+            {
+              "operation": "fileSize",
+              "parameters": [
+                "inputs.referenceImages"
+              ],
+              "maximum": 31457280,
+              "scope": "each"
+            },
+            {
+              "operation": "width",
+              "parameters": [
+                "inputs.referenceImages"
+              ],
+              "minimum": 15,
+              "scope": "each"
+            },
+            {
+              "operation": "height",
+              "parameters": [
+                "inputs.referenceImages"
+              ],
+              "minimum": 15,
+              "scope": "each"
+            },
+            {
+              "operation": "ratio",
+              "parameters": [
+                "inputs.referenceImages"
+              ],
+              "minimum": 0.0625,
+              "maximum": 16,
+              "scope": "each"
+            },
+            {
+              "operation": "area",
+              "parameters": [
+                "inputs.referenceImages"
+              ],
+              "when": {
+                "absent": [
+                  "settings.layerDecomposition"
+                ]
+              },
+              "minimum": 196,
+              "maximum": 36000000,
+              "scope": "each"
+            },
+            {
+              "operation": "area",
+              "parameters": [
+                "inputs.referenceImages"
+              ],
+              "when": {
+                "present": [
+                  "settings.layerDecomposition"
+                ]
+              },
+              "minimum": 262144,
+              "maximum": 36000000,
+              "scope": "each"
+            }
+          ],
+          "properties": {
+            "model": {
+              "title": "Model",
+              "description": "Identifier of the model to use for generation.",
+              "type": "string",
+              "const": "bytedance:seedream@5.0-flash"
+            },
+            "inputs": {
+              "title": "Inputs",
+              "description": "Input assets for the task.",
+              "type": "object",
+              "properties": {
+                "referenceImages": {
+                  "title": "Reference Images",
+                  "description": "List of reference images (UUID, URL, Data URI, or Base64).",
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "title": "Image",
+                    "description": "Image input (UUID, URL, Data URI, or Base64).",
+                    "type": "string",
+                    "anyOf": [
+                      {
+                        "format": "uuid"
+                      },
+                      {
+                        "format": "uri"
+                      },
+                      {
+                        "pattern": "^data:image\\/[a-zA-Z]+;base64,[a-zA-Z0-9+/=]+$"
+                      },
+                      {
+                        "pattern": "^[a-zA-Z0-9+/=]+$"
+                      }
+                    ]
+                  },
+                  "maxItems": 10
+                }
+              },
+              "additionalProperties": false
+            },
+            "positivePrompt": {
+              "title": "Positive Prompt",
+              "description": "Text prompt describing elements to include in the generated output.",
+              "type": "string"
+            },
+            "width": {
+              "title": "Width",
+              "description": "Width of the generated media in pixels.",
+              "type": "integer"
+            },
+            "height": {
+              "title": "Height",
+              "description": "Height of the generated media in pixels.",
+              "type": "integer"
+            },
+            "resolution": {
+              "title": "Resolution",
+              "description": "Resolution preset for the output. When used with input media, automatically matches the aspect ratio from the input.",
+              "type": "string",
+              "enum": [
+                "1K",
+                "1.5K",
+                "2K"
+              ]
+            },
+            "settings": {
+              "title": "Settings",
+              "description": "Global inference settings.",
+              "type": "object",
+              "properties": {
+                "background": {
+                  "title": "Background",
+                  "description": "Background handling in generated images.",
+                  "type": "string",
+                  "default": "opaque",
+                  "oneOf": [
+                    {
+                      "description": "Solid background, no transparency.",
+                      "const": "opaque"
+                    },
+                    {
+                      "description": "Transparent background. The reference image must contain transparent pixels.",
+                      "const": "transparent"
+                    }
+                  ]
+                },
+                "layerDecomposition": {
+                  "title": "Layer Decomposition",
+                  "description": "Enables layer decomposition of the reference image. The layers are returned in `outputs.layers` next to the base image. `outputFormat` applies to the base image only, layers are always PNG.",
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false
+            },
+            "taskType": {
+              "title": "Task Type",
+              "description": "Identifier for the type of task being performed.",
+              "type": "string",
+              "const": "imageInference"
+            },
+            "taskUUID": {
+              "title": "Task UUID",
+              "description": "UUID v4 identifier for tracking tasks and matching async responses. Must be unique per task.",
+              "type": "string",
+              "format": "uuid"
+            },
+            "webhookURL": {
+              "title": "Webhook URL",
+              "description": "Webhook URL that receives JSON responses via HTTP POST when generation tasks complete. For batch requests with multiple results, each completed item triggers a separate webhook call as it becomes available.",
+              "type": "string",
+              "format": "uri"
+            },
+            "includeCost": {
+              "title": "Include Cost",
+              "description": "Include task cost in the response.",
+              "type": "boolean"
+            },
+            "numberResults": {
+              "title": "Number of Results",
+              "description": "Number of results to generate. Each result uses a different seed, producing variations of the same parameters.",
+              "type": "integer",
+              "minimum": 1,
+              "default": 1,
+              "maximum": 20
+            },
+            "uploadEndpoint": {
+              "title": "Upload Endpoint",
+              "description": "Specifies a URL where the generated content will be automatically uploaded using the HTTP PUT method. The raw binary data of the media file is sent directly as the request body. For secure uploads to cloud storage, use presigned URLs that include temporary authentication credentials.\n\n**Common use cases:**\n\n- **Cloud storage**: Upload directly to S3 buckets, Google Cloud Storage, or Azure Blob Storage using presigned URLs.\n- **CDN integration**: Upload to content delivery networks for immediate distribution.\n\n```text\n// S3 presigned URL for secure upload\nhttps://your-bucket.s3.amazonaws.com/generated/content.mp4?X-Amz-Signature=abc123&X-Amz-Expires=3600\n\n// Google Cloud Storage presigned URL\nhttps://storage.googleapis.com/your-bucket/content.jpg?X-Goog-Signature=xyz789\n\n// Custom storage endpoint\nhttps://storage.example.com/uploads/generated-image.jpg\n```\n\nThe content data will be sent as the request body to the specified URL when generation is complete.\n\n[Read full documentation](https://runware.ai/docs/models/bytedance-seedream-5-0-flash#uploadEndpoint)",
+              "type": "string",
+              "format": "uri"
+            },
+            "ttl": {
+              "title": "TTL",
+              "description": "Time-to-live (TTL) in seconds for generated content. Only applies when `outputType` is `URL`.",
+              "type": "integer",
+              "minimum": 60
+            },
+            "outputType": {
+              "title": "Output Type",
+              "description": "Image output type.",
+              "type": "string",
+              "enum": [
+                "URL",
+                "base64Data",
+                "dataURI"
+              ],
+              "default": "URL"
+            },
+            "outputFormat": {
+              "title": "Output Format",
+              "description": "Specifies the file format of the generated output. The available values depend on the task type and the specific model's capabilities.\n\n- \\`JPG\\`: Best for photorealistic images with smaller file sizes (no transparency).\n- \\`PNG\\`: Lossless compression, supports high quality and transparency (alpha channel).\n- \\`WEBP\\`: Modern format providing superior compression and transparency support.\n- \\`MP4\\`: Widely supported video container (H.264), recommended for general use.\n- \\`WEBM\\`: Optimized for web delivery.\n- \\`MOV\\`: QuickTime format, common in professional workflows (Apple ecosystem).\n- \\`GIF\\`: Animated image format (no audio), suitable for short loops or previews.\n- \\`MP3\\`: Compressed audio, smaller file size.\n- \\`WAV\\`: Uncompressed, high-quality audio.\n- \\`FLAC\\`: Lossless compression.\n- \\`OGG\\`: Open-source compressed audio format (Vorbis codec).\n- \\`SVG\\`: Scalable Vector Graphics.\n- \\`TIFF\\`: High-quality output supporting layers.\n- \\`GLB\\`: Binary glTF format for 3D models, including geometry, textures, and PBR materials.\n\n> [!NOTE]\n> \\*\\*Transparency\\*\\*: If you are using features like background removal or LayerDiffuse that require transparency, you must select a format that supports an alpha channel (e.g., \\`PNG\\`, \\`WEBP\\`, \\`TIFF\\`). \\`JPG\\` does not support transparency.\n\n[Read full documentation](https://runware.ai/docs/models/bytedance-seedream-5-0-flash#outputFormat)",
+              "type": "string",
+              "enum": [
+                "JPG",
+                "PNG",
+                "WEBP"
+              ],
+              "default": "JPG"
+            },
+            "outputQuality": {
+              "title": "Output Quality",
+              "description": "Compression quality of the output. Higher values preserve quality but increase file size.",
+              "type": "integer",
+              "minimum": 20,
+              "maximum": 99,
+              "default": 95
+            },
+            "deliveryMethod": {
+              "title": "Delivery Method",
+              "description": "Determines how the API delivers task results.",
+              "type": "string",
+              "oneOf": [
+                {
+                  "const": "sync",
+                  "description": "Returns complete results directly in the API response."
+                },
+                {
+                  "const": "async",
+                  "description": "Returns an immediate acknowledgment with the task UUID. Poll for results using getResponse."
+                }
+              ],
+              "default": "sync"
+            },
+            "safety": {
+              "type": "object",
+              "title": "Safety Settings",
+              "description": "Content safety checking configuration for image generation.",
+              "properties": {
+                "checkContent": {
+                  "title": "Check Content",
+                  "description": "Enable or disable content safety checking. Increases total generation time.",
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false
+            },
+            "advancedFeatures": {
+              "title": "Advanced Features",
+              "description": "Model-specific advanced configuration options.",
+              "type": "object",
+              "properties": {
+                "watermark": {
+                  "title": "Watermark",
+                  "description": "Configuration object for adding watermarks to generated videos. Watermarks can be applied using either text or image content with customizable positioning and appearance. You must provide either `text` or `image` content for the watermark, but not both.\n\n**Text watermark**:\n\n```json\n\"advancedFeatures\": {\n  \"watermark\": {\n    \"text\": \"© 2025 Company\",\n    \"displayPosition\": \"bottom-right\",\n    \"opacity\": 0.6,\n    \"fontColor\": \"#ffffff\",\n    \"bgColor\": \"#000000\"\n  }\n}\n```\n\n**Image watermark**:\n\n```json\n\"advancedFeatures\": {\n  \"watermark\": {\n    \"image\": \"c64351d5-4c59-42f7-95e1-eace013eddab\",\n    \"displayPosition\": \"top-left\",\n    \"opacity\": 0.6\n  }\n}\n```\n\n**Tiled watermark**:\n\n```json\n\"advancedFeatures\": {\n  \"watermark\": {\n    \"text\": \"PREVIEW\",\n    \"tiled\": true,\n    \"opacity\": 0.4,\n    \"fontColor\": \"#cccccc\"\n  }\n}\n```\n\n[Read full documentation](https://runware.ai/docs/models/bytedance-seedream-5-0-flash#watermark)",
+                  "type": "object",
+                  "properties": {
+                    "text": {
+                      "title": "Watermark Text",
+                      "description": "Watermark text.",
+                      "type": "string",
+                      "minLength": 2,
+                      "maxLength": 32
+                    },
+                    "image": {
+                      "title": "Watermark Image",
+                      "description": "Watermark image (UUID, URL, Data URI, or Base64).",
+                      "type": "string",
+                      "anyOf": [
+                        {
+                          "format": "uuid"
+                        },
+                        {
+                          "format": "uri"
+                        },
+                        {
+                          "pattern": "^data:image\\/[a-zA-Z]+;base64,[a-zA-Z0-9+/=]+$"
+                        },
+                        {
+                          "pattern": "^[a-zA-Z0-9+/=]+$"
+                        }
+                      ]
+                    },
+                    "displayPosition": {
+                      "title": "Display Position",
+                      "description": "Watermark position.",
+                      "type": "string",
+                      "enum": [
+                        "top-left",
+                        "top-center",
+                        "top-right",
+                        "center-left",
+                        "center-center",
+                        "center-right",
+                        "bottom-left",
+                        "bottom-center",
+                        "bottom-right",
+                        "tiled"
+                      ]
+                    },
+                    "opacity": {
+                      "title": "Watermark Opacity",
+                      "description": "Watermark opacity.",
+                      "type": "number",
+                      "multipleOf": 0.01,
+                      "minimum": 0.1,
+                      "maximum": 1
+                    },
+                    "fontColor": {
+                      "title": "Font Color",
+                      "description": "Text color in hex format.",
+                      "type": "string",
+                      "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
+                    },
+                    "bgColor": {
+                      "title": "Background Color",
+                      "description": "Background color in hex format.",
+                      "type": "string",
+                      "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
+                    }
+                  },
+                  "oneOf": [
+                    {
+                      "required": [
+                        "text"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "image"
+                      ]
+                    }
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "allOf": [
+            {
+              "dependentRequired": {
+                "width": [
+                  "height"
+                ],
+                "height": [
+                  "width"
+                ]
+              }
+            },
+            {
+              "if": {
+                "not": {
+                  "properties": {
+                    "inputs": {
+                      "required": [
+                        "referenceImages"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "inputs"
+                  ]
+                }
+              },
+              "then": {
+                "required": [
+                  "width",
+                  "height"
+                ]
+              }
+            },
+            {
+              "not": {
+                "allOf": [
+                  {
+                    "properties": {
+                      "settings": {
+                        "properties": {
+                          "background": {
+                            "const": "transparent"
+                          }
+                        },
+                        "required": [
+                          "background"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "settings"
+                    ]
+                  },
+                  {
+                    "properties": {
+                      "settings": {
+                        "properties": {
+                          "layerDecomposition": {
+                            "const": true
+                          }
+                        },
+                        "required": [
+                          "layerDecomposition"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "settings"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "settings": {
+                    "properties": {
+                      "layerDecomposition": {
+                        "const": true
+                      }
+                    },
+                    "required": [
+                      "layerDecomposition"
+                    ]
+                  }
+                },
+                "required": [
+                  "settings"
+                ]
+              },
+              "then": {
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "width"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "height"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "positivePrompt"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "resolution"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "inputs": {
+                    "required": [
+                      "referenceImages"
+                    ]
+                  },
+                  "settings": {
+                    "properties": {
+                      "layerDecomposition": {
+                        "const": true
+                      }
+                    },
+                    "required": [
+                      "layerDecomposition"
+                    ]
+                  }
+                },
+                "required": [
+                  "inputs",
+                  "settings"
+                ]
+              }
+            },
+            {
+              "if": {
+                "not": {
+                  "properties": {
+                    "settings": {
+                      "properties": {
+                        "layerDecomposition": {
+                          "const": true
+                        }
+                      },
+                      "required": [
+                        "layerDecomposition"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "settings"
+                  ]
+                }
+              },
+              "then": {
+                "required": [
+                  "positivePrompt"
+                ]
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "settings": {
+                    "properties": {
+                      "layerDecomposition": {
+                        "const": true
+                      }
+                    },
+                    "required": [
+                      "layerDecomposition"
+                    ]
+                  }
+                },
+                "required": [
+                  "settings"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "inputs": {
+                    "properties": {
+                      "referenceImages": {
+                        "maxItems": 1
+                      }
+                    },
+                    "required": [
+                      "referenceImages"
+                    ]
+                  }
+                },
+                "required": [
+                  "inputs"
+                ]
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "settings": {
+                    "properties": {
+                      "background": {
+                        "const": "transparent"
+                      }
+                    },
+                    "required": [
+                      "background"
+                    ]
+                  }
+                },
+                "required": [
+                  "settings"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "outputFormat": {
+                    "enum": [
+                      "PNG",
+                      "WEBP"
+                    ],
+                    "default": "PNG"
+                  },
+                  "inputs": {
+                    "properties": {
+                      "referenceImages": {
+                        "maxItems": 1
+                      }
+                    },
+                    "required": [
+                      "referenceImages"
+                    ]
+                  }
+                },
+                "required": [
+                  "inputs"
+                ]
+              }
+            }
+          ],
+          "additionalProperties": false,
+          "required": [
+            "taskType",
+            "taskUUID",
+            "model"
+          ]
+        },
+        "description": "You must always POST an array of task objects."
+      },
+      "ResponseBody": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "properties": {
+                "taskType": {
+                  "title": "Task Type",
+                  "description": "Identifier for the type of task this response belongs to.",
+                  "type": "string",
+                  "const": "imageInference"
+                },
+                "taskUUID": {
+                  "title": "Task UUID",
+                  "description": "UUID v4 identifier echoed from the original request, used to match async responses to their tasks.",
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "cost": {
+                  "title": "Cost",
+                  "description": "Task cost in USD. Present when `includeCost` is set to `true` in the request.",
+                  "type": "number"
+                },
+                "imageUUID": {
+                  "title": "Image UUID",
+                  "description": "UUID of the output image.",
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "imageURL": {
+                  "title": "Image URL",
+                  "description": "URL of the output image.",
+                  "type": "string",
+                  "format": "uri"
+                },
+                "imageBase64Data": {
+                  "title": "Image Base64 Data",
+                  "description": "Base64-encoded image data.",
+                  "type": "string"
+                },
+                "imageDataURI": {
+                  "title": "Image Data URI",
+                  "description": "Data URI of the output image.",
+                  "type": "string",
+                  "format": "uri"
+                },
+                "seed": {
+                  "title": "Seed",
+                  "description": "The seed used for generation. If none was provided, shows the randomly generated seed.",
+                  "type": "integer"
+                },
+                "NSFWContent": {
+                  "title": "NSFW Content",
+                  "description": "Flag indicating if NSFW content was detected.",
+                  "type": "boolean"
+                },
+                "outputs": {
+                  "title": "Outputs",
+                  "description": "Generated output artifacts.",
+                  "type": "object",
+                  "properties": {
+                    "layers": {
+                      "type": "array",
+                      "title": "Layers",
+                      "description": "Layers decomposed from the reference image, returned when `settings.layerDecomposition` is enabled. Each layer is a PNG with transparency.",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "description": {
+                            "type": "string",
+                            "title": "Description",
+                            "description": "Description of the layer content."
+                          },
+                          "boundingBox": {
+                            "type": "object",
+                            "title": "Bounding Box",
+                            "description": "Position of the layer on the base image, as [left, top, right, bottom].",
+                            "properties": {
+                              "absolute": {
+                                "type": "array",
+                                "title": "Absolute",
+                                "description": "Coordinates in pixels of the base image.",
+                                "items": {
+                                  "type": "integer"
+                                },
+                                "minItems": 4,
+                                "maxItems": 4
+                              },
+                              "normalized": {
+                                "type": "array",
+                                "title": "Normalized",
+                                "description": "Coordinates on a 0 to 1000 scale.",
+                                "items": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 1000
+                                },
+                                "minItems": 4,
+                                "maxItems": 4
+                              }
+                            },
+                            "additionalProperties": false
+                          },
+                          "name": {
+                            "type": "string",
+                            "title": "Name",
+                            "description": "Short name of the layer."
+                          },
+                          "url": {
+                            "title": "Image URL",
+                            "description": "URL of the output image.",
+                            "type": "string",
+                            "format": "uri"
+                          },
+                          "uuid": {
+                            "title": "Image UUID",
+                            "description": "UUID of the output image.",
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "zIndex": {
+                            "type": "integer",
+                            "title": "Z-Index",
+                            "description": "Stacking order of the layer.",
+                            "minimum": 1
+                          }
+                        },
+                        "required": [
+                          "uuid",
+                          "url",
+                          "zIndex"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "maxItems": 16
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "taskType",
+                "taskUUID",
+                "imageUUID"
+              ]
+            }
+          }
+        }
+      },
+      "ErrorResponse": {
+        "title": "Error Response",
+        "description": "Standard error response returned by the Runware API.",
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "code",
+                "message"
+              ],
+              "additionalProperties": true,
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "description": "A short identifier for the error (e.g., invalidApiKey, timeoutProvider)."
+                },
+                "message": {
+                  "type": "string",
+                  "description": "A human-readable explanation of what went wrong."
+                },
+                "parameter": {
+                  "type": "string",
+                  "description": "The request parameter related to the error, if applicable."
+                },
+                "taskType": {
+                  "type": "string",
+                  "description": "The task type of the request that failed."
+                },
+                "taskUUID": {
+                  "type": "string",
+                  "description": "The unique identifier of the failed request."
+                },
+                "documentation": {
+                  "type": "string",
+                  "description": "A link to relevant documentation."
+                }
+              }
+            }
+          }
+        },
+        "required": [
+          "errors"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "paths": {
+    "/": {
+      "post": {
+        "summary": "Run Seedream 5.0 Flash",
+        "description": "Seedream 5.0 Flash is the fast, cost-efficient model in ByteDance's Seedream 5.0 family for image generation and editing. It supports text-to-image and reference-guided editing with up to 10 input images, precise local edits targeted with point and bounding-box coordinates in the prompt, transparent-background output, and decomposition of an image into separate transparent layers. It outputs from 1K to 2K and suits high-volume workflows such as ad concepts, thumbnails, social visuals, and rapid design iteration.",
+        "operationId": "run_bytedance_seedream_5_0_flash",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request — Missing or invalid parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized — No valid API key provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required — Insufficient account balance.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden — The API key lacks permissions for this request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests — Rate limit exceeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error — Something went wrong on Runware's end.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable — Temporarily unavailable (maintenance or capacity).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "apiKeyAuth": []
+    }
+  ]
+}

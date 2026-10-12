@@ -9,7 +9,7 @@ description = "OpenRouter, fal and Runware clients of VideoSOS: one model catalo
 anyhow = { workspace = true }
 thiserror = { workspace = true }
 serde = { workspace = true }
-serde_json = { workspace = true }
+serde_json = { workspace = true, features = ["preserve_order"] }
 tokio = { workspace = true }
 tracing = { workspace = true }
 reqwest = { workspace = true }
@@ -17,3 +17,4 @@ futures-util = { workspace = true }
 uuid = { workspace = true }
 base64 = { workspace = true }
 chrono = { workspace = true }
+jsonschema = { version = "0.58", default-features = false }
