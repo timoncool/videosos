@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from 'react'
+import { useState, useCallback, useEffect, useRef, lazy, Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import type { TFunction } from 'i18next'
@@ -35,6 +35,7 @@ import {
   HardDrive,
   Sparkles,
   Play,
+  KeyRound,
 } from 'lucide-react'
 import {
   LocalInferenceUnloadControl,
@@ -75,7 +76,12 @@ const MIN_SECTION_HEIGHT = 360
 /** Fraction of the viewport a section may occupy before it scrolls instead. */
 const MAX_SECTION_HEIGHT_VH = 0.7
 
+const LazyProvidersSettings = lazy(() =>
+  import('../deps/generate').then((m) => ({ default: m.ProvidersSettings })),
+)
+
 const SETTINGS_SECTIONS = [
+  { id: 'providers', labelKey: 'settings.sections.providers', icon: KeyRound },
   { id: 'general', labelKey: 'settings.sections.general', icon: Settings2 },
   { id: 'timeline', labelKey: 'settings.sections.timeline', icon: Rows3 },
   { id: 'ai', labelKey: 'settings.sections.ai', icon: Sparkles },
@@ -393,7 +399,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const mediaItems = useMediaLibraryStore((s) => s.mediaItems)
   const proxyStatus = useMediaLibraryStore((s) => s.proxyStatus)
 
-  const [activeSection, setActiveSection] = useState<SettingsSectionId>('general')
+  const [activeSection, setActiveSection] = useState<SettingsSectionId>('providers')
 
   // Animate the content area's height as sections change (width is fixed, so a
   // pure vertical morph). Measure the active section's natural height and spring
@@ -633,6 +639,12 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                     exit={{ opacity: 0 }}
                     transition={{ duration: reduceMotion ? 0 : 0.12 }}
                   >
+                    {activeSection === 'providers' && (
+                      <Suspense fallback={null}>
+                        <LazyProvidersSettings />
+                      </Suspense>
+                    )}
+
                     {activeSection === 'general' && (
                       <div className="space-y-3">
                         <div className="flex items-center justify-between">

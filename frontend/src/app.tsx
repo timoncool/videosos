@@ -6,6 +6,7 @@ import { ErrorBoundary } from '@/components/error-boundary'
 import { WorkspaceGate } from '@/features/workspace-gate/workspace-gate'
 import { router } from '@/app/router'
 import { AgentBridgeHost } from '@/features/agent-bridge/components/agent-bridge-host'
+import { FirstRunDialog } from '@/features/first-run/first-run-dialog'
 
 const LazyToaster = lazy(async () => {
   const { Toaster } = await import('@/components/ui/sonner')
@@ -70,6 +71,7 @@ export function App() {
           <RouterProvider router={router} />
         </WorkspaceGate>
         <AgentBridgeHost />
+        <FirstRunDialog />
         <GlobalTooltip />
         {showToaster && (
           <Suspense fallback={null}>

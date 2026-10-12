@@ -16,6 +16,12 @@ fn main() -> anyhow::Result<()> {
     if !vs_server::process_group::bind_children_to_this_process() {
         eprintln!("[ERROR] the process did not join its own job object: ffmpeg children end only with their handles");
     }
+    let args: Vec<String> = std::env::args().collect();
+    if let Some(at) = args.iter().position(|arg| arg == "--snapshot") {
+        let dir = args.get(at + 1).map(PathBuf::from).unwrap_or_else(|| PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("catalog"));
+        let runtime = tokio::runtime::Builder::new_multi_thread().enable_all().build()?;
+        return runtime.block_on(vs_server::catalog::write_snapshot(&dir));
+    }
     let root = dunce::canonicalize(repo_root())?;
     let port = vs_server::service::listen_port().map_err(anyhow::Error::msg)?;
     match vs_server::service::claim_port(port, Duration::from_secs(5)).map_err(|busy| anyhow::anyhow!(busy.to_string()))? {

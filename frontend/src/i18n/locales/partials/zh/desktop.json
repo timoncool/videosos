@@ -1,0 +1,7 @@
+{
+  "desktop": {
+    "saved": "Saved: {{path}}",
+    "reveal": "Show in folder",
+    "saveFailed": "The file was not saved: {{reason}}"
+  }
+}

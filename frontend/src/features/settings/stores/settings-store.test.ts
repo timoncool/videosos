@@ -10,7 +10,7 @@ const DEFAULT_SETTINGS = {
   enableFilmstripExtraction: true,
   editorDensity: 'compact' as const,
   maxUndoHistory: 50,
-  autoSaveInterval: 5,
+  autoSaveInterval: 1,
   defaultWhisperModel: 'parakeet-tdt-v3' as const,
   defaultWhisperQuantization: 'hybrid' as const,
   defaultWhisperLanguage: '',

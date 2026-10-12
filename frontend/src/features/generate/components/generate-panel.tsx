@@ -17,6 +17,8 @@ import {
   Music,
   Sparkles,
   Volume2,
+  WandSparkles,
+  Undo2,
   ZoomIn,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -39,6 +41,7 @@ import { modelKey, useGenerateStore } from '../stores/generate-store'
 import { useGenerateSync } from '../hooks/use-generate-sync'
 import { useProjectStore } from '../deps/editor'
 import { FieldControl } from './field-control'
+import { improvePrompt } from '../services/prompt-assist'
 import { JobCard } from './job-card'
 import { ModelPicker } from './model-picker'
 
@@ -168,6 +171,9 @@ export function GeneratePanel() {
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [moreOpen, setMoreOpen] = useState(false)
+  const [improving, setImproving] = useState(false)
+  const [improveError, setImproveError] = useState<string | null>(null)
+  const [previousPrompt, setPreviousPrompt] = useState<{ key: string; text: string } | null>(null)
   const estimate = useEstimate(model?.provider, model?.id, values, repeat)
 
   useEffect(() => {
@@ -284,12 +290,52 @@ export function GeneratePanel() {
         {form && model && (
           <div className="space-y-2.5">
             {main.map((field) => (
-              <FieldControl
-                key={field.key}
-                field={field}
-                value={values[field.key]}
-                onChange={(value) => useGenerateStore.getState().setValue(model, field.key, value)}
-              />
+              <div key={field.key} className="space-y-1">
+                <FieldControl
+                  field={field}
+                  value={values[field.key]}
+                  onChange={(value) => useGenerateStore.getState().setValue(model, field.key, value)}
+                />
+                {field.role === 'prompt' && task !== 'transcribe' && (
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      disabled={improving || typeof values[field.key] !== 'string' || !(values[field.key] as string).trim() || !keys.openrouter}
+                      title={keys.openrouter ? t('generate.improve.hint') : t('generate.improve.needsKey')}
+                      onClick={() => {
+                        const original = values[field.key] as string
+                        setImproving(true)
+                        setImproveError(null)
+                        improvePrompt(original, task, model.id)
+                          .then((better) => {
+                            setPreviousPrompt({ key: field.key, text: original })
+                            useGenerateStore.getState().setValue(model, field.key, better)
+                          })
+                          .catch((error: unknown) => setImproveError(error instanceof Error ? error.message : String(error)))
+                          .finally(() => setImproving(false))
+                      }}
+                      className="inline-flex items-center gap-1 text-[10px] text-muted-foreground hover:text-foreground disabled:opacity-40"
+                    >
+                      {improving ? <Loader2 className="h-3 w-3 animate-spin" /> : <WandSparkles className="h-3 w-3" />}
+                      {t('generate.improve.button')}
+                    </button>
+                    {previousPrompt?.key === field.key && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          useGenerateStore.getState().setValue(model, field.key, previousPrompt.text)
+                          setPreviousPrompt(null)
+                        }}
+                        className="inline-flex items-center gap-1 text-[10px] text-muted-foreground hover:text-foreground"
+                      >
+                        <Undo2 className="h-3 w-3" />
+                        {t('generate.improve.undo')}
+                      </button>
+                    )}
+                  </div>
+                )}
+                {field.role === 'prompt' && improveError && <p className="text-[10px] text-destructive">{improveError}</p>}
+              </div>
             ))}
             {more.length > 0 && (
               <Collapsible open={moreOpen} onOpenChange={setMoreOpen}>

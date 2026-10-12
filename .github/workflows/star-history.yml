@@ -1,0 +1,31 @@
+name: Star History
+
+on:
+  watch:
+    types: [started]       # every new star redraws the chart at once
+  schedule:
+    - cron: "17 3 * * *"   # daily, in case a star event was missed
+  workflow_dispatch:
+
+concurrency:
+  group: star-history
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  chart:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Render star chart
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 .github/scripts/star_chart.py
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/stars-*.svg
+          git diff --cached --quiet || (git commit -m "chore: update star history chart" && git push)

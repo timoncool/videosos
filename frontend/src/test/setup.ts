@@ -1,7 +1,10 @@
 import '@testing-library/jest-dom'
 import { afterEach } from 'vite-plus/test'
-import '@/i18n'
+import { i18n } from '@/i18n'
 import { resetAutoKeyframeStore } from '@/features/keyframes/stores/auto-keyframe-store'
+
+// Tests read English text; the detector would otherwise follow the machine's own language.
+await i18n.changeLanguage('en')
 
 // Mock ImageData for Canvas operations
 type TestGlobalWithImageData = typeof globalThis & { ImageData?: typeof ImageData }

@@ -82,6 +82,12 @@
       "again": "Again",
       "forgetHint": "Remove from the list and delete its files (media already in the library stays)"
     },
-    "importFailed": "The result arrived but was not added to the library: {{reason}}"
+    "importFailed": "The result arrived but was not added to the library: {{reason}}",
+    "improve": {
+      "button": "Improve prompt",
+      "hint": "Rewrite the prompt for this model with an OpenRouter LLM (a fraction of a cent)",
+      "needsKey": "Needs an OpenRouter key",
+      "undo": "Back to mine"
+    }
   }
 }

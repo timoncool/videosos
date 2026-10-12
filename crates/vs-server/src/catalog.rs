@@ -231,6 +231,49 @@ impl Catalog {
     }
 }
 
+/// Reads every provider afresh, with the price and release of each Runware model from its schema, and writes
+/// the copies shipped with the program into `dir`.
+pub async fn write_snapshot(dir: &std::path::Path) -> anyhow::Result<()> {
+    let http = vs_providers::http::Http::new(reqwest::Client::builder()).map_err(|e| anyhow::anyhow!(e.to_string()))?;
+    std::fs::create_dir_all(dir)?;
+    let save = |provider: Provider, entries: Vec<ModelEntry>| -> anyhow::Result<()> {
+        let catalog = ProviderCatalog { entries, updated: Some(now_ms()), refreshing: false, error: None };
+        std::fs::write(dir.join(format!("{}.json", provider.as_str())), serde_json::to_string(&catalog)?)?;
+        Ok(())
+    };
+    let openrouter = openrouter::catalog(&http).await.map_err(|e| anyhow::anyhow!(e.to_string()))?;
+    println!("[OK] openrouter {}", openrouter.len());
+    save(Provider::Openrouter, openrouter)?;
+    let mut runware = runware::catalog(&http).await.map_err(|e| anyhow::anyhow!(e.to_string()))?;
+    let total = runware.len();
+    for (index, entry) in runware.iter_mut().enumerate() {
+        let Some(url) = entry.source["schema"].as_str() else { continue };
+        match http.get_json::<Value>(url, None).await {
+            Ok(schema) => {
+                let (created, price, description) = runware::details(&schema);
+                entry.created = created;
+                entry.price = price;
+                entry.description = description.unwrap_or_default();
+            }
+            Err(error) => println!("[WARN] {}: {error}", entry.id),
+        }
+        if index % 25 == 0 {
+            println!("[{}%] runware schemas {index}/{total}", index * 100 / total.max(1));
+        }
+    }
+    save(Provider::Runware, runware)?;
+    let (fal, failures) = fal::catalog(&http, 3).await;
+    for failure in &failures {
+        println!("[WARN] fal {failure}");
+    }
+    println!("[OK] fal {}", fal.len());
+    if fal.is_empty() {
+        anyhow::bail!("fal answered with no models");
+    }
+    save(Provider::Fal, fal)?;
+    Ok(())
+}
+
 #[derive(Serialize, Deserialize)]
 struct CachedForm {
     form: ModelForm,
