@@ -51,7 +51,6 @@
     "headless:gpu:probe": "node headless/probe.mjs",
     "changelog:append": "node scripts/changelog-append.mjs",
     "changelog:rollup": "node scripts/changelog-rollup.mjs",
-    "prepare": "vp config",
     "coverage:headless": "node scripts/headless-coverage.mjs"
   },
   "dependencies": {
