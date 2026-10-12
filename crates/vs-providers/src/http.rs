@@ -36,8 +36,10 @@ impl Http {
         }
     }
 
+    /// A small JSON answer: a catalogue page, a job's status. It has its own short deadline, so a stalled
+    /// connection is retried instead of holding the caller for the long download timeout.
     pub async fn get_json<T: DeserializeOwned>(&self, url: &str, auth: Auth) -> Result<T, ProviderError> {
-        let response = Self::with_auth(self.client.get(url), auth).send().await?;
+        let response = Self::with_auth(self.client.get(url), auth).timeout(Duration::from_secs(90)).send().await?;
         let status = response.status();
         let text = response.text().await?;
         if !status.is_success() {

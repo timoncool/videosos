@@ -44,9 +44,13 @@ fn hub() -> Option<&'static studio_hub_client::Hub> {
     HUB.get().and_then(Option::as_ref)
 }
 
+/// The languages the hub accepts in a report; a report with another is refused whole.
+const HUB_LANGUAGES: [&str; 8] = ["en", "ru", "es", "fr", "pt", "ja", "ko", "zh"];
+
 pub fn set_language(language: &str) {
     if let Some(hub) = hub() {
-        hub.set_ui_lang(language.split('-').next().unwrap_or(language));
+        let base = language.split('-').next().unwrap_or(language);
+        hub.set_ui_lang(if HUB_LANGUAGES.contains(&base) { base } else { "en" });
     }
 }
 
