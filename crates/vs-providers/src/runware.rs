@@ -248,12 +248,11 @@ pub fn build_task(model: &str, form: &ModelForm, values: &Map<String, Value>, ta
             continue;
         }
         if key == "size" {
-            if let Some((w, h)) = value.as_str().and_then(|size| size.split_once('x')) {
-                if let (Ok(w), Ok(h)) = (w.parse::<u64>(), h.parse::<u64>()) {
+            if let Some((w, h)) = value.as_str().and_then(|size| size.split_once('x'))
+                && let (Ok(w), Ok(h)) = (w.parse::<u64>(), h.parse::<u64>()) {
                     flat.insert("width".into(), json!(w));
                     flat.insert("height".into(), json!(h));
                 }
-            }
             continue;
         }
         flat.insert(key.clone(), value.clone());
@@ -286,8 +285,8 @@ pub fn pick_valid(schema: &Value, task: Map<String, Value>, fallback_size: Optio
     if validator.is_valid(&given) {
         return Ok(task);
     }
-    if !task.contains_key("width") {
-        if let Some((w, h)) = fallback_size.and_then(|size| size.split_once('x')).and_then(|(w, h)| Some((w.parse::<u64>().ok()?, h.parse::<u64>().ok()?))) {
+    if !task.contains_key("width")
+        && let Some((w, h)) = fallback_size.and_then(|size| size.split_once('x')).and_then(|(w, h)| Some((w.parse::<u64>().ok()?, h.parse::<u64>().ok()?))) {
             let mut sized = task.clone();
             sized.insert("width".into(), json!(w));
             sized.insert("height".into(), json!(h));
@@ -295,7 +294,6 @@ pub fn pick_valid(schema: &Value, task: Map<String, Value>, fallback_size: Optio
                 return Ok(sized);
             }
         }
-    }
     let problems: Vec<String> = validator.iter_errors(&given).take(3).map(|error| format!("{} at {}", error, error.instance_path())).collect();
     Err(ProviderError::Refused(format!("the model does not accept these settings: {}", problems.join("; "))))
 }
@@ -323,11 +321,10 @@ fn outputs_of(item: &Value) -> Vec<Output> {
             }
         }
     }
-    if outputs.is_empty() {
-        if let Some(text) = item.get("text").and_then(Value::as_str) {
+    if outputs.is_empty()
+        && let Some(text) = item.get("text").and_then(Value::as_str) {
             outputs.push(Output::Text { text: text.to_string() });
         }
-    }
     outputs
 }
 

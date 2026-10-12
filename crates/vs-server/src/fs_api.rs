@@ -110,7 +110,7 @@ async fn list(State(state): State<AppState>, Query(query): Query<PathQuery>) -> 
         entries.push(Entry {
             name,
             kind: if meta.is_dir() { "directory" } else { "file" },
-            size: meta.is_file().then(|| meta.len()),
+            size: meta.is_file().then_some(meta.len()),
         });
     }
     entries.sort_by(|a, b| a.name.cmp(&b.name));
@@ -127,7 +127,7 @@ async fn stat(State(state): State<AppState>, Query(query): Query<PathQuery>) -> 
         .map(|since| since.as_millis() as u64);
     Ok(Json(json!({
         "kind": if meta.is_dir() { "directory" } else { "file" },
-        "size": meta.is_file().then(|| meta.len()),
+        "size": meta.is_file().then_some(meta.len()),
         "modified": modified,
     })))
 }

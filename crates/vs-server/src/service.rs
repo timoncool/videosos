@@ -127,11 +127,10 @@ pub fn probe(port: u16, timeout: Duration) -> Occupant {
         return Occupant::Other(t!("service-request-not-sent", error = e.to_string()));
     }
     let mut raw = Vec::new();
-    if let Err(e) = stream.read_to_end(&mut raw) {
-        if raw.is_empty() {
+    if let Err(e) = stream.read_to_end(&mut raw)
+        && raw.is_empty() {
             return Occupant::Other(t!("service-no-health-answer", error = e.to_string()));
         }
-    }
     classify_response(&raw)
 }
 

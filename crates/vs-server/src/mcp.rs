@@ -874,12 +874,11 @@ async fn run_tool(state: &AppState, tool: &Tool, args: &Value) -> Result<Answer,
         Payload::Composite(other) => Err(format!("unknown composite {other}")),
         Payload::Window { command, args, seconds } => {
             let mut result = ask_window(command, args, seconds).await?;
-            if command == "export_video" {
-                if let Some(saved) = result.get("saved").and_then(Value::as_str) {
+            if command == "export_video"
+                && let Some(saved) = result.get("saved").and_then(Value::as_str) {
                     let path = crate::fs_api::resolve(&state.workspace, saved).map_err(|_| format!("the window named an odd file: {saved}"))?;
                     result["path"] = json!(path.display().to_string());
                 }
-            }
             if let Some(image) = result.get("image").and_then(Value::as_str) {
                 return Ok(Answer::Image {
                     data: image.to_string(),

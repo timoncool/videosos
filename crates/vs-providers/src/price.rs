@@ -49,7 +49,7 @@ fn pick<'a>(rates: &[&'a Rate], wanted: &[String]) -> (Option<&'a Rate>, bool) {
         let score = wanted.iter().filter(|word| !word.is_empty() && label.contains(word.as_str())).count();
         (score, *rate)
     });
-    let best = scored.clone().max_by_key(|(score, _)| *score).map(|(score, rate)| (score, rate));
+    let best = scored.max_by_key(|(score, _)| *score);
     match best {
         Some((score, rate)) if score > 0 => (Some(rate), true),
         _ => (rates.iter().copied().min_by(|a, b| a.amount.total_cmp(&b.amount)), false),

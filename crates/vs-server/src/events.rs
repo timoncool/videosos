@@ -26,14 +26,10 @@ pub async fn stream() -> impl IntoResponse {
     let receiver = channel().subscribe();
     let hello = futures_util::stream::once(async { Ok::<Event, Infallible>(Event::default().data(json!({ "kind": "hello" }).to_string())) });
     let updates = futures_util::stream::unfold(receiver, |mut receiver| async move {
-        loop {
-            match receiver.recv().await {
-                Ok(text) => return Some((Ok::<Event, Infallible>(Event::default().data(text)), receiver)),
-                Err(broadcast::error::RecvError::Lagged(_)) => {
-                    return Some((Ok(Event::default().data(json!({ "kind": "resync" }).to_string())), receiver));
-                }
-                Err(broadcast::error::RecvError::Closed) => return None,
-            }
+        match receiver.recv().await {
+            Ok(text) => Some((Ok::<Event, Infallible>(Event::default().data(text)), receiver)),
+            Err(broadcast::error::RecvError::Lagged(_)) => Some((Ok(Event::default().data(json!({ "kind": "resync" }).to_string())), receiver)),
+            Err(broadcast::error::RecvError::Closed) => None,
         }
     });
     Sse::new(futures_util::StreamExt::chain(hello, updates)).keep_alive(KeepAlive::default())

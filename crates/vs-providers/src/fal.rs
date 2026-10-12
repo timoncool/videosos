@@ -109,11 +109,10 @@ pub async fn catalog(http: &Http, pages: usize) -> (Vec<ModelEntry>, Vec<String>
                 break;
             };
             for model in page["models"].as_array().into_iter().flatten() {
-                if let Some(entry) = entry_of(model) {
-                    if !entries.iter().any(|seen| seen.id == entry.id) {
+                if let Some(entry) = entry_of(model)
+                    && !entries.iter().any(|seen| seen.id == entry.id) {
                         entries.push(entry);
                     }
-                }
             }
             cursor = page["next_cursor"].as_str().map(str::to_string);
             if cursor.is_none() || page["has_more"] == false {
@@ -279,11 +278,10 @@ pub async fn cancel(http: &Http, key: &str, handle: &Value) -> Result<(), Provid
 pub fn outputs_of(body: &Value) -> Vec<Output> {
     let mut found = Vec::new();
     collect(body, &mut found);
-    if found.is_empty() {
-        if let Some(text) = body.get("text").and_then(Value::as_str) {
+    if found.is_empty()
+        && let Some(text) = body.get("text").and_then(Value::as_str) {
             found.push(Output::Text { text: text.to_string() });
         }
-    }
     found
 }
 

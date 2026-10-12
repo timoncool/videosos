@@ -172,11 +172,10 @@ impl Catalog {
         let path = self.form_path(provider, id);
         if let Ok(meta) = std::fs::metadata(&path) {
             let fresh = meta.modified().ok().and_then(|time| time.elapsed().ok()).is_some_and(|age| age.as_secs() < 24 * 3600);
-            if fresh {
-                if let Some(form) = std::fs::read_to_string(&path).ok().and_then(|text| serde_json::from_str::<CachedForm>(&text).ok()) {
+            if fresh
+                && let Some(form) = std::fs::read_to_string(&path).ok().and_then(|text| serde_json::from_str::<CachedForm>(&text).ok()) {
                     return Ok(form.form);
                 }
-            }
         }
         match self.read_form(provider, id).await {
             Ok(form) => Ok(form),
@@ -197,11 +196,10 @@ impl Catalog {
         let (form, schema) = match provider {
             Provider::Openrouter => {
                 let mut form = openrouter::form(&entry).map_err(|e| e.to_string())?;
-                if entry.source["kind"] == "image" {
-                    if let Ok(rule) = openrouter::image_price(&self.http, id).await {
+                if entry.source["kind"] == "image"
+                    && let Ok(rule) = openrouter::image_price(&self.http, id).await {
                         form.price = rule;
                     }
-                }
                 (form, Value::Null)
             }
             Provider::Runware => {
