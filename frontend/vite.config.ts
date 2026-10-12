@@ -104,8 +104,12 @@ export default defineConfig({
     dedupe: ['react', 'react-dom'],
   },
   server: {
-    port: 5173,
+    port: 5196,
     strictPort: true,
+    proxy: {
+      '/api': 'http://127.0.0.1:8796',
+      '/mcp': 'http://127.0.0.1:8796',
+    },
     headers: {
       'Cross-Origin-Embedder-Policy': 'require-corp',
       'Cross-Origin-Opener-Policy': 'same-origin',

@@ -1,0 +1,117 @@
+//! VideoSOS server: one axum service on 127.0.0.1 that serves the editor window and everything behind it —
+//! the workspace the editor keeps its projects in, generations through OpenRouter, fal and Runware, export
+//! through ffmpeg, and the MCP server through which an agent drives the same routes the window uses.
+//!
+//! The desktop shell runs it on a background thread of its own process (`serve_blocking`); `vs-server`
+//! runs it alone for development.
+
+#[macro_use]
+pub mod i18n;
+pub mod fs_api;
+pub mod process_group;
+pub mod service;
+mod spa;
+
+use std::net::TcpListener;
+use std::path::{Path, PathBuf};
+use std::sync::Arc;
+
+use axum::extract::State;
+use axum::http::{header, HeaderName, HeaderValue, StatusCode};
+use axum::routing::{get, post};
+use axum::{Json, Router};
+use serde::Deserialize;
+use serde_json::{json, Value};
+use tower_http::set_header::SetResponseHeaderLayer;
+
+/// Everything a handler needs.
+#[derive(Clone)]
+pub struct AppState {
+    inner: Arc<Inner>,
+}
+
+pub struct Inner {
+    /// The server root: `frontend/dist`, `data/`, `tools/`, `secrets/` live under it.
+    pub repo_root: PathBuf,
+    /// The editor's workspace folder.
+    pub workspace: PathBuf,
+    /// The folder the server keeps its own files in.
+    pub data: PathBuf,
+}
+
+impl std::ops::Deref for AppState {
+    type Target = Inner;
+    fn deref(&self) -> &Inner {
+        &self.inner
+    }
+}
+
+impl AppState {
+    pub fn new(repo_root: &Path) -> anyhow::Result<Self> {
+        let data = repo_root.join("data");
+        let workspace = data.join("workspace");
+        std::fs::create_dir_all(&workspace)?;
+        Ok(Self { inner: Arc::new(Inner { repo_root: repo_root.to_path_buf(), workspace, data }) })
+    }
+}
+
+#[derive(Deserialize)]
+struct LanguageBody {
+    language: String,
+}
+
+/// The window says which language it shows: the server's own messages follow it.
+async fn set_language(Json(body): Json<LanguageBody>) -> Result<StatusCode, (StatusCode, String)> {
+    i18n::set_language(&body.language).map_err(|e| (StatusCode::BAD_REQUEST, e))?;
+    Ok(StatusCode::NO_CONTENT)
+}
+
+async fn info(State(state): State<AppState>) -> Json<Value> {
+    Json(json!({
+        "app": service::APP_ID,
+        "version": service::app_version(),
+        "workspace": state.workspace.display().to_string(),
+        "data": state.data.display().to_string(),
+        "os": std::env::consts::OS,
+    }))
+}
+
+/// The API and the window on one origin. Every answer carries the cross-origin isolation headers the
+/// editor needs for SharedArrayBuffer (decoding and export workers).
+pub fn app(state: AppState) -> Router {
+    let api = Router::new()
+        .route("/health", get(service::health))
+        .route("/api/info", get(info))
+        .route("/api/ui-language", post(set_language))
+        .merge(fs_api::router())
+        .with_state(state.clone());
+    api.merge(spa::router(&state.repo_root))
+        .layer(SetResponseHeaderLayer::overriding(
+            HeaderName::from_static("cross-origin-opener-policy"),
+            HeaderValue::from_static("same-origin"),
+        ))
+        .layer(SetResponseHeaderLayer::overriding(
+            HeaderName::from_static("cross-origin-embedder-policy"),
+            HeaderValue::from_static("require-corp"),
+        ))
+        .layer(SetResponseHeaderLayer::if_not_present(
+            HeaderName::from_static("cross-origin-resource-policy"),
+            HeaderValue::from_static("same-origin"),
+        ))
+        .layer(SetResponseHeaderLayer::if_not_present(header::X_CONTENT_TYPE_OPTIONS, HeaderValue::from_static("nosniff")))
+}
+
+/// Serves on the listener the caller bound until the process ends.
+pub fn serve_blocking(repo_root: &Path, listener: TcpListener) -> anyhow::Result<()> {
+    let runtime = tokio::runtime::Builder::new_multi_thread().enable_all().thread_name("vs-server").build()?;
+    runtime.block_on(async move {
+        listener.set_nonblocking(true)?;
+        let port = listener.local_addr()?.port();
+        service::record_port(port);
+        let state = AppState::new(repo_root)?;
+        let listener = tokio::net::TcpListener::from_std(listener)?;
+        tracing::info!("VideoSOS {} on http://127.0.0.1:{port}/", service::app_version());
+        axum::serve(listener, app(state)).await?;
+        Ok(())
+    })
+}

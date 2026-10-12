@@ -30,6 +30,10 @@ import {
   saveWorkspaceHandleRecord,
 } from '@/infrastructure/storage/handles-db'
 import { onPermissionLost, setWorkspaceRoot } from '@/infrastructure/storage/workspace-fs/root'
+import {
+  createServerWorkspaceRoot,
+  detectServerWorkspace,
+} from '@/infrastructure/storage/workspace-fs/rest-handle'
 import { createLogger } from '@/shared/logging/logger'
 import { WorkspaceGateSplash } from './workspace-gate-splash'
 import { usePathname } from './use-pathname'
@@ -86,6 +90,10 @@ export function WorkspaceGate({ children }: { children: React.ReactNode }) {
     if (!needsWorkspace) return
     let cancelled = false
     ;(async () => {
+      if (await detectServerWorkspace()) {
+        if (!cancelled) await activate(createServerWorkspaceRoot())
+        return
+      }
       if (!isFileSystemAccessSupported()) {
         if (!cancelled) setStatus({ kind: 'unavailable' })
         return

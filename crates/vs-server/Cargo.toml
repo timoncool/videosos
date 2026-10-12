@@ -1,0 +1,55 @@
+[package]
+name = "vs-server"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "axum server of VideoSOS: the editor's workspace, generations through OpenRouter, fal and Runware, export through ffmpeg, MCP"
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "vs-server"
+path = "src/main.rs"
+
+[dependencies]
+vs-providers = { path = "../vs-providers" }
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tokio = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+reqwest = { workspace = true }
+futures-util = { workspace = true }
+uuid = { workspace = true }
+base64 = { workspace = true }
+chrono = { workspace = true }
+axum = { version = "0.8", features = ["multipart", "macros"] }
+tower = { version = "0.5", features = ["util"] }
+tower-http = { version = "0.7", features = ["cors", "fs", "set-header"] }
+tokio-util = { version = "0.7", features = ["io"] }
+tokio-stream = { version = "0.1", features = ["sync"] }
+async-stream = "0.3"
+mime_guess = "2"
+percent-encoding = "2.3"
+fluent-templates = "0.15.1"
+rusqlite = { version = "0.40", features = ["bundled"] }
+sha2 = "0.11"
+hex = "0.4"
+zip = { version = "8", default-features = false, features = ["deflate"] }
+tar = "0.4"
+lzma-rust2 = { version = "0.21", default-features = false, features = ["std", "optimization", "xz"] }
+sysinfo = "0.39"
+regex = "1"
+studio-hub-client = { git = "https://github.com/timoncool/studio-hub-client", rev = "531327a64882580bd44f8e173908be0a046c7adc" }
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.61", features = ["Win32_Foundation", "Win32_Security", "Win32_System_JobObjects", "Win32_System_Threading"] }
+
+[target.'cfg(not(windows))'.dependencies]
+libc = "0.2"
+
+[dev-dependencies]
+tempfile = "3"

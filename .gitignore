@@ -1,0 +1,14 @@
+/target/
+/desktop/src-tauri/target/
+/desktop/src-tauri/gen/
+/desktop/src-tauri/staging/
+/desktop/node_modules/
+/frontend/node_modules/
+/frontend/dist/
+/data/
+/secrets/
+/tools/
+/release/
+*.vs-partial
+.env
+.env.*
