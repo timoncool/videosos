@@ -99,14 +99,22 @@ impl Catalog {
             catalog.refreshing = true;
             catalog.error = None;
         });
-        let read = match provider {
-            Provider::Openrouter => openrouter::catalog(&self.http).await,
-            Provider::Runware => runware::catalog(&self.http).await.map(|fresh| self.keep_runware_details(fresh)),
-            Provider::Fal => fal::catalog(&self.http, 3).await,
+        let (read, partial) = match provider {
+            Provider::Openrouter => (openrouter::catalog(&self.http).await, None),
+            Provider::Runware => (runware::catalog(&self.http).await.map(|fresh| self.keep_runware_details(fresh)), None),
+            Provider::Fal => {
+                let (entries, failures) = fal::catalog(&self.http, 3).await;
+                let note = (!failures.is_empty()).then(|| t!("catalog-partial", failures = failures.join("; ")));
+                if entries.is_empty() {
+                    (Err(vs_providers::ProviderError::Network(failures.join("; "))), None)
+                } else {
+                    (Ok(entries), note)
+                }
+            }
         };
         match read {
             Ok(entries) if !entries.is_empty() => {
-                let catalog = ProviderCatalog { entries, updated: Some(now_ms()), refreshing: false, error: None };
+                let catalog = ProviderCatalog { entries, updated: Some(now_ms()), refreshing: false, error: partial };
                 let path = self.dir.join(format!("{}.json", provider.as_str()));
                 if let Ok(text) = serde_json::to_string(&catalog) {
                     let _ = std::fs::write(path, text);

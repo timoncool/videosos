@@ -157,8 +157,9 @@ impl Jobs {
 
     fn update(&self, id: &str, change: impl FnOnce(&mut Job)) -> Option<Job> {
         let mut job = self.get(id)?;
+        let before = job.updated;
         change(&mut job);
-        job.updated = now_ms();
+        job.updated = now_ms().max(before + 1);
         let saved = self.db().execute(
             "UPDATE jobs SET status=?2, progress=?3, error=?4, estimate=?5, cost=?6, cost_source=?7, outputs=?8, imported=?9, updated=?10, handle=?11 WHERE id=?1",
             params![
@@ -252,11 +253,12 @@ impl Jobs {
     pub fn create(self: &Arc<Self>, mut request: CreateRequest, form: &ModelForm, model_name: String) -> Vec<Job> {
         // OpenRouter's defaults are this program's picks from the model's lists (its first voice), not the
         // provider's, so they are sent; schema defaults of fal and Runware are the provider's own.
-        if form.provider == Provider::Openrouter {
-            for field in &form.fields {
-                if let Some(default) = &field.default {
-                    request.values.entry(field.key.clone()).or_insert_with(|| default.clone());
-                }
+        // A size pair is this program's pick too (the schema lists pairs, not a default), and a required field
+        // left at its default must still be sent.
+        for field in &form.fields {
+            let ours = form.provider == Provider::Openrouter || matches!(field.kind, FieldKind::Size { .. }) || field.required;
+            if let (true, Some(default)) = (ours, &field.default) {
+                request.values.entry(field.key.clone()).or_insert_with(|| default.clone());
             }
         }
         let estimate = price::estimate(form, &request.values).map(|estimate| estimate.usd);

@@ -1,0 +1,87 @@
+{
+  "generate": {
+    "tabLabel": "Generate",
+    "serverError": "The VideoSOS server did not answer: {{reason}}",
+    "tasks": {
+      "image": "Image",
+      "image_edit": "Edit image",
+      "video": "Video",
+      "video_edit": "Edit video",
+      "lip_sync": "Lip sync",
+      "upscale": "Upscale",
+      "remove_background": "Remove background",
+      "music": "Music",
+      "speech": "Voice",
+      "sound": "Sound effects",
+      "transcribe": "Transcribe",
+      "text": "Text"
+    },
+    "media": {
+      "image": "an image",
+      "video": "a video",
+      "audio": "audio"
+    },
+    "model": {
+      "choose": "Choose a model",
+      "loading": "Reading the models…",
+      "search": "Search models",
+      "all": "All",
+      "refresh": "Read the catalogues again",
+      "none": "No model fits this search.",
+      "new": "new",
+      "deprecated": "retiring"
+    },
+    "keys": {
+      "missing": "No key for this provider",
+      "needed": "Add your {{provider}} key to run this model.",
+      "placeholder": "Paste the API key",
+      "save": "Save",
+      "ok": "The key works.",
+      "okBalance": "The key works. Balance: {{balance}}",
+      "failed": "The provider did not accept the key.",
+      "getOne": "Get a {{provider}} key"
+    },
+    "form": {
+      "loading": "Reading the model's settings…",
+      "more": "More settings ({{count}})",
+      "default": "Model default",
+      "dropHere": "Drop {{kind}} from the library or a result here",
+      "pick": "Pick from the library",
+      "remove": "Remove",
+      "noMedia": "The library has no {{kind}} yet.",
+      "tooMany": "At most {{max}} files here.",
+      "wrongKind": "This slot takes {{kind}}.",
+      "missing": "Fill in: {{fields}}"
+    },
+    "placeOnTimeline": "Put on the timeline",
+    "repeat": "Runs",
+    "repeatHint": "How many times to run it; each run is a separate result and is paid separately",
+    "submit": "Generate",
+    "cost": {
+      "unknown": "price after the run",
+      "estimated": "Worked out before the run",
+      "billed": "As the provider billed it"
+    },
+    "history": "Generations ({{count}})",
+    "status": {
+      "queued": "waiting",
+      "sending": "sending",
+      "running": "working",
+      "done": "done",
+      "failed": "failed",
+      "cancelled": "cancelled"
+    },
+    "actions": {
+      "cancel": "Cancel",
+      "place": "To timeline",
+      "placeHint": "Put the result at the playhead",
+      "copy": "Copy",
+      "placeText": "As text",
+      "reuse": "Edit",
+      "reuseHint": "Load this run's model and settings into the form",
+      "again": "Again",
+      "forgetHint": "Remove from the list and delete its files (media already in the library stays)"
+    },
+    "importFailed": "The result arrived but was not added to the library: {{reason}}"
+  }
+}

@@ -78,9 +78,11 @@ fn entry_of(model: &Value) -> Option<ModelEntry> {
     })
 }
 
-/// The catalogue, `pages` pages of twelve per category (the API stalls on larger pages).
-pub async fn catalog(http: &Http, pages: usize) -> Result<Vec<ModelEntry>, ProviderError> {
+/// The catalogue, `pages` pages of twelve per category (the API stalls on larger pages). A page is tried
+/// three times; a category that still fails keeps what was read and is named in the second list.
+pub async fn catalog(http: &Http, pages: usize) -> (Vec<ModelEntry>, Vec<String>) {
     let mut entries: Vec<ModelEntry> = Vec::new();
+    let mut failures = Vec::new();
     for category in CATEGORIES {
         let mut cursor: Option<String> = None;
         for _ in 0..pages {
@@ -88,7 +90,24 @@ pub async fn catalog(http: &Http, pages: usize) -> Result<Vec<ModelEntry>, Provi
             if let Some(cursor) = &cursor {
                 url.push_str(&format!("&cursor={cursor}"));
             }
-            let page: Value = http.get_json(&url, None).await?;
+            let mut page: Option<Value> = None;
+            let mut last_error = String::new();
+            for attempt in 0..3u64 {
+                match http.get_json::<Value>(&url, None).await {
+                    Ok(value) => {
+                        page = Some(value);
+                        break;
+                    }
+                    Err(error) => {
+                        last_error = error.to_string();
+                        tokio::time::sleep(std::time::Duration::from_secs(2 * (attempt + 1))).await;
+                    }
+                }
+            }
+            let Some(page) = page else {
+                failures.push(format!("{category}: {last_error}"));
+                break;
+            };
             for model in page["models"].as_array().into_iter().flatten() {
                 if let Some(entry) = entry_of(model) {
                     if !entries.iter().any(|seen| seen.id == entry.id) {
@@ -102,7 +121,7 @@ pub async fn catalog(http: &Http, pages: usize) -> Result<Vec<ModelEntry>, Provi
             }
         }
     }
-    Ok(entries)
+    (entries, failures)
 }
 
 /// Models matching a search, straight from fal.

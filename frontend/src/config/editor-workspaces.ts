@@ -10,6 +10,7 @@
 export type EditorWorkspaceId = 'edit' | 'color' | 'motion'
 
 export type EditorSidebarTab =
+  | 'generate'
   | 'media'
   | 'text'
   | 'shapes'

@@ -45,3 +45,4 @@ keys-one-line = A key is one line.
 settings-bad-budget = The daily limit is a number from 0 to 10000.
 spend-agent-limit = Agents have spent ${ $spent } today; this job would cost about ${ $cost } and pass the daily limit of ${ $budget }. Raise the limit in Settings, Providers.
 spend-agent-limit-reached = Agents have reached today's limit of ${ $budget }.
+catalog-partial = Part of the catalogue was not read: { $failures }. The models read are listed; refresh to try again.

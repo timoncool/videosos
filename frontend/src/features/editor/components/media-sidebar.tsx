@@ -20,6 +20,7 @@ import {
   Captions,
   Sticker,
   WandSparkles,
+  Sparkles,
 } from 'lucide-react'
 import { motion, useReducedMotion } from 'motion/react'
 import { Button } from '@/components/ui/button'
@@ -64,6 +65,9 @@ import { createLogger } from '@/shared/logging/logger'
 import { useSettingsStore } from '@/features/editor/deps/settings'
 import { resolveGeneratedLayerCanvasSize } from '../utils/generated-layer-canvas-size'
 const LazyAiPanel = lazy(() => import('./ai-tab').then((m) => ({ default: m.AiTab })))
+const LazyGeneratePanel = lazy(() =>
+  import('../deps/generate').then((m) => ({ default: m.GeneratePanel })),
+)
 const LazyTranscriptEditorPanel = lazy(() =>
   importTranscriptEditorPanel().then(({ TranscriptEditorPanel }) => ({
     default: TranscriptEditorPanel,
@@ -305,11 +309,13 @@ export const MediaSidebar = memo(function MediaSidebar() {
   const prefersReducedMotion = useReducedMotion()
 
   const [aiTabActivated, setAiTabActivated] = useState(activeTab === 'ai')
+  const [generateTabActivated, setGenerateTabActivated] = useState(activeTab === 'generate')
   // The Lottie panel hits an external API on mount, so keep it unmounted until
   // the tab is first opened; it then stays mounted (state preserved).
   const [lottieTabActivated, setLottieTabActivated] = useState(activeTab === 'lottie')
   useEffect(() => {
     if (activeTab === 'ai') setAiTabActivated(true)
+    if (activeTab === 'generate') setGenerateTabActivated(true)
     if (activeTab === 'lottie') setLottieTabActivated(true)
   }, [activeTab])
 
@@ -540,6 +546,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
 
   // Category items for the vertical nav
   const categories = [
+    { id: 'generate' as const, icon: Sparkles, label: t('generate.tabLabel') },
     { id: 'media' as const, icon: Film, label: t('editor.mediaSidebar.media') },
     { id: 'text' as const, icon: Type, label: t('editor.mediaSidebar.text') },
     { id: 'shapes' as const, icon: Pentagon, label: t('editor.mediaSidebar.shapes') },
@@ -1158,6 +1165,17 @@ export const MediaSidebar = memo(function MediaSidebar() {
               {activeTab === 'transcript' && (
                 <Suspense fallback={null}>
                   <LazyTranscriptEditorPanel active />
+                </Suspense>
+              )}
+            </div>
+
+            {/* Generate Tab */}
+            <div
+              className={`min-h-0 flex-1 overflow-hidden ${activeTab === 'generate' ? 'flex flex-col' : 'hidden'}`}
+            >
+              {generateTabActivated && (
+                <Suspense fallback={null}>
+                  <LazyGeneratePanel />
                 </Suspense>
               )}
             </div>
