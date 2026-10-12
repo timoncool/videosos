@@ -50,8 +50,6 @@ interface GenerateState extends Persisted {
   jobs: Job[]
   keys: Partial<Record<Provider, boolean>>
   forms: Record<string, ModelForm>
-  /** Jobs whose results go onto the timeline as soon as they are imported. */
-  toPlace: string[]
   /** Why the panel could not reach the server, shown above everything else. */
   serverError: string | null
   setServerError: (message: string | null) => void
@@ -66,8 +64,6 @@ interface GenerateState extends Persisted {
   removeJob: (id: string) => void
   setKeys: (keys: Partial<Record<Provider, boolean>>) => void
   setForm: (form: ModelForm) => void
-  markToPlace: (ids: string[]) => void
-  placed: (id: string) => void
 }
 
 function persisted(state: GenerateState): Persisted {
@@ -85,7 +81,6 @@ export const useGenerateStore = create<GenerateState>()((set, get) => ({
   jobs: [],
   keys: {},
   forms: {},
-  toPlace: [],
   serverError: null,
   setServerError: (serverError) => set({ serverError }),
   setTask: (task) => {
@@ -135,6 +130,4 @@ export const useGenerateStore = create<GenerateState>()((set, get) => ({
   removeJob: (id) => set({ jobs: get().jobs.filter((job) => job.id !== id) }),
   setKeys: (keys) => set({ keys }),
   setForm: (form) => set({ forms: { ...get().forms, [modelKey(form.provider, form.id)]: form } }),
-  markToPlace: (ids) => set({ toPlace: [...get().toPlace, ...ids] }),
-  placed: (id) => set({ toPlace: get().toPlace.filter((each) => each !== id) }),
 }))

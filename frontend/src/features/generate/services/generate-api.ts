@@ -231,6 +231,7 @@ export const generateApi = {
   }) => request<{ jobs: Job[] }>('/api/jobs', { method: 'POST', body: JSON.stringify(body) }),
   jobs: (projectId: string | null) =>
     request<{ jobs: Job[] }>(`/api/jobs?${new URLSearchParams({ project: projectId ?? '' })}`),
+  job: (id: string) => request<Job>(`/api/jobs/${id}`),
   cancel: (id: string) => request<Job>(`/api/jobs/${id}/cancel`, { method: 'POST' }),
   retry: (id: string) => request<{ jobs: Job[] }>(`/api/jobs/${id}/retry`, { method: 'POST' }),
   remove: (id: string) => request<void>(`/api/jobs/${id}`, { method: 'DELETE' }),

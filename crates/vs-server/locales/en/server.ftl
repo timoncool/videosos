@@ -67,3 +67,4 @@ update-failed = The update did not install: { $error }
 exports-dialog-title = Save the video
 exports-no-folder = The folder of { $path } is not there.
 exports-no-file = There is no file { $path }.
+jobs-finished-after-cancel = The provider finished the job after it was cancelled; the result is kept, since it was billed.

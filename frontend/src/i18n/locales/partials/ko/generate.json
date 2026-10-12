@@ -60,7 +60,8 @@
     "cost": {
       "unknown": "price after the run",
       "estimated": "Worked out before the run",
-      "billed": "As the provider billed it"
+      "billed": "As the provider billed it",
+      "failed": "Price unknown: {{reason}}"
     },
     "history": "Generations ({{count}})",
     "status": {

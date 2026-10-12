@@ -35,8 +35,7 @@ export async function improvePrompt(prompt: string, task: Task, modelName: strin
   if (!id) throw new Error('the server did not start the job')
   for (;;) {
     await new Promise((resolve) => setTimeout(resolve, 800))
-    const job = (await generateApi.jobs(null)).jobs.find((each) => each.id === id)
-    if (!job) continue
+    const job = await generateApi.job(id)
     if (job.status === 'failed' || job.status === 'cancelled') throw new Error(job.error ?? job.status)
     if (job.status === 'done') {
       const text = job.outputs.find((output) => output.kind === 'text')?.text?.trim()

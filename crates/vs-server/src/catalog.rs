@@ -178,6 +178,21 @@ impl Catalog {
                 }
             }
         }
+        match self.read_form(provider, id).await {
+            Ok(form) => Ok(form),
+            // the provider cannot be reached now: the copy read before still describes the model
+            Err(error) => match std::fs::read_to_string(&path).ok().and_then(|text| serde_json::from_str::<CachedForm>(&text).ok()) {
+                Some(cached) => {
+                    tracing::warn!("{} {id}: using the form read before, the provider answered: {error}", provider.as_str());
+                    Ok(cached.form)
+                }
+                None => Err(error),
+            },
+        }
+    }
+
+    async fn read_form(&self, provider: Provider, id: &str) -> Result<ModelForm, String> {
+        let path = self.form_path(provider, id);
         let entry = self.find(provider, id).ok_or_else(|| t!("catalog-unknown-model", provider = provider.as_str(), model = id.to_string()))?;
         let (form, schema) = match provider {
             Provider::Openrouter => {

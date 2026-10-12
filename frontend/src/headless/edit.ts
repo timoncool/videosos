@@ -144,13 +144,17 @@ function applyOpTracked(
  * Applies ops to the stores as they are now: the open project of the editor window, for the agent bridge.
  * Each op is one undoable edit of the editor; the first that fails stops the list and is reported.
  */
-export function applyEditOpsLive(ops: EditOp[]): HeadlessEditResult['results'] {
+export function applyEditOpsLive(ops: EditOp[]): { results: HeadlessEditResult['results']; error?: string } {
   const results: HeadlessEditResult['results'] = []
   const prior = new Map<string, HeadlessEditResult['results'][number]>()
   const callerIds = ops.map((op) => asString(op.callerId)).filter(Boolean) as string[]
   if (new Set(callerIds).size !== callerIds.length) throw new Error('Duplicate edit callerId')
-  for (const rawOp of ops) applyOpTracked(rawOp, prior, results)
-  return results
+  try {
+    for (const rawOp of ops) applyOpTracked(rawOp, prior, results)
+  } catch (error) {
+    return { results, error: error instanceof Error ? error.message : String(error) }
+  }
+  return { results }
 }
 
 export async function editProject(input: HeadlessEditInput): Promise<HeadlessEditResult> {

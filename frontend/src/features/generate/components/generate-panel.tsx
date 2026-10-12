@@ -38,7 +38,6 @@ import {
   type Task,
 } from '../services/generate-api'
 import { modelKey, useGenerateStore } from '../stores/generate-store'
-import { useGenerateSync } from '../hooks/use-generate-sync'
 import { useProjectStore } from '../deps/editor'
 import { FieldControl } from './field-control'
 import { improvePrompt } from '../services/prompt-assist'
@@ -131,6 +130,7 @@ function KeyPrompt({ provider }: { provider: Provider }) {
 
 function useEstimate(provider: Provider | undefined, id: string | undefined, values: Record<string, unknown>, repeat: number) {
   const [estimate, setEstimate] = useState<Estimate | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const key = JSON.stringify([provider, id, values, repeat])
   useEffect(() => {
     if (!provider || !id) return
@@ -139,10 +139,14 @@ function useEstimate(provider: Provider | undefined, id: string | undefined, val
       generateApi
         .estimate(provider, id, values, repeat)
         .then((answer) => {
-          if (!cancelled) setEstimate(answer)
+          if (cancelled) return
+          setEstimate(answer)
+          setError(null)
         })
-        .catch(() => {
-          if (!cancelled) setEstimate(null)
+        .catch((reason: unknown) => {
+          if (cancelled) return
+          setEstimate(null)
+          setError(reason instanceof Error ? reason.message : String(reason))
         })
     }, 250)
     return () => {
@@ -150,13 +154,12 @@ function useEstimate(provider: Provider | undefined, id: string | undefined, val
       clearTimeout(timer)
     }
   }, [key]) // eslint-disable-line react-hooks/exhaustive-deps
-  return estimate
+  return { estimate, error }
 }
 
 export function GeneratePanel() {
   const { t } = useTranslation()
   const projectId = useProjectStore((state) => state.currentProject?.id ?? null)
-  useGenerateSync(projectId)
   const task = useGenerateStore((state) => state.task)
   const model = useGenerateStore((state) => state.modelByTask[state.task])
   const keys = useGenerateStore((state) => state.keys)
@@ -174,7 +177,7 @@ export function GeneratePanel() {
   const [improving, setImproving] = useState(false)
   const [improveError, setImproveError] = useState<string | null>(null)
   const [previousPrompt, setPreviousPrompt] = useState<{ key: string; text: string } | null>(null)
-  const estimate = useEstimate(model?.provider, model?.id, values, repeat)
+  const { estimate, error: estimateError } = useEstimate(model?.provider, model?.id, values, repeat)
 
   useEffect(() => {
     if (!model) return
@@ -401,6 +404,9 @@ export function GeneratePanel() {
           </p>
         )}
         {submitError && <p className="text-[11px] text-destructive">{submitError}</p>}
+        {estimateError && (
+          <p className="text-[10px] text-destructive">{t('generate.cost.failed', { reason: estimateError })}</p>
+        )}
       </div>
 
       {jobs.length > 0 && (

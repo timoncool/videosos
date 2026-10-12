@@ -7,6 +7,7 @@ import { WorkspaceGate } from '@/features/workspace-gate/workspace-gate'
 import { router } from '@/app/router'
 import { AgentBridgeHost } from '@/features/agent-bridge/components/agent-bridge-host'
 import { FirstRunDialog } from '@/features/first-run/first-run-dialog'
+import { GenerateSyncHost } from '@/features/generate/components/generate-sync-host'
 
 const LazyToaster = lazy(async () => {
   const { Toaster } = await import('@/components/ui/sonner')
@@ -72,6 +73,7 @@ export function App() {
         </WorkspaceGate>
         <AgentBridgeHost />
         <FirstRunDialog />
+        <GenerateSyncHost />
         <GlobalTooltip />
         {showToaster && (
           <Suspense fallback={null}>

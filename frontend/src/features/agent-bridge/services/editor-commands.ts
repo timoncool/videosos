@@ -108,13 +108,21 @@ export function registerEditorCommands(): void {
     if (!Array.isArray(args.ops) || args.ops.length === 0) throw bridgeError('missing', { command: 'timeline_edit', field: 'ops' })
     const project = openProject()
     setEditCanvas({ width: project.metadata?.width ?? 1920, height: project.metadata?.height ?? 1080, fps: fpsOf(project) })
+    let outcome
     try {
-      const results = applyEditOpsLive(args.ops as EditOp[])
-      await save(project.id)
-      return { applied: results.length, results, timeline: timeline() }
+      outcome = applyEditOpsLive(args.ops as EditOp[])
     } catch (problem) {
       throw failed('timeline_edit', problem)
     }
+    const applied = outcome.results.filter((result) => result.ok)
+    if (applied.length > 0) await save(project.id)
+    if (outcome.error) {
+      throw failed(
+        'timeline_edit',
+        `${outcome.error}. The ${applied.length} op(s) before it were applied and saved: ${JSON.stringify(applied)}`,
+      )
+    }
+    return { applied: applied.length, results: outcome.results, timeline: timeline() }
   })
 
   registerBridgeCommand('timeline_undo', async (args) => {
@@ -229,7 +237,9 @@ export function registerEditorCommands(): void {
     }
     if (fileName) job = { ...job, fileName: `${fileName}.${job.clientSettings.container}` }
     useRenderQueueStore.getState().enqueueJobs([job])
+    const deadline = Date.now() + 3_500_000
     for (;;) {
+      if (Date.now() > deadline) throw failed('export_video', 'the render did not finish within an hour')
       await new Promise((resolve) => setTimeout(resolve, 500))
       const current = useRenderQueueStore.getState().jobs.find((each) => each.id === job.id)
       if (!current) throw failed('export_video', 'the render job left the queue')

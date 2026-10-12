@@ -162,12 +162,14 @@ impl Jobs {
         result.unwrap_or_default()
     }
 
+    /// Reads, changes and writes the job under one hold of the database, so two updates never lose each other.
     fn update(&self, id: &str, change: impl FnOnce(&mut Job)) -> Option<Job> {
-        let mut job = self.get(id)?;
+        let db = self.db();
+        let mut job = db.query_row(&format!("SELECT {COLUMNS} FROM jobs WHERE id = ?1"), params![id], row_to_job).optional().ok().flatten()?;
         let before = job.updated;
         change(&mut job);
         job.updated = now_ms().max(before + 1);
-        let saved = self.db().execute(
+        let saved = db.execute(
             "UPDATE jobs SET status=?2, progress=?3, error=?4, estimate=?5, cost=?6, cost_source=?7, outputs=?8, imported=?9, updated=?10, handle=?11 WHERE id=?1",
             params![
                 id,
@@ -183,6 +185,7 @@ impl Jobs {
                 job.handle.as_ref().map(Value::to_string),
             ],
         );
+        drop(db);
         if let Err(error) = saved {
             tracing::error!("[ERROR] job {id} was not saved: {error}");
         }
@@ -261,10 +264,9 @@ impl Jobs {
     pub fn create(self: &Arc<Self>, mut request: CreateRequest, form: &ModelForm, model_name: String) -> Vec<Job> {
         // OpenRouter's defaults are this program's picks from the model's lists (its first voice), not the
         // provider's, so they are sent; schema defaults of fal and Runware are the provider's own.
-        // A size pair is this program's pick too (the schema lists pairs, not a default), and a required field
-        // left at its default must still be sent.
+        // A required field left at its default must still be sent.
         for field in &form.fields {
-            let ours = form.provider == Provider::Openrouter || matches!(field.kind, FieldKind::Size { .. }) || field.required;
+            let ours = form.provider == Provider::Openrouter || field.required;
             if let (true, Some(default)) = (ours, &field.default) {
                 request.values.entry(field.key.clone()).or_insert_with(|| default.clone());
             }
@@ -308,7 +310,15 @@ impl Jobs {
         created
     }
 
+    /// The job ended: it no longer needs to be remembered as cancelled.
+    fn forget_cancel(&self, id: &str) -> bool {
+        self.cancelled.lock().unwrap_or_else(|p| p.into_inner()).remove(id)
+    }
+
     fn fail(&self, id: &str, message: String) {
+        if self.forget_cancel(id) {
+            return;
+        }
         tracing::warn!("[ERROR] job {id}: {message}");
         let ended = self.update(id, |job| {
             job.status = "failed".into();
@@ -345,7 +355,7 @@ impl Jobs {
                 let task_uuid = uuid::Uuid::new_v4().to_string();
                 let task = runware::build_task(&form.id, &form, &values, &task_uuid);
                 let task = match self.catalog.runware_schema(&form.id) {
-                    Some(schema) => match runware::pick_valid(&schema, task) {
+                    Some(schema) => match runware::pick_valid(&schema, task, runware::default_size(&form).as_deref()) {
                         Ok(task) => task,
                         Err(error) => return self.fail(&id, error.to_string()),
                     },
@@ -505,10 +515,12 @@ impl Jobs {
                 Err(error) => return self.fail(id, t!("jobs-download-failed", reason = error)),
             }
         }
+        let was_cancelled = self.forget_cancel(id);
         let ended = self.update(id, |job| {
             job.status = "done".into();
             job.progress = Some(1.0);
             job.outputs = files;
+            job.error = was_cancelled.then(|| t!("jobs-finished-after-cancel"));
             match cost {
                 Some(cost) => {
                     job.cost = Some(cost);

@@ -267,33 +267,36 @@ pub fn build_task(model: &str, form: &ModelForm, values: &Map<String, Value>, ta
     task
 }
 
-/// The first variant of the task the schema accepts: as given, without the size (frame images set it),
-/// without the resolution. When none passes, the schema's own complaint about the first.
-pub fn pick_valid(schema: &Value, task: Map<String, Value>) -> Result<Map<String, Value>, ProviderError> {
+/// The size pair the form offers first, sent only when the task needs a size and the person chose none.
+pub fn default_size(form: &ModelForm) -> Option<String> {
+    form.fields.iter().find(|field| matches!(field.kind, FieldKind::Size { .. })).and_then(|field| field.default.as_ref()).and_then(Value::as_str).map(str::to_string)
+}
+
+/// The task as given when the schema accepts it; when it lacks the size the schema requires and the person chose
+/// none, the same task with the form's first size. Nothing the person chose is ever dropped: a combination the
+/// model refuses comes back as the schema's own complaint.
+pub fn pick_valid(schema: &Value, task: Map<String, Value>, fallback_size: Option<&str>) -> Result<Map<String, Value>, ProviderError> {
     let item = task_schema(schema)?.clone();
     let mut validator_schema = item;
     if let (Some(object), Some(components)) = (validator_schema.as_object_mut(), schema.get("components")) {
         object.insert("components".into(), components.clone());
     }
     let validator = jsonschema::validator_for(&validator_schema).map_err(|error| ProviderError::Refused(format!("the model's schema does not compile: {error}")))?;
-    let mut candidates = vec![task.clone()];
-    let mut without_size = task.clone();
-    without_size.remove("width");
-    without_size.remove("height");
-    candidates.push(without_size.clone());
-    let mut without_resolution = task.clone();
-    without_resolution.remove("resolution");
-    candidates.push(without_resolution);
-    let mut bare = without_size;
-    bare.remove("resolution");
-    candidates.push(bare);
-    for candidate in &candidates {
-        if validator.is_valid(&Value::Object(candidate.clone())) {
-            return Ok(candidate.clone());
+    let given = Value::Object(task.clone());
+    if validator.is_valid(&given) {
+        return Ok(task);
+    }
+    if !task.contains_key("width") {
+        if let Some((w, h)) = fallback_size.and_then(|size| size.split_once('x')).and_then(|(w, h)| Some((w.parse::<u64>().ok()?, h.parse::<u64>().ok()?))) {
+            let mut sized = task.clone();
+            sized.insert("width".into(), json!(w));
+            sized.insert("height".into(), json!(h));
+            if validator.is_valid(&Value::Object(sized.clone())) {
+                return Ok(sized);
+            }
         }
     }
-    let first = Value::Object(candidates[0].clone());
-    let problems: Vec<String> = validator.iter_errors(&first).take(3).map(|error| format!("{} at {}", error, error.instance_path())).collect();
+    let problems: Vec<String> = validator.iter_errors(&given).take(3).map(|error| format!("{} at {}", error, error.instance_path())).collect();
     Err(ProviderError::Refused(format!("the model does not accept these settings: {}", problems.join("; "))))
 }
 
@@ -451,16 +454,25 @@ mod tests {
         values.insert("size".into(), json!("848x480"));
         values.insert("duration".into(), json!(2));
         let task = build_task(&form.id, &form, &values, "3f0c2a7e-0000-4000-8000-000000000001");
-        let chosen = pick_valid(&schema, task).unwrap();
+        let chosen = pick_valid(&schema, task, default_size(&form).as_deref()).unwrap();
         assert_eq!(chosen["width"], 848);
         assert!(chosen.get("resolution").is_none());
+
+        values.remove("size");
+        let task = build_task(&form.id, &form, &values, "3f0c2a7e-0000-4000-8000-000000000003");
+        let chosen = pick_valid(&schema, task, default_size(&form).as_deref()).unwrap();
+        assert!(chosen.get("width").is_some(), "text-to-video gets the form's first size: {chosen:?}");
 
         values.insert("inputs.frameImages".into(), json!(["https://example.com/a.png"]));
         values.insert("resolution".into(), json!("480p"));
         let task = build_task(&form.id, &form, &values, "3f0c2a7e-0000-4000-8000-000000000002");
-        let chosen = pick_valid(&schema, task).unwrap();
+        let chosen = pick_valid(&schema, task, default_size(&form).as_deref()).unwrap();
         assert!(chosen.get("width").is_none(), "{chosen:?}");
         assert_eq!(chosen["resolution"], "480p");
+
+        values.insert("size".into(), json!("848x480"));
+        let task = build_task(&form.id, &form, &values, "3f0c2a7e-0000-4000-8000-000000000004");
+        assert!(pick_valid(&schema, task, default_size(&form).as_deref()).is_err(), "a size the model refuses with frames is reported, not dropped");
     }
 
     #[test]
