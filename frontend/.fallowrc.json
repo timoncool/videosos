@@ -1,0 +1,131 @@
+{
+  "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
+  "entry": [
+    "src/index.{ts,tsx,js,jsx}",
+    "src/main.{ts,tsx,js,jsx}",
+    "src/test/setup.ts",
+    "headless/probe.mjs",
+    "headless/smoke.mjs",
+    "headless/media-smoke.mjs"
+  ],
+  "ignorePatterns": [
+    // Static reachability cannot see URL-loaded assets such as /sw.js
+    // and /moss-tts/moss_tts.worker.js.
+    "public/**"
+  ],
+  "duplicates": {
+    // Hide pair-only clones; focus on widespread copy-paste
+    // worth refactoring. Lower to 2 to report every duplicate pair.
+    "minOccurrences": 3,
+    // Test setup often repeats scenario scaffolding intentionally; keep the
+    // duplicate-code ratchet focused on production code.
+    "ignore": ["**/*.test.ts", "**/*.test.tsx", "**/*.test.mjs"]
+    // Common additions (uncomment to enable):
+    // "ignore": [
+    //   "**/lib/**",          // for repos that publish transpiled output to lib/
+    //   "**/legacy/**",       // for repos with legacy-build artifacts
+    //   "**/__generated__/**", // Relay, GraphQL Code Generator
+    //   "**/generated/**"     // OpenAPI, Protobuf codegen
+    // ]
+  },
+  "health": {
+    // Health complexity is most useful on everyday product code. Exclude tests,
+    // local quality tooling, and the known render/preview orchestration modules
+    // that are covered by focused regression tests and tracked separately.
+    "ignore": [
+      "**/*.test.ts",
+      "**/*.test.tsx",
+      "**/*.test.mjs",
+      "scripts/check-fallow-*.mjs",
+      "scripts/headless-coverage.mjs",
+      "headless/test.mjs",
+      "src/runtime/composition-runtime/components/item-content.tsx",
+      "src/features/preview/components/video-preview.tsx",
+      "src/features/preview/components/color-scopes-view.tsx",
+      "src/features/preview/hooks/use-preview-renderer-controller.ts",
+      "src/features/preview/hooks/use-preview-render-pump-controller.ts",
+      "src/features/preview/hooks/use-throttled-frame.ts",
+      "src/features/preview/utils/render-pump-preseek.ts",
+      "src/features/editor/utils/color-grade-thumbnail-treatment.ts",
+      "src/features/editor/hooks/use-color-playhead-auto-select.ts",
+      "src/features/effects/components/panels/gpu-wheels-panel.tsx",
+      "src/features/effects/components/panels/gpu-curves-panel.tsx",
+      "src/features/timeline/components/timeline.tsx",
+      "src/features/timeline/services/reverse-conform-service.ts"
+    ]
+  },
+  "usedClassMembers": ["addEventListener", "removeEventListener"],
+  "rules": {},
+  "ignoreExports": [
+    {
+      "file": "src/features/timeline/constants.ts",
+      "exports": ["*"]
+    },
+    {
+      "file": "src/shared/timeline/defaults.ts",
+      "exports": ["*"]
+    },
+    {
+      "file": "src/runtime/renderer/client-renderer.ts",
+      "exports": ["*"]
+    },
+    {
+      "file": "src/types/export.ts",
+      "exports": ["*"]
+    },
+    {
+      "file": "src/features/timeline/stores/new-track-zone-preview-store.ts",
+      "exports": ["*"]
+    },
+    {
+      "file": "src/features/timeline/utils/new-track-zone-media.ts",
+      "exports": ["*"]
+    },
+    {
+      "file": "src/features/timeline/deps/media-library-resolver.ts",
+      "exports": ["*"]
+    },
+    {
+      "file": "src/features/timeline/utils/generated-layer-items.ts",
+      "exports": ["*"]
+    },
+    {
+      "file": "src/features/keyframes/utils/animated-crop-resolver.ts",
+      "exports": ["*"]
+    },
+    {
+      "file": "src/shared/utils/media-crop.ts",
+      "exports": ["*"]
+    },
+    {
+      "file": "src/features/media-library/deps/timeline-actions.ts",
+      "exports": ["*"]
+    },
+    {
+      "file": "src/features/media-library/deps/timeline-stores.ts",
+      "exports": ["*"]
+    },
+    {
+      "file": "src/features/preview/deps/timeline-source-edit.ts",
+      "exports": ["*"]
+    },
+    {
+      "file": "src/features/preview/deps/timeline-utils.ts",
+      "exports": ["*"]
+    },
+    {
+      "file": "src/features/editor/deps/timeline-cache.ts",
+      "exports": ["*"]
+    },
+    {
+      // Consumed via a dynamic import('@/infrastructure/storage') in the render
+      // queue runner, which static reachability cannot follow.
+      "file": "src/infrastructure/storage/index.ts",
+      "exports": ["saveExportFile"]
+    },
+    {
+      "file": "src/features/editor/deps/timeline-store.ts",
+      "exports": ["*"]
+    }
+  ]
+}

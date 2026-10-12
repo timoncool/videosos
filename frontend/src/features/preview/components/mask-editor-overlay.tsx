@@ -1,0 +1,1888 @@
+/**
+ * Mask Editor Overlay
+ *
+ * Interactive bezier mask path editor rendered as an overlay on top
+ * of the preview canvas. Two modes:
+ *
+ * 1. **Edit mode** — drag existing vertices/handles, add/remove vertices
+ * 2. **Pen mode** — click to place vertices, click+drag for bezier handles,
+ *    click first vertex to close the path
+ *
+ * Positioned as a sibling to the player container, using the same
+ * coordinate transform system as the transform gizmo.
+ */
+
+import { useCallback, useEffect, memo, useRef, useState } from 'react'
+import { toast } from 'sonner'
+import { useMaskEditorStore } from '../stores/mask-editor-store'
+import { useGizmoStore } from '../stores/gizmo-store'
+import {
+  addItem,
+  commitMaskEdit,
+  setTracks,
+  useItemsStore,
+  useKeyframesStore,
+  useTimelineSettingsStore,
+  useTimelineViewportStore,
+  useTransitionsStore,
+} from '@/features/preview/deps/timeline-store'
+import {
+  screenToCanvas,
+  getEffectiveScale,
+  transformToScreenBounds,
+} from '../utils/coordinate-transform'
+import { insertVertexBetween, removeVertex } from '../utils/mask-path-utils'
+import { getPathBounds, fitShapePathToBounds } from '../utils/path-fit'
+import { useSelectionStore } from '@/shared/state/selection'
+import { usePlaybackStore } from '@/shared/state/playback'
+import type { CoordinateParams, Transform } from '../types/gizmo'
+import type { MaskVertex } from '@/types/masks'
+import type { ShapeItem, TimelineTrack } from '@/types/timeline'
+import type { TransformProperties } from '@/types/transform'
+import {
+  drawMaskSegment,
+  drawMaskSelectionMarquee,
+  drawMaskVertexWithHandles,
+} from './mask-editor-drawing'
+import {
+  hitTestMaskVertices,
+  hitTestPenVertices,
+  type MaskHit,
+  type PenHit,
+} from './mask-editor-hit-testing'
+import {
+  MASK_GEOMETRY_TRANSFORM_PROPS,
+  cloneVertices,
+  cubicPointAt,
+  drawSelectedVertexRing,
+  getNextTrackName,
+  toOverlayTransform,
+  transformChanged,
+} from './mask-editor-overlay-utils'
+import {
+  planPenPathRender,
+  type OverlayPoint,
+  type PenClosingPreview,
+  type PenCursorHint,
+  type PenHandleMark,
+  type PenRubberBand,
+  type PenSegmentGroup,
+  type PenVertexMark,
+} from './mask-editor-pen-render-plan'
+import {
+  createPenHitInteraction,
+  createVertexHandleDragState,
+  dragVerticesByCanvasDelta,
+  resolvePenDragStart,
+  resolvePenHitHandle,
+  resolvePenPointerDownDragStart,
+  type EditDragState,
+  type PenDragStart,
+  type PenInteraction,
+} from './mask-editor-pointer-drag'
+import {
+  convertVerticesAtIndices,
+  removeVerticesAtIndices,
+  resolveSelectedVertexTargets,
+  resolveSelectionAfterVertexRemoval,
+  shouldHandleConvertVertexRequest,
+} from './mask-editor-vertex-selection'
+import {
+  findBestCanvasDropPlacement,
+  createClassicTrack,
+  getTrackKind,
+  resolveEffectiveTrackStates,
+} from '../deps/timeline-utils'
+import {
+  getAutoKeyframeOperation,
+  isFrameInTransitionRegion,
+  resolveAnimatedShapeItem,
+  type AutoKeyframeOperation,
+} from '../deps/keyframes'
+import { buildPathGeometryPersistence as planPathGeometryPersistence } from '../utils/path-geometry-persistence'
+
+/** Radius of vertex control points in screen pixels */
+const VERTEX_RADIUS = 5
+/** Radius of bezier handle control points in screen pixels */
+const HANDLE_RADIUS = 4
+/** Hit testing radius (slightly larger than visual for easier clicking) */
+const HIT_RADIUS = 8
+/** Distance threshold to close pen path by clicking first vertex */
+const CLOSE_RADIUS = 12
+/** Distance threshold before click turns into a drag */
+const DRAG_THRESHOLD = 3
+/** Larger threshold before a planted pen point turns into a bezier-handle drag */
+const PEN_BEZIER_DRAG_THRESHOLD = 10
+/** Segment sampling density for interior hit testing on curved paths */
+const CURVE_HIT_TEST_STEPS = 16
+const DEFAULT_PATH_SHAPE_DURATION_SECONDS = 5
+
+/** Paint the pen cursor dot shown before the first point is placed. */
+function drawPenCursorHint(ctx: CanvasRenderingContext2D, hint: PenCursorHint | null): void {
+  if (!hint) return
+  ctx.beginPath()
+  ctx.arc(hint.position.x, hint.position.y, hint.radius, 0, Math.PI * 2)
+  ctx.fillStyle = hint.fill
+  ctx.fill()
+}
+
+/** Paint the segments the pen has already placed. */
+function drawPenSegments(
+  ctx: CanvasRenderingContext2D,
+  group: PenSegmentGroup | null,
+  drawSegment: (ctx: CanvasRenderingContext2D, curr: MaskVertex, next: MaskVertex) => void,
+): void {
+  if (!group) return
+  ctx.beginPath()
+  ctx.moveTo(group.moveTo.x, group.moveTo.y)
+  for (const pair of group.pairs) {
+    drawSegment(ctx, pair.from, pair.to)
+  }
+  ctx.strokeStyle = group.stroke
+  ctx.lineWidth = group.lineWidth
+  ctx.stroke()
+}
+
+/** Paint the dashed preview of the segment that would close the path. */
+function drawPenClosingPreview(
+  ctx: CanvasRenderingContext2D,
+  preview: PenClosingPreview | null,
+  drawSegment: (ctx: CanvasRenderingContext2D, curr: MaskVertex, next: MaskVertex) => void,
+): void {
+  if (!preview) return
+  ctx.beginPath()
+  ctx.moveTo(preview.moveTo.x, preview.moveTo.y)
+  drawSegment(ctx, preview.from, preview.to)
+  ctx.strokeStyle = preview.stroke
+  ctx.lineWidth = preview.lineWidth
+  ctx.setLineDash(preview.dash)
+  ctx.stroke()
+  ctx.setLineDash([])
+}
+
+/** Paint the dashed rubber band from the last placed point to the cursor. */
+function drawPenRubberBand(ctx: CanvasRenderingContext2D, band: PenRubberBand | null): void {
+  if (!band) return
+  ctx.beginPath()
+  ctx.moveTo(band.moveTo.x, band.moveTo.y)
+  if (band.control) {
+    ctx.quadraticCurveTo(band.control.x, band.control.y, band.to.x, band.to.y)
+  } else {
+    ctx.lineTo(band.to.x, band.to.y)
+  }
+  ctx.strokeStyle = band.stroke
+  ctx.lineWidth = band.lineWidth
+  ctx.setLineDash(band.dash)
+  ctx.stroke()
+  ctx.setLineDash([])
+}
+
+/** Paint one bezier handle: the stem from its anchor, then the knob. */
+function drawPenHandleMark(
+  ctx: CanvasRenderingContext2D,
+  anchor: OverlayPoint,
+  mark: PenHandleMark,
+): void {
+  ctx.beginPath()
+  ctx.moveTo(anchor.x, anchor.y)
+  ctx.lineTo(mark.stemEnd.x, mark.stemEnd.y)
+  ctx.strokeStyle = 'rgba(34, 211, 238, 0.5)'
+  ctx.lineWidth = 1
+  ctx.stroke()
+
+  ctx.beginPath()
+  ctx.arc(mark.stemEnd.x, mark.stemEnd.y, HANDLE_RADIUS, 0, Math.PI * 2)
+  ctx.fillStyle = mark.fill
+  ctx.fill()
+  ctx.strokeStyle = '#fff'
+  ctx.lineWidth = 1
+  ctx.stroke()
+}
+
+/** Paint every placed pen point: its handles, selection ring, then the anchor. */
+function drawPenVertexMarks(ctx: CanvasRenderingContext2D, marks: readonly PenVertexMark[]): void {
+  for (const mark of marks) {
+    if (mark.outHandle) drawPenHandleMark(ctx, mark.position, mark.outHandle)
+    if (mark.inHandle) drawPenHandleMark(ctx, mark.position, mark.inHandle)
+    if (mark.drawSelectionRing) drawSelectedVertexRing(ctx, mark.position.x, mark.position.y)
+    ctx.beginPath()
+    ctx.arc(mark.position.x, mark.position.y, VERTEX_RADIUS, 0, Math.PI * 2)
+    ctx.fillStyle = mark.fill
+    ctx.fill()
+    ctx.strokeStyle = mark.stroke
+    ctx.lineWidth = mark.lineWidth
+    ctx.stroke()
+  }
+}
+
+type CommittedEditSnapshot = {
+  vertices: MaskVertex[]
+  transform: Transform
+}
+
+type SelectionMarquee = {
+  left: number
+  top: number
+  width: number
+  height: number
+}
+
+interface MaskEditorOverlayProps {
+  coordParams: CoordinateParams
+  playerSize: { width: number; height: number }
+  itemTransform: Transform
+}
+
+export const MaskEditorOverlay = memo(function MaskEditorOverlay({
+  coordParams,
+  playerSize,
+  itemTransform,
+}: MaskEditorOverlayProps) {
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const [hoveredShapeBody, setHoveredShapeBody] = useState(false)
+  const [hoveredSegmentIndex, setHoveredSegmentIndex] = useState<number | null>(null)
+  const [committedEditSnapshot, setCommittedEditSnapshot] = useState<CommittedEditSnapshot | null>(
+    null,
+  )
+  const [selectionMarquee, setSelectionMarquee] = useState<SelectionMarquee | null>(null)
+
+  // Edit mode state
+  const isEditing = useMaskEditorStore((s) => s.isEditing)
+  const editingItemId = useMaskEditorStore((s) => s.editingItemId)
+  const editingPathClosed = useItemsStore(
+    useCallback(
+      (state) => {
+        const item = editingItemId ? state.itemById[editingItemId] : undefined
+        return item?.type === 'shape' && item.shapeType === 'path'
+          ? item.isMask || (item.pathClosed ?? true)
+          : true
+      },
+      [editingItemId],
+    ),
+  )
+  const draggingVertexIndex = useMaskEditorStore((s) => s.draggingVertexIndex)
+  const draggingHandle = useMaskEditorStore((s) => s.draggingHandle)
+  const previewVertices = useMaskEditorStore((s) => s.previewVertices)
+  const selectedVertexIndices = useMaskEditorStore((s) => s.selectedVertexIndices)
+  const selectedVertexIndex = useMaskEditorStore((s) => s.selectedVertexIndex)
+  const hoveredVertexIndex = useMaskEditorStore((s) => s.hoveredVertexIndex)
+  const hoveredHandle = useMaskEditorStore((s) => s.hoveredHandle)
+
+  // Pen mode state
+  const penMode = useMaskEditorStore((s) => s.penMode)
+  const penVertices = useMaskEditorStore((s) => s.penVertices)
+  const penDraggingHandle = useMaskEditorStore((s) => s.penDraggingHandle)
+  const penCursorPos = useMaskEditorStore((s) => s.penCursorPos)
+  const finishPenRequestVersion = useMaskEditorStore((s) => s.finishPenRequestVersion)
+  const cancelPenRequestVersion = useMaskEditorStore((s) => s.cancelPenRequestVersion)
+  const convertSelectedVertexRequestVersion = useMaskEditorStore(
+    (s) => s.convertSelectedVertexRequestVersion,
+  )
+  const convertSelectedVertexRequestMode = useMaskEditorStore(
+    (s) => s.convertSelectedVertexRequestMode,
+  )
+  // Actions
+  const selectVertices = useMaskEditorStore((s) => s.selectVertices)
+  const selectVertex = useMaskEditorStore((s) => s.selectVertex)
+  const startVertexDrag = useMaskEditorStore((s) => s.startVertexDrag)
+  const startHandleDrag = useMaskEditorStore((s) => s.startHandleDrag)
+  const updatePreview = useMaskEditorStore((s) => s.updatePreview)
+  const endDrag = useMaskEditorStore((s) => s.endDrag)
+  const setHover = useMaskEditorStore((s) => s.setHover)
+  const stopEditing = useMaskEditorStore((s) => s.stopEditing)
+  const addPenVertex = useMaskEditorStore((s) => s.addPenVertex)
+  const setPenVertices = useMaskEditorStore((s) => s.setPenVertices)
+  const updatePenLastHandle = useMaskEditorStore((s) => s.updatePenLastHandle)
+  const setPenDragging = useMaskEditorStore((s) => s.setPenDragging)
+  const setPenCursorPos = useMaskEditorStore((s) => s.setPenCursorPos)
+  const cancelPenMode = useMaskEditorStore((s) => s.cancelPenMode)
+  const startTranslate = useGizmoStore((s) => s.startTranslate)
+  const updateInteraction = useGizmoStore((s) => s.updateInteraction)
+  const endInteraction = useGizmoStore((s) => s.endInteraction)
+  const clearInteraction = useGizmoStore((s) => s.clearInteraction)
+  const effectiveItemTransform = committedEditSnapshot?.transform ?? itemTransform
+
+  const buildPathGeometryPersistence = useCallback(
+    (item: ShapeItem, nextVertices: MaskVertex[], currentFrame: number) => {
+      const result = planPathGeometryPersistence({
+        item,
+        itemKeyframes: useKeyframesStore.getState().keyframesByItemId[item.id],
+        nextVertices,
+        currentFrame,
+      })
+      if (result.blocked === 'topology') {
+        toast.error('Path topology cannot change while Path Geometry has keyframes.')
+      } else if (result.blocked === 'frame') {
+        toast.error('Path Geometry keyframes cannot be added at this frame.')
+      }
+      return result
+    },
+    [],
+  )
+
+  // ============================================================
+  // Shared coordinate helpers
+  // ============================================================
+
+  const getItemScreenBounds = useCallback(() => {
+    return transformToScreenBounds(effectiveItemTransform, coordParams)
+  }, [effectiveItemTransform, coordParams])
+
+  /**
+   * coordParams.containerRect is measured by the preview view-model and only
+   * refreshes on player resize/scroll — layout shifts that move the player
+   * without resizing it (e.g. the pen toolbar mounting below the preview)
+   * leave it stale. The overlay canvas is exactly aligned with the player
+   * container, so its live rect is an exact substitute.
+   */
+  const getLiveCoordParams = useCallback((): CoordinateParams => {
+    const rect = canvasRef.current?.getBoundingClientRect()
+    return rect ? { ...coordParams, containerRect: rect } : coordParams
+  }, [coordParams])
+
+  /** Convert normalized vertex position to screen (overlay-local) coords */
+  const normToScreen = useCallback(
+    (pos: [number, number]): [number, number] => {
+      const bounds = getItemScreenBounds()
+      return [bounds.left + pos[0] * bounds.width, bounds.top + pos[1] * bounds.height]
+    },
+    [getItemScreenBounds],
+  )
+
+  /** Convert vertex to screen coords */
+  const vertexToScreen = useCallback(
+    (v: MaskVertex): [number, number] => normToScreen(v.position),
+    [normToScreen],
+  )
+
+  /** Convert handle to screen coords */
+  const handleToScreen = useCallback(
+    (v: MaskVertex, type: 'in' | 'out'): [number, number] => {
+      const h = type === 'in' ? v.inHandle : v.outHandle
+      return normToScreen([v.position[0] + h[0], v.position[1] + h[1]])
+    },
+    [normToScreen],
+  )
+
+  /** Convert screen position to normalized path coords */
+  const screenToNorm = useCallback(
+    (sx: number, sy: number): [number, number] => {
+      const canvasPos = screenToCanvas(sx, sy, getLiveCoordParams())
+      const bounds = getItemScreenBounds()
+      const scale = getEffectiveScale(coordParams)
+      const itemLeft = bounds.left / scale
+      const itemTop = bounds.top / scale
+      const itemWidth = bounds.width / scale
+      const itemHeight = bounds.height / scale
+      return [(canvasPos.x - itemLeft) / itemWidth, (canvasPos.y - itemTop) / itemHeight]
+    },
+    [coordParams, getItemScreenBounds, getLiveCoordParams],
+  )
+
+  // ============================================================
+  // Edit mode: get existing path vertices
+  // ============================================================
+
+  const getVertices = useCallback((): MaskVertex[] | null => {
+    if (committedEditSnapshot) return committedEditSnapshot.vertices
+    if (previewVertices) return previewVertices
+    if (!editingItemId) return null
+    const items = useItemsStore.getState().items
+    const item = items.find((i) => i.id === editingItemId)
+    if (item?.type === 'shape' && item.shapeType === 'path') {
+      const currentFrame = usePlaybackStore.getState().currentFrame
+      const itemKeyframes = useKeyframesStore.getState().keyframesByItemId[item.id]
+      return (
+        resolveAnimatedShapeItem(item, itemKeyframes, currentFrame - item.from).pathVertices ??
+        null
+      )
+    }
+    return null
+  }, [committedEditSnapshot, editingItemId, previewVertices])
+
+  const getMarqueeBounds = useCallback(
+    (startScreenPos: [number, number], currentScreenPos: [number, number]): SelectionMarquee => ({
+      left: Math.min(startScreenPos[0], currentScreenPos[0]),
+      top: Math.min(startScreenPos[1], currentScreenPos[1]),
+      width: Math.abs(currentScreenPos[0] - startScreenPos[0]),
+      height: Math.abs(currentScreenPos[1] - startScreenPos[1]),
+    }),
+    [],
+  )
+
+  const getVerticesInMarquee = useCallback(
+    (marquee: SelectionMarquee): number[] => {
+      const vertices = getVertices()
+      if (!vertices) return []
+
+      const right = marquee.left + marquee.width
+      const bottom = marquee.top + marquee.height
+      const selected: number[] = []
+
+      for (let i = 0; i < vertices.length; i++) {
+        const [vertexX, vertexY] = vertexToScreen(vertices[i]!)
+        if (
+          vertexX >= marquee.left &&
+          vertexX <= right &&
+          vertexY >= marquee.top &&
+          vertexY <= bottom
+        ) {
+          selected.push(i)
+        }
+      }
+
+      return selected
+    },
+    [getVertices, vertexToScreen],
+  )
+
+  // ============================================================
+  // Drawing
+  // ============================================================
+
+  /** Draw a single bezier/line segment between two vertices */
+  const drawSegment = useCallback(
+    (ctx: CanvasRenderingContext2D, curr: MaskVertex, next: MaskVertex) => {
+      drawMaskSegment(ctx, curr, next, vertexToScreen, handleToScreen)
+    },
+    [vertexToScreen, handleToScreen],
+  )
+
+  /** Draw a single vertex with its handles */
+  const drawVertexWithHandles = useCallback(
+    (ctx: CanvasRenderingContext2D, v: MaskVertex, i: number) => {
+      drawMaskVertexWithHandles({
+        ctx,
+        vertex: v,
+        index: i,
+        vertexRadius: VERTEX_RADIUS,
+        handleRadius: HANDLE_RADIUS,
+        vertexToScreen,
+        handleToScreen,
+        draggingVertexIndex,
+        draggingHandle,
+        selectedVertexIndices,
+        hoveredVertexIndex,
+        hoveredHandle,
+      })
+    },
+    [
+      vertexToScreen,
+      handleToScreen,
+      draggingVertexIndex,
+      draggingHandle,
+      selectedVertexIndices,
+      hoveredVertexIndex,
+      hoveredHandle,
+    ],
+  )
+
+  /** Draw closed path with handles (edit mode) */
+  const drawEditPath = useCallback(
+    (ctx: CanvasRenderingContext2D) => {
+      const vertices = getVertices()
+      if (!vertices || vertices.length < 2) return
+
+      // Draw closed path
+      ctx.beginPath()
+      const [sx, sy] = vertexToScreen(vertices[0]!)
+      ctx.moveTo(sx, sy)
+
+      const segmentCount = editingPathClosed ? vertices.length : vertices.length - 1
+      for (let i = 0; i < segmentCount; i++) {
+        const curr = vertices[i]!
+        const next = vertices[(i + 1) % vertices.length]!
+        drawSegment(ctx, curr, next)
+      }
+
+      if (editingPathClosed) ctx.closePath()
+      ctx.strokeStyle = '#22d3ee'
+      ctx.lineWidth = 1.5
+      ctx.stroke()
+      if (editingPathClosed) {
+        ctx.fillStyle = 'rgba(34, 211, 238, 0.08)'
+        ctx.fill()
+      }
+
+      if (hoveredSegmentIndex !== null) {
+        const curr = vertices[hoveredSegmentIndex]
+        const next = vertices[(hoveredSegmentIndex + 1) % vertices.length]
+        if (curr && next) {
+          ctx.beginPath()
+          const [highlightStartX, highlightStartY] = vertexToScreen(curr)
+          const [highlightEndX, highlightEndY] = vertexToScreen(next)
+          ctx.moveTo(highlightStartX, highlightStartY)
+          drawSegment(ctx, curr, next)
+          ctx.strokeStyle = '#67e8f9'
+          ctx.lineWidth = 3
+          ctx.stroke()
+
+          const isStraight =
+            curr.outHandle[0] === 0 &&
+            curr.outHandle[1] === 0 &&
+            next.inHandle[0] === 0 &&
+            next.inHandle[1] === 0
+          const [insertX, insertY] = isStraight
+            ? [(highlightStartX + highlightEndX) / 2, (highlightStartY + highlightEndY) / 2]
+            : (() => {
+                const [cp1x, cp1y] = handleToScreen(curr, 'out')
+                const [cp2x, cp2y] = handleToScreen(next, 'in')
+                return [
+                  cubicPointAt(highlightStartX, cp1x, cp2x, highlightEndX, 0.5),
+                  cubicPointAt(highlightStartY, cp1y, cp2y, highlightEndY, 0.5),
+                ] as const
+              })()
+
+          ctx.beginPath()
+          ctx.arc(insertX, insertY, 4, 0, Math.PI * 2)
+          ctx.fillStyle = '#ffffff'
+          ctx.fill()
+          ctx.strokeStyle = '#22d3ee'
+          ctx.lineWidth = 1.5
+          ctx.stroke()
+        }
+      }
+
+      // Draw handles and vertices
+      for (let i = 0; i < vertices.length; i++) {
+        drawVertexWithHandles(ctx, vertices[i]!, i)
+      }
+    },
+    [
+      drawSegment,
+      drawVertexWithHandles,
+      getVertices,
+      handleToScreen,
+      hoveredSegmentIndex,
+      vertexToScreen,
+      editingPathClosed,
+    ],
+  )
+
+  const drawSelectionMarquee = useCallback(
+    (ctx: CanvasRenderingContext2D) => {
+      drawMaskSelectionMarquee(ctx, selectionMarquee)
+    },
+    [selectionMarquee],
+  )
+
+  /**
+   * Draw open pen path with rubber-band line.
+   *
+   * The geometry and per-point visuals come from `planPenPathRender`; this
+   * callback only replays the plan as 2D-context calls, in the same order the
+   * pen path has always been painted.
+   */
+  const drawPenPath = useCallback(
+    (ctx: CanvasRenderingContext2D) => {
+      const plan = planPenPathRender({
+        bounds: getItemScreenBounds(),
+        vertices: penVertices,
+        cursorPos: penCursorPos,
+        penDraggingHandle,
+        draggingVertexIndex,
+        draggingHandle,
+        selectedVertexIndices,
+        hoveredVertexIndex,
+        hoveredHandle,
+        closeRadius: CLOSE_RADIUS,
+      })
+
+      drawPenCursorHint(ctx, plan.cursorHint)
+      drawPenSegments(ctx, plan.segments, drawSegment)
+      drawPenClosingPreview(ctx, plan.closingPreview, drawSegment)
+      drawPenRubberBand(ctx, plan.rubberBand)
+      drawPenVertexMarks(ctx, plan.vertexMarks)
+    },
+    [
+      drawSegment,
+      getItemScreenBounds,
+      penVertices,
+      penCursorPos,
+      penDraggingHandle,
+      draggingVertexIndex,
+      draggingHandle,
+      selectedVertexIndices,
+      hoveredVertexIndex,
+      hoveredHandle,
+    ],
+  )
+
+  const draw = useCallback(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    const dpr = window.devicePixelRatio || 1
+    canvas.width = playerSize.width * dpr
+    canvas.height = playerSize.height * dpr
+    ctx.scale(dpr, dpr)
+    ctx.clearRect(0, 0, playerSize.width, playerSize.height)
+
+    if (penMode) {
+      drawPenPath(ctx)
+    } else {
+      drawEditPath(ctx)
+      drawSelectionMarquee(ctx)
+    }
+  }, [drawEditPath, drawPenPath, drawSelectionMarquee, penMode, playerSize])
+
+  // Redraw on state changes
+  useEffect(() => {
+    draw()
+  }, [draw])
+
+  useEffect(() => {
+    setHoveredShapeBody(false)
+    setHoveredSegmentIndex(null)
+    setCommittedEditSnapshot(null)
+    setSelectionMarquee(null)
+    selectVertex(null)
+  }, [editingItemId, penMode, selectVertex])
+
+  // ============================================================
+  // Edit mode: hit testing
+  // ============================================================
+
+  const hitTest = useCallback(
+    (screenX: number, screenY: number): MaskHit | null => {
+      const vertices = getVertices()
+      if (!vertices) return null
+      return hitTestMaskVertices({
+        vertices,
+        screenX,
+        screenY,
+        hitRadius: HIT_RADIUS,
+        curveHitTestSteps: CURVE_HIT_TEST_STEPS,
+        vertexToScreen,
+        handleToScreen,
+        closed: editingPathClosed,
+      })
+    },
+    [editingPathClosed, getVertices, vertexToScreen, handleToScreen],
+  )
+
+  const hitTestPen = useCallback(
+    (screenX: number, screenY: number): PenHit | null => {
+      return hitTestPenVertices({
+        vertices: penVertices,
+        screenX,
+        screenY,
+        hitRadius: HIT_RADIUS,
+        vertexToScreen,
+        handleToScreen,
+      })
+    },
+    [penVertices, vertexToScreen, handleToScreen],
+  )
+
+  const hitTestPenEvent = useCallback(
+    (event: Pick<React.MouseEvent | React.PointerEvent, 'clientX' | 'clientY'>): PenHit | null => {
+      const rect = canvasRef.current?.getBoundingClientRect()
+      if (!rect) return null
+      return hitTestPen(event.clientX - rect.left, event.clientY - rect.top)
+    },
+    [hitTestPen],
+  )
+
+  const hitTestEditEvent = useCallback(
+    (event: Pick<React.MouseEvent | React.PointerEvent, 'clientX' | 'clientY'>): MaskHit | null => {
+      const rect = canvasRef.current?.getBoundingClientRect()
+      if (!rect) return null
+      return hitTest(event.clientX - rect.left, event.clientY - rect.top)
+    },
+    [hitTest],
+  )
+
+  // ============================================================
+  // Edit mode: drag state
+  // ============================================================
+
+  const dragStateRef = useRef<EditDragState | null>(null)
+
+  // ============================================================
+  // Pen mode: mouse handlers
+  // ============================================================
+
+  const penInteractionRef = useRef<PenInteraction | null>(null)
+  const closePenPathRef = useRef<(() => void) | null>(null)
+  const resetPenInteraction = useCallback(() => {
+    penInteractionRef.current = null
+    setPenDragging(false)
+    endDrag()
+    setHover(null)
+  }, [endDrag, setHover, setPenDragging])
+
+  const buildPenDragVertices = useCallback(
+    (
+      interaction: Extract<PenInteraction, { type: 'close-or-drag' | 'vertex' | 'handle' }>,
+      clientX: number,
+      clientY: number,
+      altKey: boolean,
+    ) => {
+      const moveCanvas = screenToCanvas(clientX, clientY, getLiveCoordParams())
+      const bounds = getItemScreenBounds()
+      const scale = getEffectiveScale(coordParams)
+      return dragVerticesByCanvasDelta({
+        startVertices: interaction.startVertices,
+        vertexIndex: interaction.vertexIndex,
+        handleType: interaction.handleType,
+        dx: moveCanvas.x - interaction.startCanvasPos[0],
+        dy: moveCanvas.y - interaction.startCanvasPos[1],
+        itemWidth: bounds.width / scale,
+        itemHeight: bounds.height / scale,
+        breakTangents: altKey,
+        smoothTangentOnDrag: interaction.type === 'close-or-drag',
+      })
+    },
+    [coordParams, getItemScreenBounds, getLiveCoordParams],
+  )
+
+  const startPenDrag = useCallback(
+    (dragStart: PenDragStart | null) => {
+      if (!dragStart) return
+
+      if (dragStart.kind === 'vertex') {
+        startVertexDrag(dragStart.index)
+      } else {
+        startHandleDrag(dragStart.index, dragStart.handleType)
+      }
+    },
+    [startHandleDrag, startVertexDrag],
+  )
+
+  const handlePenPointerDown = useCallback(
+    (e: React.PointerEvent) => {
+      e.stopPropagation()
+      e.preventDefault()
+
+      const norm = screenToNorm(e.clientX, e.clientY)
+      setPenCursorPos(norm)
+
+      const hit = hitTestPenEvent(e)
+      const canvasPos = screenToCanvas(e.clientX, e.clientY, getLiveCoordParams())
+
+      if (hit) {
+        penInteractionRef.current = createPenHitInteraction({
+          hit,
+          screenPos: [e.clientX, e.clientY],
+          canvasPos: [canvasPos.x, canvasPos.y],
+          vertices: penVertices,
+        })
+        setPenDragging(true)
+        setHover(hit.index, resolvePenHitHandle(hit))
+        startPenDrag(resolvePenPointerDownDragStart(hit, penVertices.length))
+        canvasRef.current?.setPointerCapture(e.pointerId)
+        return
+      }
+
+      const newVertex: MaskVertex = {
+        position: norm,
+        inHandle: [0, 0],
+        outHandle: [0, 0],
+        tangentMode: 'corner',
+      }
+      addPenVertex(newVertex)
+      setPenDragging(true)
+      setHover(penVertices.length, null)
+      penInteractionRef.current = {
+        type: 'create',
+        vertexIndex: penVertices.length,
+        startScreenPos: [e.clientX, e.clientY],
+      }
+      canvasRef.current?.setPointerCapture(e.pointerId)
+    },
+    [
+      penVertices,
+      screenToNorm,
+      setPenCursorPos,
+      hitTestPenEvent,
+      getLiveCoordParams,
+      setPenDragging,
+      setHover,
+      startPenDrag,
+      addPenVertex,
+    ],
+  )
+
+  /** A pen point planted by the last click turns into a bezier once dragged far enough. */
+  const extendPenLastHandle = useCallback(
+    (norm: [number, number], vertexIndex: number) => {
+      const lastVerts = useMaskEditorStore.getState().penVertices
+      const last = lastVerts[lastVerts.length - 1]
+      if (!last) return
+
+      startHandleDrag(vertexIndex, 'out')
+      updatePenLastHandle([norm[0] - last.position[0], norm[1] - last.position[1]])
+    },
+    [startHandleDrag, updatePenLastHandle],
+  )
+
+  const updatePenDragInteraction = useCallback(
+    (interaction: PenInteraction, e: React.PointerEvent, norm: [number, number]) => {
+      const dist = Math.hypot(
+        e.clientX - interaction.startScreenPos[0],
+        e.clientY - interaction.startScreenPos[1],
+      )
+
+      if (interaction.type === 'create') {
+        if (dist >= PEN_BEZIER_DRAG_THRESHOLD) {
+          extendPenLastHandle(norm, interaction.vertexIndex)
+        }
+        return
+      }
+
+      const interactionDragThreshold =
+        interaction.type === 'close-or-drag' ? PEN_BEZIER_DRAG_THRESHOLD : DRAG_THRESHOLD
+
+      if (dist < interactionDragThreshold && !interaction.hasMoved) {
+        return
+      }
+
+      if (!interaction.hasMoved) {
+        interaction.hasMoved = true
+        startPenDrag(resolvePenDragStart(interaction))
+      }
+
+      setPenVertices(buildPenDragVertices(interaction, e.clientX, e.clientY, e.altKey))
+    },
+    [buildPenDragVertices, extendPenLastHandle, setPenVertices, startPenDrag],
+  )
+
+  const handlePenPointerMove = useCallback(
+    (e: React.PointerEvent) => {
+      const norm = screenToNorm(e.clientX, e.clientY)
+      setPenCursorPos(norm)
+
+      const interaction = penInteractionRef.current
+      if (interaction) {
+        updatePenDragInteraction(interaction, e, norm)
+        return
+      }
+
+      const hit = hitTestPenEvent(e)
+      if (!hit) {
+        setHover(null)
+      } else if (hit.type === 'vertex') {
+        setHover(hit.index, null)
+      } else {
+        setHover(hit.index, hit.type === 'inHandle' ? 'in' : 'out')
+      }
+    },
+    [screenToNorm, setPenCursorPos, updatePenDragInteraction, hitTestPenEvent, setHover],
+  )
+
+  const handlePenPointerUp = useCallback(
+    (e: React.PointerEvent) => {
+      const interaction = penInteractionRef.current
+      if (!interaction) return
+      e.stopPropagation()
+      e.preventDefault()
+      canvasRef.current?.releasePointerCapture(e.pointerId)
+      penInteractionRef.current = null
+      setPenDragging(false)
+      endDrag()
+
+      if (interaction.type === 'close-or-drag') {
+        closePenPathRef.current?.()
+        return
+      }
+
+      const norm = screenToNorm(e.clientX, e.clientY)
+      setPenCursorPos(norm)
+
+      const hit = hitTestPenEvent(e)
+      if (!hit) {
+        setHover(null)
+      } else if (hit.type === 'vertex') {
+        setHover(hit.index, null)
+      } else {
+        setHover(hit.index, hit.type === 'inHandle' ? 'in' : 'out')
+      }
+    },
+    [setPenDragging, endDrag, screenToNorm, setPenCursorPos, hitTestPenEvent, setHover],
+  )
+
+  const handlePenContextMenu = useCallback(
+    (e: React.MouseEvent) => {
+      const hit = hitTestPenEvent(e)
+      if (hit?.type !== 'vertex') return
+
+      e.preventDefault()
+      e.stopPropagation()
+
+      const nextVertices = penVertices.filter((_, index) => index !== hit.index)
+      setPenVertices(nextVertices)
+      if (nextVertices.length === 0) {
+        setHover(null)
+      } else if (hit.index >= nextVertices.length) {
+        setHover(nextVertices.length - 1, null)
+      } else {
+        setHover(hit.index, null)
+      }
+    },
+    [hitTestPenEvent, penVertices, setPenVertices, setHover],
+  )
+
+  /** Commit pen vertices as a new ShapeItem with shapeType='path'. */
+  const commitShapePenPath = useCallback(
+    (verts: MaskVertex[], closed: boolean) => {
+      const bounds = getPathBounds(verts)
+      if (!bounds) {
+        cancelPenMode()
+        return
+      }
+
+      const { width: canvasW, height: canvasH } = coordParams.projectSize
+      const spanX = Math.max(bounds.maxX - bounds.minX, 2 / canvasW)
+      const spanY = Math.max(bounds.maxY - bounds.minY, 2 / canvasH)
+      const bboxW = spanX * canvasW
+      const bboxH = spanY * canvasH
+
+      // Prevent degenerate shapes
+      if (bboxW < 2 || bboxH < 2) {
+        cancelPenMode()
+        return
+      }
+
+      // Convert vertices to shape-local normalized coords (0-1 within bounding box)
+      const localVerts: MaskVertex[] = verts.map((v) => ({
+        ...v,
+        position: [
+          (v.position[0] - bounds.minX) / spanX,
+          (v.position[1] - bounds.minY) / spanY,
+        ] as [number, number],
+        // Scale handles proportionally
+        inHandle: [v.inHandle[0] / spanX, v.inHandle[1] / spanY] as [number, number],
+        outHandle: [v.outHandle[0] / spanX, v.outHandle[1] / spanY] as [number, number],
+      }))
+
+      // Bounding box center relative to canvas center
+      const centerX = ((bounds.minX + bounds.maxX) / 2 - 0.5) * canvasW
+      const centerY = ((bounds.minY + bounds.maxY) / 2 - 0.5) * canvasH
+
+      const { tracks, items } = useItemsStore.getState()
+      const { fps } = useTimelineSettingsStore.getState()
+      const { activeTrackId, selectItems, setActiveTrack } = useSelectionStore.getState()
+      const currentFrame = usePlaybackStore.getState().currentFrame
+      const durationInFrames = Math.max(1, Math.round(fps * DEFAULT_PATH_SHAPE_DURATION_SECONDS))
+      let placement = findBestCanvasDropPlacement({
+        tracks,
+        items,
+        activeTrackId,
+        proposedFrame: currentFrame,
+        durationInFrames,
+        itemType: 'shape',
+      })
+
+      if (!placement) {
+        cancelPenMode()
+        return
+      }
+
+      const placementTrackId = placement.trackId
+      const eligibleTracks = resolveEffectiveTrackStates(tracks).filter(
+        (track) => !track.locked && !track.isGroup,
+      )
+      const activeTrack = activeTrackId
+        ? eligibleTracks.find((track) => track.id === activeTrackId)
+        : undefined
+      const placementTrack = eligibleTracks.find((track) => track.id === placementTrackId)
+      const shouldCreateTopTrack =
+        !placement.preservedTime ||
+        (placementTrackId !== activeTrackId &&
+          !!activeTrack &&
+          !!placementTrack &&
+          placementTrack.order > activeTrack.order)
+
+      if (shouldCreateTopTrack) {
+        const referenceTrack = tracks.find((track) => track.id === placementTrackId)
+        const minOrder =
+          tracks.length > 0 ? Math.min(...tracks.map((track) => track.order ?? 0)) : 0
+        const usesClassicTrackKinds = tracks.some((track) => getTrackKind(track) !== null)
+        const newTrack: TimelineTrack = usesClassicTrackKinds
+          ? createClassicTrack({
+              tracks,
+              kind: 'video',
+              order: minOrder - 1,
+              height: referenceTrack?.height ?? 72,
+            })
+          : {
+              id: `track-${Date.now()}`,
+              name: getNextTrackName(tracks),
+              height: referenceTrack?.height ?? 72,
+              locked: false,
+              visible: true,
+              muted: false,
+              solo: false,
+              order: minOrder - 1,
+              items: [],
+            }
+
+        setTracks([newTrack, ...tracks])
+        placement = {
+          trackId: newTrack.id,
+          from: currentFrame,
+          preservedTime: true,
+        }
+      }
+
+      const shapeItem: ShapeItem = {
+        id: crypto.randomUUID(),
+        type: 'shape',
+        trackId: placement.trackId,
+        from: placement.from,
+        durationInFrames,
+        label: 'Path',
+        shapeType: 'path',
+        pathVertices: localVerts,
+        pathClosed: closed,
+        fillColor: '#3b82f6',
+        fillEnabled: false,
+        strokeColor: '#3b82f6',
+        strokeWidth: 4,
+        strokeEnabled: true,
+        strokeLineCap: 'round',
+        strokeLineJoin: 'round',
+        isMask: false,
+        transform: {
+          x: centerX,
+          y: centerY,
+          width: bboxW,
+          height: bboxH,
+          rotation: 0,
+          opacity: 1,
+          aspectRatioLocked: false,
+        },
+      }
+
+      addItem(shapeItem)
+      setActiveTrack(shapeItem.trackId)
+      selectItems([shapeItem.id])
+      useTimelineViewportStore.getState().requestScrollToFrame(shapeItem.from)
+      stopEditing()
+    },
+    [coordParams, cancelPenMode, stopEditing],
+  )
+
+  /** Finish pen mode as an open path. Clicking the first anchor closes instead. */
+  const finishPenMode = useCallback(() => {
+    const state = useMaskEditorStore.getState()
+    const verts = state.penVertices
+
+    resetPenInteraction()
+
+    if (!state.shapePenMode || verts.length < 2) {
+      cancelPenMode()
+      return
+    }
+    commitShapePenPath(verts, false)
+  }, [cancelPenMode, commitShapePenPath, resetPenInteraction])
+
+  const closePenPath = useCallback(() => {
+    const state = useMaskEditorStore.getState()
+    const verts = state.penVertices
+    resetPenInteraction()
+    if (!state.shapePenMode || verts.length < 3) return
+    commitShapePenPath(verts, true)
+  }, [commitShapePenPath, resetPenInteraction])
+  closePenPathRef.current = closePenPath
+
+  const cancelCurrentPenMode = useCallback(() => {
+    resetPenInteraction()
+    cancelPenMode()
+  }, [cancelPenMode, resetPenInteraction])
+
+  const lastHandledFinishRequestRef = useRef(0)
+  const lastHandledCancelRequestRef = useRef(0)
+  const lastHandledConvertRequestRef = useRef(0)
+
+  useEffect(() => {
+    lastHandledFinishRequestRef.current = 0
+    lastHandledCancelRequestRef.current = 0
+    lastHandledConvertRequestRef.current = 0
+  }, [editingItemId, penMode])
+
+  useEffect(() => {
+    if (!penMode) return
+    if (finishPenRequestVersion === 0) return
+    if (finishPenRequestVersion === lastHandledFinishRequestRef.current) return
+    lastHandledFinishRequestRef.current = finishPenRequestVersion
+    finishPenMode()
+  }, [penMode, finishPenRequestVersion, finishPenMode])
+
+  useEffect(() => {
+    if (!penMode) return
+    if (cancelPenRequestVersion === 0) return
+    if (cancelPenRequestVersion === lastHandledCancelRequestRef.current) return
+    lastHandledCancelRequestRef.current = cancelPenRequestVersion
+    cancelCurrentPenMode()
+  }, [penMode, cancelPenRequestVersion, cancelCurrentPenMode])
+
+  const popLastPenVertex = useCallback(() => {
+    const state = useMaskEditorStore.getState()
+    if (state.penVertices.length === 0) return
+
+    const nextVertices = state.penVertices.slice(0, -1)
+    penInteractionRef.current = null
+    setPenDragging(false)
+    endDrag()
+    setPenVertices(nextVertices)
+    setHover(nextVertices.length > 0 ? nextVertices.length - 1 : null)
+  }, [endDrag, setHover, setPenDragging, setPenVertices])
+
+  // Keyboard shortcuts for the in-progress pen path.
+  useEffect(() => {
+    if (!penMode) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const isModifierOnly =
+        e.key === 'Shift' || e.key === 'Alt' || e.key === 'Control' || e.key === 'Meta'
+      if (isModifierOnly) {
+        return
+      }
+
+      e.stopPropagation()
+      e.stopImmediatePropagation()
+
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        cancelCurrentPenMode()
+        return
+      }
+
+      if (e.key === 'Backspace' || e.key === 'Delete') {
+        e.preventDefault()
+        popLastPenVertex()
+        return
+      }
+
+      if (e.key === 'Enter') {
+        e.preventDefault()
+        finishPenMode()
+        return
+      }
+
+      e.preventDefault()
+    }
+    window.addEventListener('keydown', handleKeyDown, true)
+    return () => window.removeEventListener('keydown', handleKeyDown, true)
+  }, [penMode, cancelCurrentPenMode, finishPenMode, popLastPenVertex])
+
+  // ============================================================
+  // Edit mode: mouse handlers
+  // ============================================================
+
+  const editDraggingRef = useRef(false)
+
+  // Store values in refs for pointer handlers to avoid stale closures
+  const coordParamsRef = useRef(coordParams)
+  coordParamsRef.current = coordParams
+  const getLiveCoordParamsRef = useRef(getLiveCoordParams)
+  getLiveCoordParamsRef.current = getLiveCoordParams
+  const getItemScreenBoundsRef = useRef(getItemScreenBounds)
+  getItemScreenBoundsRef.current = getItemScreenBounds
+  const editingItemIdRef = useRef(editingItemId)
+  editingItemIdRef.current = editingItemId
+  const itemTransformRef = useRef(effectiveItemTransform)
+  itemTransformRef.current = effectiveItemTransform
+  const pendingCleanupRafIdsRef = useRef<number[]>([])
+  const editInteractionGenerationRef = useRef(0)
+  const maskOwnedInteractionIdRef = useRef<number | null>(null)
+
+  useEffect(() => {
+    return () => {
+      for (const id of pendingCleanupRafIdsRef.current) {
+        cancelAnimationFrame(id)
+      }
+      pendingCleanupRafIdsRef.current = []
+      const ownedInteractionId = maskOwnedInteractionIdRef.current
+      if (ownedInteractionId !== null) {
+        useGizmoStore.getState().clearInteraction(ownedInteractionId)
+        maskOwnedInteractionIdRef.current = null
+      }
+    }
+  }, [])
+
+  const scheduleEditCommitCleanup = useCallback((expectedInteractionId?: number) => {
+    for (const id of pendingCleanupRafIdsRef.current) {
+      cancelAnimationFrame(id)
+    }
+    pendingCleanupRafIdsRef.current = []
+    const scheduledGeneration = editInteractionGenerationRef.current
+
+    const firstFrameId = requestAnimationFrame(() => {
+      const secondFrameId = requestAnimationFrame(() => {
+        if (editInteractionGenerationRef.current !== scheduledGeneration) return
+        pendingCleanupRafIdsRef.current = []
+        setCommittedEditSnapshot(null)
+        if (expectedInteractionId !== undefined) {
+          clearInteraction(expectedInteractionId)
+          if (maskOwnedInteractionIdRef.current === expectedInteractionId) {
+            maskOwnedInteractionIdRef.current = null
+          }
+        }
+        endDrag()
+      })
+      pendingCleanupRafIdsRef.current = [firstFrameId, secondFrameId]
+    })
+
+    pendingCleanupRafIdsRef.current = [firstFrameId]
+  }, [clearInteraction, endDrag])
+
+  const buildMaskTransformPersistence = useCallback(
+    (
+      item: ShapeItem,
+      nextTransform: Partial<
+        Pick<TransformProperties, (typeof MASK_GEOMETRY_TRANSFORM_PROPS)[number]>
+      >,
+      currentFrame: number,
+    ): {
+      baseTransform: Partial<TransformProperties>
+      autoKeyframeOperations: AutoKeyframeOperation[]
+    } => {
+      const itemKeyframes = useKeyframesStore.getState().keyframesByItemId[item.id]
+      const baseTransform: Partial<TransformProperties> = {}
+      const autoKeyframeOperations: AutoKeyframeOperation[] = []
+      const relativeFrame = currentFrame - item.from
+      const isWithinItemBounds = relativeFrame >= 0 && relativeFrame < item.durationInFrames
+
+      for (const property of MASK_GEOMETRY_TRANSFORM_PROPS) {
+        const value = nextTransform[property]
+        if (typeof value !== 'number') {
+          continue
+        }
+
+        const propertyKeyframes = itemKeyframes?.properties.find(
+          (entry) => entry.property === property,
+        )
+
+        const autoOperation = getAutoKeyframeOperation(
+          item,
+          itemKeyframes,
+          property,
+          value,
+          currentFrame,
+        )
+
+        if (autoOperation) {
+          autoKeyframeOperations.push(autoOperation)
+          continue
+        }
+
+        // Path editing needs the fitted transform to exist at the edited frame.
+        // If this property is already animated but lacks a key here, falling back
+        // to the base transform would make the mask snap back to the interpolated
+        // value on the next render.
+        if (isWithinItemBounds && propertyKeyframes && propertyKeyframes.keyframes.length > 0) {
+          const transitions = useTransitionsStore.getState().transitions
+          const blocked = isFrameInTransitionRegion(relativeFrame, item.id, item, transitions)
+          if (!blocked) {
+            autoKeyframeOperations.push({
+              type: 'add',
+              itemId: item.id,
+              property,
+              frame: relativeFrame,
+              value,
+              easing: 'linear',
+            })
+            continue
+          }
+          // Frame is in a transition region — can't add a keyframe, fall through
+          // to baseTransform so the edit isn't silently dropped.
+        }
+
+        baseTransform[property] = value
+      }
+
+      return { baseTransform, autoKeyframeOperations }
+    },
+    [],
+  )
+
+  // ============================================================
+  // Commit vertices to timeline store
+  // ============================================================
+
+  const commitVertices = useCallback(
+    (vertices: MaskVertex[]) => {
+      if (!editingItemId) return
+      const item = useItemsStore.getState().itemById[editingItemId]
+      if (item?.type === 'shape' && item.shapeType === 'path') {
+        const currentFrame = usePlaybackStore.getState().currentFrame
+        const directPathPersistence = buildPathGeometryPersistence(item, vertices, currentFrame)
+        if (directPathPersistence.blocked) {
+          scheduleEditCommitCleanup()
+          return
+        }
+        if (directPathPersistence.pathVertices === undefined) {
+          setCommittedEditSnapshot({
+            vertices: cloneVertices(vertices),
+            transform: itemTransform,
+          })
+          commitMaskEdit(editingItemId, {
+            autoKeyframeOperations: directPathPersistence.autoKeyframeOperations,
+          })
+          scheduleEditCommitCleanup()
+          return
+        }
+
+        const fitted = fitShapePathToBounds(vertices, itemTransform, item.transform)
+        const pathPersistence = buildPathGeometryPersistence(
+          item,
+          fitted.pathVertices,
+          currentFrame,
+        )
+        if (pathPersistence.blocked) return
+        const { baseTransform, autoKeyframeOperations } = buildMaskTransformPersistence(
+          item,
+          {
+            x: fitted.transform.x,
+            y: fitted.transform.y,
+            width: fitted.transform.width,
+            height: fitted.transform.height,
+          },
+          currentFrame,
+        )
+        setCommittedEditSnapshot({
+          vertices: cloneVertices(fitted.pathVertices),
+          transform: toOverlayTransform(fitted.transform, itemTransform),
+        })
+        commitMaskEdit(editingItemId, {
+          pathVertices: pathPersistence.pathVertices,
+          transform: baseTransform,
+          autoKeyframeOperations: [
+            ...autoKeyframeOperations,
+            ...pathPersistence.autoKeyframeOperations,
+          ],
+        })
+        scheduleEditCommitCleanup()
+      }
+    },
+    [
+      buildMaskTransformPersistence,
+      buildPathGeometryPersistence,
+      editingItemId,
+      itemTransform,
+      scheduleEditCommitCleanup,
+    ],
+  )
+
+  const removeSelectedVertices = useCallback(() => {
+    const vertices = getVertices()
+    if (!vertices) return
+
+    const targetIndices = resolveSelectedVertexTargets({
+      selectedVertexIndices,
+      selectedVertexIndex,
+      vertexCount: vertices.length,
+    })
+    if (targetIndices.length === 0) return
+
+    const minimumVertices = editingPathClosed ? 3 : 2
+    const nextVertices = removeVerticesAtIndices(vertices, targetIndices, minimumVertices)
+    if (!nextVertices) return
+
+    const nextSelection = resolveSelectionAfterVertexRemoval({
+      selectedVertexIndices,
+      selectedVertexIndex,
+      removedIndices: targetIndices,
+    })
+    selectVertices(nextSelection.indices, nextSelection.primaryIndex)
+    commitVertices(nextVertices)
+  }, [
+    commitVertices,
+    editingPathClosed,
+    getVertices,
+    selectVertices,
+    selectedVertexIndex,
+    selectedVertexIndices,
+  ])
+
+  useEffect(() => {
+    if (!isEditing || penMode) return
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const isModifierOnly =
+        e.key === 'Shift' || e.key === 'Alt' || e.key === 'Control' || e.key === 'Meta'
+      if (isModifierOnly) {
+        return
+      }
+
+      if (e.key !== 'Backspace' && e.key !== 'Delete') {
+        return
+      }
+
+      e.preventDefault()
+      e.stopPropagation()
+      e.stopImmediatePropagation()
+      removeSelectedVertices()
+    }
+
+    window.addEventListener('keydown', handleKeyDown, true)
+    return () => window.removeEventListener('keydown', handleKeyDown, true)
+  }, [isEditing, penMode, removeSelectedVertices])
+
+  useEffect(() => {
+    if (
+      !shouldHandleConvertVertexRequest({
+        isEditing,
+        penMode,
+        requestVersion: convertSelectedVertexRequestVersion,
+        handledVersion: lastHandledConvertRequestRef.current,
+        draggingVertexIndex,
+        draggingHandle,
+      })
+    ) {
+      return
+    }
+
+    lastHandledConvertRequestRef.current = convertSelectedVertexRequestVersion
+
+    if (
+      (selectedVertexIndices.length === 0 && selectedVertexIndex === null) ||
+      !convertSelectedVertexRequestMode
+    ) {
+      return
+    }
+
+    const vertices = getVertices()
+    if (!vertices) {
+      selectVertex(null)
+      return
+    }
+
+    const targetIndices = resolveSelectedVertexTargets({
+      selectedVertexIndices,
+      selectedVertexIndex,
+      vertexCount: vertices.length,
+    })
+    if (targetIndices.length === 0) {
+      selectVertex(null)
+      return
+    }
+
+    commitVertices(
+      convertVerticesAtIndices({
+        vertices,
+        targetIndices,
+        mode: convertSelectedVertexRequestMode,
+        closed: editingPathClosed,
+      }),
+    )
+  }, [
+    isEditing,
+    penMode,
+    draggingVertexIndex,
+    draggingHandle,
+    selectedVertexIndices,
+    selectedVertexIndex,
+    convertSelectedVertexRequestVersion,
+    convertSelectedVertexRequestMode,
+    getVertices,
+    commitVertices,
+    selectVertex,
+    editingPathClosed,
+  ])
+
+  const beginEditPointerInteraction = useCallback(() => {
+    editInteractionGenerationRef.current += 1
+    for (const id of pendingCleanupRafIdsRef.current) {
+      cancelAnimationFrame(id)
+    }
+    pendingCleanupRafIdsRef.current = []
+    setCommittedEditSnapshot(null)
+    const previousOwnedInteractionId = maskOwnedInteractionIdRef.current
+    if (previousOwnedInteractionId !== null) {
+      clearInteraction(previousOwnedInteractionId)
+      maskOwnedInteractionIdRef.current = null
+    }
+  }, [clearInteraction])
+
+  const startMarqueeDrag = useCallback(
+    (e: React.PointerEvent, localX: number, localY: number) => {
+      e.stopPropagation()
+      e.preventDefault()
+      canvasRef.current!.setPointerCapture(e.pointerId)
+      editDraggingRef.current = true
+      dragStateRef.current = {
+        type: 'marquee',
+        startScreenPos: [localX, localY],
+        currentScreenPos: [localX, localY],
+        hasMoved: false,
+      }
+      setHoveredShapeBody(false)
+      setHoveredSegmentIndex(null)
+      setHover(null)
+      setSelectionMarquee(null)
+    },
+    [setHover],
+  )
+
+  const startEditDrag = useCallback(
+    (dragState: Extract<EditDragState, { type: 'vertex' | 'handle' }>) => {
+      if (dragState.handleType) {
+        startHandleDrag(dragState.vertexIndex, dragState.handleType)
+      } else {
+        startVertexDrag(dragState.vertexIndex)
+      }
+    },
+    [startHandleDrag, startVertexDrag],
+  )
+
+  const startShapeTranslateDrag = useCallback(
+    (canvasPos: { x: number; y: number }) => {
+      const itemId = editingItemIdRef.current
+      if (!itemId) return
+
+      const interactionId = startTranslate(
+        itemId,
+        canvasPos,
+        itemTransformRef.current,
+        undefined,
+        'shape',
+      )
+      maskOwnedInteractionIdRef.current = interactionId
+      dragStateRef.current = {
+        type: 'shape',
+        startTransform: itemTransformRef.current,
+        interactionId,
+      }
+      setHoveredSegmentIndex(null)
+      setHover(null)
+      setHoveredShapeBody(true)
+    },
+    [startTranslate, setHover],
+  )
+
+  const handleEditPointerDown = useCallback(
+    (e: React.PointerEvent) => {
+      if (editDraggingRef.current) return
+      const rect = canvasRef.current?.getBoundingClientRect()
+      if (!rect) return
+
+      beginEditPointerInteraction()
+
+      const localX = e.clientX - rect.left
+      const localY = e.clientY - rect.top
+      const hit = hitTest(localX, localY)
+
+      if (!hit) {
+        startMarqueeDrag(e, localX, localY)
+        return
+      }
+
+      e.stopPropagation()
+      e.preventDefault()
+
+      const vertices = getVertices()
+      if (!vertices) return
+
+      canvasRef.current!.setPointerCapture(e.pointerId)
+      editDraggingRef.current = true
+
+      const canvasPos = screenToCanvas(e.clientX, e.clientY, getLiveCoordParams())
+      const vertexDragState = createVertexHandleDragState(vertices, hit, [
+        canvasPos.x,
+        canvasPos.y,
+      ])
+
+      if (vertexDragState) {
+        startEditDrag(vertexDragState)
+        dragStateRef.current = vertexDragState
+        return
+      }
+
+      startShapeTranslateDrag(canvasPos)
+    },
+    [
+      hitTest,
+      getVertices,
+      getLiveCoordParams,
+      startEditDrag,
+      beginEditPointerInteraction,
+      startMarqueeDrag,
+      startShapeTranslateDrag,
+    ],
+  )
+
+  const applyMarqueeSelection = useCallback(
+    (marquee: SelectionMarquee) => {
+      const nextSelectedVertices = getVerticesInMarquee(marquee)
+      selectVertices(
+        nextSelectedVertices,
+        nextSelectedVertices[nextSelectedVertices.length - 1] ?? null,
+      )
+    },
+    [getVerticesInMarquee, selectVertices],
+  )
+
+  const updateMarqueeDrag = useCallback(
+    (state: Extract<EditDragState, { type: 'marquee' }>, e: React.PointerEvent) => {
+      const rect = canvasRef.current?.getBoundingClientRect()
+      const currentScreenPos: [number, number] = [
+        e.clientX - (rect?.left ?? 0),
+        e.clientY - (rect?.top ?? 0),
+      ]
+      const marquee = getMarqueeBounds(state.startScreenPos, currentScreenPos)
+      const hasMoved = marquee.width >= DRAG_THRESHOLD || marquee.height >= DRAG_THRESHOLD
+
+      dragStateRef.current = {
+        type: 'marquee',
+        startScreenPos: state.startScreenPos,
+        currentScreenPos,
+        hasMoved,
+      }
+
+      setSelectionMarquee(hasMoved ? marquee : null)
+      if (hasMoved) {
+        applyMarqueeSelection(marquee)
+      }
+    },
+    [applyMarqueeSelection, getMarqueeBounds, setSelectionMarquee],
+  )
+
+  const updateActiveEditDrag = useCallback(
+    (state: EditDragState, e: React.PointerEvent) => {
+      if (state.type === 'marquee') {
+        updateMarqueeDrag(state, e)
+        return
+      }
+
+      const moveCanvas = screenToCanvas(e.clientX, e.clientY, getLiveCoordParamsRef.current())
+
+      if (state.type === 'shape') {
+        updateInteraction(moveCanvas, e.shiftKey, e.ctrlKey, e.altKey)
+        return
+      }
+
+      const bounds = getItemScreenBoundsRef.current()
+      const scale = getEffectiveScale(coordParamsRef.current)
+      updatePreview(
+        dragVerticesByCanvasDelta({
+          startVertices: state.startVertices,
+          vertexIndex: state.vertexIndex,
+          handleType: state.handleType,
+          dx: moveCanvas.x - state.startCanvasPos[0],
+          dy: moveCanvas.y - state.startCanvasPos[1],
+          itemWidth: bounds.width / scale,
+          itemHeight: bounds.height / scale,
+          breakTangents: e.altKey,
+          smoothTangentOnDrag: false,
+        }),
+      )
+    },
+    [updateInteraction, updateMarqueeDrag, updatePreview],
+  )
+
+  const updateEditHover = useCallback(
+    (hit: MaskHit | null) => {
+      if (!hit) {
+        setHoveredShapeBody(false)
+        setHoveredSegmentIndex(null)
+        setHover(null)
+      } else if (hit.type === 'vertex') {
+        setHoveredShapeBody(false)
+        setHoveredSegmentIndex(null)
+        setHover(hit.index, null)
+      } else if (hit.type === 'inHandle') {
+        setHoveredShapeBody(false)
+        setHoveredSegmentIndex(null)
+        setHover(hit.index, 'in')
+      } else if (hit.type === 'outHandle') {
+        setHoveredShapeBody(false)
+        setHoveredSegmentIndex(null)
+        setHover(hit.index, 'out')
+      } else if (hit.type === 'segment') {
+        setHoveredShapeBody(false)
+        setHoveredSegmentIndex(hit.index)
+        setHover(null)
+      } else {
+        setHoveredSegmentIndex(null)
+        setHoveredShapeBody(true)
+        setHover(null)
+      }
+    },
+    [setHover],
+  )
+
+  const handleEditPointerMove = useCallback(
+    (e: React.PointerEvent) => {
+      if (editDraggingRef.current) {
+        const state = dragStateRef.current
+        if (state) {
+          updateActiveEditDrag(state, e)
+        }
+        return
+      }
+
+      // Hover detection (not dragging)
+      const rect = canvasRef.current?.getBoundingClientRect()
+      if (!rect) return
+
+      updateEditHover(hitTest(e.clientX - rect.left, e.clientY - rect.top))
+    },
+    [hitTest, updateEditHover, updateActiveEditDrag],
+  )
+
+  const finishMarqueeDrag = useCallback(
+    (state: Extract<EditDragState, { type: 'marquee' }>) => {
+      setSelectionMarquee(null)
+      if (state.hasMoved) {
+        applyMarqueeSelection(getMarqueeBounds(state.startScreenPos, state.currentScreenPos))
+      } else {
+        selectVertex(null)
+      }
+    },
+    [applyMarqueeSelection, getMarqueeBounds, selectVertex],
+  )
+
+  const commitShapeMoveEdit = useCallback(
+    (state: Extract<EditDragState, { type: 'shape' }>) => {
+      const itemId = editingItemIdRef.current
+      const finalTransform = endInteraction()
+      if (finalTransform && itemId && transformChanged(state.startTransform, finalTransform)) {
+        const item = useItemsStore.getState().items.find((candidate) => candidate.id === itemId)
+        if (item?.type === 'shape' && item.shapeType === 'path') {
+          const currentFrame = usePlaybackStore.getState().currentFrame
+          const { baseTransform, autoKeyframeOperations } = buildMaskTransformPersistence(
+            item,
+            {
+              x: finalTransform.x,
+              y: finalTransform.y,
+            },
+            currentFrame,
+          )
+          commitMaskEdit(
+            itemId,
+            {
+              transform: baseTransform,
+              autoKeyframeOperations,
+            },
+            { operation: 'move' },
+          )
+        }
+      }
+      scheduleEditCommitCleanup(state.interactionId)
+    },
+    [buildMaskTransformPersistence, endInteraction, scheduleEditCommitCleanup],
+  )
+
+  const handleEditPointerUp = useCallback(
+    (e: React.PointerEvent) => {
+      if (!editDraggingRef.current) return
+      e.stopPropagation()
+      e.preventDefault()
+      canvasRef.current?.releasePointerCapture(e.pointerId)
+
+      editDraggingRef.current = false
+
+      const state = dragStateRef.current
+      const finalVertices = useMaskEditorStore.getState().previewVertices
+      const itemId = editingItemIdRef.current
+      if (state?.type === 'marquee') {
+        finishMarqueeDrag(state)
+      } else if (state?.type === 'shape') {
+        commitShapeMoveEdit(state)
+      } else if (finalVertices && itemId) {
+        commitVertices(finalVertices)
+      } else {
+        scheduleEditCommitCleanup()
+      }
+
+      dragStateRef.current = null
+    },
+    [commitShapeMoveEdit, commitVertices, finishMarqueeDrag, scheduleEditCommitCleanup],
+  )
+
+  const handleEditContextMenu = useCallback(
+    (e: React.MouseEvent) => {
+      const hit = hitTestEditEvent(e)
+      if (hit?.type !== 'vertex') return
+
+      e.preventDefault()
+      e.stopPropagation()
+
+      const vertices = getVertices()
+      if (!vertices) return
+
+      const newVertices = removeVertex(vertices, hit.index, editingPathClosed ? 3 : 2)
+      if (!newVertices) return
+
+      const nextSelection = resolveSelectionAfterVertexRemoval({
+        selectedVertexIndices,
+        selectedVertexIndex,
+        removedIndices: [hit.index],
+      })
+      selectVertices(nextSelection.indices, nextSelection.primaryIndex)
+      commitVertices(newVertices)
+    },
+    [
+      hitTestEditEvent,
+      getVertices,
+      selectedVertexIndices,
+      selectedVertexIndex,
+      selectVertices,
+      commitVertices,
+      editingPathClosed,
+    ],
+  )
+
+  const handleEditDoubleClick = useCallback(
+    (e: React.MouseEvent) => {
+      const hit = hitTestEditEvent(e)
+
+      if (hit?.type !== 'segment') return
+
+      e.preventDefault()
+      e.stopPropagation()
+
+      const vertices = getVertices()
+      if (!vertices) return
+
+      const newVertices = insertVertexBetween(vertices, hit.index)
+      selectVertex(hit.index + 1)
+      commitVertices(newVertices)
+      setHoveredShapeBody(false)
+      setHoveredSegmentIndex(null)
+    },
+    [hitTestEditEvent, getVertices, selectVertex, commitVertices],
+  )
+
+  // ============================================================
+  // Render
+  // ============================================================
+
+  if (!isEditing) return null
+
+  const cursor = hoveredShapeBody ? 'move' : 'crosshair'
+
+  return (
+    <div
+      className="absolute z-20"
+      style={{
+        top: 0,
+        left: 0,
+        width: playerSize.width,
+        height: playerSize.height,
+        pointerEvents: 'none',
+      }}
+    >
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0"
+        style={{
+          width: playerSize.width,
+          height: playerSize.height,
+          pointerEvents: 'auto',
+          cursor,
+        }}
+        onPointerDown={penMode ? handlePenPointerDown : handleEditPointerDown}
+        onPointerMove={penMode ? handlePenPointerMove : handleEditPointerMove}
+        onPointerUp={penMode ? handlePenPointerUp : handleEditPointerUp}
+        onContextMenu={penMode ? handlePenContextMenu : handleEditContextMenu}
+        onDoubleClick={penMode ? undefined : handleEditDoubleClick}
+      />
+    </div>
+  )
+})

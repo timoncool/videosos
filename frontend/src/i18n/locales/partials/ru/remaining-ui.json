@@ -1,0 +1,408 @@
+{
+  "editor": {
+    "mediaSidebar": {
+      "media": "Медиа",
+      "text": "Текст",
+      "shapes": "Фигуры",
+      "effects": "Эффекты",
+      "transitions": "Переходы",
+      "ai": "AI",
+      "collapsePanel": "Свернуть панель",
+      "expandPanel": "Развернуть панель",
+      "keyframeEditor": "Редактор ключевых кадров",
+      "hideKeyframeEditor": "Скрыть редактор ключевых кадров",
+      "showKeyframeEditor": "Показать редактор ключевых кадров",
+      "templates": "Шаблоны",
+      "textGroupSingle": "Одиночный",
+      "textGroupTwoSpans": "2 фрагмента",
+      "textGroupThreeSpans": "3 фрагмента",
+      "addText": "Добавить текст",
+      "pen": "Перо",
+      "penToolHint": "Нарисуйте контур фигуры с помощью инструмента «Перо»",
+      "adjustmentLayer": "Корректирующий слой",
+      "blankAdjustmentLayer": "Пустой корректирующий слой",
+      "presets": "Пресеты"
+    },
+    "textSection": {
+      "sectionTitle": "Текст",
+      "content": "Содержимое",
+      "single": "Одиночный",
+      "twoSpans": "2 фрагмента",
+      "threeSpans": "3 фрагмента",
+      "mixedNone": "Смешанный / Нет",
+      "selectPreset": "Выбрать пресет",
+      "span": "Фрагмент {{count}}",
+      "spanText": "Текст фрагмента {{count}}",
+      "eyebrow": "Надзаголовок",
+      "eyebrowText": "Текст надзаголовка",
+      "title": "Заголовок",
+      "titleText": "Текст заголовка",
+      "subtitle": "Подзаголовок",
+      "subtitleText": "Текст подзаголовка",
+      "text": "Текст",
+      "enterText": "Введите текст...",
+      "defaultText": "Ваш текст",
+      "selectFont": "Выбрать шрифт",
+      "size": "Размер",
+      "spacing": "Интервал",
+      "scale": "Масштаб",
+      "font": "Шрифт",
+      "weight": "Насыщенность",
+      "style": "Стиль",
+      "align": "Выравнивание",
+      "color": "Цвет",
+      "background": "Фон",
+      "clear": "Очистить",
+      "clearBackground": "Очистить фон",
+      "lineHeightShort": "Интерлин.",
+      "padding": "Отступ",
+      "radius": "Радиус",
+      "mixed": "Смешанный",
+      "selectWeight": "Выбрать насыщенность",
+      "bold": "Полужирный",
+      "boldUnavailable": "Полужирный недоступен для этого шрифта",
+      "italic": "Курсив",
+      "underline": "Подчеркнутый",
+      "italicSpan": "Курсив: {{label}}",
+      "underlineSpan": "Подчеркивание: {{label}}",
+      "alignLeft": "По левому краю",
+      "alignCenter": "По центру",
+      "alignRight": "По правому краю",
+      "alignTop": "По верхнему краю",
+      "alignMiddle": "По центру",
+      "alignBottom": "По нижнему краю",
+      "effects": "Эффекты",
+      "presets": "Пресеты",
+      "fontWeights": {
+        "regular": "Обычный",
+        "medium": "Средний",
+        "semibold": "Полужирный",
+        "bold": "Жирный"
+      },
+      "effectPresets": {
+        "none": "Нет",
+        "shadow": "Тень",
+        "outline": "Контур",
+        "glow": "Свечение"
+      },
+      "shadow": "Тень",
+      "shadowX": "Тень X",
+      "shadowY": "Тень Y",
+      "shadowBlur": "Размытие Т.",
+      "strokeWidth": "Толщ. обв.",
+      "stroke": "Обводка",
+      "animation": "Анимация",
+      "intro": "Появление",
+      "outro": "Исчезновение",
+      "animationFooter": "Применяет короткую анимацию текста с плавным замедлением в начале или конце каждого выбранного клипа.",
+      "animationPresets": {
+        "none": "Нет",
+        "fade": "Затухание",
+        "rise": "Подъем",
+        "drop": "Падение",
+        "left": "Слева",
+        "right": "Справа",
+        "tilt": "Наклон",
+        "pop": "Выскакивание",
+        "swing": "Раскачивание"
+      }
+    },
+    "tts": {
+      "seek": "Перемотка",
+      "dialogTitle": "Генерация аудио из текста",
+      "dialogDescription": "Сгенерируйте речь и вставьте ее на позицию текстового клипа.",
+      "kokoroUnsupported": "WebGPU недоступен в этом браузере. Для Kokoro TTS требуется Chrome 113+, Edge 113+ или Safari 26+.",
+      "mossUnsupported": "Хранилище браузера недоступно. MOSS multilingual TTS лучше всего работает в свежей версии Chromium.",
+      "supertonicUnsupported": "Этот браузер не поддерживает локальную среду выполнения Supertonic TTS. Попробуйте свежую версию Chrome или Edge.",
+      "engine": "Движок",
+      "engineSupportDetails": "Сведения о поддержке движка TTS",
+      "kokoroDescription": "Английские голоса на WebGPU.",
+      "supertonicDescription": "Локальные модели ONNX на WebGPU или WASM для 31 языка.",
+      "supportedLanguages": "Поддерживаемые языки: {{languages}}.",
+      "kokoroOption": "Kokoro (английский, WebGPU)",
+      "mossOption": "MOSS Nano (20 языков, CPU)",
+      "supertonicOption": "Supertonic 3 (31 язык, локальный ONNX)",
+      "language": "Язык",
+      "autoDetectLanguage": "Определять автоматически",
+      "voice": "Голос",
+      "text": "Текст",
+      "textPlaceholder": "Введите текст для озвучивания...",
+      "expressiveTags": "Теги выразительности",
+      "speed": "Скорость",
+      "progressPreparing": "Подготовка локального TTS...",
+      "insertedAndLinked": "Вставлено и привязано",
+      "generate": "Сгенерировать",
+      "generating": "Генерация...",
+      "regenerate": "Сгенерировать заново",
+      "insertAndLink": "Вставить и привязать",
+      "inserting": "Вставка...",
+      "errors": {
+        "openProject": "Откройте проект перед генерацией аудио.",
+        "enterText": "Введите текст для озвучивания.",
+        "kokoroUnsupported": "Для Kokoro TTS требуется WebGPU. Попробуйте Chrome 113+, Edge 113+ или Safari 26+.",
+        "mossUnsupported": "Для MOSS multilingual TTS требуется хранилище браузера. Попробуйте свежую версию Chromium.",
+        "supertonicUnsupported": "Этот браузер не поддерживает локальную среду выполнения Supertonic TTS. Попробуйте свежую версию Chrome или Edge.",
+        "generateFailed": "Не удалось сгенерировать речь.",
+        "insertFailed": "Не удалось сохранить и вставить аудио."
+      },
+      "notifications": {
+        "addedAndLinked": "Файл «{{fileName}}» добавлен на таймлайн и привязан к тексту.",
+        "savedNoTrack": "Файл «{{fileName}}» сохранен, но нет доступной аудиодорожки."
+      }
+    },
+    "aiPanel": {
+      "textToSpeech": "Преобразование текста в речь",
+      "collapseTextToSpeech": "Свернуть синтез речи",
+      "expandTextToSpeech": "Развернуть синтез речи",
+      "runsLocally": "{{runtime}} работает локально в браузере через {{backend}}.",
+      "history": "История ({{count}}) — {{size}}",
+      "clearAll": "Очистить всё",
+      "musicGeneration": "Генерация музыки",
+      "collapseMusicGeneration": "Свернуть генерацию музыки",
+      "expandMusicGeneration": "Развернуть генерацию музыки",
+      "musicGenerationInfo": "Справка о генерации музыки",
+      "musicgenDescription": "Использует модель MusicGen от Xenova через Transformers.js. Первая загрузка объёмная, затем модель сохраняется в локальном кэше.",
+      "musicgenPromptHint": "Укажите жанр, настроение, темп и инструменты. Короткие клипы генерируются намного быстрее.",
+      "musicgenUnsupported": "WebGPU не поддерживается в этом браузере. Для MusicGen требуется Chrome 113+, Edge 113+ или Safari 26+.",
+      "prompt": "Промпт",
+      "presets": "Пресеты",
+      "musicPromptPlaceholder": "Опишите музыку, которую хотите сгенерировать...",
+      "length": "Длительность",
+      "generateMusic": "Сгенерировать музыку",
+      "musicHistory": "История музыки ({{count}}) — {{size}}",
+      "remove": "Удалить",
+      "saved": "Сохранено",
+      "saving": "Сохранение...",
+      "saveAndInsert": "Сохранить и вставить",
+      "saveToLibrary": "Сохранить в медиатеку",
+      "progressPreparingMusic": "Подготовка локальной генерации музыки...",
+      "errors": {
+        "describeMusic": "Опишите музыку, которую хотите сгенерировать.",
+        "musicgenUnsupported": "Для MusicGen требуется WebGPU. Используйте Chrome 113+, Edge 113+ или Safari 26+.",
+        "generateMusicFailed": "Не удалось сгенерировать музыку.",
+        "saveAudioFailed": "Не удалось сохранить аудио в медиатеку."
+      },
+      "notifications": {
+        "savedToLibrary": "Файл «{{fileName}}» сохранён в медиатеку.",
+        "savedAndAdded": "Файл «{{fileName}}» сохранён и добавлен на таймлайн."
+      },
+      "defaultTtsPrompt": "Добро пожаловать в VideoSOS. Этот голос сгенерирован локально в браузере.",
+      "musicPresets": {
+        "lofiChillLabel": "Lo-fi чилл",
+        "lofiChillPrompt": "Тёплый lo-fi бит с глухими барабанами, мягким басом и мечтательным синтезатором",
+        "pop80sLabel": "Поп 80-х",
+        "pop80sPrompt": "Поп-трек в стиле 80-х с плотными ударными и синтезатором",
+        "rock90sLabel": "Рок 90-х",
+        "rock90sPrompt": "Рок-композиция в стиле 90-х с громкими гитарами и мощными ударными",
+        "upbeatEdmLabel": "Энергичный EDM",
+        "upbeatEdmPrompt": "Лёгкий и жизнерадостный EDM-трек с синкопированными ударными, воздушными пэдами и яркими эмоциями, bpm: 130",
+        "countryLabel": "Кантри",
+        "countryPrompt": "Весёлая кантри-песня с акустическими гитарами",
+        "lofiElectroLabel": "Lo-fi электро",
+        "lofiElectroPrompt": "Медленный чилловый lo-fi электро-трек с органическими сэмплами"
+      }
+    },
+    "clearKeyframesDialog": {
+      "descriptionProperty": "Удалить ключевые кадры параметра «{{property}}» для выбранных элементов ({{count}})?",
+      "descriptionAll": "Удалить все ключевые кадры для выбранных элементов ({{count}})?"
+    },
+    "localInferencePill": {
+      "jobs": "{{count}} задач(и)"
+    },
+    "subtitleSection": {
+      "cueCount": "{{count}} реплик(и)"
+    },
+    "propertiesSidebar": {
+      "clipsSelected": "Выбрано клипов: {{count}}"
+    }
+  },
+  "preview": {
+    "canvasDrop": {
+      "dropOnTimeline": "Перетащите на таймлайн",
+      "compoundClipsTimeline": "Составные клипы лучше размещать на таймлайне.",
+      "presetsTimeline": "Пресеты текста и фигур лучше размещать на таймлайне.",
+      "dropOneItem": "Перетащите один объект",
+      "oneMediaAtATime": "Перетаскивайте на холст по одному медиафайлу за раз.",
+      "audioGoesOnTimeline": "Аудио размещается на таймлайне",
+      "visualLayersOnly": "Перетаскивание на холст добавляет только визуальные слои.",
+      "dropToPlace": "Перетащите для размещения",
+      "addAtPlayhead": "Добавить этот медиафайл в позицию плейхеда и точку сброса.",
+      "dropOneFile": "Перетащите один файл",
+      "oneVisualFileAtATime": "Перетаскивание на холст импортирует по одному визуальному файлу за раз.",
+      "importAndPlace": "Импортировать и разместить",
+      "importAndPlaceDescription": "Импортировать этот файл и разместить его на холсте.",
+      "noCompatibleTrack": "Нет доступной разблокированной совместимой дорожки для вставки.",
+      "unableToLoadMedia": "Не удалось загрузить добавленный медиафайл.",
+      "mediaNoLongerAvailable": "Добавленный медиафайл больше недоступен.",
+      "dragDropUnsupported": "Перетаскивание не поддерживается в этом браузере. Используйте Chrome или Edge.",
+      "filesRejected": "Некоторые файлы отклонены: {{errors}}",
+      "dropAudioOnTimeline": "Перетащите аудио на таймлайн.",
+      "unableToInspectVideo": "Не удалось проверить добавленное видео.",
+      "unableToInspectFile": "Не удалось проверить добавленный файл.",
+      "unableToImportFile": "Не удалось импортировать добавленный файл."
+    }
+  },
+  "settings": {
+    "ai": {
+      "scene": "Сцен: {{count}}"
+    },
+    "feedback": {
+      "completedForItems": "{{action}}: выполнено для {{count}} объект(ов).",
+      "couldntProcessItems": "Не удалось выполнить «{{action}}» для {{count}} объект(ов){{detail}}"
+    },
+    "toasts": {
+      "itemsUpdated": "Обновлено элементов: {{count}}.",
+      "itemsUpdatedFailed": "Обновлено элементов: {{count}}. С ошибкой: {{failed}}"
+    }
+  },
+  "projects": {
+    "legacyMigration": {
+      "errorsLogged": "Зафиксировано ошибок: {{count}}"
+    },
+    "legacyMigrationErrors": {
+      "retryStillFailing": "При повторе по-прежнему ошибок: {{count}}.",
+      "failedCount": "Ошибок миграции: {{count}}"
+    },
+    "list": {
+      "movedToTrashCount": "Перемещено проектов в корзину: {{count}}.",
+      "selectedCount": "Выбрано: {{count}}",
+      "deleteN": "Удалить: {{count}}",
+      "projectCount": "Проектов: {{count}}",
+      "bulkDeleteTitle": "Удалить выбранные проекты ({{count}})?"
+    },
+    "trash": {
+      "emptiedTrash": "Удалено проектов из корзины: {{count}}.",
+      "emptiedTrashWithFailures": "Не удалось удалить проектов: {{count}}."
+    },
+    "relativeTime": {
+      "minutesAgo": "{{count}} мин назад",
+      "hoursAgo": "{{count}} ч назад",
+      "daysAgo": "{{count}} дн. назад",
+      "weeksAgo": "{{count}} нед. назад",
+      "monthsAgo": "{{count}} мес. назад",
+      "yearsAgo": "{{count}} г. назад"
+    },
+    "settings": {
+      "hotkeys": {
+        "importedCommands": "Импортировано команд: {{count}}",
+        "remappedCount": "Переназначено: {{count}}",
+        "ignoredCount": "Пропущено: {{count}}",
+        "customCount": "Пользовательских: {{count}}"
+      },
+      "localInference": {
+        "activeJobs": "Активных задач: {{count}}",
+        "unloadedToast": "Выгружено локальных сред выполнения: {{count}}."
+      }
+    }
+  },
+  "sceneBrowser": {
+    "counts": {
+      "clip_one": "{{count}} клип",
+      "clip_few": "{{count}} клипа",
+      "clip_many": "{{count}} клипов",
+      "clip_other": "{{count}} клипа",
+      "scene_one": "{{count}} сцена",
+      "scene_few": "{{count}} сцены",
+      "scene_many": "{{count}} сцен",
+      "scene_other": "{{count}} сцены",
+      "match_one": "{{count}} совпадение",
+      "match_few": "{{count}} совпадения",
+      "match_many": "{{count}} совпадений",
+      "match_other": "{{count}} совпадения"
+    },
+    "sort": {
+      "label": "Сортировка",
+      "relevance": "По релевантности",
+      "time": "По таймкоду",
+      "name": "По имени медиафайла"
+    },
+    "scope": {
+      "placeholder": "Область поиска",
+      "allMedia": "Все медиафайлы",
+      "scopedTo": "Область: {{name}}",
+      "scopedToAll": "Область: все медиафайлы"
+    },
+    "banners": {
+      "downloadingSemanticModel": "Загрузка семантической модели (~22 MB, только при первом запуске)...",
+      "indexingCaptions": "Индексация субтитров для семантического поиска — {{current}}/{{total}} клипов",
+      "reanalyzing": "Повторный анализ <strong>{{label}}</strong> — сцены обновятся по завершении."
+    },
+    "analyze": {
+      "title": "Анализ медиа с помощью ИИ",
+      "button": "Анализировать",
+      "scope": "Анализировать «{{name}}»",
+      "newMedia": "Анализировать новые медиафайлы",
+      "reanalyzeAll": "Повторить анализ для всех"
+    },
+    "view": {
+      "list": "Список",
+      "grid": "Сетка"
+    },
+    "empty": {
+      "noCaptionsTitle": "ИИ-субтитров пока нет.",
+      "noCaptionsPrefix": "Запустите",
+      "noCaptionsSuffix": "для клипа из медиатеки, чтобы создать субтитры сцен для поиска.",
+      "noMatchesTitle": "Сцены по вашему запросу не найдены.",
+      "noMatchesPrefix": "Попробуйте более короткий запрос или измените область поиска на"
+    },
+    "search": {
+      "exitColorMode": "Выйти из режима цвета",
+      "colorTitle": "Поиск по цвету",
+      "color": "Цвет",
+      "semanticTitle": "Семантический поиск (по смыслу)",
+      "keywordTitle": "Поиск по ключевым словам (точное совпадение)",
+      "semanticLabel": "Семантический поиск",
+      "keywordLabel": "Поиск по ключевым словам",
+      "semantic": "Семантический",
+      "keyword": "По словам",
+      "keywordDescription": "Точные совпадения слов",
+      "semanticDescription": "По смыслу",
+      "clearReference": "Сбросить эталон и выбрать другой цвет",
+      "findingSimilarPalette": "Поиск сцен с похожей палитрой...",
+      "semanticPlaceholder": "Поиск по смыслу — «закат над водой», «смеющиеся люди»...",
+      "keywordPlaceholder": "Поиск сцен по тому, что видно в кадре...",
+      "clearSearch": "Очистить поиск",
+      "similarPaletteTo": "Похожая палитра на {{label}} — нажмите, чтобы сбросить"
+    },
+    "matchTiers": {
+      "strong": "Высокое",
+      "good": "Хорошее",
+      "fair": "Удовлетворительное"
+    },
+    "match": {
+      "keyword": "Ключевое слово",
+      "keywordHint": "Совпадение по ключу · косинус {{score}}",
+      "meaningWithTier": "Смысл · {{tier}}",
+      "textEmbeddingHint": "Косинусное сходство text-embedding: {{score}}",
+      "visualWithTier": "Визуальное · {{tier}}",
+      "clipHint": "CLIP косинус: {{score}}",
+      "colorWithName": "Цвет · {{color}}",
+      "paletteColorHint": "Совпадение палитры по {{color}} (ΔE 2000)",
+      "paletteDistance": "Палитра · ΔE {{distance}}",
+      "paletteDistanceHint": "Взвешенное среднее ΔE 2000 к эталонной палитре",
+      "belowThreshold": "Ниже порога",
+      "cosineHint": "косинус {{score}}",
+      "top": "Лучшее",
+      "topHint": "Наибольшее совпадение"
+    },
+    "palette": {
+      "libraryColor": "Цвет медиатеки",
+      "empty": "Палитры еще не проиндексированы — запустите создание ИИ-субтитров.",
+      "moreColors_one": "еще {{count}} цвет",
+      "moreColors_few": "еще {{count}} цвета",
+      "moreColors_many": "еще {{count}} цветов",
+      "moreColors_other": "еще {{count}} цвета",
+      "showMoreColors_one": "Показать еще {{count}} цвет",
+      "showMoreColors_few": "Показать еще {{count}} цвета",
+      "showMoreColors_many": "Показать еще {{count}} цветов",
+      "showMoreColors_other": "Показать еще {{count}} цвета",
+      "moreColorsTitle": "Другие цвета",
+      "findColor": "Найти сцены этого цвета ({{percent}}% медиатеки)",
+      "findSimilar": "Найти сцены с похожей палитрой",
+      "pickedSwatch": "Выбранный образец"
+    },
+    "scene": {
+      "previewAndDragHint": "Нажмите для превью в мониторе источника — перетащите для добавления на таймлайн"
+    }
+  }
+}

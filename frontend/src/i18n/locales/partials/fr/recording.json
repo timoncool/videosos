@@ -1,0 +1,36 @@
+{
+  "recording": {
+    "rec": "REC",
+    "record": "Enregistrer une voix off",
+    "recordTooltip": "Enregistrez une voix off synchronisée avec la tête de lecture",
+    "pause": "Mettre l’enregistrement en pause",
+    "resume": "Reprendre l’enregistrement",
+    "stop": "Arrêter et enregistrer",
+    "stopTooltip": "Arrêtez l’enregistrement et ajoutez la prise à la chronologie",
+    "cancel": "Annuler l’enregistrement",
+    "cancelTooltip": "Ignorer cette prise",
+    "saving": "Enregistrement…",
+    "chooseDevice": "Paramètres du microphone",
+    "microphone": "Microphone",
+    "systemDefault": "Système par défaut",
+    "settings": "Paramètres d’enregistrement",
+    "noiseSuppression": "Suppression du bruit",
+    "autoGain": "Gain automatique",
+    "muteWhileRecording": "Couper le son de la chronologie pendant l’enregistrement",
+    "syncOffset": "Décalage de synchronisation",
+    "syncOffsetEarlier": "Avancer la prise",
+    "syncOffsetLater": "Retarder la prise",
+    "headphonesHint": "Utilisez un casque pour que l’audio de la chronologie ne soit pas capté par le micro.",
+    "fileNamePrefix": "voiceover",
+    "errors": {
+      "unsupported": "L’enregistrement au microphone n’est pas pris en charge par ce navigateur.",
+      "noProject": "Ouvrez un projet avant d’enregistrer.",
+      "permissionDenied": "L’accès au microphone a été bloqué. Autorisez l’accès au micro dans votre navigateur et réessayez.",
+      "noDevice": "Aucun microphone détecté. Connectez un micro et réessayez.",
+      "deviceBusy": "Le microphone est utilisé par une autre application.",
+      "startFailed": "Impossible de démarrer l’enregistrement. Veuillez réessayer.",
+      "failed": "Échec de l’enregistrement. Veuillez réessayer.",
+      "saveFailed": "Impossible d’enregistrer la prise."
+    }
+  }
+}

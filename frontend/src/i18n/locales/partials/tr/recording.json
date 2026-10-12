@@ -1,0 +1,36 @@
+{
+  "recording": {
+    "rec": "REC",
+    "record": "Seslendirme kaydet",
+    "recordTooltip": "Oynatma başlığıyla eşzamanlı bir seslendirme kaydedin",
+    "pause": "Kaydı duraklat",
+    "resume": "Kaydı sürdür",
+    "stop": "Durdur ve kaydet",
+    "stopTooltip": "Kaydı durdurun ve çekimi zaman çizelgesine ekleyin",
+    "cancel": "Kaydı iptal et",
+    "cancelTooltip": "Bu çekimi at",
+    "saving": "Kaydediliyor…",
+    "chooseDevice": "Mikrofon ayarları",
+    "microphone": "Mikrofon",
+    "systemDefault": "Sistem varsayılanı",
+    "settings": "Kayıt ayarları",
+    "noiseSuppression": "Gürültü bastırma",
+    "autoGain": "Otomatik kazanç",
+    "muteWhileRecording": "Kayıt sırasında zaman çizelgesini sessize al",
+    "syncOffset": "Senkronizasyon kayması",
+    "syncOffsetEarlier": "Çekimi öne kaydır",
+    "syncOffsetLater": "Çekimi geriye kaydır",
+    "headphonesHint": "Zaman çizelgesi sesinin mikrofon tarafından yakalanmaması için kulaklık kullanın.",
+    "fileNamePrefix": "voiceover",
+    "errors": {
+      "unsupported": "Mikrofonla kayıt bu tarayıcıda desteklenmiyor.",
+      "noProject": "Kayıt yapmadan önce bir proje açın.",
+      "permissionDenied": "Mikrofon erişimi engellendi. Tarayıcınızda mikrofon erişimine izin verip tekrar deneyin.",
+      "noDevice": "Mikrofon bulunamadı. Bir mikrofon bağlayıp tekrar deneyin.",
+      "deviceBusy": "Mikrofon başka bir uygulama tarafından kullanılıyor.",
+      "startFailed": "Kayıt başlatılamadı. Lütfen tekrar deneyin.",
+      "failed": "Kayıt başarısız oldu. Lütfen tekrar deneyin.",
+      "saveFailed": "Kayıt kaydedilemedi."
+    }
+  }
+}

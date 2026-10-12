@@ -1,0 +1,48 @@
+{
+  "textMotion": {
+    "sectionTitle": "Animação de texto",
+    "hint": "Anime o texto por caractere, palavra ou linha. Entrada e Saída tocam nas bordas do clipe; o Loop repete continuamente entre elas.",
+    "slots": {
+      "in": "Entrada",
+      "out": "Saída",
+      "loop": "Loop"
+    },
+    "duration": "Duração",
+    "stagger": "Escalonamento",
+    "intensity": "Intensidade",
+    "order": "Ordem",
+    "orders": {
+      "forward": "Para frente",
+      "backward": "Para trás",
+      "center": "Do centro",
+      "random": "Aleatório"
+    },
+    "removePreset": "Remover {{name}}",
+    "presets": {
+      "typewriter": "Máquina de escrever",
+      "fade-up": "Surgir subindo",
+      "rise": "Subida",
+      "cascade": "Cascata",
+      "pop": "Pop",
+      "blur-in": "Desfoque de entrada",
+      "slide-mask": "Deslizar e revelar",
+      "wave-in": "Onda de entrada",
+      "fade-down": "Sumir descendo",
+      "sink": "Afundar",
+      "pop-out": "Pop de saída",
+      "blur-out": "Desfoque de saída",
+      "typewriter-erase": "Apagar",
+      "pulse": "Pulso",
+      "wave": "Onda",
+      "shimmer": "Cintilação",
+      "swing": "Balanço"
+    },
+    "unit": "Aplicar a",
+    "units": {
+      "character": "Caractere",
+      "word": "Palavra",
+      "line": "Linha",
+      "whole-clip": "Clipe inteiro"
+    }
+  }
+}

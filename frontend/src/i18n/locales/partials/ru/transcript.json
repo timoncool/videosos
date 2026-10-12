@@ -1,0 +1,30 @@
+{
+  "transcript": {
+    "sourceAnalyzed": "Исходник полностью проанализирован",
+    "detectedRange": "Голос обнаружен с {{start}} по {{end}}. Участки с тишиной и только музыкой пропущены.",
+    "title": "Расшифровка",
+    "tabLabel": "Расшифровка",
+    "emptySelection": "Выберите видео- или аудиоклип для редактирования расшифровки.",
+    "searchPlaceholder": "Поиск по расшифровке",
+    "nextMatch": "Следующее совпадение",
+    "previousMatch": "Предыдущее совпадение",
+    "clearSearch": "Очистить поиск",
+    "noTranscript": "У этого клипа пока нет расшифровки.",
+    "transcriptionFailed": "Не удалось создать расшифровку.",
+    "tryAgain": "Повторить",
+    "largeTurboFallback": "Недостаточно памяти для Large Turbo. Повторная попытка с Whisper Small…",
+    "generate": "Создать расшифровку",
+    "transcribing": "Создание расшифровки…",
+    "loading": "Загрузка расшифровки…",
+    "wordsSelected_one": "Выбрано {{count}} слово",
+    "wordsSelected_few": "Выбрано {{count}} слова",
+    "wordsSelected_many": "Выбрано {{count}} слов",
+    "wordsSelected_other": "Выбрано {{count}} слова",
+    "selectHint": "Нажмите на слово для перехода; выделите перетаскиванием.",
+    "deleteSelection": "Удалить",
+    "toastRemoved": "Удалено клипов: {{count}}",
+    "toastNothingRemoved": "Ничего не удалено",
+    "toastRemoveFailed": "Не удалось удалить выбранные слова",
+    "toastTranscribeFailed": "Сбой расшифровки"
+  }
+}

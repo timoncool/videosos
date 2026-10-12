@@ -1,0 +1,109 @@
+{
+  "preview": {
+    "mediaOffline": {
+      "title": "Медиафайл недоступен",
+      "relink": "Перелинкуйте его на панели медиатеки",
+      "loading": "Загрузка…"
+    },
+    "align": {
+      "left": "Выровнять по левому краю",
+      "centerH": "Выровнять по центру по горизонтали",
+      "right": "Выровнять по правому краю",
+      "top": "Выровнять по верхнему краю",
+      "centerV": "Выровнять по центру по вертикали",
+      "bottom": "Выровнять по нижнему краю",
+      "distributeH": "Распределить по горизонтали",
+      "distributeV": "Распределить по вертикали",
+      "disableCanvasSnap": "Отключить привязку на холсте",
+      "enableCanvasSnap": "Включить привязку на холсте",
+      "toggleCanvasSnap": "Переключить привязку на холсте"
+    },
+    "controls": {
+      "captureFailed": "Не удалось захватить текущий кадр.",
+      "disableProxyPlayback": "Отключить воспроизведение прокси",
+      "enableProxyPlayback": "Включить воспроизведение прокси",
+      "frameDownloadedNoProject": "Кадр скачан — откройте проект, чтобы сохранить его в медиатеку.",
+      "frameDownloadedNotSaved": "Кадр скачан, но не удалось сохранить его в медиатеку: {{message}}",
+      "frameSaved": "«{{name}}» сохранен в медиатеку.",
+      "goToEnd": "В конец",
+      "goToEndTooltip": "В конец",
+      "goToStart": "В начало",
+      "goToStartTooltip": "В начало",
+      "nextFrame": "Следующий кадр",
+      "nextFrameTooltip": "Следующий кадр",
+      "pauseTooltip": "Пауза",
+      "playTooltip": "Воспроизведение",
+      "prevFrame": "Предыдущий кадр",
+      "prevFrameTooltip": "Предыдущий кадр",
+      "proxyPlaybackOff": "Воспроизведение прокси выкл.",
+      "proxyPlaybackOn": "Воспроизведение прокси вкл.",
+      "saveFrame": "Сохранить кадр",
+      "saveFrameFailed": "Не удалось сохранить кадр.",
+      "saveFrameTooltip": "Сохранить кадр",
+      "savingFrame": "Сохранение кадра",
+      "savingFrameTooltip": "Сохранение кадра"
+    },
+    "monitor": {
+      "mute": "Заглушить",
+      "muteShort": "Заглушить",
+      "muted": "Без звука",
+      "percent": "Проценты",
+      "previewOnlyNote": "Влияет только на локальное воспроизведение — при экспорте используется микс проекта.",
+      "thisDeviceOnly": "Только на этом устройстве",
+      "title": "Звук превью",
+      "unmute": "Включить звук",
+      "volume": "Громкость"
+    },
+    "player": {
+      "exitFullscreen": "Выйти из полноэкранного режима",
+      "fullscreen": "Полноэкранный режим",
+      "mute": "Заглушить",
+      "pause": "Пауза",
+      "play": "Воспроизведение",
+      "seek": "Перемотка",
+      "unmute": "Включить звук",
+      "volume": "Громкость"
+    },
+    "stage": {
+      "loadingMedia": "Загрузка медиа",
+      "videoPreview": "Превью видео",
+      "emptyTitle": "На таймлайне пока ничего нет",
+      "emptyDescription": "Импортируйте медиа, перетащите клип на таймлайн и нажмите Space для превью.",
+      "gradeComparisonSplit": "Раздельное сравнение грейдинга",
+      "gradeComparisonBefore": "До",
+      "gradeComparisonAfter": "После",
+      "gradeComparisonWipe": "Настроить границу сравнения"
+    },
+    "zoom": {
+      "ariaLabel": "Масштаб: {{label}}",
+      "auto": "Авто",
+      "tooltip": "Масштаб: {{label}}"
+    },
+    "canvasDrop": {
+      "dropOnTimeline": "Перетащите на таймлайн",
+      "compoundClipsTimeline": "Составные клипы лучше размещать на таймлайне.",
+      "presetsTimeline": "Шаблоны текста и фигур лучше размещать на таймлайне.",
+      "adjustmentLayersTimeline": "Корректирующие слои применяются ко всему кадру — размещайте их на таймлайне.",
+      "placeLayerDescription": "Разместить этот слой в точке сброса.",
+      "dropOneItem": "Перетащите один элемент",
+      "oneMediaAtATime": "Размещайте на холсте не более одного медиафайла за раз.",
+      "audioGoesOnTimeline": "Аудио размещается на таймлайне",
+      "visualLayersOnly": "На холст можно помещать только визуальные слои.",
+      "dropToPlace": "Отпустите для размещения",
+      "addAtPlayhead": "Добавить это медиа в позиции плейхеда и точке сброса.",
+      "dropOneFile": "Перетащите один файл",
+      "oneVisualFileAtATime": "На холст можно импортировать только по одному визуальному файлу за раз.",
+      "importAndPlace": "Импортировать и разместить",
+      "importAndPlaceDescription": "Импортировать этот файл и разместить его на холсте.",
+      "noCompatibleTrack": "Нет доступной незаблокированной подходящей дорожки.",
+      "unableToLoadMedia": "Не удалось загрузить перетащенный медиафайл.",
+      "mediaNoLongerAvailable": "Перетащенный медиафайл больше недоступен.",
+      "dragDropUnsupported": "Перетаскивание не поддерживается в этом браузере. Используйте Chrome или Edge.",
+      "filesRejected": "Некоторые файлы отклонены: {{errors}}",
+      "dropAudioOnTimeline": "Перетащите аудио на таймлайн.",
+      "unableToInspectVideo": "Не удалось проанализировать перетащенное видео.",
+      "unableToInspectFile": "Не удалось проанализировать перетащенный файл.",
+      "unableToImportFile": "Не удалось импортировать перетащенный файл."
+    }
+  }
+}

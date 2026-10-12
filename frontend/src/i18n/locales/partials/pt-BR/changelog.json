@@ -1,0 +1,16 @@
+{
+  "changelog": {
+    "homeAria": "Página inicial do VideoSOS",
+    "backToHome": "Voltar ao início",
+    "releaseNotes": "Notas da versão",
+    "title": "Novidades no VideoSOS",
+    "description": "Um resumo semanal de novas ferramentas de edição, melhorias no fluxo de trabalho e correções. A versão mais recente está aberta; expanda qualquer semana anterior para ver a lista completa de alterações.",
+    "latest": "Mais recente",
+    "changeCount_one": "{{count}} alteração",
+    "changeCount_other": "{{count}} alterações",
+    "initialRelease": "Versão inicial",
+    "ctaTitle": "Pronto para criar algo?",
+    "ctaDescription": "Abra o VideoSOS e coloque as ferramentas mais recentes em ação.",
+    "openVideoSOS": "Abrir o VideoSOS"
+  }
+}

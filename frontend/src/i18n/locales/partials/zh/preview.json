@@ -1,0 +1,105 @@
+{
+  "preview": {
+    "mediaOffline": {
+      "title": "媒体离线",
+      "relink": "在媒体面板中重新链接",
+      "loading": "加载中…"
+    },
+    "align": {
+      "left": "左对齐",
+      "centerH": "水平居中",
+      "right": "右对齐",
+      "top": "顶部对齐",
+      "centerV": "垂直居中",
+      "bottom": "底部对齐",
+      "distributeH": "水平分布",
+      "distributeV": "垂直分布",
+      "disableCanvasSnap": "禁用画布吸附",
+      "enableCanvasSnap": "启用画布吸附",
+      "toggleCanvasSnap": "切换画布吸附"
+    },
+    "controls": {
+      "captureFailed": "无法捕获当前帧。",
+      "disableProxyPlayback": "禁用代理播放",
+      "enableProxyPlayback": "启用代理播放",
+      "frameDownloadedNoProject": "已下载帧 — 打开项目即可保存到媒体库。",
+      "frameDownloadedNotSaved": "帧已下载，但无法保存到媒体库：{{message}}",
+      "frameSaved": "已将 \"{{name}}\" 保存到媒体库。",
+      "goToEnd": "跳到结尾",
+      "goToEndTooltip": "跳到结尾",
+      "goToStart": "跳到开始",
+      "goToStartTooltip": "跳到开始",
+      "nextFrame": "下一帧",
+      "nextFrameTooltip": "下一帧",
+      "pauseTooltip": "暂停",
+      "playTooltip": "播放",
+      "prevFrame": "上一帧",
+      "prevFrameTooltip": "上一帧",
+      "proxyPlaybackOff": "代理播放已关闭",
+      "proxyPlaybackOn": "代理播放已开启",
+      "saveFrame": "保存帧",
+      "saveFrameFailed": "无法保存帧。",
+      "saveFrameTooltip": "保存帧",
+      "savingFrame": "正在保存帧…",
+      "savingFrameTooltip": "正在保存帧…"
+    },
+    "monitor": {
+      "mute": "静音",
+      "muteShort": "静音",
+      "muted": "已静音",
+      "percent": "{{value}}%",
+      "previewOnlyNote": "仅影响本地播放 — 导出时使用项目混音。",
+      "thisDeviceOnly": "仅此设备",
+      "title": "预览音频",
+      "unmute": "取消静音",
+      "volume": "音量"
+    },
+    "player": {
+      "exitFullscreen": "退出全屏",
+      "fullscreen": "全屏",
+      "mute": "静音",
+      "pause": "暂停",
+      "play": "播放",
+      "seek": "拖动",
+      "unmute": "取消静音",
+      "volume": "音量"
+    },
+    "stage": {
+      "loadingMedia": "正在加载媒体…",
+      "videoPreview": "视频预览",
+      "emptyTitle": "时间线上还没有内容",
+      "emptyDescription": "导入媒体，将片段拖到时间线，然后按空格键预览。"
+    },
+    "zoom": {
+      "ariaLabel": "缩放级别：{{label}}",
+      "auto": "自动",
+      "tooltip": "缩放：{{label}}"
+    },
+    "canvasDrop": {
+      "dropOnTimeline": "拖放到时间线",
+      "compoundClipsTimeline": "复合剪辑仍然最适合放在时间线上。",
+      "presetsTimeline": "文本和形状预设仍然最适合放在时间线上。",
+      "adjustmentLayersTimeline": "调整图层应用于整个画面 — 请将其放置在时间线上。",
+      "placeLayerDescription": "将此图层放置在拖放位置。",
+      "dropOneItem": "拖放一个项目",
+      "oneMediaAtATime": "一次只能在画布上放置一个媒体项目。",
+      "audioGoesOnTimeline": "音频应放到时间线",
+      "visualLayersOnly": "画布拖放只会放置视觉图层。",
+      "dropToPlace": "拖放以放置",
+      "addAtPlayhead": "在播放头和拖放位置添加此媒体。",
+      "dropOneFile": "拖放一个文件",
+      "oneVisualFileAtATime": "画布拖放一次只导入一个视觉文件。",
+      "importAndPlace": "导入并放置",
+      "importAndPlaceDescription": "导入此文件并将其放在画布上。",
+      "noCompatibleTrack": "没有可用于此拖放的未锁定兼容轨道。",
+      "unableToLoadMedia": "无法加载拖放的媒体。",
+      "mediaNoLongerAvailable": "拖放的媒体已不可用。",
+      "dragDropUnsupported": "此浏览器不支持拖放。请使用 Chrome 或 Edge。",
+      "filesRejected": "部分文件被拒绝：{{errors}}",
+      "dropAudioOnTimeline": "请将音频拖放到时间线。",
+      "unableToInspectVideo": "无法检查拖放的视频。",
+      "unableToInspectFile": "无法检查拖放的文件。",
+      "unableToImportFile": "无法导入拖放的文件。"
+    }
+  }
+}

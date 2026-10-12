@@ -1,0 +1,56 @@
+{
+  "export": {
+    "renderQueue": {
+      "title": "Render kuyruğu",
+      "dialogTitle": "Dışa aktarmalar",
+      "tabQueue": "Kuyruk",
+      "tabExports": "Kaydedilenler",
+      "description": "Kuyruktaki dışa aktarmalar tek tek render edilir ve çalışma alanınızın dışa aktarma klasörüne kaydedilir.",
+      "addToQueue": "Kuyruğa ekle",
+      "addCurrentRange": "Geçerli aralık",
+      "segmentsHeading": "Bölümlere ayır",
+      "perMarker": "İşaretçi başına bir bölüm",
+      "splitChunks": "{{seconds}} sn'lik parçalara böl",
+      "partLabel": "Bölüm {{n}}",
+      "addedToast_one": "Render kuyruğuna {{count}} iş eklendi",
+      "addedToast_other": "Render kuyruğuna {{count}} iş eklendi",
+      "noMarkers": "İşaretçiye göre bölmek için zaman çizelgesine işaretçi ekleyin.",
+      "nothingToRender": "Bu aralıkta render edilecek bir şey yok.",
+      "buildFailed": "Render kuyruğuna eklenemedi.",
+      "empty": "Henüz render işi yok. Dışa aktarma penceresinden ekleyin.",
+      "exportsEmpty": "Henüz dışa aktarılan dosya yok.",
+      "exportsLocation": "Dosyalar bu projenin yerel klasöründe ({{folder}}).",
+      "exportsLocationGeneric": "Dosyalar çalışma alanınızdaki bu projenin yerel klasöründe.",
+      "pause": "Duraklat",
+      "resume": "Sürdür",
+      "paused": "Kuyruk duraklatıldı — devam etmek için sürdürün.",
+      "clearFinished": "Bitenleri temizle",
+      "clearAll": "Tümünü temizle",
+      "refresh": "Yenile",
+      "wholeProject": "Tüm proje",
+      "savedTo": "{{path}} konumuna kaydedildi",
+      "remove": "Kaldır",
+      "cancel": "İptal",
+      "retry": "Yeniden dene",
+      "moveUp": "Yukarı taşı",
+      "moveDown": "Aşağı taşı",
+      "download": "İndir",
+      "delete": "Sil",
+      "deleted": "{{name}} silindi",
+      "missingFile": "Dosya bulunamadı — taşınmış veya silinmiş olabilir.",
+      "downloadFailed": "İndirme başarısız.",
+      "deleteFailed": "Silme başarısız.",
+      "status": {
+        "queued": "Kuyrukta",
+        "rendering": "Render ediliyor",
+        "completed": "Tamamlandı",
+        "failed": "Başarısız",
+        "cancelled": "İptal edildi"
+      }
+    }
+  },
+  "toolbar": {
+    "renderQueue": "Render kuyruğu",
+    "renderQueueAria": "Render kuyruğunu aç"
+  }
+}

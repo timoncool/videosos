@@ -1,0 +1,33 @@
+[package]
+name = "videosos-desktop"
+version = "2.0.0"
+edition = "2021"
+description = "Tauri shell of VideoSOS: runs vs-server on 127.0.0.1:8796 (VIDEOSOS_PORT) inside this process and opens the window on it"
+
+[lib]
+name = "videosos_desktop_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-updater = "2"
+tauri-plugin-dialog = "2"
+tauri-plugin-opener = "2"
+tauri-plugin-single-instance = "2"
+rfd = "0.17"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+vs-server = { path = "../../crates/vs-server" }
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+
+[profile.dev]
+debug = "line-tables-only"
+
+[profile.dev.package."*"]
+debug = false

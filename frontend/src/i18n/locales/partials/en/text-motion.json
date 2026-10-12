@@ -1,0 +1,48 @@
+{
+  "textMotion": {
+    "sectionTitle": "Text Animation",
+    "hint": "Animate text per character, word, or line. In and Out play at the clip edges; Loop runs continuously between them.",
+    "slots": {
+      "in": "In",
+      "out": "Out",
+      "loop": "Loop"
+    },
+    "duration": "Duration",
+    "stagger": "Stagger",
+    "intensity": "Intensity",
+    "order": "Order",
+    "orders": {
+      "forward": "Forward",
+      "backward": "Backward",
+      "center": "Center out",
+      "random": "Random"
+    },
+    "removePreset": "Remove {{name}}",
+    "presets": {
+      "typewriter": "Typewriter",
+      "fade-up": "Fade Up",
+      "rise": "Rise",
+      "cascade": "Cascade",
+      "pop": "Pop",
+      "blur-in": "Blur In",
+      "slide-mask": "Slide Reveal",
+      "wave-in": "Wave In",
+      "fade-down": "Fade Down",
+      "sink": "Sink",
+      "pop-out": "Pop Out",
+      "blur-out": "Blur Out",
+      "typewriter-erase": "Erase",
+      "pulse": "Pulse",
+      "wave": "Wave",
+      "shimmer": "Shimmer",
+      "swing": "Swing"
+    },
+    "unit": "Applies to",
+    "units": {
+      "character": "Character",
+      "word": "Word",
+      "line": "Line",
+      "whole-clip": "Whole clip"
+    }
+  }
+}

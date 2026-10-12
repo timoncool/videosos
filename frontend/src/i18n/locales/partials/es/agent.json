@@ -1,0 +1,21 @@
+{
+  "agent": {
+    "action": "Agent: {{action}}",
+    "commands": {
+      "click": "clicks",
+      "type": "types",
+      "select": "chooses",
+      "press_key": "presses a key",
+      "scroll": "scrolls",
+      "timeline_edit": "edits the timeline",
+      "timeline_undo": "undoes",
+      "timeline_redo": "redoes",
+      "media_import": "imports media",
+      "playhead_seek": "moves the playhead",
+      "playback": "plays or pauses",
+      "editor_tab": "opens a tab",
+      "project_open": "opens a project",
+      "export_video": "exports the video"
+    }
+  }
+}

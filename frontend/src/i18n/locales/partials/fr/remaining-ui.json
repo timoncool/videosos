@@ -1,0 +1,398 @@
+{
+  "editor": {
+    "mediaSidebar": {
+      "media": "Médias",
+      "text": "Texte",
+      "shapes": "Formes",
+      "effects": "Effets",
+      "transitions": "Transitions",
+      "ai": "IA",
+      "collapsePanel": "Réduire le panneau",
+      "expandPanel": "Développer le panneau",
+      "keyframeEditor": "Éditeur d'images clés",
+      "hideKeyframeEditor": "Masquer l'éditeur d'images clés",
+      "showKeyframeEditor": "Afficher l'éditeur d'images clés",
+      "templates": "Modèles",
+      "textGroupSingle": "Simple",
+      "textGroupTwoSpans": "2 segments",
+      "textGroupThreeSpans": "3 segments",
+      "addText": "Ajouter du texte",
+      "pen": "Plume",
+      "penToolHint": "Dessiner une forme de tracé personnalisée avec l'outil plume",
+      "adjustmentLayer": "Calque d'ajustement",
+      "blankAdjustmentLayer": "Calque d'ajustement vide",
+      "presets": "Préréglages"
+    },
+    "textSection": {
+      "sectionTitle": "Texte",
+      "content": "Contenu",
+      "single": "Simple",
+      "twoSpans": "2 segments",
+      "threeSpans": "3 segments",
+      "mixedNone": "Mixte / Aucun",
+      "selectPreset": "Sélectionner un préréglage",
+      "span": "Segment {{count}}",
+      "spanText": "Texte du segment {{count}}",
+      "eyebrow": "Accroche",
+      "eyebrowText": "Texte de l'accroche",
+      "title": "Titre",
+      "titleText": "Texte du titre",
+      "subtitle": "Sous-titre",
+      "subtitleText": "Texte du sous-titre",
+      "text": "Texte",
+      "enterText": "Saisir du texte...",
+      "defaultText": "Votre texte ici",
+      "selectFont": "Sélectionner une police",
+      "size": "Taille",
+      "spacing": "Espacement",
+      "scale": "Échelle",
+      "font": "Police",
+      "weight": "Graisse",
+      "style": "Style",
+      "align": "Aligner",
+      "color": "Couleur",
+      "background": "Arrière-plan",
+      "clear": "Effacer",
+      "clearBackground": "Effacer l'arrière-plan",
+      "lineHeightShort": "Interligne",
+      "padding": "Marge",
+      "radius": "Rayon",
+      "mixed": "Mixte",
+      "selectWeight": "Sélectionner une graisse",
+      "bold": "Gras",
+      "boldUnavailable": "Le gras n'est pas disponible pour cette police",
+      "italic": "Italique",
+      "underline": "Souligné",
+      "italicSpan": "Italique {{label}}",
+      "underlineSpan": "Souligner {{label}}",
+      "alignLeft": "Aligner à gauche",
+      "alignCenter": "Aligner au centre",
+      "alignRight": "Aligner à droite",
+      "alignTop": "Aligner en haut",
+      "alignMiddle": "Aligner au milieu",
+      "alignBottom": "Aligner en bas",
+      "effects": "Effets",
+      "presets": "Préréglages",
+      "fontWeights": {
+        "regular": "Normal",
+        "medium": "Moyen",
+        "semibold": "Demi-gras",
+        "bold": "Gras"
+      },
+      "effectPresets": {
+        "none": "Aucun",
+        "shadow": "Ombre",
+        "outline": "Contour",
+        "glow": "Lueur"
+      },
+      "shadow": "Ombre",
+      "shadowX": "Ombre X",
+      "shadowY": "Ombre Y",
+      "shadowBlur": "Flou ombre",
+      "strokeWidth": "Cont. ép.",
+      "stroke": "Contour",
+      "animation": "Animation",
+      "intro": "Entrée",
+      "outro": "Sortie",
+      "animationFooter": "Applique un court mouvement de texte en ease-out au début ou à la fin de chaque clip sélectionné.",
+      "animationPresets": {
+        "none": "Aucun",
+        "fade": "Fondu",
+        "rise": "Monter",
+        "drop": "Descendre",
+        "left": "Gauche",
+        "right": "Droite",
+        "tilt": "Incliner",
+        "pop": "Apparaître",
+        "swing": "Balancer"
+      }
+    },
+    "tts": {
+      "seek": "Parcourir",
+      "dialogTitle": "Générer de l'audio depuis le texte",
+      "dialogDescription": "Générez une voix et insérez-la à la position du clip de texte.",
+      "kokoroUnsupported": "WebGPU n'est pas disponible dans ce navigateur. Kokoro TTS nécessite Chrome 113+, Edge 113+ ou Safari 26+.",
+      "mossUnsupported": "Le stockage géré par le navigateur n'est pas disponible. MOSS TTS multilingue fonctionne mieux dans un navigateur Chromium récent.",
+      "supertonicUnsupported": "Ce navigateur ne peut pas exécuter le runtime TTS local de Supertonic. Essayez une version récente de Chrome ou Edge.",
+      "engine": "Moteur",
+      "engineSupportDetails": "Détails de compatibilité du moteur TTS",
+      "kokoroDescription": "Voix anglaises sur WebGPU.",
+      "supertonicDescription": "Voix ONNX locales en 31 langues sur WebGPU ou WASM.",
+      "supportedLanguages": "Langues prises en charge : {{languages}}.",
+      "kokoroOption": "Kokoro (anglais, WebGPU)",
+      "mossOption": "MOSS Nano (20 langues, CPU)",
+      "supertonicOption": "Supertonic 3 (31 langues, ONNX local)",
+      "language": "Langue",
+      "autoDetectLanguage": "Détection automatique",
+      "voice": "Voix",
+      "text": "Texte",
+      "textPlaceholder": "Saisissez le texte à lire...",
+      "expressiveTags": "Balises expressives",
+      "speed": "Vitesse",
+      "progressPreparing": "Préparation du TTS local...",
+      "insertedAndLinked": "Inséré et lié",
+      "generate": "Générer",
+      "generating": "Génération...",
+      "regenerate": "Régénérer",
+      "insertAndLink": "Insérer et lier",
+      "inserting": "Insertion...",
+      "errors": {
+        "openProject": "Ouvrez un projet avant de générer de l'audio.",
+        "enterText": "Saisissez du texte à synthétiser.",
+        "kokoroUnsupported": "WebGPU est requis pour Kokoro TTS. Essayez Chrome 113+, Edge 113+ ou Safari 26+.",
+        "mossUnsupported": "Le stockage géré par le navigateur est requis pour MOSS TTS multilingue. Essayez un navigateur Chromium récent.",
+        "supertonicUnsupported": "Ce navigateur ne peut pas exécuter le runtime TTS local de Supertonic. Essayez une version récente de Chrome ou Edge.",
+        "generateFailed": "Échec de la génération vocale.",
+        "insertFailed": "Échec de l'enregistrement et de l'insertion de l'audio."
+      },
+      "notifications": {
+        "addedAndLinked": "« {{fileName}} » a été ajouté à la timeline et lié au texte.",
+        "savedNoTrack": "« {{fileName}} » a été enregistré, mais aucune piste audio n'est disponible."
+      }
+    },
+    "aiPanel": {
+      "textToSpeech": "Texte vers voix",
+      "collapseTextToSpeech": "Réduire le texte vers voix",
+      "expandTextToSpeech": "Développer le texte vers voix",
+      "runsLocally": "{{runtime}} s'exécute localement dans le navigateur avec {{backend}}.",
+      "history": "Historique ({{count}}) - {{size}}",
+      "clearAll": "Tout effacer",
+      "musicGeneration": "Génération musicale",
+      "collapseMusicGeneration": "Réduire la génération musicale",
+      "expandMusicGeneration": "Développer la génération musicale",
+      "musicGenerationInfo": "Infos de génération musicale",
+      "musicgenDescription": "Utilise le modèle MusicGen de Xenova prêt pour le navigateur via Transformers.js. Le premier téléchargement est volumineux, puis il reste en cache local.",
+      "musicgenPromptHint": "Décrivez le genre, l'ambiance, le tempo et les instruments. Les clips plus courts finissent beaucoup plus vite.",
+      "musicgenUnsupported": "WebGPU n'est pas disponible dans ce navigateur. MusicGen nécessite Chrome 113+, Edge 113+ ou Safari 26+.",
+      "prompt": "Prompt",
+      "presets": "Préréglages",
+      "musicPromptPlaceholder": "Décrivez le type de musique à générer...",
+      "length": "Durée",
+      "generateMusic": "Générer la musique",
+      "musicHistory": "Historique musical ({{count}}) - {{size}}",
+      "remove": "Supprimer",
+      "saved": "Enregistré",
+      "saving": "Enregistrement...",
+      "saveAndInsert": "Enregistrer et insérer",
+      "saveToLibrary": "Enregistrer dans la bibliothèque",
+      "progressPreparingMusic": "Préparation de la génération musicale locale...",
+      "errors": {
+        "describeMusic": "Décrivez la musique à générer.",
+        "musicgenUnsupported": "WebGPU est requis pour MusicGen. Essayez Chrome 113+, Edge 113+ ou Safari 26+.",
+        "generateMusicFailed": "Échec de la génération musicale.",
+        "saveAudioFailed": "Impossible d'enregistrer l'audio dans la bibliothèque multimédia."
+      },
+      "notifications": {
+        "savedToLibrary": "« {{fileName}} » a été enregistré dans la bibliothèque multimédia.",
+        "savedAndAdded": "« {{fileName}} » a été enregistré et ajouté à la timeline."
+      },
+      "defaultTtsPrompt": "Welcome to freecut. This voice was generated locally in the browser.",
+      "musicPresets": {
+        "lofiChillLabel": "Lo-fi Chill",
+        "lofiChillPrompt": "Warm lo-fi beat with dusty drums, mellow bass, and a dreamy synth lead",
+        "pop80sLabel": "80s Pop",
+        "pop80sPrompt": "80s pop track with bassy drums and synth",
+        "rock90sLabel": "90s Rock",
+        "rock90sPrompt": "90s rock song with loud guitars and heavy drums",
+        "upbeatEdmLabel": "Upbeat EDM",
+        "upbeatEdmPrompt": "A light and cheery EDM track, with syncopated drums, airy pads, and strong emotions bpm: 130",
+        "countryLabel": "Country",
+        "countryPrompt": "A cheerful country song with acoustic guitars",
+        "lofiElectroLabel": "Lo-fi Electro",
+        "lofiElectroPrompt": "Lofi slow bpm electro chill with organic samples"
+      }
+    },
+    "clearKeyframesDialog": {
+      "descriptionProperty": "Effacer les images clés {{property}} de {{count}} élément(s) sélectionné(s) ?",
+      "descriptionAll": "Effacer toutes les images clés de {{count}} élément(s) sélectionné(s) ?"
+    },
+    "localInferencePill": {
+      "jobs": "{{count}} tâche(s)"
+    },
+    "subtitleSection": {
+      "cueCount": "{{count}} réplique(s)"
+    },
+    "propertiesSidebar": {
+      "clipsSelected": "{{count}} clips sélectionnés"
+    }
+  },
+  "preview": {
+    "canvasDrop": {
+      "dropOnTimeline": "Déposer sur la timeline",
+      "compoundClipsTimeline": "Les clips composés se placent toujours mieux sur la timeline.",
+      "presetsTimeline": "Les préréglages de texte et de forme se placent toujours mieux sur la timeline.",
+      "dropOneItem": "Déposer un élément",
+      "oneMediaAtATime": "Placez un média à la fois sur le canevas.",
+      "audioGoesOnTimeline": "L'audio va sur la timeline",
+      "visualLayersOnly": "Le dépôt sur le canevas place uniquement des calques visuels.",
+      "dropToPlace": "Déposer pour placer",
+      "addAtPlayhead": "Ajoutez ce média à la tête de lecture et à la position de dépôt.",
+      "dropOneFile": "Déposer un fichier",
+      "oneVisualFileAtATime": "Le dépôt sur le canevas importe un fichier visuel à la fois.",
+      "importAndPlace": "Importer et placer",
+      "importAndPlaceDescription": "Importez ce fichier et placez-le sur le canevas.",
+      "noCompatibleTrack": "Aucune piste compatible déverrouillée n'est disponible pour ce dépôt.",
+      "unableToLoadMedia": "Impossible de charger le média déposé.",
+      "mediaNoLongerAvailable": "Le média déposé n'est plus disponible.",
+      "dragDropUnsupported": "Le glisser-déposer n'est pas pris en charge par ce navigateur. Utilisez Chrome ou Edge.",
+      "filesRejected": "Certains fichiers ont été refusés : {{errors}}",
+      "dropAudioOnTimeline": "Déposez plutôt l'audio sur la timeline.",
+      "unableToInspectVideo": "Impossible d'inspecter la vidéo déposée.",
+      "unableToInspectFile": "Impossible d'inspecter le fichier déposé.",
+      "unableToImportFile": "Impossible d'importer le fichier déposé."
+    }
+  },
+  "settings": {
+    "ai": {
+      "scene": "{{count}} scène(s)"
+    },
+    "feedback": {
+      "completedForItems": "{{action}} terminé pour {{count}} élément(s).",
+      "couldntProcessItems": "Impossible de {{action}} pour {{count}} élément(s){{detail}}"
+    },
+    "toasts": {
+      "itemsUpdated": "{{count}} élément(s) mis à jour.",
+      "itemsUpdatedFailed": "{{count}} élément(s) mis à jour. Échec : {{failed}}"
+    }
+  },
+  "projects": {
+    "legacyMigration": {
+      "errorsLogged": "{{count}} erreur(s) consignées"
+    },
+    "legacyMigrationErrors": {
+      "retryStillFailing": "Le nouvel essai contient encore {{count}} erreur(s).",
+      "failedCount": "{{count}} erreur(s) de migration"
+    },
+    "list": {
+      "movedToTrashCount": "{{count}} projet(s) déplacés dans la corbeille.",
+      "selectedCount": "{{count}} sélectionné(s)",
+      "deleteN": "Supprimer {{count}}",
+      "projectCount": "{{count}} projet(s)",
+      "bulkDeleteTitle": "Supprimer {{count}} projet(s) sélectionné(s) ?"
+    },
+    "trash": {
+      "emptiedTrash": "{{count}} projet(s) supprimés de la corbeille.",
+      "emptiedTrashWithFailures": "Impossible de supprimer {{count}} projet(s)."
+    },
+    "relativeTime": {
+      "minutesAgo": "il y a {{count}} min",
+      "hoursAgo": "il y a {{count}} h",
+      "daysAgo": "il y a {{count}} jour(s)",
+      "weeksAgo": "il y a {{count}} semaine(s)",
+      "monthsAgo": "il y a {{count}} mois",
+      "yearsAgo": "il y a {{count}} an(s)"
+    },
+    "settings": {
+      "hotkeys": {
+        "importedCommands": "{{count}} commande(s) importées",
+        "remappedCount": "{{count}} réassignées",
+        "ignoredCount": "{{count}} ignorées",
+        "customCount": "{{count}} personnalisés"
+      },
+      "localInference": {
+        "activeJobs": "{{count}} tâche(s) active(s)",
+        "unloadedToast": "{{count}} runtime(s) locaux déchargés."
+      }
+    }
+  },
+  "sceneBrowser": {
+    "counts": {
+      "clip_one": "{{count}} clip",
+      "clip_other": "{{count}} clips",
+      "scene_one": "{{count}} scène",
+      "scene_other": "{{count}} scènes",
+      "match_one": "{{count}} résultat",
+      "match_other": "{{count}} résultats"
+    },
+    "sort": {
+      "label": "Trier",
+      "relevance": "Pertinence",
+      "time": "Horodatage",
+      "name": "Nom du média"
+    },
+    "scope": {
+      "placeholder": "Portée",
+      "allMedia": "Tous les médias",
+      "scopedTo": "Portée : {{name}}",
+      "scopedToAll": "Portée : tous les médias"
+    },
+    "banners": {
+      "downloadingSemanticModel": "Téléchargement du modèle sémantique (~22 Mo, première exécution seulement)...",
+      "indexingCaptions": "Indexation des légendes pour la recherche sémantique - {{current}}/{{total}} clips",
+      "reanalyzing": "Nouvelle analyse de <strong>{{label}}</strong> - les scènes seront actualisées à la fin."
+    },
+    "analyze": {
+      "title": "Analyser les médias avec l'IA",
+      "button": "Analyser",
+      "scope": "Analyser \"{{name}}\"",
+      "newMedia": "Analyser les nouveaux médias",
+      "reanalyzeAll": "Tout réanalyser"
+    },
+    "view": {
+      "list": "Vue liste",
+      "grid": "Vue grille"
+    },
+    "empty": {
+      "noCaptionsTitle": "Aucune légende IA pour le moment.",
+      "noCaptionsPrefix": "Lancez",
+      "noCaptionsSuffix": "sur un clip de la médiathèque pour générer des légendes de scènes consultables.",
+      "noMatchesTitle": "Aucune scène ne correspond à votre recherche.",
+      "noMatchesPrefix": "Essayez une requête plus courte ou passez la portée à"
+    },
+    "search": {
+      "exitColorMode": "Quitter le mode couleur",
+      "colorTitle": "Rechercher par couleur",
+      "color": "Couleur",
+      "semanticTitle": "Recherche sémantique (par sens)",
+      "keywordTitle": "Recherche par mot-clé (correspondance exacte)",
+      "semanticLabel": "Recherche sémantique",
+      "keywordLabel": "Recherche par mot-clé",
+      "semantic": "Sémantique",
+      "keyword": "Mot-clé",
+      "keywordDescription": "Correspondances exactes",
+      "semanticDescription": "Correspondance par sens",
+      "clearReference": "Effacer la référence et choisir une autre couleur",
+      "findingSimilarPalette": "Recherche de scènes avec une palette similaire...",
+      "semanticPlaceholder": "Rechercher par sens - \"coucher de soleil sur l'eau\", \"personnes qui rient\"...",
+      "keywordPlaceholder": "Rechercher des scènes par ce que vous voyez...",
+      "clearSearch": "Effacer la recherche",
+      "similarPaletteTo": "Palette similaire à {{label}} - cliquez pour effacer"
+    },
+    "matchTiers": {
+      "strong": "Fort",
+      "good": "Bon",
+      "fair": "Correct"
+    },
+    "match": {
+      "keyword": "Mot-clé",
+      "keywordHint": "Correspondance mot-clé · cosinus {{score}}",
+      "meaningWithTier": "Sens · {{tier}}",
+      "textEmbeddingHint": "Cosinus de l'embedding texte : {{score}}",
+      "visualWithTier": "Visuel · {{tier}}",
+      "clipHint": "Cosinus CLIP : {{score}}",
+      "colorWithName": "Couleur · {{color}}",
+      "paletteColorHint": "Correspondance de palette sur {{color}} (ΔE 2000)",
+      "paletteDistance": "Palette · ΔE {{distance}}",
+      "paletteDistanceHint": "Moyenne pondérée ΔE 2000 par rapport à la palette de référence",
+      "belowThreshold": "Sous le seuil",
+      "cosineHint": "cosinus {{score}}",
+      "top": "Top",
+      "topHint": "Correspondance au meilleur score"
+    },
+    "palette": {
+      "libraryColor": "Couleur de la médiathèque",
+      "empty": "Aucune palette indexée pour le moment - lancez les légendes IA pour les remplir.",
+      "moreColors_one": "{{count}} couleur de plus",
+      "moreColors_other": "{{count}} couleurs de plus",
+      "showMoreColors_one": "Afficher {{count}} couleur de plus",
+      "showMoreColors_other": "Afficher {{count}} couleurs de plus",
+      "moreColorsTitle": "Plus de couleurs",
+      "findColor": "Trouver des scènes dans cette couleur ({{percent}} % de la médiathèque)",
+      "findSimilar": "Trouver des scènes avec une palette similaire",
+      "pickedSwatch": "Échantillon choisi"
+    },
+    "scene": {
+      "previewAndDragHint": "Cliquez pour prévisualiser dans le moniteur source - faites glisser pour ajouter à la timeline"
+    }
+  }
+}

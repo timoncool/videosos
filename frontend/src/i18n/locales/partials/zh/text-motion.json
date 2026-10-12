@@ -1,0 +1,48 @@
+{
+  "textMotion": {
+    "sectionTitle": "文字动画",
+    "hint": "按字符、单词或行为文字添加动画。入场和出场在片段两端播放，循环则在两者之间持续运行。",
+    "slots": {
+      "in": "入场",
+      "out": "出场",
+      "loop": "循环"
+    },
+    "duration": "时长",
+    "stagger": "错开",
+    "intensity": "强度",
+    "order": "顺序",
+    "orders": {
+      "forward": "正序",
+      "backward": "倒序",
+      "center": "从中间",
+      "random": "随机"
+    },
+    "removePreset": "移除{{name}}",
+    "presets": {
+      "typewriter": "打字机",
+      "fade-up": "上浮淡入",
+      "rise": "上升",
+      "cascade": "级联",
+      "pop": "弹入",
+      "blur-in": "模糊入场",
+      "slide-mask": "滑动揭示",
+      "wave-in": "波浪入场",
+      "fade-down": "下沉淡出",
+      "sink": "下沉",
+      "pop-out": "弹出",
+      "blur-out": "模糊出场",
+      "typewriter-erase": "打字机删除",
+      "pulse": "脉冲",
+      "wave": "波浪",
+      "shimmer": "闪烁",
+      "swing": "摇摆"
+    },
+    "unit": "应用于",
+    "units": {
+      "character": "字符",
+      "word": "单词",
+      "line": "行",
+      "whole-clip": "整个片段"
+    }
+  }
+}

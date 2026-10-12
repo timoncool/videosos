@@ -1,0 +1,108 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+build
+out
+
+# Testing
+coverage
+
+# Misc
+.cache
+.temp
+.hermes/
+
+*.mp4
+*.mov
+
+# DevTools performance trace exports
+Trace-*.json
+
+# TanStack Router auto-generated files
+# Note: Some teams commit this, uncomment if you prefer to commit
+# src/routeTree.gen.ts
+.claude/settings.local.json
+.claude/worktrees/
+.claude/skills/impeccable/
+
+.vercel
+.env*.local
+CLAUDE.md
+crates/*/target/
+crates/*/Cargo.lock
+.knip-report.json
+
+tmp
+
+# Headless render harness: generated outputs, test assets, scratch workspaces.
+# (The harness source — headless/*.mjs, src/headless/ — is committed.)
+headless/output/
+headless/assets/
+tmp-workspace/
+
+.vercel
+
+# FreeCut workspace artifacts, if the repo folder itself is picked as a
+# workspace. Leading slash anchors to repo root so nested app code paths
+# (src/features/projects/, etc.) are not affected.
+/.freecut-workspace.json
+/index.json
+/projects/
+/media/
+/content/
+/proxies/
+/filmstrips/
+/preview-audio/
+/waveform-bin/
+
+*.lock
+plans/
+
+.compound-engineering/*.local.yaml
+
+# design-sync (staged scripts, build output, machine state)
+.ds-sync/
+ds-bundle/
+.design-sync/
+.design-sync/.cache/
+.design-sync/learnings/
+.design-sync/node_modules
+.design-sync/freecut-tailwind.css
+
+artifacts/
+.playwright-cli/
+
+# Scratch space for one-off analysis scripts and dumped artifacts. Never shipped;
+# ignored so `git add -A` cannot sweep them into a commit.
+.tmp/
+
+# Headless coverage feed for the Fallow changed-health gate
+.coverage/

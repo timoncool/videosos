@@ -1,0 +1,290 @@
+import type { ItemKeyframes } from './keyframe'
+import type { AudioEqSettings } from './audio'
+import type { Transition } from './transition'
+import type { CropSettings } from './transform'
+import type { TextStylePresetId } from '@/shared/typography/text-style-preset-ids'
+import type { TextLayoutDrafts, TextSpan, TextStyleFields } from './text'
+import type { TextMotionSpec } from './text-motion'
+import type { MaskVertex } from './masks'
+import type { ShapeStyleFields } from './timeline'
+import type { CompositionControlOverrides, CompositionControlSchema } from './composition-controls'
+
+/**
+ * Selects the editing surface a stored composition naturally opens in.
+ *
+ * Both kinds use the same renderer and can be nested as timeline items. The
+ * distinction is deliberately editorial: sequences use the classic
+ * track/clip editor, while composite-2d compositions use the layer/property
+ * compositing workspace.
+ */
+export type CompositionEditorKind = 'sequence' | 'composite-2d'
+
+export interface Project {
+  id: string
+  name: string
+  description: string
+  createdAt: number
+  updatedAt: number
+  duration: number
+  /**
+   * Schema version for migrations. Projects without this field are version 1.
+   * Increment CURRENT_SCHEMA_VERSION in lib/migrations when adding migrations.
+   */
+  schemaVersion?: number
+  thumbnailId?: string // Reference to workspace-backed ThumbnailData
+  thumbnail?: string // @deprecated Base64 data URL (for backward compatibility)
+  metadata: ProjectResolution
+  timeline?: ProjectTimeline
+  /**
+   * Root folder handle for the project's media files.
+   * Set when importing a bundle or manually by the user.
+   * Used for smarter relinking and showing relative paths.
+   */
+  rootFolderHandle?: FileSystemDirectoryHandle
+  /**
+   * Display name for the root folder (since handles don't expose full paths).
+   * Updated when rootFolderHandle is set.
+   */
+  rootFolderName?: string
+}
+
+export interface ProjectTimeline {
+  /**
+   * Master bus gain in dB applied after all track-level volume/fade math but
+   * before the per-device monitor gain. Stored with the project so exports
+   * and cross-device previews see the same audible level. Defaults to 0
+   * (unity) when absent.
+   */
+  masterBusDb?: number
+  tracks: Array<{
+    id: string
+    name: string
+    kind?: 'video' | 'audio'
+    height: number
+    locked: boolean
+    syncLock?: boolean
+    visible: boolean
+    muted: boolean
+    solo: boolean
+    volume?: number
+    audioEq?: AudioEqSettings
+    color?: string
+    order: number
+    parentTrackId?: string
+    isGroup?: boolean
+    isCollapsed?: boolean
+  }>
+  busAudioEq?: AudioEqSettings
+  items: Array<
+    Partial<ShapeStyleFields> & {
+      id: string
+      trackId: string
+      from: number
+      durationInFrames: number
+      label: string
+      mediaId?: string
+      originId?: string // Tracks lineage for stable React keys
+      linkedGroupId?: string
+      type:
+        | 'video'
+        | 'audio'
+        | 'text'
+        | 'image'
+        | 'shape'
+        | 'composition'
+        | 'adjustment'
+        | 'controller'
+      // Type-specific fields stored as optional for flexibility
+      src?: string
+      thumbnailUrl?: string
+      offset?: number // @deprecated Use sourceStart instead
+      waveformData?: number[]
+      // Source boundaries for media items (video/audio)
+      sourceStart?: number // Start position in source media (frames)
+      sourceEnd?: number // End position in source media (frames)
+      sourceDuration?: number // Total duration of source media (frames)
+      sourceFps?: number // Source media frame rate for source* frame fields
+      isReversed?: boolean // Play media source range from end to start
+      reverseConformSrc?: string
+      reverseConformPath?: string
+      reverseConformKey?: string
+      reverseConformPreviewSrc?: string
+      reverseConformPreviewPath?: string
+      reverseConformPreviewKey?: string
+      reverseConformPreviewUsesProxy?: boolean
+      reverseConformPreviewIsSourceLevel?: boolean
+      reverseConformPreviewSourceDuration?: number
+      reverseConformPreviewFps?: number
+      reverseConformStatus?: 'pending' | 'ready' | 'error'
+      reverseConformLocalStart?: number
+      text?: string
+      textRole?: 'caption'
+      captionSource?: {
+        type: 'transcript' | 'ai-captions' | 'subtitle-import' | 'embedded-subtitles'
+        clipId: string
+        mediaId: string
+        fileName?: string
+        format?: 'srt' | 'vtt'
+        importedAt?: number
+      }
+      textStylePresetId?: TextStylePresetId
+      textStyleScale?: number
+      textSpans?: TextSpan[]
+      textLayoutDrafts?: TextLayoutDrafts
+      /** Per-character/word/line animation (see ./text-motion). */
+      textMotion?: TextMotionSpec
+      shapeType?:
+        | 'rectangle'
+        | 'circle'
+        | 'triangle'
+        | 'ellipse'
+        | 'star'
+        | 'polygon'
+        | 'heart'
+        | 'path'
+      direction?: 'up' | 'down' | 'left' | 'right'
+      points?: number
+      innerRadius?: number
+      pathVertices?: MaskVertex[]
+      pathClosed?: boolean
+      isMask?: boolean
+      maskType?: 'clip' | 'alpha'
+      maskFeather?: number
+      maskOpacity?: number
+      maskInvert?: boolean
+      speed?: number // Playback speed multiplier (default 1.0)
+      // Composition item fields
+      compositionId?: string // Reference to a sub-composition
+      compositionWidth?: number
+      compositionHeight?: number
+      compositionControlOverrides?: CompositionControlOverrides
+      // Source dimensions (for video/image items)
+      sourceWidth?: number
+      sourceHeight?: number
+      // Transform properties
+      transform?: {
+        x?: number
+        y?: number
+        width?: number
+        height?: number
+        anchorX?: number
+        anchorY?: number
+        rotation?: number
+        flipHorizontal?: boolean
+        flipVertical?: boolean
+        opacity?: number
+        cornerRadius?: number
+        aspectRatioLocked?: boolean
+      }
+      transformParent?: import('./transform').TransformParentBinding
+      controllerKind?: 'null'
+      crop?: CropSettings
+      // Audio properties
+      volume?: number
+      audioFadeIn?: number
+      audioFadeOut?: number
+      audioFadeInCurve?: number
+      audioFadeOutCurve?: number
+      audioFadeInCurveX?: number
+      audioFadeOutCurveX?: number
+      audioPitchSemitones?: number
+      audioPitchCents?: number
+      audioEqOutputGainDb?: number
+      audioEqBand1Enabled?: boolean
+      audioEqBand1Type?: import('./audio').AudioEqBand1Type
+      audioEqBand1FrequencyHz?: number
+      audioEqBand1GainDb?: number
+      audioEqBand1Q?: number
+      audioEqBand1SlopeDbPerOct?: 6 | 12 | 18 | 24
+      audioEqLowCutEnabled?: boolean
+      audioEqLowCutFrequencyHz?: number
+      audioEqLowCutSlopeDbPerOct?: 6 | 12 | 18 | 24
+      audioEqLowEnabled?: boolean
+      audioEqLowType?: import('./audio').AudioEqInnerBandType
+      audioEqLowGainDb?: number
+      audioEqLowFrequencyHz?: number
+      audioEqLowQ?: number
+      audioEqLowMidEnabled?: boolean
+      audioEqLowMidType?: import('./audio').AudioEqInnerBandType
+      audioEqLowMidGainDb?: number
+      audioEqLowMidFrequencyHz?: number
+      audioEqLowMidQ?: number
+      audioEqMidGainDb?: number
+      audioEqHighMidEnabled?: boolean
+      audioEqHighMidType?: import('./audio').AudioEqInnerBandType
+      audioEqHighMidGainDb?: number
+      audioEqHighMidFrequencyHz?: number
+      audioEqHighMidQ?: number
+      audioEqHighEnabled?: boolean
+      audioEqHighType?: import('./audio').AudioEqInnerBandType
+      audioEqHighGainDb?: number
+      audioEqHighFrequencyHz?: number
+      audioEqHighQ?: number
+      audioEqBand6Enabled?: boolean
+      audioEqBand6Type?: import('./audio').AudioEqBand6Type
+      audioEqBand6FrequencyHz?: number
+      audioEqBand6GainDb?: number
+      audioEqBand6Q?: number
+      audioEqBand6SlopeDbPerOct?: 6 | 12 | 18 | 24
+      audioEqHighCutEnabled?: boolean
+      audioEqHighCutFrequencyHz?: number
+      audioEqHighCutSlopeDbPerOct?: 6 | 12 | 18 | 24
+      // Video properties
+      fadeIn?: number
+      fadeOut?: number
+    } & TextStyleFields
+  >
+  // Playback and view state
+  currentFrame?: number
+  zoomLevel?: number
+  scrollPosition?: number
+  // In/Out markers
+  inPoint?: number
+  outPoint?: number
+  // Project markers
+  markers?: Array<{
+    id: string
+    frame: number
+    label?: string
+    color: string
+  }>
+  // Transitions between clips
+  transitions?: Transition[]
+  /**
+   * Ordered ids of sub-compositions promoted to standalone timeline tabs
+   * ("sequences"), shown alongside the implicit Main timeline. Order = tab
+   * order. Ids that don't resolve to an entry in `compositions` are pruned on
+   * load. Absent/empty means the project has only the Main timeline.
+   */
+  topLevelSequenceIds?: string[]
+  // Sub-compositions (pre-comps)
+  compositions?: Array<{
+    id: string
+    name: string
+    /** Missing on projects created before schema v14; normalized to sequence. */
+    editorKind?: CompositionEditorKind
+    items: ProjectTimeline['items']
+    tracks: ProjectTimeline['tracks']
+    transitions?: ProjectTimeline['transitions']
+    keyframes?: ProjectTimeline['keyframes']
+    fps: number
+    width: number
+    height: number
+    durationInFrames: number
+    backgroundColor?: string
+    compositionControls?: CompositionControlSchema
+    busAudioEq?: AudioEqSettings
+    markers?: ProjectTimeline['markers']
+    inPoint?: number
+    outPoint?: number
+  }>
+  // Keyframe animations
+  keyframes?: ItemKeyframes[]
+}
+
+export interface ProjectResolution {
+  width: number
+  height: number
+  fps: number
+  backgroundColor?: string // Hex color, defaults to #000000
+}

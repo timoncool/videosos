@@ -1,0 +1,21 @@
+{
+  "agent": {
+    "action": "Агент: {{action}}",
+    "commands": {
+      "click": "нажимает",
+      "type": "печатает",
+      "select": "выбирает",
+      "press_key": "нажимает клавишу",
+      "scroll": "прокручивает",
+      "timeline_edit": "правит таймлайн",
+      "timeline_undo": "отменяет",
+      "timeline_redo": "повторяет",
+      "media_import": "импортирует медиа",
+      "playhead_seek": "двигает плейхед",
+      "playback": "запускает или ставит на паузу",
+      "editor_tab": "открывает вкладку",
+      "project_open": "открывает проект",
+      "export_video": "экспортирует видео"
+    }
+  }
+}

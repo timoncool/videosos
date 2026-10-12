@@ -1,0 +1,105 @@
+{
+  "preview": {
+    "mediaOffline": {
+      "title": "Medio sin conexión",
+      "relink": "Vuelve a vincularlo en el panel de medios",
+      "loading": "Cargando…"
+    },
+    "align": {
+      "left": "Alinear a la izquierda",
+      "centerH": "Centrar horizontalmente",
+      "right": "Alinear a la derecha",
+      "top": "Alinear arriba",
+      "centerV": "Centrar verticalmente",
+      "bottom": "Alinear abajo",
+      "distributeH": "Distribuir horizontalmente",
+      "distributeV": "Distribuir verticalmente",
+      "disableCanvasSnap": "Desactivar ajuste al lienzo",
+      "enableCanvasSnap": "Activar ajuste al lienzo",
+      "toggleCanvasSnap": "Alternar ajuste al lienzo"
+    },
+    "controls": {
+      "captureFailed": "No se pudo capturar el fotograma actual.",
+      "disableProxyPlayback": "Desactivar reproducción con proxy",
+      "enableProxyPlayback": "Activar reproducción con proxy",
+      "frameDownloadedNoProject": "Fotograma descargado. Abre un proyecto para guardarlo en la biblioteca.",
+      "frameDownloadedNotSaved": "Fotograma descargado, pero no se pudo guardar en la biblioteca: {{message}}",
+      "frameSaved": "Se guardó \"{{name}}\" en la biblioteca.",
+      "goToEnd": "Ir al final",
+      "goToEndTooltip": "Ir al final",
+      "goToStart": "Ir al inicio",
+      "goToStartTooltip": "Ir al inicio",
+      "nextFrame": "Fotograma siguiente",
+      "nextFrameTooltip": "Fotograma siguiente",
+      "pauseTooltip": "Pausar",
+      "playTooltip": "Reproducir",
+      "prevFrame": "Fotograma anterior",
+      "prevFrameTooltip": "Fotograma anterior",
+      "proxyPlaybackOff": "Reproducción con proxy desactivada",
+      "proxyPlaybackOn": "Reproducción con proxy activada",
+      "saveFrame": "Guardar fotograma",
+      "saveFrameFailed": "No se pudo guardar el fotograma.",
+      "saveFrameTooltip": "Guardar fotograma",
+      "savingFrame": "Guardando fotograma…",
+      "savingFrameTooltip": "Guardando fotograma…"
+    },
+    "monitor": {
+      "mute": "Silenciar",
+      "muteShort": "Mudo",
+      "muted": "Silenciado",
+      "percent": "{{value}}%",
+      "previewOnlyNote": "Solo afecta a la reproducción local; la exportación usa la mezcla del proyecto.",
+      "thisDeviceOnly": "Solo en este dispositivo",
+      "title": "Audio de previsualización",
+      "unmute": "Activar sonido",
+      "volume": "Volumen"
+    },
+    "player": {
+      "exitFullscreen": "Salir de pantalla completa",
+      "fullscreen": "Pantalla completa",
+      "mute": "Silenciar",
+      "pause": "Pausar",
+      "play": "Reproducir",
+      "seek": "Buscar",
+      "unmute": "Activar sonido",
+      "volume": "Volumen"
+    },
+    "stage": {
+      "loadingMedia": "Cargando medios…",
+      "videoPreview": "Previsualización de vídeo",
+      "emptyTitle": "Aún no hay nada en la línea de tiempo",
+      "emptyDescription": "Importa medios, arrastra un clip a la línea de tiempo y pulsa Espacio para previsualizar."
+    },
+    "zoom": {
+      "ariaLabel": "Nivel de zoom: {{label}}",
+      "auto": "Automático",
+      "tooltip": "Zoom: {{label}}"
+    },
+    "canvasDrop": {
+      "dropOnTimeline": "Soltar en la línea de tiempo",
+      "compoundClipsTimeline": "Los clips compuestos siguen funcionando mejor en la línea de tiempo.",
+      "presetsTimeline": "Los preajustes de texto y forma siguen funcionando mejor en la línea de tiempo.",
+      "adjustmentLayersTimeline": "Las capas de ajuste se aplican a todo el fotograma; colócalas en la línea de tiempo.",
+      "placeLayerDescription": "Coloca esta capa en la posición de soltado.",
+      "dropOneItem": "Suelta un elemento",
+      "oneMediaAtATime": "Coloca un elemento multimedia a la vez en el lienzo.",
+      "audioGoesOnTimeline": "El audio va en la línea de tiempo",
+      "visualLayersOnly": "Soltar en el lienzo solo coloca capas visuales.",
+      "dropToPlace": "Soltar para colocar",
+      "addAtPlayhead": "Añade este medio en el cabezal de reproducción y la posición de soltar.",
+      "dropOneFile": "Suelta un archivo",
+      "oneVisualFileAtATime": "Soltar en el lienzo importa un archivo visual a la vez.",
+      "importAndPlace": "Importar y colocar",
+      "importAndPlaceDescription": "Importa este archivo y colócalo en el lienzo.",
+      "noCompatibleTrack": "No hay una pista compatible desbloqueada disponible para este elemento.",
+      "unableToLoadMedia": "No se pudo cargar el medio soltado.",
+      "mediaNoLongerAvailable": "El medio soltado ya no está disponible.",
+      "dragDropUnsupported": "Arrastrar y soltar no es compatible con este navegador. Usa Chrome o Edge.",
+      "filesRejected": "Se rechazaron algunos archivos: {{errors}}",
+      "dropAudioOnTimeline": "Suelta el audio en la línea de tiempo.",
+      "unableToInspectVideo": "No se pudo inspeccionar el video soltado.",
+      "unableToInspectFile": "No se pudo inspeccionar el archivo soltado.",
+      "unableToImportFile": "No se pudo importar el archivo soltado."
+    }
+  }
+}

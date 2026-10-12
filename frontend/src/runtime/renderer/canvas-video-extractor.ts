@@ -1,0 +1,764 @@
+/**
+ * Video frame extractor using mediabunny for precise frame access.
+ *
+ * This replaces HTML5 video element seeking which is slow and imprecise.
+ * Benefits:
+ * - Precise frame-by-frame access (no seek delays)
+ * - Pre-decoded frames for instant access
+ * - No 500ms timeout fallbacks needed
+ */
+
+import { createMediabunnyInputSource } from '@/infrastructure/browser/mediabunny-input-source'
+import { ensureProResDecoderRegistered } from '@/infrastructure/browser/register-prores-decoder'
+import { createLogger } from '@/shared/logging/logger'
+import { getAdaptiveStreamStart } from '@/shared/utils/keyframe-index-registry'
+
+const log = createLogger('VideoFrameExtractor')
+
+/** Types for dynamically imported mediabunny module */
+interface MediabunnySink {
+  samples(
+    startTimestamp?: number,
+    endTimestamp?: number,
+  ): AsyncGenerator<MediabunnySample, void, unknown>
+  samplesAtTimestamps(
+    timestamps: Iterable<number> | AsyncIterable<number>,
+  ): AsyncGenerator<MediabunnySample | null, void, unknown>
+}
+
+interface MediabunnySample {
+  timestamp: number
+  duration?: number
+  draw?: (
+    context: OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+  ) => void
+  toVideoFrame(): VideoFrame | null
+  close(): void
+}
+
+interface MediabunnyInput {
+  getPrimaryVideoTrack(): Promise<MediabunnyVideoTrack | null>
+  computeDuration(): Promise<number>
+  dispose(): void
+}
+
+interface MediabunnyVideoTrack {
+  duration: number
+  displayWidth: number
+  displayHeight: number
+  canDecode?: () => Promise<boolean>
+  /** True if the track's samples may carry an alpha channel (e.g. VP9/VP8/AV1 with alpha, ProRes 4444). */
+  canBeTransparent?: () => Promise<boolean>
+}
+
+export interface DrawFrameCaptureResult {
+  success: boolean
+  capturedFrame: ImageBitmap | VideoFrame | null
+  capturedSourceTime: number | null
+}
+
+export interface CaptureFrameResult {
+  success: boolean
+  frame: ImageBitmap | VideoFrame | null
+  sourceTime: number | null
+}
+
+/**
+ * Cooperative cancellation probe for long sample walks. Return false to abort
+ * a blocking seek; the draw resolves as a plain miss with no failure
+ * bookkeeping (no 3-strikes counting, no recovery attempt, no warning).
+ */
+export type VideoDrawContinuationCheck = () => boolean
+
+const DRAW_CANCELLED = Symbol('video-frame-draw-cancelled')
+
+export class VideoFrameExtractor {
+  private static readonly TIMESTAMP_EPSILON = 1e-4
+  private static readonly LOOKAHEAD_TOLERANCE_SECONDS = 0.05
+  private static readonly STREAM_BACKTRACK_SECONDS = 1.0
+  /** Forward jump threshold: restart stream instead of reading through samples */
+  private static readonly FORWARD_JUMP_RESTART_SECONDS = 3.0
+
+  private sink: MediabunnySink | null = null
+  private input: MediabunnyInput | null = null
+  private videoTrack: MediabunnyVideoTrack | null = null
+  private duration: number = 0
+  private ready: boolean = false
+  /**
+   * Whether the decoded source can carry alpha (resolved once during init).
+   * Consumed by occlusion culling so a full-canvas transparent video never
+   * culls the layers beneath it. Defaults to false (opaque) until init runs.
+   */
+  private canBeTransparent: boolean = false
+  private drawFailureCount = 0
+  private sampleIterator: AsyncGenerator<MediabunnySample, void, unknown> | null = null
+  private currentSample: MediabunnySample | null = null
+  private nextSample: MediabunnySample | null = null
+  private iteratorDone = false
+  private streamGeneration = 0
+  private disposed = false
+  private lastRequestedTimestamp: number | null = null
+  private sampleLoopError: unknown = null
+  private lastFailureKind: 'none' | 'no-sample' | 'decode-error' = 'none'
+  /**
+   * Cached VideoFrame from the current sample.  Kept alive between draws so
+   * that repeated draws of the same sample (common during transitions past the
+   * clip's timeline end) reuse the same VideoFrame instead of calling
+   * toVideoFrame() after a previous close() has invalidated the sample data.
+   */
+  private cachedVideoFrame: VideoFrame | null = null
+  private cachedVideoFrameSample: MediabunnySample | null = null
+
+  constructor(
+    private src: string,
+    private itemId: string,
+    private options: { logFrameFailuresAsDebug?: boolean } = {},
+  ) {}
+
+  /**
+   * Initialize the extractor - must be called before drawFrame()
+   */
+  async init(): Promise<boolean> {
+    this.disposed = false
+    try {
+      const [mb] = await Promise.all([import('mediabunny'), ensureProResDecoderRegistered()])
+      const source = createMediabunnyInputSource(mb, this.src)
+
+      // Prefer direct file-backed reads for OPFS / file handles, with BlobSource
+      // fallback for in-memory blob URLs we manage locally.
+      this.input = new mb.Input({
+        formats: mb.ALL_FORMATS,
+        source,
+      }) as unknown as MediabunnyInput
+
+      // Get video track
+      this.videoTrack = await this.input!.getPrimaryVideoTrack()
+      if (!this.videoTrack) {
+        this.logInitFailure('No video track found', { itemId: this.itemId }, 'warn')
+        return false
+      }
+
+      // Bail out if the track is genuinely undecodable. ProRes decodes through the
+      // registered @mediabunny/prores decoder, so canDecode() reports it as decodable
+      // and VideoSampleSink handles it like any other codec.
+      if (typeof this.videoTrack.canDecode === 'function') {
+        const decodable = await this.videoTrack.canDecode()
+        if (!decodable) {
+          this.logInitFailure(
+            'Video track is not decodable via mediabunny/WebCodecs',
+            { itemId: this.itemId },
+            'warn',
+          )
+          return false
+        }
+      }
+
+      // Resolve alpha capability once (codec/container-level signal). VideoSampleSink
+      // decodes and merges alpha side-data automatically, so a transparent source
+      // draws with real alpha — occlusion culling must know this to avoid hiding
+      // the layers beneath a full-canvas transparent overlay.
+      // NOTE: this is a *capability* signal ("may contain alpha"), not per-frame
+      // truth. A fully-opaque clip in an alpha-capable container (VP8/VP9/AV1 with
+      // alpha, ProRes 4444) will conservatively disable occlusion culling for the
+      // layers beneath it — identical output, just a little more work. Opaque H.264
+      // reports false, so the common case (plain video base track) keeps culling.
+      if (typeof this.videoTrack.canBeTransparent === 'function') {
+        this.canBeTransparent = await this.videoTrack.canBeTransparent().catch(() => false)
+      }
+
+      // Get duration
+      this.duration = await this.input!.computeDuration()
+
+      this.sink = new mb.VideoSampleSink(
+        this.videoTrack as unknown as ConstructorParameters<typeof mb.VideoSampleSink>[0],
+      )
+
+      this.ready = true
+      log.debug('Initialized', {
+        itemId: this.itemId,
+        duration: this.duration,
+        width: this.videoTrack.displayWidth,
+        height: this.videoTrack.displayHeight,
+      })
+
+      return true
+    } catch (error) {
+      this.logInitFailure('Failed to initialize', { itemId: this.itemId, error }, 'error')
+      return false
+    }
+  }
+
+  private logInitFailure(message: string, data: Record<string, unknown>, level: 'warn' | 'error') {
+    if (this.options.logFrameFailuresAsDebug) {
+      log.debug(message, data)
+      return
+    }
+
+    if (level === 'error') {
+      log.error(message, data)
+    } else {
+      log.warn(message, data)
+    }
+  }
+
+  /**
+   * Draw a frame at the specified timestamp directly to canvas.
+   * Properly manages VideoSample lifecycle by closing immediately after draw.
+   */
+  async drawFrame(
+    ctx: OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D,
+    timestamp: number,
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    shouldContinue?: VideoDrawContinuationCheck,
+  ): Promise<boolean> {
+    if (!this.ready || !this.sink) {
+      return false
+    }
+
+    const maxTime = Math.max(0, this.duration - 0.001)
+    const clampedTime = Math.max(0, Math.min(timestamp, maxTime))
+    let lastError: unknown = this.sampleLoopError
+
+    try {
+      await this.ensureSampleForTimestamp(clampedTime, shouldContinue)
+      const drawOk = this.drawCurrentSample(ctx, x, y, width, height)
+      if (drawOk) {
+        this.drawFailureCount = 0
+        this.lastFailureKind = 'none'
+        return true
+      }
+
+      lastError = this.sampleLoopError
+      return this.reportDrawFailure(timestamp, clampedTime, lastError)
+    } catch (error) {
+      if (error === DRAW_CANCELLED) return false
+      lastError = error
+      this.sampleLoopError = error
+
+      const recovered = await this.recoverAndPrime(clampedTime, error, shouldContinue)
+      if (recovered) {
+        const drawOk = this.drawCurrentSample(ctx, x, y, width, height)
+        if (drawOk) {
+          this.drawFailureCount = 0
+          this.lastFailureKind = 'none'
+          return true
+        }
+        lastError = this.sampleLoopError
+      }
+
+      this.lastFailureKind = this.lastFailureKind === 'no-sample' ? 'no-sample' : 'decode-error'
+      return this.reportDrawFailure(timestamp, clampedTime, lastError)
+    }
+  }
+
+  async drawFrameWithCapture(
+    ctx: OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D,
+    timestamp: number,
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    shouldContinue?: VideoDrawContinuationCheck,
+  ): Promise<DrawFrameCaptureResult> {
+    const success = await this.drawFrame(ctx, timestamp, x, y, width, height, shouldContinue)
+    if (!success) {
+      return {
+        success: false,
+        capturedFrame: null,
+        capturedSourceTime: null,
+      }
+    }
+
+    return {
+      success: true,
+      capturedFrame: await this.captureCurrentOrientedFrame(),
+      capturedSourceTime: this.currentSample?.timestamp ?? null,
+    }
+  }
+
+  async captureFrame(
+    timestamp: number,
+    shouldContinue?: VideoDrawContinuationCheck,
+  ): Promise<CaptureFrameResult> {
+    const duration = this.duration
+    const clampedTime =
+      duration > 0
+        ? Math.max(0, Math.min(timestamp, duration - VideoFrameExtractor.TIMESTAMP_EPSILON))
+        : Math.max(0, timestamp)
+
+    this.sampleLoopError = null
+    this.lastFailureKind = 'none'
+
+    try {
+      await this.ensureSampleForTimestamp(clampedTime, shouldContinue)
+      if (!this.currentSample || !this.currentSampleCoversTimestamp(clampedTime)) {
+        this.lastFailureKind = 'no-sample'
+        return { success: false, frame: null, sourceTime: null }
+      }
+
+      return {
+        success: true,
+        frame: await this.captureCurrentOrientedFrame(),
+        sourceTime: this.currentSample.timestamp,
+      }
+    } catch (error) {
+      if (error === DRAW_CANCELLED) {
+        return { success: false, frame: null, sourceTime: null }
+      }
+      this.sampleLoopError = error
+      this.lastFailureKind = 'decode-error'
+      return { success: false, frame: null, sourceTime: null }
+    }
+  }
+
+  private async ensureSampleForTimestamp(
+    timestamp: number,
+    shouldContinue?: VideoDrawContinuationCheck,
+  ): Promise<void> {
+    if (!this.sink) return
+    if (shouldContinue && !shouldContinue()) throw DRAW_CANCELLED
+
+    // Use a forward sample stream instead of samplesAtTimestamps/getSample.
+    // Mediabunny's timestamp-based path can flush decoders at GOP boundaries;
+    // for some files that leads to repeated "key frame required after flush".
+    if (!this.sampleIterator) {
+      this.resetSampleIterator(timestamp, 'init')
+    } else if (
+      this.lastRequestedTimestamp !== null &&
+      timestamp + VideoFrameExtractor.TIMESTAMP_EPSILON < this.lastRequestedTimestamp &&
+      !this.currentSampleCoversTimestamp(timestamp)
+    ) {
+      // Timeline time moved backward for this clip. Restart stream.
+      this.resetSampleIterator(timestamp, 'backward')
+    } else if (
+      this.lastRequestedTimestamp !== null &&
+      timestamp - this.lastRequestedTimestamp > VideoFrameExtractor.FORWARD_JUMP_RESTART_SECONDS
+    ) {
+      // Large forward jump — restart stream at new position instead of reading
+      // through hundreds of samples. Faster than sequential iteration.
+      this.resetSampleIterator(timestamp, 'backward')
+    }
+
+    this.lastRequestedTimestamp = timestamp
+
+    while (true) {
+      if (shouldContinue && !shouldContinue()) throw DRAW_CANCELLED
+      const candidate = await this.peekNextSample()
+      if (shouldContinue && !shouldContinue()) throw DRAW_CANCELLED
+      if (!candidate) break
+      if (candidate.timestamp <= timestamp + VideoFrameExtractor.TIMESTAMP_EPSILON) {
+        // Moving to a new sample — release the cached VideoFrame first
+        // so it's closed before the old sample is closed.
+        this.closeCachedVideoFrame()
+        this.closeSample(this.currentSample)
+        this.currentSample = candidate
+        this.nextSample = null
+        continue
+      }
+
+      // If this is the first sample after stream start/restart and it's only
+      // slightly ahead of the requested timestamp, use it to avoid false misses
+      // caused by timestamp quantization/drift.
+      if (
+        !this.currentSample &&
+        candidate.timestamp - timestamp <= VideoFrameExtractor.LOOKAHEAD_TOLERANCE_SECONDS
+      ) {
+        this.currentSample = candidate
+        this.nextSample = null
+      }
+      break
+    }
+  }
+
+  private currentSampleCoversTimestamp(timestamp: number): boolean {
+    const sample = this.currentSample
+    if (!sample) {
+      return false
+    }
+
+    if (sample.timestamp > timestamp + VideoFrameExtractor.TIMESTAMP_EPSILON) {
+      return false
+    }
+
+    if (
+      typeof sample.duration !== 'number' ||
+      !Number.isFinite(sample.duration) ||
+      sample.duration <= 0
+    ) {
+      return true
+    }
+
+    return sample.timestamp + sample.duration >= timestamp - VideoFrameExtractor.TIMESTAMP_EPSILON
+  }
+
+  private async peekNextSample(): Promise<MediabunnySample | null> {
+    if (this.nextSample) {
+      return this.nextSample
+    }
+    if (!this.sampleIterator || this.iteratorDone) {
+      return null
+    }
+
+    const iterator = this.sampleIterator
+    const generation = this.streamGeneration
+    const nextResult = await iterator.next()
+    if (this.disposed || generation !== this.streamGeneration || iterator !== this.sampleIterator) {
+      if (!nextResult.done) this.closeSample(nextResult.value)
+      return null
+    }
+    if (nextResult.done) {
+      this.iteratorDone = true
+      return null
+    }
+
+    this.nextSample = nextResult.value
+    return this.nextSample
+  }
+
+  private resetSampleIterator(
+    startTimestamp: number,
+    reason: 'init' | 'backward' | 'recover',
+  ): void {
+    this.closeStreamState()
+    if (!this.sink) return
+
+    // Use keyframe index for precise backtrack; fall back to fixed 1.0s
+    const adaptiveStart = getAdaptiveStreamStart(this.src, startTimestamp)
+    const streamStart =
+      adaptiveStart ?? Math.max(0, startTimestamp - VideoFrameExtractor.STREAM_BACKTRACK_SECONDS)
+    if (reason === 'recover') {
+      log.debug('Restarting mediabunny sample stream', {
+        itemId: this.itemId,
+        reason,
+        startTimestamp,
+        streamStart,
+        adaptive: adaptiveStart !== null,
+      })
+    }
+
+    this.sampleIterator = this.sink.samples(streamStart, Infinity)
+    this.iteratorDone = false
+    this.lastRequestedTimestamp = null
+  }
+
+  private drawCurrentSample(
+    ctx: OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+  ): boolean {
+    const sample = this.currentSample
+    if (!sample) {
+      this.lastFailureKind = 'no-sample'
+      return false
+    }
+
+    try {
+      // Phone videos commonly store landscape pixels with 90/270 degree
+      // rotation metadata. VideoSample.draw() honors that metadata, while a
+      // raw VideoFrame draw does not.
+      if (typeof sample.draw !== 'function') {
+        this.lastFailureKind = 'decode-error'
+        return false
+      }
+      sample.draw(ctx, x, y, width, height)
+      return true
+    } catch (error) {
+      // Draw failed — discard the cached frame so next attempt gets a fresh one
+      this.closeCachedVideoFrame()
+      this.sampleLoopError = error
+      this.lastFailureKind = 'decode-error'
+      return false
+    }
+  }
+
+  private getOrCreateCurrentVideoFrame(): VideoFrame | null {
+    const sample = this.currentSample
+    if (!sample) {
+      this.lastFailureKind = 'no-sample'
+      return null
+    }
+
+    // Reuse cached VideoFrame if we're drawing the same sample again.
+    // This is critical for transitions: the outgoing clip is rendered past
+    // its timeline end, which means the sample iterator is exhausted and
+    // the same last sample is drawn for many consecutive frames. Calling
+    // toVideoFrame() after a previous VideoFrame was closed can return an
+    // empty/invalidated frame because the decoded buffer was released.
+    let videoFrame = this.cachedVideoFrame
+    if (!videoFrame || this.cachedVideoFrameSample !== sample) {
+      this.closeCachedVideoFrame()
+      videoFrame = sample.toVideoFrame()
+      if (!videoFrame) {
+        this.sampleLoopError = new Error('Decoded sample could not be converted to VideoFrame')
+        this.lastFailureKind = 'decode-error'
+        return null
+      }
+      this.cachedVideoFrame = videoFrame
+      this.cachedVideoFrameSample = sample
+    }
+
+    return videoFrame
+  }
+
+  private cloneCurrentVideoFrame(): VideoFrame | null {
+    const videoFrame = this.getOrCreateCurrentVideoFrame()
+    if (!videoFrame) {
+      return null
+    }
+
+    try {
+      return videoFrame.clone()
+    } catch (error) {
+      this.sampleLoopError = error
+      return null
+    }
+  }
+
+  private async captureCurrentOrientedFrame(): Promise<ImageBitmap | VideoFrame | null> {
+    const sample = this.currentSample
+    if (!sample) {
+      this.lastFailureKind = 'no-sample'
+      return null
+    }
+
+    const width = Math.round(this.videoTrack?.displayWidth ?? 0)
+    const height = Math.round(this.videoTrack?.displayHeight ?? 0)
+    if (width <= 0 || height <= 0) {
+      return this.cloneCurrentVideoFrame()
+    }
+
+    try {
+      const canvas = new OffscreenCanvas(width, height)
+      const ctx = canvas.getContext('2d')
+      if (!ctx) return this.cloneCurrentVideoFrame()
+      if (typeof sample.draw !== 'function') return this.cloneCurrentVideoFrame()
+      sample.draw(ctx, 0, 0, width, height)
+      return await createImageBitmap(canvas)
+    } catch (error) {
+      this.sampleLoopError = error
+      return this.cloneCurrentVideoFrame()
+    }
+  }
+
+  private closeCachedVideoFrame(): void {
+    if (this.cachedVideoFrame) {
+      try {
+        this.cachedVideoFrame.close()
+      } catch {
+        // Ignore close errors
+      }
+      this.cachedVideoFrame = null
+      this.cachedVideoFrameSample = null
+    }
+  }
+
+  private async recoverAndPrime(
+    timestamp: number,
+    error: unknown,
+    shouldContinue?: VideoDrawContinuationCheck,
+  ): Promise<boolean> {
+    const message = error instanceof Error ? error.message : String(error)
+    const looksRecoverable = /key frame|configure\(\)|flush\(\)|InvalidStateError|decode/i.test(
+      message,
+    )
+    if (!looksRecoverable) {
+      return false
+    }
+
+    try {
+      this.resetSampleIterator(timestamp, 'recover')
+      await this.ensureSampleForTimestamp(timestamp, shouldContinue)
+      return this.currentSample !== null
+    } catch (recoveryError) {
+      if (recoveryError === DRAW_CANCELLED) throw recoveryError
+      this.sampleLoopError = recoveryError
+      this.lastFailureKind = 'decode-error'
+      return false
+    }
+  }
+
+  private closeStreamState(): void {
+    const iterator = this.sampleIterator
+    this.sampleIterator = null
+    this.streamGeneration += 1
+    if (iterator) {
+      void iterator.return().catch(() => {})
+    }
+    this.iteratorDone = true
+    this.lastRequestedTimestamp = null
+    this.sampleLoopError = null
+    // Close cached VideoFrame before closing the sample it references
+    this.closeCachedVideoFrame()
+    this.closeSample(this.currentSample)
+    this.closeSample(this.nextSample)
+    this.currentSample = null
+    this.nextSample = null
+  }
+
+  private closeSample(sample: MediabunnySample | null): void {
+    if (!sample) return
+    try {
+      sample.close()
+    } catch {
+      // Ignore close errors
+    }
+  }
+
+  private reportDrawFailure(timestamp: number, clampedTime: number, error: unknown): boolean {
+    this.drawFailureCount += 1
+    const shouldWarn = this.drawFailureCount <= 3 || this.drawFailureCount % 20 === 0
+    const logData = {
+      itemId: this.itemId,
+      timestamp,
+      clampedTime,
+      duration: this.duration,
+      failures: this.drawFailureCount,
+      reason: this.lastFailureKind,
+      error: error instanceof Error ? error.message : String(error),
+    }
+
+    if (shouldWarn && !this.options.logFrameFailuresAsDebug) {
+      log.warn('Mediabunny frame extraction failed', logData)
+    } else {
+      log.debug('Mediabunny frame extraction failed', logData)
+    }
+    return false
+  }
+
+  getLastFailureKind(): 'none' | 'no-sample' | 'decode-error' {
+    return this.lastFailureKind
+  }
+
+  /**
+   * Whether samplesAtTimestamps has been disabled for this source due to
+   * decoder errors (falls back to the safe samples() streaming path).
+   */
+  private batchDisabled = false
+
+  /**
+   * Batch-prewarm multiple timestamps using mediabunny's optimized
+   * samplesAtTimestamps() pipeline. This decodes each packet at most
+   * once when timestamps are sorted ascending.
+   *
+   * Used for background scrub prewarm where multiple nearby frames are
+   * decoded speculatively. Does NOT update the streaming samples() iterator
+   * state — the two paths are independent.
+   *
+   * Returns the number of successfully decoded frames. Returns -1 if
+   * batch mode has been disabled for this source (caller should fall back
+   * to sequential drawFrame calls).
+   */
+  async prewarmBatch(
+    ctx: OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D,
+    timestamps: number[],
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+  ): Promise<number> {
+    if (this.batchDisabled || !this.ready || !this.sink || timestamps.length === 0) {
+      return -1
+    }
+
+    let decoded = 0
+    try {
+      for await (const sample of this.sink.samplesAtTimestamps(timestamps)) {
+        if (!sample) continue
+        try {
+          if (typeof sample.draw === 'function') {
+            sample.draw(ctx, x, y, width, height)
+            decoded++
+          }
+        } finally {
+          sample.close()
+        }
+      }
+      return decoded
+    } catch (error) {
+      // "key frame required after flush" or similar decoder error —
+      // disable batch mode for this source permanently.
+      const message = error instanceof Error ? error.message : String(error)
+      const isDecoderFlushError = /key frame|flush|InvalidStateError/i.test(message)
+      if (isDecoderFlushError) {
+        log.warn('Disabling batch prewarm for source (decoder flush error)', {
+          itemId: this.itemId,
+          error: message,
+          decoded,
+        })
+        this.batchDisabled = true
+      }
+      return decoded > 0 ? decoded : -1
+    }
+  }
+
+  /**
+   * Whether batch prewarm (samplesAtTimestamps) is available for this source.
+   */
+  isBatchPrewarmAvailable(): boolean {
+    return !this.batchDisabled && this.ready && this.sink !== null
+  }
+
+  /**
+   * Get video dimensions
+   */
+  getDimensions(): { width: number; height: number } {
+    if (!this.videoTrack) {
+      return { width: 1920, height: 1080 }
+    }
+    return {
+      width: this.videoTrack.displayWidth,
+      height: this.videoTrack.displayHeight,
+    }
+  }
+
+  /**
+   * Get video duration in seconds
+   */
+  getDuration(): number {
+    return this.duration
+  }
+
+  /**
+   * Whether the source may carry alpha (resolved during init). Used by occlusion
+   * culling so a full-canvas transparent video does not cull the layers below it.
+   * A source that is not ready (init failed or still pending) cannot paint any
+   * pixels, so it must never be treated as an opaque occluder either — otherwise
+   * a full-canvas video that failed to init would cull every layer beneath it
+   * and the frame would render as a black card.
+   */
+  // Called via the shared extractor pool (shared-video-extractor.ts getItemCanBeTransparent), which static tracing misses
+  // fallow-ignore-next-line unused-class-member
+  getCanBeTransparent(): boolean {
+    return this.canBeTransparent || !this.ready
+  }
+
+  /**
+   * Clean up resources
+   */
+  dispose(): void {
+    this.disposed = true
+    this.closeStreamState()
+
+    try {
+      // mediabunny Input lifecycle API is dispose(); close() is not guaranteed.
+      this.input?.dispose()
+    } catch {
+      // Ignore dispose errors
+    }
+    this.sink = null
+    this.input = null
+    this.videoTrack = null
+    this.ready = false
+    this.drawFailureCount = 0
+    this.lastFailureKind = 'none'
+  }
+}

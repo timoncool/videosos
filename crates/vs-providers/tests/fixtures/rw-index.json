@@ -1,0 +1,4952 @@
+[
+  {
+    "id": "ace-step-v1-5-base",
+    "air": "runware:ace-step@v1.5-base",
+    "name": "ACE-Step v1.5 Base",
+    "status": "live",
+    "capabilities": [
+      "text-to-audio",
+      "audio-to-audio",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/ace-step-v1-5-base/schema.json"
+  },
+  {
+    "id": "ace-step-v1-5-turbo",
+    "air": "runware:ace-step@v1.5-turbo",
+    "name": "ACE-Step v1.5 Turbo",
+    "status": "live",
+    "capabilities": [
+      "text-to-audio",
+      "audio-to-audio",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/ace-step-v1-5-turbo/schema.json"
+  },
+  {
+    "id": "ace-step-v1-5-xl-base",
+    "air": "runware:ace-step@v1.5-xl-base",
+    "name": "ACE-Step v1.5 XL Base",
+    "status": "live",
+    "capabilities": [
+      "text-to-audio",
+      "audio-to-audio",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/ace-step-v1-5-xl-base/schema.json"
+  },
+  {
+    "id": "ace-step-v1-5-xl-sft",
+    "air": "runware:ace-step@v1.5-xl-sft",
+    "name": "ACE-Step v1.5 XL SFT",
+    "status": "live",
+    "capabilities": [
+      "text-to-audio",
+      "audio-to-audio",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/ace-step-v1-5-xl-sft/schema.json"
+  },
+  {
+    "id": "ace-step-v1-5-xl-turbo",
+    "air": "runware:ace-step@v1.5-xl-turbo",
+    "name": "ACE-Step v1.5 XL Turbo",
+    "status": "live",
+    "capabilities": [
+      "text-to-audio",
+      "audio-to-audio",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/ace-step-v1-5-xl-turbo/schema.json"
+  },
+  {
+    "id": "alibaba-happyhorse-1-0",
+    "air": "alibaba:happyhorse@1.0",
+    "name": "HappyHorse-1.0",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "edit",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Alibaba",
+    "schema": "https://runware.ai/docs/models/alibaba-happyhorse-1-0/schema.json"
+  },
+  {
+    "id": "alibaba-happyhorse-1-1",
+    "air": "alibaba:happyhorse@1.1",
+    "name": "HappyHorse 1.1",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Alibaba",
+    "schema": "https://runware.ai/docs/models/alibaba-happyhorse-1-1/schema.json"
+  },
+  {
+    "id": "alibaba-qwen-image",
+    "air": "runware:108@1",
+    "name": "Qwen-Image",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Alibaba",
+    "architecture": "qwen-image",
+    "schema": "https://runware.ai/docs/models/alibaba-qwen-image/schema.json"
+  },
+  {
+    "id": "alibaba-qwen-image-2-0",
+    "air": "alibaba:qwen-image@2.0",
+    "name": "Qwen-Image-2.0",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Alibaba",
+    "schema": "https://runware.ai/docs/models/alibaba-qwen-image-2-0/schema.json"
+  },
+  {
+    "id": "alibaba-qwen-image-2-0-pro",
+    "air": "alibaba:qwen-image@2.0-pro",
+    "name": "Qwen-Image-2.0-Pro",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Alibaba",
+    "schema": "https://runware.ai/docs/models/alibaba-qwen-image-2-0-pro/schema.json"
+  },
+  {
+    "id": "alibaba-qwen-image-2-1-pro",
+    "air": "alibaba:qwen-image@2.1-pro",
+    "name": "Qwen-Image-2.1-Pro",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint",
+      "transparency"
+    ],
+    "creator": "Alibaba",
+    "schema": "https://runware.ai/docs/models/alibaba-qwen-image-2-1-pro/schema.json"
+  },
+  {
+    "id": "alibaba-qwen-image-2-1-turbo",
+    "air": "alibaba:qwen-image@2.1-turbo",
+    "name": "Qwen-Image-2.1-Turbo",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Alibaba",
+    "schema": "https://runware.ai/docs/models/alibaba-qwen-image-2-1-turbo/schema.json"
+  },
+  {
+    "id": "alibaba-qwen-image-2512",
+    "air": "alibaba:qwen-image@2512",
+    "name": "Qwen-Image-2512",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Alibaba",
+    "architecture": "qwen-image",
+    "schema": "https://runware.ai/docs/models/alibaba-qwen-image-2512/schema.json"
+  },
+  {
+    "id": "alibaba-qwen-image-3-0",
+    "air": "alibaba:qwen-image@3.0",
+    "name": "Qwen-Image-3.0",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Alibaba",
+    "schema": "https://runware.ai/docs/models/alibaba-qwen-image-3-0/schema.json"
+  },
+  {
+    "id": "alibaba-qwen-image-3-0-pro",
+    "air": "alibaba:qwen-image@3.0-pro",
+    "name": "Qwen-Image-3.0-Pro",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Alibaba",
+    "schema": "https://runware.ai/docs/models/alibaba-qwen-image-3-0-pro/schema.json"
+  },
+  {
+    "id": "alibaba-qwen-image-edit",
+    "air": "runware:108@20",
+    "name": "Qwen-Image-Edit",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Alibaba",
+    "architecture": "qwen-image-edit",
+    "schema": "https://runware.ai/docs/models/alibaba-qwen-image-edit/schema.json"
+  },
+  {
+    "id": "alibaba-qwen-image-edit-2511",
+    "air": "alibaba:qwen-image-edit@2511",
+    "name": "Qwen-Image-Edit-2511",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Alibaba",
+    "schema": "https://runware.ai/docs/models/alibaba-qwen-image-edit-2511/schema.json"
+  },
+  {
+    "id": "alibaba-qwen-image-edit-plus",
+    "air": "runware:108@22",
+    "name": "Qwen-Image-Edit-Plus",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Alibaba",
+    "architecture": "qwen-image-edit-plus",
+    "schema": "https://runware.ai/docs/models/alibaba-qwen-image-edit-plus/schema.json"
+  },
+  {
+    "id": "alibaba-qwen-image-layered",
+    "air": "alibaba:qwen-image@layered",
+    "name": "Qwen-Image-Layered",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "checkpoint",
+      "transparency"
+    ],
+    "creator": "Alibaba",
+    "architecture": "qwen-image-layered",
+    "schema": "https://runware.ai/docs/models/alibaba-qwen-image-layered/schema.json"
+  },
+  {
+    "id": "alibaba-qwen2-5-vl-3b-instruct",
+    "name": "Qwen2.5-VL-3B-Instruct",
+    "status": "live",
+    "capabilities": [
+      "image-to-text",
+      "caption",
+      "checkpoint"
+    ],
+    "creator": "Alibaba",
+    "schema": "https://runware.ai/docs/models/alibaba-qwen2-5-vl-3b-instruct/schema.json"
+  },
+  {
+    "id": "alibaba-qwen2-5-vl-7b-instruct",
+    "name": "Qwen2.5-VL-7B-Instruct",
+    "status": "live",
+    "capabilities": [
+      "image-to-text",
+      "caption",
+      "checkpoint"
+    ],
+    "creator": "Alibaba",
+    "schema": "https://runware.ai/docs/models/alibaba-qwen2-5-vl-7b-instruct/schema.json"
+  },
+  {
+    "id": "alibaba-qwen3-tts-1-7b-base",
+    "air": "alibaba:qwen@3-tts-1.7b-base",
+    "name": "Qwen3-TTS 1.7B Base",
+    "status": "live",
+    "capabilities": [
+      "audio-to-audio",
+      "checkpoint"
+    ],
+    "creator": "Alibaba",
+    "schema": "https://runware.ai/docs/models/alibaba-qwen3-tts-1-7b-base/schema.json"
+  },
+  {
+    "id": "alibaba-qwen3-tts-1-7b-customvoice",
+    "air": "alibaba:qwen@3-tts-1.7b-customvoice",
+    "name": "Qwen3-TTS 1.7B CustomVoice",
+    "status": "live",
+    "capabilities": [
+      "text-to-audio",
+      "checkpoint"
+    ],
+    "creator": "Alibaba",
+    "schema": "https://runware.ai/docs/models/alibaba-qwen3-tts-1-7b-customvoice/schema.json"
+  },
+  {
+    "id": "alibaba-qwen3-tts-1-7b-voicedesign",
+    "air": "alibaba:qwen@3-tts-1.7b-voicedesign",
+    "name": "Qwen3-TTS 1.7B VoiceDesign",
+    "status": "live",
+    "capabilities": [
+      "text-to-audio",
+      "checkpoint"
+    ],
+    "creator": "Alibaba",
+    "schema": "https://runware.ai/docs/models/alibaba-qwen3-tts-1-7b-voicedesign/schema.json"
+  },
+  {
+    "id": "alibaba-wan2-5-preview",
+    "air": "runware:201@1",
+    "name": "Wan2.5-Preview",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "audio-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Alibaba",
+    "schema": "https://runware.ai/docs/models/alibaba-wan2-5-preview/schema.json"
+  },
+  {
+    "id": "alibaba-wan2-5-preview-image",
+    "air": "runware:201@10",
+    "name": "Wan2.5-Preview Image",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "checkpoint"
+    ],
+    "creator": "Alibaba",
+    "schema": "https://runware.ai/docs/models/alibaba-wan2-5-preview-image/schema.json"
+  },
+  {
+    "id": "alibaba-wan2-6",
+    "air": "alibaba:wan@2.6",
+    "name": "Wan2.6",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "audio-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Alibaba",
+    "schema": "https://runware.ai/docs/models/alibaba-wan2-6/schema.json"
+  },
+  {
+    "id": "alibaba-wan2-6-flash",
+    "air": "alibaba:wan@2.6-flash",
+    "name": "Wan2.6 Flash",
+    "status": "live",
+    "capabilities": [
+      "image-to-video",
+      "video-to-video",
+      "audio-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Alibaba",
+    "schema": "https://runware.ai/docs/models/alibaba-wan2-6-flash/schema.json"
+  },
+  {
+    "id": "alibaba-wan2-6-image",
+    "air": "alibaba:wan@2.6-image",
+    "name": "Wan2.6 Image",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Alibaba",
+    "schema": "https://runware.ai/docs/models/alibaba-wan2-6-image/schema.json"
+  },
+  {
+    "id": "alibaba-wan2-7",
+    "air": "alibaba:wan@2.7",
+    "name": "Wan2.7",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "audio-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Alibaba",
+    "schema": "https://runware.ai/docs/models/alibaba-wan2-7/schema.json"
+  },
+  {
+    "id": "alibaba-wan2-7-image",
+    "air": "alibaba:wan@2.7-image",
+    "name": "Wan2.7 Image",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Alibaba",
+    "schema": "https://runware.ai/docs/models/alibaba-wan2-7-image/schema.json"
+  },
+  {
+    "id": "alibaba-wan2-7-image-pro",
+    "air": "alibaba:wan@2.7-image-pro",
+    "name": "Wan2.7 Image Pro",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Alibaba",
+    "schema": "https://runware.ai/docs/models/alibaba-wan2-7-image-pro/schema.json"
+  },
+  {
+    "id": "alibaba-wan3-0",
+    "air": "alibaba:wan@3.0",
+    "name": "Wan3.0",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "audio-to-video",
+      "edit",
+      "extend",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Alibaba",
+    "schema": "https://runware.ai/docs/models/alibaba-wan3-0/schema.json"
+  },
+  {
+    "id": "alibaba-wan3-0-prime",
+    "air": "alibaba:wan@3.0-prime",
+    "name": "Wan3.0 Prime",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "audio-to-video",
+      "edit",
+      "extend",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Alibaba",
+    "schema": "https://runware.ai/docs/models/alibaba-wan3-0-prime/schema.json"
+  },
+  {
+    "id": "alibaba-z-image",
+    "air": "runware:z-image@0",
+    "name": "Z-Image",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Alibaba",
+    "architecture": "z-image",
+    "schema": "https://runware.ai/docs/models/alibaba-z-image/schema.json"
+  },
+  {
+    "id": "alibaba-z-image-turbo",
+    "air": "runware:z-image@turbo",
+    "name": "Z-Image-Turbo",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Alibaba",
+    "architecture": "z-image-turbo",
+    "schema": "https://runware.ai/docs/models/alibaba-z-image-turbo/schema.json"
+  },
+  {
+    "id": "anthropic-claude-fable-5",
+    "name": "Claude Fable 5",
+    "status": "live",
+    "capabilities": [
+      "text-to-text",
+      "image-to-text",
+      "checkpoint"
+    ],
+    "creator": "Anthropic",
+    "schema": "https://runware.ai/docs/models/anthropic-claude-fable-5/schema.json"
+  },
+  {
+    "id": "anthropic-claude-haiku-4-5",
+    "name": "Claude Haiku 4.5",
+    "status": "live",
+    "capabilities": [
+      "text-to-text",
+      "image-to-text",
+      "checkpoint"
+    ],
+    "creator": "Anthropic",
+    "schema": "https://runware.ai/docs/models/anthropic-claude-haiku-4-5/schema.json"
+  },
+  {
+    "id": "anthropic-claude-opus-4-7",
+    "name": "Claude Opus 4.7",
+    "status": "live",
+    "capabilities": [
+      "text-to-text",
+      "image-to-text",
+      "checkpoint"
+    ],
+    "creator": "Anthropic",
+    "schema": "https://runware.ai/docs/models/anthropic-claude-opus-4-7/schema.json"
+  },
+  {
+    "id": "anthropic-claude-opus-4-8",
+    "name": "Claude Opus 4.8",
+    "status": "live",
+    "capabilities": [
+      "text-to-text",
+      "image-to-text",
+      "checkpoint"
+    ],
+    "creator": "Anthropic",
+    "schema": "https://runware.ai/docs/models/anthropic-claude-opus-4-8/schema.json"
+  },
+  {
+    "id": "anthropic-claude-sonnet-4-6",
+    "name": "Claude Sonnet 4.6",
+    "status": "live",
+    "capabilities": [
+      "text-to-text",
+      "image-to-text",
+      "checkpoint"
+    ],
+    "creator": "Anthropic",
+    "schema": "https://runware.ai/docs/models/anthropic-claude-sonnet-4-6/schema.json"
+  },
+  {
+    "id": "baidu-ernie-image",
+    "air": "baidu:ernie-image@0",
+    "name": "ERNIE-Image",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "checkpoint"
+    ],
+    "creator": "Baidu",
+    "schema": "https://runware.ai/docs/models/baidu-ernie-image/schema.json"
+  },
+  {
+    "id": "baidu-ernie-image-turbo",
+    "air": "baidu:ernie-image@turbo",
+    "name": "ERNIE-Image-Turbo",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "checkpoint"
+    ],
+    "creator": "Baidu",
+    "schema": "https://runware.ai/docs/models/baidu-ernie-image-turbo/schema.json"
+  },
+  {
+    "id": "bfl-flux-1-1-pro",
+    "air": "bfl:2@1",
+    "name": "FLUX.1.1 [pro]",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "checkpoint"
+    ],
+    "creator": "Black Forest Labs",
+    "schema": "https://runware.ai/docs/models/bfl-flux-1-1-pro/schema.json"
+  },
+  {
+    "id": "bfl-flux-1-1-pro-ultra",
+    "air": "bfl:2@2",
+    "name": "FLUX.1.1 [pro] Ultra",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "checkpoint"
+    ],
+    "creator": "Black Forest Labs",
+    "schema": "https://runware.ai/docs/models/bfl-flux-1-1-pro-ultra/schema.json"
+  },
+  {
+    "id": "bfl-flux-1-dev",
+    "air": "runware:101@1",
+    "name": "FLUX.1 [dev]",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Black Forest Labs",
+    "architecture": "flux-1-dev",
+    "schema": "https://runware.ai/docs/models/bfl-flux-1-dev/schema.json"
+  },
+  {
+    "id": "bfl-flux-1-expand-pro",
+    "air": "bfl:1@3",
+    "name": "FLUX.1 Expand [pro]",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Black Forest Labs",
+    "schema": "https://runware.ai/docs/models/bfl-flux-1-expand-pro/schema.json"
+  },
+  {
+    "id": "bfl-flux-1-fill-dev",
+    "air": "runware:102@1",
+    "name": "FLUX.1 Fill [dev]",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Black Forest Labs",
+    "architecture": "flux-1-dev",
+    "schema": "https://runware.ai/docs/models/bfl-flux-1-fill-dev/schema.json"
+  },
+  {
+    "id": "bfl-flux-1-fill-pro",
+    "air": "bfl:1@2",
+    "name": "FLUX.1 Fill [pro]",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Black Forest Labs",
+    "schema": "https://runware.ai/docs/models/bfl-flux-1-fill-pro/schema.json"
+  },
+  {
+    "id": "bfl-flux-1-kontext-dev",
+    "air": "runware:106@1",
+    "name": "FLUX.1 Kontext [dev]",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Black Forest Labs",
+    "architecture": "flux-1-kontext-dev",
+    "schema": "https://runware.ai/docs/models/bfl-flux-1-kontext-dev/schema.json"
+  },
+  {
+    "id": "bfl-flux-1-kontext-max",
+    "air": "bfl:4@1",
+    "name": "FLUX.1 Kontext [max]",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Black Forest Labs",
+    "schema": "https://runware.ai/docs/models/bfl-flux-1-kontext-max/schema.json"
+  },
+  {
+    "id": "bfl-flux-1-kontext-pro",
+    "air": "bfl:3@1",
+    "name": "FLUX.1 Kontext [pro]",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Black Forest Labs",
+    "schema": "https://runware.ai/docs/models/bfl-flux-1-kontext-pro/schema.json"
+  },
+  {
+    "id": "bfl-flux-1-schnell",
+    "air": "runware:100@1",
+    "name": "FLUX.1 [schnell]",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Black Forest Labs",
+    "architecture": "flux-1-schnell",
+    "schema": "https://runware.ai/docs/models/bfl-flux-1-schnell/schema.json"
+  },
+  {
+    "id": "bfl-flux-2-dev",
+    "air": "runware:400@1",
+    "name": "FLUX.2 [dev]",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Black Forest Labs",
+    "architecture": "flux-2-dev",
+    "schema": "https://runware.ai/docs/models/bfl-flux-2-dev/schema.json"
+  },
+  {
+    "id": "bfl-flux-2-flex",
+    "air": "bfl:6@1",
+    "name": "FLUX.2 [flex]",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Black Forest Labs",
+    "schema": "https://runware.ai/docs/models/bfl-flux-2-flex/schema.json"
+  },
+  {
+    "id": "bfl-flux-2-klein-4b",
+    "air": "runware:400@4",
+    "name": "FLUX.2 [klein] 4B",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Black Forest Labs",
+    "architecture": "flux-2-klein-4b",
+    "schema": "https://runware.ai/docs/models/bfl-flux-2-klein-4b/schema.json"
+  },
+  {
+    "id": "bfl-flux-2-klein-4b-base",
+    "air": "runware:400@5",
+    "name": "FLUX.2 [klein] 4B Base",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Black Forest Labs",
+    "architecture": "flux-2-klein-base-4b",
+    "schema": "https://runware.ai/docs/models/bfl-flux-2-klein-4b-base/schema.json"
+  },
+  {
+    "id": "bfl-flux-2-klein-9b",
+    "air": "runware:400@2",
+    "name": "FLUX.2 [klein] 9B",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Black Forest Labs",
+    "architecture": "flux-2-klein-9b",
+    "schema": "https://runware.ai/docs/models/bfl-flux-2-klein-9b/schema.json"
+  },
+  {
+    "id": "bfl-flux-2-klein-9b-base",
+    "air": "runware:400@3",
+    "name": "FLUX.2 [klein] 9B Base",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Black Forest Labs",
+    "architecture": "flux-2-klein-base-9b",
+    "schema": "https://runware.ai/docs/models/bfl-flux-2-klein-9b-base/schema.json"
+  },
+  {
+    "id": "bfl-flux-2-klein-9b-kv",
+    "air": "runware:400@6",
+    "name": "FLUX.2 [klein] 9B KV",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Black Forest Labs",
+    "architecture": "flux-2-klein-9b",
+    "schema": "https://runware.ai/docs/models/bfl-flux-2-klein-9b-kv/schema.json"
+  },
+  {
+    "id": "bfl-flux-2-max",
+    "air": "bfl:7@1",
+    "name": "FLUX.2 [max]",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Black Forest Labs",
+    "schema": "https://runware.ai/docs/models/bfl-flux-2-max/schema.json"
+  },
+  {
+    "id": "bfl-flux-2-pro",
+    "air": "bfl:5@1",
+    "name": "FLUX.2 [pro]",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Black Forest Labs",
+    "schema": "https://runware.ai/docs/models/bfl-flux-2-pro/schema.json"
+  },
+  {
+    "id": "bfl-flux-3-image",
+    "air": "bfl:flux@3-image",
+    "name": "FLUX 3 Image",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Black Forest Labs",
+    "schema": "https://runware.ai/docs/models/bfl-flux-3-image/schema.json"
+  },
+  {
+    "id": "bfl-flux-3-video",
+    "air": "bfl:flux@3-video",
+    "name": "FLUX 3 Video",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Black Forest Labs",
+    "schema": "https://runware.ai/docs/models/bfl-flux-3-video/schema.json"
+  },
+  {
+    "id": "bfl-flux-erase",
+    "air": "bfl:flux@erase",
+    "name": "FLUX Erase",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Black Forest Labs",
+    "schema": "https://runware.ai/docs/models/bfl-flux-erase/schema.json"
+  },
+  {
+    "id": "bfl-flux-outpainting",
+    "air": "bfl:flux@outpainting",
+    "name": "FLUX Outpainting",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Black Forest Labs",
+    "schema": "https://runware.ai/docs/models/bfl-flux-outpainting/schema.json"
+  },
+  {
+    "id": "bfl-flux-video-edit-fast",
+    "air": "bfl:flux@video-edit-fast",
+    "name": "FLUX Video Edit [fast]",
+    "status": "live",
+    "capabilities": [
+      "video-to-video",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Black Forest Labs",
+    "schema": "https://runware.ai/docs/models/bfl-flux-video-edit-fast/schema.json"
+  },
+  {
+    "id": "bfl-flux-video-upscale",
+    "air": "bfl:flux@video-upscale",
+    "name": "FLUX Video Upscale",
+    "status": "live",
+    "capabilities": [
+      "video-to-video",
+      "upscale",
+      "checkpoint"
+    ],
+    "creator": "Black Forest Labs",
+    "schema": "https://runware.ai/docs/models/bfl-flux-video-upscale/schema.json"
+  },
+  {
+    "id": "bfl-flux-virtual-try-on",
+    "air": "bfl:flux@vto",
+    "name": "FLUX Virtual Try-On",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Black Forest Labs",
+    "schema": "https://runware.ai/docs/models/bfl-flux-virtual-try-on/schema.json"
+  },
+  {
+    "id": "birefnet-dis",
+    "air": "runware:112@3",
+    "name": "BiRefNet Dis",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "remove-background",
+      "checkpoint",
+      "transparency"
+    ],
+    "schema": "https://runware.ai/docs/models/birefnet-dis/schema.json"
+  },
+  {
+    "id": "birefnet-general",
+    "air": "runware:112@5",
+    "name": "BiRefNet General",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "remove-background",
+      "checkpoint",
+      "transparency"
+    ],
+    "schema": "https://runware.ai/docs/models/birefnet-general/schema.json"
+  },
+  {
+    "id": "birefnet-general-resolution-512x512-fp16",
+    "air": "runware:112@6",
+    "name": "BiRefNet General 512×512 FP16",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "remove-background",
+      "checkpoint",
+      "transparency"
+    ],
+    "schema": "https://runware.ai/docs/models/birefnet-general-resolution-512x512-fp16/schema.json"
+  },
+  {
+    "id": "birefnet-hrsod-dhu",
+    "air": "runware:112@7",
+    "name": "BiRefNet HRSOD DHU",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "remove-background",
+      "checkpoint",
+      "transparency"
+    ],
+    "schema": "https://runware.ai/docs/models/birefnet-hrsod-dhu/schema.json"
+  },
+  {
+    "id": "birefnet-massive-tr-dis5k-tr-tes",
+    "air": "runware:112@8",
+    "name": "BiRefNet Massive TR DIS5K TR TES",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "remove-background",
+      "checkpoint",
+      "transparency"
+    ],
+    "schema": "https://runware.ai/docs/models/birefnet-massive-tr-dis5k-tr-tes/schema.json"
+  },
+  {
+    "id": "birefnet-matting",
+    "air": "runware:112@9",
+    "name": "BiRefNet Matting",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "remove-background",
+      "checkpoint",
+      "transparency"
+    ],
+    "schema": "https://runware.ai/docs/models/birefnet-matting/schema.json"
+  },
+  {
+    "id": "birefnet-portrait",
+    "air": "runware:112@10",
+    "name": "BiRefNet Portrait",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "remove-background",
+      "checkpoint",
+      "transparency"
+    ],
+    "schema": "https://runware.ai/docs/models/birefnet-portrait/schema.json"
+  },
+  {
+    "id": "birefnet-v1-base",
+    "air": "runware:112@1",
+    "name": "BiRefNet v1 Base",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "remove-background",
+      "checkpoint",
+      "transparency"
+    ],
+    "schema": "https://runware.ai/docs/models/birefnet-v1-base/schema.json"
+  },
+  {
+    "id": "birefnet-v1-base-cod",
+    "air": "runware:112@2",
+    "name": "BiRefNet v1 Base – COD",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "remove-background",
+      "checkpoint",
+      "transparency"
+    ],
+    "schema": "https://runware.ai/docs/models/birefnet-v1-base-cod/schema.json"
+  },
+  {
+    "id": "boogu-image-0-1-edit",
+    "air": "boogu:image@0.1-edit",
+    "name": "Boogu-Image-0.1-Edit",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Boogu",
+    "schema": "https://runware.ai/docs/models/boogu-image-0-1-edit/schema.json"
+  },
+  {
+    "id": "boogu-image-0-1-edit-turbo",
+    "air": "boogu:image@0.1-edit-turbo",
+    "name": "Boogu-Image-0.1-Edit-Turbo",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Boogu",
+    "schema": "https://runware.ai/docs/models/boogu-image-0-1-edit-turbo/schema.json"
+  },
+  {
+    "id": "bria-3-2",
+    "air": "bria:10@1",
+    "name": "Bria 3.2",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "checkpoint"
+    ],
+    "creator": "Bria",
+    "schema": "https://runware.ai/docs/models/bria-3-2/schema.json"
+  },
+  {
+    "id": "bria-fibo",
+    "air": "bria:20@1",
+    "name": "Bria FIBO",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Bria",
+    "schema": "https://runware.ai/docs/models/bria-fibo/schema.json"
+  },
+  {
+    "id": "bria-fibo-edit",
+    "air": "bria:21@1",
+    "name": "Bria FIBO Edit",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Bria",
+    "schema": "https://runware.ai/docs/models/bria-fibo-edit/schema.json"
+  },
+  {
+    "id": "bria-fibo-edit-tools",
+    "air": "bria:21@2",
+    "name": "Bria Fibo Edit Tools",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Bria",
+    "schema": "https://runware.ai/docs/models/bria-fibo-edit-tools/schema.json"
+  },
+  {
+    "id": "bria-fibo-lite",
+    "air": "bria:20@3",
+    "name": "Bria FIBO Lite",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Bria",
+    "schema": "https://runware.ai/docs/models/bria-fibo-lite/schema.json"
+  },
+  {
+    "id": "bria-image-increase-resolution",
+    "air": "bria:52@1",
+    "name": "Bria Image Increase Resolution",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "upscale",
+      "checkpoint"
+    ],
+    "creator": "Bria",
+    "schema": "https://runware.ai/docs/models/bria-image-increase-resolution/schema.json"
+  },
+  {
+    "id": "bria-image-replace-background",
+    "air": "bria:11@1",
+    "name": "Bria Image Replace Background",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Bria",
+    "schema": "https://runware.ai/docs/models/bria-image-replace-background/schema.json"
+  },
+  {
+    "id": "bria-rmbg-v2-0",
+    "air": "bria:2@1",
+    "name": "Bria RMBG v2.0",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "remove-background",
+      "checkpoint",
+      "transparency"
+    ],
+    "creator": "Bria",
+    "schema": "https://runware.ai/docs/models/bria-rmbg-v2-0/schema.json"
+  },
+  {
+    "id": "bria-video-background-removal",
+    "air": "bria:51@1",
+    "name": "Bria Video Background Removal",
+    "status": "live",
+    "capabilities": [
+      "video-to-video",
+      "remove-background",
+      "checkpoint",
+      "transparency"
+    ],
+    "creator": "Bria",
+    "schema": "https://runware.ai/docs/models/bria-video-background-removal/schema.json"
+  },
+  {
+    "id": "bria-video-eraser",
+    "air": "bria:60@1",
+    "name": "Bria Video Eraser",
+    "status": "live",
+    "capabilities": [
+      "video-to-video",
+      "checkpoint"
+    ],
+    "creator": "Bria",
+    "schema": "https://runware.ai/docs/models/bria-video-eraser/schema.json"
+  },
+  {
+    "id": "bria-video-increase-resolution",
+    "air": "bria:50@1",
+    "name": "Bria Video Increase Resolution",
+    "status": "live",
+    "capabilities": [
+      "video-to-video",
+      "upscale",
+      "checkpoint"
+    ],
+    "creator": "Bria",
+    "schema": "https://runware.ai/docs/models/bria-video-increase-resolution/schema.json"
+  },
+  {
+    "id": "bytedance-omnihuman-1",
+    "air": "bytedance:5@1",
+    "name": "OmniHuman-1",
+    "status": "live",
+    "capabilities": [
+      "image-to-video",
+      "audio-to-video",
+      "checkpoint"
+    ],
+    "creator": "ByteDance",
+    "schema": "https://runware.ai/docs/models/bytedance-omnihuman-1/schema.json"
+  },
+  {
+    "id": "bytedance-omnihuman-1-5",
+    "air": "bytedance:5@2",
+    "name": "OmniHuman-1.5",
+    "status": "live",
+    "capabilities": [
+      "image-to-video",
+      "audio-to-video",
+      "checkpoint"
+    ],
+    "creator": "ByteDance",
+    "schema": "https://runware.ai/docs/models/bytedance-omnihuman-1-5/schema.json"
+  },
+  {
+    "id": "bytedance-seed-audio-1-0",
+    "air": "bytedance:seed-audio@1.0",
+    "name": "Seed Audio 1.0",
+    "status": "live",
+    "capabilities": [
+      "text-to-audio",
+      "image-to-audio",
+      "audio-to-audio",
+      "checkpoint"
+    ],
+    "creator": "ByteDance",
+    "schema": "https://runware.ai/docs/models/bytedance-seed-audio-1-0/schema.json"
+  },
+  {
+    "id": "bytedance-seedance-1-0-pro",
+    "air": "bytedance:2@1",
+    "name": "Seedance 1.0 Pro",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "checkpoint"
+    ],
+    "creator": "ByteDance",
+    "schema": "https://runware.ai/docs/models/bytedance-seedance-1-0-pro/schema.json"
+  },
+  {
+    "id": "bytedance-seedance-1-0-pro-fast",
+    "air": "bytedance:2@2",
+    "name": "Seedance 1.0 Pro Fast",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "checkpoint"
+    ],
+    "creator": "ByteDance",
+    "schema": "https://runware.ai/docs/models/bytedance-seedance-1-0-pro-fast/schema.json"
+  },
+  {
+    "id": "bytedance-seedance-1-5-pro",
+    "air": "bytedance:seedance@1.5-pro",
+    "name": "Seedance 1.5 Pro",
+    "status": "deprecated",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "ByteDance",
+    "schema": "https://runware.ai/docs/models/bytedance-seedance-1-5-pro/schema.json"
+  },
+  {
+    "id": "bytedance-seedance-2-0",
+    "air": "bytedance:seedance@2.0",
+    "name": "Seedance 2.0",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "audio-to-video",
+      "edit",
+      "extend",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "ByteDance",
+    "schema": "https://runware.ai/docs/models/bytedance-seedance-2-0/schema.json"
+  },
+  {
+    "id": "bytedance-seedance-2-0-fast",
+    "air": "bytedance:seedance@2.0-fast",
+    "name": "Seedance 2.0 Fast",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "audio-to-video",
+      "edit",
+      "extend",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "ByteDance",
+    "schema": "https://runware.ai/docs/models/bytedance-seedance-2-0-fast/schema.json"
+  },
+  {
+    "id": "bytedance-seedance-2-0-mini",
+    "air": "bytedance:seedance@2.0-mini",
+    "name": "Seedance 2.0 Mini",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "audio-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "ByteDance",
+    "schema": "https://runware.ai/docs/models/bytedance-seedance-2-0-mini/schema.json"
+  },
+  {
+    "id": "bytedance-seedance-2-5",
+    "air": "bytedance:seedance@2.5",
+    "name": "Seedance 2.5",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "audio-to-video",
+      "edit",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "ByteDance",
+    "schema": "https://runware.ai/docs/models/bytedance-seedance-2-5/schema.json"
+  },
+  {
+    "id": "bytedance-seedream-4-0",
+    "air": "bytedance:5@0",
+    "name": "Seedream 4.0",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "ByteDance",
+    "schema": "https://runware.ai/docs/models/bytedance-seedream-4-0/schema.json"
+  },
+  {
+    "id": "bytedance-seedream-4-5",
+    "air": "bytedance:seedream@4.5",
+    "name": "Seedream 4.5",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "ByteDance",
+    "schema": "https://runware.ai/docs/models/bytedance-seedream-4-5/schema.json"
+  },
+  {
+    "id": "bytedance-seedream-5-0-flash",
+    "air": "bytedance:seedream@5.0-flash",
+    "name": "Seedream 5.0 Flash",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "ByteDance",
+    "schema": "https://runware.ai/docs/models/bytedance-seedream-5-0-flash/schema.json"
+  },
+  {
+    "id": "bytedance-seedream-5-0-lite",
+    "air": "bytedance:seedream@5.0-lite",
+    "name": "Seedream 5.0 Lite",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "ByteDance",
+    "schema": "https://runware.ai/docs/models/bytedance-seedream-5-0-lite/schema.json"
+  },
+  {
+    "id": "bytedance-seedream-5-0-pro",
+    "air": "bytedance:seedream@5.0-pro",
+    "name": "Seedream 5.0 Pro",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "ByteDance",
+    "schema": "https://runware.ai/docs/models/bytedance-seedream-5-0-pro/schema.json"
+  },
+  {
+    "id": "bytedance-video-enhancement-pro",
+    "air": "bytedance:video-enhancement@pro",
+    "name": "BytePlus Video Enhancement Pro",
+    "status": "live",
+    "capabilities": [
+      "video-to-video",
+      "upscale",
+      "checkpoint"
+    ],
+    "creator": "ByteDance",
+    "schema": "https://runware.ai/docs/models/bytedance-video-enhancement-pro/schema.json"
+  },
+  {
+    "id": "bytedance-video-enhancement-standard",
+    "air": "bytedance:video-enhancement@standard",
+    "name": "BytePlus Video Enhancement Standard",
+    "status": "live",
+    "capabilities": [
+      "video-to-video",
+      "upscale",
+      "checkpoint"
+    ],
+    "creator": "ByteDance",
+    "schema": "https://runware.ai/docs/models/bytedance-video-enhancement-standard/schema.json"
+  },
+  {
+    "id": "bytedance-video-upscaler",
+    "air": "bytedance:50@1",
+    "name": "ByteDance Video Upscaler",
+    "status": "live",
+    "capabilities": [
+      "video-to-video",
+      "upscale",
+      "checkpoint"
+    ],
+    "creator": "ByteDance",
+    "schema": "https://runware.ai/docs/models/bytedance-video-upscaler/schema.json"
+  },
+  {
+    "id": "ccsr",
+    "air": "runware:501@1",
+    "name": "CCSR",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "upscale",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/ccsr/schema.json"
+  },
+  {
+    "id": "clarity",
+    "air": "runware:500@1",
+    "name": "Clarity",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "upscale",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/clarity/schema.json"
+  },
+  {
+    "id": "controlnet-preprocess-canny",
+    "air": "runware:controlnet-preprocess@canny",
+    "name": "ControlNet Preprocess Canny",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "preprocess",
+      "edge-detection",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/controlnet-preprocess-canny/schema.json"
+  },
+  {
+    "id": "controlnet-preprocess-depth",
+    "air": "runware:controlnet-preprocess@depth",
+    "name": "ControlNet Preprocess Depth",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "preprocess",
+      "depth-estimation",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/controlnet-preprocess-depth/schema.json"
+  },
+  {
+    "id": "controlnet-preprocess-lineart",
+    "air": "runware:controlnet-preprocess@lineart",
+    "name": "ControlNet Preprocess Lineart",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "preprocess",
+      "line-extraction",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/controlnet-preprocess-lineart/schema.json"
+  },
+  {
+    "id": "controlnet-preprocess-lineart-anime",
+    "air": "runware:controlnet-preprocess@lineart-anime",
+    "name": "ControlNet Preprocess Lineart Anime",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "preprocess",
+      "line-extraction",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/controlnet-preprocess-lineart-anime/schema.json"
+  },
+  {
+    "id": "controlnet-preprocess-mlsd",
+    "air": "runware:controlnet-preprocess@mlsd",
+    "name": "ControlNet Preprocess MLSD",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "preprocess",
+      "line-extraction",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/controlnet-preprocess-mlsd/schema.json"
+  },
+  {
+    "id": "controlnet-preprocess-normalbae",
+    "air": "runware:controlnet-preprocess@normalbae",
+    "name": "ControlNet Preprocess NormalBae",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "preprocess",
+      "surface-normal-estimation",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/controlnet-preprocess-normalbae/schema.json"
+  },
+  {
+    "id": "controlnet-preprocess-openpose",
+    "air": "runware:controlnet-preprocess@openpose",
+    "name": "ControlNet Preprocess OpenPose",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "preprocess",
+      "pose-estimation",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/controlnet-preprocess-openpose/schema.json"
+  },
+  {
+    "id": "controlnet-preprocess-scribble",
+    "air": "runware:controlnet-preprocess@scribble",
+    "name": "ControlNet Preprocess Scribble",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "preprocess",
+      "line-extraction",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/controlnet-preprocess-scribble/schema.json"
+  },
+  {
+    "id": "controlnet-preprocess-seg",
+    "air": "runware:controlnet-preprocess@seg",
+    "name": "ControlNet Preprocess Seg",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "preprocess",
+      "segmentation",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/controlnet-preprocess-seg/schema.json"
+  },
+  {
+    "id": "controlnet-preprocess-shuffle",
+    "air": "runware:controlnet-preprocess@shuffle",
+    "name": "ControlNet Preprocess Shuffle",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "preprocess",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/controlnet-preprocess-shuffle/schema.json"
+  },
+  {
+    "id": "controlnet-preprocess-softedge",
+    "air": "runware:controlnet-preprocess@softedge",
+    "name": "ControlNet Preprocess SoftEdge",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "preprocess",
+      "edge-detection",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/controlnet-preprocess-softedge/schema.json"
+  },
+  {
+    "id": "controlnet-preprocess-tile",
+    "air": "runware:controlnet-preprocess@tile",
+    "name": "ControlNet Preprocess Tile",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "preprocess",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/controlnet-preprocess-tile/schema.json"
+  },
+  {
+    "id": "creatify-aurora-v1",
+    "air": "creatify:aurora@0",
+    "name": "Aurora v1",
+    "status": "live",
+    "capabilities": [
+      "image-to-video",
+      "audio-to-video",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/creatify-aurora-v1/schema.json"
+  },
+  {
+    "id": "creatify-aurora-v1-fast",
+    "air": "creatify:aurora@fast",
+    "name": "Aurora v1 Fast",
+    "status": "live",
+    "capabilities": [
+      "image-to-video",
+      "audio-to-video",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/creatify-aurora-v1-fast/schema.json"
+  },
+  {
+    "id": "dia2-2b",
+    "air": "runware:dia2@2b",
+    "name": "Dia2 2B",
+    "status": "live",
+    "capabilities": [
+      "text-to-audio",
+      "audio-to-audio",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/dia2-2b/schema.json"
+  },
+  {
+    "id": "exactly-illustrative",
+    "name": "Exactly Illustrative",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image"
+    ],
+    "creator": "Exactly AI",
+    "schema": "https://runware.ai/docs/models/exactly-illustrative/schema.json"
+  },
+  {
+    "id": "exactly-illustrative-training",
+    "air": "exactly:illustrative@training",
+    "name": "Exactly Illustrative Training",
+    "status": "live",
+    "capabilities": [
+      "train"
+    ],
+    "creator": "Exactly AI",
+    "architecture": "exactly-illustrative",
+    "schema": "https://runware.ai/docs/models/exactly-illustrative-training/schema.json"
+  },
+  {
+    "id": "exactly-photo-bright-pulse",
+    "air": "exactly:photo@bright-pulse",
+    "name": "Exactly Bright Pulse",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Exactly AI",
+    "schema": "https://runware.ai/docs/models/exactly-photo-bright-pulse/schema.json"
+  },
+  {
+    "id": "exactly-photo-distant-reality",
+    "air": "exactly:photo@distant-reality",
+    "name": "Exactly Distant Reality",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Exactly AI",
+    "schema": "https://runware.ai/docs/models/exactly-photo-distant-reality/schema.json"
+  },
+  {
+    "id": "exactly-photo-extreme-contrast",
+    "air": "exactly:photo@extreme-contrast",
+    "name": "Exactly Extreme Contrast",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Exactly AI",
+    "schema": "https://runware.ai/docs/models/exactly-photo-extreme-contrast/schema.json"
+  },
+  {
+    "id": "exactly-photo-grain-film-look",
+    "air": "exactly:photo@grain-film-look",
+    "name": "Exactly Grain Film Look",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Exactly AI",
+    "schema": "https://runware.ai/docs/models/exactly-photo-grain-film-look/schema.json"
+  },
+  {
+    "id": "exactly-photo-journey",
+    "air": "exactly:photo@journey",
+    "name": "Exactly Journey",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Exactly AI",
+    "schema": "https://runware.ai/docs/models/exactly-photo-journey/schema.json"
+  },
+  {
+    "id": "exactly-photo-warm-light",
+    "air": "exactly:photo@warm-light",
+    "name": "Exactly Warm Light",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Exactly AI",
+    "schema": "https://runware.ai/docs/models/exactly-photo-warm-light/schema.json"
+  },
+  {
+    "id": "fish-audio-s2-1-pro",
+    "air": "fishaudio:s2.1@pro",
+    "name": "Fish Audio S2.1 Pro",
+    "status": "live",
+    "capabilities": [
+      "text-to-audio",
+      "audio-to-audio",
+      "checkpoint"
+    ],
+    "creator": "Fish Audio",
+    "schema": "https://runware.ai/docs/models/fish-audio-s2-1-pro/schema.json"
+  },
+  {
+    "id": "flux-1-dev",
+    "name": "FLUX.1 [dev]",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image"
+    ],
+    "creator": "Black Forest Labs",
+    "schema": "https://runware.ai/docs/models/flux-1-dev/schema.json"
+  },
+  {
+    "id": "flux-1-dev-srpo",
+    "air": "runware:111@1",
+    "name": "FLUX.1 [dev] SRPO",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "checkpoint"
+    ],
+    "architecture": "flux-1-dev",
+    "schema": "https://runware.ai/docs/models/flux-1-dev-srpo/schema.json"
+  },
+  {
+    "id": "flux-1-kontext-dev",
+    "name": "FLUX.1 Kontext [dev]",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image"
+    ],
+    "creator": "Black Forest Labs",
+    "schema": "https://runware.ai/docs/models/flux-1-kontext-dev/schema.json"
+  },
+  {
+    "id": "flux-1-schnell",
+    "name": "FLUX.1 [schnell]",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image"
+    ],
+    "creator": "Black Forest Labs",
+    "schema": "https://runware.ai/docs/models/flux-1-schnell/schema.json"
+  },
+  {
+    "id": "google-gemini-3-1-flash-lite",
+    "name": "Gemini 3.1 Flash Lite",
+    "status": "live",
+    "capabilities": [
+      "text-to-text",
+      "image-to-text",
+      "video-to-text",
+      "audio-to-text",
+      "checkpoint"
+    ],
+    "creator": "Google",
+    "schema": "https://runware.ai/docs/models/google-gemini-3-1-flash-lite/schema.json"
+  },
+  {
+    "id": "google-gemini-3-1-flash-tts",
+    "air": "google:gemini@3.1-flash-tts",
+    "name": "Gemini 3.1 Flash TTS",
+    "status": "live",
+    "capabilities": [
+      "text-to-audio",
+      "checkpoint"
+    ],
+    "creator": "Google",
+    "schema": "https://runware.ai/docs/models/google-gemini-3-1-flash-tts/schema.json"
+  },
+  {
+    "id": "google-gemini-3-1-pro",
+    "name": "Gemini 3.1 Pro",
+    "status": "live",
+    "capabilities": [
+      "text-to-text",
+      "image-to-text",
+      "video-to-text",
+      "audio-to-text",
+      "checkpoint"
+    ],
+    "creator": "Google",
+    "schema": "https://runware.ai/docs/models/google-gemini-3-1-pro/schema.json"
+  },
+  {
+    "id": "google-gemini-3-5-flash",
+    "name": "Gemini 3.5 Flash",
+    "status": "live",
+    "capabilities": [
+      "text-to-text",
+      "image-to-text",
+      "video-to-text",
+      "audio-to-text",
+      "checkpoint"
+    ],
+    "creator": "Google",
+    "schema": "https://runware.ai/docs/models/google-gemini-3-5-flash/schema.json"
+  },
+  {
+    "id": "google-gemini-3-flash",
+    "name": "Gemini 3 Flash",
+    "status": "live",
+    "capabilities": [
+      "text-to-text",
+      "image-to-text",
+      "video-to-text",
+      "audio-to-text",
+      "checkpoint"
+    ],
+    "creator": "Google",
+    "schema": "https://runware.ai/docs/models/google-gemini-3-flash/schema.json"
+  },
+  {
+    "id": "google-gemini-omni-flash-1-1",
+    "air": "google:gemini@omni-flash-1.1",
+    "name": "Gemini Omni Flash 1.1",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "edit",
+      "extend",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Google",
+    "schema": "https://runware.ai/docs/models/google-gemini-omni-flash-1-1/schema.json"
+  },
+  {
+    "id": "google-gemma-4-31b",
+    "name": "Gemma 4 31B",
+    "status": "live",
+    "capabilities": [
+      "text-to-text",
+      "image-to-text",
+      "video-to-text",
+      "checkpoint"
+    ],
+    "creator": "Google",
+    "schema": "https://runware.ai/docs/models/google-gemma-4-31b/schema.json"
+  },
+  {
+    "id": "google-nano-banana",
+    "air": "google:4@1",
+    "name": "Nano Banana",
+    "status": "deprecated",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Google",
+    "schema": "https://runware.ai/docs/models/google-nano-banana/schema.json"
+  },
+  {
+    "id": "google-nano-banana-2",
+    "air": "google:4@3",
+    "name": "Nano Banana 2",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "video-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Google",
+    "schema": "https://runware.ai/docs/models/google-nano-banana-2/schema.json"
+  },
+  {
+    "id": "google-nano-banana-2-1",
+    "air": "google:nano-banana@2.1",
+    "name": "Nano Banana 2.1",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "video-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Google",
+    "schema": "https://runware.ai/docs/models/google-nano-banana-2-1/schema.json"
+  },
+  {
+    "id": "google-nano-banana-2-lite",
+    "air": "google:nano-banana@2-lite",
+    "name": "Nano Banana 2 Lite",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "video-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Google",
+    "schema": "https://runware.ai/docs/models/google-nano-banana-2-lite/schema.json"
+  },
+  {
+    "id": "google-nano-banana-pro",
+    "air": "google:4@2",
+    "name": "Nano Banana Pro",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Google",
+    "schema": "https://runware.ai/docs/models/google-nano-banana-pro/schema.json"
+  },
+  {
+    "id": "google-veo-3-1",
+    "air": "google:3@2",
+    "name": "Veo 3.1",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "edit",
+      "extend",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Google",
+    "schema": "https://runware.ai/docs/models/google-veo-3-1/schema.json"
+  },
+  {
+    "id": "google-veo-3-1-fast",
+    "air": "google:3@3",
+    "name": "Veo 3.1 Fast",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "edit",
+      "extend",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Google",
+    "schema": "https://runware.ai/docs/models/google-veo-3-1-fast/schema.json"
+  },
+  {
+    "id": "google-veo-3-1-lite",
+    "air": "google:veo@3.1-lite",
+    "name": "Veo 3.1 Lite",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Google",
+    "schema": "https://runware.ai/docs/models/google-veo-3-1-lite/schema.json"
+  },
+  {
+    "id": "heygen-avatar-iv",
+    "air": "heygen:avatar@4",
+    "name": "HeyGen Avatar IV",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "audio-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "HeyGen",
+    "schema": "https://runware.ai/docs/models/heygen-avatar-iv/schema.json"
+  },
+  {
+    "id": "heygen-avatar-v",
+    "air": "heygen:avatar@5",
+    "name": "HeyGen Avatar V",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "audio-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "HeyGen",
+    "schema": "https://runware.ai/docs/models/heygen-avatar-v/schema.json"
+  },
+  {
+    "id": "heygen-video-1-0",
+    "air": "heygen:video@1.0",
+    "name": "HeyGen Video 1.0",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "audio-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "HeyGen",
+    "schema": "https://runware.ai/docs/models/heygen-video-1-0/schema.json"
+  },
+  {
+    "id": "heygen-video-agent",
+    "air": "heygen:video-agent@0",
+    "name": "HeyGen Video Agent",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "HeyGen",
+    "schema": "https://runware.ai/docs/models/heygen-video-agent/schema.json"
+  },
+  {
+    "id": "hidream-i1-dev",
+    "air": "runware:97@2",
+    "name": "HiDream-I1 Dev",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "checkpoint"
+    ],
+    "architecture": "hidream-dev",
+    "schema": "https://runware.ai/docs/models/hidream-i1-dev/schema.json"
+  },
+  {
+    "id": "hidream-i1-fast",
+    "air": "runware:97@3",
+    "name": "HiDream-I1 Fast",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "checkpoint"
+    ],
+    "architecture": "hidream-fast",
+    "schema": "https://runware.ai/docs/models/hidream-i1-fast/schema.json"
+  },
+  {
+    "id": "hidream-i1-full",
+    "air": "runware:97@1",
+    "name": "HiDream-I1 Full",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "checkpoint"
+    ],
+    "architecture": "hidream-full",
+    "schema": "https://runware.ai/docs/models/hidream-i1-full/schema.json"
+  },
+  {
+    "id": "hyper3d-rodin-gen-2",
+    "air": "hyper3d:rodin@gen-2",
+    "name": "Rodin Gen-2",
+    "status": "live",
+    "capabilities": [
+      "text-to-3d",
+      "image-to-3d",
+      "checkpoint"
+    ],
+    "creator": "Hyper3D",
+    "schema": "https://runware.ai/docs/models/hyper3d-rodin-gen-2/schema.json"
+  },
+  {
+    "id": "ideogram-2-0",
+    "air": "ideogram:3@1",
+    "name": "Ideogram 2.0",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "checkpoint"
+    ],
+    "creator": "Ideogram",
+    "schema": "https://runware.ai/docs/models/ideogram-2-0/schema.json"
+  },
+  {
+    "id": "ideogram-2-0-remix",
+    "air": "ideogram:3@2",
+    "name": "Ideogram 2.0 Remix",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Ideogram",
+    "schema": "https://runware.ai/docs/models/ideogram-2-0-remix/schema.json"
+  },
+  {
+    "id": "ideogram-2a",
+    "air": "ideogram:2@1",
+    "name": "Ideogram 2a",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "checkpoint"
+    ],
+    "creator": "Ideogram",
+    "schema": "https://runware.ai/docs/models/ideogram-2a/schema.json"
+  },
+  {
+    "id": "ideogram-2a-remix",
+    "air": "ideogram:2@2",
+    "name": "Ideogram 2a Remix",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Ideogram",
+    "schema": "https://runware.ai/docs/models/ideogram-2a-remix/schema.json"
+  },
+  {
+    "id": "ideogram-3-0",
+    "air": "ideogram:4@1",
+    "name": "Ideogram 3.0",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "checkpoint"
+    ],
+    "creator": "Ideogram",
+    "schema": "https://runware.ai/docs/models/ideogram-3-0/schema.json"
+  },
+  {
+    "id": "ideogram-3-0-edit",
+    "air": "ideogram:4@3",
+    "name": "Ideogram 3.0 Edit",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Ideogram",
+    "schema": "https://runware.ai/docs/models/ideogram-3-0-edit/schema.json"
+  },
+  {
+    "id": "ideogram-3-0-reframe",
+    "air": "ideogram:4@4",
+    "name": "Ideogram 3.0 Reframe",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Ideogram",
+    "schema": "https://runware.ai/docs/models/ideogram-3-0-reframe/schema.json"
+  },
+  {
+    "id": "ideogram-3-0-remix",
+    "air": "ideogram:4@2",
+    "name": "Ideogram 3.0 Remix",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Ideogram",
+    "schema": "https://runware.ai/docs/models/ideogram-3-0-remix/schema.json"
+  },
+  {
+    "id": "ideogram-3-0-replace-background",
+    "air": "ideogram:4@5",
+    "name": "Ideogram 3.0 Replace Background",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Ideogram",
+    "schema": "https://runware.ai/docs/models/ideogram-3-0-replace-background/schema.json"
+  },
+  {
+    "id": "ideogram-4-0",
+    "air": "ideogram:4@0",
+    "name": "Ideogram 4.0",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "checkpoint"
+    ],
+    "creator": "Ideogram",
+    "schema": "https://runware.ai/docs/models/ideogram-4-0/schema.json"
+  },
+  {
+    "id": "ideogram-4-0-remix",
+    "air": "ideogram:4@remix",
+    "name": "Ideogram 4.0 Remix",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Ideogram",
+    "schema": "https://runware.ai/docs/models/ideogram-4-0-remix/schema.json"
+  },
+  {
+    "id": "ideogram-4-0q",
+    "air": "ideogram:4@q",
+    "name": "Ideogram 4.0q",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "checkpoint"
+    ],
+    "creator": "Ideogram",
+    "schema": "https://runware.ai/docs/models/ideogram-4-0q/schema.json"
+  },
+  {
+    "id": "ideogram-4-5",
+    "air": "ideogram:4.5@0",
+    "name": "Ideogram 4.5",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Ideogram",
+    "schema": "https://runware.ai/docs/models/ideogram-4-5/schema.json"
+  },
+  {
+    "id": "ideogram-4-5-precise-edit",
+    "air": "ideogram:4.5@precise-edit",
+    "name": "Ideogram 4.5 Precise Edit",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Ideogram",
+    "schema": "https://runware.ai/docs/models/ideogram-4-5-precise-edit/schema.json"
+  },
+  {
+    "id": "ideogram-layerize-text",
+    "name": "Ideogram Layerize Text",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "image-to-text",
+      "checkpoint"
+    ],
+    "creator": "Ideogram",
+    "schema": "https://runware.ai/docs/models/ideogram-layerize-text/schema.json"
+  },
+  {
+    "id": "ideogram-object-remover",
+    "air": "ideogram:object-remover@0",
+    "name": "Ideogram Object Remover",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "edit",
+      "inpaint",
+      "checkpoint"
+    ],
+    "creator": "Ideogram",
+    "schema": "https://runware.ai/docs/models/ideogram-object-remover/schema.json"
+  },
+  {
+    "id": "ideogram-remove-background",
+    "air": "ideogram:remove-background@0",
+    "name": "Ideogram Background Remover",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "remove-background",
+      "checkpoint",
+      "transparency"
+    ],
+    "creator": "Ideogram",
+    "schema": "https://runware.ai/docs/models/ideogram-remove-background/schema.json"
+  },
+  {
+    "id": "illustrious",
+    "name": "Illustrious XL",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image"
+    ],
+    "schema": "https://runware.ai/docs/models/illustrious/schema.json"
+  },
+  {
+    "id": "imagineart-1-5",
+    "air": "imagineart:1@5",
+    "name": "ImagineArt 1.5",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "checkpoint"
+    ],
+    "creator": "ImagineArt",
+    "schema": "https://runware.ai/docs/models/imagineart-1-5/schema.json"
+  },
+  {
+    "id": "imagineart-1-5-pro",
+    "air": "imagineart:1.5-pro@0",
+    "name": "ImagineArt 1.5 Pro",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "checkpoint"
+    ],
+    "creator": "ImagineArt",
+    "schema": "https://runware.ai/docs/models/imagineart-1-5-pro/schema.json"
+  },
+  {
+    "id": "imagineart-2-0",
+    "air": "imagineart:2.0@0",
+    "name": "ImagineArt 2.0",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "ImagineArt",
+    "schema": "https://runware.ai/docs/models/imagineart-2-0/schema.json"
+  },
+  {
+    "id": "inworld-tts-1-5-max",
+    "air": "inworld:tts@1.5-max",
+    "name": "Inworld TTS-1.5 Max",
+    "status": "live",
+    "capabilities": [
+      "text-to-audio",
+      "checkpoint"
+    ],
+    "creator": "Inworld AI",
+    "schema": "https://runware.ai/docs/models/inworld-tts-1-5-max/schema.json"
+  },
+  {
+    "id": "inworld-tts-1-5-mini",
+    "air": "inworld:tts@1.5-mini",
+    "name": "Inworld TTS-1.5 Mini",
+    "status": "live",
+    "capabilities": [
+      "text-to-audio",
+      "checkpoint"
+    ],
+    "creator": "Inworld AI",
+    "schema": "https://runware.ai/docs/models/inworld-tts-1-5-mini/schema.json"
+  },
+  {
+    "id": "inworld-tts-2",
+    "air": "inworld:tts@2",
+    "name": "Inworld Realtime TTS-2",
+    "status": "live",
+    "capabilities": [
+      "text-to-audio",
+      "checkpoint"
+    ],
+    "creator": "Inworld AI",
+    "schema": "https://runware.ai/docs/models/inworld-tts-2/schema.json"
+  },
+  {
+    "id": "kandinsky-5-0-image-lite",
+    "air": "runware:kandinsky-5.0-image-lite@1",
+    "name": "Kandinsky 5.0 Image Lite",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/kandinsky-5-0-image-lite/schema.json"
+  },
+  {
+    "id": "klingai-2-5-turbo-pro",
+    "air": "klingai:6@1",
+    "name": "KlingAI 2.5 Turbo Pro",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "checkpoint"
+    ],
+    "creator": "Kling AI",
+    "schema": "https://runware.ai/docs/models/klingai-2-5-turbo-pro/schema.json"
+  },
+  {
+    "id": "klingai-2-5-turbo-standard",
+    "air": "klingai:6@0",
+    "name": "KlingAI 2.5 Turbo Standard",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "checkpoint"
+    ],
+    "creator": "Kling AI",
+    "schema": "https://runware.ai/docs/models/klingai-2-5-turbo-standard/schema.json"
+  },
+  {
+    "id": "klingai-avatar-2-0-pro",
+    "air": "klingai:avatar@2.0-pro",
+    "name": "KlingAI Avatar 2.0 Pro",
+    "status": "live",
+    "capabilities": [
+      "image-to-video",
+      "audio-to-video",
+      "checkpoint"
+    ],
+    "creator": "Kling AI",
+    "schema": "https://runware.ai/docs/models/klingai-avatar-2-0-pro/schema.json"
+  },
+  {
+    "id": "klingai-avatar-2-0-standard",
+    "air": "klingai:avatar@2.0-standard",
+    "name": "KlingAI Avatar 2.0 Standard",
+    "status": "live",
+    "capabilities": [
+      "image-to-video",
+      "audio-to-video",
+      "checkpoint"
+    ],
+    "creator": "Kling AI",
+    "schema": "https://runware.ai/docs/models/klingai-avatar-2-0-standard/schema.json"
+  },
+  {
+    "id": "klingai-image-3-0",
+    "air": "klingai:kling-image@3",
+    "name": "Kling IMAGE 3.0",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Kling AI",
+    "schema": "https://runware.ai/docs/models/klingai-image-3-0/schema.json"
+  },
+  {
+    "id": "klingai-image-o1",
+    "air": "klingai:kling-image@o1",
+    "name": "Kling IMAGE O1",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Kling AI",
+    "schema": "https://runware.ai/docs/models/klingai-image-o1/schema.json"
+  },
+  {
+    "id": "klingai-image-o3",
+    "air": "klingai:kling-image@o3",
+    "name": "Kling IMAGE O3",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Kling AI",
+    "schema": "https://runware.ai/docs/models/klingai-image-o3/schema.json"
+  },
+  {
+    "id": "klingai-lip-sync",
+    "air": "klingai:7@1",
+    "name": "KlingAI Lip-Sync",
+    "status": "live",
+    "capabilities": [
+      "video-to-video",
+      "audio-to-video",
+      "checkpoint"
+    ],
+    "creator": "Kling AI",
+    "schema": "https://runware.ai/docs/models/klingai-lip-sync/schema.json"
+  },
+  {
+    "id": "klingai-video-2-6-pro",
+    "air": "klingai:kling-video@2.6-pro",
+    "name": "Kling VIDEO 2.6 Pro",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Kling AI",
+    "schema": "https://runware.ai/docs/models/klingai-video-2-6-pro/schema.json"
+  },
+  {
+    "id": "klingai-video-2-6-standard",
+    "air": "klingai:kling-video@2.6-standard",
+    "name": "Kling VIDEO 2.6 Standard",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "checkpoint"
+    ],
+    "creator": "Kling AI",
+    "schema": "https://runware.ai/docs/models/klingai-video-2-6-standard/schema.json"
+  },
+  {
+    "id": "klingai-video-3-0-4k",
+    "air": "klingai:kling-video@3-4k",
+    "name": "Kling VIDEO 3.0 4K",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Kling AI",
+    "schema": "https://runware.ai/docs/models/klingai-video-3-0-4k/schema.json"
+  },
+  {
+    "id": "klingai-video-3-0-omni-4k",
+    "air": "klingai:kling-video@o3-4k",
+    "name": "Kling VIDEO 3.0 Omni 4K",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Kling AI",
+    "schema": "https://runware.ai/docs/models/klingai-video-3-0-omni-4k/schema.json"
+  },
+  {
+    "id": "klingai-video-3-0-omni-pro",
+    "air": "klingai:kling-video@o3-pro",
+    "name": "Kling VIDEO 3.0 Omni Pro",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "edit",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Kling AI",
+    "schema": "https://runware.ai/docs/models/klingai-video-3-0-omni-pro/schema.json"
+  },
+  {
+    "id": "klingai-video-3-0-omni-standard",
+    "air": "klingai:kling-video@o3-standard",
+    "name": "Kling VIDEO 3.0 Omni Standard",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "edit",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Kling AI",
+    "schema": "https://runware.ai/docs/models/klingai-video-3-0-omni-standard/schema.json"
+  },
+  {
+    "id": "klingai-video-3-0-pro",
+    "air": "klingai:kling-video@3-pro",
+    "name": "Kling VIDEO 3.0 Pro",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Kling AI",
+    "schema": "https://runware.ai/docs/models/klingai-video-3-0-pro/schema.json"
+  },
+  {
+    "id": "klingai-video-3-0-standard",
+    "air": "klingai:kling-video@3-standard",
+    "name": "Kling VIDEO 3.0 Standard",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Kling AI",
+    "schema": "https://runware.ai/docs/models/klingai-video-3-0-standard/schema.json"
+  },
+  {
+    "id": "klingai-video-3-0-turbo",
+    "air": "klingai:kling-video@3.0-turbo",
+    "name": "Kling VIDEO 3.0 Turbo",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Kling AI",
+    "schema": "https://runware.ai/docs/models/klingai-video-3-0-turbo/schema.json"
+  },
+  {
+    "id": "klingai-video-o1-pro",
+    "air": "klingai:kling@o1",
+    "name": "Kling VIDEO O1 Pro",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Kling AI",
+    "schema": "https://runware.ai/docs/models/klingai-video-o1-pro/schema.json"
+  },
+  {
+    "id": "klingai-video-o1-standard",
+    "air": "klingai:kling@o1-standard",
+    "name": "Kling VIDEO O1 Standard",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Kling AI",
+    "schema": "https://runware.ai/docs/models/klingai-video-o1-standard/schema.json"
+  },
+  {
+    "id": "krea-2-large",
+    "air": "krea:krea@2-large",
+    "name": "Krea 2 Large",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Krea",
+    "schema": "https://runware.ai/docs/models/krea-2-large/schema.json"
+  },
+  {
+    "id": "krea-2-medium",
+    "air": "krea:krea@2-medium",
+    "name": "Krea 2 Medium",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Krea",
+    "schema": "https://runware.ai/docs/models/krea-2-medium/schema.json"
+  },
+  {
+    "id": "krea-2-medium-turbo",
+    "air": "krea:krea@2-medium-turbo",
+    "name": "Krea 2 Medium Turbo",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Krea",
+    "schema": "https://runware.ai/docs/models/krea-2-medium-turbo/schema.json"
+  },
+  {
+    "id": "krea-2-raw",
+    "air": "krea:krea@2-raw",
+    "name": "Krea 2 Raw",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Krea",
+    "schema": "https://runware.ai/docs/models/krea-2-raw/schema.json"
+  },
+  {
+    "id": "krea-2-turbo",
+    "air": "krea:krea@2-turbo",
+    "name": "Krea 2 Turbo",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Krea",
+    "schema": "https://runware.ai/docs/models/krea-2-turbo/schema.json"
+  },
+  {
+    "id": "krea-flux-1-krea-dev",
+    "air": "runware:107@1",
+    "name": "FLUX.1 Krea [dev]",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Krea",
+    "architecture": "flux-1-dev",
+    "schema": "https://runware.ai/docs/models/krea-flux-1-krea-dev/schema.json"
+  },
+  {
+    "id": "lightricks-ltx-2",
+    "air": "lightricks:ltx@2",
+    "name": "LTX-2",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Lightricks",
+    "schema": "https://runware.ai/docs/models/lightricks-ltx-2/schema.json"
+  },
+  {
+    "id": "lightricks-ltx-2-3",
+    "air": "lightricks:ltx@2.3",
+    "name": "LTX-2.3",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "audio-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Lightricks",
+    "architecture": "ltx-2-3",
+    "schema": "https://runware.ai/docs/models/lightricks-ltx-2-3/schema.json"
+  },
+  {
+    "id": "lightricks-ltx-2-3-fast",
+    "air": "lightricks:ltx@2.3-fast",
+    "name": "LTX-2.3 Fast",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "audio-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Lightricks",
+    "architecture": "ltx-2-3",
+    "schema": "https://runware.ai/docs/models/lightricks-ltx-2-3-fast/schema.json"
+  },
+  {
+    "id": "lightricks-ltx-2-5-fast",
+    "air": "lightricks:ltx@2.5-fast",
+    "name": "LTX-2.5 Fast",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "audio-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Lightricks",
+    "schema": "https://runware.ai/docs/models/lightricks-ltx-2-5-fast/schema.json"
+  },
+  {
+    "id": "lightricks-ltx-2-5-pro",
+    "air": "lightricks:ltx@2.5-pro",
+    "name": "LTX-2.5 Pro",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "audio-to-video",
+      "edit",
+      "extend",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Lightricks",
+    "schema": "https://runware.ai/docs/models/lightricks-ltx-2-5-pro/schema.json"
+  },
+  {
+    "id": "llama-3-1-8b-prompt-enhancer",
+    "name": "Llama 3.1 8B Prompt Enhancer",
+    "status": "live",
+    "capabilities": [
+      "text-to-text",
+      "prompt-enhance",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/llama-3-1-8b-prompt-enhancer/schema.json"
+  },
+  {
+    "id": "luma-ray3-2",
+    "air": "luma:ray@3.2",
+    "name": "Ray3.2",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Luma",
+    "schema": "https://runware.ai/docs/models/luma-ray3-2/schema.json"
+  },
+  {
+    "id": "luma-uni-1",
+    "air": "luma:uni@1",
+    "name": "UNI-1",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Luma",
+    "schema": "https://runware.ai/docs/models/luma-uni-1/schema.json"
+  },
+  {
+    "id": "luma-uni-1-max",
+    "air": "luma:uni@1-max",
+    "name": "UNI-1 Max",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Luma",
+    "schema": "https://runware.ai/docs/models/luma-uni-1-max/schema.json"
+  },
+  {
+    "id": "mediapipe-eyes-lips-mesh",
+    "air": "runware:35@10",
+    "name": "MediaPipe Eyes + Lips Mesh",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "mask",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/mediapipe-eyes-lips-mesh/schema.json"
+  },
+  {
+    "id": "mediapipe-eyes-mesh",
+    "air": "runware:35@15",
+    "name": "MediaPipe Eyes Mesh",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "mask",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/mediapipe-eyes-mesh/schema.json"
+  },
+  {
+    "id": "mediapipe-face-full",
+    "air": "runware:35@6",
+    "name": "MediaPipe Face Full",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "mask",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/mediapipe-face-full/schema.json"
+  },
+  {
+    "id": "mediapipe-face-mesh",
+    "air": "runware:35@8",
+    "name": "MediaPipe Face Mesh",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "mask",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/mediapipe-face-mesh/schema.json"
+  },
+  {
+    "id": "mediapipe-face-mesh-eyes-only",
+    "air": "runware:35@9",
+    "name": "MediaPipe Face Mesh Eyes Only",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "mask",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/mediapipe-face-mesh-eyes-only/schema.json"
+  },
+  {
+    "id": "mediapipe-face-short",
+    "air": "runware:35@7",
+    "name": "MediaPipe Face Short",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "mask",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/mediapipe-face-short/schema.json"
+  },
+  {
+    "id": "mediapipe-lips-mesh",
+    "air": "runware:35@14",
+    "name": "MediaPipe Lips Mesh",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "mask",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/mediapipe-lips-mesh/schema.json"
+  },
+  {
+    "id": "mediapipe-nose-eyes-mesh",
+    "air": "runware:35@11",
+    "name": "MediaPipe Nose + Eyes Mesh",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "mask",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/mediapipe-nose-eyes-mesh/schema.json"
+  },
+  {
+    "id": "mediapipe-nose-lips-mesh",
+    "air": "runware:35@12",
+    "name": "MediaPipe Nose + Lips Mesh",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "mask",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/mediapipe-nose-lips-mesh/schema.json"
+  },
+  {
+    "id": "mediapipe-nose-mesh",
+    "air": "runware:35@13",
+    "name": "MediaPipe Nose Mesh",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "mask",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/mediapipe-nose-mesh/schema.json"
+  },
+  {
+    "id": "meshy-6",
+    "air": "meshy:meshy@6",
+    "name": "Meshy-6",
+    "status": "live",
+    "capabilities": [
+      "text-to-3d",
+      "image-to-3d",
+      "checkpoint"
+    ],
+    "creator": "Meshy",
+    "schema": "https://runware.ai/docs/models/meshy-6/schema.json"
+  },
+  {
+    "id": "meta-llava-1-6-mistral-7b",
+    "name": "LLaVA-1.6-Mistral-7B",
+    "status": "live",
+    "capabilities": [
+      "image-to-text",
+      "caption",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/meta-llava-1-6-mistral-7b/schema.json"
+  },
+  {
+    "id": "meta-muse-image",
+    "air": "meta:muse@image",
+    "name": "Muse Image",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Meta",
+    "schema": "https://runware.ai/docs/models/meta-muse-image/schema.json"
+  },
+  {
+    "id": "meta-sam-3d-objects",
+    "air": "meta:sam@3d",
+    "name": "SAM 3D Objects",
+    "status": "live",
+    "capabilities": [
+      "image-to-3d",
+      "checkpoint"
+    ],
+    "creator": "Meta",
+    "schema": "https://runware.ai/docs/models/meta-sam-3d-objects/schema.json"
+  },
+  {
+    "id": "microsoft-trellis-2",
+    "air": "microsoft:trellis-2@4b",
+    "name": "TRELLIS.2",
+    "status": "live",
+    "capabilities": [
+      "image-to-3d",
+      "checkpoint"
+    ],
+    "creator": "Microsoft",
+    "schema": "https://runware.ai/docs/models/microsoft-trellis-2/schema.json"
+  },
+  {
+    "id": "minimax-01",
+    "air": "minimax:1@1",
+    "name": "MiniMax 01",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "checkpoint"
+    ],
+    "creator": "MiniMax",
+    "schema": "https://runware.ai/docs/models/minimax-01/schema.json"
+  },
+  {
+    "id": "minimax-01-director",
+    "air": "minimax:2@1",
+    "name": "MiniMax 01 Director",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "checkpoint"
+    ],
+    "creator": "MiniMax",
+    "schema": "https://runware.ai/docs/models/minimax-01-director/schema.json"
+  },
+  {
+    "id": "minimax-01-live",
+    "air": "minimax:2@3",
+    "name": "MiniMax 01 Live",
+    "status": "live",
+    "capabilities": [
+      "image-to-video",
+      "checkpoint"
+    ],
+    "creator": "MiniMax",
+    "schema": "https://runware.ai/docs/models/minimax-01-live/schema.json"
+  },
+  {
+    "id": "minimax-h3",
+    "air": "minimax:h3@0",
+    "name": "MiniMax H3",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "audio-to-video",
+      "edit",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "MiniMax",
+    "schema": "https://runware.ai/docs/models/minimax-h3/schema.json"
+  },
+  {
+    "id": "minimax-h3-fast",
+    "air": "minimax:h3@fast",
+    "name": "MiniMax H3 Fast",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "audio-to-video",
+      "checkpoint"
+    ],
+    "creator": "MiniMax",
+    "schema": "https://runware.ai/docs/models/minimax-h3-fast/schema.json"
+  },
+  {
+    "id": "minimax-h3-max",
+    "air": "minimax:h3@max",
+    "name": "MiniMax H3 Max",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "audio-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "MiniMax",
+    "schema": "https://runware.ai/docs/models/minimax-h3-max/schema.json"
+  },
+  {
+    "id": "minimax-h3-max-turbo",
+    "air": "minimax:h3@max-turbo",
+    "name": "MiniMax H3 Max Turbo",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "checkpoint"
+    ],
+    "creator": "MiniMax",
+    "schema": "https://runware.ai/docs/models/minimax-h3-max-turbo/schema.json"
+  },
+  {
+    "id": "minimax-hailuo-02",
+    "air": "minimax:3@1",
+    "name": "MiniMax Hailuo 02",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "checkpoint"
+    ],
+    "creator": "MiniMax",
+    "schema": "https://runware.ai/docs/models/minimax-hailuo-02/schema.json"
+  },
+  {
+    "id": "minimax-hailuo-2-3",
+    "air": "minimax:4@1",
+    "name": "MiniMax Hailuo 2.3",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "checkpoint"
+    ],
+    "creator": "MiniMax",
+    "schema": "https://runware.ai/docs/models/minimax-hailuo-2-3/schema.json"
+  },
+  {
+    "id": "minimax-hailuo-2-3-fast",
+    "air": "minimax:4@2",
+    "name": "MiniMax Hailuo 2.3 Fast",
+    "status": "live",
+    "capabilities": [
+      "image-to-video",
+      "checkpoint"
+    ],
+    "creator": "MiniMax",
+    "schema": "https://runware.ai/docs/models/minimax-hailuo-2-3-fast/schema.json"
+  },
+  {
+    "id": "minimax-m2-7",
+    "name": "MiniMax M2.7",
+    "status": "live",
+    "capabilities": [
+      "text-to-text",
+      "checkpoint"
+    ],
+    "creator": "MiniMax",
+    "schema": "https://runware.ai/docs/models/minimax-m2-7/schema.json"
+  },
+  {
+    "id": "minimax-m2-7-highspeed",
+    "name": "MiniMax M2.7 Highspeed",
+    "status": "live",
+    "capabilities": [
+      "text-to-text",
+      "checkpoint"
+    ],
+    "creator": "MiniMax",
+    "schema": "https://runware.ai/docs/models/minimax-m2-7-highspeed/schema.json"
+  },
+  {
+    "id": "minimax-m3",
+    "name": "MiniMax M3",
+    "status": "live",
+    "capabilities": [
+      "text-to-text",
+      "image-to-text",
+      "video-to-text",
+      "checkpoint"
+    ],
+    "creator": "MiniMax",
+    "schema": "https://runware.ai/docs/models/minimax-m3/schema.json"
+  },
+  {
+    "id": "minimax-music-2-6",
+    "air": "minimax:music@2.6",
+    "name": "MiniMax Music 2.6",
+    "status": "live",
+    "capabilities": [
+      "text-to-audio",
+      "checkpoint"
+    ],
+    "creator": "MiniMax",
+    "schema": "https://runware.ai/docs/models/minimax-music-2-6/schema.json"
+  },
+  {
+    "id": "minimax-music-cover",
+    "air": "minimax:music@cover",
+    "name": "MiniMax Music Cover",
+    "status": "live",
+    "capabilities": [
+      "audio-to-audio",
+      "checkpoint"
+    ],
+    "creator": "MiniMax",
+    "schema": "https://runware.ai/docs/models/minimax-music-cover/schema.json"
+  },
+  {
+    "id": "minimax-speech-2-8",
+    "air": "minimax:speech@2.8",
+    "name": "MiniMax Speech 2.8",
+    "status": "live",
+    "capabilities": [
+      "text-to-audio",
+      "checkpoint"
+    ],
+    "creator": "MiniMax",
+    "schema": "https://runware.ai/docs/models/minimax-speech-2-8/schema.json"
+  },
+  {
+    "id": "mirelo-sfx-1-5",
+    "air": "mirelo:1@1",
+    "name": "Mirelo SFX 1.5",
+    "status": "live",
+    "capabilities": [
+      "text-to-audio",
+      "video-to-audio",
+      "checkpoint"
+    ],
+    "creator": "Mirelo",
+    "schema": "https://runware.ai/docs/models/mirelo-sfx-1-5/schema.json"
+  },
+  {
+    "id": "noobai",
+    "name": "NoobAI XL",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image"
+    ],
+    "schema": "https://runware.ai/docs/models/noobai/schema.json"
+  },
+  {
+    "id": "object-eraser",
+    "air": "runware:300@1",
+    "name": "Object Eraser",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/object-eraser/schema.json"
+  },
+  {
+    "id": "open-age-detection",
+    "name": "Open Age Detection",
+    "status": "live",
+    "capabilities": [
+      "image-to-text",
+      "age-classification",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/open-age-detection/schema.json"
+  },
+  {
+    "id": "openai-clip-vit-l-14",
+    "name": "OpenAI CLIP ViT-L/14",
+    "status": "live",
+    "capabilities": [
+      "image-to-text",
+      "caption",
+      "checkpoint"
+    ],
+    "creator": "OpenAI",
+    "schema": "https://runware.ai/docs/models/openai-clip-vit-l-14/schema.json"
+  },
+  {
+    "id": "openai-gpt-5-4",
+    "name": "GPT-5.4",
+    "status": "live",
+    "capabilities": [
+      "text-to-text",
+      "image-to-text",
+      "checkpoint"
+    ],
+    "creator": "OpenAI",
+    "schema": "https://runware.ai/docs/models/openai-gpt-5-4/schema.json"
+  },
+  {
+    "id": "openai-gpt-5-4-mini",
+    "name": "GPT-5.4 Mini",
+    "status": "live",
+    "capabilities": [
+      "text-to-text",
+      "image-to-text",
+      "checkpoint"
+    ],
+    "creator": "OpenAI",
+    "schema": "https://runware.ai/docs/models/openai-gpt-5-4-mini/schema.json"
+  },
+  {
+    "id": "openai-gpt-5-4-nano",
+    "name": "GPT-5.4 Nano",
+    "status": "live",
+    "capabilities": [
+      "text-to-text",
+      "image-to-text",
+      "checkpoint"
+    ],
+    "creator": "OpenAI",
+    "schema": "https://runware.ai/docs/models/openai-gpt-5-4-nano/schema.json"
+  },
+  {
+    "id": "openai-gpt-5-4-pro",
+    "name": "GPT-5.4 Pro",
+    "status": "live",
+    "capabilities": [
+      "text-to-text",
+      "image-to-text",
+      "checkpoint"
+    ],
+    "creator": "OpenAI",
+    "schema": "https://runware.ai/docs/models/openai-gpt-5-4-pro/schema.json"
+  },
+  {
+    "id": "openai-gpt-5-5",
+    "name": "GPT-5.5",
+    "status": "live",
+    "capabilities": [
+      "text-to-text",
+      "image-to-text",
+      "checkpoint"
+    ],
+    "creator": "OpenAI",
+    "schema": "https://runware.ai/docs/models/openai-gpt-5-5/schema.json"
+  },
+  {
+    "id": "openai-gpt-5-mini",
+    "name": "GPT-5 Mini",
+    "status": "deprecated",
+    "capabilities": [
+      "text-to-text",
+      "image-to-text",
+      "checkpoint"
+    ],
+    "creator": "OpenAI",
+    "schema": "https://runware.ai/docs/models/openai-gpt-5-mini/schema.json"
+  },
+  {
+    "id": "openai-gpt-5-nano",
+    "name": "GPT-5 Nano",
+    "status": "deprecated",
+    "capabilities": [
+      "text-to-text",
+      "image-to-text",
+      "checkpoint"
+    ],
+    "creator": "OpenAI",
+    "schema": "https://runware.ai/docs/models/openai-gpt-5-nano/schema.json"
+  },
+  {
+    "id": "openai-gpt-image-1",
+    "air": "openai:1@1",
+    "name": "GPT Image 1",
+    "status": "deprecated",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint",
+      "transparency"
+    ],
+    "creator": "OpenAI",
+    "schema": "https://runware.ai/docs/models/openai-gpt-image-1/schema.json"
+  },
+  {
+    "id": "openai-gpt-image-1-5",
+    "air": "openai:4@1",
+    "name": "GPT Image 1.5",
+    "status": "deprecated",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint",
+      "transparency"
+    ],
+    "creator": "OpenAI",
+    "schema": "https://runware.ai/docs/models/openai-gpt-image-1-5/schema.json"
+  },
+  {
+    "id": "openai-gpt-image-1-mini",
+    "air": "openai:1@2",
+    "name": "GPT Image 1 Mini",
+    "status": "deprecated",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint",
+      "transparency"
+    ],
+    "creator": "OpenAI",
+    "schema": "https://runware.ai/docs/models/openai-gpt-image-1-mini/schema.json"
+  },
+  {
+    "id": "openai-gpt-image-2",
+    "air": "openai:gpt-image@2",
+    "name": "GPT Image 2",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint",
+      "transparency"
+    ],
+    "creator": "OpenAI",
+    "schema": "https://runware.ai/docs/models/openai-gpt-image-2/schema.json"
+  },
+  {
+    "id": "openai-gpt-image-2-5-flare",
+    "air": "openai:gpt-image@2.5-flare",
+    "name": "GPT-Image-2.5 Flare",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint",
+      "transparency"
+    ],
+    "creator": "OpenAI",
+    "schema": "https://runware.ai/docs/models/openai-gpt-image-2-5-flare/schema.json"
+  },
+  {
+    "id": "openai-gpt-image-2-5-sunburst",
+    "air": "openai:gpt-image@2.5-sunburst",
+    "name": "GPT-Image-2.5 Sunburst",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint",
+      "transparency"
+    ],
+    "creator": "OpenAI",
+    "schema": "https://runware.ai/docs/models/openai-gpt-image-2-5-sunburst/schema.json"
+  },
+  {
+    "id": "picsart-image-vectorizer",
+    "air": "picsart:1@1",
+    "name": "Picsart Image Vectorizer",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "vectorize",
+      "checkpoint"
+    ],
+    "creator": "Picsart",
+    "schema": "https://runware.ai/docs/models/picsart-image-vectorizer/schema.json"
+  },
+  {
+    "id": "pixverse-lipsync",
+    "air": "pixverse:lipsync@1",
+    "name": "PixVerse LipSync",
+    "status": "live",
+    "capabilities": [
+      "video-to-video",
+      "audio-to-video",
+      "checkpoint"
+    ],
+    "creator": "PixVerse",
+    "schema": "https://runware.ai/docs/models/pixverse-lipsync/schema.json"
+  },
+  {
+    "id": "pixverse-modify",
+    "air": "pixverse:modify@0",
+    "name": "PixVerse Modify",
+    "status": "live",
+    "capabilities": [
+      "image-to-video",
+      "video-to-video",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "PixVerse",
+    "schema": "https://runware.ai/docs/models/pixverse-modify/schema.json"
+  },
+  {
+    "id": "pixverse-v3-5",
+    "air": "pixverse:1@1",
+    "name": "PixVerse V3.5",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "checkpoint"
+    ],
+    "creator": "PixVerse",
+    "schema": "https://runware.ai/docs/models/pixverse-v3-5/schema.json"
+  },
+  {
+    "id": "pixverse-v4",
+    "air": "pixverse:1@2",
+    "name": "PixVerse V4",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "checkpoint"
+    ],
+    "creator": "PixVerse",
+    "schema": "https://runware.ai/docs/models/pixverse-v4/schema.json"
+  },
+  {
+    "id": "pixverse-v4-5",
+    "air": "pixverse:1@3",
+    "name": "PixVerse V4.5",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "checkpoint"
+    ],
+    "creator": "PixVerse",
+    "schema": "https://runware.ai/docs/models/pixverse-v4-5/schema.json"
+  },
+  {
+    "id": "pixverse-v5",
+    "air": "pixverse:1@5",
+    "name": "PixVerse V5",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "checkpoint"
+    ],
+    "creator": "PixVerse",
+    "schema": "https://runware.ai/docs/models/pixverse-v5/schema.json"
+  },
+  {
+    "id": "pixverse-v5-5",
+    "air": "pixverse:1@6",
+    "name": "PixVerse V5.5",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "PixVerse",
+    "schema": "https://runware.ai/docs/models/pixverse-v5-5/schema.json"
+  },
+  {
+    "id": "pixverse-v5-6",
+    "air": "pixverse:1@7",
+    "name": "PixVerse V5.6",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "PixVerse",
+    "schema": "https://runware.ai/docs/models/pixverse-v5-6/schema.json"
+  },
+  {
+    "id": "pixverse-v5-fast",
+    "air": "pixverse:1@5-fast",
+    "name": "PixVerse V5 Fast",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "checkpoint"
+    ],
+    "creator": "PixVerse",
+    "schema": "https://runware.ai/docs/models/pixverse-v5-fast/schema.json"
+  },
+  {
+    "id": "pixverse-v6",
+    "air": "pixverse:1@8",
+    "name": "PixVerse V6",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "edit",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "PixVerse",
+    "schema": "https://runware.ai/docs/models/pixverse-v6/schema.json"
+  },
+  {
+    "id": "pony",
+    "name": "Pony Diffusion XL",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image"
+    ],
+    "schema": "https://runware.ai/docs/models/pony/schema.json"
+  },
+  {
+    "id": "prunaai-p-image",
+    "air": "prunaai:1@1",
+    "name": "P-Image",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "checkpoint"
+    ],
+    "creator": "Pruna AI",
+    "schema": "https://runware.ai/docs/models/prunaai-p-image/schema.json"
+  },
+  {
+    "id": "prunaai-p-image-edit",
+    "air": "prunaai:2@1",
+    "name": "P-Image-Edit",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Pruna AI",
+    "schema": "https://runware.ai/docs/models/prunaai-p-image-edit/schema.json"
+  },
+  {
+    "id": "prunaai-p-image-ideogram",
+    "air": "prunaai:p-image@ideogram",
+    "name": "P-Image-Ideogram",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "checkpoint"
+    ],
+    "creator": "Pruna AI",
+    "schema": "https://runware.ai/docs/models/prunaai-p-image-ideogram/schema.json"
+  },
+  {
+    "id": "prunaai-p-image-try-on",
+    "air": "prunaai:p-image@try-on",
+    "name": "P-Image-Try-On",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Pruna AI",
+    "schema": "https://runware.ai/docs/models/prunaai-p-image-try-on/schema.json"
+  },
+  {
+    "id": "prunaai-p-image-upscale",
+    "air": "prunaai:p-image@upscale",
+    "name": "P-Image Upscale",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "upscale",
+      "checkpoint"
+    ],
+    "creator": "Pruna AI",
+    "schema": "https://runware.ai/docs/models/prunaai-p-image-upscale/schema.json"
+  },
+  {
+    "id": "prunaai-p-video",
+    "air": "prunaai:p-video@0",
+    "name": "P-Video",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "audio-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Pruna AI",
+    "schema": "https://runware.ai/docs/models/prunaai-p-video/schema.json"
+  },
+  {
+    "id": "prunaai-p-video-2",
+    "air": "prunaai:p-video@2",
+    "name": "P-Video-2",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "audio-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Pruna AI",
+    "schema": "https://runware.ai/docs/models/prunaai-p-video-2/schema.json"
+  },
+  {
+    "id": "prunaai-p-video-2-pro",
+    "air": "prunaai:p-video@2-pro",
+    "name": "P-Video-2-Pro",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Pruna AI",
+    "schema": "https://runware.ai/docs/models/prunaai-p-video-2-pro/schema.json"
+  },
+  {
+    "id": "prunaai-p-video-animate",
+    "air": "prunaai:p-video@animate",
+    "name": "P-Video-Animate",
+    "status": "live",
+    "capabilities": [
+      "image-to-video",
+      "video-to-video",
+      "checkpoint"
+    ],
+    "creator": "Pruna AI",
+    "schema": "https://runware.ai/docs/models/prunaai-p-video-animate/schema.json"
+  },
+  {
+    "id": "prunaai-p-video-avatar",
+    "air": "prunaai:p-video@avatar",
+    "name": "P-Video-Avatar",
+    "status": "live",
+    "capabilities": [
+      "image-to-video",
+      "audio-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Pruna AI",
+    "schema": "https://runware.ai/docs/models/prunaai-p-video-avatar/schema.json"
+  },
+  {
+    "id": "prunaai-p-video-edit",
+    "air": "prunaai:p-video@edit",
+    "name": "P-Video-Edit",
+    "status": "live",
+    "capabilities": [
+      "image-to-video",
+      "video-to-video",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Pruna AI",
+    "schema": "https://runware.ai/docs/models/prunaai-p-video-edit/schema.json"
+  },
+  {
+    "id": "prunaai-p-video-replace",
+    "air": "prunaai:p-video@replace",
+    "name": "P-Video-Replace",
+    "status": "live",
+    "capabilities": [
+      "image-to-video",
+      "video-to-video",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Pruna AI",
+    "schema": "https://runware.ai/docs/models/prunaai-p-video-replace/schema.json"
+  },
+  {
+    "id": "qwen2-5-vl-7b-age-detector",
+    "name": "Qwen2.5-VL-7B Age Detector",
+    "status": "live",
+    "capabilities": [
+      "image-to-text",
+      "age-classification",
+      "checkpoint"
+    ],
+    "creator": "Alibaba",
+    "schema": "https://runware.ai/docs/models/qwen2-5-vl-7b-age-detector/schema.json"
+  },
+  {
+    "id": "real-esrgan",
+    "air": "runware:504@1",
+    "name": "Real-ESRGAN",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "upscale",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/real-esrgan/schema.json"
+  },
+  {
+    "id": "recraft-v4",
+    "air": "recraft:v4@0",
+    "name": "Recraft V4",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "checkpoint"
+    ],
+    "creator": "Recraft",
+    "schema": "https://runware.ai/docs/models/recraft-v4/schema.json"
+  },
+  {
+    "id": "recraft-v4-1",
+    "air": "recraft:v4.1@0",
+    "name": "Recraft V4.1",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "checkpoint"
+    ],
+    "creator": "Recraft",
+    "schema": "https://runware.ai/docs/models/recraft-v4-1/schema.json"
+  },
+  {
+    "id": "recraft-v4-1-flash",
+    "air": "recraft:v4.1@flash",
+    "name": "Recraft V4.1 Flash",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "checkpoint"
+    ],
+    "creator": "Recraft",
+    "schema": "https://runware.ai/docs/models/recraft-v4-1-flash/schema.json"
+  },
+  {
+    "id": "recraft-v4-1-pro",
+    "air": "recraft:v4.1-pro@0",
+    "name": "Recraft V4.1 Pro",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "checkpoint"
+    ],
+    "creator": "Recraft",
+    "schema": "https://runware.ai/docs/models/recraft-v4-1-pro/schema.json"
+  },
+  {
+    "id": "recraft-v4-1-utility",
+    "air": "recraft:v4.1-utility@0",
+    "name": "Recraft V4.1 Utility",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "checkpoint"
+    ],
+    "creator": "Recraft",
+    "schema": "https://runware.ai/docs/models/recraft-v4-1-utility/schema.json"
+  },
+  {
+    "id": "recraft-v4-1-utility-pro",
+    "air": "recraft:v4.1-utility-pro@0",
+    "name": "Recraft V4.1 Utility Pro",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "checkpoint"
+    ],
+    "creator": "Recraft",
+    "schema": "https://runware.ai/docs/models/recraft-v4-1-utility-pro/schema.json"
+  },
+  {
+    "id": "recraft-v4-pro",
+    "air": "recraft:v4-pro@0",
+    "name": "Recraft V4 Pro",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "checkpoint"
+    ],
+    "creator": "Recraft",
+    "schema": "https://runware.ai/docs/models/recraft-v4-pro/schema.json"
+  },
+  {
+    "id": "recraft-v4-pro-vector",
+    "air": "recraft:v4-pro@vector",
+    "name": "Recraft V4 Pro Vector",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "vectorize",
+      "checkpoint"
+    ],
+    "creator": "Recraft",
+    "schema": "https://runware.ai/docs/models/recraft-v4-pro-vector/schema.json"
+  },
+  {
+    "id": "recraft-v4-styles",
+    "air": "recraft:v4@styles",
+    "name": "Recraft V4 Styles",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Recraft",
+    "schema": "https://runware.ai/docs/models/recraft-v4-styles/schema.json"
+  },
+  {
+    "id": "recraft-v4-styles-pro",
+    "air": "recraft:v4@styles-pro",
+    "name": "Recraft V4 Styles Pro",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Recraft",
+    "schema": "https://runware.ai/docs/models/recraft-v4-styles-pro/schema.json"
+  },
+  {
+    "id": "recraft-v4-styles-pro-vector",
+    "air": "recraft:v4@styles-pro-vector",
+    "name": "Recraft V4 Styles Pro Vector",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "vectorize",
+      "checkpoint"
+    ],
+    "creator": "Recraft",
+    "schema": "https://runware.ai/docs/models/recraft-v4-styles-pro-vector/schema.json"
+  },
+  {
+    "id": "recraft-v4-styles-vector",
+    "air": "recraft:v4@styles-vector",
+    "name": "Recraft V4 Styles Vector",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "vectorize",
+      "checkpoint"
+    ],
+    "creator": "Recraft",
+    "schema": "https://runware.ai/docs/models/recraft-v4-styles-vector/schema.json"
+  },
+  {
+    "id": "recraft-v4-vector",
+    "air": "recraft:v4@vector",
+    "name": "Recraft V4 Vector",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "vectorize",
+      "checkpoint"
+    ],
+    "creator": "Recraft",
+    "schema": "https://runware.ai/docs/models/recraft-v4-vector/schema.json"
+  },
+  {
+    "id": "recraft-vectorize",
+    "air": "recraft:1@1",
+    "name": "Recraft Vectorize",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "vectorize",
+      "checkpoint"
+    ],
+    "creator": "Recraft",
+    "schema": "https://runware.ai/docs/models/recraft-vectorize/schema.json"
+  },
+  {
+    "id": "rembg-v1-4",
+    "air": "runware:109@1",
+    "name": "RemBG v1.4",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "remove-background",
+      "checkpoint",
+      "transparency"
+    ],
+    "schema": "https://runware.ai/docs/models/rembg-v1-4/schema.json"
+  },
+  {
+    "id": "rundiffusion-juggernaut-base-flux",
+    "air": "rundiffusion:120@100",
+    "name": "Juggernaut Base Flux",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "RunDiffusion",
+    "architecture": "flux-1-dev",
+    "schema": "https://runware.ai/docs/models/rundiffusion-juggernaut-base-flux/schema.json"
+  },
+  {
+    "id": "rundiffusion-juggernaut-lightning-flux",
+    "air": "rundiffusion:110@101",
+    "name": "Juggernaut Lightning Flux",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "RunDiffusion",
+    "architecture": "flux-1-dev",
+    "schema": "https://runware.ai/docs/models/rundiffusion-juggernaut-lightning-flux/schema.json"
+  },
+  {
+    "id": "rundiffusion-juggernaut-pro-flux",
+    "air": "rundiffusion:130@100",
+    "name": "Juggernaut Pro Flux",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "RunDiffusion",
+    "architecture": "flux-1-dev",
+    "schema": "https://runware.ai/docs/models/rundiffusion-juggernaut-pro-flux/schema.json"
+  },
+  {
+    "id": "rundiffusion-juggernaut-z",
+    "air": "rundiffusion:200@100",
+    "name": "Juggernaut Z",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "RunDiffusion",
+    "architecture": "z-image",
+    "schema": "https://runware.ai/docs/models/rundiffusion-juggernaut-z/schema.json"
+  },
+  {
+    "id": "rundiffusion-juggernaut-z-fast",
+    "air": "rundiffusion:300@100",
+    "name": "Juggernaut Z Fast",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "RunDiffusion",
+    "architecture": "z-image",
+    "schema": "https://runware.ai/docs/models/rundiffusion-juggernaut-z-fast/schema.json"
+  },
+  {
+    "id": "runware-flux-1-dev-style-lora-training",
+    "air": "runware:flux-1-dev@style-lora-training",
+    "name": "FLUX.1 [dev] Style LoRA Training",
+    "status": "live",
+    "capabilities": [
+      "train"
+    ],
+    "architecture": "flux-1-dev",
+    "schema": "https://runware.ai/docs/models/runware-flux-1-dev-style-lora-training/schema.json"
+  },
+  {
+    "id": "runware-flux-2-klein-4b-style-lora-training",
+    "air": "runware:flux-2-klein-4b@style-lora-training",
+    "name": "FLUX.2 [klein] 4B Style LoRA Training",
+    "status": "live",
+    "capabilities": [
+      "train"
+    ],
+    "architecture": "flux-2-klein-4b",
+    "schema": "https://runware.ai/docs/models/runware-flux-2-klein-4b-style-lora-training/schema.json"
+  },
+  {
+    "id": "runware-flux-2-klein-9b-style-lora-training",
+    "air": "runware:flux-2-klein-9b@style-lora-training",
+    "name": "FLUX.2 [klein] 9B Style LoRA Training",
+    "status": "live",
+    "capabilities": [
+      "train"
+    ],
+    "architecture": "flux-2-klein-9b",
+    "schema": "https://runware.ai/docs/models/runware-flux-2-klein-9b-style-lora-training/schema.json"
+  },
+  {
+    "id": "runware-qwen-image-style-lora-training",
+    "air": "runware:qwen-image@style-lora-training",
+    "name": "Qwen-Image Style LoRA Training",
+    "status": "live",
+    "capabilities": [
+      "train"
+    ],
+    "architecture": "qwen-image",
+    "schema": "https://runware.ai/docs/models/runware-qwen-image-style-lora-training/schema.json"
+  },
+  {
+    "id": "runware-z-image-style-lora-training",
+    "air": "runware:z-image@style-lora-training",
+    "name": "Z-Image Style LoRA Training",
+    "status": "live",
+    "capabilities": [
+      "train"
+    ],
+    "architecture": "z-image",
+    "schema": "https://runware.ai/docs/models/runware-z-image-style-lora-training/schema.json"
+  },
+  {
+    "id": "runway-aleph-2-0",
+    "air": "runway:aleph@2.0",
+    "name": "Runway Aleph 2.0",
+    "status": "live",
+    "capabilities": [
+      "image-to-video",
+      "video-to-video",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Runway",
+    "schema": "https://runware.ai/docs/models/runway-aleph-2-0/schema.json"
+  },
+  {
+    "id": "runway-gen-4-5",
+    "air": "runway:1@2",
+    "name": "Runway Gen-4.5",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "checkpoint"
+    ],
+    "creator": "Runway",
+    "schema": "https://runware.ai/docs/models/runway-gen-4-5/schema.json"
+  },
+  {
+    "id": "runway-gen-4-image",
+    "air": "runway:4@1",
+    "name": "Runway Gen-4 Image",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Runway",
+    "schema": "https://runware.ai/docs/models/runway-gen-4-image/schema.json"
+  },
+  {
+    "id": "runway-gen-4-image-turbo",
+    "air": "runway:4@2",
+    "name": "Runway Gen-4 Image Turbo",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Runway",
+    "schema": "https://runware.ai/docs/models/runway-gen-4-image-turbo/schema.json"
+  },
+  {
+    "id": "runway-gen-4-turbo",
+    "air": "runway:1@1",
+    "name": "Runway Gen-4 Turbo",
+    "status": "live",
+    "capabilities": [
+      "image-to-video",
+      "checkpoint"
+    ],
+    "creator": "Runway",
+    "schema": "https://runware.ai/docs/models/runway-gen-4-turbo/schema.json"
+  },
+  {
+    "id": "sd-1-5",
+    "name": "Stable Diffusion 1.5",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image"
+    ],
+    "creator": "Stability AI",
+    "schema": "https://runware.ai/docs/models/sd-1-5/schema.json"
+  },
+  {
+    "id": "sdxl",
+    "name": "Stable Diffusion XL",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image"
+    ],
+    "creator": "Stability AI",
+    "schema": "https://runware.ai/docs/models/sdxl/schema.json"
+  },
+  {
+    "id": "sdxl-lightning",
+    "name": "Stable Diffusion XL Lightning",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image"
+    ],
+    "creator": "ByteDance",
+    "schema": "https://runware.ai/docs/models/sdxl-lightning/schema.json"
+  },
+  {
+    "id": "sdxl-turbo",
+    "name": "Stable Diffusion XL Turbo",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image"
+    ],
+    "creator": "Stability AI",
+    "schema": "https://runware.ai/docs/models/sdxl-turbo/schema.json"
+  },
+  {
+    "id": "skywork-skyreels-v4",
+    "air": "skywork:skyreels@v4",
+    "name": "SkyReels V4",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "audio-to-video",
+      "edit",
+      "extend",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Skywork",
+    "schema": "https://runware.ai/docs/models/skywork-skyreels-v4/schema.json"
+  },
+  {
+    "id": "sourceful-riverflow-2-0-fast",
+    "air": "sourceful:riverflow-2.0@fast",
+    "name": "Riverflow 2.0 Fast",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Sourceful",
+    "schema": "https://runware.ai/docs/models/sourceful-riverflow-2-0-fast/schema.json"
+  },
+  {
+    "id": "sourceful-riverflow-2-0-pro",
+    "air": "sourceful:riverflow-2.0@pro",
+    "name": "Riverflow 2.0 Pro",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint"
+    ],
+    "creator": "Sourceful",
+    "schema": "https://runware.ai/docs/models/sourceful-riverflow-2-0-pro/schema.json"
+  },
+  {
+    "id": "sourceful-riverflow-2-5-fast",
+    "air": "sourceful:riverflow-2.5@fast",
+    "name": "Riverflow 2.5 Fast",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint",
+      "transparency"
+    ],
+    "creator": "Sourceful",
+    "schema": "https://runware.ai/docs/models/sourceful-riverflow-2-5-fast/schema.json"
+  },
+  {
+    "id": "sourceful-riverflow-2-5-pro",
+    "air": "sourceful:riverflow-2.5@pro",
+    "name": "Riverflow 2.5 Pro",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "edit",
+      "checkpoint",
+      "transparency"
+    ],
+    "creator": "Sourceful",
+    "schema": "https://runware.ai/docs/models/sourceful-riverflow-2-5-pro/schema.json"
+  },
+  {
+    "id": "stabilityai-stable-diffusion-3",
+    "air": "runware:5@1",
+    "name": "Stable Diffusion 3",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "checkpoint"
+    ],
+    "architecture": "sd3",
+    "schema": "https://runware.ai/docs/models/stabilityai-stable-diffusion-3/schema.json"
+  },
+  {
+    "id": "stabilityai-stable-diffusion-xl-v1-0-vae-fix",
+    "air": "civitai:101055@128078",
+    "name": "Stable Diffusion XL v1.0 VAE Fix",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Stability AI",
+    "architecture": "sdxl",
+    "schema": "https://runware.ai/docs/models/stabilityai-stable-diffusion-xl-v1-0-vae-fix/schema.json"
+  },
+  {
+    "id": "stable-diffusion-latent-upscaler",
+    "air": "runware:502@1",
+    "name": "Stable Diffusion Latent Upscaler",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "upscale",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/stable-diffusion-latent-upscaler/schema.json"
+  },
+  {
+    "id": "swinir",
+    "air": "runware:503@1",
+    "name": "SwinIR",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "upscale",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/swinir/schema.json"
+  },
+  {
+    "id": "sync-3",
+    "air": "sync:3@0",
+    "name": "sync-3",
+    "status": "live",
+    "capabilities": [
+      "video-to-video",
+      "audio-to-video",
+      "checkpoint"
+    ],
+    "creator": "sync.",
+    "schema": "https://runware.ai/docs/models/sync-3/schema.json"
+  },
+  {
+    "id": "sync-lipsync-2",
+    "air": "sync:lipsync-2@1",
+    "name": "lipsync-2",
+    "status": "live",
+    "capabilities": [
+      "video-to-video",
+      "audio-to-video",
+      "checkpoint"
+    ],
+    "creator": "sync.",
+    "schema": "https://runware.ai/docs/models/sync-lipsync-2/schema.json"
+  },
+  {
+    "id": "sync-lipsync-2-pro",
+    "air": "sync:lipsync-2-pro@1",
+    "name": "lipsync-2-pro",
+    "status": "live",
+    "capabilities": [
+      "video-to-video",
+      "audio-to-video",
+      "checkpoint"
+    ],
+    "creator": "sync.",
+    "schema": "https://runware.ai/docs/models/sync-lipsync-2-pro/schema.json"
+  },
+  {
+    "id": "sync-react-1",
+    "air": "sync:react-1@1",
+    "name": "react-1",
+    "status": "live",
+    "capabilities": [
+      "video-to-video",
+      "audio-to-video",
+      "checkpoint"
+    ],
+    "creator": "sync.",
+    "schema": "https://runware.ai/docs/models/sync-react-1/schema.json"
+  },
+  {
+    "id": "tencent-hunyuan-3d-3-1-pro",
+    "air": "tencent:hunyuan-3d@3.1-pro",
+    "name": "Hunyuan 3D 3.1 Pro",
+    "status": "live",
+    "capabilities": [
+      "text-to-3d",
+      "image-to-3d",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/tencent-hunyuan-3d-3-1-pro/schema.json"
+  },
+  {
+    "id": "tencent-hunyuan-3d-3-1-rapid",
+    "air": "tencent:hunyuan-3d@3.1-rapid",
+    "name": "Hunyuan 3D 3.1 Rapid",
+    "status": "live",
+    "capabilities": [
+      "text-to-3d",
+      "image-to-3d",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/tencent-hunyuan-3d-3-1-rapid/schema.json"
+  },
+  {
+    "id": "topazlabs-proteus-4",
+    "air": "topazlabs:proteus@4",
+    "name": "Topaz Labs Proteus",
+    "status": "live",
+    "capabilities": [
+      "video-to-video",
+      "upscale",
+      "checkpoint"
+    ],
+    "creator": "Topaz Labs",
+    "schema": "https://runware.ai/docs/models/topazlabs-proteus-4/schema.json"
+  },
+  {
+    "id": "topazlabs-starlight-precise-2-5",
+    "air": "topazlabs:starlight-precise@2.5",
+    "name": "Topaz Labs Starlight Precise 2.5",
+    "status": "live",
+    "capabilities": [
+      "video-to-video",
+      "upscale",
+      "checkpoint"
+    ],
+    "creator": "Topaz Labs",
+    "schema": "https://runware.ai/docs/models/topazlabs-starlight-precise-2-5/schema.json"
+  },
+  {
+    "id": "topazlabs-wonder-3-5",
+    "air": "topazlabs:wonder@3.5",
+    "name": "Topaz Labs Wonder 3.5",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "upscale",
+      "checkpoint"
+    ],
+    "creator": "Topaz Labs",
+    "schema": "https://runware.ai/docs/models/topazlabs-wonder-3-5/schema.json"
+  },
+  {
+    "id": "tripo-v3-1",
+    "air": "tripo:v3.1@0",
+    "name": "Tripo 3D v3.1",
+    "status": "live",
+    "capabilities": [
+      "text-to-3d",
+      "image-to-3d",
+      "checkpoint"
+    ],
+    "creator": "Tripo AI",
+    "schema": "https://runware.ai/docs/models/tripo-v3-1/schema.json"
+  },
+  {
+    "id": "twinflow-z-image-turbo",
+    "air": "runware:twinflow-z-image-turbo@0",
+    "name": "TwinFlow Z-Image-Turbo",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/twinflow-z-image-turbo/schema.json"
+  },
+  {
+    "id": "veed-fabric-1-0-hosted",
+    "air": "veed:fabric@1.0-hosted",
+    "name": "VEED Fabric 1.0",
+    "status": "live",
+    "capabilities": [
+      "image-to-video",
+      "audio-to-video",
+      "checkpoint"
+    ],
+    "creator": "VEED",
+    "schema": "https://runware.ai/docs/models/veed-fabric-1-0-hosted/schema.json"
+  },
+  {
+    "id": "vidu-2-0",
+    "air": "vidu:2@0",
+    "name": "Vidu 2.0",
+    "status": "live",
+    "capabilities": [
+      "image-to-video",
+      "checkpoint"
+    ],
+    "creator": "Vidu",
+    "schema": "https://runware.ai/docs/models/vidu-2-0/schema.json"
+  },
+  {
+    "id": "vidu-q1",
+    "air": "vidu:1@1",
+    "name": "Vidu Q1",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "checkpoint"
+    ],
+    "creator": "Vidu",
+    "schema": "https://runware.ai/docs/models/vidu-q1/schema.json"
+  },
+  {
+    "id": "vidu-q1-classic",
+    "air": "vidu:1@0",
+    "name": "Vidu Q1 Classic",
+    "status": "live",
+    "capabilities": [
+      "image-to-video",
+      "checkpoint"
+    ],
+    "creator": "Vidu",
+    "schema": "https://runware.ai/docs/models/vidu-q1-classic/schema.json"
+  },
+  {
+    "id": "vidu-q1-image",
+    "air": "vidu:q1@image",
+    "name": "Vidu Q1",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "Vidu",
+    "schema": "https://runware.ai/docs/models/vidu-q1-image/schema.json"
+  },
+  {
+    "id": "vidu-q2-pro",
+    "air": "vidu:3@1",
+    "name": "Vidu Q2 Pro",
+    "status": "live",
+    "capabilities": [
+      "image-to-video",
+      "checkpoint"
+    ],
+    "creator": "Vidu",
+    "schema": "https://runware.ai/docs/models/vidu-q2-pro/schema.json"
+  },
+  {
+    "id": "vidu-q2-turbo",
+    "air": "vidu:3@2",
+    "name": "Vidu Q2 Turbo",
+    "status": "live",
+    "capabilities": [
+      "image-to-video",
+      "checkpoint"
+    ],
+    "creator": "Vidu",
+    "schema": "https://runware.ai/docs/models/vidu-q2-turbo/schema.json"
+  },
+  {
+    "id": "vidu-q3",
+    "air": "vidu:4@1",
+    "name": "Vidu Q3",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Vidu",
+    "schema": "https://runware.ai/docs/models/vidu-q3/schema.json"
+  },
+  {
+    "id": "vidu-q3-turbo",
+    "air": "vidu:4@2",
+    "name": "Vidu Q3 Turbo",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "Vidu",
+    "schema": "https://runware.ai/docs/models/vidu-q3-turbo/schema.json"
+  },
+  {
+    "id": "vit-age-classifier",
+    "name": "ViT Age Classifier",
+    "status": "live",
+    "capabilities": [
+      "image-to-text",
+      "age-classification",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/vit-age-classifier/schema.json"
+  },
+  {
+    "id": "xai-grok-4-3",
+    "name": "Grok 4.3",
+    "status": "compatible-only",
+    "capabilities": [
+      "text-to-text",
+      "image-to-text",
+      "checkpoint"
+    ],
+    "creator": "xAI",
+    "schema": "https://runware.ai/docs/models/xai-grok-4-3/schema.json"
+  },
+  {
+    "id": "xai-grok-imagine-image",
+    "air": "xai:grok-imagine@image",
+    "name": "Grok Imagine Image",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "xAI",
+    "schema": "https://runware.ai/docs/models/xai-grok-imagine-image/schema.json"
+  },
+  {
+    "id": "xai-grok-imagine-image-2-0",
+    "air": "xai:grok-imagine@image-2.0",
+    "name": "Grok Imagine Image 2.0",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "xAI",
+    "schema": "https://runware.ai/docs/models/xai-grok-imagine-image-2-0/schema.json"
+  },
+  {
+    "id": "xai-grok-imagine-image-quality",
+    "air": "xai:grok-imagine@image-quality",
+    "name": "Grok Imagine Image Quality",
+    "status": "deprecated",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image",
+      "checkpoint"
+    ],
+    "creator": "xAI",
+    "schema": "https://runware.ai/docs/models/xai-grok-imagine-image-quality/schema.json"
+  },
+  {
+    "id": "xai-grok-imagine-video",
+    "air": "xai:grok-imagine@video",
+    "name": "Grok Imagine Video",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "edit",
+      "extend",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "xAI",
+    "schema": "https://runware.ai/docs/models/xai-grok-imagine-video/schema.json"
+  },
+  {
+    "id": "xai-grok-imagine-video-1-5",
+    "air": "xai:grok-imagine@video-1.5",
+    "name": "Grok Imagine Video 1.5",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "xAI",
+    "schema": "https://runware.ai/docs/models/xai-grok-imagine-video-1-5/schema.json"
+  },
+  {
+    "id": "xai-grok-imagine-video-1-5-lite",
+    "air": "xai:grok-imagine@video-1.5-lite",
+    "name": "Grok Imagine Video 1.5 Lite",
+    "status": "live",
+    "capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "checkpoint",
+      "audio"
+    ],
+    "creator": "xAI",
+    "schema": "https://runware.ai/docs/models/xai-grok-imagine-video-1-5-lite/schema.json"
+  },
+  {
+    "id": "xai-tts",
+    "air": "xai:tts@0",
+    "name": "xAI Text-to-Speech",
+    "status": "live",
+    "capabilities": [
+      "text-to-audio",
+      "checkpoint"
+    ],
+    "creator": "xAI",
+    "schema": "https://runware.ai/docs/models/xai-tts/schema.json"
+  },
+  {
+    "id": "yolov8n-face",
+    "air": "runware:35@1",
+    "name": "YOLOv8n Face",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "mask",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/yolov8n-face/schema.json"
+  },
+  {
+    "id": "yolov8n-hand",
+    "air": "runware:35@3",
+    "name": "YOLOv8n Hand",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "mask",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/yolov8n-hand/schema.json"
+  },
+  {
+    "id": "yolov8n-person-seg",
+    "air": "runware:35@4",
+    "name": "YOLOv8n Person Seg",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "mask",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/yolov8n-person-seg/schema.json"
+  },
+  {
+    "id": "yolov8s-face",
+    "air": "runware:35@2",
+    "name": "YOLOv8s Face",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "mask",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/yolov8s-face/schema.json"
+  },
+  {
+    "id": "yolov8s-person-seg",
+    "air": "runware:35@5",
+    "name": "YOLOv8s Person Seg",
+    "status": "live",
+    "capabilities": [
+      "image-to-image",
+      "mask",
+      "checkpoint"
+    ],
+    "schema": "https://runware.ai/docs/models/yolov8s-person-seg/schema.json"
+  },
+  {
+    "id": "z-image",
+    "name": "Z Image",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image"
+    ],
+    "creator": "Alibaba",
+    "schema": "https://runware.ai/docs/models/z-image/schema.json"
+  },
+  {
+    "id": "z-image-turbo",
+    "name": "Z Image Turbo",
+    "status": "live",
+    "capabilities": [
+      "text-to-image",
+      "image-to-image"
+    ],
+    "creator": "Alibaba",
+    "schema": "https://runware.ai/docs/models/z-image-turbo/schema.json"
+  },
+  {
+    "id": "zai-glm-5-1",
+    "name": "GLM-5.1",
+    "status": "live",
+    "capabilities": [
+      "text-to-text",
+      "checkpoint"
+    ],
+    "creator": "Z.ai",
+    "schema": "https://runware.ai/docs/models/zai-glm-5-1/schema.json"
+  }
+]

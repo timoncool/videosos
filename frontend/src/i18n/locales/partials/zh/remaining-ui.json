@@ -1,0 +1,398 @@
+{
+  "editor": {
+    "mediaSidebar": {
+      "media": "媒体",
+      "text": "文本",
+      "shapes": "形状",
+      "effects": "效果",
+      "transitions": "转场",
+      "ai": "AI",
+      "collapsePanel": "收起面板",
+      "expandPanel": "展开面板",
+      "keyframeEditor": "关键帧编辑器",
+      "hideKeyframeEditor": "隐藏关键帧编辑器",
+      "showKeyframeEditor": "显示关键帧编辑器",
+      "templates": "模板",
+      "textGroupSingle": "单段",
+      "textGroupTwoSpans": "2 段",
+      "textGroupThreeSpans": "3 段",
+      "addText": "添加文本",
+      "pen": "钢笔",
+      "penToolHint": "使用钢笔工具绘制自定义路径形状",
+      "adjustmentLayer": "调整图层",
+      "blankAdjustmentLayer": "空白调整图层",
+      "presets": "预设"
+    },
+    "textSection": {
+      "sectionTitle": "文本",
+      "content": "内容",
+      "single": "单段",
+      "twoSpans": "2 段",
+      "threeSpans": "3 段",
+      "mixedNone": "混合 / 无",
+      "selectPreset": "选择预设",
+      "span": "段 {{count}}",
+      "spanText": "段 {{count}} 文本",
+      "eyebrow": "眉题",
+      "eyebrowText": "眉题文本",
+      "title": "标题",
+      "titleText": "标题文本",
+      "subtitle": "副标题",
+      "subtitleText": "副标题文本",
+      "text": "文本",
+      "enterText": "输入文本...",
+      "defaultText": "在此输入文本",
+      "selectFont": "选择字体",
+      "size": "大小",
+      "spacing": "间距",
+      "scale": "缩放",
+      "font": "字体",
+      "weight": "字重",
+      "style": "样式",
+      "align": "对齐",
+      "color": "颜色",
+      "background": "背景",
+      "clear": "清除",
+      "clearBackground": "清除背景",
+      "lineHeightShort": "行高",
+      "padding": "内边距",
+      "radius": "圆角",
+      "mixed": "混合",
+      "selectWeight": "选择字重",
+      "bold": "加粗",
+      "boldUnavailable": "此字体不支持加粗",
+      "italic": "斜体",
+      "underline": "下划线",
+      "italicSpan": "{{label}} 斜体",
+      "underlineSpan": "{{label}} 下划线",
+      "alignLeft": "左对齐",
+      "alignCenter": "居中对齐",
+      "alignRight": "右对齐",
+      "alignTop": "顶部对齐",
+      "alignMiddle": "垂直居中",
+      "alignBottom": "底部对齐",
+      "effects": "效果",
+      "presets": "预设",
+      "fontWeights": {
+        "regular": "常规",
+        "medium": "中等",
+        "semibold": "半粗",
+        "bold": "加粗"
+      },
+      "effectPresets": {
+        "none": "无",
+        "shadow": "阴影",
+        "outline": "描边",
+        "glow": "发光"
+      },
+      "shadow": "阴影",
+      "shadowX": "阴影 X",
+      "shadowY": "阴影 Y",
+      "shadowBlur": "阴影模糊",
+      "strokeWidth": "描边宽度",
+      "stroke": "描边",
+      "animation": "动画",
+      "intro": "入场",
+      "outro": "出场",
+      "animationFooter": "在所选每个剪辑的开头或结尾应用短暂的缓出文字动作。",
+      "animationPresets": {
+        "none": "无",
+        "fade": "淡入淡出",
+        "rise": "上升",
+        "drop": "下落",
+        "left": "向左",
+        "right": "向右",
+        "tilt": "倾斜",
+        "pop": "弹出",
+        "swing": "摇摆"
+      }
+    },
+    "tts": {
+      "seek": "定位",
+      "dialogTitle": "从文本生成音频",
+      "dialogDescription": "生成语音并插入到文本剪辑的位置。",
+      "kokoroUnsupported": "此浏览器不支持 WebGPU. Kokoro TTS 需要 Chrome 113+, Edge 113+ 或 Safari 26+.",
+      "mossUnsupported": "此浏览器不支持浏览器管理的存储。MOSS 多语言 TTS 在较新的 Chromium 浏览器中效果最佳。",
+      "engine": "引擎",
+      "engineSupportDetails": "TTS 引擎支持详情",
+      "kokoroDescription": "基于 WebGPU 的英语语音。",
+      "supportedLanguages": "支持的语言：{{languages}}。",
+      "kokoroOption": "Kokoro (英语, WebGPU)",
+      "mossOption": "MOSS Nano (20 种语言, CPU)",
+      "voice": "语音",
+      "text": "文本",
+      "textPlaceholder": "输入你想听到朗读的文本...",
+      "speed": "速度",
+      "progressPreparing": "正在准备本地 TTS...",
+      "insertedAndLinked": "已插入并链接",
+      "generate": "生成",
+      "generating": "正在生成...",
+      "regenerate": "重新生成",
+      "insertAndLink": "插入并链接",
+      "inserting": "正在插入...",
+      "errors": {
+        "openProject": "生成音频前请先打开项目。",
+        "enterText": "请输入要合成的文本。",
+        "kokoroUnsupported": "Kokoro TTS 需要 WebGPU. 请尝试 Chrome 113+, Edge 113+ 或 Safari 26+.",
+        "mossUnsupported": "MOSS 多语言 TTS 需要浏览器管理的存储。请尝试较新的 Chromium 浏览器。",
+        "generateFailed": "无法生成语音。",
+        "insertFailed": "无法保存并插入音频。",
+        "supertonicUnsupported": "此浏览器无法运行本地 Supertonic TTS 运行时。请使用最新版 Chrome 或 Edge。"
+      },
+      "notifications": {
+        "addedAndLinked": "已将\"{{fileName}}\"添加到时间线并与文本链接。",
+        "savedNoTrack": "已保存\"{{fileName}}\"，但没有可用的音频轨道。"
+      },
+      "supertonicUnsupported": "此浏览器无法运行本地 Supertonic TTS 运行时。请使用最新版 Chrome 或 Edge。",
+      "supertonicDescription": "在 WebGPU 或 WASM 上运行的 31 种语言本地 ONNX 语音。",
+      "supertonicOption": "Supertonic 3（31 种语言，本地 ONNX）",
+      "language": "语言",
+      "autoDetectLanguage": "自动检测",
+      "expressiveTags": "表现标签"
+    },
+    "aiPanel": {
+      "textToSpeech": "文本转语音",
+      "collapseTextToSpeech": "折叠文本转语音",
+      "expandTextToSpeech": "展开文本转语音",
+      "runsLocally": "{{runtime}} 会在浏览器中通过 {{backend}} 本地运行。",
+      "history": "历史记录 ({{count}}) - {{size}}",
+      "clearAll": "全部清除",
+      "musicGeneration": "音乐生成",
+      "collapseMusicGeneration": "折叠音乐生成",
+      "expandMusicGeneration": "展开音乐生成",
+      "musicGenerationInfo": "音乐生成信息",
+      "musicgenDescription": "通过 Transformers.js 使用 Xenova 的浏览器版 MusicGen 模型。首次下载较大，之后会缓存在本地。",
+      "musicgenPromptHint": "请描述流派、情绪、速度和乐器。较短的片段会完成得更快。",
+      "musicgenUnsupported": "此浏览器不支持 WebGPU. MusicGen 需要 Chrome 113+, Edge 113+ 或 Safari 26+.",
+      "prompt": "提示词",
+      "presets": "预设",
+      "musicPromptPlaceholder": "描述你想生成的音乐类型...",
+      "length": "长度",
+      "generateMusic": "生成音乐",
+      "musicHistory": "音乐历史记录 ({{count}}) - {{size}}",
+      "remove": "移除",
+      "saved": "已保存",
+      "saving": "正在保存...",
+      "saveAndInsert": "保存并插入",
+      "saveToLibrary": "保存到库",
+      "progressPreparingMusic": "正在准备本地音乐生成...",
+      "errors": {
+        "describeMusic": "请描述你想生成的音乐。",
+        "musicgenUnsupported": "MusicGen 需要 WebGPU. 请尝试 Chrome 113+, Edge 113+ 或 Safari 26+.",
+        "generateMusicFailed": "无法生成音乐。",
+        "saveAudioFailed": "无法将音频保存到媒体库。"
+      },
+      "notifications": {
+        "savedToLibrary": "已将\"{{fileName}}\"保存到媒体库。",
+        "savedAndAdded": "已保存\"{{fileName}}\"并添加到时间线。"
+      },
+      "defaultTtsPrompt": "Welcome to freecut. This voice was generated locally in the browser.",
+      "musicPresets": {
+        "lofiChillLabel": "Lo-fi 放松",
+        "lofiChillPrompt": "温暖的 lo-fi 节拍，配有复古鼓点、柔和低音和梦幻合成器主旋律",
+        "pop80sLabel": "80 年代流行",
+        "pop80sPrompt": "80 年代流行曲，配有厚重鼓点和合成器",
+        "rock90sLabel": "90 年代摇滚",
+        "rock90sPrompt": "90 年代摇滚歌曲，配有响亮的吉他和厚重鼓点",
+        "upbeatEdmLabel": "欢快 EDM",
+        "upbeatEdmPrompt": "轻快愉快的 EDM 曲目，配有切分鼓点、空灵铺底和强烈情绪 bpm: 130",
+        "countryLabel": "乡村",
+        "countryPrompt": "一首欢快的乡村歌，配有原声吉他",
+        "lofiElectroLabel": "Lo-fi 电子",
+        "lofiElectroPrompt": "低速 lo-fi 电子\f，配有有机采样"
+      }
+    },
+    "clearKeyframesDialog": {
+      "descriptionProperty": "从所选 {{count}} 个项目清除 {{property}} 关键帧吗？",
+      "descriptionAll": "从所选 {{count}} 个项目清除所有关键帧吗？"
+    },
+    "localInferencePill": {
+      "jobs": "{{count}} 个任务"
+    },
+    "subtitleSection": {
+      "cueCount": "{{count}} 条字幕"
+    },
+    "propertiesSidebar": {
+      "clipsSelected": "已选择 {{count}} 个剪辑"
+    }
+  },
+  "preview": {
+    "canvasDrop": {
+      "dropOnTimeline": "拖放到时间线",
+      "compoundClipsTimeline": "复合剪辑仍然最适合放在时间线上。",
+      "presetsTimeline": "文本和形状预设仍然最适合放在时间线上。",
+      "dropOneItem": "拖放一个项目",
+      "oneMediaAtATime": "一次只能在画布上放置一个媒体项目。",
+      "audioGoesOnTimeline": "音频应放到时间线",
+      "visualLayersOnly": "画布拖放只会放置视觉图层。",
+      "dropToPlace": "拖放以放置",
+      "addAtPlayhead": "在播放头和拖放位置添加此媒体。",
+      "dropOneFile": "拖放一个文件",
+      "oneVisualFileAtATime": "画布拖放一次只导入一个视觉文件。",
+      "importAndPlace": "导入并放置",
+      "importAndPlaceDescription": "导入此文件并将其放在画布上。",
+      "noCompatibleTrack": "没有可用于此拖放的未锁定兼容轨道。",
+      "unableToLoadMedia": "无法加载拖放的媒体。",
+      "mediaNoLongerAvailable": "拖放的媒体已不可用。",
+      "dragDropUnsupported": "此浏览器不支持拖放。请使用 Chrome 或 Edge。",
+      "filesRejected": "部分文件被拒绝：{{errors}}",
+      "dropAudioOnTimeline": "请将音频拖放到时间线。",
+      "unableToInspectVideo": "无法检查拖放的视频。",
+      "unableToInspectFile": "无法检查拖放的文件。",
+      "unableToImportFile": "无法导入拖放的文件。"
+    }
+  },
+  "settings": {
+    "ai": {
+      "scene": "{{count}} 个场景"
+    },
+    "feedback": {
+      "completedForItems": "已为 {{count}} 个项目完成 {{action}}。",
+      "couldntProcessItems": "无法为 {{count}} 个项目执行 {{action}}{{detail}}"
+    },
+    "toasts": {
+      "itemsUpdated": "已更新 {{count}} 个项目。",
+      "itemsUpdatedFailed": "已更新 {{count}} 个项目。失败：{{failed}}"
+    }
+  },
+  "projects": {
+    "legacyMigration": {
+      "errorsLogged": "已记录 {{count}} 个错误"
+    },
+    "legacyMigrationErrors": {
+      "retryStillFailing": "重试仍有 {{count}} 个错误。",
+      "failedCount": "{{count}} 个迁移错误"
+    },
+    "list": {
+      "movedToTrashCount": "已将 {{count}} 个项目移至回收站。",
+      "selectedCount": "已选择 {{count}} 个",
+      "deleteN": "删除 {{count}} 个",
+      "projectCount": "{{count}} 个项目",
+      "bulkDeleteTitle": "删除所选的 {{count}} 个项目吗？"
+    },
+    "trash": {
+      "emptiedTrash": "已从回收站清空 {{count}} 个项目。",
+      "emptiedTrashWithFailures": "无法删除 {{count}} 个项目。"
+    },
+    "relativeTime": {
+      "minutesAgo": "{{count}} 分钟前",
+      "hoursAgo": "{{count}} 小时前",
+      "daysAgo": "{{count}} 天前",
+      "weeksAgo": "{{count}} 周前",
+      "monthsAgo": "{{count}} 个月前",
+      "yearsAgo": "{{count}} 年前"
+    },
+    "settings": {
+      "hotkeys": {
+        "importedCommands": "已导入 {{count}} 个命令",
+        "remappedCount": "已重新映射 {{count}} 个",
+        "ignoredCount": "已忽略 {{count}} 个",
+        "customCount": "{{count}} 个自定义"
+      },
+      "localInference": {
+        "activeJobs": "{{count}} 个活动任务",
+        "unloadedToast": "已卸载 {{count}} 个本地运行时。"
+      }
+    }
+  },
+  "sceneBrowser": {
+    "counts": {
+      "clip_one": "{{count}} 个剪辑",
+      "clip_other": "{{count}} 个剪辑",
+      "scene_one": "{{count}} 个场景",
+      "scene_other": "{{count}} 个场景",
+      "match_one": "{{count}} 个匹配",
+      "match_other": "{{count}} 个匹配"
+    },
+    "sort": {
+      "label": "排序",
+      "relevance": "相关性",
+      "time": "时间戳",
+      "name": "媒体名称"
+    },
+    "scope": {
+      "placeholder": "范围",
+      "allMedia": "所有媒体",
+      "scopedTo": "范围：{{name}}",
+      "scopedToAll": "范围：所有媒体"
+    },
+    "banners": {
+      "downloadingSemanticModel": "正在下载语义模型（约 22 MB，仅首次运行）...",
+      "indexingCaptions": "正在为语义搜索索引字幕 - {{current}}/{{total}} 个剪辑",
+      "reanalyzing": "正在重新分析 <strong>{{label}}</strong> - 完成后场景将刷新。"
+    },
+    "analyze": {
+      "title": "用 AI 分析媒体",
+      "button": "分析",
+      "scope": "分析\"{{name}}\"",
+      "newMedia": "分析新媒体",
+      "reanalyzeAll": "全部重新分析"
+    },
+    "view": {
+      "list": "列表视图",
+      "grid": "网格视图"
+    },
+    "empty": {
+      "noCaptionsTitle": "还没有 AI 字幕。",
+      "noCaptionsPrefix": "在媒体库中的剪辑上运行",
+      "noCaptionsSuffix": "以生成可搜索的场景字幕。",
+      "noMatchesTitle": "没有场景与你的搜索匹配。",
+      "noMatchesPrefix": "尝试更短的查询，或将范围切换到"
+    },
+    "search": {
+      "exitColorMode": "退出颜色模式",
+      "colorTitle": "按颜色搜索",
+      "color": "颜色",
+      "semanticTitle": "语义搜索（按含义）",
+      "keywordTitle": "关键词搜索（精确匹配）",
+      "semanticLabel": "语义搜索",
+      "keywordLabel": "关键词搜索",
+      "semantic": "语义",
+      "keyword": "关键词",
+      "keywordDescription": "精确单词匹配",
+      "semanticDescription": "按含义匹配",
+      "clearReference": "清除参考并选择其他颜色",
+      "findingSimilarPalette": "正在查找具有相似调色板的场景...",
+      "semanticPlaceholder": "按含义搜索 - \"水面上的日落\"、\"大笑的人\"...",
+      "keywordPlaceholder": "按所见内容搜索场景...",
+      "clearSearch": "清除搜索",
+      "similarPaletteTo": "与 {{label}} 相似的调色板 - 点击清除"
+    },
+    "matchTiers": {
+      "strong": "强",
+      "good": "良好",
+      "fair": "一般"
+    },
+    "match": {
+      "keyword": "关键词",
+      "keywordHint": "关键词匹配 · 余弦 {{score}}",
+      "meaningWithTier": "含义 · {{tier}}",
+      "textEmbeddingHint": "文本嵌入余弦：{{score}}",
+      "visualWithTier": "视觉 · {{tier}}",
+      "clipHint": "CLIP 余弦：{{score}}",
+      "colorWithName": "颜色 · {{color}}",
+      "paletteColorHint": "{{color}} 上的调色板匹配（ΔE 2000）",
+      "paletteDistance": "调色板 · ΔE {{distance}}",
+      "paletteDistanceHint": "与参考调色板的加权平均 ΔE 2000",
+      "belowThreshold": "低于阈值",
+      "cosineHint": "余弦 {{score}}",
+      "top": "最佳",
+      "topHint": "得分最高的匹配"
+    },
+    "palette": {
+      "libraryColor": "媒体库颜色",
+      "empty": "还没有索引的调色板 - 运行 AI 字幕进行填充。",
+      "moreColors_one": "另有 {{count}} 种颜色",
+      "moreColors_other": "另有 {{count}} 种颜色",
+      "showMoreColors_one": "再显示 {{count}} 种颜色",
+      "showMoreColors_other": "再显示 {{count}} 种颜色",
+      "moreColorsTitle": "更多颜色",
+      "findColor": "查找此颜色的场景（占媒体库的 {{percent}}%）",
+      "findSimilar": "查找具有相似调色板的场景",
+      "pickedSwatch": "选取的色样"
+    },
+    "scene": {
+      "previewAndDragHint": "点击在源监视器中预览 - 拖动以添加到时间线"
+    }
+  }
+}

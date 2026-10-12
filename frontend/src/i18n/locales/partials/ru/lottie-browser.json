@@ -1,0 +1,24 @@
+{
+  "lottieBrowser": {
+    "tabLabel": "Lottie",
+    "searchPlaceholder": "Поиск анимаций",
+    "clearSearch": "Очистить поиск",
+    "categories": {
+      "featured": "Рекомендуемые",
+      "popular": "Популярные",
+      "recent": "Недавние"
+    },
+    "addToMedia": "Добавить в медиатеку",
+    "added": "Добавлено в медиатеку",
+    "importFailed": "Ошибка импорта — нажмите, чтобы повторить",
+    "by": "автор: {{author}}",
+    "empty": "Анимации не найдены",
+    "error": "Не удалось загрузить анимации",
+    "retry": "Повторить",
+    "previous": "Предыдущая страница",
+    "next": "Следующая страница",
+    "goToPage": "Перейти на страницу",
+    "ofTotal": "из {{total}}",
+    "attributionNote": "Бесплатные анимации от LottieFiles по лицензии <license>Lottie Simple License</license>. Указывайте автора при публикации."
+  }
+}

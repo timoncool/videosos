@@ -1,0 +1,398 @@
+{
+  "editor": {
+    "mediaSidebar": {
+      "media": "メディア",
+      "text": "テキスト",
+      "shapes": "図形",
+      "effects": "エフェクト",
+      "transitions": "トランジション",
+      "ai": "AI",
+      "collapsePanel": "パネルを折りたたむ",
+      "expandPanel": "パネルを展開",
+      "keyframeEditor": "キーフレームエディター",
+      "hideKeyframeEditor": "キーフレームエディターを非表示",
+      "showKeyframeEditor": "キーフレームエディターを表示",
+      "templates": "テンプレート",
+      "textGroupSingle": "単一",
+      "textGroupTwoSpans": "2スパン",
+      "textGroupThreeSpans": "3スパン",
+      "addText": "テキストを追加",
+      "pen": "ペン",
+      "penToolHint": "ペンツールでカスタムパス図形を描画",
+      "adjustmentLayer": "調整レイヤー",
+      "blankAdjustmentLayer": "空の調整レイヤー",
+      "presets": "プリセット"
+    },
+    "textSection": {
+      "sectionTitle": "テキスト",
+      "content": "内容",
+      "single": "単一",
+      "twoSpans": "2スパン",
+      "threeSpans": "3スパン",
+      "mixedNone": "混在 / なし",
+      "selectPreset": "プリセットを選択",
+      "span": "スパン {{count}}",
+      "spanText": "スパン {{count}} のテキスト",
+      "eyebrow": "アイブロウ",
+      "eyebrowText": "アイブロウのテキスト",
+      "title": "タイトル",
+      "titleText": "タイトルのテキスト",
+      "subtitle": "サブタイトル",
+      "subtitleText": "サブタイトルのテキスト",
+      "text": "テキスト",
+      "enterText": "テキストを入力...",
+      "defaultText": "ここにテキスト",
+      "selectFont": "フォントを選択",
+      "size": "サイズ",
+      "spacing": "間隔",
+      "scale": "スケール",
+      "font": "フォント",
+      "weight": "太さ",
+      "style": "スタイル",
+      "align": "整列",
+      "color": "色",
+      "background": "背景",
+      "clear": "クリア",
+      "clearBackground": "背景をクリア",
+      "lineHeightShort": "行の高さ",
+      "padding": "余白",
+      "radius": "角丸",
+      "mixed": "混在",
+      "selectWeight": "太さを選択",
+      "bold": "太字",
+      "boldUnavailable": "このフォントでは太字を使用できません",
+      "italic": "斜体",
+      "underline": "下線",
+      "italicSpan": "{{label}} を斜体",
+      "underlineSpan": "{{label}} に下線",
+      "alignLeft": "左揃え",
+      "alignCenter": "中央揃え",
+      "alignRight": "右揃え",
+      "alignTop": "上揃え",
+      "alignMiddle": "中央揃え（縦）",
+      "alignBottom": "下揃え",
+      "effects": "エフェクト",
+      "presets": "プリセット",
+      "fontWeights": {
+        "regular": "標準",
+        "medium": "中",
+        "semibold": "セミボールド",
+        "bold": "太字"
+      },
+      "effectPresets": {
+        "none": "なし",
+        "shadow": "影",
+        "outline": "アウトライン",
+        "glow": "発光"
+      },
+      "shadow": "影",
+      "shadowX": "影 X",
+      "shadowY": "影 Y",
+      "shadowBlur": "影ぼかし",
+      "strokeWidth": "縁取り幅",
+      "stroke": "縁取り",
+      "animation": "アニメーション",
+      "intro": "イントロ",
+      "outro": "アウトロ",
+      "animationFooter": "選択した各クリップの開始または終了に短いイーズアウトのテキストモーションを適用します。",
+      "animationPresets": {
+        "none": "なし",
+        "fade": "フェード",
+        "rise": "ライズ",
+        "drop": "ドロップ",
+        "left": "左",
+        "right": "右",
+        "tilt": "ティルト",
+        "pop": "ポップ",
+        "swing": "スイング"
+      }
+    },
+    "tts": {
+      "seek": "シーク",
+      "dialogTitle": "テキストから音声を生成",
+      "dialogDescription": "音声を生成してテキストクリップの位置に挿入します。",
+      "kokoroUnsupported": "このブラウザでは WebGPU を利用できません。Kokoro TTS には Chrome 113+、Edge 113+、または Safari 26+ が必要です。",
+      "mossUnsupported": "このブラウザではブラウザ管理ストレージを利用できません。MOSS 多言語 TTS は新しい Chromium ブラウザで最適に動作します。",
+      "engine": "エンジン",
+      "engineSupportDetails": "TTS エンジンの対応状況",
+      "kokoroDescription": "WebGPU の英語音声。",
+      "supportedLanguages": "対応言語: {{languages}}。",
+      "kokoroOption": "Kokoro (英語、WebGPU)",
+      "mossOption": "MOSS Nano (20言語、CPU)",
+      "voice": "音声",
+      "text": "テキスト",
+      "textPlaceholder": "読み上げたいテキストを入力...",
+      "speed": "速度",
+      "progressPreparing": "ローカル TTS を準備中...",
+      "insertedAndLinked": "挿入してリンク済み",
+      "generate": "生成",
+      "generating": "生成中...",
+      "regenerate": "再生成",
+      "insertAndLink": "挿入してリンク",
+      "inserting": "挿入中...",
+      "errors": {
+        "openProject": "音声を生成する前にプロジェクトを開いてください。",
+        "enterText": "合成するテキストを入力してください。",
+        "kokoroUnsupported": "Kokoro TTS には WebGPU が必要です。Chrome 113+、Edge 113+、または Safari 26+ をお試しください。",
+        "mossUnsupported": "MOSS 多言語 TTS にはブラウザ管理ストレージが必要です。新しい Chromium ブラウザをお試しください。",
+        "generateFailed": "音声を生成できませんでした。",
+        "insertFailed": "音声を保存して挿入できませんでした。",
+        "supertonicUnsupported": "このブラウザーではローカルの Supertonic TTS ランタイムを実行できません。最新の Chrome または Edge をお試しください。"
+      },
+      "notifications": {
+        "addedAndLinked": "\"{{fileName}}\" をタイムラインに追加し、テキストとリンクしました。",
+        "savedNoTrack": "\"{{fileName}}\" を保存しましたが、利用可能な音声トラックがありません。"
+      },
+      "supertonicUnsupported": "このブラウザーではローカルの Supertonic TTS ランタイムを実行できません。最新の Chrome または Edge をお試しください。",
+      "supertonicDescription": "WebGPU または WASM 上で動作する 31 言語対応のローカル ONNX 音声。",
+      "supertonicOption": "Supertonic 3（31 言語、ローカル ONNX）",
+      "language": "言語",
+      "autoDetectLanguage": "自動検出",
+      "expressiveTags": "表現タグ"
+    },
+    "aiPanel": {
+      "textToSpeech": "テキスト読み上げ",
+      "collapseTextToSpeech": "テキスト読み上げを折りたたむ",
+      "expandTextToSpeech": "テキスト読み上げを展開",
+      "runsLocally": "{{runtime}} はブラウザ内で {{backend}} を使ってローカル実行されます。",
+      "history": "履歴 ({{count}}) - {{size}}",
+      "clearAll": "すべてクリア",
+      "musicGeneration": "音楽生成",
+      "collapseMusicGeneration": "音楽生成を折りたたむ",
+      "expandMusicGeneration": "音楽生成を展開",
+      "musicGenerationInfo": "音楽生成情報",
+      "musicgenDescription": "Transformers.js 経由で、Xenova のブラウザ対応 MusicGen モデルを使用します。初回ダウンロードは大きめですが、その後はローカルにキャッシュされます。",
+      "musicgenPromptHint": "ジャンル、ムード、テンポ、楽器編成を指定してください。短いクリップほどかなり速く完了します。",
+      "musicgenUnsupported": "このブラウザでは WebGPU を利用できません。MusicGen には Chrome 113+、Edge 113+、または Safari 26+ が必要です。",
+      "prompt": "プロンプト",
+      "presets": "プリセット",
+      "musicPromptPlaceholder": "生成したい音楽の種類を説明してください...",
+      "length": "長さ",
+      "generateMusic": "音楽を生成",
+      "musicHistory": "音楽履歴 ({{count}}) - {{size}}",
+      "remove": "削除",
+      "saved": "保存済み",
+      "saving": "保存中...",
+      "saveAndInsert": "保存して挿入",
+      "saveToLibrary": "ライブラリに保存",
+      "progressPreparingMusic": "ローカル音楽生成を準備中...",
+      "errors": {
+        "describeMusic": "生成したい音楽を説明してください。",
+        "musicgenUnsupported": "MusicGen には WebGPU が必要です。Chrome 113+、Edge 113+、または Safari 26+ をお試しください。",
+        "generateMusicFailed": "音楽を生成できませんでした。",
+        "saveAudioFailed": "メディアライブラリに音声を保存できませんでした。"
+      },
+      "notifications": {
+        "savedToLibrary": "\"{{fileName}}\" をメディアライブラリに保存しました。",
+        "savedAndAdded": "\"{{fileName}}\" を保存してタイムラインに追加しました。"
+      },
+      "defaultTtsPrompt": "Welcome to freecut. This voice was generated locally in the browser.",
+      "musicPresets": {
+        "lofiChillLabel": "Lo-fi チル",
+        "lofiChillPrompt": "温かい lo-fi ビート、ダスティなドラム、メロウなベース、夢のようなシンセリード",
+        "pop80sLabel": "80年代ポップ",
+        "pop80sPrompt": "太いドラムとシンセが印象的な80年代ポップトラック",
+        "rock90sLabel": "90年代ロック",
+        "rock90sPrompt": "大きなギターと重いドラムの90年代ロックソング",
+        "upbeatEdmLabel": "アップビート EDM",
+        "upbeatEdmPrompt": "明るく爽やかな EDM トラック、シンコペーションのドラム、空気感のあるパッド、強い感情 bpm: 130",
+        "countryLabel": "カントリー",
+        "countryPrompt": "アコースティックギターの入った明るいカントリーソング",
+        "lofiElectroLabel": "Lo-fi エレクトロ",
+        "lofiElectroPrompt": "オーガニックなサンプルを使った低速 BPM の lo-fi エレクトロチル"
+      }
+    },
+    "clearKeyframesDialog": {
+      "descriptionProperty": "選択した {{count}} 項目から {{property}} のキーフレームをクリアしますか？",
+      "descriptionAll": "選択した {{count}} 項目からすべてのキーフレームをクリアしますか？"
+    },
+    "localInferencePill": {
+      "jobs": "{{count}} 件のジョブ"
+    },
+    "subtitleSection": {
+      "cueCount": "{{count}} 件のキュー"
+    },
+    "propertiesSidebar": {
+      "clipsSelected": "{{count}} クリップを選択中"
+    }
+  },
+  "preview": {
+    "canvasDrop": {
+      "dropOnTimeline": "タイムラインにドロップ",
+      "compoundClipsTimeline": "コンパウンドクリップはタイムラインに配置するのが最適です。",
+      "presetsTimeline": "テキストと図形のプリセットはタイムラインに配置するのが最適です。",
+      "dropOneItem": "1項目をドロップ",
+      "oneMediaAtATime": "キャンバスにはメディアを1つずつ配置してください。",
+      "audioGoesOnTimeline": "音声はタイムラインへ",
+      "visualLayersOnly": "キャンバスへのドロップはビジュアルレイヤーのみ配置します。",
+      "dropToPlace": "ドロップして配置",
+      "addAtPlayhead": "このメディアを再生ヘッドとドロップ位置に追加します。",
+      "dropOneFile": "1ファイルをドロップ",
+      "oneVisualFileAtATime": "キャンバスへのドロップではビジュアルファイルを1つずつ読み込みます。",
+      "importAndPlace": "読み込んで配置",
+      "importAndPlaceDescription": "このファイルを読み込み、キャンバスに配置します。",
+      "noCompatibleTrack": "このドロップに使えるロック解除済みの互換トラックがありません。",
+      "unableToLoadMedia": "ドロップしたメディアを読み込めませんでした。",
+      "mediaNoLongerAvailable": "ドロップしたメディアはもう利用できません。",
+      "dragDropUnsupported": "このブラウザーはドラッグ＆ドロップに対応していません。Chrome または Edge を使用してください。",
+      "filesRejected": "一部のファイルが拒否されました: {{errors}}",
+      "dropAudioOnTimeline": "音声はタイムラインにドロップしてください。",
+      "unableToInspectVideo": "ドロップした動画を検査できませんでした。",
+      "unableToInspectFile": "ドロップしたファイルを検査できませんでした。",
+      "unableToImportFile": "ドロップしたファイルを読み込めませんでした。"
+    }
+  },
+  "settings": {
+    "ai": {
+      "scene": "{{count}} シーン"
+    },
+    "feedback": {
+      "completedForItems": "{{count}} 項目の {{action}} が完了しました。",
+      "couldntProcessItems": "{{count}} 項目の {{action}} を実行できませんでした{{detail}}"
+    },
+    "toasts": {
+      "itemsUpdated": "{{count}} 項目を更新しました。",
+      "itemsUpdatedFailed": "{{count}} 項目を更新しました。失敗: {{failed}}"
+    }
+  },
+  "projects": {
+    "legacyMigration": {
+      "errorsLogged": "{{count}} 件のエラーを記録"
+    },
+    "legacyMigrationErrors": {
+      "retryStillFailing": "再試行に {{count}} 件のエラーが残っています。",
+      "failedCount": "{{count}} 件の移行エラー"
+    },
+    "list": {
+      "movedToTrashCount": "{{count}} 件のプロジェクトをゴミ箱に移動しました。",
+      "selectedCount": "{{count}} 件を選択中",
+      "deleteN": "{{count}} 件を削除",
+      "projectCount": "{{count}} 件のプロジェクト",
+      "bulkDeleteTitle": "選択した {{count}} 件のプロジェクトを削除しますか？"
+    },
+    "trash": {
+      "emptiedTrash": "ゴミ箱から {{count}} 件のプロジェクトを削除しました。",
+      "emptiedTrashWithFailures": "{{count}} 件のプロジェクトを削除できませんでした。"
+    },
+    "relativeTime": {
+      "minutesAgo": "{{count}} 分前",
+      "hoursAgo": "{{count}} 時間前",
+      "daysAgo": "{{count}} 日前",
+      "weeksAgo": "{{count}} 週間前",
+      "monthsAgo": "{{count}} か月前",
+      "yearsAgo": "{{count}} 年前"
+    },
+    "settings": {
+      "hotkeys": {
+        "importedCommands": "{{count}} 件のコマンドをインポートしました",
+        "remappedCount": "{{count}} 件を再割り当て",
+        "ignoredCount": "{{count}} 件を無視",
+        "customCount": "{{count}} 件のカスタム"
+      },
+      "localInference": {
+        "activeJobs": "{{count}} 件のアクティブなジョブ",
+        "unloadedToast": "{{count}} 件のローカルランタイムをアンロードしました。"
+      }
+    }
+  },
+  "sceneBrowser": {
+    "counts": {
+      "clip_one": "{{count}} クリップ",
+      "clip_other": "{{count}} クリップ",
+      "scene_one": "{{count}} シーン",
+      "scene_other": "{{count}} シーン",
+      "match_one": "{{count}} 件一致",
+      "match_other": "{{count}} 件一致"
+    },
+    "sort": {
+      "label": "並び替え",
+      "relevance": "関連性",
+      "time": "タイムスタンプ",
+      "name": "メディア名"
+    },
+    "scope": {
+      "placeholder": "範囲",
+      "allMedia": "すべてのメディア",
+      "scopedTo": "範囲: {{name}}",
+      "scopedToAll": "範囲: すべてのメディア"
+    },
+    "banners": {
+      "downloadingSemanticModel": "セマンティックモデルをダウンロード中（約 22 MB、初回のみ）...",
+      "indexingCaptions": "セマンティック検索のためキャプションをインデックス中 - {{current}}/{{total}} クリップ",
+      "reanalyzing": "<strong>{{label}}</strong> を再解析中 - 完了するとシーンが更新されます。"
+    },
+    "analyze": {
+      "title": "AI でメディアを解析",
+      "button": "解析",
+      "scope": "「{{name}}」を解析",
+      "newMedia": "新しいメディアを解析",
+      "reanalyzeAll": "すべて再解析"
+    },
+    "view": {
+      "list": "リスト表示",
+      "grid": "グリッド表示"
+    },
+    "empty": {
+      "noCaptionsTitle": "AI キャプションがまだありません。",
+      "noCaptionsPrefix": "メディアライブラリのクリップで",
+      "noCaptionsSuffix": "を実行すると、検索可能なシーンキャプションを生成できます。",
+      "noMatchesTitle": "検索に一致するシーンがありません。",
+      "noMatchesPrefix": "短いクエリを試すか、範囲を次に切り替えてください:"
+    },
+    "search": {
+      "exitColorMode": "カラーモードを終了",
+      "colorTitle": "色で検索",
+      "color": "色",
+      "semanticTitle": "セマンティック検索（意味で検索）",
+      "keywordTitle": "キーワード検索（完全一致）",
+      "semanticLabel": "セマンティック検索",
+      "keywordLabel": "キーワード検索",
+      "semantic": "セマンティック",
+      "keyword": "キーワード",
+      "keywordDescription": "完全な単語一致",
+      "semanticDescription": "意味で一致",
+      "clearReference": "参照をクリアして別の色を選ぶ",
+      "findingSimilarPalette": "似たパレットのシーンを検索中...",
+      "semanticPlaceholder": "意味で検索 - 「水面に沈む夕日」「笑う人々」...",
+      "keywordPlaceholder": "見える内容でシーンを検索...",
+      "clearSearch": "検索をクリア",
+      "similarPaletteTo": "{{label}} に似たパレット - クリックでクリア"
+    },
+    "matchTiers": {
+      "strong": "強",
+      "good": "良",
+      "fair": "可"
+    },
+    "match": {
+      "keyword": "キーワード",
+      "keywordHint": "キーワード一致 · コサイン {{score}}",
+      "meaningWithTier": "意味 · {{tier}}",
+      "textEmbeddingHint": "テキスト埋め込みのコサイン: {{score}}",
+      "visualWithTier": "ビジュアル · {{tier}}",
+      "clipHint": "CLIP コサイン: {{score}}",
+      "colorWithName": "色 · {{color}}",
+      "paletteColorHint": "{{color}} でのパレット一致 (ΔE 2000)",
+      "paletteDistance": "パレット · ΔE {{distance}}",
+      "paletteDistanceHint": "参照パレットへの加重平均 ΔE 2000",
+      "belowThreshold": "しきい値未満",
+      "cosineHint": "コサイン {{score}}",
+      "top": "トップ",
+      "topHint": "最高スコアの一致"
+    },
+    "palette": {
+      "libraryColor": "ライブラリの色",
+      "empty": "まだ索引付けされたパレットがありません - AI キャプションを実行して追加してください。",
+      "moreColors_one": "あと {{count}} 色",
+      "moreColors_other": "あと {{count}} 色",
+      "showMoreColors_one": "あと {{count}} 色を表示",
+      "showMoreColors_other": "あと {{count}} 色を表示",
+      "moreColorsTitle": "その他の色",
+      "findColor": "この色のシーンを検索（ライブラリの {{percent}}%）",
+      "findSimilar": "似たパレットのシーンを検索",
+      "pickedSwatch": "選択したスウォッチ"
+    },
+    "scene": {
+      "previewAndDragHint": "クリックでソースモニターでプレビュー - ドラッグでタイムラインに追加"
+    }
+  }
+}

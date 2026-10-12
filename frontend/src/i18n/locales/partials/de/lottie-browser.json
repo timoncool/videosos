@@ -1,0 +1,24 @@
+{
+  "lottieBrowser": {
+    "tabLabel": "Lottie",
+    "searchPlaceholder": "Animationen suchen",
+    "clearSearch": "Suche löschen",
+    "categories": {
+      "featured": "Empfohlen",
+      "popular": "Beliebt",
+      "recent": "Neu"
+    },
+    "addToMedia": "Zur Medienbibliothek hinzufügen",
+    "added": "Zur Medienbibliothek hinzugefügt",
+    "importFailed": "Import fehlgeschlagen – zum Wiederholen klicken",
+    "by": "von {{author}}",
+    "empty": "Keine Animationen gefunden",
+    "error": "Animationen konnten nicht geladen werden",
+    "retry": "Erneut versuchen",
+    "previous": "Vorherige Seite",
+    "next": "Nächste Seite",
+    "goToPage": "Zur Seite",
+    "ofTotal": "von {{total}}",
+    "attributionNote": "Kostenlose Animationen von LottieFiles unter der <license>Lottie Simple License</license>. Nenne beim Veröffentlichen den ursprünglichen Urheber."
+  }
+}

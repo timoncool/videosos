@@ -1,0 +1,23 @@
+/**
+ * Adapter exports for media-library dependencies.
+ * Preview modules should import media-library stores/services/utils from here.
+ */
+
+export { useMediaLibraryStore } from '@/features/media-library/stores/media-library-store'
+export { proxyService } from '@/features/media-library/services/proxy-service'
+export { mediaProcessorService } from '@/features/media-library/services/media-processor-service'
+export { getMediaType, getMimeType } from '@/features/media-library/utils/validation'
+export { getProjectBrokenMediaIds } from '@/features/media-library/utils/broken-media'
+export {
+  resolveMediaUrl,
+  resolveProxyUrl,
+  resolveMediaUrls,
+} from '@/features/media-library/utils/media-resolver'
+export { clearPendingMediaRequests } from '@/features/media-library/utils/media-resolver-requests'
+export { importMediaLibraryService } from '@/features/media-library/services/media-library-service-loader'
+export { FileAccessError } from '@/features/media-library/services/file-access'
+export { extractValidMediaFileEntriesFromDataTransfer } from '@/features/media-library/utils/file-drop'
+export {
+  getMediaDragData,
+  clearMediaDragData,
+} from '@/features/media-library/utils/drag-data-cache'

@@ -1,0 +1,24 @@
+{
+  "lottieBrowser": {
+    "tabLabel": "Lottie",
+    "searchPlaceholder": "アニメーションを検索",
+    "clearSearch": "検索をクリア",
+    "categories": {
+      "featured": "注目",
+      "popular": "人気",
+      "recent": "新着"
+    },
+    "addToMedia": "メディアライブラリに追加",
+    "added": "メディアライブラリに追加しました",
+    "importFailed": "インポートに失敗しました。クリックして再試行",
+    "by": "作成者: {{author}}",
+    "empty": "アニメーションが見つかりません",
+    "error": "アニメーションを読み込めませんでした",
+    "retry": "再試行",
+    "previous": "前のページ",
+    "next": "次のページ",
+    "goToPage": "ページへ移動",
+    "ofTotal": "/ {{total}}",
+    "attributionNote": "LottieFiles の無料アニメーション（<license>Lottie Simple ライセンス</license>）。公開時は元の作成者をクレジットしてください。"
+  }
+}

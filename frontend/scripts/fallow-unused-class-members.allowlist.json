@@ -1,0 +1,493 @@
+{
+  "unusedClassMembers": [
+    {
+      "path": "src/runtime/renderer/canvas-pool.ts",
+      "reason": "Audited as a live typed-call surface after the unused-class-members cleanup pass.",
+      "members": [
+        {
+          "parentName": "TextMeasurementCache",
+          "memberName": "measure",
+          "kind": "class_method"
+        }
+      ]
+    },
+    {
+      "path": "src/runtime/renderer/canvas-video-extractor.ts",
+      "reason": "Audited as a live extractor API reached through shared wrappers and preview/export renderers.",
+      "members": [
+        {
+          "parentName": "VideoFrameExtractor",
+          "memberName": "captureFrame",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "VideoFrameExtractor",
+          "memberName": "drawFrameWithCapture",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "VideoFrameExtractor",
+          "memberName": "getDimensions",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "VideoFrameExtractor",
+          "memberName": "getDuration",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "VideoFrameExtractor",
+          "memberName": "getLastFailureKind",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "VideoFrameExtractor",
+          "memberName": "init",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "VideoFrameExtractor",
+          "memberName": "isBatchPrewarmAvailable",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "VideoFrameExtractor",
+          "memberName": "prewarmBatch",
+          "kind": "class_method"
+        }
+      ]
+    },
+    {
+      "path": "src/runtime/renderer/shared-video-extractor.ts",
+      "reason": "SharedVideoExtractorPool is consumed through the client renderer's pool abstraction; dispose releases every extractor lane during renderer teardown.",
+      "members": [
+        {
+          "parentName": "SharedVideoExtractorPool",
+          "memberName": "dispose",
+          "kind": "class_method"
+        }
+      ]
+    },
+    {
+      "path": "src/features/media-library/transcription/browser-transcriber.ts",
+      "reason": "Audited as a live transcription service API reached through adapter instances.",
+      "members": [
+        {
+          "parentName": "BrowserTranscriber",
+          "memberName": "transcribe",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "TranscribeStream",
+          "memberName": "collect",
+          "kind": "class_method"
+        }
+      ]
+    },
+    {
+      "path": "src/features/preview/utils/scrubbing-cache.ts",
+      "reason": "Audited as a live preview cache API reached through render-pump and export cache integration.",
+      "members": [
+        {
+          "parentName": "ScrubbingCache",
+          "memberName": "setEvictionHint",
+          "kind": "class_method"
+        }
+      ]
+    },
+    {
+      "path": "src/infrastructure/audio/time-stretch.ts",
+      "reason": "Audited as retained SoundTouch-compatible audio algorithm API surface.",
+      "members": [
+        {
+          "parentName": "TimeStretchFilter",
+          "memberName": "handleSampleData",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "TimeStretchFilter",
+          "memberName": "onEnd",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "TimeStretchFilter",
+          "memberName": "position",
+          "kind": "class_method",
+          "count": 2
+        },
+        {
+          "parentName": "TimeStretchProcessor",
+          "memberName": "clone",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "TimeStretchProcessor",
+          "memberName": "pitchSemitones",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "TimeStretchProcessor",
+          "memberName": "process",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "TimeStretchProcessor",
+          "memberName": "rateChange",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "TimeStretchProcessor",
+          "memberName": "tempoChange",
+          "kind": "class_method"
+        }
+      ]
+    },
+    {
+      "path": "src/infrastructure/gpu-compositor/compositor-pipeline.ts",
+      "reason": "Audited as a live GPU compositor API reached through typed render contexts.",
+      "members": [
+        {
+          "parentName": "CompositorPipeline",
+          "memberName": "compositeToCanvas",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "CompositorPipeline",
+          "memberName": "getDevice",
+          "kind": "class_method"
+        }
+      ]
+    },
+    {
+      "path": "src/infrastructure/gpu-effects/effects-pipeline.ts",
+      "reason": "Audited as a live GPU effects API reached through export and preview typed contexts.",
+      "members": [
+        {
+          "parentName": "EffectsPipeline",
+          "memberName": "applyEffectsToTexture",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "EffectsPipeline",
+          "memberName": "applyEffectsToVideo",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "EffectsPipeline",
+          "memberName": "applyEffectsToVideoTexture",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "EffectsPipeline",
+          "memberName": "applyTextureEffectsToTexture",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "EffectsPipeline",
+          "memberName": "beginBatch",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "EffectsPipeline",
+          "memberName": "endBatch",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "EffectsPipeline",
+          "memberName": "waitForSubmittedWork",
+          "kind": "class_method"
+        }
+      ]
+    },
+    {
+      "path": "src/infrastructure/gpu-masks/mask-texture-manager.ts",
+      "reason": "Audited as a live compositor fallback-mask API.",
+      "members": [
+        {
+          "parentName": "MaskTextureManager",
+          "memberName": "getFallbackView",
+          "kind": "class_method"
+        }
+      ]
+    },
+    {
+      "path": "src/infrastructure/gpu-scopes/scope-renderer.ts",
+      "reason": "Audited as a live color-scopes renderer API reached through refs and GPU setup helpers.",
+      "members": [
+        {
+          "parentName": "ScopeRenderer",
+          "memberName": "configureCanvas",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "ScopeRenderer",
+          "memberName": "renderHistogram",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "ScopeRenderer",
+          "memberName": "renderVectorscope",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "ScopeRenderer",
+          "memberName": "renderWaveforms",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "ScopeRenderer",
+          "memberName": "setMatrix",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "ScopeRenderer",
+          "memberName": "setRange",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "ScopeRenderer",
+          "memberName": "uploadFromCanvas",
+          "kind": "class_method"
+        }
+      ]
+    },
+    {
+      "path": "src/infrastructure/gpu-transitions/transition-pipeline.ts",
+      "reason": "Audited as a live GPU transition API reached through typed item render contexts.",
+      "members": [
+        {
+          "parentName": "TransitionPipeline",
+          "memberName": "renderTexturesToTexture",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "TransitionPipeline",
+          "memberName": "renderToTexture",
+          "kind": "class_method"
+        }
+      ]
+    },
+    {
+      "path": "src/infrastructure/lottie/lottie-frame-provider.ts",
+      "reason": "Live provider surface: LottieRenderer is constructed by preview/source-composition and the composition-runtime player; renderFrame is called through the LottieExportProvider-typed field in canvas-item-renderer.",
+      "members": [
+        {
+          "parentName": "LottieExportProvider",
+          "memberName": "renderFrame",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "LottieRenderer",
+          "memberName": "frameRate",
+          "kind": "class_method"
+        }
+      ]
+    },
+    {
+      "path": "src/runtime/player/clock/Clock.ts",
+      "reason": "Audited as retained player clock API used through hooks, external clock injection, and public controls.",
+      "members": [
+        {
+          "parentName": "Clock",
+          "memberName": "clearInOutPoints",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "Clock",
+          "memberName": "durationInFrames",
+          "kind": "class_method",
+          "count": 2
+        },
+        {
+          "parentName": "Clock",
+          "memberName": "durationInSeconds",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "Clock",
+          "memberName": "fps",
+          "kind": "class_method",
+          "count": 2
+        },
+        {
+          "parentName": "Clock",
+          "memberName": "frameToTime",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "Clock",
+          "memberName": "getState",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "Clock",
+          "memberName": "goToEnd",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "Clock",
+          "memberName": "goToStart",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "Clock",
+          "memberName": "inFrame",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "Clock",
+          "memberName": "isFrameInRange",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "Clock",
+          "memberName": "isPlaying",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "Clock",
+          "memberName": "loop",
+          "kind": "class_method",
+          "count": 2
+        },
+        {
+          "parentName": "Clock",
+          "memberName": "onFrameChange",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "Clock",
+          "memberName": "onPlayStateChange",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "Clock",
+          "memberName": "outFrame",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "Clock",
+          "memberName": "seekToTime",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "Clock",
+          "memberName": "setInPoint",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "Clock",
+          "memberName": "setOutPoint",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "Clock",
+          "memberName": "stepBackward",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "Clock",
+          "memberName": "stepForward",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "Clock",
+          "memberName": "timeToFrame",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "Clock",
+          "memberName": "toggle",
+          "kind": "class_method"
+        }
+      ]
+    },
+    {
+      "path": "src/runtime/player/player-emitter.ts",
+      "reason": "Audited as retained player event surface and dispatch API.",
+      "members": [
+        {
+          "parentName": "PlayerEmitter",
+          "memberName": "dispatchEnded",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "PlayerEmitter",
+          "memberName": "dispatchError",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "PlayerEmitter",
+          "memberName": "dispatchFullscreenChange",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "PlayerEmitter",
+          "memberName": "dispatchPause",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "PlayerEmitter",
+          "memberName": "dispatchPlay",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "PlayerEmitter",
+          "memberName": "dispatchRateChange",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "PlayerEmitter",
+          "memberName": "dispatchResume",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "PlayerEmitter",
+          "memberName": "dispatchSeek",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "PlayerEmitter",
+          "memberName": "dispatchTimeUpdate",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "PlayerEmitter",
+          "memberName": "dispatchVolumeChange",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "PlayerEmitter",
+          "memberName": "dispatchWaiting",
+          "kind": "class_method"
+        }
+      ]
+    },
+    {
+      "path": "src/runtime/player/video/VideoSourcePool.ts",
+      "reason": "Audited as a live video source pool API reached through preview/export integrations.",
+      "members": [
+        {
+          "parentName": "VideoSourcePool",
+          "memberName": "dispose",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "VideoSourcePool",
+          "memberName": "preloadSource",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "VideoSourcePool",
+          "memberName": "pruneUnused",
+          "kind": "class_method"
+        },
+        {
+          "parentName": "VideoSourcePool",
+          "memberName": "seekClip",
+          "kind": "class_method"
+        }
+      ]
+    }
+  ]
+}

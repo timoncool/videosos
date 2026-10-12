@@ -1,0 +1,11 @@
+{
+  "build": {
+    "beforeBundleCommand": ""
+  },
+  "bundle": {
+    "active": true,
+    "resources": {
+      "staging/frontend/dist": "frontend/dist"
+    }
+  }
+}

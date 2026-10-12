@@ -1,0 +1,28 @@
+{
+  "transcript": {
+    "sourceAnalyzed": "전체 소스 분석 완료",
+    "detectedRange": "{{start}}~{{end}} 구간에서 음성을 감지했습니다. 무음 또는 음악만 있는 구간은 표시되지 않습니다.",
+    "title": "전사",
+    "tabLabel": "전사",
+    "emptySelection": "전사를 편집하려면 비디오 또는 오디오 클립을 선택하세요.",
+    "searchPlaceholder": "전사 검색",
+    "nextMatch": "다음 일치",
+    "previousMatch": "이전 일치",
+    "clearSearch": "검색 지우기",
+    "noTranscript": "이 클립에는 아직 전사가 없습니다.",
+    "transcriptionFailed": "전사에 실패했습니다.",
+    "tryAgain": "다시 시도",
+    "largeTurboFallback": "Large Turbo의 메모리가 부족합니다. Whisper Small로 다시 시도 중…",
+    "generate": "전사 생성",
+    "transcribing": "전사 중…",
+    "loading": "전사 불러오는 중…",
+    "wordsSelected_one": "{{count}}개 단어 선택됨",
+    "wordsSelected_other": "{{count}}개 단어 선택됨",
+    "selectHint": "단어를 클릭하면 해당 위치로 이동하고, 드래그하면 선택됩니다.",
+    "deleteSelection": "삭제",
+    "toastRemoved": "클립 {{count}}개를 제거했습니다",
+    "toastNothingRemoved": "제거된 항목이 없습니다",
+    "toastRemoveFailed": "선택한 단어를 제거할 수 없습니다",
+    "toastTranscribeFailed": "전사에 실패했습니다"
+  }
+}

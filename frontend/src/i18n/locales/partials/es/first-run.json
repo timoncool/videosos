@@ -1,0 +1,11 @@
+{
+  "firstRun": {
+    "title": "Welcome to VideoSOS 2",
+    "what": "Generate images, video, music, voices and sound effects with the best models of OpenRouter, fal and Runware, and edit them on a multitrack timeline into a finished video.",
+    "keys": "Generation runs on your own accounts: open a project, the Generate tab, and paste a provider key there or in Settings, Providers and agent. You pay the provider directly; VideoSOS shows the price before each run.",
+    "agent": "An AI agent (Claude and others) can drive VideoSOS through its MCP server; the address is in Settings.",
+    "statistics": "Send anonymous statistics",
+    "statisticsHint": "How many generations ran and on which models, the version and the system. Never prompts, files or keys. You can change it in Settings.",
+    "start": "Start"
+  }
+}

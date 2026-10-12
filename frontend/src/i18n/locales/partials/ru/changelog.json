@@ -1,0 +1,18 @@
+{
+  "changelog": {
+    "homeAria": "Главная VideoSOS",
+    "backToHome": "На главную",
+    "releaseNotes": "Примечания к выпуску",
+    "title": "Что нового в VideoSOS",
+    "description": "Еженедельный дайджест новых инструментов монтажа, улучшений и исправлений. Последний выпуск открыт; разверните предыдущие недели, чтобы увидеть полный список изменений.",
+    "latest": "Последний",
+    "changeCount_one": "{{count}} изменение",
+    "changeCount_few": "{{count}} изменения",
+    "changeCount_many": "{{count}} изменений",
+    "changeCount_other": "{{count}} изменения",
+    "initialRelease": "Первый выпуск",
+    "ctaTitle": "Готовы что-то создать?",
+    "ctaDescription": "Откройте VideoSOS и опробуйте новые инструменты в деле.",
+    "openVideoSOS": "Открыть VideoSOS"
+  }
+}

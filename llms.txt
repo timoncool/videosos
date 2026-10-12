@@ -1,0 +1,9 @@
+# VideoSOS
+
+> VideoSOS is a desktop AI video studio for Windows: it generates images, video, music, speech, sound effects and
+> text through the user's own OpenRouter, fal and Runware keys and edits them on a multitrack timeline into a video.
+> While it runs it serves MCP at http://127.0.0.1:8796/mcp.
+
+- [Agent guide (MCP skill)](docs/mcp-skill.md): every tool, how to generate, edit the timeline and export.
+- [README](README.md): what it does, where files live, how it is built.
+- Connect: `claude mcp add --transport http videosos http://127.0.0.1:8796/mcp`, then call `studio_status`.

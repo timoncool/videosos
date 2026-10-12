@@ -1,291 +1,170 @@
 <div align="center">
 
-# VideoSOS
+<img src="docs/brand/icon.svg" width="88" alt="VideoSOS logo"/>
 
-**Open-source AI video editor with 100+ models — text-to-video, image-to-video, lip sync, music, voiceover.**
+# VideoSOS 2
 
-[![Stars](https://img.shields.io/github/stars/timoncool/videosos?style=flat-square)](https://github.com/timoncool/videosos/stargazers)
+**A desktop AI video studio: generate images, video, music, voices, sound effects and text with the best models of OpenRouter, fal and Runware, and cut them on a real multitrack timeline into a finished video. One native app (Rust + Tauri), your own keys, your files on your disk, and an MCP server so an AI agent can make the video with you.**
+
 [![License](https://img.shields.io/github/license/timoncool/videosos?style=flat-square)](LICENSE)
-[![Last Commit](https://img.shields.io/github/last-commit/timoncool/videosos?style=flat-square)](https://github.com/timoncool/videosos/commits)
-[![Demo](https://img.shields.io/badge/demo-live-brightgreen?style=flat-square)](https://videosos.vercel.app/)
+[![Stars](https://img.shields.io/github/stars/timoncool/videosos?style=flat-square)](https://github.com/timoncool/videosos/stargazers)
+[![Latest release](https://img.shields.io/github/v/release/timoncool/videosos?style=flat-square)](https://github.com/timoncool/videosos/releases)
+[![Downloads](https://img.shields.io/github/downloads/timoncool/videosos/total?style=flat-square)](https://github.com/timoncool/videosos/releases)
+[![Last commit](https://img.shields.io/github/last-commit/timoncool/videosos?style=flat-square)](https://github.com/timoncool/videosos/commits)
 
-**[Try the Live Demo](https://videosos.vercel.app/)** · **[Русская версия](./README.ru.md)**
+**English** · [Русский](README.ru.md)
+
+![VideoSOS 2 — generation and editing in one window](docs/shots/editor-en.png)
 
 </div>
 
-Create professional videos with AI in your browser. Free, open-source video editor featuring Google Veo 3.1, FLUX, Gemini 2.5 Flash, Imagen 4, and 100+ top AI models for text-to-video, image-to-video, text-to-image generation, image editing, music composition, and voiceover creation. No uploads, complete privacy, advanced timeline editing.
+## What it is
 
-## Screenshots
+**VideoSOS 2** puts AI generation and video editing into one window. On the left you pick what to make —
+an image, an edit of an image, a video from text or from a frame, a lip-synced talking head, an upscale, a
+removed background, music, a voice-over, sound effects, a transcript or a script — and a model of **OpenRouter,
+fal or Runware**. The form is drawn from the model's own description, so every setting the model takes is
+there, and the price is shown **before** you press Generate. The result lands in the project's media library
+and, if you like, straight onto the timeline at the playhead.
 
-### Video Editor — Main Interface
-![VideoSOS Video Editor - Main Interface](./public/screenshot-app.png)
+The editor is a full NLE: multiple video and audio tracks, ripple/rolling/slip/slide trims, transitions,
+keyframes with a Bezier graph, masks, blend modes, color grading with scopes, text and shapes, captions, and a
+fast export to MP4, WebM, MOV or MKV that runs on your graphics card.
 
-### Video Editor — Project Statistics
-![VideoSOS Video Editor - Project Statistics](./public/screenshot-stats.png)
+VideoSOS 1 was a web app in the browser. **Version 2 is a native desktop program**: one `.exe` with its server
+written in Rust, projects and generations kept as plain files on your disk, jobs that survive a restart, and no
+account of ours anywhere — you pay the providers directly with your own keys.
 
----
+## Generate everything
 
-## Key Features
+| Task | What you get | Providers |
+|---|---|---|
+| Image | text to image | OpenRouter, fal, Runware |
+| Edit image | image with references or a mask | OpenRouter, fal, Runware |
+| Video | text to video, first frame, first and last frame, references | OpenRouter, fal, Runware |
+| Edit video | video to video, extend, restyle | OpenRouter, fal, Runware |
+| Lip sync | a face that speaks your audio | fal, Runware |
+| Upscale | images and videos in higher resolution | fal, Runware, OpenRouter (video) |
+| Remove background | transparent cut-outs | fal, Runware |
+| Music | songs and scores | fal, Runware |
+| Voice | text to speech in dozens of voices and languages | OpenRouter, fal, Runware |
+| Sound effects | foley from text or from a video | fal, Runware |
+| Transcribe | speech to text | OpenRouter, fal |
+| Text | scripts, prompts, ideas — any LLM of OpenRouter | OpenRouter |
 
-### 🤖 100+ AI Models
+- **Live catalogues.** Models are read from the providers themselves — over a thousand, newest first, with each
+  provider's price line; retiring models are marked. Nothing is hard-coded.
+- **Price before you run.** Rates by second, resolution, sound and input images are worked out from the form; after
+  the run the provider's own bill is recorded. Settings, Providers shows what you spent today and in total.
+- **Files as inputs.** Drag a picture, a clip or a sound from the library — or a result of an earlier generation —
+  into a slot: first frame, last frame, references, the video to lip-sync.
+- **Never paid twice.** A job is saved before it is sent; after a restart a job that was sent is followed, not sent
+  again. Results are downloaded at once, before the providers' links expire.
+- **History.** Every run with its model, settings, price and files: run it again, load it back into the form, put it
+  on the timeline.
 
-VideoSOS integrates with **fal.ai** and **Runware.ai** to bring you cutting-edge AI generation capabilities:
+## For AI agents
 
-- **🎬 Video Generation**: Text-to-video and image-to-video with state-of-the-art models including Google Veo 3.1, Kling 2.5, and Hailuo-02
-- **🎨 Image Generation**: Text-to-image with cutting-edge models including Gemini 2.5 Flash, Imagen 4.0, FLUX.1 Pro, and Ideogram V3
-- **✏️ Image Editing**: AI-powered photo editing with leading models including Gemini 2.5 Flash Edit, FLUX.1 Kontext, and Qwen Image Edit
-- **🎵 Audio Generation**: Music composition with Stable Audio and natural voiceovers with multiple voices
-
-Switch between providers seamlessly or use both simultaneously for maximum flexibility. [See complete model list below](#supported-ai-models).
-
-### 🔒 100% Privacy-First Architecture
-Everything runs locally in your browser. Your projects, media, and API keys are stored in IndexedDB on your device. No uploads, no tracking, no data collection.
-
-### 🎬 Timeline Editor
-Advanced multi-track video editing with drag-and-drop functionality, precise keyframe control, audio waveform visualization, and real-time preview. Support for multiple aspect ratios (16:9, 9:16, 1:1) perfect for social media platforms.
-
-### 💰 Cost Tracking & Project Statistics
-Built-in cost tracking and comprehensive project analytics help you stay within budget. Track generation costs per media item, view total project expenses, and get detailed breakdowns by media type, AI provider, and model usage. Perfect for managing your AI generation budget and analyzing usage patterns.
-
-### 🔍 Advanced Model Selection
-Enhanced model selection interface with intelligent search, filtering by provider (FAL/Runware), and categorization by type (text-to-video, image-to-video, text-to-image, image editing). Real-time pricing display for FAL models helps you make informed decisions before generating content.
-
-### 🎨 Multi-Modal Content Generation
-Create complete video projects with AI-generated images, videos, background music, and voiceovers. Advanced features include camera movement controls, video upscaling with Topaz, and automatic lip-sync for voiceovers.
-
-### ⚡ Client-Side Video Processing
-Powered by **FFmpeg.wasm** and **Remotion** for high-quality video rendering entirely in the browser. No server uploads, no waiting in queues. Export videos with proper audio mixing and precise timing control.
-
-### 🌍 International & Accessible
-Full internationalization support (English/Russian) with keyboard shortcuts for power users. Intuitive UI designed for both beginners and professionals.
-
-## Supported AI Models
-
-VideoSOS features 100+ AI models across video generation, image generation, and image editing. All models are available through dual provider support for maximum reliability.
-
-### Complete Model List by Category
-
-#### Text-to-Video Models
-| Model | Provider | Description |
-|-------|----------|-------------|
-| Veo 3.1 | FAL, Runware | Google's latest video model with native audio |
-| Veo 3.1 Fast | FAL, Runware | Faster version of Veo 3.1 |
-| Veo 3 | FAL, Runware | Cinematic video with synchronized audio |
-| Veo 3 Fast | FAL | Fast cinematic video generation |
-| Kling 2.5 | FAL, Runware | High-quality video synthesis |
-| Hailuo-02 | FAL, Runware | Advanced video generation |
-
-#### Image-to-Video Models
-| Model | Provider | Description |
-|-------|----------|-------------|
-| Veo 3.1 Image-to-Video | FAL | Animate images with Veo 3.1 |
-| Veo 3.1 Fast Image-to-Video | FAL | Fast image animation |
-| Veo 3 Image-to-Video | FAL, Runware | Animate static images |
-| Veo 3 Fast Image-to-Video | FAL, Runware | Fast image animation |
-
-#### Text-to-Image Models
-| Model | Provider | Description |
-|-------|----------|-------------|
-| Gemini 2.5 Flash Image | FAL, Runware | Ultra-fast image generation |
-| Imagen 4.0 Ultra | FAL, Runware | Google's highest quality image model |
-| Imagen 4.0 Preview Fast | FAL, Runware | Fast high-quality images |
-| Hunyuan Image 3.0 | FAL, Runware | State-of-the-art image synthesis |
-| Seedream 4.0 | FAL, Runware | High-resolution image generation |
-| Seedream 3.0 | FAL, Runware | Quality image synthesis |
-| GPT Image 1 | FAL, Runware | OpenAI's image model |
-| FLUX.1 Pro | FAL, Runware | Professional image generation |
-| Ideogram V3 | FAL, Runware | Text rendering in images |
-
-#### Image Editing Models
-| Model | Provider | Description |
-|-------|----------|-------------|
-| Gemini 2.5 Flash Edit | FAL, Runware | High-quality image editing |
-| FLUX.1 Kontext Pro | FAL, Runware | Context-aware editing |
-| FLUX.1 Kontext Dev | FAL, Runware | Developer-friendly editing |
-| FLUX.1 Kontext Max | FAL, Runware | Maximum quality editing |
-| Qwen Image Edit | FAL, Runware | Intelligent image modification |
-| Reve v1 Edit | FAL | Advanced editing capabilities |
-| Seedream 4.0 Edit | FAL, Runware | High-quality transformations |
-| GPT Image 1 Edit | FAL, Runware | OpenAI image editing |
-
-### AI Providers
-
-VideoSOS supports multiple AI providers simultaneously:
-
-- **[fal.ai](https://fal.ai)** - Comprehensive AI model infrastructure with 50+ models for image, video, and audio generation
-- **[Runware.ai](https://runware.ai)** - High-performance AI inference platform with 100+ models including FLUX, Google Imagen, Ideogram, Kling, and more
-
-You can use either provider independently or both simultaneously. Simply add your API keys in the Settings dialog (click the gear icon in the app).
-
-#### Getting API Keys
-
-- **FAL API Key**: Get it from [fal.ai/dashboard/keys](https://fal.ai/dashboard/keys)
-- **Runware API Key**: Sign up at [runware.ai](https://runware.ai) and get your key from the dashboard
-
-Both API keys are stored locally in your browser and never sent to our servers.
-
-## For Developers
-
-### Updating Model Information
-
-VideoSOS includes automated scripts to keep model information up-to-date with provider APIs. Here's how to update models:
-
-#### FAL Models
-
-Run the FAL model update script to fetch latest models and pricing:
+While VideoSOS is open it serves MCP at `http://127.0.0.1:8796/mcp`. An agent such as Claude Code, Claude Desktop,
+Cursor or Codex can do what the window does: pick models and read their settings, estimate prices, generate, wait for
+the results, read and edit the open project's timeline (each edit is an undoable step you see happen), import media,
+move the playhead, take a picture of the window and export the video. Every action is shown in the window.
 
 ```bash
-npm run update-fal-models
+claude mcp add --transport http videosos http://127.0.0.1:8796/mcp
 ```
 
-This script:
-- Fetches all available models from FAL API
-- Updates model schemas and parameters
-- Syncs pricing information
-- Updates `src/lib/fal.ts` and related files
+Other clients: `{ "mcpServers": { "videosos": { "type": "streamable-http", "url": "http://127.0.0.1:8796/mcp" } } }`.
+The server serves its guide as the resource `videosos://skill` (prompt `videosos`) — the same text as
+[docs/mcp-skill.md](docs/mcp-skill.md). Generations are paid: Settings, Providers and agent sets **a daily limit for
+agents**, past which `generate` is refused. Only agents on this computer and the program's own window may connect;
+provider keys are never shown to them.
 
-#### Runware Models
+## Quick start
 
-For Runware models, manually enrich model configurations in `src/lib/runware-models.ts` based on [Runware documentation](https://docs.runware.ai/):
+1. Download `VideoSOS_2.0.0_x64-setup.exe` (or the portable zip) from the
+   [latest release](https://github.com/timoncool/videosos/releases/latest) and run it.
+2. Create a project, open the **Generate** tab on the left and paste a key of
+   [OpenRouter](https://openrouter.ai/settings/keys), [fal](https://fal.ai/dashboard/keys) or
+   [Runware](https://my.runware.ai/keys) when asked. One provider is enough to start.
+3. Pick a task and a model, write what you want, press **Generate**.
 
-1. Check model documentation for available parameters
-2. Add `availableDimensions`, `hasNegativePrompt`, `availableSteps`, etc.
-3. Verify changes match actual API capabilities
+## Requirements
 
-**Example enrichment:**
-```typescript
-{
-  endpointId: "google:4@1",
-  label: "Gemini Flash Image 2.5",
-  hasNegativePrompt: true,
-  availableDimensions: [
-    { width: 1024, height: 1024, label: "1024×1024 (1:1)" },
-    { width: 1824, height: 1024, label: "1824×1024 (16:9)" },
-    // ... more dimensions
-  ],
-}
-```
+- Windows 10/11 x64 with Microsoft Edge WebView2 (the installer gets it when missing).
+- A graphics card with WebGPU (any recent NVIDIA, AMD or Intel) for the preview and the fast export.
+- An internet connection for generation; editing and export work offline.
 
-#### Safe Updates
+## Where your files are
 
-The project includes safe update scripts that preserve existing configurations:
+Everything lives beside the program (or in `%LOCALAPPDATA%\VideoSOS` when that folder is read-only):
+`data\workspace` — projects, media, thumbnails and exports; `data\generations` — the files of every generation;
+`secrets` — provider keys; `data\videosos.db` — the generation history. Uninstalling keeps them unless you tick
+*Delete the application data*.
 
-```bash
-# Apply FAL parameter updates safely
-npm run safe-apply-parameters
-```
+## Anonymous statistics and news
 
-### Tech Stack
+The first-run screen has a switch **Send anonymous statistics**; the same switch is in Settings, Providers and agent.
+While it is on, the program sends once a day: a random install id, the version, the OS and the window language, how
+many generations finished or failed by task, and which models ran. Never prompts, files, keys or anything personal.
+`DO_NOT_TRACK=1` or `STUDIO_TELEMETRY=0` turns it off entirely.
 
-- [fal.ai](https://fal.ai) - AI model infrastructure
-- [Runware.ai](https://runware.ai) - High-performance AI inference platform
-- [Next.js](https://nextjs.org) - React framework
-- [Remotion](https://remotion.dev) - Video processing and composition
-- [FFmpeg.wasm](https://ffmpegwasm.netlify.app/) - Client-side video processing
-- [IndexedDB](https://developer.mozilla.org/docs/Web/API/IndexedDB_API) - Browser-based storage
-- [next-intl](https://next-intl-docs.vercel.app/) - Internationalization
-- [Vercel](https://vercel.com) - Deployment platform
+## How it is built
 
-### Quick Start
+- `crates/vs-providers` — OpenRouter, fal and Runware brought to one contract: catalogue, form from the model's
+  JSON Schema, a price rule, jobs that end in files. Runware tasks are checked against the model's schema before they
+  are sent, so a wrong setting costs nothing.
+- `crates/vs-server` — axum on 127.0.0.1: the editor's workspace on disk, the job queue in SQLite, keys, spend, the
+  MCP server and its bridge to the window.
+- `frontend` — the editor window: a fork of [FreeCut](https://github.com/walterlow/freecut) (MIT) kept as a git
+  subtree, with its storage moved to the server and the generation panel, settings and agent bridge added.
+- `desktop` — the Tauri shell: one process, the server inside it, updates from GitHub releases.
 
-1. Clone the repository:
+## More portable AI apps
 
-```bash
-git clone https://github.com/timoncool/videosos
-cd videosos
-```
+| Project | What it is |
+|--------|----------|
+| [Dub Studio](https://github.com/timoncool/dub-studio) | Offline AI video dubbing with a cloned voice |
+| [YuE2 Studio](https://github.com/timoncool/YuE2-Studio) | AI song generator with an editable score |
+| [MiniMax Music3 Studio](https://github.com/timoncool/MiniMax-Music3-Studio) | Local and cloud AI music studio |
+| [ACE-Step Studio](https://github.com/timoncool/ACE-Step-Studio) | AI music studio — songs, vocals, covers, clips |
+| [Higgs Ultimate](https://github.com/timoncool/Higgs-Ultimate) | Native speech synthesis and voice cloning |
 
-2. Install dependencies:
+## Authors
 
-```bash
-npm install
-```
+- **Nerual Dreming** — [Telegram](https://t.me/nerual_dreming) | [neuro-cartel.com](https://neuro-cartel.com) | founder of [ArtGeneration.me](https://artgeneration.me)
+- **Neuro-Soft** — [Telegram](https://t.me/neuroport) | portable AI apps
 
-3. Start the development server:
+## Credits
 
-```bash
-npm run dev
-```
+- **[FreeCut](https://github.com/walterlow/freecut)** by Walter Low — the editor this window is built on (MIT).
+- **[OpenRouter](https://openrouter.ai)**, **[fal](https://fal.ai)** and **[Runware](https://runware.ai)** — the
+  providers, and the model makers behind them.
+- **[mediabunny](https://github.com/Vanilagy/mediabunny)**, **[Tauri](https://tauri.app)**, **[axum](https://github.com/tokio-rs/axum)**,
+  **[jsonschema](https://github.com/Stranger6667/jsonschema)**, **[lucide](https://lucide.dev)**.
+- VideoSOS 1 started as a fork of the **[fal AI Video Starter Kit](https://github.com/fal-ai-community/video-starter-kit)**.
 
-Open [http://localhost:3000](http://localhost:3000) to see the application.
+## Support the author
 
-### Running with Docker
+I build open-source software and do AI research — most of what I make is freely available. Donations let me build and research more.
 
-If you have Docker installed, you can run the project in a container:
-
-1. Clone the repository:
-
-```bash
-git clone https://github.com/timoncool/videosos
-cd videosos
-```
-
-2. Start services with Docker Compose:
-
-```bash
-docker compose up -d
-```
-
-3. Open [http://localhost:3000](http://localhost:3000) to see the application.
-
-To stop services:
-
-```bash
-docker compose down
-```
-
-## Other Projects by [@timoncool](https://github.com/timoncool)
-
-| Project | Description |
-|---------|-------------|
-| [ACE-Step Studio](https://github.com/timoncool/ACE-Step-Studio) | AI music studio — songs, vocals, covers, videos |
-| [Bulka](https://github.com/timoncool/Bulka) | Live-coding music platform |
-| [GitLife](https://github.com/timoncool/gitlife) | Your life in weeks — interactive calendar |
-| [telegram-api-mcp](https://github.com/timoncool/telegram-api-mcp) | Full Telegram Bot API as MCP server |
-| [civitai-mcp-ultimate](https://github.com/timoncool/civitai-mcp-ultimate) | Civitai API as MCP server |
-| [ScreenSavy.com](https://github.com/timoncool/ScreenSavy.com) | Ambient screen generator |
-
-## Support the Author
-
-I build open-source software and do AI research. Most of what I create is free and available to everyone. Your donations help me keep creating without worrying about where the next meal comes from =)
-
-**[All donation methods](https://github.com/timoncool/ACE-Step-Studio/blob/master/DONATE.md)** | **[dalink.to/nerual_dreming](https://dalink.to/nerual_dreming)** | **[boosty.to/neuro_art](https://boosty.to/neuro_art)**
+**[All the ways to support](DONATE.md)** | **[dalink.to/nerual_dreming](https://dalink.to/nerual_dreming)** | **[boosty.to/neuro_art](https://boosty.to/neuro_art)**
 
 - **BTC:** `1E7dHL22RpyhJGVpcvKdbyZgksSYkYeEBC`
 - **ETH (ERC20):** `0xb5db65adf478983186d4897ba92fe2c25c594a0c`
 - **USDT (TRC20):** `TQST9Lp2TjK6FiVkn4fwfGUee7NmkxEE7C`
 
-## Star History
+## Star history
 
 <a href="https://github.com/timoncool/videosos/stargazers">
  <picture>
    <source media="(prefers-color-scheme: dark)" srcset="docs/stars-dark.svg" />
    <source media="(prefers-color-scheme: light)" srcset="docs/stars-light.svg" />
-   <img alt="Star History Chart" src="docs/stars-light.svg" />
+   <img alt="Star history chart" src="docs/stars-light.svg" />
  </picture>
 </a>
 
-## Contributing
+## License
 
-We welcome contributions from developers of all skill levels! Whether you're fixing bugs, adding features, improving documentation, or sharing ideas, your help makes VideoSOS better for everyone.
-
-**How to contribute:**
-1. ⭐ Star this repository to show your support
-2. 🐛 Report bugs or suggest features in [Issues](https://github.com/timoncool/videosos/issues)
-3. 🔧 Submit pull requests - see our [Contributing Guide](CONTRIBUTING.md)
-4. 📖 Improve documentation
-5. 💬 Join discussions and help other users
-
-Every contribution counts, no matter how small! Let's build the best open-source AI video editor together.
-
-### Credits
-
-Assembled by [Nerual Dreming](https://t.me/nerual_dreming) - founder of [ArtGeneration.me](https://artgeneration.me/), tech blogger, and neuro-evangelist.
-
-This project was built with [Devin](https://app.devin.ai/invite/fdc44857a73c4afea4c0763e67c7a2d2), the AI software engineer. Experience autonomous coding with Devin's free trial.
-
-This project is a fork of the original [AI Video Starter Kit](https://github.com/fal-ai-community/video-starter-kit) from the fal.ai community.
-
-### License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+The code is [MIT](LICENSE); the editor window is based on FreeCut (MIT). What you generate is governed by the terms of
+the provider and the model you used — read them before you publish or sell.

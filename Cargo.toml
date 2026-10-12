@@ -1,0 +1,39 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/vs-providers",
+    "crates/vs-server",
+]
+# The Tauri shell is its own build unit (a heavy tauri tree); it is built by `npx tauri build`
+# in desktop/ and is not pulled into `cargo build --workspace`.
+exclude = ["desktop/src-tauri"]
+
+[workspace.package]
+version = "2.0.0"
+edition = "2024"
+license = "MIT"
+authors = ["Ilya Timonin"]
+
+[workspace.dependencies]
+anyhow = "1"
+thiserror = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["full"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+reqwest = { version = "0.13", default-features = false, features = ["json", "rustls", "query", "stream", "multipart"] }
+futures-util = "0.3"
+uuid = { version = "1", features = ["v4", "v7"] }
+base64 = "0.23"
+chrono = { version = "0.4", default-features = false, features = ["clock", "std", "serde"] }
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+
+[profile.dev]
+debug = "line-tables-only"
+
+[profile.dev.package."*"]
+debug = false

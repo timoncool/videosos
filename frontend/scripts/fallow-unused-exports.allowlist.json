@@ -1,0 +1,144 @@
+{
+  "unusedExports": [
+    {
+      "path": "src/features/editor/deps/preview-contract.ts",
+      "exportName": "ColorVideoPreview",
+      "reason": "deps-contract: consumed through the editor preview adapter and lazy component selection; Fallow does not trace this re-export path reliably."
+    },
+    {
+      "path": "src/features/editor/deps/preview-contract.ts",
+      "exportName": "usePowerWindowEditorStore",
+      "reason": "deps-contract: preview editor state is shared with effect panels through feature boundary adapters."
+    },
+    {
+      "path": "src/features/editor/deps/preview-contract.ts",
+      "exportName": "useSpatialEffectEditorStore",
+      "reason": "deps-contract: preview editor state is shared with effect panels through feature boundary adapters."
+    },
+    {
+      "path": "src/features/preview/components/video-preview.tsx",
+      "exportName": "ColorVideoPreview",
+      "reason": "Component is re-exported by the editor preview dependency contract for workspace-specific preview selection."
+    },
+    {
+      "path": "src/features/timeline/components/transcript-editor/transcript-editor-panel.tsx",
+      "exportName": "TranscriptEditorPanel",
+      "reason": "Component is lazy-loaded by the editor media sidebar through timeline contracts."
+    },
+    {
+      "path": "src/features/timeline/components/timeline.tsx",
+      "exportName": "Timeline",
+      "reason": "Component is exported through the timeline editor contract and consumed by the editor workspace."
+    },
+    {
+      "path": "src/features/editor/deps/composition-runtime-contract.ts",
+      "exportName": "deletePreviewAudioConform",
+      "reason": "Re-exported deps contract API used through a dynamic composition-runtime import in the editor settings dialog."
+    },
+    {
+      "path": "src/features/export/components/exports-dialog.tsx",
+      "exportName": "ExportsDialog",
+      "reason": "Lazy-loaded from the editor export deps contract."
+    },
+    {
+      "path": "src/features/export/deps/timeline-compositions-contract.ts",
+      "exportName": "getActiveCompositionId",
+      "reason": "deps-contract: cross-feature adapter surface mandated by the boundary rules; check:deps-wrapper-health --fail-on-unused passes it."
+    },
+    {
+      "path": "src/features/media-library/components/embedded-subtitle-track-picker-host.tsx",
+      "exportName": "EmbeddedSubtitleTrackPickerHost",
+      "reason": "Lazy-loaded through the editor media-library import helper."
+    },
+    {
+      "path": "src/features/media-library/components/subtitle-scan-progress-dialog.tsx",
+      "exportName": "SubtitleScanProgressDialog",
+      "reason": "Lazy-loaded through the editor media-library import helper."
+    },
+    {
+      "path": "src/features/preview/components/color-scopes-monitor.tsx",
+      "exportName": "ColorScopesMonitor",
+      "reason": "Lazy-loaded from the preview area."
+    },
+    {
+      "path": "src/features/preview/components/inline-source-preview.tsx",
+      "exportName": "InlineSourcePreview",
+      "reason": "Lazy-loaded from the preview area."
+    },
+    {
+      "path": "src/features/preview/deps/media-library-contract.ts",
+      "exportName": "resolveProxyUrl",
+      "reason": "Re-exported through preview media resolution helpers for preview component callers."
+    },
+    {
+      "path": "src/features/project-bundle/components/bundle-export-dialog.tsx",
+      "exportName": "BundleExportDialog",
+      "reason": "Lazy-loaded through the editor project-bundle deps contract."
+    },
+    {
+      "path": "src/features/project-bundle/services/json-export-service.ts",
+      "exportName": "downloadSnapshotJson",
+      "reason": "Dynamically imported by the project debug panel."
+    },
+    {
+      "path": "src/features/scene-browser/components/scene-browser-panel.tsx",
+      "exportName": "SceneBrowserPanel",
+      "reason": "Lazy-loaded through the scene-browser contract from media-library UI."
+    },
+    {
+      "path": "src/features/timeline/components/bento-layout-dialog.tsx",
+      "exportName": "BentoLayoutDialog",
+      "reason": "Lazy-loaded through the editor timeline import helper."
+    },
+    {
+      "path": "src/features/timeline/components/filler-removal-dialog.tsx",
+      "exportName": "FillerRemovalDialog",
+      "reason": "Lazy-loaded through the editor timeline import helper."
+    },
+    {
+      "path": "src/features/timeline/components/reverse-conform-dialog.tsx",
+      "exportName": "ReverseConformDialog",
+      "reason": "Lazy-loaded through the editor timeline import helper."
+    },
+    {
+      "path": "src/features/timeline/utils/collision-utils.ts",
+      "exportName": "detectOverlappingItems",
+      "reason": "Dynamically imported by the project debug utilities."
+    },
+    {
+      "path": "src/infrastructure/storage/workspace-fs/ai-outputs/index.ts",
+      "exportName": "AI_OUTPUT_SCHEMA_VERSION",
+      "reason": "Intentional AI-output workspace API surface covered by storage tests."
+    },
+    {
+      "path": "src/infrastructure/storage/workspace-fs/ai-outputs/index.ts",
+      "exportName": "listAiOutputs",
+      "reason": "Intentional AI-output workspace API surface covered by storage tests."
+    },
+    {
+      "path": "src/infrastructure/storage/workspace-fs/exports.ts",
+      "exportName": "saveExportFile",
+      "reason": "Storage implementation exported through the indexed storage API and dynamic render queue path."
+    },
+    {
+      "path": "src/shared/logging/preview-trace.ts",
+      "exportName": "getPreviewTraceEvents",
+      "reason": "Called by project debug utilities through the preview-trace namespace."
+    },
+    {
+      "path": "src/shared/timeline/io-range/index.ts",
+      "exportName": "computeIoGripWidth",
+      "reason": "barrel-surface: feature barrel defines the public API; current consumers import the underlying module directly."
+    },
+    {
+      "path": "src/shared/timeline/io-range/index.ts",
+      "exportName": "IO_HANDLE_COLOR",
+      "reason": "barrel-surface: feature barrel defines the public API; current consumers import the underlying module directly."
+    },
+    {
+      "path": "src/shared/timeline/io-range/index.ts",
+      "exportName": "IO_HANDLE_WIDTH",
+      "reason": "barrel-surface: feature barrel defines the public API; current consumers import the underlying module directly."
+    }
+  ]
+}

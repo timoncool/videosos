@@ -1,0 +1,105 @@
+{
+  "preview": {
+    "mediaOffline": {
+      "title": "Medium offline",
+      "relink": "Verknüpfe es erneut im Medienbereich",
+      "loading": "Wird geladen…"
+    },
+    "align": {
+      "left": "Links ausrichten",
+      "centerH": "Horizontal zentrieren",
+      "right": "Rechts ausrichten",
+      "top": "Oben ausrichten",
+      "centerV": "Vertikal zentrieren",
+      "bottom": "Unten ausrichten",
+      "distributeH": "Horizontal verteilen",
+      "distributeV": "Vertikal verteilen",
+      "disableCanvasSnap": "Canvas-Einrasten deaktivieren",
+      "enableCanvasSnap": "Canvas-Einrasten aktivieren",
+      "toggleCanvasSnap": "Canvas-Einrasten umschalten"
+    },
+    "controls": {
+      "captureFailed": "Aktuelles Bild konnte nicht erfasst werden.",
+      "disableProxyPlayback": "Proxy-Wiedergabe deaktivieren",
+      "enableProxyPlayback": "Proxy-Wiedergabe aktivieren",
+      "frameDownloadedNoProject": "Bild heruntergeladen — öffne ein Projekt, um es zur Mediathek hinzuzufügen.",
+      "frameDownloadedNotSaved": "Bild heruntergeladen, konnte aber nicht zur Mediathek hinzugefügt werden: {{message}}",
+      "frameSaved": "„{{name}}“ zur Mediathek hinzugefügt.",
+      "goToEnd": "Zum Ende",
+      "goToEndTooltip": "Zum Ende",
+      "goToStart": "Zum Anfang",
+      "goToStartTooltip": "Zum Anfang",
+      "nextFrame": "Nächstes Bild",
+      "nextFrameTooltip": "Nächstes Bild",
+      "pauseTooltip": "Pause",
+      "playTooltip": "Wiedergabe",
+      "prevFrame": "Vorheriges Bild",
+      "prevFrameTooltip": "Vorheriges Bild",
+      "proxyPlaybackOff": "Proxy-Wiedergabe aus",
+      "proxyPlaybackOn": "Proxy-Wiedergabe an",
+      "saveFrame": "Bild speichern",
+      "saveFrameFailed": "Bild konnte nicht gespeichert werden.",
+      "saveFrameTooltip": "Bild speichern",
+      "savingFrame": "Bild wird gespeichert…",
+      "savingFrameTooltip": "Bild wird gespeichert…"
+    },
+    "monitor": {
+      "mute": "Stummschalten",
+      "muteShort": "Stumm",
+      "muted": "Stummgeschaltet",
+      "percent": "{{value}} %",
+      "previewOnlyNote": "Wirkt nur auf die lokale Wiedergabe — Exporte nutzen den Projektmix.",
+      "thisDeviceOnly": "Nur dieses Gerät",
+      "title": "Vorschau-Audio",
+      "unmute": "Stummschaltung aufheben",
+      "volume": "Lautstärke"
+    },
+    "player": {
+      "exitFullscreen": "Vollbild beenden",
+      "fullscreen": "Vollbild",
+      "mute": "Stummschalten",
+      "pause": "Pause",
+      "play": "Wiedergabe",
+      "seek": "Suchen",
+      "unmute": "Stummschaltung aufheben",
+      "volume": "Lautstärke"
+    },
+    "stage": {
+      "loadingMedia": "Medien werden geladen…",
+      "videoPreview": "Videovorschau",
+      "emptyTitle": "Noch nichts in der Timeline",
+      "emptyDescription": "Importiere Medien, ziehe einen Clip in die Timeline und drücke die Leertaste für die Vorschau."
+    },
+    "zoom": {
+      "ariaLabel": "Zoomstufe: {{label}}",
+      "auto": "Automatisch",
+      "tooltip": "Zoom: {{label}}"
+    },
+    "canvasDrop": {
+      "dropOnTimeline": "Auf Timeline ablegen",
+      "compoundClipsTimeline": "Compound-Clips werden weiterhin am besten auf der Timeline platziert.",
+      "presetsTimeline": "Text- und Formvorgaben werden weiterhin am besten auf der Timeline platziert.",
+      "adjustmentLayersTimeline": "Anpassungsebenen wirken auf das gesamte Bild — platziere sie in der Timeline.",
+      "placeLayerDescription": "Platziere diese Ebene an der Ablageposition.",
+      "dropOneItem": "Ein Element ablegen",
+      "oneMediaAtATime": "Platziere jeweils ein Medienelement auf der Leinwand.",
+      "audioGoesOnTimeline": "Audio gehört auf die Timeline",
+      "visualLayersOnly": "Auf der Leinwand werden nur visuelle Ebenen platziert.",
+      "dropToPlace": "Zum Platzieren ablegen",
+      "addAtPlayhead": "Füge dieses Medium am Abspielkopf und an der Ablageposition hinzu.",
+      "dropOneFile": "Eine Datei ablegen",
+      "oneVisualFileAtATime": "Auf der Leinwand wird jeweils eine visuelle Datei importiert.",
+      "importAndPlace": "Importieren und platzieren",
+      "importAndPlaceDescription": "Importiere diese Datei und platziere sie auf der Leinwand.",
+      "noCompatibleTrack": "Für dieses Ablegen ist keine entsperrte kompatible Spur verfügbar.",
+      "unableToLoadMedia": "Abgelegtes Medium konnte nicht geladen werden.",
+      "mediaNoLongerAvailable": "Das abgelegte Medium ist nicht mehr verfügbar.",
+      "dragDropUnsupported": "Drag-and-drop wird in diesem Browser nicht unterstützt. Verwende Chrome oder Edge.",
+      "filesRejected": "Einige Dateien wurden abgelehnt: {{errors}}",
+      "dropAudioOnTimeline": "Lege Audio stattdessen auf der Timeline ab.",
+      "unableToInspectVideo": "Abgelegtes Video konnte nicht geprüft werden.",
+      "unableToInspectFile": "Abgelegte Datei konnte nicht geprüft werden.",
+      "unableToImportFile": "Abgelegte Datei konnte nicht importiert werden."
+    }
+  }
+}
