@@ -281,7 +281,7 @@
     "projectUpgradeDialog": {
       "title": "打开前升级项目",
       "versionMismatch": "<strong>{{projectName}}</strong> 使用项目架构 v{{storedSchemaVersion}} 保存，但此版本需要 v{{currentSchemaVersion}}。",
-      "explanation": "FreeCut 可以在加载编辑器之前为你升级它。会先创建升级前的备份，以便在出现问题时恢复旧数据。",
+      "explanation": "VideoSOS 可以在加载编辑器之前为你升级它。会先创建升级前的备份，以便在出现问题时恢复旧数据。",
       "backupCopy": "备份副本：<strong>{{backupName}}</strong>",
       "creatingBackup": "正在创建备份...",
       "confirm": "创建备份并升级"
@@ -631,7 +631,7 @@
       "clip": "片段",
       "size": "尺寸",
       "frameRate": "帧率",
-      "fpsRoundedHint": "FreeCut 会将导入的视频匹配到最接近的受支持项目帧率。此片段将使用 {{fps}} fps。",
+      "fpsRoundedHint": "VideoSOS 会将导入的视频匹配到最接近的受支持项目帧率。此片段将使用 {{fps}} fps。",
       "keepCurrent": "保持当前",
       "fpsOnly": "仅帧率",
       "sizeOnly": "仅尺寸",
@@ -640,14 +640,14 @@
       "matchSize": "匹配尺寸"
     },
     "editor": {
-      "appLabel": "FreeCut 视频编辑器",
+      "appLabel": "VideoSOS 视频编辑器",
       "upgrading": "正在升级项目…",
       "backupCreated": "升级前已创建备份",
       "backupFailed": "升级前创建备份失败",
       "tryAgain": "请重试。",
       "projectSaved": "项目已保存",
       "projectSaveFailed": "保存项目失败",
-      "projectBundle": "FreeCut 项目包"
+      "projectBundle": "VideoSOS 项目包"
     },
     "audioMeters": {
       "meters": "电平表",

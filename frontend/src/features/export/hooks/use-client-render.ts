@@ -42,6 +42,21 @@ import { DEFAULT_PROJECT_HEIGHT, DEFAULT_PROJECT_WIDTH } from '@/shared/projects
 import { resolveMediaUrls } from '@/features/export/deps/media-library'
 import { usePlaybackStore } from '@/shared/state/playback'
 import { createLogger, createOperationId } from '@/shared/logging/logger'
+import { isDesktop, revealOnDisk, saveToDisk } from '@/infrastructure/desktop'
+import { toast } from 'sonner'
+import { i18n } from '@/i18n'
+
+function extensionOf(mimeType: string): string {
+  const mime = mimeType.toLowerCase()
+  if (mime.includes('webm')) return 'webm'
+  if (mime.includes('matroska')) return 'mkv'
+  if (mime.includes('quicktime') || mime.includes('mov')) return 'mov'
+  if (mime.includes('audio/mpeg') || mime.includes('mp3')) return 'mp3'
+  if (mime.includes('audio/wav') || mime.includes('wave')) return 'wav'
+  if (mime.includes('audio/aac') || mime.includes('adts')) return 'aac'
+  return 'mp4'
+}
+
 
 const log = createLogger('Export')
 
@@ -367,7 +382,33 @@ export function useClientRender(): UseClientRenderReturn {
    */
   const downloadVideo = useCallback(() => {
     if (!result) return
+    void (async () => {
+      if (!(await isDesktop())) return downloadInBrowser()
+      const project = useProjectStore.getState().currentProject?.name ?? 'videosos'
+      const extension = extensionOf(result.mimeType)
+      const baseName = project.replace(/[<>:"/\\|?*]+/g, '_').trim() || 'videosos'
+      try {
+        const saved = await saveToDisk(result.blob, `${baseName}.${extension}`, { dialog: true })
+        if (saved.cancelled || !saved.path) return
+        const sidecar = result.subtitleSidecar
+        if (sidecar) {
+          const sidecarExt = sidecar.filename.split('.').pop() ?? 'srt'
+          await saveToDisk(new Blob([sidecar.content], { type: 'text/plain;charset=utf-8' }), `${baseName}.${sidecarExt}`, {
+            dialog: false,
+            beside: saved.path,
+          })
+        }
+        const path = saved.path
+        toast.success(i18n.t('desktop.saved', { path }), {
+          action: { label: i18n.t('desktop.reveal'), onClick: () => void revealOnDisk(path) },
+        })
+      } catch (error) {
+        toast.error(i18n.t('desktop.saveFailed', { reason: error instanceof Error ? error.message : String(error) }))
+      }
+    })()
 
+    function downloadInBrowser() {
+    if (!result) return
     const url = URL.createObjectURL(result.blob)
     const a = document.createElement('a')
     a.href = url
@@ -404,6 +445,7 @@ export function useClientRender(): UseClientRenderReturn {
       sidecarLink.click()
       document.body.removeChild(sidecarLink)
       requestIdleCallback(() => URL.revokeObjectURL(sidecarUrl))
+    }
     }
   }, [result])
 

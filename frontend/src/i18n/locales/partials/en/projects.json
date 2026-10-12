@@ -112,7 +112,7 @@
       "selectedCount_other": "{{count}} selected",
       "deleteN_one": "Delete {{count}}",
       "deleteN_other": "Delete {{count}}",
-      "welcomeTitle": "Welcome to FreeCut",
+      "welcomeTitle": "Welcome to VideoSOS",
       "welcomeDescription": "Get started by creating your first video project. Choose your resolution, frame rate, and start editing!",
       "noResultsTitle": "No projects found",
       "noResultsDescription": "We couldn't find any projects matching your search criteria. Try adjusting your filters or search terms.",
@@ -179,9 +179,9 @@
     },
     "workspaceGate": {
       "unsupportedBrowser": "Unsupported browser",
-      "unsupportedBrowserDescription": "FreeCut requires a Chromium-based browser (Chrome, Edge, Brave, Arc) for its workspace folder storage. Firefox and Safari don't yet support the File System Access API.",
+      "unsupportedBrowserDescription": "VideoSOS requires a Chromium-based browser (Chrome, Edge, Brave, Arc) for its workspace folder storage. Firefox and Safari don't yet support the File System Access API.",
       "pickTitle": "Pick your workspace folder",
-      "pickDescription": "FreeCut stores all your projects, media, and caches as plain files in a folder you control. Pick any folder on disk — your projects will live there.",
+      "pickDescription": "VideoSOS stores all your projects, media, and caches as plain files in a folder you control. Pick any folder on disk — your projects will live there.",
       "chooseFolder": "Choose folder",
       "workspaceGuide": "Workspace guide",
       "pickTip": "Tip: pick a folder in Dropbox, iCloud, or Google Drive to sync projects across devices. You can move it later.",
@@ -190,7 +190,7 @@
       "chooseDifferentFolder": "Choose a different folder",
       "reconnect": "Reconnect",
       "folderPermissionDenied": "Permission was not granted. Choose a folder and allow read/write access to continue.",
-      "folderPickFailed": "FreeCut could not open that folder. Try a normal folder you can edit, then grant read/write access.",
+      "folderPickFailed": "VideoSOS could not open that folder. Try a normal folder you can edit, then grant read/write access.",
       "reconnectPermissionDenied": "Permission was denied. Reconnect the workspace or choose a different folder."
     },
     "workspaceIndicator": {
@@ -264,15 +264,15 @@
       "showcaseSubheading": "A complete video editing suite, right in your browser.",
       "screenshot": "Screenshot",
       "seeItInAction": "See it in Action",
-      "seeItInActionSubheading": "Watch a quick demo of FreeCut's editing capabilities.",
-      "demoPreviewAlt": "FreeCut demo preview",
+      "seeItInActionSubheading": "Watch a quick demo of VideoSOS's editing capabilities.",
+      "demoPreviewAlt": "VideoSOS demo preview",
       "watchDemoOnYouTube": "Watch Demo on YouTube",
       "faqHeading": "Frequently Asked Questions",
-      "faqSubheading": "Everything you need to know about FreeCut.",
+      "faqSubheading": "Everything you need to know about VideoSOS.",
       "ctaHeading": "Ready to start editing?",
       "ctaSubheading": "Jump in and create your first project in seconds.",
       "startEditing": "Start Editing",
-      "footer": "MIT License © {{year}} FreeCut",
+      "footer": "MIT License © {{year}} VideoSOS",
       "showcase": {
         "timeline": {
           "title": "Timeline Editing",
@@ -309,12 +309,12 @@
       },
       "faq": {
         "free": {
-          "question": "Is FreeCut really free?",
-          "answer": "Yes, FreeCut is completely free and open source under the MIT license. There are no hidden fees, subscriptions, or watermarks."
+          "question": "Is VideoSOS really free?",
+          "answer": "Yes, VideoSOS is completely free and open source under the MIT license. There are no hidden fees, subscriptions, or watermarks."
         },
         "install": {
           "question": "Do I need to install anything?",
-          "answer": "No installation required. FreeCut runs entirely in your browser. Just open the website and start editing."
+          "answer": "No installation required. VideoSOS runs entirely in your browser. Just open the website and start editing."
         },
         "storage": {
           "question": "Where are my videos stored?",
@@ -322,7 +322,7 @@
         },
         "browsers": {
           "question": "What browsers are supported?",
-          "answerP1": "FreeCut currently works best in Chrome or Edge 113+. It relies on modern browser APIs like WebGPU, WebCodecs, OPFS, and File System Access, so the full workflow is currently Chromium-first.",
+          "answerP1": "VideoSOS currently works best in Chrome or Edge 113+. It relies on modern browser APIs like WebGPU, WebCodecs, OPFS, and File System Access, so the full workflow is currently Chromium-first.",
           "answerP2": "<strong>Brave users:</strong> The File System Access API is disabled by default. To enable it, navigate to <code>brave://flags/#file-system-access-api</code>, set it to <strong>Enabled</strong>, and relaunch the browser."
         },
         "exportFormats": {
@@ -557,7 +557,7 @@
     },
     "routeError": {
       "title": "Something went wrong",
-      "description": "FreeCut could not finish loading this page.",
+      "description": "VideoSOS could not finish loading this page.",
       "projectNotFoundTitle": "We couldn't find this project",
       "projectNotFoundDescription": "It may have been moved, deleted, or opened from an old link. Your other projects are still available in your workspace.",
       "backToProjects": "Back to projects",
@@ -565,9 +565,9 @@
       "copyDetails": "Copy error details",
       "detailsCopied": "Error details copied",
       "copyFailed": "Couldn't copy details",
-      "causePermission": "FreeCut no longer has permission to use your workspace folder. Reconnect it, or choose a different folder.",
+      "causePermission": "VideoSOS no longer has permission to use your workspace folder. Reconnect it, or choose a different folder.",
       "causeMissing": "Your workspace folder could not be found. It may have been moved, renamed, or deleted.",
-      "causeUnsupported": "Your workspace folder is on a drive that does not support everything FreeCut needs. Cloud-synced and network folders often behave this way. Choosing a folder on a local disk usually fixes it."
+      "causeUnsupported": "Your workspace folder is on a drive that does not support everything VideoSOS needs. Cloud-synced and network folders often behave this way. Choosing a folder on a local disk usually fixes it."
     }
   }
 }

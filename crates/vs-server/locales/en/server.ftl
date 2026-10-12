@@ -15,6 +15,8 @@ service-port-videosos = VideoSOS { $version } is on it ({ $executable })
 service-port-other = another process holds it: { $what }
 service-port-busy = Port 127.0.0.1:{ $port } has been busy for { $seconds } s: { $who }. Error: { $error }.
 
+    Close the program that holds it, or set another port with the { $env } environment variable (for example { $env }={ $other_port }).
+
 ## jobs
 jobs-variants = { $count ->
     [one] { $count } variant
@@ -46,3 +48,22 @@ settings-bad-budget = The daily limit is a number from 0 to 10000.
 spend-agent-limit = Agents have spent ${ $spent } today; this job would cost about ${ $cost } and pass the daily limit of ${ $budget }. Raise the limit in Settings, Providers.
 spend-agent-limit-reached = Agents have reached today's limit of ${ $budget }.
 catalog-partial = Part of the catalogue was not read: { $failures }. The models read are listed; refresh to try again.
+
+## the desktop shell
+shell-server-failed = The VideoSOS server did not start: { $error }
+shell-server-stopped = The VideoSOS server stopped right after it started.
+shell-server-crashed = The VideoSOS server thread crashed while starting.
+shell-server-silent = The VideoSOS server did not answer on 127.0.0.1:{ $port } within 30 s.
+update-title = VideoSOS update
+update-install-now = VideoSOS { $version } is out. Install it now? The program restarts when it is done.
+update-open-page = VideoSOS { $version } is out. Open the release page to download it?
+update-button-install = Install
+update-button-open = Open the page
+update-button-later = Later
+update-open-failed = The release page did not open: { $error }. Open { $url } in a browser.
+update-failed = The update did not install: { $error }
+
+## exports
+exports-dialog-title = Save the video
+exports-no-folder = The folder of { $path } is not there.
+exports-no-file = There is no file { $path }.

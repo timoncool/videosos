@@ -1,9 +1,6 @@
-// Консольный сабсистем НАМЕРЕННО (НЕ windows_subsystem="windows"): процесс держит собственную консоль —
-// ровно как раньше делал отдельный dub-server.exe. Дочерние консольные процессы (ffmpeg/ffprobe,
-// llama-server, roformer-CLI) НАСЛЕДУЮТ эту одну консоль и НЕ открывают своё окно на каждый спавн.
-// Это та самая «консоль терминала dub-server», что решала проблему в two-exe сборке. Убирать её
-// per-spawn-флагами — костыль, который не ловит спавны из зависимостей; одна консоль ловит всё.
+// Console subsystem on purpose (not windows_subsystem = "windows"): console children such as ffmpeg inherit
+// this one console instead of opening a window each; lib.rs hides the console's own window at start.
 
 fn main() {
-    dub_studio_desktop_lib::run();
+    videosos_desktop_lib::run();
 }

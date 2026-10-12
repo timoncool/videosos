@@ -281,7 +281,7 @@
     "projectUpgradeDialog": {
       "title": "Açmadan Önce Projeyi Yükselt",
       "versionMismatch": "<strong>{{projectName}}</strong> proje şeması v{{storedSchemaVersion}} ile kaydedilmiş, ancak bu sürüm v{{currentSchemaVersion}} bekliyor.",
-      "explanation": "FreeCut, editörü yüklemeden önce projeyi sizin için yükseltebilir. Bir şey ters görünürse eski veriye dönebilmeniz için önce yükseltme öncesi bir yedek oluşturulur.",
+      "explanation": "VideoSOS, editörü yüklemeden önce projeyi sizin için yükseltebilir. Bir şey ters görünürse eski veriye dönebilmeniz için önce yükseltme öncesi bir yedek oluşturulur.",
       "backupCopy": "Yedek kopya: <strong>{{backupName}}</strong>",
       "creatingBackup": "Yedek Oluşturuluyor...",
       "confirm": "Yedek Oluştur ve Yükselt"
@@ -631,7 +631,7 @@
       "clip": "Klip",
       "size": "Boyut",
       "frameRate": "Kare hızı",
-      "fpsRoundedHint": "FreeCut içe aktarılan videoyu en yakın desteklenen proje kare hızına eşler. Bu klip {{fps}} fps kullanır.",
+      "fpsRoundedHint": "VideoSOS içe aktarılan videoyu en yakın desteklenen proje kare hızına eşler. Bu klip {{fps}} fps kullanır.",
       "keepCurrent": "Geçerli Olanı Koru",
       "fpsOnly": "Yalnızca FPS",
       "sizeOnly": "Yalnızca Boyut",
@@ -640,14 +640,14 @@
       "matchSize": "Boyutu Eşle"
     },
     "editor": {
-      "appLabel": "FreeCut Video Editörü",
+      "appLabel": "VideoSOS Video Editörü",
       "upgrading": "Proje yükseltiliyor…",
       "backupCreated": "Yükseltmeden önce yedek oluşturuldu",
       "backupFailed": "Yükseltmeden önce yedek oluşturulamadı",
       "tryAgain": "Lütfen tekrar deneyin.",
       "projectSaved": "Proje kaydedildi",
       "projectSaveFailed": "Proje kaydedilemedi",
-      "projectBundle": "FreeCut Proje Paketi"
+      "projectBundle": "VideoSOS Proje Paketi"
     },
     "audioMeters": {
       "meters": "Sayaçlar",
@@ -862,7 +862,7 @@
         "savedToLibrary": "\"{{fileName}}\" medya kitaplığına kaydedildi.",
         "savedAndAdded": "\"{{fileName}}\" kaydedildi ve zaman çizelgesine eklendi."
       },
-      "defaultTtsPrompt": "FreeCut'a hoş geldiniz. Bu ses tarayıcıda yerel olarak oluşturuldu.",
+      "defaultTtsPrompt": "VideoSOS'a hoş geldiniz. Bu ses tarayıcıda yerel olarak oluşturuldu.",
       "musicPresets": {
         "lofiChillLabel": "Lo-fi Rahat",
         "lofiChillPrompt": "Tozlu davullar, yumuşak bas ve rüya gibi synth melodisiyle sıcak lo-fi beat",

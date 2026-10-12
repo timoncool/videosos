@@ -112,7 +112,7 @@
       "selectedCount_other": "{{count}}개 선택됨",
       "deleteN_one": "{{count}}개 삭제",
       "deleteN_other": "{{count}}개 삭제",
-      "welcomeTitle": "FreeCut에 오신 것을 환영합니다",
+      "welcomeTitle": "VideoSOS에 오신 것을 환영합니다",
       "welcomeDescription": "첫 번째 동영상 프로젝트를 만들어 시작하세요. 해상도와 프레임 속도를 선택하고 편집을 시작하세요!",
       "noResultsTitle": "프로젝트를 찾을 수 없습니다",
       "noResultsDescription": "검색 조건과 일치하는 프로젝트를 찾을 수 없습니다. 필터나 검색어를 조정해 보세요.",
@@ -179,9 +179,9 @@
     },
     "workspaceGate": {
       "unsupportedBrowser": "지원되지 않는 브라우저",
-      "unsupportedBrowserDescription": "FreeCut의 작업 공간 폴더 저장소에는 Chromium 기반 브라우저(Chrome, Edge, Brave, Arc)가 필요합니다. Firefox와 Safari는 아직 File System Access API를 지원하지 않습니다.",
+      "unsupportedBrowserDescription": "VideoSOS의 작업 공간 폴더 저장소에는 Chromium 기반 브라우저(Chrome, Edge, Brave, Arc)가 필요합니다. Firefox와 Safari는 아직 File System Access API를 지원하지 않습니다.",
       "pickTitle": "작업 공간 폴더 선택",
-      "pickDescription": "FreeCut은 모든 프로젝트, 미디어, 캐시를 사용자가 관리하는 폴더에 일반 파일로 저장합니다. 디스크의 아무 폴더나 선택하세요 — 프로젝트가 그곳에 저장됩니다.",
+      "pickDescription": "VideoSOS은 모든 프로젝트, 미디어, 캐시를 사용자가 관리하는 폴더에 일반 파일로 저장합니다. 디스크의 아무 폴더나 선택하세요 — 프로젝트가 그곳에 저장됩니다.",
       "chooseFolder": "폴더 선택",
       "workspaceGuide": "작업 공간 가이드",
       "pickTip": "팁: Dropbox, iCloud, Google Drive 내의 폴더를 선택하면 기기 간에 프로젝트를 동기화할 수 있습니다. 나중에 옮길 수 있습니다.",
@@ -190,7 +190,7 @@
       "chooseDifferentFolder": "다른 폴더 선택",
       "reconnect": "다시 연결",
       "folderPermissionDenied": "권한이 부여되지 않았습니다. 계속하려면 폴더를 선택하고 읽기/쓰기 접근을 허용하세요.",
-      "folderPickFailed": "FreeCut이 해당 폴더를 열 수 없습니다. 편집할 수 있는 일반 폴더를 선택한 뒤 읽기/쓰기 접근을 허용하세요.",
+      "folderPickFailed": "VideoSOS이 해당 폴더를 열 수 없습니다. 편집할 수 있는 일반 폴더를 선택한 뒤 읽기/쓰기 접근을 허용하세요.",
       "reconnectPermissionDenied": "권한이 거부되었습니다. 워크스페이스를 다시 연결하거나 다른 폴더를 선택하세요."
     },
     "workspaceIndicator": {
@@ -264,15 +264,15 @@
       "showcaseSubheading": "완전한 동영상 편집 도구 모음을 브라우저에서.",
       "screenshot": "스크린샷",
       "seeItInAction": "실제로 보기",
-      "seeItInActionSubheading": "FreeCut 편집 기능의 빠른 데모를 확인하세요.",
-      "demoPreviewAlt": "FreeCut 데모 미리보기",
+      "seeItInActionSubheading": "VideoSOS 편집 기능의 빠른 데모를 확인하세요.",
+      "demoPreviewAlt": "VideoSOS 데모 미리보기",
       "watchDemoOnYouTube": "YouTube에서 데모 보기",
       "faqHeading": "자주 묻는 질문",
-      "faqSubheading": "FreeCut에 대해 알아야 할 모든 것.",
+      "faqSubheading": "VideoSOS에 대해 알아야 할 모든 것.",
       "ctaHeading": "편집을 시작할 준비가 되셨나요?",
       "ctaSubheading": "바로 시작해서 몇 초 만에 첫 프로젝트를 만드세요.",
       "startEditing": "편집 시작",
-      "footer": "MIT 라이선스 © {{year}} FreeCut",
+      "footer": "MIT 라이선스 © {{year}} VideoSOS",
       "showcase": {
         "timeline": {
           "title": "타임라인 편집",
@@ -309,12 +309,12 @@
       },
       "faq": {
         "free": {
-          "question": "FreeCut은 정말 무료인가요?",
-          "answer": "네, FreeCut은 MIT 라이선스 하에 완전히 무료이며 오픈 소스입니다. 숨겨진 요금, 구독, 워터마크가 없습니다."
+          "question": "VideoSOS은 정말 무료인가요?",
+          "answer": "네, VideoSOS은 MIT 라이선스 하에 완전히 무료이며 오픈 소스입니다. 숨겨진 요금, 구독, 워터마크가 없습니다."
         },
         "install": {
           "question": "설치해야 하는 것이 있나요?",
-          "answer": "설치가 필요 없습니다. FreeCut은 전적으로 브라우저에서 실행됩니다. 웹사이트를 열고 편집을 시작하기만 하면 됩니다."
+          "answer": "설치가 필요 없습니다. VideoSOS은 전적으로 브라우저에서 실행됩니다. 웹사이트를 열고 편집을 시작하기만 하면 됩니다."
         },
         "storage": {
           "question": "내 동영상은 어디에 저장되나요?",
@@ -322,7 +322,7 @@
         },
         "browsers": {
           "question": "어떤 브라우저가 지원되나요?",
-          "answerP1": "FreeCut은 현재 Chrome 또는 Edge 113 이상에서 가장 잘 작동합니다. WebGPU, WebCodecs, OPFS, File System Access 같은 최신 브라우저 API에 의존하므로 현재 전체 워크플로는 Chromium 우선입니다.",
+          "answerP1": "VideoSOS은 현재 Chrome 또는 Edge 113 이상에서 가장 잘 작동합니다. WebGPU, WebCodecs, OPFS, File System Access 같은 최신 브라우저 API에 의존하므로 현재 전체 워크플로는 Chromium 우선입니다.",
           "answerP2": "<strong>Brave 사용자:</strong> File System Access API는 기본적으로 비활성화되어 있습니다. 활성화하려면 <code>brave://flags/#file-system-access-api</code>로 이동하여 <strong>Enabled</strong>로 설정한 다음 브라우저를 다시 시작하세요."
         },
         "exportFormats": {
@@ -557,7 +557,7 @@
     },
     "routeError": {
       "title": "문제가 발생했습니다",
-      "description": "FreeCut이 이 페이지를 모두 불러오지 못했습니다.",
+      "description": "VideoSOS이 이 페이지를 모두 불러오지 못했습니다.",
       "projectNotFoundTitle": "이 프로젝트를 찾을 수 없습니다",
       "projectNotFoundDescription": "프로젝트가 이동 또는 삭제되었거나 오래된 링크에서 열렸을 수 있습니다. 다른 프로젝트는 작업 공간에서 계속 사용할 수 있습니다.",
       "backToProjects": "프로젝트로 돌아가기",
@@ -565,9 +565,9 @@
       "copyDetails": "오류 세부 정보 복사",
       "detailsCopied": "오류 세부 정보를 복사했습니다",
       "copyFailed": "세부 정보를 복사하지 못했습니다",
-      "causePermission": "FreeCut에 작업 폴더를 사용할 권한이 더 이상 없습니다. 다시 연결하거나 다른 폴더를 선택하세요.",
+      "causePermission": "VideoSOS에 작업 폴더를 사용할 권한이 더 이상 없습니다. 다시 연결하거나 다른 폴더를 선택하세요.",
       "causeMissing": "작업 폴더를 찾을 수 없습니다. 이동되었거나 이름이 변경되었거나 삭제되었을 수 있습니다.",
-      "causeUnsupported": "작업 폴더가 FreeCut에 필요한 기능을 모두 지원하지 않는 드라이브에 있습니다. 클라우드 동기화 폴더나 네트워크 폴더에서 흔히 발생합니다. 로컬 디스크의 폴더를 선택하면 대부분 해결됩니다."
+      "causeUnsupported": "작업 폴더가 VideoSOS에 필요한 기능을 모두 지원하지 않는 드라이브에 있습니다. 클라우드 동기화 폴더나 네트워크 폴더에서 흔히 발생합니다. 로컬 디스크의 폴더를 선택하면 대부분 해결됩니다."
     }
   }
 }

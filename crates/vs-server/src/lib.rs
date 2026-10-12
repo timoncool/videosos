@@ -10,6 +10,7 @@ pub mod i18n;
 pub mod catalog;
 pub mod credentials;
 pub mod events;
+mod exports;
 pub mod fs_api;
 pub mod hub;
 pub mod jobs;
@@ -133,6 +134,7 @@ pub fn app(state: AppState) -> Router {
         .merge(jobs::router())
         .merge(keys::router())
         .merge(settings::router())
+        .merge(exports::router())
         .with_state(state.clone())
         .merge(hub::router());
     mcp::install(api.clone());

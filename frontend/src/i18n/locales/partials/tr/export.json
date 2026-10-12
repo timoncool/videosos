@@ -132,7 +132,7 @@
         },
         "video-codec-fallback": {
           "title": "Kodek geri dönüşü kullanılacak",
-          "detail": "Seçilen kodek burada kullanılamıyor. FreeCut bunun yerine {{container}} içinde {{codec}} dışa aktaracak.",
+          "detail": "Seçilen kodek burada kullanılamıyor. VideoSOS bunun yerine {{container}} içinde {{codec}} dışa aktaracak.",
           "fix": "Bu geri dönüşü koruyun veya desteklenen başka bir kodeği elle seçin."
         },
         "video-codec-supported": {
@@ -155,7 +155,7 @@
         },
         "worker-animated-image-fallback": {
           "title": "Animasyonlu görseller ana iş parçacığında dışa aktarma gerektirir",
-          "detail": "GIF/WebP görsel öğeleri henüz dışa aktarma worker’ında render edilemiyor. FreeCut otomatik olarak geri dönüş yolunu kullanacak.",
+          "detail": "GIF/WebP görsel öğeleri henüz dışa aktarma worker’ında render edilemiyor. VideoSOS otomatik olarak geri dönüş yolunu kullanacak.",
           "fix": "Daha hızlı worker dışa aktarımı için, dışa aktarmadan önce animasyonlu görselleri video kliplerle değiştirin."
         },
         "worker-audio-context-fallback": {

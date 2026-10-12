@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { isDesktop, revealOnDisk, saveToDisk } from '@/infrastructure/desktop'
 import {
   Dialog,
   DialogContent,
@@ -50,6 +51,16 @@ function ExportFileRow({ entry, onChanged }: { entry: ExportFileEntry; onChanged
       if (!blob) {
         toast.error(t('export.renderQueue.missingFile'))
         onChanged()
+        return
+      }
+      if (await isDesktop()) {
+        const saved = await saveToDisk(blob, entry.name, { dialog: true })
+        if (saved.path) {
+          const path = saved.path
+          toast.success(t('desktop.saved', { path }), {
+            action: { label: t('desktop.reveal'), onClick: () => void revealOnDisk(path) },
+          })
+        }
         return
       }
       const url = URL.createObjectURL(blob)

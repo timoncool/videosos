@@ -281,7 +281,7 @@
     "projectUpgradeDialog": {
       "title": "Atualizar o projeto antes de abrir",
       "versionMismatch": "<strong>{{projectName}}</strong> foi salvo com o esquema de projeto v{{storedSchemaVersion}}, mas esta versão espera v{{currentSchemaVersion}}.",
-      "explanation": "O FreeCut pode atualizá-lo antes de carregar o editor. Primeiro será criado um backup do estado anterior à atualização para que você possa restaurar os dados antigos se algo parecer errado.",
+      "explanation": "O VideoSOS pode atualizá-lo antes de carregar o editor. Primeiro será criado um backup do estado anterior à atualização para que você possa restaurar os dados antigos se algo parecer errado.",
       "backupCopy": "Cópia de backup: <strong>{{backupName}}</strong>",
       "creatingBackup": "Criando backup...",
       "confirm": "Criar backup e atualizar"
@@ -631,7 +631,7 @@
       "clip": "Clipe",
       "size": "Tamanho",
       "frameRate": "Taxa de quadros",
-      "fpsRoundedHint": "O FreeCut ajusta o vídeo importado para a taxa de quadros de projeto compatível mais próxima. Este clipe usaria {{fps}} fps.",
+      "fpsRoundedHint": "O VideoSOS ajusta o vídeo importado para a taxa de quadros de projeto compatível mais próxima. Este clipe usaria {{fps}} fps.",
       "keepCurrent": "Manter atual",
       "fpsOnly": "Apenas FPS",
       "sizeOnly": "Apenas tamanho",
@@ -640,14 +640,14 @@
       "matchSize": "Ajustar tamanho"
     },
     "editor": {
-      "appLabel": "Editor de vídeo FreeCut",
+      "appLabel": "Editor de vídeo VideoSOS",
       "upgrading": "Atualizando projeto…",
       "backupCreated": "Backup criado antes da atualização",
       "backupFailed": "Falha ao criar backup antes da atualização",
       "tryAgain": "Tente novamente.",
       "projectSaved": "Projeto salvo",
       "projectSaveFailed": "Falha ao salvar o projeto",
-      "projectBundle": "Pacote de projeto FreeCut"
+      "projectBundle": "Pacote de projeto VideoSOS"
     },
     "audioMeters": {
       "meters": "Medidores",

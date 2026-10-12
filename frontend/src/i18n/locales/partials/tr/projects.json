@@ -112,7 +112,7 @@
       "selectedCount_other": "{{count}} seçili",
       "deleteN_one": "{{count}} sil",
       "deleteN_other": "{{count}} sil",
-      "welcomeTitle": "FreeCut'a Hoş Geldiniz",
+      "welcomeTitle": "VideoSOS'a Hoş Geldiniz",
       "welcomeDescription": "İlk video projenizi oluşturarak başlayın. Çözünürlüğünüzü ve kare hızınızı seçin, sonra düzenlemeye başlayın!",
       "noResultsTitle": "Proje bulunamadı",
       "noResultsDescription": "Arama ölçütlerinizle eşleşen proje bulamadık. Filtreleri veya arama terimlerini değiştirmeyi deneyin.",
@@ -189,15 +189,15 @@
       "showcaseSubheading": "Eksiksiz bir video düzenleme paketi, doğrudan tarayıcınızda.",
       "screenshot": "Ekran görüntüsü",
       "seeItInAction": "Çalışırken Gör",
-      "seeItInActionSubheading": "FreeCut'ın düzenleme yeteneklerinin kısa bir demosunu izleyin.",
-      "demoPreviewAlt": "FreeCut demo önizlemesi",
+      "seeItInActionSubheading": "VideoSOS'ın düzenleme yeteneklerinin kısa bir demosunu izleyin.",
+      "demoPreviewAlt": "VideoSOS demo önizlemesi",
       "watchDemoOnYouTube": "Demoyu YouTube'da İzle",
       "faqHeading": "Sık Sorulan Sorular",
-      "faqSubheading": "FreeCut hakkında bilmeniz gereken her şey.",
+      "faqSubheading": "VideoSOS hakkında bilmeniz gereken her şey.",
       "ctaHeading": "Düzenlemeye başlamaya hazır mısınız?",
       "ctaSubheading": "Hemen girin ve ilk projenizi saniyeler içinde oluşturun.",
       "startEditing": "Düzenlemeye Başla",
-      "footer": "MIT Lisansı © {{year}} FreeCut",
+      "footer": "MIT Lisansı © {{year}} VideoSOS",
       "showcase": {
         "timeline": {
           "title": "Zaman Çizelgesi Düzenleme",
@@ -234,12 +234,12 @@
       },
       "faq": {
         "free": {
-          "question": "FreeCut gerçekten ücretsiz mi?",
-          "answer": "Evet, FreeCut MIT lisansı altında tamamen ücretsiz ve açık kaynaklıdır. Gizli ücret, abonelik veya filigran yoktur."
+          "question": "VideoSOS gerçekten ücretsiz mi?",
+          "answer": "Evet, VideoSOS MIT lisansı altında tamamen ücretsiz ve açık kaynaklıdır. Gizli ücret, abonelik veya filigran yoktur."
         },
         "install": {
           "question": "Bir şey yüklemem gerekiyor mu?",
-          "answer": "Kurulum gerekmez. FreeCut tamamen tarayıcınızda çalışır. Web sitesini açın ve düzenlemeye başlayın."
+          "answer": "Kurulum gerekmez. VideoSOS tamamen tarayıcınızda çalışır. Web sitesini açın ve düzenlemeye başlayın."
         },
         "storage": {
           "question": "Videolarım nerede saklanır?",
@@ -247,7 +247,7 @@
         },
         "browsers": {
           "question": "Hangi tarayıcılar destekleniyor?",
-          "answerP1": "FreeCut şu anda Chrome veya Edge 113+ üzerinde en iyi şekilde çalışır. WebGPU, WebCodecs, OPFS ve File System Access gibi modern tarayıcı API'lerine dayanır; bu yüzden tam iş akışı şimdilik Chromium önceliklidir.",
+          "answerP1": "VideoSOS şu anda Chrome veya Edge 113+ üzerinde en iyi şekilde çalışır. WebGPU, WebCodecs, OPFS ve File System Access gibi modern tarayıcı API'lerine dayanır; bu yüzden tam iş akışı şimdilik Chromium önceliklidir.",
           "answerP2": "<strong>Brave kullanıcıları:</strong> File System Access API varsayılan olarak kapalıdır. Etkinleştirmek için <code>brave://flags/#file-system-access-api</code> adresine gidin, <strong>Enabled</strong> yapın ve tarayıcıyı yeniden başlatın."
         },
         "exportFormats": {
@@ -267,9 +267,9 @@
     },
     "workspaceGate": {
       "unsupportedBrowser": "Desteklenmeyen tarayıcı",
-      "unsupportedBrowserDescription": "FreeCut çalışma alanı klasörü depolaması için Chromium tabanlı bir tarayıcı (Chrome, Edge, Brave, Arc) gerektirir. Firefox ve Safari henüz File System Access API'yi desteklemiyor.",
+      "unsupportedBrowserDescription": "VideoSOS çalışma alanı klasörü depolaması için Chromium tabanlı bir tarayıcı (Chrome, Edge, Brave, Arc) gerektirir. Firefox ve Safari henüz File System Access API'yi desteklemiyor.",
       "pickTitle": "Çalışma alanı klasörünüzü seçin",
-      "pickDescription": "FreeCut tüm projelerinizi, medyanızı ve önbelleklerinizi kontrol ettiğiniz bir klasörde düz dosyalar olarak saklar. Diskte herhangi bir klasör seçin; projeleriniz orada yaşar.",
+      "pickDescription": "VideoSOS tüm projelerinizi, medyanızı ve önbelleklerinizi kontrol ettiğiniz bir klasörde düz dosyalar olarak saklar. Diskte herhangi bir klasör seçin; projeleriniz orada yaşar.",
       "chooseFolder": "Klasör seç",
       "workspaceGuide": "Çalışma alanı kılavuzu",
       "pickTip": "İpucu: projeleri cihazlar arasında eşitlemek için Dropbox, iCloud veya Google Drive içinde bir klasör seçin. Daha sonra taşıyabilirsiniz.",
@@ -278,7 +278,7 @@
       "chooseDifferentFolder": "Farklı bir klasör seç",
       "reconnect": "Yeniden bağlan",
       "folderPermissionDenied": "İzin verilmedi. Devam etmek için bir klasör seçin ve okuma/yazma erişimine izin verin.",
-      "folderPickFailed": "FreeCut bu klasörü açamadı. Düzenleyebileceğiniz normal bir klasör deneyin ve okuma/yazma erişimine izin verin.",
+      "folderPickFailed": "VideoSOS bu klasörü açamadı. Düzenleyebileceğiniz normal bir klasör deneyin ve okuma/yazma erişimine izin verin.",
       "reconnectPermissionDenied": "İzin reddedildi. Çalışma alanını yeniden bağlayın veya farklı bir klasör seçin."
     },
     "workspaceIndicator": {
@@ -557,7 +557,7 @@
     },
     "routeError": {
       "title": "Bir şeyler ters gitti",
-      "description": "FreeCut bu sayfayı yüklemeyi tamamlayamadı.",
+      "description": "VideoSOS bu sayfayı yüklemeyi tamamlayamadı.",
       "projectNotFoundTitle": "Bu projeyi bulamadık",
       "projectNotFoundDescription": "Proje taşınmış, silinmiş veya eski bir bağlantıdan açılmış olabilir. Diğer projeleriniz çalışma alanınızda kullanılmaya devam edebilir.",
       "backToProjects": "Projelere dön",
@@ -565,9 +565,9 @@
       "copyDetails": "Hata ayrıntılarını kopyala",
       "detailsCopied": "Hata ayrıntıları kopyalandı",
       "copyFailed": "Ayrıntılar kopyalanamadı",
-      "causePermission": "FreeCut artık çalışma klasörünüzü kullanma iznine sahip değil. Yeniden bağlayın veya başka bir klasör seçin.",
+      "causePermission": "VideoSOS artık çalışma klasörünüzü kullanma iznine sahip değil. Yeniden bağlayın veya başka bir klasör seçin.",
       "causeMissing": "Çalışma klasörünüz bulunamadı. Taşınmış, yeniden adlandırılmış veya silinmiş olabilir.",
-      "causeUnsupported": "Çalışma klasörünüz, FreeCut'ın ihtiyaç duyduğu her şeyi desteklemeyen bir sürücüde. Buluta eşitlenen klasörler ve ağ klasörleri genellikle böyle davranır. Yerel bir diskteki klasörü seçmek sorunu genellikle çözer."
+      "causeUnsupported": "Çalışma klasörünüz, VideoSOS'ın ihtiyaç duyduğu her şeyi desteklemeyen bir sürücüde. Buluta eşitlenen klasörler ve ağ klasörleri genellikle böyle davranır. Yerel bir diskteki klasörü seçmek sorunu genellikle çözer."
     }
   }
 }

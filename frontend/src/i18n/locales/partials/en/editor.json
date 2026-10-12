@@ -281,7 +281,7 @@
     "projectUpgradeDialog": {
       "title": "Upgrade Project Before Opening",
       "versionMismatch": "<strong>{{projectName}}</strong> was saved with project schema v{{storedSchemaVersion}}, but this build expects v{{currentSchemaVersion}}.",
-      "explanation": "FreeCut can upgrade it for you before loading the editor. A backup of the pre-upgrade project will be created first so you can restore the old data if anything looks off.",
+      "explanation": "VideoSOS can upgrade it for you before loading the editor. A backup of the pre-upgrade project will be created first so you can restore the old data if anything looks off.",
       "backupCopy": "Backup copy: <strong>{{backupName}}</strong>",
       "creatingBackup": "Creating Backup...",
       "confirm": "Create Backup & Upgrade"
@@ -631,7 +631,7 @@
       "clip": "Clip",
       "size": "Size",
       "frameRate": "Frame rate",
-      "fpsRoundedHint": "FreeCut matches imported video to the closest supported project frame rate. This clip would use {{fps}} fps.",
+      "fpsRoundedHint": "VideoSOS matches imported video to the closest supported project frame rate. This clip would use {{fps}} fps.",
       "keepCurrent": "Keep Current",
       "fpsOnly": "FPS Only",
       "sizeOnly": "Size Only",
@@ -640,14 +640,14 @@
       "matchSize": "Match Size"
     },
     "editor": {
-      "appLabel": "FreeCut Video Editor",
+      "appLabel": "VideoSOS Video Editor",
       "upgrading": "Upgrading project…",
       "backupCreated": "Backup created before upgrade",
       "backupFailed": "Failed to create backup before upgrade",
       "tryAgain": "Please try again.",
       "projectSaved": "Project saved",
       "projectSaveFailed": "Failed to save project",
-      "projectBundle": "FreeCut Project Bundle"
+      "projectBundle": "VideoSOS Project Bundle"
     },
     "audioMeters": {
       "meters": "Meters",

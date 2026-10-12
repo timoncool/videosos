@@ -112,7 +112,7 @@
       "selectedCount_other": "{{count}}件選択中",
       "deleteN_one": "{{count}}件削除",
       "deleteN_other": "{{count}}件削除",
-      "welcomeTitle": "FreeCutへようこそ",
+      "welcomeTitle": "VideoSOSへようこそ",
       "welcomeDescription": "最初の動画プロジェクトを作成して始めましょう。解像度とフレームレートを選んで、編集を開始してください！",
       "noResultsTitle": "プロジェクトが見つかりません",
       "noResultsDescription": "検索条件に一致するプロジェクトが見つかりませんでした。フィルターや検索語句を調整してみてください。",
@@ -179,9 +179,9 @@
     },
     "workspaceGate": {
       "unsupportedBrowser": "サポートされていないブラウザ",
-      "unsupportedBrowserDescription": "FreeCutのワークスペースフォルダストレージには、Chromiumベースのブラウザ（Chrome、Edge、Brave、Arc）が必要です。FirefoxとSafariはまだFile System Access APIをサポートしていません。",
+      "unsupportedBrowserDescription": "VideoSOSのワークスペースフォルダストレージには、Chromiumベースのブラウザ（Chrome、Edge、Brave、Arc）が必要です。FirefoxとSafariはまだFile System Access APIをサポートしていません。",
       "pickTitle": "ワークスペースフォルダを選択",
-      "pickDescription": "FreeCutは、すべてのプロジェクト、メディア、キャッシュを、あなたが管理するフォルダ内のプレーンファイルとして保存します。ディスク上の任意のフォルダを選んでください。プロジェクトはそこに保存されます。",
+      "pickDescription": "VideoSOSは、すべてのプロジェクト、メディア、キャッシュを、あなたが管理するフォルダ内のプレーンファイルとして保存します。ディスク上の任意のフォルダを選んでください。プロジェクトはそこに保存されます。",
       "chooseFolder": "フォルダを選択",
       "workspaceGuide": "ワークスペースガイド",
       "pickTip": "ヒント: Dropbox、iCloud、Google Drive 内のフォルダを選ぶと、デバイス間でプロジェクトを同期できます。後で移動することもできます。",
@@ -190,7 +190,7 @@
       "chooseDifferentFolder": "別のフォルダを選択",
       "reconnect": "再接続",
       "folderPermissionDenied": "権限が付与されませんでした。続行するにはフォルダーを選択し、読み書きアクセスを許可してください。",
-      "folderPickFailed": "FreeCut はそのフォルダーを開けませんでした。編集できる通常のフォルダーを選び、読み書きアクセスを許可してください。",
+      "folderPickFailed": "VideoSOS はそのフォルダーを開けませんでした。編集できる通常のフォルダーを選び、読み書きアクセスを許可してください。",
       "reconnectPermissionDenied": "権限が拒否されました。ワークスペースを再接続するか、別のフォルダーを選択してください。"
     },
     "workspaceIndicator": {
@@ -264,15 +264,15 @@
       "showcaseSubheading": "完全な動画編集スイートを、ブラウザの中で。",
       "screenshot": "スクリーンショット",
       "seeItInAction": "動作を見る",
-      "seeItInActionSubheading": "FreeCutの編集機能のクイックデモをご覧ください。",
-      "demoPreviewAlt": "FreeCutデモのプレビュー",
+      "seeItInActionSubheading": "VideoSOSの編集機能のクイックデモをご覧ください。",
+      "demoPreviewAlt": "VideoSOSデモのプレビュー",
       "watchDemoOnYouTube": "YouTubeでデモを見る",
       "faqHeading": "よくある質問",
-      "faqSubheading": "FreeCutについて知っておくべきすべて。",
+      "faqSubheading": "VideoSOSについて知っておくべきすべて。",
       "ctaHeading": "編集を始める準備はできましたか？",
       "ctaSubheading": "さっそく数秒で最初のプロジェクトを作成しましょう。",
       "startEditing": "編集を始める",
-      "footer": "MITライセンス © {{year}} FreeCut",
+      "footer": "MITライセンス © {{year}} VideoSOS",
       "showcase": {
         "timeline": {
           "title": "タイムライン編集",
@@ -309,12 +309,12 @@
       },
       "faq": {
         "free": {
-          "question": "FreeCutは本当に無料ですか？",
-          "answer": "はい、FreeCutはMITライセンスの下で完全に無料かつオープンソースです。隠れた料金、サブスクリプション、ウォーターマークはありません。"
+          "question": "VideoSOSは本当に無料ですか？",
+          "answer": "はい、VideoSOSはMITライセンスの下で完全に無料かつオープンソースです。隠れた料金、サブスクリプション、ウォーターマークはありません。"
         },
         "install": {
           "question": "何かインストールする必要がありますか？",
-          "answer": "インストールは不要です。FreeCutは完全にブラウザ内で動作します。ウェブサイトを開いて編集を始めるだけです。"
+          "answer": "インストールは不要です。VideoSOSは完全にブラウザ内で動作します。ウェブサイトを開いて編集を始めるだけです。"
         },
         "storage": {
           "question": "動画はどこに保存されますか？",
@@ -322,7 +322,7 @@
         },
         "browsers": {
           "question": "対応しているブラウザは？",
-          "answerP1": "FreeCutは現在、ChromeまたはEdge 113以降で最も快適に動作します。WebGPU、WebCodecs、OPFS、File System AccessなどのモダンなブラウザAPIに依存しているため、現時点ではフルワークフローはChromium優先です。",
+          "answerP1": "VideoSOSは現在、ChromeまたはEdge 113以降で最も快適に動作します。WebGPU、WebCodecs、OPFS、File System AccessなどのモダンなブラウザAPIに依存しているため、現時点ではフルワークフローはChromium優先です。",
           "answerP2": "<strong>Braveユーザーの方:</strong> File System Access APIはデフォルトで無効になっています。有効にするには、<code>brave://flags/#file-system-access-api</code>に移動し、<strong>Enabled</strong>に設定して、ブラウザを再起動してください。"
         },
         "exportFormats": {
@@ -557,7 +557,7 @@
     },
     "routeError": {
       "title": "問題が発生しました",
-      "description": "FreeCut はこのページの読み込みを完了できませんでした。",
+      "description": "VideoSOS はこのページの読み込みを完了できませんでした。",
       "projectNotFoundTitle": "このプロジェクトが見つかりません",
       "projectNotFoundDescription": "移動または削除されたか、古いリンクから開かれた可能性があります。他のプロジェクトは引き続きワークスペースで利用できます。",
       "backToProjects": "プロジェクト一覧に戻る",
@@ -565,9 +565,9 @@
       "copyDetails": "エラーの詳細をコピー",
       "detailsCopied": "エラーの詳細をコピーしました",
       "copyFailed": "詳細をコピーできませんでした",
-      "causePermission": "FreeCut はワークスペースフォルダーを使用する権限を失いました。再接続するか、別のフォルダーを選択してください。",
+      "causePermission": "VideoSOS はワークスペースフォルダーを使用する権限を失いました。再接続するか、別のフォルダーを選択してください。",
       "causeMissing": "ワークスペースフォルダーが見つかりません。移動、名前の変更、または削除された可能性があります。",
-      "causeUnsupported": "ワークスペースフォルダーは、FreeCut に必要な機能をすべてサポートしていないドライブ上にあります。クラウド同期フォルダーやネットワークフォルダーではよくあることです。ローカルディスク上のフォルダーを選ぶと、たいていは解決します。"
+      "causeUnsupported": "ワークスペースフォルダーは、VideoSOS に必要な機能をすべてサポートしていないドライブ上にあります。クラウド同期フォルダーやネットワークフォルダーではよくあることです。ローカルディスク上のフォルダーを選ぶと、たいていは解決します。"
     }
   }
 }

@@ -15,6 +15,8 @@ service-port-videosos = на нём VideoSOS { $version } ({ $executable })
 service-port-other = его занял другой процесс: { $what }
 service-port-busy = Порт 127.0.0.1:{ $port } занят уже { $seconds } с: { $who }. Ошибка: { $error }.
 
+    Закройте программу, которая его держит, или задайте другой порт переменной окружения { $env } (например, { $env }={ $other_port }).
+
 ## jobs
 jobs-variants = { $count ->
     [one] { $count } вариант
@@ -47,3 +49,22 @@ settings-bad-budget = Дневной лимит — число от 0 до 10000
 spend-agent-limit = Агенты потратили сегодня ${ $spent }; эта задача стоит около ${ $cost } и превысит дневной лимит ${ $budget }. Поднимите лимит в Настройках, раздел «Провайдеры».
 spend-agent-limit-reached = Агенты исчерпали сегодняшний лимит ${ $budget }.
 catalog-partial = Часть каталога не прочиталась: { $failures }. Прочитанные модели в списке; обновите, чтобы попробовать снова.
+
+## the desktop shell
+shell-server-failed = Сервер VideoSOS не запустился: { $error }
+shell-server-stopped = Сервер VideoSOS остановился сразу после запуска.
+shell-server-crashed = Поток сервера VideoSOS упал при запуске.
+shell-server-silent = Сервер VideoSOS не ответил на 127.0.0.1:{ $port } за 30 с.
+update-title = Обновление VideoSOS
+update-install-now = Вышел VideoSOS { $version }. Установить сейчас? Программа перезапустится, когда закончит.
+update-open-page = Вышел VideoSOS { $version }. Открыть страницу релиза, чтобы скачать его?
+update-button-install = Установить
+update-button-open = Открыть страницу
+update-button-later = Позже
+update-open-failed = Страница релиза не открылась: { $error }. Откройте { $url } в браузере.
+update-failed = Обновление не установилось: { $error }
+
+## exports
+exports-dialog-title = Сохранить видео
+exports-no-folder = Папки файла { $path } нет.
+exports-no-file = Файла { $path } нет.

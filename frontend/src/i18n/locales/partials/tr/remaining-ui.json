@@ -186,7 +186,7 @@
         "savedToLibrary": "\"{{fileName}}\" medya kitaplığına kaydedildi.",
         "savedAndAdded": "\"{{fileName}}\" kaydedildi ve zaman çizelgesine eklendi."
       },
-      "defaultTtsPrompt": "FreeCut'a hoş geldiniz. Bu ses tarayıcıda yerel olarak oluşturuldu.",
+      "defaultTtsPrompt": "VideoSOS'a hoş geldiniz. Bu ses tarayıcıda yerel olarak oluşturuldu.",
       "musicPresets": {
         "lofiChillLabel": "Lo-fi Rahat",
         "lofiChillPrompt": "Tozlu davullar, yumuşak bas ve rüya gibi synth melodisiyle sıcak lo-fi beat",

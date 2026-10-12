@@ -273,7 +273,10 @@ window.addEventListener('vite:preloadError', (event) => {
 // should survive refresh/reload.
 // The browser tears down workers/resources on navigation anyway.
 
-if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+// The desktop program serves this window itself and replaces it with each update, so no offline app shell is kept.
+const APP_SHELL_SERVICE_WORKER = false
+
+if (APP_SHELL_SERVICE_WORKER && import.meta.env.PROD && 'serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker
       .register('/sw.js')

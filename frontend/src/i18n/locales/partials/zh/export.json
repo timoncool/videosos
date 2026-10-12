@@ -132,7 +132,7 @@
         },
         "video-codec-fallback": {
           "title": "将使用编解码器回退",
-          "detail": "所选编解码器在此处不可用。FreeCut 将改为以 {{container}} 导出 {{codec}}。",
+          "detail": "所选编解码器在此处不可用。VideoSOS 将改为以 {{container}} 导出 {{codec}}。",
           "fix": "保留此回退，或手动选择其他受支持的编解码器。"
         },
         "video-codec-supported": {
@@ -155,7 +155,7 @@
         },
         "worker-animated-image-fallback": {
           "title": "动画图片需要主线程导出",
-          "detail": "GIF/WebP 图片项目尚无法在导出 worker 中渲染。FreeCut 将自动回退。",
+          "detail": "GIF/WebP 图片项目尚无法在导出 worker 中渲染。VideoSOS 将自动回退。",
           "fix": "如需更快的 worker 导出，请在导出前将动画图片替换为视频片段。"
         },
         "worker-audio-context-fallback": {

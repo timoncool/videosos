@@ -132,7 +132,7 @@
         },
         "video-codec-fallback": {
           "title": "代替コーデックを使用します",
-          "detail": "選択したコーデックはここでは使用できません。FreeCut は代わりに {{container}} で {{codec}} を書き出します。",
+          "detail": "選択したコーデックはここでは使用できません。VideoSOS は代わりに {{container}} で {{codec}} を書き出します。",
           "fix": "この代替設定を使うか、対応している別のコーデックを手動で選択してください。"
         },
         "video-codec-supported": {
@@ -155,7 +155,7 @@
         },
         "worker-animated-image-fallback": {
           "title": "アニメーション画像はメインスレッド書き出しが必要です",
-          "detail": "GIF/WebP 画像アイテムはまだ書き出しワーカーでレンダリングできません。FreeCut は自動的にフォールバックします。",
+          "detail": "GIF/WebP 画像アイテムはまだ書き出しワーカーでレンダリングできません。VideoSOS は自動的にフォールバックします。",
           "fix": "より高速なワーカー書き出しのため、書き出す前にアニメーション画像を動画クリップに置き換えてください。"
         },
         "worker-audio-context-fallback": {

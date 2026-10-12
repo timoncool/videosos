@@ -7,3 +7,5 @@ export { useMediaLibraryStore } from '@/features/media-library/stores/media-libr
 export { mediaLibraryService } from '@/features/media-library/services/media-library-service'
 export { useProjectStore } from '@/features/projects/stores/project-store'
 export { saveTimeline } from '@/features/timeline/stores/timeline-persistence'
+export { buildRenderJob } from '@/features/export/utils/build-render-job'
+export { useRenderQueueStore } from '@/features/export/stores/render-queue-store'

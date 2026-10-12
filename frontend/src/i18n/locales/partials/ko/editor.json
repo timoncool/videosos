@@ -281,7 +281,7 @@
     "projectUpgradeDialog": {
       "title": "열기 전에 프로젝트 업그레이드",
       "versionMismatch": "<strong>{{projectName}}</strong>은(는) 프로젝트 스키마 v{{storedSchemaVersion}}으로 저장되었지만 이 빌드는 v{{currentSchemaVersion}}을(를) 필요로 합니다.",
-      "explanation": "FreeCut은 편집기를 로드하기 전에 업그레이드할 수 있습니다. 문제가 있을 경우 이전 데이터를 복원할 수 있도록 먼저 업그레이드 전 백업이 생성됩니다.",
+      "explanation": "VideoSOS은 편집기를 로드하기 전에 업그레이드할 수 있습니다. 문제가 있을 경우 이전 데이터를 복원할 수 있도록 먼저 업그레이드 전 백업이 생성됩니다.",
       "backupCopy": "백업 사본: <strong>{{backupName}}</strong>",
       "creatingBackup": "백업 생성 중...",
       "confirm": "백업 생성 후 업그레이드"
@@ -631,7 +631,7 @@
       "clip": "클립",
       "size": "크기",
       "frameRate": "프레임 레이트",
-      "fpsRoundedHint": "FreeCut은 가져온 비디오를 가장 가까운 지원 프로젝트 프레임 레이트에 맞춥니다. 이 클립은 {{fps}} fps를 사용합니다.",
+      "fpsRoundedHint": "VideoSOS은 가져온 비디오를 가장 가까운 지원 프로젝트 프레임 레이트에 맞춥니다. 이 클립은 {{fps}} fps를 사용합니다.",
       "keepCurrent": "현재 유지",
       "fpsOnly": "FPS만",
       "sizeOnly": "크기만",
@@ -640,14 +640,14 @@
       "matchSize": "크기 맞추기"
     },
     "editor": {
-      "appLabel": "FreeCut 비디오 편집기",
+      "appLabel": "VideoSOS 비디오 편집기",
       "upgrading": "프로젝트 업그레이드 중…",
       "backupCreated": "업그레이드 전 백업이 생성되었습니다",
       "backupFailed": "업그레이드 전 백업 생성에 실패했습니다",
       "tryAgain": "다시 시도하세요.",
       "projectSaved": "프로젝트가 저장되었습니다",
       "projectSaveFailed": "프로젝트 저장에 실패했습니다",
-      "projectBundle": "FreeCut 프로젝트 번들"
+      "projectBundle": "VideoSOS 프로젝트 번들"
     },
     "audioMeters": {
       "meters": "미터",

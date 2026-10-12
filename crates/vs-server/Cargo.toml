@@ -43,6 +43,9 @@ tar = "0.4"
 lzma-rust2 = { version = "0.21", default-features = false, features = ["std", "optimization", "xz"] }
 sysinfo = "0.39"
 regex = "1"
+rfd = "0.17"
+dirs = "7"
+dunce = "1"
 studio-hub-client = { git = "https://github.com/timoncool/studio-hub-client", rev = "531327a64882580bd44f8e173908be0a046c7adc" }
 
 [target.'cfg(windows)'.dependencies]

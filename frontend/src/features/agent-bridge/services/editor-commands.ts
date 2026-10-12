@@ -11,9 +11,12 @@ import { useEditorStore } from '@/shared/state/editor'
 import { usePlaybackStore } from '@/shared/state/playback'
 import type { EditorSidebarTab } from '@/config/editor-workspaces'
 import { router } from '@/app/router'
+import type { ExtendedExportSettings, VideoContainer } from '@/types/export'
 import {
+  buildRenderJob,
   mediaLibraryService,
   saveTimeline,
+  useRenderQueueStore,
   useItemsStore,
   useMediaLibraryStore,
   useProjectStore,
@@ -71,8 +74,10 @@ function timeline() {
 }
 
 export function registerEditorCommands(): void {
-  registerBridgeCommand('editor_state', (args) => {
+  registerBridgeCommand('editor_state', async (args) => {
     takeArgs('editor_state', args, [])
+    const gpu = (navigator as Navigator & { gpu?: { requestAdapter: () => Promise<unknown> } }).gpu
+    const adapter = gpu ? await gpu.requestAdapter().catch(() => null) : null
     const project = useProjectStore.getState().currentProject
     const playback = usePlaybackStore.getState()
     const open = !!project && window.location.pathname.startsWith('/editor/')
@@ -84,6 +89,12 @@ export function registerEditorCommands(): void {
       sidebar_tab: useEditorStore.getState().activeTab,
       clips: open ? useItemsStore.getState().items.length : null,
       media: open ? useMediaLibraryStore.getState().mediaItems.length : null,
+      engine: {
+        cross_origin_isolated: window.crossOriginIsolated,
+        webgpu: adapter !== null,
+        webcodecs: typeof VideoEncoder !== 'undefined' && typeof AudioEncoder !== 'undefined',
+        user_agent: navigator.userAgent,
+      },
     }
   })
 
@@ -182,6 +193,50 @@ export function registerEditorCommands(): void {
     openProject()
     useEditorStore.getState().setActiveTab(tab)
     return { tab }
+  })
+
+  registerBridgeCommand('export_video', async (args) => {
+    takeArgs('export_video', args, ['format', 'quality', 'width', 'height', 'file_name'])
+    const project = openProject()
+    const format = (textArg('export_video', args, 'format') ?? 'mp4') as VideoContainer
+    if (!['mp4', 'webm', 'mov', 'mkv'].includes(format)) {
+      throw bridgeError('bad_value', { command: 'export_video', field: 'format', expected: 'mp4, webm, mov or mkv' })
+    }
+    const quality = (textArg('export_video', args, 'quality') ?? 'high') as ExtendedExportSettings['quality']
+    if (!['low', 'medium', 'high', 'ultra'].includes(quality)) {
+      throw bridgeError('bad_value', { command: 'export_video', field: 'quality', expected: 'low, medium, high or ultra' })
+    }
+    if (useItemsStore.getState().items.length === 0) throw failed('export_video', 'the timeline is empty')
+    await save(project.id)
+    const settings: ExtendedExportSettings = {
+      mode: 'video',
+      codec: format === 'webm' ? 'vp9' : 'h264',
+      quality,
+      resolution: {
+        width: numberArg('export_video', args, 'width') ?? project.metadata?.width ?? 1920,
+        height: numberArg('export_video', args, 'height') ?? project.metadata?.height ?? 1080,
+      },
+      videoContainer: format,
+      renderWholeProject: true,
+      subtitleMode: 'burn',
+    }
+    const fileName = textArg('export_video', args, 'file_name')?.replace(/[<>:"/\\|?*]+/g, '_').trim()
+    let job
+    try {
+      job = await buildRenderJob({ settings, name: fileName || project.name })
+    } catch (problem) {
+      throw failed('export_video', problem)
+    }
+    if (fileName) job = { ...job, fileName: `${fileName}.${job.clientSettings.container}` }
+    useRenderQueueStore.getState().enqueueJobs([job])
+    for (;;) {
+      await new Promise((resolve) => setTimeout(resolve, 500))
+      const current = useRenderQueueStore.getState().jobs.find((each) => each.id === job.id)
+      if (!current) throw failed('export_video', 'the render job left the queue')
+      if (current.status === 'completed') return { saved: current.savedPath, size: current.fileSize }
+      if (current.status === 'failed') throw failed('export_video', current.error ?? 'the render failed')
+      if (current.status === 'cancelled') throw failed('export_video', 'the render was cancelled')
+    }
   })
 
   registerBridgeCommand('project_open', async (args) => {

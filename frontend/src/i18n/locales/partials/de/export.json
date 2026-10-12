@@ -132,7 +132,7 @@
         },
         "video-codec-fallback": {
           "title": "Codec-Fallback wird verwendet",
-          "detail": "Der ausgewählte Codec ist hier nicht verfügbar. FreeCut exportiert stattdessen {{codec}} in {{container}}.",
+          "detail": "Der ausgewählte Codec ist hier nicht verfügbar. VideoSOS exportiert stattdessen {{codec}} in {{container}}.",
           "fix": "Behalte diesen Fallback bei oder wähle manuell einen anderen unterstützten Codec."
         },
         "video-codec-supported": {
@@ -155,7 +155,7 @@
         },
         "worker-animated-image-fallback": {
           "title": "Animierte Bilder benötigen Export im Hauptthread",
-          "detail": "GIF-/WebP-Bildelemente können im Export-Worker noch nicht gerendert werden. FreeCut wechselt automatisch zum Fallback.",
+          "detail": "GIF-/WebP-Bildelemente können im Export-Worker noch nicht gerendert werden. VideoSOS wechselt automatisch zum Fallback.",
           "fix": "Ersetze animierte Bilder vor dem Export durch Videoclips, um einen schnelleren Worker-Export zu ermöglichen."
         },
         "worker-audio-context-fallback": {

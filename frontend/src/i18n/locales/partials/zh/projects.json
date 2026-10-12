@@ -112,7 +112,7 @@
       "selectedCount_other": "已选 {{count}} 个",
       "deleteN_one": "删除 {{count}} 个",
       "deleteN_other": "删除 {{count}} 个",
-      "welcomeTitle": "欢迎使用 FreeCut",
+      "welcomeTitle": "欢迎使用 VideoSOS",
       "welcomeDescription": "创建你的第一个视频项目开始吧。选择分辨率和帧率，然后开始编辑！",
       "noResultsTitle": "未找到项目",
       "noResultsDescription": "我们找不到符合你搜索条件的项目。请尝试调整筛选条件或搜索词。",
@@ -179,9 +179,9 @@
     },
     "workspaceGate": {
       "unsupportedBrowser": "不支持的浏览器",
-      "unsupportedBrowserDescription": "FreeCut 的工作区文件夹存储需要基于 Chromium 的浏览器（Chrome、Edge、Brave、Arc）。Firefox 和 Safari 尚不支持 File System Access API。",
+      "unsupportedBrowserDescription": "VideoSOS 的工作区文件夹存储需要基于 Chromium 的浏览器（Chrome、Edge、Brave、Arc）。Firefox 和 Safari 尚不支持 File System Access API。",
       "pickTitle": "选择你的工作区文件夹",
-      "pickDescription": "FreeCut 将你的所有项目、媒体和缓存作为普通文件存储在你控制的文件夹中。选择磁盘上的任意文件夹——你的项目将存放在那里。",
+      "pickDescription": "VideoSOS 将你的所有项目、媒体和缓存作为普通文件存储在你控制的文件夹中。选择磁盘上的任意文件夹——你的项目将存放在那里。",
       "chooseFolder": "选择文件夹",
       "workspaceGuide": "工作区指南",
       "pickTip": "提示：选择 Dropbox、iCloud 或 Google Drive 中的文件夹，可在多个设备间同步项目。你可以稍后移动它。",
@@ -190,7 +190,7 @@
       "chooseDifferentFolder": "选择其他文件夹",
       "reconnect": "重新连接",
       "folderPermissionDenied": "未授予权限。请选择一个文件夹并允许读写访问后继续。",
-      "folderPickFailed": "FreeCut 无法打开该文件夹。请尝试选择一个可编辑的普通文件夹，并授予读写访问权限。",
+      "folderPickFailed": "VideoSOS 无法打开该文件夹。请尝试选择一个可编辑的普通文件夹，并授予读写访问权限。",
       "reconnectPermissionDenied": "权限被拒绝。请重新连接工作区或选择其他文件夹。"
     },
     "workspaceIndicator": {
@@ -264,15 +264,15 @@
       "showcaseSubheading": "完整的视频编辑套件，就在你的浏览器中。",
       "screenshot": "截图",
       "seeItInAction": "查看实际效果",
-      "seeItInActionSubheading": "观看 FreeCut 编辑功能的快速演示。",
-      "demoPreviewAlt": "FreeCut 演示预览",
+      "seeItInActionSubheading": "观看 VideoSOS 编辑功能的快速演示。",
+      "demoPreviewAlt": "VideoSOS 演示预览",
       "watchDemoOnYouTube": "在 YouTube 上观看演示",
       "faqHeading": "常见问题",
-      "faqSubheading": "关于 FreeCut 你需要知道的一切。",
+      "faqSubheading": "关于 VideoSOS 你需要知道的一切。",
       "ctaHeading": "准备好开始编辑了吗？",
       "ctaSubheading": "立即开始，几秒钟内创建你的第一个项目。",
       "startEditing": "开始编辑",
-      "footer": "MIT 许可证 © {{year}} FreeCut",
+      "footer": "MIT 许可证 © {{year}} VideoSOS",
       "showcase": {
         "timeline": {
           "title": "时间线编辑",
@@ -309,12 +309,12 @@
       },
       "faq": {
         "free": {
-          "question": "FreeCut 真的免费吗？",
-          "answer": "是的，FreeCut 在 MIT 许可证下完全免费且开源。没有隐藏费用、订阅或水印。"
+          "question": "VideoSOS 真的免费吗？",
+          "answer": "是的，VideoSOS 在 MIT 许可证下完全免费且开源。没有隐藏费用、订阅或水印。"
         },
         "install": {
           "question": "我需要安装什么吗？",
-          "answer": "无需安装。FreeCut 完全在你的浏览器中运行。只需打开网站即可开始编辑。"
+          "answer": "无需安装。VideoSOS 完全在你的浏览器中运行。只需打开网站即可开始编辑。"
         },
         "storage": {
           "question": "我的视频存储在哪里？",
@@ -322,7 +322,7 @@
         },
         "browsers": {
           "question": "支持哪些浏览器？",
-          "answerP1": "FreeCut 目前在 Chrome 或 Edge 113+ 上效果最佳。它依赖 WebGPU、WebCodecs、OPFS 和 File System Access 等现代浏览器 API，因此完整的工作流程目前以 Chromium 为先。",
+          "answerP1": "VideoSOS 目前在 Chrome 或 Edge 113+ 上效果最佳。它依赖 WebGPU、WebCodecs、OPFS 和 File System Access 等现代浏览器 API，因此完整的工作流程目前以 Chromium 为先。",
           "answerP2": "<strong>Brave 用户：</strong>File System Access API 默认处于禁用状态。要启用它，请前往 <code>brave://flags/#file-system-access-api</code>，将其设置为 <strong>Enabled</strong>，然后重新启动浏览器。"
         },
         "exportFormats": {
@@ -557,7 +557,7 @@
     },
     "routeError": {
       "title": "出了点问题",
-      "description": "FreeCut 无法完成此页面的加载。",
+      "description": "VideoSOS 无法完成此页面的加载。",
       "projectNotFoundTitle": "找不到此项目",
       "projectNotFoundDescription": "该项目可能已被移动或删除，或者你打开的是旧链接。工作区中的其他项目仍然可用。",
       "backToProjects": "返回项目列表",
@@ -565,9 +565,9 @@
       "copyDetails": "复制错误详情",
       "detailsCopied": "已复制错误详情",
       "copyFailed": "无法复制详情",
-      "causePermission": "FreeCut 已失去使用工作区文件夹的权限。请重新连接，或选择其他文件夹。",
+      "causePermission": "VideoSOS 已失去使用工作区文件夹的权限。请重新连接，或选择其他文件夹。",
       "causeMissing": "找不到你的工作区文件夹。它可能已被移动、重命名或删除。",
-      "causeUnsupported": "你的工作区文件夹位于不支持 FreeCut 所需全部功能的驱动器上。云同步文件夹和网络文件夹经常如此。选择本地磁盘上的文件夹通常可以解决。"
+      "causeUnsupported": "你的工作区文件夹位于不支持 VideoSOS 所需全部功能的驱动器上。云同步文件夹和网络文件夹经常如此。选择本地磁盘上的文件夹通常可以解决。"
     }
   }
 }

@@ -16,7 +16,7 @@ fn main() -> anyhow::Result<()> {
     if !vs_server::process_group::bind_children_to_this_process() {
         eprintln!("[ERROR] the process did not join its own job object: ffmpeg children end only with their handles");
     }
-    let root = repo_root().canonicalize()?;
+    let root = dunce::canonicalize(repo_root())?;
     let port = vs_server::service::listen_port().map_err(anyhow::Error::msg)?;
     match vs_server::service::claim_port(port, Duration::from_secs(5)).map_err(|busy| anyhow::anyhow!(busy.to_string()))? {
         vs_server::service::Claim::Bound(listener) => vs_server::serve_blocking(&root, listener),

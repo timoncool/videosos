@@ -1,0 +1,15 @@
+{
+  "name": "videosos-desktop",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Tauri shell of VideoSOS: runs the vs-server inside its own process and opens the window on it",
+  "scripts": {
+    "tauri": "tauri",
+    "dev": "tauri dev",
+    "build": "tauri build --no-bundle",
+    "bundle": "tauri build --config src-tauri/tauri.bundle.conf.json"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "2.12.2"
+  }
+}

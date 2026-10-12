@@ -112,7 +112,7 @@
       "selectedCount_other": "{{count}} ausgewählt",
       "deleteN_one": "{{count}} löschen",
       "deleteN_other": "{{count}} löschen",
-      "welcomeTitle": "Willkommen bei FreeCut",
+      "welcomeTitle": "Willkommen bei VideoSOS",
       "welcomeDescription": "Beginne, indem du dein erstes Videoprojekt erstellst. Wähle deine Auflösung, Bildrate und leg los mit dem Bearbeiten!",
       "noResultsTitle": "Keine Projekte gefunden",
       "noResultsDescription": "Wir konnten keine Projekte finden, die deinen Suchkriterien entsprechen. Versuche, deine Filter oder Suchbegriffe anzupassen.",
@@ -179,9 +179,9 @@
     },
     "workspaceGate": {
       "unsupportedBrowser": "Nicht unterstützter Browser",
-      "unsupportedBrowserDescription": "FreeCut benötigt einen Chromium-basierten Browser (Chrome, Edge, Brave, Arc) für seinen Arbeitsbereich-Ordnerspeicher. Firefox und Safari unterstützen die File System Access API noch nicht.",
+      "unsupportedBrowserDescription": "VideoSOS benötigt einen Chromium-basierten Browser (Chrome, Edge, Brave, Arc) für seinen Arbeitsbereich-Ordnerspeicher. Firefox und Safari unterstützen die File System Access API noch nicht.",
       "pickTitle": "Wähle deinen Arbeitsbereich-Ordner",
-      "pickDescription": "FreeCut speichert alle deine Projekte, Medien und Caches als einfache Dateien in einem Ordner, den du kontrollierst. Wähle einen beliebigen Ordner auf der Festplatte – deine Projekte werden dort gespeichert.",
+      "pickDescription": "VideoSOS speichert alle deine Projekte, Medien und Caches als einfache Dateien in einem Ordner, den du kontrollierst. Wähle einen beliebigen Ordner auf der Festplatte – deine Projekte werden dort gespeichert.",
       "chooseFolder": "Ordner auswählen",
       "workspaceGuide": "Workspace-Anleitung",
       "pickTip": "Tipp: Wähle einen Ordner in Dropbox, iCloud oder Google Drive, um Projekte über Geräte hinweg zu synchronisieren. Du kannst ihn später verschieben.",
@@ -190,7 +190,7 @@
       "chooseDifferentFolder": "Anderen Ordner auswählen",
       "reconnect": "Erneut verbinden",
       "folderPermissionDenied": "Die Berechtigung wurde nicht erteilt. Wähle einen Ordner und erlaube Lese-/Schreibzugriff, um fortzufahren.",
-      "folderPickFailed": "FreeCut konnte diesen Ordner nicht öffnen. Versuche es mit einem normalen bearbeitbaren Ordner und erlaube Lese-/Schreibzugriff.",
+      "folderPickFailed": "VideoSOS konnte diesen Ordner nicht öffnen. Versuche es mit einem normalen bearbeitbaren Ordner und erlaube Lese-/Schreibzugriff.",
       "reconnectPermissionDenied": "Berechtigung verweigert. Verbinde den Arbeitsbereich erneut oder wähle einen anderen Ordner."
     },
     "workspaceIndicator": {
@@ -264,15 +264,15 @@
       "showcaseSubheading": "Eine komplette Videobearbeitungssuite, direkt in deinem Browser.",
       "screenshot": "Screenshot",
       "seeItInAction": "In Aktion sehen",
-      "seeItInActionSubheading": "Sieh dir eine kurze Demo der Bearbeitungsfunktionen von FreeCut an.",
-      "demoPreviewAlt": "FreeCut-Demovorschau",
+      "seeItInActionSubheading": "Sieh dir eine kurze Demo der Bearbeitungsfunktionen von VideoSOS an.",
+      "demoPreviewAlt": "VideoSOS-Demovorschau",
       "watchDemoOnYouTube": "Demo auf YouTube ansehen",
       "faqHeading": "Häufig gestellte Fragen",
-      "faqSubheading": "Alles, was du über FreeCut wissen musst.",
+      "faqSubheading": "Alles, was du über VideoSOS wissen musst.",
       "ctaHeading": "Bereit, mit dem Bearbeiten zu beginnen?",
       "ctaSubheading": "Leg los und erstelle dein erstes Projekt in Sekunden.",
       "startEditing": "Mit dem Bearbeiten beginnen",
-      "footer": "MIT-Lizenz © {{year}} FreeCut",
+      "footer": "MIT-Lizenz © {{year}} VideoSOS",
       "showcase": {
         "timeline": {
           "title": "Timeline-Bearbeitung",
@@ -309,12 +309,12 @@
       },
       "faq": {
         "free": {
-          "question": "Ist FreeCut wirklich kostenlos?",
-          "answer": "Ja, FreeCut ist vollständig kostenlos und Open Source unter der MIT-Lizenz. Es gibt keine versteckten Gebühren, Abonnements oder Wasserzeichen."
+          "question": "Ist VideoSOS wirklich kostenlos?",
+          "answer": "Ja, VideoSOS ist vollständig kostenlos und Open Source unter der MIT-Lizenz. Es gibt keine versteckten Gebühren, Abonnements oder Wasserzeichen."
         },
         "install": {
           "question": "Muss ich etwas installieren?",
-          "answer": "Keine Installation erforderlich. FreeCut läuft vollständig in deinem Browser. Öffne einfach die Website und beginne mit dem Bearbeiten."
+          "answer": "Keine Installation erforderlich. VideoSOS läuft vollständig in deinem Browser. Öffne einfach die Website und beginne mit dem Bearbeiten."
         },
         "storage": {
           "question": "Wo werden meine Videos gespeichert?",
@@ -322,7 +322,7 @@
         },
         "browsers": {
           "question": "Welche Browser werden unterstützt?",
-          "answerP1": "FreeCut funktioniert derzeit am besten in Chrome oder Edge 113+. Es stützt sich auf moderne Browser-APIs wie WebGPU, WebCodecs, OPFS und File System Access, daher ist der vollständige Workflow derzeit Chromium-orientiert.",
+          "answerP1": "VideoSOS funktioniert derzeit am besten in Chrome oder Edge 113+. Es stützt sich auf moderne Browser-APIs wie WebGPU, WebCodecs, OPFS und File System Access, daher ist der vollständige Workflow derzeit Chromium-orientiert.",
           "answerP2": "<strong>Brave-Nutzer:</strong> Die File System Access API ist standardmäßig deaktiviert. Um sie zu aktivieren, gehe zu <code>brave://flags/#file-system-access-api</code>, stelle sie auf <strong>Enabled</strong> und starte den Browser neu."
         },
         "exportFormats": {
@@ -557,7 +557,7 @@
     },
     "routeError": {
       "title": "Etwas ist schiefgelaufen",
-      "description": "FreeCut konnte diese Seite nicht vollständig laden.",
+      "description": "VideoSOS konnte diese Seite nicht vollständig laden.",
       "projectNotFoundTitle": "Dieses Projekt wurde nicht gefunden",
       "projectNotFoundDescription": "Es wurde möglicherweise verschoben, gelöscht oder über einen alten Link geöffnet. Deine anderen Projekte sind weiterhin in deinem Arbeitsbereich verfügbar.",
       "backToProjects": "Zurück zu den Projekten",
@@ -565,9 +565,9 @@
       "copyDetails": "Fehlerdetails kopieren",
       "detailsCopied": "Fehlerdetails kopiert",
       "copyFailed": "Details konnten nicht kopiert werden",
-      "causePermission": "FreeCut hat keine Berechtigung mehr für deinen Arbeitsordner. Verbinde ihn erneut oder wähle einen anderen Ordner.",
+      "causePermission": "VideoSOS hat keine Berechtigung mehr für deinen Arbeitsordner. Verbinde ihn erneut oder wähle einen anderen Ordner.",
       "causeMissing": "Dein Arbeitsordner wurde nicht gefunden. Möglicherweise wurde er verschoben, umbenannt oder gelöscht.",
-      "causeUnsupported": "Dein Arbeitsordner liegt auf einem Laufwerk, das nicht alles unterstützt, was FreeCut benötigt. Cloud-synchronisierte Ordner und Netzwerkordner verhalten sich häufig so. Ein Ordner auf einer lokalen Festplatte behebt das meist."
+      "causeUnsupported": "Dein Arbeitsordner liegt auf einem Laufwerk, das nicht alles unterstützt, was VideoSOS benötigt. Cloud-synchronisierte Ordner und Netzwerkordner verhalten sich häufig so. Ein Ordner auf einer lokalen Festplatte behebt das meist."
     }
   }
 }

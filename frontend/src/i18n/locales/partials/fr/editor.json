@@ -281,7 +281,7 @@
     "projectUpgradeDialog": {
       "title": "Mettre à jour le projet avant de l'ouvrir",
       "versionMismatch": "<strong>{{projectName}}</strong> a été enregistré avec le schéma de projet v{{storedSchemaVersion}}, mais cette version attend v{{currentSchemaVersion}}.",
-      "explanation": "FreeCut peut le mettre à jour avant de charger l'éditeur. Une sauvegarde de l'état précédent sera créée d'abord afin que vous puissiez restaurer les anciennes données si nécessaire.",
+      "explanation": "VideoSOS peut le mettre à jour avant de charger l'éditeur. Une sauvegarde de l'état précédent sera créée d'abord afin que vous puissiez restaurer les anciennes données si nécessaire.",
       "backupCopy": "Copie de sauvegarde : <strong>{{backupName}}</strong>",
       "creatingBackup": "Création de la sauvegarde...",
       "confirm": "Sauvegarder et mettre à jour"
@@ -631,7 +631,7 @@
       "clip": "Clip",
       "size": "Taille",
       "frameRate": "Fréquence d'images",
-      "fpsRoundedHint": "FreeCut adapte la vidéo importée à la fréquence d'images de projet prise en charge la plus proche. Ce clip utiliserait {{fps}} fps.",
+      "fpsRoundedHint": "VideoSOS adapte la vidéo importée à la fréquence d'images de projet prise en charge la plus proche. Ce clip utiliserait {{fps}} fps.",
       "keepCurrent": "Conserver l'actuel",
       "fpsOnly": "FPS uniquement",
       "sizeOnly": "Taille uniquement",
@@ -640,14 +640,14 @@
       "matchSize": "Adapter la taille"
     },
     "editor": {
-      "appLabel": "Éditeur vidéo FreeCut",
+      "appLabel": "Éditeur vidéo VideoSOS",
       "upgrading": "Mise à niveau du projet…",
       "backupCreated": "Sauvegarde créée avant la mise à jour",
       "backupFailed": "Échec de la création de la sauvegarde avant la mise à jour",
       "tryAgain": "Veuillez réessayer.",
       "projectSaved": "Projet enregistré",
       "projectSaveFailed": "Échec de l'enregistrement du projet",
-      "projectBundle": "Paquet de projet FreeCut"
+      "projectBundle": "Paquet de projet VideoSOS"
     },
     "audioMeters": {
       "meters": "Vu-mètres",

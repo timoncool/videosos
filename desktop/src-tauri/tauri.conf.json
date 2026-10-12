@@ -1,0 +1,49 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "VideoSOS",
+  "version": "2.0.0",
+  "identifier": "com.timoncool.videosos",
+  "build": {
+    "frontendDist": "../../frontend/dist",
+    "beforeBundleCommand": "echo The installer is built only with npm run bundle, which adds the staged window of src-tauri/tauri.bundle.conf.json && exit 1"
+  },
+  "app": {
+    "withGlobalTauri": false,
+    "windows": [],
+    "security": {
+      "csp": null
+    }
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEQzRjMwOEJBODk1MzdFQjgKUldTNGZsT0p1Z2p6MDJMVTlRdllVVGN0MnlPMnpDNUU1OG1zYmRmS3RWRjR2aldYN2ZBM1NFalkK",
+      "endpoints": [
+        "https://github.com/timoncool/videosos/releases/latest/download/latest.json"
+      ],
+      "windows": {
+        "installMode": "passive"
+      }
+    }
+  },
+  "bundle": {
+    "linux": { "appimage": { "bundleMediaFramework": true } },
+    "active": false,
+    "targets": "all",
+    "createUpdaterArtifacts": true,
+    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
+    "windows": {
+      "webviewInstallMode": {
+        "type": "downloadBootstrapper"
+      },
+      "nsis": {
+        "installerHooks": "installer-hooks.nsi",
+        "languages": ["English", "Russian"],
+        "customLanguageFiles": {
+          "English": "installer-english.nsh",
+          "Russian": "installer-russian.nsh"
+        }
+      }
+    }
+  },
+  "mainBinaryName": "VideoSOS"
+}

@@ -281,7 +281,7 @@
     "projectUpgradeDialog": {
       "title": "Actualizar el proyecto antes de abrirlo",
       "versionMismatch": "<strong>{{projectName}}</strong> se guardó con el esquema de proyecto v{{storedSchemaVersion}}, pero esta versión espera v{{currentSchemaVersion}}.",
-      "explanation": "FreeCut puede actualizarlo antes de cargar el editor. Primero se creará una copia de seguridad previa a la actualización para que puedas restaurar los datos antiguos si algo no va bien.",
+      "explanation": "VideoSOS puede actualizarlo antes de cargar el editor. Primero se creará una copia de seguridad previa a la actualización para que puedas restaurar los datos antiguos si algo no va bien.",
       "backupCopy": "Copia de seguridad: <strong>{{backupName}}</strong>",
       "creatingBackup": "Creando copia de seguridad...",
       "confirm": "Crear copia y actualizar"
@@ -631,7 +631,7 @@
       "clip": "Clip",
       "size": "Tamaño",
       "frameRate": "Velocidad de fotogramas",
-      "fpsRoundedHint": "FreeCut ajusta el vídeo importado a la velocidad de fotogramas de proyecto compatible más cercana. Este clip usaría {{fps}} fps.",
+      "fpsRoundedHint": "VideoSOS ajusta el vídeo importado a la velocidad de fotogramas de proyecto compatible más cercana. Este clip usaría {{fps}} fps.",
       "keepCurrent": "Mantener actual",
       "fpsOnly": "Solo FPS",
       "sizeOnly": "Solo tamaño",
@@ -640,14 +640,14 @@
       "matchSize": "Ajustar tamaño"
     },
     "editor": {
-      "appLabel": "Editor de vídeo FreeCut",
+      "appLabel": "Editor de vídeo VideoSOS",
       "upgrading": "Actualizando proyecto…",
       "backupCreated": "Copia de seguridad creada antes de actualizar",
       "backupFailed": "Error al crear la copia de seguridad antes de actualizar",
       "tryAgain": "Inténtalo de nuevo.",
       "projectSaved": "Proyecto guardado",
       "projectSaveFailed": "Error al guardar el proyecto",
-      "projectBundle": "Paquete de proyecto FreeCut"
+      "projectBundle": "Paquete de proyecto VideoSOS"
     },
     "audioMeters": {
       "meters": "Medidores",

@@ -3,7 +3,6 @@ import { RouterProvider } from '@tanstack/react-router'
 import { GlobalTooltip } from '@/components/ui/global-tooltip'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { ErrorBoundary } from '@/components/error-boundary'
-import { PwaInstallPrompt } from '@/app/pwa-install-prompt'
 import { WorkspaceGate } from '@/features/workspace-gate/workspace-gate'
 import { router } from '@/app/router'
 import { AgentBridgeHost } from '@/features/agent-bridge/components/agent-bridge-host'
@@ -72,7 +71,6 @@ export function App() {
         </WorkspaceGate>
         <AgentBridgeHost />
         <GlobalTooltip />
-        <PwaInstallPrompt />
         {showToaster && (
           <Suspense fallback={null}>
             <LazyToaster />
