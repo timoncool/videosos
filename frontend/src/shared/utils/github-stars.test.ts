@@ -39,7 +39,7 @@ describe('GitHub stars cache', () => {
 
     await expect(refreshGitHubStarCount(storage, fetchImpl, 25_000)).resolves.toBe(987)
     expect(storage.setItem).toHaveBeenCalledWith(
-      'freecut.githubStars.v1',
+      'videosos.githubStars.v1',
       JSON.stringify({ stars: 987, fetchedAt: 25_000 }),
     )
   })

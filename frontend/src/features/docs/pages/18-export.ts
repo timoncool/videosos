@@ -5,7 +5,7 @@ const page = {
   slug: 'export',
   title: 'Exporting',
   description:
-    'Render video or audio in the browser, choose formats and range, and clear preflight warnings.',
+    'Render video or audio on your machine, choose formats and range, and clear preflight warnings.',
   category: 'Output',
   related: ['render-queue', 'text-captions-subtitles', 'troubleshooting'],
   sections: [
@@ -48,7 +48,7 @@ const page = {
         {
           kind: 'note',
           tone: 'info',
-          text: 'Which codecs are available depends on your browser; FreeCut warns or falls back when one is not.',
+          text: 'Which codecs are available depends on your graphics card and system; VideoSOS warns or falls back when one is not.',
         },
       ],
     },

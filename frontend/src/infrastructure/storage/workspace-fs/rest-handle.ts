@@ -53,7 +53,7 @@ async function stat(path: string): Promise<Stat> {
 }
 
 /** The URL the server streams the file from, with byte ranges. */
-export function restFileUrl(path: string): string {
+function restFileUrl(path: string): string {
   return `${API}/read?${query({ path })}`
 }
 
@@ -112,7 +112,7 @@ abstract class RestHandle {
   }
 }
 
-export class RestFileHandle extends RestHandle {
+class RestFileHandle extends RestHandle {
   readonly kind = 'file' as const
 
   async getFile(): Promise<File> {
@@ -148,7 +148,7 @@ export class RestFileHandle extends RestHandle {
   }
 }
 
-export class RestDirectoryHandle extends RestHandle {
+class RestDirectoryHandle extends RestHandle {
   readonly kind = 'directory' as const
 
   async getDirectoryHandle(name: string, options: { create?: boolean } = {}): Promise<RestDirectoryHandle> {
@@ -215,10 +215,6 @@ export class RestDirectoryHandle extends RestHandle {
 /** The workspace root of the server this page was served from. */
 export function createServerWorkspaceRoot(): FileSystemDirectoryHandle {
   return new RestDirectoryHandle('', 'workspace') as unknown as FileSystemDirectoryHandle
-}
-
-export function isRestFileHandle(handle: unknown): handle is RestFileHandle {
-  return handle instanceof RestFileHandle
 }
 
 /** Whether this page runs inside VideoSOS, with its server behind the same origin. */

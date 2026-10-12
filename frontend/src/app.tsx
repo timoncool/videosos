@@ -14,6 +14,11 @@ const LazyToaster = lazy(async () => {
   return { default: Toaster }
 })
 
+async function showProject(projectId: string | null): Promise<void> {
+  if (projectId) await router.navigate({ to: '/editor/$projectId', params: { projectId } })
+  else await router.navigate({ to: '/projects' })
+}
+
 export function App() {
   const [showToaster, setShowToaster] = useState(false)
 
@@ -71,7 +76,7 @@ export function App() {
         <WorkspaceGate>
           <RouterProvider router={router} />
         </WorkspaceGate>
-        <AgentBridgeHost />
+        <AgentBridgeHost showProject={showProject} />
         <FirstRunDialog />
         <GenerateSyncHost />
         <GlobalTooltip />

@@ -10,7 +10,6 @@ import { setEditCanvas } from '@/headless/edit-op-support'
 import { useEditorStore } from '@/shared/state/editor'
 import { usePlaybackStore } from '@/shared/state/playback'
 import type { EditorSidebarTab } from '@/config/editor-workspaces'
-import { router } from '@/app/router'
 import type { ExtendedExportSettings, VideoContainer } from '@/types/export'
 import {
   buildRenderJob,
@@ -73,7 +72,10 @@ function timeline() {
   }
 }
 
-export function registerEditorCommands(): void {
+/** Opens a project in the editor, or the projects list for `null`; the app owns the router. */
+export type ShowProject = (projectId: string | null) => Promise<void>
+
+export function registerEditorCommands(showProject: ShowProject): void {
   registerBridgeCommand('editor_state', async (args) => {
     takeArgs('editor_state', args, [])
     const gpu = (navigator as Navigator & { gpu?: { requestAdapter: () => Promise<unknown> } }).gpu
@@ -253,8 +255,7 @@ export function registerEditorCommands(): void {
     takeArgs('project_open', args, ['project_id'])
     const id = textArg('project_open', args, 'project_id')
     try {
-      if (id) await router.navigate({ to: '/editor/$projectId', params: { projectId: id } })
-      else await router.navigate({ to: '/projects' })
+      await showProject(id || null)
     } catch (problem) {
       throw failed('project_open', problem)
     }

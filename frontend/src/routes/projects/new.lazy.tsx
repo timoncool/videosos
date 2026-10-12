@@ -7,9 +7,8 @@ import { InlineCreateProjectForm } from '@/features/projects/components/project-
 import { useCreateProject } from '@/features/projects/hooks/use-project-actions'
 import { FreeCutLogo } from '@/components/brand/freecut-logo'
 import { Button } from '@/components/ui/button'
-import { Github } from 'lucide-react'
-import { DiscordIcon } from '@/components/brand/discord-icon'
-import { DISCORD_INVITE_URL } from '@/config/community'
+import { Github, Send } from 'lucide-react'
+import { DISCORD_INVITE_URL, REPOSITORY_URL } from '@/config/community'
 import type { ProjectFormData } from '@/features/projects/utils/validation'
 
 const logger = createLogger('NewProject')
@@ -58,13 +57,13 @@ function NewProject() {
           <div className="flex items-center gap-3">
             <Button variant="outline" size="lg" className="gap-2" asChild>
               <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer">
-                <DiscordIcon className="w-4 h-4" />
-                Discord
+                <Send className="w-4 h-4" />
+                Telegram
               </a>
             </Button>
             <Button variant="outline" size="icon" className="h-10 w-10" asChild>
               <a
-                href="https://github.com/walterlow/freecut"
+                href={REPOSITORY_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 data-tooltip={t('projects.viewOnGitHub')}

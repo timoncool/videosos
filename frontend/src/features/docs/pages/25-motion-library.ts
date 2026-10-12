@@ -14,7 +14,7 @@ const page = {
       blocks: [
         {
           kind: 'paragraph',
-          text: 'FreeCut uses one animation system in two places. Use the compact **Animation** tab while editing a sequence clip, or open **Motion** for layered composition work.',
+          text: 'VideoSOS uses one animation system in two places. Use the compact **Animation** tab while editing a sequence clip, or open **Motion** for layered composition work.',
         },
         {
           kind: 'table',

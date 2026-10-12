@@ -15,9 +15,9 @@ const page = {
         {
           kind: 'list',
           items: [
-            'A **workspace** is a single folder on disk that FreeCut reads from and writes to.',
-            'Everything FreeCut generates lives there: project files, media metadata, thumbnails, waveforms, transcripts, scene data, AI assets, caches, and exports.',
-            'Imported source media is not copied into the workspace — FreeCut records a link to each file where it already sits on disk.',
+            'The **workspace** is the folder VideoSOS keeps its projects in: `data\\workspace` beside the program, or `%LOCALAPPDATA%\\VideoSOS\\data\\workspace` when the program folder is read-only.',
+            'Everything VideoSOS generates lives there: project files, media metadata, thumbnails, waveforms, transcripts, scene data, AI assets, caches, and exports.',
+            'Imported source media is not copied into the workspace — VideoSOS records a link to each file where it already sits on disk.',
           ],
         },
         {
@@ -28,32 +28,14 @@ const page = {
       ],
     },
     {
-      title: 'Choosing and switching workspaces',
+      title: 'Generations',
       blocks: [
         {
           kind: 'list',
           items: [
-            'On first launch FreeCut asks you to pick a workspace before the editor opens.',
-            'Pick a normal folder you own — for example a folder in Documents. Avoid protected system locations.',
-            'Use the **Workspaces** control to add, switch between, or remove known workspaces.',
-            'Switching changes which folder FreeCut uses; it does not move your source media.',
-          ],
-        },
-      ],
-    },
-    {
-      title: 'Permissions and reconnecting',
-      blocks: [
-        {
-          kind: 'paragraph',
-          text: 'Browsers can expire folder permission between sessions for security.',
-        },
-        {
-          kind: 'list',
-          items: [
-            'When FreeCut shows **Reconnect your workspace**, choose **Reconnect** and grant read and write access to the same folder.',
-            'If access is denied, pick the folder again and allow access when the browser prompts.',
-            'If the folder was moved, renamed, or deleted, choose a different folder instead.',
+            'Every generation is saved in `data\\generations`, one folder per job, before it is imported into a project.',
+            'The history of generations, with their settings and prices, is kept in `data\\videosos.db`.',
+            'Provider keys are kept in `secrets` beside the program, never in a project.',
           ],
         },
       ],
@@ -64,10 +46,9 @@ const page = {
         {
           kind: 'list',
           items: [
-            'Missing Media means FreeCut cannot currently read one or more linked source files.',
-            'Use **Grant Access** when a file only needs renewed browser permission.',
-            'Use **Locate** or **Locate Folder** when a file or its folder was moved.',
-            'Use **Browse Another Folder** to point FreeCut at a new copy of the media.',
+            'Missing Media means VideoSOS cannot currently read one or more linked source files.',
+                        'Use **Locate** or **Locate Folder** when a file or its folder was moved.',
+            'Use **Browse Another Folder** to point VideoSOS at a new copy of the media.',
           ],
         },
         {
@@ -91,7 +72,7 @@ const page = {
         {
           kind: 'note',
           tone: 'info',
-          text: 'Clearing caches never deletes your source media; FreeCut regenerates previews when the project needs them.',
+          text: 'Clearing caches never deletes your source media; VideoSOS regenerates previews when the project needs them.',
         },
       ],
     },

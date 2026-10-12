@@ -4,7 +4,7 @@ import { i18n } from '@/i18n'
 import { isDesktop } from '@/infrastructure/desktop'
 import { toast } from 'sonner'
 import { AGENT_ACTION, startBridge } from '../services/bridge'
-import { registerEditorCommands } from '../services/editor-commands'
+import { registerEditorCommands, type ShowProject } from '../services/editor-commands'
 
 let registered = false
 
@@ -24,12 +24,12 @@ function reportLanguage(language: string): void {
  * Connects this window to VideoSOS's MCP server and shows the person every action an agent takes in it,
  * as a short notice ("Agent: timeline edit").
  */
-export function AgentBridgeHost() {
+export function AgentBridgeHost({ showProject }: { showProject: ShowProject }) {
   const { t } = useTranslation()
   useEffect(() => {
     if (!registered) {
       registered = true
-      registerEditorCommands()
+      registerEditorCommands(showProject)
       reportLanguage(i18n.language)
       i18n.on('languageChanged', reportLanguage)
     }
@@ -40,6 +40,6 @@ export function AgentBridgeHost() {
     }
     window.addEventListener(AGENT_ACTION, show)
     return () => window.removeEventListener(AGENT_ACTION, show)
-  }, [t])
+  }, [t, showProject])
   return null
 }

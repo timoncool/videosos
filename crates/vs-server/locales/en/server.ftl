@@ -34,6 +34,7 @@ jobs-download-failed = The result could not be downloaded: { $reason }
 jobs-cancelled = Cancelled.
 jobs-cancelled-not-waiting = Stopped waiting. This provider cannot cancel a job, so it may still finish and be charged.
 jobs-field-required = Fill in: { $field }
+jobs-place-needs-project = Placing on the timeline needs project_id: the project open in the window (editor_state names it).
 jobs-not-found = No job { $job }
 jobs-still-running = The job is still running; cancel it first.
 

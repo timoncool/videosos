@@ -58,7 +58,7 @@ export function DocsShell({ children, currentSlug }: DocsShellProps) {
           </Link>
           <nav className="flex items-center gap-2">
             <Button asChild variant="ghost" size="sm">
-              <Link to="/projects">Open FreeCut</Link>
+              <Link to="/projects">Open VideoSOS</Link>
             </Button>
             <Button asChild variant="outline" size="sm">
               <Link to="/">Home</Link>
@@ -154,10 +154,10 @@ export function DocsHome() {
       <section className="rounded-lg border border-border bg-card p-6 sm:p-8">
         <div className="mb-4 flex items-center gap-2 text-primary">
           <BookOpen className="h-5 w-5" />
-          <span className="text-sm font-medium">FreeCut documentation</span>
+          <span className="text-sm font-medium">VideoSOS documentation</span>
         </div>
         <h1 className="max-w-3xl text-3xl font-semibold tracking-tight sm:text-4xl">
-          FreeCut User Guide
+          VideoSOS User Guide
         </h1>
         <p className="mt-4 max-w-3xl text-muted-foreground">
           Start with setup, workspaces, media import, timeline editing, and export. Use the
@@ -181,7 +181,7 @@ export function DocsHome() {
       <section className="grid gap-4 md:grid-cols-2">
         {(
           [
-            ['Start', 'Set up the browser, workspace, projects, and editor layout.'],
+            ['Start', 'Get started, the workspace, projects, and editor layout.'],
             [
               'Core Editing',
               'Import media, cut on the timeline, preview, and adjust clip properties.',
@@ -190,7 +190,7 @@ export function DocsHome() {
               'Creative Tools',
               'Text, shapes and masks, audio, effects, color, transitions, keyframes, animation, scenes, and local AI.',
             ],
-            ['Output', 'Export files from the browser and manage queued renders.'],
+            ['Output', 'Export files and manage queued renders.'],
           ] satisfies [DocCategory, string][]
         ).map(([title, description]) => (
           <div key={title} className="rounded-lg border border-border bg-card p-5">

@@ -8,7 +8,6 @@
  * through the built-in ui_* commands. What the agent is told is English, as the tools' own descriptions
  * are; what the person sees of it goes through i18n in the components.
  */
-import { useEffect, useLayoutEffect, useRef } from "react";
 import { domToJpeg } from "modern-screenshot";
 
 
@@ -21,22 +20,6 @@ const handlers = new Map<string, Handler>();
 export function registerBridgeCommand(command: string, handler: Handler): void {
   handlers.set(command, handler);
 }
-
-/** Answers a command while the calling component is mounted. */
-export function useBridgeCommand(command: string, handler: Handler): void {
-  const latest = useRef(handler);
-  useLayoutEffect(() => {
-    latest.current = handler;
-  });
-  useEffect(() => {
-    const run: Handler = (args) => latest.current(args);
-    handlers.set(command, run);
-    return () => {
-      if (handlers.get(command) === run) handlers.delete(command);
-    };
-  }, [command]);
-}
-
 
 // ---------------------------------------------------------------- what the agent is told
 
@@ -102,27 +85,12 @@ export const AGENT_ACTION = "videosos:agent-action";
 const FLASH = "mcp-agent-target";
 
 /** Marks an element the agent acts on, for a moment, so the user sees where it acts. */
-export function flash(element: Element | null | undefined): void {
+function flash(element: Element | null | undefined): void {
   if (!element) return;
   element.classList.remove(FLASH);
   void (element as HTMLElement).offsetWidth;
   element.classList.add(FLASH);
   window.setTimeout(() => element.classList.remove(FLASH), 1800);
-}
-
-/** Brings the element matching `selector` into view and marks it, once the page has drawn it (within half a second). */
-export function showElement(selector: string): void {
-  let frames = 30;
-  const look = () => {
-    const element = document.querySelector(selector);
-    if (!element) {
-      if (--frames > 0) window.requestAnimationFrame(look);
-      return;
-    }
-    element.scrollIntoView({ block: "center", behavior: "smooth" });
-    flash(element);
-  };
-  window.requestAnimationFrame(look);
 }
 
 // ---------------------------------------------------------------- what is on screen
@@ -168,7 +136,7 @@ function textOf(element: Element): string {
   return parts.join(" ");
 }
 
-export function label(element: Element): string {
+function label(element: Element): string {
   const own = element.getAttribute("aria-label") || element.getAttribute("title") || "";
   if (own) return own.slice(0, 80);
   if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement || element instanceof HTMLSelectElement) {
@@ -196,7 +164,7 @@ function openDialog(): Element | null {
 }
 
 /** The mark of a field whose value the agent never reads, even while its show button reveals it to the user. */
-export const SECRET = "data-mcp-secret";
+const SECRET = "data-mcp-secret";
 
 /**
  * A key or a password: the agent's answers go to its model's provider, so of such a field it learns only
@@ -210,7 +178,7 @@ function secret(element: Element): boolean {
  * Marks the chosen option of every list in a copy of the page: the copy carries a list's value only as its
  * value attribute, which a drawn list ignores, so it would show its first option.
  */
-export function showChosenOptions(cloned: Node): void {
+function showChosenOptions(cloned: Node): void {
   if (!(cloned instanceof Element)) return;
   const lists = cloned instanceof HTMLSelectElement ? [cloned] : Array.from(cloned.querySelectorAll("select"));
   for (const list of lists) {
@@ -224,7 +192,7 @@ export function showChosenOptions(cloned: Node): void {
 }
 
 /** Draws a secret field of a copy of the page masked, as a password field is. */
-export function maskSecret(cloned: Node): void {
+function maskSecret(cloned: Node): void {
   if (cloned instanceof HTMLInputElement && cloned.hasAttribute(SECRET)) cloned.setAttribute("type", "password");
 }
 
@@ -240,7 +208,7 @@ function valueOf(element: Element): string | null {
  * Every visible control, one line each, with the ref the other commands take. The controls of a row of a
  * list (a line of the transcript, a blur box, a title, a project) read as one line named by the row.
  */
-export function readPage(): string {
+function readPage(): string {
   const lines: string[] = [];
   const title = document.querySelector("h1, h2")?.textContent?.trim();
   if (title) lines.push(`Page: ${title}`);
@@ -345,22 +313,6 @@ function watchConsole(): void {
   window.addEventListener("unhandledrejection", (event) => remember("error", ["unhandled rejection", event.reason]));
 }
 
-/** A picture fetched from VideoSOS, at most `maxWidth` wide, as a JPEG the agent sees. */
-export async function pictureOf(url: string, maxWidth: number): Promise<{ image: string; mime: string; width: number; height: number }> {
-  const response = await fetch(url, { cache: "force-cache" });
-  if (!response.ok) throw new Error(`${response.status} ${await response.text()}`);
-  const bitmap = await createImageBitmap(await response.blob());
-  const scale = Math.min(1, maxWidth / bitmap.width);
-  const canvas = document.createElement("canvas");
-  canvas.width = Math.round(bitmap.width * scale);
-  canvas.height = Math.round(bitmap.height * scale);
-  const context = canvas.getContext("2d");
-  if (!context) throw new Error("the page cannot draw a canvas");
-  context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-  bitmap.close();
-  return { image: canvas.toDataURL("image/jpeg", 0.9).replace(/^data:image\/jpeg;base64,/, ""), mime: "image/jpeg", width: canvas.width, height: canvas.height };
-}
-
 const builtIn: Record<string, Handler> = {
   async screenshot(args) {
     takeArgs("ui_screenshot", args, ["max_width"]);
@@ -456,9 +408,6 @@ const builtIn: Record<string, Handler> = {
     return { text: "Scrolled." };
   },
 };
-
-/** The commands every screen of the page answers itself. */
-export const BUILT_IN_COMMANDS = Object.keys(builtIn);
 
 /** Commands that only look: the user is not shown them as the agent's actions. */
 const LOOKING = new Set(["read_page", "console", "editor_state", "timeline_get", "media_list", "screenshot"]);

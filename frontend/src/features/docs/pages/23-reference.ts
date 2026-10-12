@@ -23,7 +23,7 @@ const page = {
         {
           kind: 'note',
           tone: 'info',
-          text: 'Codec support depends on what your browser can decode and encode.',
+          text: 'Codec support depends on what your graphics card and system can decode and encode.',
         },
       ],
     },
@@ -51,7 +51,7 @@ const page = {
           kind: 'table',
           headers: ['Term', 'Meaning'],
           rows: [
-            ['Workspace', 'The folder FreeCut reads from and writes to.'],
+            ['Workspace', 'The folder VideoSOS reads from and writes to.'],
             ['Proxy', 'A lighter generated copy of heavy media used for smoother playback.'],
             ['Compound clip', 'A section of timeline grouped into a single reusable media item.'],
             ['Adjustment layer', 'A layer whose effects and grade apply to the clips below it.'],

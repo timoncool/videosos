@@ -4,32 +4,32 @@ const page = {
   order: 22,
   slug: 'troubleshooting',
   title: 'Troubleshooting',
-  description: 'Fixes for browser, workspace, media, WebGPU, local AI, and export problems.',
+  description: 'Fixes for start, generation, media, WebGPU, local AI, and export problems.',
   category: 'Reference',
   related: ['workspaces', 'export'],
   sections: [
     {
-      title: 'Browser and workspace',
+      title: 'Start and generation',
       blocks: [
         {
           kind: 'table',
           headers: ['Symptom', 'Fix'],
           rows: [
             [
-              'Unsupported browser, or no workspace picker',
-              'Use Chrome or Edge 113+, which support the APIs FreeCut needs.',
+              'VideoSOS says its port is busy',
+              'Another copy of VideoSOS or another program holds port 8796. Close it, or start VideoSOS with `VIDEOSOS_PORT` set to a free port.',
             ],
             [
-              'Brave cannot pick a folder',
-              'Enable `brave://flags/#file-system-access-api` and relaunch Brave.',
+              'A provider answers 401 or "invalid key"',
+              'Open **Settings**, **Providers and agent**, paste the key again and press **Check**.',
             ],
             [
-              'Permission denied',
-              'Choose a normal folder you can edit, then allow read and write access.',
+              'A model is missing from the list',
+              'Press refresh in the model picker; the catalogues are read from the providers and refreshed in the background.',
             ],
             [
-              'Asked to reconnect on reopen',
-              'Choose **Reconnect** for the same folder; if it moved, pick a different folder.',
+              'A generation failed',
+              'The job card shows the provider message. Change the setting it names and run it again.',
             ],
           ],
         },
@@ -48,7 +48,7 @@ const page = {
             ],
             [
               'Import failed or unsupported codec',
-              'Try another browser-supported format, or transcode the file first.',
+              'Try another format, or transcode the file first.',
             ],
             [
               'Import from URL fails',
@@ -83,7 +83,7 @@ const page = {
               'Keep the tab open, retry on a stable connection, and clear the **Local AI Model Cache** if a download is corrupt.',
             ],
             ['Out of memory during AI work', 'Use **Unload Local Models** to release runtimes.'],
-            ['LUT import blocked', 'LUT (.cube) import requires a Chromium-based browser.'],
+            ['LUT import blocked', 'Choose a `.cube` file; other LUT formats are not read.'],
           ],
         },
       ],

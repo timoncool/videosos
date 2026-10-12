@@ -214,6 +214,28 @@ describe('editProject', () => {
     expect(audioTrack.kind).toBe('audio')
   })
 
+  it('addClip (video with audio) keeps the pair together when the video track is taken', async () => {
+    const result = await editProject({
+      project: baseProject(),
+      ops: [
+        { op: 'addClip', mediaId: 'm-img', from: 0 } as EditOp,
+        { op: 'addClip', mediaId: 'm-vid', from: 0 } as EditOp,
+      ],
+      media: [
+        {
+          mediaId: 'm-img',
+          metadata: { ...videoMedia, id: 'm-img', mimeType: 'image/png', audioCodec: undefined } as MediaMetadata,
+        },
+        { mediaId: 'm-vid', metadata: videoMedia },
+      ],
+    })
+    const items = result.project.timeline!.items
+    const video = items.find((i) => i.type === 'video')!
+    const audio = items.find((i) => i.type === 'audio')!
+    expect(video.from).toBe(150)
+    expect(audio.from).toBe(video.from)
+  })
+
   it('addClip image defaults to a 150-frame still', async () => {
     const result = await editProject({
       project: baseProject(),

@@ -615,7 +615,7 @@ impl Jobs {
         let today: f64 = db
             .query_row("SELECT COALESCE(SUM(cost), 0) FROM jobs WHERE status = 'done' AND updated >= ?1", params![today_start], |row| row.get(0))
             .unwrap_or(0.0);
-        let total: f64 = by_provider.iter().filter_map(|item| item["usd"].as_f64()).sum();
+        let total: f64 = by_provider.iter().filter_map(|item| item["usd"].as_f64()).fold(0.0, |sum, usd| sum + usd);
         json!({ "total": total, "today": today, "providers": by_provider })
     }
 }
@@ -674,6 +674,9 @@ async fn create(State(state): State<AppState>, Json(request): Json<CreateRequest
     let Some(provider) = Provider::parse(&request.provider) else { return bad(t!("catalog-unknown-provider", provider = request.provider)) };
     if credentials::key(provider).is_none() {
         return bad(ProviderError::NoKey(provider.as_str()).to_string());
+    }
+    if request.place && request.project_id.as_deref().is_none_or(str::is_empty) {
+        return bad(t!("jobs-place-needs-project"));
     }
     let form = match state.catalog.form(provider, &request.model).await {
         Ok(form) => form,

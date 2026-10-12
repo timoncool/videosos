@@ -16,7 +16,7 @@ const page = {
           kind: 'list',
           items: [
             'Open the **Media** tab and use **Import** to pick files, or drag files straight into the library.',
-            'FreeCut handles video, audio, images, GIFs, SVGs, Lottie animations (`.json` and `.lottie`), and generated assets. GIFs import as image items.',
+            'VideoSOS handles video, audio, images, GIFs, SVGs, Lottie animations (`.json` and `.lottie`), and generated assets. GIFs import as image items.',
             'Use **Import Media From URL** for a direct link to a media file — the URL must point at the file itself, not a page that embeds it.',
           ],
         },
@@ -28,7 +28,7 @@ const page = {
         {
           kind: 'note',
           tone: 'info',
-          text: 'Folder import is not supported yet — drop the media files directly. What decodes depends on your browser; if a file will not import, try a different format or transcode it first.',
+          text: 'Folder import is not supported yet — drop the media files directly. What decodes depends on your graphics card and system; if a file will not import, try a different format or transcode it first.',
         },
         {
           kind: 'note',

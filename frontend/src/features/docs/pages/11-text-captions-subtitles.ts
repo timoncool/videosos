@@ -83,7 +83,7 @@ const page = {
           kind: 'steps',
           items: [
             'Generate a transcript for the clip from the Media library or the Transcript panel.',
-            'Use **Generate Captions** (or let FreeCut enable transcript captions automatically) from the clip context menu.',
+            'Use **Generate Captions** (or let VideoSOS enable transcript captions automatically) from the clip context menu.',
             'Edit cue timing and text, and pick a style preset (Netflix, YouTube, Bold Yellow, Outlined, TikTok) in the **Subtitle** section.',
             'Adjust caption color, size, vertical position, and an optional background.',
           ],

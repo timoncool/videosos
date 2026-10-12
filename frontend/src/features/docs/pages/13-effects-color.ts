@@ -130,7 +130,7 @@ const page = {
         {
           kind: 'note',
           tone: 'warning',
-          text: 'LUT import requires a Chromium-based browser.',
+          text: 'LUT import reads `.cube` files.',
         },
       ],
     },

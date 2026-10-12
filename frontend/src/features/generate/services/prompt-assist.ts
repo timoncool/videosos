@@ -5,7 +5,7 @@
 
 import { generateApi, type Task } from './generate-api'
 
-export const PROMPT_MODEL = 'google/gemini-3.8-flash'
+const PROMPT_MODEL = 'google/gemini-3.8-flash'
 
 const GOALS: Partial<Record<Task, string>> = {
   image: 'a still image: subject, composition, lens and framing, lighting, color palette, style, mood',

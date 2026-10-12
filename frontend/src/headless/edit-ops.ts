@@ -21,6 +21,7 @@ import { createClassicTrack } from '@/features/timeline/utils/classic-tracks'
 import { getGpuEffect } from '@/infrastructure/gpu-effects'
 import {
   addItem,
+  addItems,
   updateItem,
   moveItem,
   removeItems,
@@ -293,10 +294,12 @@ function placeVideoClip(
     ...(media.height ? { sourceHeight: media.height } : {}),
     ...sf,
   }
-  addItem(video)
   const created: CreatedClip[] = [{ id: video.id, type: 'video' }]
   // Linked audio companion (as the app creates on import) so audio renders.
-  if (!media.audioCodec) return created
+  if (!media.audioCodec) {
+    addItem(video)
+    return created
+  }
   const audio: AudioItem = {
     id: newId(),
     type: 'audio',
@@ -310,7 +313,7 @@ function placeVideoClip(
     linkedGroupId,
     ...sf,
   }
-  addItem(audio)
+  addItems([video, audio])
   created.push({ id: audio.id, type: 'audio' })
   return created
 }

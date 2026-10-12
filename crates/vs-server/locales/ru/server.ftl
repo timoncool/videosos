@@ -35,6 +35,7 @@ jobs-download-failed = Результат не скачался: { $reason }
 jobs-cancelled = Отменено.
 jobs-cancelled-not-waiting = Ожидание остановлено. Этот провайдер не умеет отменять задачи, поэтому она может завершиться и быть оплачена.
 jobs-field-required = Заполните: { $field }
+jobs-place-needs-project = Чтобы поставить результат на таймлайн, нужен project_id — проект, открытый в окне (его называет editor_state).
 jobs-not-found = Нет задачи { $job }
 jobs-still-running = Задача ещё идёт; сначала отмените её.
 

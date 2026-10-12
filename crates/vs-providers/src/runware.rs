@@ -294,8 +294,55 @@ pub fn pick_valid(schema: &Value, task: Map<String, Value>, fallback_size: Optio
                 return Ok(sized);
             }
         }
-    let problems: Vec<String> = validator.iter_errors(&given).take(3).map(|error| format!("{} at {}", error, error.instance_path())).collect();
+    let mut problems: Vec<String> = validator.iter_errors(&given).map(|error| describe(&error)).collect();
+    problems.dedup();
+    problems.truncate(3);
     Err(ProviderError::Refused(format!("the model does not accept these settings: {}", problems.join("; "))))
+}
+
+/// A schema complaint in the person's terms. The validator's own text quotes the whole value it judged, which
+/// for a task holds every setting and the files as data URLs; this names the settings instead.
+fn describe(error: &jsonschema::ValidationError) -> String {
+    use jsonschema::error::ValidationErrorKind as Kind;
+    let setting = |name: &str| if name == "width" || name == "height" { "size".to_string() } else { name.to_string() };
+    let names = |values: Vec<String>| {
+        let mut names: Vec<String> = values.iter().map(|name| setting(name)).collect();
+        names.dedup();
+        names.join(", ")
+    };
+    let path = error.instance_path().as_str().trim_start_matches('/').replace('/', ".");
+    match error.kind() {
+        Kind::Not { schema } => {
+            let mut required = Vec::new();
+            collect_required(schema, &mut required);
+            if required.is_empty() {
+                format!("{} is not allowed with the other settings", if path.is_empty() { "this combination".into() } else { setting(&path) })
+            } else {
+                format!("{} cannot be set together with the other settings chosen; leave it empty", names(required))
+            }
+        }
+        Kind::Required { property } => format!("{} is required", setting(property.as_str().unwrap_or_default())),
+        Kind::AdditionalProperties { unexpected } => format!("the model does not take {}", names(unexpected.clone())),
+        _ if path.is_empty() => format!("the settings do not fit the model's rules ({})", error.schema_path().as_str()),
+        _ => {
+            let text = error.to_string();
+            let short: String = text.chars().take(200).collect();
+            format!("{}: {}{}", setting(&path), short, if text.chars().count() > 200 { "..." } else { "" })
+        }
+    }
+}
+
+fn collect_required(schema: &Value, into: &mut Vec<String>) {
+    match schema {
+        Value::Object(object) => {
+            if let Some(Value::Array(names)) = object.get("required") {
+                into.extend(names.iter().filter_map(Value::as_str).map(str::to_string));
+            }
+            object.iter().filter(|(key, _)| key.as_str() != "required").for_each(|(_, value)| collect_required(value, into));
+        }
+        Value::Array(items) => items.iter().for_each(|item| collect_required(item, into)),
+        _ => {}
+    }
 }
 
 fn errors_of(body: &Value) -> Option<(String, bool)> {
@@ -468,8 +515,11 @@ mod tests {
         assert_eq!(chosen["resolution"], "480p");
 
         values.insert("size".into(), json!("848x480"));
+        values.insert("inputs.frameImages".into(), json!([format!("data:image/jpeg;base64,{}", "A".repeat(4000))]));
         let task = build_task(&form.id, &form, &values, "3f0c2a7e-0000-4000-8000-000000000004");
-        assert!(pick_valid(&schema, task, default_size(&form).as_deref()).is_err(), "a size the model refuses with frames is reported, not dropped");
+        let refusal = pick_valid(&schema, task, default_size(&form).as_deref()).expect_err("a size the model refuses with frames is reported, not dropped").to_string();
+        assert!(refusal.contains("size cannot be set together"), "{refusal}");
+        assert!(!refusal.contains("base64") && refusal.len() < 400, "the refusal names settings, not their values: {refusal}");
     }
 
     #[test]

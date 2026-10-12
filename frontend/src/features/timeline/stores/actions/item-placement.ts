@@ -42,33 +42,50 @@ export function placeItemsWithoutTimelineOverlap(items: TimelineItem[]): Timelin
     trackItems.sort((a, b) => a.from - b.from)
   }
 
-  // Group incoming items by track and sort each group by `from` so
-  // placement is deterministic regardless of input order.
-  const itemsByTrack = new Map<string, TimelineItem[]>()
+  // Incoming items of one linked group (a video and its audio) move as one unit: they keep their offsets and
+  // land where every one of them is free, so the pair never comes apart.
+  const units: TimelineItem[][] = []
+  const unitByGroup = new Map<string, TimelineItem[]>()
   for (const item of items) {
-    const group = itemsByTrack.get(item.trackId)
+    const group = item.linkedGroupId ? unitByGroup.get(item.linkedGroupId) : undefined
     if (group) {
       group.push(item)
-    } else {
-      itemsByTrack.set(item.trackId, [item])
+      continue
     }
+    const unit = [item]
+    units.push(unit)
+    if (item.linkedGroupId) unitByGroup.set(item.linkedGroupId, unit)
   }
-  for (const group of itemsByTrack.values()) {
-    group.sort((a, b) => a.from - b.from)
-  }
+  const unitStart = (unit: TimelineItem[]) => Math.min(...unit.map((item) => item.from))
+  units.sort((a, b) => unitStart(a) - unitStart(b))
 
-  for (const group of itemsByTrack.values()) {
-    for (const item of group) {
+  for (const unit of units) {
+    const start = unitStart(unit)
+    let candidate = Math.max(0, start)
+    for (;;) {
+      let next = candidate
+      for (const item of unit) {
+        const offset = item.from - start
+        const free = findNextAvailableSpaceOnTrack(
+          candidate + offset,
+          item.durationInFrames,
+          occupiedRangesByTrack.get(item.trackId) ?? [],
+        )
+        next = Math.max(next, free - offset)
+      }
+      if (next === candidate) break
+      candidate = next
+    }
+
+    for (const item of unit) {
+      const finalFrom = candidate + item.from - start
+      const placedItem = finalFrom === item.from ? item : { ...item, from: finalFrom }
+      placedItems.push(placedItem)
       let trackItems = occupiedRangesByTrack.get(item.trackId)
       if (!trackItems) {
         trackItems = []
         occupiedRangesByTrack.set(item.trackId, trackItems)
       }
-
-      const finalFrom = findNextAvailableSpaceOnTrack(item.from, item.durationInFrames, trackItems)
-      const placedItem = finalFrom === item.from ? item : { ...item, from: finalFrom }
-
-      placedItems.push(placedItem)
       trackItems.push({
         trackId: placedItem.trackId,
         from: placedItem.from,

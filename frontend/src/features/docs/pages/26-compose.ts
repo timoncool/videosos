@@ -40,7 +40,7 @@ const page = {
             'Drag video, audio, images, text, shapes, Lottie files, or another composition from the media library.',
             'Choose **Add Item** to create **Text**, **Solid Color**, **Gradient**, **Shape**, or **Null Object** layers.',
             'Solid Color and Gradient create full-frame shape layers that you can resize, style, mask, and animate.',
-            'FreeCut blocks a composition from containing itself, including indirect circular nesting.',
+            'VideoSOS blocks a composition from containing itself, including indirect circular nesting.',
           ],
         },
       ],
@@ -151,7 +151,7 @@ const page = {
         {
           kind: 'note',
           tone: 'info',
-          text: 'FreeCut evaluates keyframes first, then Property Link, then the expression. Preview and export use the same order.',
+          text: 'VideoSOS evaluates keyframes first, then Property Link, then the expression. Preview and export use the same order.',
         },
       ],
     },

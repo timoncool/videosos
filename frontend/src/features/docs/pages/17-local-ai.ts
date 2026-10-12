@@ -5,7 +5,7 @@ const page = {
   slug: 'local-ai',
   title: 'Local AI Tools',
   description:
-    'In-browser text to speech, music generation, and transcription, with local model caching.',
+    'Local text to speech, music generation, and transcription, with local model caching.',
   category: 'Creative Tools',
   related: ['scene-browser', 'text-captions-subtitles', 'audio'],
   sections: [
@@ -15,7 +15,7 @@ const page = {
         {
           kind: 'list',
           items: [
-            'AI tools run in your browser using your own hardware — nothing is sent to a server.',
+            'These local AI tools run on your own hardware — nothing is sent to a server. Generation with providers is on the **Generate** tab.',
             'The first time you use a model it downloads once and is then cached locally for reuse.',
             'A status pill shows loading, active, ready, and error states while a model runs.',
           ],
@@ -70,7 +70,7 @@ const page = {
           items: [
             'Transcription lives in the Media library and Transcript workflow, separate from the AI tab.',
             '**Parakeet** is the fast default engine and covers many European languages.',
-            'Whisper models (Tiny, Base, Small, Large v3 Turbo) are also available, and FreeCut falls back to Whisper when needed.',
+            'Whisper models (Tiny, Base, Small, Large v3 Turbo) are also available, and VideoSOS falls back to Whisper when needed.',
           ],
         },
         {
