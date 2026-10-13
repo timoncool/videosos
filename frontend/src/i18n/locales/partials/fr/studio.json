@@ -32,7 +32,8 @@
     "refresh": "Vérifier maintenant",
     "reset": "Nouvel identifiant d'installation",
     "what": "Ce qui est envoyé",
-    "why": "How many people use VideoSOS and what for helps decide what to work on next. Nothing personal: no prompts, files or keys - only counts of generations by task and provider, the models used, the version, the system and the window language."
+    "why": "How many people use VideoSOS and what for helps decide what to work on next. Nothing personal: no prompts, files or keys - only counts of generations by task and provider, the models used, the version, the system and the window language.",
+    "ad": "Publicité"
   },
   "monitor": {
     "popOut": "Détacher le moniteur de ressources",

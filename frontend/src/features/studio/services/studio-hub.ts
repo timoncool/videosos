@@ -2,7 +2,7 @@
 // the shipped news.
 import { useEffect, useState } from "react";
 
-export interface HubButton { label: string; action: "url" | "dismiss" | "open"; url?: string; style: "primary" | "secondary" }
+export interface HubButton { label: string; action: "url" | "dismiss" | "open"; url?: string; target?: "news" | "settings" | "models" | "update"; style: "primary" | "secondary" }
 export interface HubContent { title: string; body: string; buttons: HubButton[] }
 export interface HubItem {
   id: string;
@@ -13,7 +13,9 @@ export interface HubItem {
   eligible: boolean;
   dismissible: boolean;
   theme: HubTheme | null;
-  rules: { delay_s: number };
+  image: string | null;
+  ad: { label: boolean; erid?: string } | null;
+  rules: { delay_s: number; views: string[] | null };
 }
 export type HubTheme = "sunset" | "orchid" | "lime" | "graphite";
 export interface HubState {
@@ -21,6 +23,8 @@ export interface HubState {
   source: string | null;
   fetchedAt: number | null;
   lastError: string | null;
+  /** The hub's test channel (STUDIO_HUB_TEST=1): popups show only there until they are released. */
+  test: boolean;
   items: HubItem[];
 }
 
@@ -73,6 +77,16 @@ export function useHubState(lang: string): HubState | null {
     return () => { listeners.delete(setState); };
   }, [lang]);
   return state;
+}
+
+/** A notice is due: allowed in this launch, its delay passed, and it is meant for this screen. */
+export function showsNow(item: HubItem, elapsed: number, view: string): boolean {
+  return item.eligible && elapsed >= item.rules.delay_s && (!item.rules.views || item.rules.views.includes(view));
+}
+
+/** A notice's picture, through the service, which keeps a copy for offline launches. */
+export function hubMediaUrl(image: string): string {
+  return /^https?:\/\//.test(image) ? image : `/v1/hub/media/${encodeURIComponent(image)}`;
 }
 
 export function hubText(item: HubItem, lang: string): HubContent | undefined {

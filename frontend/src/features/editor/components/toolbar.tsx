@@ -28,11 +28,10 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Separator } from '@/components/ui/separator'
 import { LocalInferenceStatusPill } from './local-inference-status-pill'
 import { ProjectDebugPanel } from './project-debug-panel'
-import { SettingsDialog } from './settings-dialog'
 import { ShortcutsDialog } from './shortcuts-dialog'
 import { UnsavedChangesDialog } from './unsaved-changes-dialog'
 import { WorkspaceSwitcher } from './workspace-switcher'
-import { ResourceMonitor, WhatsNew } from '../deps/studio'
+import { openSettings, ResourceMonitor, WhatsNew } from '../deps/studio'
 import { EDITOR_LAYOUT_CSS_VALUES } from '@/config/editor-layout'
 import { cn } from '@/shared/ui/cn'
 import { LanguageSwitcher } from '@/shared/ui/language-switcher'
@@ -86,7 +85,6 @@ export const Toolbar = memo(function Toolbar({
   const { t } = useTranslation()
   const [showUnsavedDialog, setShowUnsavedDialog] = useState(false)
   const [showShortcutsDialog, setShowShortcutsDialog] = useState(false)
-  const [showSettingsDialog, setShowSettingsDialog] = useState(false)
   const [isSaveAnimating, setIsSaveAnimating] = useState(false)
   const [saveAnimationKey, setSaveAnimationKey] = useState(0)
   const saveAnimationTimeoutRef = useRef<number | undefined>(undefined)
@@ -207,7 +205,6 @@ export const Toolbar = memo(function Toolbar({
 
       <ShortcutsDialog open={showShortcutsDialog} onOpenChange={setShowShortcutsDialog} />
 
-      <SettingsDialog open={showSettingsDialog} onOpenChange={setShowSettingsDialog} />
 
 
       <div className="flex items-center gap-1.5">
@@ -263,7 +260,7 @@ export const Toolbar = memo(function Toolbar({
           variant="outline"
           size="icon"
           className="h-7 w-7"
-          onClick={() => setShowSettingsDialog(true)}
+          onClick={() => openSettings('providers')}
           data-tooltip={t('toolbar.settings')}
           data-tooltip-side="bottom"
           aria-label={t('toolbar.settings')}

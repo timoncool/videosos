@@ -1,25 +1,10 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { X } from "lucide-react";
+import { hubInline } from "../services/hub-inline";
 import { HUB_GRADIENTS, HUB_TEXT, hubChanged, hubText, reportNotice, stackTheme, type HubItem } from "../services/studio-hub";
 
 const MAX_VISIBLE = 3;
-
-function inline(text: string, key: string): ReactNode[] {
-  const out: ReactNode[] = [];
-  const pattern = /\*\*([^*]+)\*\*|\[([^\]]+)\]\((https:\/\/[^)\s]+)\)/g;
-  let last = 0;
-  let index = 0;
-  for (const match of text.matchAll(pattern)) {
-    if (match.index > last) out.push(text.slice(last, match.index));
-    const id = `${key}-${index++}`;
-    if (match[1]) out.push(<strong key={id} className="font-semibold">{match[1]}</strong>);
-    else out.push(<a key={id} href={match[3]} target="_blank" rel="noreferrer" className="underline underline-offset-2 hover:opacity-90">{match[2]}</a>);
-    last = match.index + match[0].length;
-  }
-  if (last < text.length) out.push(text.slice(last));
-  return out;
-}
 
 /** The hub's strips across the top of the window: full width, centred text with links, a close button; at most three. */
 export function HubBars({ items }: { items: HubItem[] }) {
@@ -52,7 +37,7 @@ export function HubBars({ items }: { items: HubItem[] }) {
           <div key={item.id} className="flex items-start justify-between gap-3 px-6 py-2 text-[13px] leading-6"
                style={{ background: HUB_GRADIENTS[theme], color: HUB_TEXT[theme] }}
                onClick={(e) => { if ((e.target as HTMLElement).closest("a")) reportNotice(item.id, "clicked", "link").catch(() => undefined); }}>
-            <div className="w-full text-center">{inline((content?.body || content?.title || "").replace(/\s*\n\s*/g, " "), item.id)}</div>
+            <div className="w-full text-center">{hubInline((content?.body || content?.title || "").replace(/\s*\n\s*/g, " "), item.id)}</div>
             {item.dismissible && (
               <button type="button" onClick={() => close(item.id)} aria-label={t("hub.close")} className="shrink-0 rounded-md p-0.5 opacity-85 hover:opacity-100">
                 <X size={16} />

@@ -47,7 +47,7 @@ function NewProject() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-full bg-background">
       {/* Header */}
       <div className="panel-header border-b border-border">
         <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">

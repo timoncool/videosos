@@ -32,7 +32,8 @@
     "refresh": "Comprobar ahora",
     "reset": "Nuevo id de instalación",
     "what": "Qué se envía",
-    "why": "How many people use VideoSOS and what for helps decide what to work on next. Nothing personal: no prompts, files or keys - only counts of generations by task and provider, the models used, the version, the system and the window language."
+    "why": "How many people use VideoSOS and what for helps decide what to work on next. Nothing personal: no prompts, files or keys - only counts of generations by task and provider, the models used, the version, the system and the window language.",
+    "ad": "Publicidad"
   },
   "monitor": {
     "popOut": "Separar el monitor de recursos",

@@ -32,7 +32,8 @@
     "refresh": "立即检查",
     "reset": "新的安装 ID",
     "what": "发送的内容",
-    "why": "How many people use VideoSOS and what for helps decide what to work on next. Nothing personal: no prompts, files or keys - only counts of generations by task and provider, the models used, the version, the system and the window language."
+    "why": "How many people use VideoSOS and what for helps decide what to work on next. Nothing personal: no prompts, files or keys - only counts of generations by task and provider, the models used, the version, the system and the window language.",
+    "ad": "广告"
   },
   "monitor": {
     "popOut": "分离资源监视器",

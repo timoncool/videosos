@@ -206,7 +206,7 @@ fn hide_console_window() {
 }
 
 pub fn run() {
-    if !vs_server::process_group::bind_children_to_this_process() {
+    if cfg!(windows) && !vs_server::process_group::bind_children_to_this_process() {
         eprintln!("[ERROR] the process did not join its own job object: ffmpeg children end only with their handles");
     }
     #[cfg(windows)]

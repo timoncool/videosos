@@ -285,7 +285,7 @@ export const Editor = memo(function Editor({ projectId, project, migration }: Ed
 
   if (!upgradeApproved) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-full bg-background flex items-center justify-center">
         <div className="text-sm text-muted-foreground">
           {t('editor.editor.upgrading', { defaultValue: 'Upgrading project…' })}
         </div>
@@ -671,7 +671,7 @@ export const LoadedEditor = memo(function LoadedEditor({
 
   return (
     <div
-      className="h-screen bg-background flex flex-col overflow-hidden"
+      className="h-full bg-background flex flex-col overflow-hidden"
       style={editorLayoutCssVars as import('react').CSSProperties}
       role="application"
       aria-label={t('editor.editor.appLabel')}

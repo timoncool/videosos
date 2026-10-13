@@ -122,6 +122,8 @@ type SettingsSectionId = (typeof SETTINGS_SECTIONS)[number]['id']
 interface SettingsDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  /** The section to show on opening, and the block of it to scroll to. */
+  target?: { section: SettingsSectionId; part: string | null } | null
 }
 
 interface BatchActionResult {
@@ -384,7 +386,7 @@ async function regenerateProjectThumbnails(
   return result
 }
 
-export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
+export function SettingsDialog({ open, onOpenChange, target }: SettingsDialogProps) {
   const { t } = useTranslation()
   const snapEnabled = useSettingsStore((s) => s.snapEnabled)
   const showWaveforms = useSettingsStore((s) => s.showWaveforms)
@@ -413,6 +415,16 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const proxyStatus = useMediaLibraryStore((s) => s.proxyStatus)
 
   const [activeSection, setActiveSection] = useState<SettingsSectionId>('providers')
+  useEffect(() => {
+    if (!open || !target) return
+    setActiveSection(target.section)
+    if (!target.part) return
+    const part = target.part
+    const frame = window.requestAnimationFrame(() => {
+      document.querySelector(`[data-settings-part="${CSS.escape(part)}"]`)?.scrollIntoView({ block: 'start' })
+    })
+    return () => window.cancelAnimationFrame(frame)
+  }, [open, target])
 
   // Animate the content area's height as sections change (width is fixed, so a
   // pure vertical morph). Measure the active section's natural height and spring

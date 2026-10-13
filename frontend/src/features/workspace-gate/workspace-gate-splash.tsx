@@ -19,7 +19,7 @@ interface Props {
 export function WorkspaceGateSplash({ status, error, onPickFolder, onReconnect }: Props) {
   const { t } = useTranslation()
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-6">
+    <div className="min-h-full bg-background flex items-center justify-center px-6">
       <div className="max-w-lg w-full text-center">
         <FreeCutLogo variant="full" size="lg" className="justify-center mb-8" />
 

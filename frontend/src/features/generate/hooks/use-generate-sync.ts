@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { generateApi, onServerEvent, type Provider } from '../services/generate-api'
+import { generateApi, onGenerateEvent, type Provider } from '../services/generate-api'
 import { importFinished } from '../services/result-importer'
 import { useGenerateStore } from '../stores/generate-store'
 
@@ -34,7 +34,7 @@ export function useGenerateSync(projectId: string | null): void {
       })
       .catch(report)
     void loadKeys().catch(report)
-    const unsubscribe = onServerEvent((event) => {
+    const unsubscribe = onGenerateEvent((event) => {
       if (event.kind === 'job') {
         if (event.data.project_id === projectId) {
           useGenerateStore.getState().upsertJob(event.data)

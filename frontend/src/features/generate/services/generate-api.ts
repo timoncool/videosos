@@ -4,6 +4,8 @@
  * Every failure carries the server's own message, which is shown as is.
  */
 
+import { onServerEvent } from '@/infrastructure/desktop/server-events'
+
 export type Provider = 'openrouter' | 'fal' | 'runware'
 
 export type Task =
@@ -270,32 +272,9 @@ export type ServerEvent =
   | { kind: 'keys' | 'settings'; data: unknown }
   | { kind: 'changed'; data: { what: string } }
 
-type Listener = (event: ServerEvent) => void
-const listeners = new Set<Listener>()
-let source: EventSource | null = null
-
-/** One stream of server events per page, shared by every subscriber. */
-export function onServerEvent(listener: Listener): () => void {
-  listeners.add(listener)
-  if (!source) {
-    source = new EventSource('/api/events')
-    source.onmessage = (message) => {
-      let event: ServerEvent
-      try {
-        event = JSON.parse(message.data) as ServerEvent
-      } catch {
-        return
-      }
-      for (const each of listeners) each(event)
-    }
-  }
-  return () => {
-    listeners.delete(listener)
-    if (listeners.size === 0 && source) {
-      source.close()
-      source = null
-    }
-  }
+/** The server's events as the generation panel reads them. */
+export function onGenerateEvent(listener: (event: ServerEvent) => void): () => void {
+  return onServerEvent((event) => listener(event as ServerEvent))
 }
 
 export function formatUsd(amount: number): string {

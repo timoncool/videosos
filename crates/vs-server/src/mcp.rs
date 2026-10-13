@@ -6,8 +6,9 @@
 //! editor with undo, while the person watches. Every tool call that changes something is written to the
 //! Activity journal and shown in the window.
 
-use std::collections::{HashMap, VecDeque};
+use std::collections::HashMap;
 use std::convert::Infallible;
+use std::path::Path;
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::{Mutex, OnceLock};
 use std::time::Duration;
@@ -256,7 +257,7 @@ fn tools() -> &'static [Tool] {
             },
             Tool {
                 name: "activity_list",
-                description: "The journal of what agents did through MCP, newest last.",
+                description: "The Activity journal the person reads: what agents changed (verb, kind, target) and what the window told them (text, tone), newest first.",
                 looks: true,
                 schema: nothing,
                 call: |_| composite("activity"),
@@ -530,32 +531,69 @@ async fn ask_window(command: &str, args: Value, seconds: u64) -> Result<Value, S
 
 // ---------------------------------------------------------------- the journal
 
-#[derive(Clone, serde::Serialize)]
-struct Entry {
-    at: i64,
-    tool: String,
-    ok: bool,
-    summary: String,
+/// What an agent's change goes into the journal as: what was done and to what kind of thing, for the window to put
+/// into words of its language. A generation is written as started, since what it makes is not there yet.
+const JOURNAL: &[(&str, &str, &str)] = &[
+    ("generate", "started", "generation"),
+    ("job_retry", "started", "generation"),
+    ("job_cancel", "cancelled", "generation"),
+    ("job_delete", "deleted", "generation"),
+    ("timeline_edit", "updated", "timeline"),
+    ("timeline_undo", "undone", "timeline"),
+    ("timeline_redo", "redone", "timeline"),
+    ("media_import", "imported", "media"),
+    ("export_video", "exported", "video"),
+];
+
+/// Tools that change something yet leave no line: the window's own controls and the service's upkeep.
+#[cfg(test)]
+const UNJOURNALED: &[&str] = &["catalog_refresh", "ui_click", "ui_type", "ui_press_key", "ui_scroll", "project_open", "playhead_seek", "playback", "editor_tab"];
+
+fn journal_facts(name: &str) -> Option<(&'static str, &'static str)> {
+    JOURNAL.iter().find(|(tool, _, _)| *tool == name).map(|(_, verb, kind)| (*verb, *kind))
 }
 
-fn journal() -> std::sync::MutexGuard<'static, VecDeque<Entry>> {
-    static JOURNAL: OnceLock<Mutex<VecDeque<Entry>>> = OnceLock::new();
-    JOURNAL.get_or_init(|| Mutex::new(VecDeque::new())).lock().unwrap_or_else(|poisoned| poisoned.into_inner())
+/// The name a job had before the call, for a change that takes it away.
+fn job_name_before(state: &AppState, name: &str, args: &Value) -> String {
+    if !matches!(name, "job_cancel" | "job_delete") {
+        return String::new();
+    }
+    args.get("job_id").and_then(Value::as_str).and_then(|id| state.jobs.get(id)).map(|job| job.model_name).unwrap_or_default()
 }
 
-fn record(tool: &str, args: &Value, ok: bool, answer: &str) {
-    let mut shown = args.clone();
-    if let Some(object) = shown.as_object_mut() {
-        object.remove("key");
+/// The name a journal line gives what a change touched: the job's model, the file imported or written.
+fn change_target(kind: &str, args: &Value, before: &str, answer: &Value) -> String {
+    let file_name = |path: &str| Path::new(path).file_name().map_or_else(|| path.to_string(), |name| name.to_string_lossy().into_owned());
+    let named = match kind {
+        "generation" if !before.is_empty() => Some(before.to_string()),
+        "generation" => {
+            let jobs = answer.get("jobs").unwrap_or(answer);
+            let first = jobs.as_array().and_then(|jobs| jobs.first()).unwrap_or(jobs);
+            first.get("model_name").and_then(Value::as_str).or_else(|| args.get("model").and_then(Value::as_str)).map(str::to_string)
+        }
+        "media" => args.get("path").or_else(|| args.get("url")).and_then(Value::as_str).map(file_name),
+        "video" => answer.get("path").and_then(Value::as_str).map(file_name),
+        _ => None,
+    };
+    named.map(|name| name.trim().chars().take(80).collect()).unwrap_or_default()
+}
+
+/// Writes an agent's change into the journal, where the person reads it.
+fn journal_change(state: &AppState, name: &str, args: &Value, before: &str, answer: &Value) {
+    let Some((verb, kind)) = journal_facts(name) else { return };
+    let line = crate::journal::Line {
+        id: 0,
+        at: 0,
+        source: "agent".into(),
+        tone: String::new(),
+        verb: verb.into(),
+        kind: kind.into(),
+        target: change_target(kind, args, before, answer),
+        text: String::new(),
+    };
+    if let Err(error) = state.journal.note(&line) {
+        tracing::error!("the journal did not take an agent's change to {name}: {error}");
     }
-    let summary: String = format!("{} -> {}", shown, answer.chars().take(160).collect::<String>()).chars().take(400).collect();
-    let entry = Entry { at: chrono::Utc::now().timestamp_millis(), tool: tool.to_string(), ok, summary };
-    let mut entries = journal();
-    entries.push_back(entry.clone());
-    while entries.len() > 300 {
-        entries.pop_front();
-    }
-    crate::events::send("agent", serde_json::to_value(entry).unwrap_or_default());
 }
 
 /// When an agent last called, for the settings page.
@@ -573,10 +611,6 @@ async fn status_route() -> Json<Value> {
         "agent_last_call": last.as_ref().map(|(_, what)| what.clone()),
         "agent_seconds_ago": last.as_ref().map(|(at, _)| at.elapsed().as_secs()),
     }))
-}
-
-async fn activity_route() -> Json<Value> {
-    Json(json!({ "entries": journal().iter().cloned().collect::<Vec<_>>() }))
 }
 
 // ---------------------------------------------------------------- calls
@@ -839,15 +873,12 @@ async fn handle(State(state): State<AppState>, body: axum::body::Bytes) -> Respo
             let Some(tool) = tools().iter().find(|tool| tool.name == name) else {
                 return rpc_error(StatusCode::OK, id, -32602, format!("Unknown tool: {name}; tools/list names them all."));
             };
+            let before = job_name_before(&state, name, &args);
             let answer = run_tool(&state, tool, &args).await;
-            if !tool.looks {
-                let (ok, summary) = match &answer {
-                    Ok(Answer::Json(value)) => (true, value.to_string()),
-                    Ok(Answer::Text(text)) => (true, text.clone()),
-                    Ok(Answer::Image { text, .. }) => (true, text.clone()),
-                    Err(problem) => (false, problem.clone()),
-                };
-                record(name, &args, ok, &summary);
+            match &answer {
+                Ok(Answer::Json(value)) => journal_change(&state, name, &args, &before, value),
+                Ok(Answer::Text(text)) => journal_change(&state, name, &args, &before, &serde_json::from_str(text).unwrap_or(Value::Null)),
+                Ok(Answer::Image { .. }) | Err(_) => {}
             }
             match answer {
                 Ok(Answer::Json(value)) => tool_json(id, value),
@@ -873,7 +904,7 @@ async fn run_tool(state: &AppState, tool: &Tool, args: &Value) -> Result<Answer,
         Payload::Composite("wait") => wait_for(state, args).await.map(Answer::Json),
         Payload::Composite("projects") => Ok(Answer::Json(projects(state))),
         Payload::Composite("project") => project(state, args).map(Answer::Json),
-        Payload::Composite("activity") => Ok(Answer::Json(json!({ "entries": journal().iter().cloned().collect::<Vec<_>>() }))),
+        Payload::Composite("activity") => state.journal.read(crate::journal::KEPT).map(|lines| Answer::Json(json!({ "lines": lines }))).map_err(|error| error.to_string()),
         Payload::Composite("import") => import_media(state, args).await.map(Answer::Json),
         Payload::Composite(other) => Err(format!("unknown composite {other}")),
         Payload::Window { command, args, seconds } => {
@@ -926,7 +957,6 @@ pub fn router() -> Router<AppState> {
         .route("/mcp/window/result", post(window_result))
         .route("/mcp/window/focus", post(window_focus))
         .route("/api/agent/status", get(status_route))
-        .route("/api/activity", get(activity_route))
         .route("/api/inbox/{id}/{name}", get(inbox))
 }
 
@@ -942,6 +972,30 @@ mod tests {
             assert_eq!((tool.schema)()["type"], "object", "{}", tool.name);
             assert!(!tool.description.is_empty());
         }
+    }
+
+    #[test]
+    fn every_change_an_agent_can_make_is_journaled() {
+        for tool in tools().iter().filter(|tool| !tool.looks) {
+            assert!(
+                journal_facts(tool.name).is_some() || UNJOURNALED.contains(&tool.name),
+                "{} changes something: give it a journal line or name it among the window's controls",
+                tool.name
+            );
+        }
+        for (name, _, _) in JOURNAL {
+            assert!(tools().iter().any(|tool| tool.name == *name), "the journal names a tool that is gone: {name}");
+        }
+    }
+
+    #[test]
+    fn a_change_is_named_by_what_it_touched() {
+        assert_eq!(change_target("generation", &json!({ "model": "m" }), "", &json!({ "jobs": [{ "model_name": "Kling 2.1" }] })), "Kling 2.1");
+        assert_eq!(change_target("generation", &json!({ "model": "openai/sora" }), "", &Value::Null), "openai/sora");
+        assert_eq!(change_target("generation", &json!({}), "Veo 3", &Value::Null), "Veo 3");
+        assert_eq!(change_target("media", &json!({ "path": "C:/clips/sea shore.mp4" }), "", &Value::Null), "sea shore.mp4");
+        assert_eq!(change_target("video", &json!({}), "", &json!({ "path": "/data/exports/cut.mp4" })), "cut.mp4");
+        assert_eq!(change_target("timeline", &json!({ "ops": [] }), "", &Value::Null), "");
     }
 
     #[test]

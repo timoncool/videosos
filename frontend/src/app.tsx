@@ -7,6 +7,7 @@ import { WorkspaceGate } from '@/features/workspace-gate/workspace-gate'
 import { router } from '@/app/router'
 import { AgentBridgeHost } from '@/features/agent-bridge/components/agent-bridge-host'
 import { StudioHost } from '@/features/studio/components/studio-host'
+import { SettingsHost } from '@/features/editor/components/settings-host'
 import { FirstRunDialog } from '@/features/first-run/first-run-dialog'
 import { GenerateSyncHost } from '@/features/generate/components/generate-sync-host'
 
@@ -74,11 +75,13 @@ export function App() {
   return (
     <ErrorBoundary level="app">
       <TooltipProvider delayDuration={300}>
-        <WorkspaceGate>
-          <RouterProvider router={router} />
-        </WorkspaceGate>
+        <StudioHost>
+          <WorkspaceGate>
+            <RouterProvider router={router} />
+          </WorkspaceGate>
+        </StudioHost>
         <AgentBridgeHost showProject={showProject} />
-        <StudioHost />
+        <SettingsHost />
         <FirstRunDialog />
         <GenerateSyncHost />
         <GlobalTooltip />

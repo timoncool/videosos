@@ -16,6 +16,7 @@ pub mod hw;
 pub mod fs_api;
 pub mod hub;
 pub mod jobs;
+pub mod journal;
 mod keys;
 pub mod mcp;
 pub mod process_group;
@@ -54,6 +55,7 @@ pub struct Inner {
     pub http: vs_providers::http::Http,
     pub catalog: Arc<catalog::Catalog>,
     pub jobs: Arc<jobs::Jobs>,
+    pub journal: journal::Journal,
 }
 
 impl std::ops::Deref for AppState {
@@ -84,7 +86,8 @@ impl AppState {
         let jobs = jobs::Jobs::open(&data, &workspace, http.clone(), catalog.clone())?;
         spend::init(jobs.clone());
         hub::start(&data, http.client.clone());
-        Ok(Self { inner: Arc::new(Inner { repo_root: repo_root.to_path_buf(), workspace, data, http, catalog, jobs }) })
+        let journal = journal::Journal::open(&data)?;
+        Ok(Self { inner: Arc::new(Inner { repo_root: repo_root.to_path_buf(), workspace, data, http, catalog, jobs, journal }) })
     }
 
     /// Work left from the last run and the catalogue read afresh.
@@ -164,6 +167,7 @@ pub fn app(state: AppState) -> Router {
         .merge(settings::router())
         .merge(exports::router())
         .merge(hw::router())
+        .merge(journal::router())
         .with_state(state.clone())
         .merge(hub::router());
     mcp::install(api.clone());

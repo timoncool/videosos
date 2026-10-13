@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Sparkles, X, ExternalLink } from "lucide-react";
 import newsData from "../data/news.json";
+import { OPEN_NEWS_EVENT } from "../services/settings-nav";
 import { reportNotice, useHubState, type HubState } from "../services/studio-hub";
 import changelogRaw from "../../../../../CHANGELOG.md?raw";
 
@@ -212,6 +213,14 @@ export default function WhatsNew() {
     setOpen(true);
     if (latest) { writeSeen(latest); setSeen(latest); }
   };
+  useEffect(() => {
+    const open = () => {
+      setOpen(true);
+      if (latest) { writeSeen(latest); setSeen(latest); }
+    };
+    window.addEventListener(OPEN_NEWS_EVENT, open);
+    return () => window.removeEventListener(OPEN_NEWS_EVENT, open);
+  }, [latest]);
   return (
     <>
       <button onClick={show} title={t("news.title")} aria-label={t("news.title")}

@@ -7,7 +7,7 @@ import { createLogger } from '@/shared/logging/logger'
 const logger = createLogger('ProjectsIndex')
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { Plus, Upload, FolderOpen, File, Github, BookOpen, Send } from 'lucide-react'
+import { Plus, Upload, FolderOpen, File, Github, BookOpen, Send, Settings } from 'lucide-react'
 import { FreeCutLogo } from '@/components/brand/freecut-logo'
 import { DISCORD_INVITE_URL, REPOSITORY_URL } from '@/config/community'
 import { ProjectList } from '@/features/projects/components/project-list'
@@ -36,6 +36,8 @@ import { LegacyMigrationErrors } from '@/features/projects/components/legacy-mig
 import { TrashSection } from '@/features/projects/components/trash-section'
 import { WorkspaceIndicator } from '@/features/workspace-gate'
 import { LanguageSwitcher } from '@/shared/ui/language-switcher'
+import WhatsNew from '@/features/studio/components/whats-new'
+import { openSettings } from '@/features/studio/services/settings-nav'
 
 export const Route = createLazyFileRoute('/projects/')({
   component: ProjectsIndex,
@@ -250,7 +252,7 @@ function ProjectsIndex() {
 
   return (
     <>
-      <div className="min-h-screen bg-background">
+      <div className="min-h-full bg-background">
         {/* Header */}
         <div className="panel-header border-b border-border" data-no-marquee>
           <div className="max-w-[1920px] mx-auto px-6 py-5 flex items-center justify-between">
@@ -263,6 +265,17 @@ function ProjectsIndex() {
             </Link>
             <div className="flex items-center gap-3">
               <LanguageSwitcher size="md" align="end" side="bottom" />
+              <WhatsNew />
+              <Button
+                variant="outline"
+                size="lg"
+                className="gap-2 px-4"
+                onClick={() => openSettings('providers')}
+                aria-label={t('settings.title')}
+              >
+                <Settings className="w-4 h-4" />
+                {t('settings.title')}
+              </Button>
 
               <Separator orientation="vertical" className="h-6" />
 

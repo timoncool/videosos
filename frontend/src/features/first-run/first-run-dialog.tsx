@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Switch } from '@/components/ui/switch'
 import { FreeCutLogo } from '@/components/brand/freecut-logo'
 import { isDesktop } from '@/infrastructure/desktop'
+import { hubChanged } from './deps/studio'
 
 interface HubState {
   telemetry: { enabled: boolean; acknowledged: boolean; disabledByEnv: boolean }
@@ -45,6 +46,7 @@ export function FirstRunDialog() {
         body: JSON.stringify({ enabled: statistics, acknowledge: true }),
       })
       if (!response.ok) throw new Error(`${response.status} ${response.statusText}`)
+      hubChanged()
       setOpen(false)
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : String(reason))

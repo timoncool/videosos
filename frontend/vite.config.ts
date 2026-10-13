@@ -113,6 +113,8 @@ export default defineConfig({
     proxy: {
       '/api': 'http://127.0.0.1:8796',
       '/mcp': 'http://127.0.0.1:8796',
+      '/v1': 'http://127.0.0.1:8796',
+      '/health': 'http://127.0.0.1:8796',
     },
     headers: {
       'Cross-Origin-Embedder-Policy': 'require-corp',
