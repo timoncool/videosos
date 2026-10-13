@@ -44,7 +44,13 @@ cache="${2:-$HOME/videosos-linux2204-cache}"
 repo="$(cd "$(dirname "$0")/.." && pwd)"
 mkdir -p "$out" "$cache"
 cp "$repo/scripts/build-linux-docker.sh" "$out/.build-linux-docker.sh"
-# the committed tree, taken here: a worktree's git folder is not reachable from inside the container
-git -C "$repo" archive HEAD -o "$out/.source.tar"
-git -C "$repo" rev-parse --short HEAD > "$out/.source-commit"
+# the committed tree, taken here: a worktree's git folder is not reachable from inside the container, and under WSL
+# a worktree made on Windows is read by Windows' own git
+if command -v wslpath >/dev/null && command -v git.exe >/dev/null; then
+  git.exe -C "$(wslpath -w "$repo")" archive HEAD -o "$(wslpath -w "$out")\\.source.tar"
+  git.exe -C "$(wslpath -w "$repo")" rev-parse --short HEAD | tr -d '\r' > "$out/.source-commit"
+else
+  git -C "$repo" archive HEAD -o "$out/.source.tar"
+  git -C "$repo" rev-parse --short HEAD > "$out/.source-commit"
+fi
 docker run --rm -v "$(cd "$out" && pwd):/out" -v "$cache:/cache" ubuntu:22.04 bash /out/.build-linux-docker.sh --inside

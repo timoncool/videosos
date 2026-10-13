@@ -51,7 +51,7 @@ export default function AgentPanel() {
   const dot = (on: boolean) => <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${on ? "bg-[var(--color-accent)]" : "bg-[var(--color-muted)]"}`} />;
 
   return (
-    <div className="max-w-2xl">
+    <div className="w-full min-w-0">
       <div className="px-2.5 py-2 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] space-y-2.5">
         <p className="text-[12px] leading-5 text-[var(--color-text)]">{t("agent.intro")}</p>
         <div className="space-y-1 text-[11px]">

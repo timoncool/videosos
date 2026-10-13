@@ -25,7 +25,7 @@
     "byEnv": "已被环境变量 DO_NOT_TRACK 或 STUDIO_TELEMETRY 关闭。",
     "checkbox": "发送匿名使用统计",
     "close": "关闭",
-    "feedNever": "尚未获取服务器新闻：工作室显示其版本自带的新闻。",
+    "feedNever": "News have not been fetched from the server yet: VideoSOS shows the news of its release.",
     "feedSource": "新闻来源",
     "nothing": "今天还没有需要发送的内容。",
     "notices": "通知",
@@ -64,7 +64,7 @@
   "prefs": {
     "copied": "已复制",
     "copyPath": "复制路径",
-    "dataDir": "工作室文件夹",
+    "dataDir": "Data folder",
     "dataHint": "Projects, generations, their history and the settings of VideoSOS are kept here",
     "dataTitle": "数据文件夹",
     "issues": "报告问题",

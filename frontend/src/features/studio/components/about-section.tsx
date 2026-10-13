@@ -21,7 +21,7 @@ function PathRow({ label, path }: { label: string; path: string }) {
   return (
     <div className="px-3 py-2">
       <div className="flex items-center gap-2">
-        <span className="w-40 shrink-0 text-[12px] text-[var(--color-muted)]">{label}</span>
+        <span className="w-28 shrink-0 text-[12px] text-[var(--color-muted)]">{label}</span>
         <span className="mono text-[11px] truncate flex-1 min-w-0" title={path}>{path}</span>
         <button type="button" onClick={() => { void copy(); }} aria-label={t("prefs.copyPath")} title={copied ? t("prefs.copied") : t("prefs.copyPath")}
           className="shrink-0 p-1 rounded-md text-[var(--color-muted)] hover:text-[var(--color-text)]">
@@ -52,7 +52,7 @@ export default function AboutSection() {
   const link = "inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-2)] text-[12px] text-[var(--color-text)] hover:border-[var(--color-accent)] transition-colors";
   const heading = "text-[11px] uppercase tracking-[0.14em] text-[var(--color-muted)] mb-2";
   return (
-    <div className="max-w-2xl space-y-6">
+    <div className="w-full min-w-0 space-y-6">
       <div className="flex items-center gap-3">
         <img src="/videosos-icon.svg" alt="" width={36} height={36} className="rounded-lg" />
         <div>

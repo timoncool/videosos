@@ -25,7 +25,7 @@
     "byEnv": "Desligadas por DO_NOT_TRACK ou STUDIO_TELEMETRY no ambiente.",
     "checkbox": "Enviar estatísticas de uso anônimas",
     "close": "Fechar",
-    "feedNever": "As novidades do servidor ainda não chegaram: o estúdio mostra as da sua versão.",
+    "feedNever": "News have not been fetched from the server yet: VideoSOS shows the news of its release.",
     "feedSource": "Novidades de",
     "nothing": "Nada para enviar hoje ainda.",
     "notices": "Avisos",
@@ -64,7 +64,7 @@
   "prefs": {
     "copied": "Copiado",
     "copyPath": "Copiar caminho",
-    "dataDir": "Pasta do estúdio",
+    "dataDir": "Data folder",
     "dataHint": "Projects, generations, their history and the settings of VideoSOS are kept here",
     "dataTitle": "Pasta de dados",
     "issues": "Relatar um problema",
