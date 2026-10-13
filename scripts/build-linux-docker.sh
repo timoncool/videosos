@@ -22,9 +22,9 @@ if [ "${1:-}" = "--inside" ]; then
     echo "[..] rust stable"
     curl -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain stable >/dev/null
   fi
-  echo "[..] source $(git -c safe.directory=/src -C /src rev-parse --short HEAD)"
+  echo "[..] source $(cat /out/.source-commit)"
   rm -rf /cache/src && mkdir -p /cache/src
-  git -c safe.directory=/src -C /src archive HEAD | tar -x -C /cache/src
+  tar -xf /out/.source.tar -C /cache/src
   cd /cache/src
   export CARGO_TARGET_DIR=/cache/target
   mkdir -p desktop/src-tauri
@@ -44,4 +44,7 @@ cache="${2:-$HOME/videosos-linux2204-cache}"
 repo="$(cd "$(dirname "$0")/.." && pwd)"
 mkdir -p "$out" "$cache"
 cp "$repo/scripts/build-linux-docker.sh" "$out/.build-linux-docker.sh"
-docker run --rm -v "$repo:/src:ro" -v "$(cd "$out" && pwd):/out" -v "$cache:/cache" ubuntu:22.04 bash /out/.build-linux-docker.sh --inside
+# the committed tree, taken here: a worktree's git folder is not reachable from inside the container
+git -C "$repo" archive HEAD -o "$out/.source.tar"
+git -C "$repo" rev-parse --short HEAD > "$out/.source-commit"
+docker run --rm -v "$(cd "$out" && pwd):/out" -v "$cache:/cache" ubuntu:22.04 bash /out/.build-linux-docker.sh --inside
