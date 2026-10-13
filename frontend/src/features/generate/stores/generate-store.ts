@@ -6,7 +6,7 @@
  */
 
 import { create } from 'zustand'
-import type { Job, MediaRef, ModelForm, Provider, Role, Task } from '../services/generate-api'
+import type { Job, MediaKind, MediaRef, ModelForm, Provider, Role, Task } from '../services/generate-api'
 
 const STORAGE_KEY = 'videosos-generate'
 
@@ -49,7 +49,9 @@ export function modelKey(provider: Provider, id: string): string {
 /** A result to be put into a slot of another task's form ("use as..."), applied once that form is open. */
 export interface PendingUse {
   task: Task
-  role: Role
+  /** The slots it fits, best first; any slot of its kind when the model has none of these. */
+  roles: Role[]
+  kind: MediaKind
   ref: MediaRef
 }
 

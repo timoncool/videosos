@@ -89,6 +89,47 @@
       "hint": "Rewrite the prompt for this model with an OpenRouter LLM (a fraction of a cent)",
       "needsKey": "Needs an OpenRouter key",
       "undo": "Back to mine"
+    },
+    "use": {
+      "button": "Use as…",
+      "videoFromFrame": "Video from this frame",
+      "edit": "Edit the picture",
+      "upscale": "Upscale",
+      "removeBackground": "Remove the background",
+      "lipSync": "Lip sync this face",
+      "continue": "Continue from the last frame",
+      "editVideo": "Edit the video",
+      "sound": "Sound for this video",
+      "lipSyncVoice": "Lip sync with this voice",
+      "transcribe": "Transcribe",
+      "needsProject": "Open a project first: the frame goes into its media library.",
+      "noSlot": "{{model}} takes no file of this kind: choose another model of this task.",
+      "placed": "Put into \"{{field}}\""
+    },
+    "compare": {
+      "pick": "Compare",
+      "button": "Compare ({{count}})",
+      "title": "Side by side",
+      "play": "Play together",
+      "pause": "Pause"
+    },
+    "stats": {
+      "button": "Project spend",
+      "title": "What this project spent",
+      "total": "In total {{total}}, today {{today}}",
+      "empty": "Nothing has been generated for this project yet.",
+      "byTask": "By task",
+      "byProvider": "By provider",
+      "byModel": "By model",
+      "other": "Other"
+    },
+    "filter": {
+      "search": "Find by words or model",
+      "task": "Task",
+      "status": "State",
+      "allTasks": "All tasks",
+      "allStates": "Any state",
+      "nothing": "No generation matches."
     }
   }
 }

@@ -1,9 +1,13 @@
 import { useTranslation } from 'react-i18next'
-import { ArrowDownToLine, Ban, CircleAlert, Copy, Loader2, RotateCcw, SquarePen, Trash2 } from 'lucide-react'
+import { ArrowDownToLine, Ban, CircleAlert, Copy, Forward, Loader2, RotateCcw, SquarePen, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { cn } from '@/shared/ui/cn'
 import { toast } from 'sonner'
-import { formatUsd, generateApi, type Job, type OutputFile } from '../services/generate-api'
+import { formatUsd, generateApi, type Job, type MediaKind, type OutputFile, type Role, type Task } from '../services/generate-api'
+import { useGenerateStore } from '../stores/generate-store'
+import { importLastFrame } from '../services/last-frame'
+import { useProjectStore } from '../deps/editor'
 import { placeMediaAtPlayhead, placeTextAtPlayhead } from '../services/timeline-actions'
 import { OUTPUT_DRAG_TYPE } from './field-control'
 import { ProviderBadge } from './model-picker'
@@ -64,12 +68,70 @@ function attempt(work: () => unknown): void {
   }
 }
 
+/** Where a result can go next ("use as..."), by what it is: the task and the slots it fits there. */
+const NEXT: Record<MediaKind, Array<{ task: Task; roles: Role[]; label: string; lastFrame?: boolean }>> = {
+  image: [
+    { task: 'video', roles: ['first_frame'], label: 'generate.use.videoFromFrame' },
+    { task: 'image_edit', roles: ['source', 'reference'], label: 'generate.use.edit' },
+    { task: 'upscale', roles: ['source'], label: 'generate.use.upscale' },
+    { task: 'remove_background', roles: ['source'], label: 'generate.use.removeBackground' },
+    { task: 'lip_sync', roles: ['first_frame', 'source'], label: 'generate.use.lipSync' },
+  ],
+  video: [
+    { task: 'video', roles: ['first_frame'], label: 'generate.use.continue', lastFrame: true },
+    { task: 'video_edit', roles: ['source'], label: 'generate.use.editVideo' },
+    { task: 'upscale', roles: ['source'], label: 'generate.use.upscale' },
+    { task: 'lip_sync', roles: ['source'], label: 'generate.use.lipSync' },
+    { task: 'sound', roles: ['source'], label: 'generate.use.sound' },
+  ],
+  audio: [
+    { task: 'lip_sync', roles: ['audio'], label: 'generate.use.lipSyncVoice' },
+    { task: 'transcribe', roles: ['audio'], label: 'generate.use.transcribe' },
+  ],
+}
+
+function UseAs({ job, output }: { job: Job; output: OutputFile }) {
+  const { t } = useTranslation()
+  const projectId = useProjectStore((state) => state.currentProject?.id ?? null)
+  if (output.kind !== 'image' && output.kind !== 'video' && output.kind !== 'audio') return null
+  const kind = output.kind
+  const choose = async (next: (typeof NEXT)[MediaKind][number]) => {
+    if (next.lastFrame) {
+      if (!projectId) throw new Error(t('generate.use.needsProject'))
+      const media = await importLastFrame(generateApi.fileUrl(job.id, output.index), `${job.model_name}-last-frame.png`, projectId)
+      useGenerateStore.getState().useAs({ task: next.task, roles: next.roles, kind: 'image', ref: { media } })
+      return
+    }
+    useGenerateStore.getState().useAs({ task: next.task, roles: next.roles, kind, ref: { job: job.id, index: output.index } })
+  }
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button size="sm" variant="ghost" className="h-6 px-1.5 text-[10px]" data-testid="generate-use-as">
+          <Forward className="mr-1 h-3 w-3" />
+          {t('generate.use.button')}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="w-56">
+        {NEXT[kind].map((next) => (
+          <DropdownMenuItem key={next.label} className="text-xs" onClick={() => attempt(() => choose(next))}>
+            {t(next.label)}
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
+
 interface JobCardProps {
   job: Job
   onReuse: (job: Job) => void
+  /** Ticked for side-by-side comparison; absent when the card cannot be compared. */
+  selected?: boolean
+  onSelect?: (selected: boolean) => void
 }
 
-export function JobCard({ job, onReuse }: JobCardProps) {
+export function JobCard({ job, onReuse, selected, onSelect }: JobCardProps) {
   const { t } = useTranslation()
   const running = job.status === 'queued' || job.status === 'sending' || job.status === 'running'
   const prompt = Object.entries(job.values).find(([key]) => /prompt|^input$|^text$/i.test(key))?.[1]
@@ -78,6 +140,16 @@ export function JobCard({ job, onReuse }: JobCardProps) {
   return (
     <div className="space-y-1.5 rounded-lg border border-border bg-secondary/20 p-2" data-testid="generate-job">
       <div className="flex items-center gap-1.5">
+        {onSelect && (
+          <input
+            type="checkbox"
+            checked={selected === true}
+            onChange={(event) => onSelect(event.target.checked)}
+            aria-label={t('generate.compare.pick')}
+            title={t('generate.compare.pick')}
+            className="h-3.5 w-3.5 accent-[var(--color-accent)]"
+          />
+        )}
         <ProviderBadge provider={job.provider} />
         <span className="min-w-0 flex-1 truncate text-[11px] font-medium" title={job.model}>
           {job.model_name}
@@ -144,6 +216,7 @@ export function JobCard({ job, onReuse }: JobCardProps) {
             </Button>
           </>
         )}
+        {job.status === 'done' && job.outputs[0] && <UseAs job={job} output={job.outputs[0]} />}
         {!running && (
           <>
             <Button size="sm" variant="ghost" className="h-6 px-1.5 text-[10px]" title={t('generate.actions.reuseHint')} onClick={() => onReuse(job)}>

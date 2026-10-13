@@ -25,6 +25,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
+import { toast } from 'sonner'
 import { cn } from '@/shared/ui/cn'
 import {
   formatUsd,
@@ -41,7 +42,7 @@ import { modelKey, useGenerateStore } from '../stores/generate-store'
 import { useProjectStore } from '../deps/editor'
 import { FieldControl } from './field-control'
 import { improvePrompt } from '../services/prompt-assist'
-import { JobCard } from './job-card'
+import { GenerationHistory } from './generation-history'
 import { ModelPicker } from './model-picker'
 
 const NO_VALUES: Record<string, unknown> = {}
@@ -199,6 +200,22 @@ export function GeneratePanel() {
       cancelled = true
     }
   }, [model?.provider, model?.id]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const pendingUse = useGenerateStore((state) => state.pendingUse)
+  useEffect(() => {
+    if (!pendingUse || pendingUse.task !== task || !model || !form) return
+    const media = form.fields.filter((field) => field.type === 'media')
+    const slot =
+      pendingUse.roles.map((role) => media.find((field) => field.role === role)).find((field) => field !== undefined) ??
+      media.find((field) => field.type === 'media' && field.media === pendingUse.kind)
+    useGenerateStore.getState().useAs(null)
+    if (!slot) {
+      toast.error(t('generate.use.noSlot', { model: model.id }))
+      return
+    }
+    useGenerateStore.getState().setValue(model, slot.key, [pendingUse.ref])
+    toast.success(t('generate.use.placed', { field: slot.label }))
+  }, [pendingUse, task, model, form, t])
 
   const fields = useMemo(() => form?.fields ?? [], [form])
   const main = fields.filter((field) => !field.advanced)
@@ -409,14 +426,7 @@ export function GeneratePanel() {
         )}
       </div>
 
-      {jobs.length > 0 && (
-        <div className="max-h-[45%] min-h-0 space-y-2 overflow-y-auto border-t border-border p-3">
-          <h3 className="text-[11px] font-medium text-muted-foreground">{t('generate.history', { count: jobs.length })}</h3>
-          {jobs.map((job) => (
-            <JobCard key={job.id} job={job} onReuse={reuse} />
-          ))}
-        </div>
-      )}
+      {jobs.length > 0 && <GenerationHistory jobs={jobs} projectId={projectId} onReuse={reuse} />}
     </div>
   )
 }
