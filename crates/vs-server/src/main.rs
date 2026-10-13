@@ -24,7 +24,7 @@ fn main() -> anyhow::Result<()> {
     }
     let root = dunce::canonicalize(repo_root())?;
     let port = vs_server::service::listen_port().map_err(anyhow::Error::msg)?;
-    match vs_server::service::claim_port(port, Duration::from_secs(5)).map_err(|busy| anyhow::anyhow!(busy.to_string()))? {
+    match vs_server::service::claim_port_on(vs_server::bind_address(&root), port, Duration::from_secs(5)).map_err(|busy| anyhow::anyhow!(busy.to_string()))? {
         vs_server::service::Claim::Bound(listener) => vs_server::serve_blocking(&root, listener),
         vs_server::service::Claim::AlreadyRunning(running) => {
             anyhow::bail!("VideoSOS {} already serves 127.0.0.1:{port} ({})", running.version, running.service_executable)

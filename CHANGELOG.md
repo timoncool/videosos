@@ -1,8 +1,19 @@
 # Changelog
 
-## VideoSOS 2.0.0
+What changed, newest first. Dates are release dates. Every change a user can see is written here in the commit that
+makes it, and the release notes on GitHub are taken from the release's section.
 
-VideoSOS is now a native desktop program. Everything below is new.
+## Unreleased — 2.1.0
+
+### Added
+
+- **News and changes in the window.** The sparkle button opens the news of VideoSOS and the author's other programs,
+  and this changelog; short notes from the author appear as a strip across the top of the window.
+- **Resource monitor**: the graphics card, its memory, temperature and power, and the memory of the program.
+
+## 2026-10-12 — 2.0.0
+
+### Added
 
 - **One window for generation and editing.** A Generate tab beside the media library: images, image edits, video
   from text or frames, video edits, lip sync, upscale, background removal, music, voice, sound effects, transcripts

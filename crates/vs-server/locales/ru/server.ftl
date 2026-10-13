@@ -70,3 +70,6 @@ exports-dialog-title = Сохранить видео
 exports-no-folder = Папки файла { $path } нет.
 exports-no-file = Файла { $path } нет.
 jobs-finished-after-cancel = Провайдер доделал задачу уже после отмены; результат сохранён, раз он оплачен.
+
+hw-no-nvidia = нет NVIDIA GPU
+remote-only-here = Доступ из сети меняют на компьютере, где запущен VideoSOS.

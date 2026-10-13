@@ -41,6 +41,7 @@ hex = "0.4"
 zip = { version = "8", default-features = false, features = ["deflate"] }
 tar = "0.4"
 lzma-rust2 = { version = "0.21", default-features = false, features = ["std", "optimization", "xz"] }
+nvml-wrapper = "0.13"
 sysinfo = "0.39"
 regex = "1"
 rfd = "0.17"

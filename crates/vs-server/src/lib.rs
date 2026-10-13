@@ -11,12 +11,14 @@ pub mod catalog;
 pub mod credentials;
 pub mod events;
 mod exports;
+pub mod hw;
 pub mod fs_api;
 pub mod hub;
 pub mod jobs;
 mod keys;
 pub mod mcp;
 pub mod process_group;
+pub mod remote;
 pub mod service;
 pub mod settings;
 mod spa;
@@ -94,6 +96,17 @@ async fn set_language(Json(body): Json<LanguageBody>) -> Result<StatusCode, (Sta
     Ok(StatusCode::NO_CONTENT)
 }
 
+/// Where the program keeps what the person makes, for Settings, About.
+async fn app_paths(State(state): State<AppState>) -> Json<Value> {
+    Json(json!({
+        "data_dir": state.data.display().to_string(),
+        "projects_dir": state.workspace.display().to_string(),
+        "generations_dir": state.data.join("generations").display().to_string(),
+        "exports_dir": state.data.join("exports").display().to_string(),
+        "logs_dir": state.data.join("logs").display().to_string(),
+    }))
+}
+
 async fn info(State(state): State<AppState>) -> Json<Value> {
     Json(json!({
         "app": service::APP_ID,
@@ -109,6 +122,9 @@ async fn info(State(state): State<AppState>) -> Json<Value> {
 /// money, so only the window and agents on this computer may ask for them.
 async fn local_only(request: axum::extract::Request, next: axum::middleware::Next) -> axum::response::Response {
     use axum::response::IntoResponse;
+    if request.extensions().get::<remote::FromNetwork>().is_some() {
+        return next.run(request).await;
+    }
     let headers = request.headers();
     let host_ok = headers
         .get(header::HOST)
@@ -127,6 +143,8 @@ pub fn app(state: AppState) -> Router {
     let api = Router::new()
         .route("/health", get(service::health))
         .route("/api/info", get(info))
+        .route("/api/app/paths", get(app_paths))
+        .route("/api/network", get(remote::status).put(remote::change))
         .route("/api/ui-language", post(set_language))
         .route("/api/events", get(events::stream))
         .merge(fs_api::router())
@@ -135,12 +153,14 @@ pub fn app(state: AppState) -> Router {
         .merge(keys::router())
         .merge(settings::router())
         .merge(exports::router())
+        .merge(hw::router())
         .with_state(state.clone())
         .merge(hub::router());
     mcp::install(api.clone());
     api.merge(mcp::router().with_state(state.clone()))
         .merge(spa::router(&state.repo_root))
         .layer(axum::middleware::from_fn(local_only))
+        .layer(axum::middleware::from_fn(remote::guard))
         .layer(SetResponseHeaderLayer::overriding(
             HeaderName::from_static("cross-origin-opener-policy"),
             HeaderValue::from_static("same-origin"),
@@ -156,6 +176,11 @@ pub fn app(state: AppState) -> Router {
         .layer(SetResponseHeaderLayer::if_not_present(header::X_CONTENT_TYPE_OPTIONS, HeaderValue::from_static("nosniff")))
 }
 
+/// The address the service binds: every address when access from the network is on, loopback otherwise.
+pub fn bind_address(repo_root: &Path) -> [u8; 4] {
+    remote::start(settings::saved_network(&repo_root.join("data")))
+}
+
 /// Serves on the listener the caller bound until the process ends.
 pub fn serve_blocking(repo_root: &Path, listener: TcpListener) -> anyhow::Result<()> {
     let runtime = tokio::runtime::Builder::new_multi_thread().enable_all().thread_name("vs-server").build()?;
@@ -167,7 +192,7 @@ pub fn serve_blocking(repo_root: &Path, listener: TcpListener) -> anyhow::Result
         state.start_background();
         let listener = tokio::net::TcpListener::from_std(listener)?;
         tracing::info!("VideoSOS {} on http://127.0.0.1:{port}/", service::app_version());
-        axum::serve(listener, app(state)).await?;
+        axum::serve(listener, app(state).into_make_service_with_connect_info::<std::net::SocketAddr>()).await?;
         Ok(())
     })
 }

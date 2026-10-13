@@ -16,6 +16,21 @@ use crate::AppState;
 pub struct Settings {
     /// What agents may spend per day through MCP, in USD; none means no limit.
     pub agent_daily_budget_usd: Option<f64>,
+    /// Access from another computer's browser, changed only through `/api/network`.
+    pub network: Option<crate::remote::NetworkAccess>,
+}
+
+/// The network setting as kept on disk, read before the service binds its address.
+pub fn saved_network(data: &std::path::Path) -> Option<crate::remote::NetworkAccess> {
+    let text = std::fs::read_to_string(data.join("settings.json")).ok()?;
+    serde_json::from_str::<Settings>(&text).ok()?.network
+}
+
+/// Changes the kept settings and saves them.
+pub fn update(change: impl FnOnce(&mut Settings)) -> Result<(), String> {
+    let mut settings = get();
+    change(&mut settings);
+    save(&settings)
 }
 
 static PATH: OnceLock<PathBuf> = OnceLock::new();
@@ -43,14 +58,16 @@ fn save(settings: &Settings) -> Result<(), String> {
 }
 
 async fn read(State(_): State<AppState>) -> Json<Settings> {
-    Json(get())
+    Json(Settings { network: None, ..get() })
 }
 
-async fn write(State(_): State<AppState>, Json(settings): Json<Settings>) -> Result<Json<Settings>, (StatusCode, String)> {
+async fn write(State(_): State<AppState>, Json(mut settings): Json<Settings>) -> Result<Json<Settings>, (StatusCode, String)> {
     if settings.agent_daily_budget_usd.is_some_and(|budget| !(0.0..=10_000.0).contains(&budget)) {
         return Err((StatusCode::BAD_REQUEST, t!("settings-bad-budget")));
     }
+    settings.network = get().network;
     save(&settings).map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e))?;
+    settings.network = None;
     crate::events::send("settings", serde_json::to_value(&settings).unwrap_or_default());
     Ok(Json(settings))
 }

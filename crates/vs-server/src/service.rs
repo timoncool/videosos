@@ -208,8 +208,8 @@ impl std::fmt::Display for PortBusy {
 
 impl std::error::Error for PortBusy {}
 
-fn bind_loopback(port: u16) -> std::io::Result<TcpListener> {
-    TcpListener::bind(SocketAddrV4::new(Ipv4Addr::LOCALHOST, port))
+fn bind_on(address: [u8; 4], port: u16) -> std::io::Result<TcpListener> {
+    TcpListener::bind(SocketAddrV4::new(Ipv4Addr::from(address), port))
 }
 
 const PROBE_TIMEOUT: Duration = Duration::from_millis(1500);
@@ -217,10 +217,15 @@ const PROBE_TIMEOUT: Duration = Duration::from_millis(1500);
 /// Занять порт сервиса. Если на нём уже отвечает VideoSOS — вернуть её. Если порт держит кто-то
 /// ещё, повторять до `patience`: закрытая только что студия отпускает порт не сразу.
 pub fn claim_port(port: u16, patience: Duration) -> Result<Claim, PortBusy> {
+    claim_port_on([127, 0, 0, 1], port, patience)
+}
+
+/// As [`claim_port`], on `address`: every address when access from the network is on.
+pub fn claim_port_on(address: [u8; 4], port: u16, patience: Duration) -> Result<Claim, PortBusy> {
     let started = Instant::now();
     loop {
-        // Сначала bind, потом вопрос: connect на закрытый порт loopback в Windows ждёт повторов SYN.
-        let error = match bind_loopback(port) {
+        // bind first, ask second: on Windows a connect to a closed loopback port waits for SYN retries
+        let error = match bind_on(address, port) {
             Ok(l) => return Ok(Claim::Bound(l)),
             Err(e) => e,
         };
@@ -249,6 +254,11 @@ pub fn wait_until_serving(port: u16, timeout: Duration) -> bool {
 
 pub(crate) fn record_port(port: u16) {
     let _ = LISTEN_PORT.set(port);
+}
+
+/// The port the service listens on, once it does.
+pub fn recorded_port() -> Option<u16> {
+    LISTEN_PORT.get().copied()
 }
 
 #[cfg(test)]

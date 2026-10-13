@@ -430,25 +430,31 @@ impl Drop for Listening {
     }
 }
 
-/// Only the program's own window and agents on this computer may drive it: a web page in the user's browser
-/// sends its own origin and is refused.
+/// Only the program's own window and agents on this computer may drive it: a web page in the person's browser
+/// sends its own origin and is refused, and so is a page of another server on this computer. A development build
+/// also lets the frontend's dev server (another local port) through.
 pub fn local_origin(headers: &HeaderMap) -> bool {
     let Some(origin) = headers.get(header::ORIGIN) else { return true };
     let Ok(origin) = origin.to_str() else { return false };
     let Some((scheme, rest)) = origin.split_once("://") else { return false };
-    let host = rest.split('/').next().unwrap_or_default();
-    let host = if host.starts_with('[') { host.split(']').next().map(|name| format!("{name}]")).unwrap_or_default() } else { host.split(':').next().unwrap_or_default().to_string() };
-    scheme == "tauri" || ["localhost", "127.0.0.1", "[::1]", "tauri.localhost"].contains(&host.as_str())
-}
-
-fn foreign_origin() -> Response {
-    (StatusCode::FORBIDDEN, "VideoSOS answers only its own window and agents on this computer.").into_response()
-}
-
-async fn window_events(headers: HeaderMap) -> Response {
-    if !local_origin(&headers) {
-        return foreign_origin();
+    if scheme == "tauri" {
+        return true;
     }
+    let authority = rest.split('/').next().unwrap_or_default();
+    let (host, port) = match authority.rsplit_once(':') {
+        Some((host, port)) if !host.ends_with(':') && !port.contains(']') => (host, port.parse::<u16>().ok()),
+        _ => (authority, None),
+    };
+    if host == "tauri.localhost" {
+        return true;
+    }
+    if !matches!(host, "localhost" | "127.0.0.1" | "[::1]") {
+        return false;
+    }
+    cfg!(debug_assertions) || port.is_some_and(|port| Some(port) == crate::service::recorded_port())
+}
+
+async fn window_events() -> Response {
     let window = bridge().sequence.fetch_add(1, Ordering::Relaxed);
     open_windows().push(window);
     let receiver = bridge().commands.subscribe();
@@ -474,10 +480,7 @@ struct WindowAnswer {
     error: Option<String>,
 }
 
-async fn window_result(headers: HeaderMap, Json(answer): Json<WindowAnswer>) -> StatusCode {
-    if !local_origin(&headers) {
-        return StatusCode::FORBIDDEN;
-    }
+async fn window_result(Json(answer): Json<WindowAnswer>) -> StatusCode {
     let waiting = bridge().pending.lock().unwrap_or_else(|poisoned| poisoned.into_inner()).remove(&answer.id);
     match waiting {
         Some(sender) => {
@@ -496,10 +499,7 @@ struct WindowFocus {
     window: u64,
 }
 
-async fn window_focus(headers: HeaderMap, Json(focus): Json<WindowFocus>) -> StatusCode {
-    if !local_origin(&headers) {
-        return StatusCode::FORBIDDEN;
-    }
+async fn window_focus(Json(focus): Json<WindowFocus>) -> StatusCode {
     let mut windows = open_windows();
     let Some(place) = windows.iter().position(|open| *open == focus.window) else { return StatusCode::NOT_FOUND };
     windows.remove(place);
@@ -775,10 +775,7 @@ fn annotations(tool: &Tool) -> Value {
     json!({ "readOnlyHint": tool.looks, "destructiveHint": matches!(tool.name, "job_delete" | "timeline_edit"), "openWorldHint": tool.name == "generate" })
 }
 
-async fn handle(State(state): State<AppState>, headers: HeaderMap, body: axum::body::Bytes) -> Response {
-    if !local_origin(&headers) {
-        return foreign_origin();
-    }
+async fn handle(State(state): State<AppState>, body: axum::body::Bytes) -> Response {
     let Ok(message) = serde_json::from_slice::<Value>(&body) else {
         return rpc_error(StatusCode::BAD_REQUEST, Value::Null, -32700, "Parse error".into());
     };
@@ -944,7 +941,10 @@ mod tests {
     fn only_local_pages_drive_the_program() {
         let mut headers = HeaderMap::new();
         assert!(local_origin(&headers));
+        crate::service::record_port(8796);
         headers.insert(header::ORIGIN, "http://127.0.0.1:8796".parse().unwrap());
+        assert!(local_origin(&headers));
+        headers.insert(header::ORIGIN, "tauri://localhost".parse().unwrap());
         assert!(local_origin(&headers));
         headers.insert(header::ORIGIN, "https://evil.example".parse().unwrap());
         assert!(!local_origin(&headers));

@@ -58,7 +58,7 @@ fn single_instance_wanted() -> bool {
 
 fn start_or_reuse_service(repo_root: &std::path::Path) -> Result<u16, String> {
     let port = service::listen_port()?;
-    match service::claim_port(port, Duration::from_secs(20)).map_err(|busy| busy.to_string())? {
+    match service::claim_port_on(vs_server::bind_address(repo_root), port, Duration::from_secs(20)).map_err(|busy| busy.to_string())? {
         Claim::Bound(listener) => {
             let root = repo_root.to_path_buf();
             let (tx, rx) = std::sync::mpsc::channel();
