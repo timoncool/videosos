@@ -6,6 +6,7 @@ import { ErrorBoundary } from '@/components/error-boundary'
 import { WorkspaceGate } from '@/features/workspace-gate/workspace-gate'
 import { router } from '@/app/router'
 import { AgentBridgeHost } from '@/features/agent-bridge/components/agent-bridge-host'
+import { StudioHost } from '@/features/studio/components/studio-host'
 import { FirstRunDialog } from '@/features/first-run/first-run-dialog'
 import { GenerateSyncHost } from '@/features/generate/components/generate-sync-host'
 
@@ -77,6 +78,7 @@ export function App() {
           <RouterProvider router={router} />
         </WorkspaceGate>
         <AgentBridgeHost showProject={showProject} />
+        <StudioHost />
         <FirstRunDialog />
         <GenerateSyncHost />
         <GlobalTooltip />

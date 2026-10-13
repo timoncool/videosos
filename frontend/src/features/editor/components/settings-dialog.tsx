@@ -36,6 +36,10 @@ import {
   Sparkles,
   Play,
   KeyRound,
+  Bot,
+  Globe,
+  ShieldCheck,
+  Info,
 } from 'lucide-react'
 import {
   LocalInferenceUnloadControl,
@@ -67,6 +71,7 @@ import { VOICE_OPTIONS, type VoiceName } from '@/infrastructure/audio/ui-sound'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { createLogger } from '@/shared/logging/logger'
 import { cn } from '@/shared/ui/cn'
+import { LanguageSwitcher } from '@/shared/ui/language-switcher'
 import { useNaturalHeight } from '@/shared/ui/use-natural-height'
 
 const log = createLogger('SettingsDialog')
@@ -79,13 +84,21 @@ const MAX_SECTION_HEIGHT_VH = 0.7
 const LazyProvidersSettings = lazy(() =>
   import('../deps/generate').then((m) => ({ default: m.ProvidersSettings })),
 )
+const LazyAgentsSection = lazy(() => import('./agents-settings'))
+const LazyNetworkSection = lazy(() => import('../deps/studio').then((m) => ({ default: m.NetworkSection })))
+const LazyPrivacySection = lazy(() => import('../deps/studio').then((m) => ({ default: m.PrivacySection })))
+const LazyAboutSection = lazy(() => import('../deps/studio').then((m) => ({ default: m.AboutSection })))
 
 const SETTINGS_SECTIONS = [
   { id: 'providers', labelKey: 'settings.sections.providers', icon: KeyRound },
+  { id: 'agents', labelKey: 'settings.sections.agents', icon: Bot },
   { id: 'general', labelKey: 'settings.sections.general', icon: Settings2 },
   { id: 'timeline', labelKey: 'settings.sections.timeline', icon: Rows3 },
   { id: 'ai', labelKey: 'settings.sections.ai', icon: Sparkles },
   { id: 'storage', labelKey: 'settings.sections.storage', icon: HardDrive },
+  { id: 'network', labelKey: 'settings.sections.network', icon: Globe },
+  { id: 'privacy', labelKey: 'settings.sections.privacy', icon: ShieldCheck },
+  { id: 'about', labelKey: 'settings.sections.about', icon: Info },
 ] as const
 
 const ESTIMATE_REFERENCE_DURATION_SEC = 60
@@ -645,8 +658,39 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                       </Suspense>
                     )}
 
+                    {activeSection === 'agents' && (
+                      <Suspense fallback={null}>
+                        <LazyAgentsSection />
+                      </Suspense>
+                    )}
+
+                    {activeSection === 'network' && (
+                      <Suspense fallback={null}>
+                        <LazyNetworkSection />
+                      </Suspense>
+                    )}
+
+                    {activeSection === 'privacy' && (
+                      <Suspense fallback={null}>
+                        <LazyPrivacySection />
+                      </Suspense>
+                    )}
+
+                    {activeSection === 'about' && (
+                      <Suspense fallback={null}>
+                        <LazyAboutSection />
+                      </Suspense>
+                    )}
+
                     {activeSection === 'general' && (
                       <div className="space-y-3">
+                        <div className="flex items-center justify-between gap-3">
+                          <div>
+                            <Label className="text-sm">{t('settings.general.language')}</Label>
+                            <p className="text-[11px] text-muted-foreground">{t('settings.general.languageHint')}</p>
+                          </div>
+                          <LanguageSwitcher size="sm" align="end" side="left" />
+                        </div>
                         <div className="flex items-center justify-between">
                           <Label className="text-sm">{t('settings.general.autoSave')}</Label>
                           <Switch

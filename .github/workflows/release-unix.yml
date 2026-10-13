@@ -1,0 +1,63 @@
+name: macOS build
+
+# VideoSOS for Apple Silicon, started by hand. With a tag the .dmg is attached to that release. Linux is built on
+# the release machine: scripts/build-linux-docker.sh.
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to attach the builds to; empty builds only"
+        required: false
+
+concurrency:
+  group: unix-builds-${{ github.ref }}-${{ inputs.tag }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+env:
+  RUSTUP_TOOLCHAIN: stable
+  CARGO_TERM_COLOR: never
+
+jobs:
+  macos:
+    runs-on: macos-14
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: |
+            . -> target
+            desktop/src-tauri -> target
+      - name: Build
+        run: bash scripts/build-release-macos.sh
+      - name: The program starts
+        run: |
+          set -e
+          app="$(find desktop/src-tauri/target/release/bundle/macos -maxdepth 1 -name '*.app' | head -n 1)"
+          test -x "$app/Contents/MacOS/VideoSOS"
+          test -f "$app/Contents/Resources/frontend/dist/index.html"
+      - name: Collect
+        run: |
+          set -e
+          mkdir -p out
+          dmg="$(find desktop/src-tauri/target/release/bundle/dmg -name '*.dmg' | head -n 1)"
+          version="$(node -p "require('./desktop/src-tauri/tauri.conf.json').version")"
+          cp "$dmg" "out/VideoSOS-${version}-macos-arm64.dmg"
+          ls -la out
+      - uses: actions/upload-artifact@v4
+        with:
+          name: videosos-macos-arm64
+          path: out/*
+      - name: Attach to the release
+        if: ${{ inputs.tag != '' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "${{ inputs.tag }}" out/* --clobber

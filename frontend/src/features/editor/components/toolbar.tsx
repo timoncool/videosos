@@ -14,7 +14,6 @@ import {
   ListVideo,
   Save,
   Settings,
-  Sparkles,
   Video,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -33,8 +32,7 @@ import { SettingsDialog } from './settings-dialog'
 import { ShortcutsDialog } from './shortcuts-dialog'
 import { UnsavedChangesDialog } from './unsaved-changes-dialog'
 import { WorkspaceSwitcher } from './workspace-switcher'
-import { WhatsNewDialog } from './whats-new-dialog'
-import { hasUnseenChangelog } from './whats-new-seen'
+import { ResourceMonitor, WhatsNew } from '../deps/studio'
 import { EDITOR_LAYOUT_CSS_VALUES } from '@/config/editor-layout'
 import { cn } from '@/shared/ui/cn'
 import { LanguageSwitcher } from '@/shared/ui/language-switcher'
@@ -89,8 +87,6 @@ export const Toolbar = memo(function Toolbar({
   const [showUnsavedDialog, setShowUnsavedDialog] = useState(false)
   const [showShortcutsDialog, setShowShortcutsDialog] = useState(false)
   const [showSettingsDialog, setShowSettingsDialog] = useState(false)
-  const [showWhatsNewDialog, setShowWhatsNewDialog] = useState(false)
-  const [hasUnseenWhatsNew, setHasUnseenWhatsNew] = useState(false)
   const [isSaveAnimating, setIsSaveAnimating] = useState(false)
   const [saveAnimationKey, setSaveAnimationKey] = useState(0)
   const saveAnimationTimeoutRef = useRef<number | undefined>(undefined)
@@ -112,21 +108,12 @@ export const Toolbar = memo(function Toolbar({
   )
 
   useEffect(() => {
-    setHasUnseenWhatsNew(hasUnseenChangelog())
-  }, [])
-
-  useEffect(() => {
     return () => {
       if (saveAnimationTimeoutRef.current !== undefined) {
         window.clearTimeout(saveAnimationTimeoutRef.current)
       }
     }
   }, [])
-
-  const openWhatsNew = () => {
-    setHasUnseenWhatsNew(false)
-    setShowWhatsNewDialog(true)
-  }
 
   const handleBackClick = () => {
     if (useTimelineSettingsStore.getState().isDirty) {
@@ -222,7 +209,6 @@ export const Toolbar = memo(function Toolbar({
 
       <SettingsDialog open={showSettingsDialog} onOpenChange={setShowSettingsDialog} />
 
-      <WhatsNewDialog open={showWhatsNewDialog} onOpenChange={setShowWhatsNewDialog} />
 
       <div className="flex items-center gap-1.5">
         {import.meta.env.DEV && import.meta.env.VITE_SHOW_DEBUG_PANEL !== 'false' && (
@@ -270,23 +256,9 @@ export const Toolbar = memo(function Toolbar({
             <BookOpen className="h-4 w-4" />
           </a>
         </Button>
-        <Button
-          variant="outline"
-          size="icon"
-          className="h-7 w-7 relative"
-          onClick={openWhatsNew}
-          data-tooltip={t('toolbar.whatsNew')}
-          data-tooltip-side="bottom"
-          aria-label={t('toolbar.whatsNewAria')}
-        >
-          <Sparkles className="h-4 w-4" />
-          {hasUnseenWhatsNew && (
-            <span
-              className="absolute top-1 right-1 h-1.5 w-1.5 rounded-full bg-primary"
-              aria-hidden="true"
-            />
-          )}
-        </Button>
+        <div id="dock-slot" className="flex items-center" />
+        <ResourceMonitor />
+        <WhatsNew />
         <Button
           variant="outline"
           size="icon"

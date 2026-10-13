@@ -28,6 +28,11 @@ pub fn saved_network(data: &std::path::Path) -> Option<crate::remote::NetworkAcc
     serde_json::from_str::<Settings>(&text).ok()?.network
 }
 
+/// The proxy as kept on disk, for the window's own browser, which takes it when it starts.
+pub fn saved_proxy(data: &std::path::Path) -> vs_providers::net::ProxySettings {
+    std::fs::read_to_string(data.join("settings.json")).ok().and_then(|text| serde_json::from_str::<Settings>(&text).ok()).map(|settings| settings.proxy).unwrap_or_default()
+}
+
 /// Changes the kept settings and saves them.
 pub fn update(change: impl FnOnce(&mut Settings)) -> Result<(), String> {
     let mut settings = get();

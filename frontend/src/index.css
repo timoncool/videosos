@@ -17,6 +17,14 @@ body.canvas-translate-cursor-not-allowed * {
    `var(--ease-out-strong)` in raw CSS / inline styles) AND generate Tailwind
    utilities: `ease-out-strong`, `ease-in-out-strong`, `ease-drawer`. Reference
    these instead of hand-rolling cubic-beziers so "feels right" is the default. */
+/* FreeCut marks its active states with the orange scale; in VideoSOS that is the studios' accent. */
+@theme {
+  --color-orange-300: #d9f78a;
+  --color-orange-400: #cff46b;
+  --color-orange-500: #c6f24e;
+  --color-orange-600: #a9d23a;
+}
+
 @theme {
   --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1); /* UI entrances/exits */
   --ease-in-out-strong: cubic-bezier(0.77, 0, 0.175, 1); /* on-screen movement */
@@ -25,59 +33,56 @@ body.canvas-translate-cursor-not-allowed * {
 
 @layer base {
   :root {
-    /* Professional Video Editor Dark Theme - OKLCH Colors */
-    /* Inspired by Premiere Pro & DaVinci Resolve */
+    /* The studios' "dark studio console" (Dub Studio): a near-black instrument panel, one acid-lime signal
+       accent, depth by luminance steps and 1px hairlines rather than shadows. */
+    --color-bg: #0b0c0e;
+    --color-surface: #121317;
+    --color-surface-2: #1a1c22;
+    --color-overlay: #23262e;
+    --color-border: #262a31;
+    --color-hairline: #ffffff14;
+    --color-text: #e8eaed;
+    --color-muted: #888e99;
+    --color-accent: #c6f24e;
+    --color-on-accent: #0b0c0e;
+    --color-accent-2: #5be0c8;
+    --color-warn: #ffb020;
+    --color-danger: #ef4444;
+    --font-ui: 'Onest', 'Noto Sans SC', ui-sans-serif, system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
-    /* Base - Very dark, reduced eye strain */
-    --background: oklch(0.15 0 0); /* #262626 - Main canvas */
-    --foreground: oklch(0.95 0 0); /* #f2f2f2 - Primary text */
-
-    /* Panels - Layered depth */
-    --card: oklch(0.18 0 0); /* #2e2e2e - Panel backgrounds */
-    --card-foreground: oklch(0.92 0 0); /* #ebebeb - Panel text */
-
-    --popover: oklch(0.16 0 0); /* #292929 - Dropdowns */
-    --popover-foreground: oklch(0.92 0 0);
-
-    /* Primary - Orange accent (playback, active states) */
-    --primary: oklch(0.68 0.19 45); /* #FF8C3A - Vibrant orange */
-    --primary-foreground: oklch(0.12 0 0); /* Dark text on primary */
-
-    /* Secondary - Subtle panel variation */
-    --secondary: oklch(0.22 0 0); /* #383838 - Secondary surfaces */
-    --secondary-foreground: oklch(0.88 0 0);
-
-    /* Muted - Backgrounds and disabled states */
-    --muted: oklch(0.2 0 0); /* #333333 - Muted backgrounds */
-    --muted-foreground: oklch(0.6 0 0); /* #999999 - Muted text */
-
-    /* Accent - Hover states and highlights */
-    --accent: oklch(0.24 0 0); /* #3d3d3d - Hover backgrounds */
-    --accent-foreground: oklch(0.95 0 0);
-
-    /* Destructive - Red for delete/errors */
-    --destructive: oklch(0.58 0.22 25); /* #E53E3E - Error red */
+    --background: var(--color-bg);
+    --foreground: var(--color-text);
+    --card: var(--color-surface);
+    --card-foreground: var(--color-text);
+    --popover: var(--color-surface-2);
+    --popover-foreground: var(--color-text);
+    --primary: var(--color-accent);
+    --primary-foreground: var(--color-on-accent);
+    --secondary: var(--color-surface-2);
+    --secondary-foreground: var(--color-text);
+    --muted: #16181c;
+    --muted-foreground: var(--color-muted);
+    --accent: var(--color-overlay);
+    --accent-foreground: var(--color-text);
+    --destructive: oklch(0.58 0.22 25);
     --destructive-foreground: oklch(0.98 0 0);
+    --border: var(--color-border);
+    --input: var(--color-border);
+    --ring: var(--color-accent);
 
-    /* Borders - Subtle separators */
-    --border: oklch(0.25 0 0); /* #404040 - Borders */
-    --input: oklch(0.24 0 0); /* #3d3d3d - Input borders */
-    --ring: oklch(0.68 0.19 45); /* Orange focus ring */
+    --panel-bg: var(--color-surface);
+    --panel-header: #0f1013;
+    --timeline-bg: var(--color-bg);
 
-    /* Panel system - Layered depth */
-    --panel-bg: oklch(0.18 0 0); /* #2e2e2e - Panels */
-    --panel-header: oklch(0.14 0 0); /* #242424 - Panel headers */
-    --timeline-bg: oklch(0.12 0 0); /* #1f1f1f - Timeline darker */
-
-    /* Sidebar */
-    --sidebar: oklch(0.18 0 0);
-    --sidebar-foreground: oklch(0.92 0 0);
-    --sidebar-primary: oklch(0.68 0.19 45);
-    --sidebar-primary-foreground: oklch(0.12 0 0);
-    --sidebar-accent: oklch(0.22 0 0);
-    --sidebar-accent-foreground: oklch(0.92 0 0);
-    --sidebar-border: oklch(0.25 0 0);
-    --sidebar-ring: oklch(0.68 0.19 45);
+    --sidebar: var(--color-surface);
+    --sidebar-foreground: var(--color-text);
+    --sidebar-primary: var(--color-accent);
+    --sidebar-primary-foreground: var(--color-on-accent);
+    --sidebar-accent: var(--color-surface-2);
+    --sidebar-accent-foreground: var(--color-text);
+    --sidebar-border: var(--color-border);
+    --sidebar-ring: var(--color-accent);
 
     --radius: 0.5rem;
   }
@@ -96,12 +101,8 @@ body.canvas-translate-cursor-not-allowed * {
 
   body {
     @apply bg-background text-foreground;
-    font-family:
-      'IBM Plex Sans',
-      -apple-system,
-      BlinkMacSystemFont,
-      'Segoe UI',
-      sans-serif;
+    font-family: var(--font-ui);
+    font-feature-settings: 'ss01', 'cv01';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     user-select: none;
@@ -120,7 +121,7 @@ body.canvas-translate-cursor-not-allowed * {
   pre,
   .font-mono,
   [data-mono] {
-    font-family: 'IBM Plex Mono', 'Consolas', 'Monaco', monospace;
+    font-family: var(--font-mono);
   }
 
   /* Disable smooth scrolling globally - timeline needs instant response for zoom */
@@ -130,26 +131,22 @@ body.canvas-translate-cursor-not-allowed * {
 
   /* Professional scrollbar styling */
   ::-webkit-scrollbar {
-    width: 12px;
-    height: 12px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: oklch(0.15 0 0);
+    width: 9px;
+    height: 9px;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: oklch(0.3 0 0);
+    background: var(--color-border);
     border-radius: 6px;
-    border: 2px solid oklch(0.15 0 0);
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: oklch(0.35 0 0);
+    background: #333843;
   }
 
+  ::-webkit-scrollbar-track,
   ::-webkit-scrollbar-corner {
-    background: oklch(0.15 0 0);
+    background: transparent;
   }
 
   /* Timeline keyframe sheets reserve a custom overlay rail matching the main
@@ -383,4 +380,35 @@ body.canvas-translate-cursor-not-allowed * {
   .animate-pulse-subtle {
     animation: none;
   }
+}
+
+/* The studios' shared utilities (Dub Studio): console mono for numbers, glass for floating chrome, entrances. */
+.mono,
+.tabnum {
+  font-family: var(--font-mono);
+  font-feature-settings: 'tnum';
+}
+.glass-scrim {
+  background: rgba(7, 8, 10, 0.55);
+  backdrop-filter: blur(3px);
+}
+.glass-panel {
+  background: color-mix(in oklab, var(--color-overlay) 80%, transparent);
+  backdrop-filter: blur(22px) saturate(1.35);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55), inset 0 1px 0 var(--color-hairline);
+}
+@keyframes vs-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes vs-pop {
+  from { opacity: 0; transform: translateY(6px) scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
+.anim-fade { animation: vs-fade 0.16s var(--ease-out-strong) both; }
+.anim-pop { animation: vs-pop 0.2s var(--ease-out-strong) both; }
+@media (prefers-reduced-motion: reduce) {
+  .anim-fade,
+  .anim-pop { animation: none; }
 }

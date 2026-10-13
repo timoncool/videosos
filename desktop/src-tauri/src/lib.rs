@@ -13,6 +13,7 @@ use std::time::{Duration, Instant};
 
 use tauri::{Manager, WebviewUrl, WebviewWindowBuilder};
 use vs_server::service::{self, Claim};
+use vs_server::vs_providers::net as vs_providers_net;
 
 fn wait_for_own_service(port: u16, stopped: &Receiver<Result<(), String>>) -> Result<(), String> {
     let deadline = Instant::now() + Duration::from_secs(30);
@@ -168,6 +169,22 @@ fn spawn_update_check(app: tauri::AppHandle, portable: bool) {
     });
 }
 
+/// Tauri's own WebView2 switches, the proxy the person chose for what the window loads itself (as in the music
+/// studios), and whatever is set in the variable WebView2 documents for exactly this.
+#[cfg(windows)]
+fn webview_browser_arguments(proxy: &vs_providers_net::ProxySettings) -> String {
+    let mut own = "--disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection --autoplay-policy=no-user-gesture-required".to_owned();
+    if proxy.mode == vs_providers_net::ProxyMode::Off {
+        own.push_str(" --no-proxy-server");
+    } else if let Some(url) = proxy.window_proxy().filter(|url| !matches!(url.scheme(), "http" | "socks5")) {
+        own.push_str(&format!(" --proxy-server={}://{}:{}", url.scheme(), url.host_str().unwrap_or_default(), url.port_or_known_default().unwrap_or_default()));
+    }
+    match std::env::var("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS") {
+        Ok(extra) if !extra.trim().is_empty() => format!("{own} {}", extra.trim()),
+        _ => own,
+    }
+}
+
 /// Hides this process's own console window; a console shared with a terminal it was started from is left.
 #[cfg(windows)]
 fn hide_console_window() {
@@ -232,7 +249,16 @@ pub fn run() {
             let url = format!("http://127.0.0.1:{port}/projects");
             let icon = app.default_window_icon().cloned();
             let (for_tabs, for_links) = (app.handle().clone(), app.handle().clone());
-            let win = WebviewWindowBuilder::new(app, "main", WebviewUrl::External(url.parse().expect("a valid URL")))
+            let proxy = vs_server::settings::saved_proxy(&repo_root.join("data"));
+            let window = WebviewWindowBuilder::new(app, "main", WebviewUrl::External(url.parse().expect("a valid URL")));
+            #[cfg(windows)]
+            let window = window.additional_browser_args(&webview_browser_arguments(&proxy));
+            // a proxy of the person's own reaches the window through Tauri where it takes the scheme
+            let window = match proxy.window_proxy().filter(|url| matches!(url.scheme(), "http" | "socks5")) {
+                Some(url) => window.proxy_url(url),
+                None => window,
+            };
+            let win = window
                 .title(format!("VideoSOS {}", app.package_info().version))
                 .inner_size(1600.0, 1000.0)
                 .min_inner_size(1200.0, 760.0)

@@ -47,7 +47,7 @@ export function HubBars({ items }: { items: HubItem[] }) {
     <div role="region" aria-label={t("hub.notices")} className="shrink-0">
       {visible.map((item, index) => {
         const theme = stackTheme(item.theme, index);
-        const content = hubText(item, i18n.language.split("-")[0]);
+        const content = hubText(item, i18n.language.split("-")[0] ?? "en");
         return (
           <div key={item.id} className="flex items-start justify-between gap-3 px-6 py-2 text-[13px] leading-6"
                style={{ background: HUB_GRADIENTS[theme], color: HUB_TEXT[theme] }}

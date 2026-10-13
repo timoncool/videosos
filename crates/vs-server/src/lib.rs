@@ -8,6 +8,7 @@
 #[macro_use]
 pub mod i18n;
 pub mod catalog;
+pub use vs_providers;
 pub mod credentials;
 pub mod events;
 pub mod exports;

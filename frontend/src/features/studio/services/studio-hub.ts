@@ -89,4 +89,4 @@ export const HUB_GRADIENTS: Record<HubTheme, string> = {
 export const HUB_TEXT: Record<HubTheme, string> = { sunset: "#ffffff", orchid: "#ffffff", lime: "#0b0c0e", graphite: "#ffffff" };
 const THEMES: HubTheme[] = ["sunset", "orchid", "lime", "graphite"];
 /** A strip's colour: its own theme, or the next one by its place in the stack. */
-export const stackTheme = (theme: HubTheme | null, index: number): HubTheme => theme ?? THEMES[index % THEMES.length];
+export const stackTheme = (theme: HubTheme | null, index: number): HubTheme => theme ?? THEMES[index % THEMES.length] ?? "graphite";

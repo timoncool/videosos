@@ -24,7 +24,7 @@ function useNews(lang: string): NewsItem[] {
       return {
         id: `hub:${item.id}`,
         date: item.date ?? "",
-        release: index >= 0 ? local?.buttons[index].url : undefined,
+        release: index >= 0 ? local?.buttons[index]?.url : undefined,
         releaseButton: index >= 0 ? `b${index}` : undefined,
         title: Object.fromEntries(Object.entries(item.content).map(([l, c]) => [l, c.title])),
         body: Object.fromEntries(Object.entries(item.content).map(([l, c]) => [l, c.body])),
@@ -52,21 +52,21 @@ function parseChangelog(raw: string): ChangelogRelease[] {
   let section: ChangelogSection | null = null;
   for (const line of raw.split(/\r?\n/)) {
     const head = line.match(/^## (Unreleased|\d{4}-\d{2}-\d{2}) — (\S+)/);
-    if (head) {
+    if (head?.[1] && head[2]) {
       release = { heading: line.slice(3), unreleased: head[1] === "Unreleased", version: head[2], date: head[1], sections: [] };
       releases.push(release);
       section = null;
       continue;
     }
     const sec = line.match(/^### (.+)/);
-    if (sec && release) {
+    if (sec?.[1] && release) {
       section = { key: sec[1].trim().toLowerCase(), title: sec[1].trim(), items: [] };
       release.sections.push(section);
       continue;
     }
     if (!section) continue;
     const item = line.match(/^- (.+)/);
-    if (item) section.items.push(item[1]);
+    if (item?.[1]) section.items.push(item[1]);
     else if (/^\s{2,}\S/.test(line) && section.items.length) section.items[section.items.length - 1] += " " + line.trim();
   }
   return releases.filter((r) => r.sections.some((s) => s.items.length));
@@ -204,7 +204,7 @@ function WhatsNewModal({ onClose, news }: { onClose: () => void; news: NewsItem[
 export default function WhatsNew() {
   const { t, i18n } = useTranslation();
   const NEWS = useNews(i18n.language);
-  const latest = NEWS.length ? NEWS[0].id : null;
+  const latest = NEWS[0]?.id ?? null;
   const [seen, setSeen] = useState<string | null>(readSeen);
   const [open, setOpen] = useState(false);
   const unseen = latest !== null && seen !== latest;
