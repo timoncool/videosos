@@ -173,9 +173,12 @@ impl Catalog {
         if let Ok(meta) = std::fs::metadata(&path) {
             let fresh = meta.modified().ok().and_then(|time| time.elapsed().ok()).is_some_and(|age| age.as_secs() < 24 * 3600);
             if fresh
-                && let Some(form) = std::fs::read_to_string(&path).ok().and_then(|text| serde_json::from_str::<CachedForm>(&text).ok()) {
-                    return Ok(form.form);
-                }
+                && let Some(cached) = std::fs::read_to_string(&path).ok().and_then(|text| serde_json::from_str::<CachedForm>(&text).ok())
+                // fal tells its prices only to a key: a form read before the key was set is read again once it is
+                && (provider != Provider::Fal || cached.keyed || credentials::key(Provider::Fal).is_none())
+            {
+                return Ok(cached.form);
+            }
         }
         match self.read_form(provider, id).await {
             Ok(form) => Ok(form),
@@ -230,7 +233,8 @@ impl Catalog {
                 (form, Value::Null)
             }
         };
-        let cached = CachedForm { form: form.clone(), schema };
+        let keyed = provider == Provider::Fal && credentials::key(Provider::Fal).is_some();
+        let cached = CachedForm { form: form.clone(), schema, keyed };
         if let Ok(text) = serde_json::to_string(&cached) {
             let _ = std::fs::write(&path, text);
         }
@@ -292,6 +296,9 @@ struct CachedForm {
     form: ModelForm,
     #[serde(default)]
     schema: Value,
+    /// Read with a key, so with the prices that need one.
+    #[serde(default)]
+    keyed: bool,
 }
 
 #[derive(Deserialize)]
@@ -377,7 +384,8 @@ async fn estimate(State(state): State<AppState>, Json(body): Json<EstimateBody>)
     let Some(provider) = Provider::parse(&body.provider) else { return bad(t!("catalog-unknown-provider", provider = body.provider)) };
     match state.catalog.form(provider, &body.id).await {
         Ok(form) => {
-            let estimate = price::estimate(&form, &body.values).map(|estimate| json!({ "usd": estimate.usd * f64::from(body.repeat.max(1)), "exact": estimate.exact }));
+            let values = crate::jobs::with_defaults(&form, body.values);
+            let estimate = price::estimate(&form, &values).map(|estimate| json!({ "usd": estimate.usd * f64::from(body.repeat.max(1)), "exact": estimate.exact }));
             Json(json!({ "estimate": estimate, "note": form.price.note, "rates": form.price.rates })).into_response()
         }
         Err(error) => (StatusCode::BAD_GATEWAY, Json(json!({ "error": error }))).into_response(),

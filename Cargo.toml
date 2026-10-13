@@ -22,7 +22,9 @@ serde_json = "1"
 tokio = { version = "1", features = ["full"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-reqwest = { version = "0.13", default-features = false, features = ["json", "rustls", "query", "stream", "multipart"] }
+reqwest = { version = "0.13", default-features = false, features = ["json", "rustls", "query", "stream", "multipart", "socks"] }
+hyper-util = { version = "0.1.20", features = ["client-proxy", "client-proxy-system"] }
+http = "1"
 futures-util = "0.3"
 uuid = { version = "1", features = ["v4", "v7"] }
 base64 = "0.23"

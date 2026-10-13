@@ -32,7 +32,7 @@ jobs-lost-contact = The provider stopped answering about this job: { $reason }
 jobs-too-long = The provider has worked on this job for over three hours; it is no longer awaited.
 jobs-download-failed = The result could not be downloaded: { $reason }
 jobs-cancelled = Cancelled.
-jobs-cancelled-not-waiting = Stopped waiting. This provider cannot cancel a job, so it may still finish and be charged.
+jobs-cancelled-not-waiting = Stopped waiting. The provider did not stop the job, so it may still finish and be charged.
 jobs-field-required = Fill in: { $field }
 jobs-place-needs-project = Placing on the timeline needs project_id: the project open in the window (editor_state names it).
 jobs-not-found = No job { $job }
@@ -46,8 +46,8 @@ catalog-unknown-provider = Unknown provider: { $provider }
 keys-env-wins = The environment variable { $variable } is set and takes priority; unset it to store a key here.
 keys-one-line = A key is one line.
 settings-bad-budget = The daily limit is a number from 0 to 10000.
-spend-agent-limit = Agents have spent ${ $spent } today; this job would cost about ${ $cost } and pass the daily limit of ${ $budget }. Raise the limit in Settings, Providers.
-spend-agent-limit-reached = Agents have reached today's limit of ${ $budget }.
+spend-agent-limit = Agents have spent ${ $spent } today; this job would cost about ${ $cost } and pass the daily limit of ${ $budget }. Raise the limit in Settings, Agents.
+spend-agent-limit-unknown-price = This model's price is known only after the run, so an agent cannot start it while the daily limit of ${ $budget } is set. Pick a model with a price, or clear the limit in Settings, Agents.
 catalog-partial = Part of the catalogue was not read: { $failures }. The models read are listed; refresh to try again.
 
 ## the desktop shell
@@ -72,3 +72,4 @@ jobs-finished-after-cancel = The provider finished the job after it was cancelle
 
 hw-no-nvidia = no NVIDIA GPU
 remote-only-here = Access from the network is changed on the computer VideoSOS runs on.
+settings-proxy-not-saved = The proxy is in use but was not saved: { $error }

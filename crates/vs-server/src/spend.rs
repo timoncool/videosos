@@ -11,6 +11,10 @@ pub fn init(jobs: std::sync::Arc<crate::jobs::Jobs>) {
     let _ = SPENT.set(jobs);
 }
 
+/// Held from the limit check until the job is recorded, so agents calling at once cannot all pass on the same
+/// spending.
+pub static CHECK_AND_RECORD: std::sync::Mutex<()> = std::sync::Mutex::new(());
+
 /// Why the job may not start, if the limit stops it.
 pub fn agent_limit_left(request: &CreateRequest, form: &ModelForm) -> Option<String> {
     if request.origin.as_deref() != Some("agent") {
@@ -18,10 +22,12 @@ pub fn agent_limit_left(request: &CreateRequest, form: &ModelForm) -> Option<Str
     }
     let budget = crate::settings::get().agent_daily_budget_usd?;
     let spent = SPENT.get().map(|jobs| jobs.agent_spent_today()).unwrap_or(0.0);
-    let cost = price::estimate(form, &request.values).map(|estimate| estimate.usd * f64::from(request.repeat.max(1)));
+    let values = crate::jobs::with_defaults(form, request.values.clone());
+    let cost = price::estimate(form, &values).map(|estimate| estimate.usd * f64::from(request.repeat.max(1)));
     match cost {
         Some(cost) if spent + cost > budget => Some(t!("spend-agent-limit", spent = format!("{spent:.2}"), cost = format!("{cost:.2}"), budget = format!("{budget:.2}"))),
-        None if spent >= budget => Some(t!("spend-agent-limit-reached", budget = format!("{budget:.2}"))),
-        _ => None,
+        Some(_) => None,
+        // a run priced only afterwards cannot be held to the limit, so an agent may not start it while one is set
+        None => Some(t!("spend-agent-limit-unknown-price", budget = format!("{budget:.2}"))),
     }
 }

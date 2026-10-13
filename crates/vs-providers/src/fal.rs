@@ -268,8 +268,13 @@ pub async fn poll(http: &Http, key: &str, handle: &Value) -> Result<Polled, Prov
 }
 
 pub async fn cancel(http: &Http, key: &str, handle: &Value) -> Result<(), ProviderError> {
-    if let Some(url) = handle["cancel_url"].as_str() {
-        http.client.put(url).header("Authorization", format!("Key {key}")).send().await?;
+    let Some(url) = handle["cancel_url"].as_str() else {
+        return Err(ProviderError::Refused("fal gave no address to cancel the job".into()));
+    };
+    let response = http.client.put(url).header("Authorization", format!("Key {key}")).send().await?;
+    let status = response.status();
+    if !status.is_success() {
+        return Err(refusal(status, &response.text().await.unwrap_or_default()));
     }
     Ok(())
 }

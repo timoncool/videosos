@@ -257,6 +257,21 @@ pub fn run() {
             if let Some(icon) = icon {
                 let _ = win.set_icon(icon);
             }
+            let dialogs = app.handle().clone();
+            vs_server::exports::set_save_dialog(std::sync::Arc::new(move |name: &str, start: Option<std::path::PathBuf>| {
+                use tauri_plugin_dialog::DialogExt;
+                let mut dialog = dialogs.dialog().file().set_file_name(name);
+                if let Some(extension) = std::path::Path::new(name).extension().and_then(|extension| extension.to_str()) {
+                    dialog = dialog.add_filter(extension.to_uppercase(), &[extension]);
+                }
+                if let Some(folder) = start {
+                    dialog = dialog.set_directory(folder);
+                }
+                if let Some(window) = dialogs.get_webview_window("main") {
+                    dialog = dialog.set_parent(&window);
+                }
+                dialog.blocking_save_file().and_then(|path| path.into_path().ok())
+            }));
             spawn_update_check(app.handle().clone(), layout::is_portable());
             Ok(())
         })

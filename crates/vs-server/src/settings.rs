@@ -18,6 +18,8 @@ pub struct Settings {
     pub agent_daily_budget_usd: Option<f64>,
     /// Access from another computer's browser, changed only through `/api/network`.
     pub network: Option<crate::remote::NetworkAccess>,
+    /// Where requests to the providers go; changed only through `/api/network/proxy`.
+    pub proxy: vs_providers::net::ProxySettings,
 }
 
 /// The network setting as kept on disk, read before the service binds its address.
@@ -38,8 +40,9 @@ static CURRENT: RwLock<Option<Settings>> = RwLock::new(None);
 
 pub fn init(data: &std::path::Path) {
     let path = data.join("settings.json");
-    let loaded = std::fs::read_to_string(&path).ok().and_then(|text| serde_json::from_str(&text).ok()).unwrap_or_default();
+    let loaded: Settings = std::fs::read_to_string(&path).ok().and_then(|text| serde_json::from_str(&text).ok()).unwrap_or_default();
     let _ = PATH.set(path);
+    vs_providers::net::set(loaded.proxy.clone());
     *CURRENT.write().unwrap_or_else(|p| p.into_inner()) = Some(loaded);
 }
 
@@ -58,20 +61,46 @@ fn save(settings: &Settings) -> Result<(), String> {
 }
 
 async fn read(State(_): State<AppState>) -> Json<Settings> {
-    Json(Settings { network: None, ..get() })
+    Json(Settings { network: None, proxy: Default::default(), ..get() })
 }
 
 async fn write(State(_): State<AppState>, Json(mut settings): Json<Settings>) -> Result<Json<Settings>, (StatusCode, String)> {
     if settings.agent_daily_budget_usd.is_some_and(|budget| !(0.0..=10_000.0).contains(&budget)) {
         return Err((StatusCode::BAD_REQUEST, t!("settings-bad-budget")));
     }
-    settings.network = get().network;
+    let kept = get();
+    settings.network = kept.network;
+    settings.proxy = kept.proxy;
     save(&settings).map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e))?;
     settings.network = None;
     crate::events::send("settings", serde_json::to_value(&settings).unwrap_or_default());
     Ok(Json(settings))
 }
 
+/// The proxy settings, and why the saved address cannot be used when it cannot: requests then go straight out,
+/// and Settings says so.
+async fn read_proxy() -> Json<serde_json::Value> {
+    let settings = vs_providers::net::current();
+    let mut value = serde_json::to_value(&settings).unwrap_or_default();
+    value["problem"] = serde_json::json!(settings.validated().err().map(|error| format!("{error:#}")));
+    Json(value)
+}
+
+/// Takes effect at once for every request to the providers.
+async fn update_proxy(Json(proxy): Json<vs_providers::net::ProxySettings>) -> Result<Json<vs_providers::net::ProxySettings>, (StatusCode, String)> {
+    let proxy = proxy.validated().map_err(|error| (StatusCode::BAD_REQUEST, format!("{error:#}")))?;
+    vs_providers::net::set(proxy.clone());
+    update(|settings| settings.proxy = proxy.clone()).map_err(|error| (StatusCode::INTERNAL_SERVER_ERROR, t!("settings-proxy-not-saved", error = error)))?;
+    Ok(Json(proxy))
+}
+
+async fn test_proxy(Json(proxy): Json<vs_providers::net::ProxySettings>) -> Result<Json<serde_json::Value>, (StatusCode, String)> {
+    vs_providers::net::test(proxy).await.map(Json).map_err(|error| (StatusCode::BAD_REQUEST, format!("{error:#}")))
+}
+
 pub fn router() -> Router<AppState> {
-    Router::new().route("/api/settings", axum::routing::get(read).put(write))
+    Router::new()
+        .route("/api/settings", axum::routing::get(read).put(write))
+        .route("/api/network/proxy", axum::routing::get(read_proxy).put(update_proxy))
+        .route("/api/network/proxy/test", axum::routing::post(test_proxy))
 }

@@ -385,7 +385,14 @@ async fn post(http: &Http, key: &str, tasks: Value) -> Result<Value, ProviderErr
     }
     if !status.is_success() && body.get("data").is_none() {
         let message = format!("Runware answered {status}");
-        return Err(if status.as_u16() == 429 || status.is_server_error() { ProviderError::Busy(message) } else { ProviderError::Refused(message) });
+        // a gateway error may come after Runware took the task: its outcome is unknown, not a refusal
+        return Err(if status.as_u16() == 429 {
+            ProviderError::Busy(message)
+        } else if status.is_server_error() {
+            ProviderError::Network(message)
+        } else {
+            ProviderError::Refused(message)
+        });
     }
     Ok(body)
 }
@@ -426,7 +433,9 @@ pub async fn poll(http: &Http, key: &str, handle: &Value) -> Result<Polled, Prov
         return Ok(Polled::Failed { message });
     }
     let done: Vec<&&Value> = items.iter().filter(|item| item["status"] == "success" || (item.get("status").is_none() && !outputs_of(item).is_empty())).collect();
-    if done.len() == items.len() {
+    // getResponse lists the results finished so far: a task of several waits for all of them
+    let expected = handle["results"].as_u64().unwrap_or(1).max(1) as usize;
+    if done.len() == items.len() && done.len() >= expected {
         let cost: f64 = items.iter().filter_map(|item| item["cost"].as_f64()).sum();
         let outputs: Vec<Output> = items.iter().flat_map(|item| outputs_of(item)).collect();
         return Ok(Polled::Done { outputs, cost: (cost > 0.0).then_some(cost) });

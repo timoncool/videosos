@@ -696,7 +696,7 @@ fn project(state: &AppState, args: &Value) -> Result<Value, String> {
 }
 
 async fn import_media(state: &AppState, args: &Value) -> Result<Value, String> {
-    let url = if let Some(path) = opt(args, "path") {
+    let (url, copy) = if let Some(path) = opt(args, "path") {
         let source = std::path::PathBuf::from(&path);
         if !source.is_file() {
             return Err(format!("No file {path} on this computer."));
@@ -704,15 +704,22 @@ async fn import_media(state: &AppState, args: &Value) -> Result<Value, String> {
         let id = uuid::Uuid::new_v4().simple().to_string();
         let name = source.file_name().map(|name| name.to_string_lossy().into_owned()).ok_or("the path has no file name")?;
         let dir = state.data.join("inbox").join(&id);
-        std::fs::create_dir_all(&dir).map_err(|error| error.to_string())?;
-        std::fs::copy(&source, dir.join(&name)).map_err(|error| error.to_string())?;
-        format!("/api/inbox/{id}/{}", segment(&name))
+        tokio::fs::create_dir_all(&dir).await.map_err(|error| error.to_string())?;
+        tokio::fs::copy(&source, dir.join(&name)).await.map_err(|error| error.to_string())?;
+        (format!("/api/inbox/{id}/{}", segment(&name)), Some(dir))
     } else if let Some(url) = opt(args, "url") {
-        url
+        (url, None)
     } else {
         return Err("Give path (a file on this computer) or url.".into());
     };
-    ask_window("media_import", json!({ "url": url }), 300).await
+    let answer = ask_window("media_import", json!({ "url": url }), 300).await;
+    // the window has read the copy into the workspace, or given up on it: either way it is not needed again
+    if let Some(dir) = copy
+        && let Err(error) = tokio::fs::remove_dir_all(&dir).await
+    {
+        tracing::warn!("the import copy {} was not removed: {error}", dir.display());
+    }
+    answer
 }
 
 // ---------------------------------------------------------------- protocol

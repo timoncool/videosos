@@ -20,7 +20,7 @@ pub type Auth = Option<(&'static str, String)>;
 
 impl Http {
     pub fn new(builder: reqwest::ClientBuilder) -> Result<Self, ProviderError> {
-        let client = builder
+        let client = crate::net::with_proxy(builder)
             .user_agent(USER_AGENT)
             .connect_timeout(Duration::from_secs(20))
             .timeout(Duration::from_secs(600))

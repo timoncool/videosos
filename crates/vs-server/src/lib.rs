@@ -10,7 +10,7 @@ pub mod i18n;
 pub mod catalog;
 pub mod credentials;
 pub mod events;
-mod exports;
+pub mod exports;
 pub mod hw;
 pub mod fs_api;
 pub mod hub;
@@ -19,6 +19,7 @@ mod keys;
 pub mod mcp;
 pub mod process_group;
 pub mod remote;
+pub mod request_log;
 pub mod service;
 pub mod settings;
 mod spa;
@@ -67,7 +68,15 @@ impl AppState {
         let data = repo_root.join("data");
         let workspace = data.join("workspace");
         std::fs::create_dir_all(&workspace)?;
+        // copies an agent handed over for import last run: the window has taken them or never will
+        let inbox = data.join("inbox");
+        if inbox.is_dir()
+            && let Err(error) = std::fs::remove_dir_all(&inbox)
+        {
+            tracing::warn!("the old import copies in {} were not removed: {error}", inbox.display());
+        }
         credentials::init(repo_root);
+        request_log::init(&data);
         settings::init(&data);
         let http = vs_providers::http::Http::new(reqwest::Client::builder()).map_err(|e| anyhow::anyhow!(e.to_string()))?;
         let catalog = catalog::Catalog::open(&data, http.clone());

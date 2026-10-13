@@ -262,15 +262,7 @@ impl Jobs {
     }
 
     pub fn create(self: &Arc<Self>, mut request: CreateRequest, form: &ModelForm, model_name: String) -> Vec<Job> {
-        // OpenRouter's defaults are this program's picks from the model's lists (its first voice), not the
-        // provider's, so they are sent; schema defaults of fal and Runware are the provider's own.
-        // A required field left at its default must still be sent.
-        for field in &form.fields {
-            let ours = form.provider == Provider::Openrouter || field.required;
-            if let (true, Some(default)) = (ours, &field.default) {
-                request.values.entry(field.key.clone()).or_insert_with(|| default.clone());
-            }
-        }
+        request.values = with_defaults(form, request.values);
         let estimate = price::estimate(form, &request.values).map(|estimate| estimate.usd);
         let mut created = Vec::new();
         for _ in 0..request.repeat.clamp(1, 8) {
@@ -350,6 +342,14 @@ impl Jobs {
             Ok(values) => values,
             Err(error) => return self.fail(&id, error),
         };
+        // the last moment a cancel keeps the job from being sent and paid for
+        if self.is_cancelled(&id) {
+            return;
+        }
+        let what = if job.task.is_empty() { "generation".to_string() } else { job.task.clone() };
+        let prompt_chars = values.values().filter_map(Value::as_str).filter(|text| !text.starts_with("data:")).map(|text| text.chars().count()).sum();
+        crate::request_log::asked(&what, &job.model, prompt_chars);
+        let started = std::time::Instant::now();
         let submitted = match job.provider {
             Provider::Runware => {
                 let task_uuid = uuid::Uuid::new_v4().to_string();
@@ -361,40 +361,70 @@ impl Jobs {
                     },
                     None => task,
                 };
-                let handle = json!({ "taskUUID": task_uuid, "taskType": task["taskType"] });
-                self.update(&id, |job| {
-                    job.status = "sending".into();
-                    job.handle = Some(handle);
-                });
+                let handle = json!({ "taskUUID": task_uuid, "taskType": task["taskType"], "results": task.get("numberResults").and_then(Value::as_u64).unwrap_or(1) });
+                self.sending(&id, Some(handle));
                 runware::submit(&self.http, &key, task).await
             }
             Provider::Fal => {
-                self.update(&id, |job| job.status = "sending".into());
+                self.sending(&id, None);
                 fal::submit(&self.http, &key, &form.id, fal::build_input(&values)).await
             }
             Provider::Openrouter => {
-                self.update(&id, |job| job.status = "sending".into());
+                self.sending(&id, None);
                 openrouter::submit(&self.http, &key, &form, &values).await
             }
         };
         drop(permit);
+        match &submitted {
+            Ok(_) => crate::request_log::answered(&what, &job.model, 200, started.elapsed().as_secs_f64(), 0),
+            Err(error) => crate::request_log::failed(&what, &job.model, &error.to_string()),
+        }
         match submitted {
             Ok(Submitted::Done { outputs, cost }) => self.finish(&id, outputs, cost).await,
             Ok(Submitted::Pending { handle }) => {
+                let cancelled = self.is_cancelled(&id);
                 self.update(&id, |job| {
-                    job.status = "running".into();
-                    job.handle = Some(handle);
+                    if job.status != "cancelled" {
+                        job.status = "running".into();
+                    }
+                    job.handle = Some(handle.clone());
                 });
+                if cancelled {
+                    // cancelled while it was being sent: fal can still stop it now that it has an address
+                    if job.provider == Provider::Fal
+                        && let Err(error) = fal::cancel(&self.http, &key, &handle).await
+                    {
+                        tracing::warn!("job {id}: fal did not take the cancel: {error}");
+                    }
+                    return;
+                }
                 self.follow(id).await;
             }
+            // no answer to the send: Runware may have the task, and polling the same task id never pays twice
             Err(ProviderError::Network(reason)) if job.provider == Provider::Runware => {
                 tracing::warn!("job {id}: no answer to the send ({reason}); polling the same task");
-                self.update(&id, |job| job.status = "running".into());
+                self.update(&id, |job| {
+                    if job.status != "cancelled" {
+                        job.status = "running".into();
+                    }
+                });
                 self.follow(id).await;
             }
             Err(ProviderError::Busy(message)) => self.fail(&id, t!("jobs-busy", reason = message)),
             Err(error) => self.fail(&id, error.to_string()),
         }
+    }
+
+    /// The job is on its way to the provider; a cancel that came first stays.
+    fn sending(&self, id: &str, handle: Option<Value>) {
+        self.update(id, |job| {
+            if job.status != "cancelled" {
+                job.status = "sending".into();
+            }
+            if handle.is_some() {
+                job.handle = handle;
+            }
+        });
     }
 
     /// Files of the request read from disk and handed to the provider the way it reads them.
@@ -547,7 +577,19 @@ impl Jobs {
                     Some(key) if openrouter::needs_key_to_download(&url) => Some(("Authorization", format!("Bearer {key}"))),
                     _ => None,
                 };
-                let (bytes, served) = self.http.get_bytes(&url, auth).await.map_err(|e| e.to_string())?;
+                // the result is paid for: a dropped connection is tried again before the job counts as failed
+                let mut attempt = 0u64;
+                let (bytes, served) = loop {
+                    match self.http.get_bytes(&url, auth.clone()).await {
+                        Ok(answer) => break answer,
+                        Err(error @ (ProviderError::Network(_) | ProviderError::Busy(_))) if attempt < 4 => {
+                            attempt += 1;
+                            tracing::warn!("download {url}: {error}; attempt {} of 5", attempt + 1);
+                            tokio::time::sleep(Duration::from_secs(3 * attempt)).await;
+                        }
+                        Err(error) => return Err(error.to_string()),
+                    }
+                };
                 let mime = served
                     .filter(|served| served.contains('/') && served != "application/octet-stream" && served != "binary/octet-stream")
                     .or_else(|| mime_guess::from_path(url.split('?').next().unwrap_or(&url)).first().map(|m| m.essence_str().to_string()))
@@ -579,10 +621,18 @@ impl Jobs {
             return Some(job);
         }
         self.cancelled.lock().unwrap_or_else(|p| p.into_inner()).insert(id.to_string());
-        if let (Provider::Fal, Some(handle), Some((key, _))) = (job.provider, &job.handle, credentials::key(Provider::Fal)) {
-            let _ = fal::cancel(&self.http, &key, handle).await;
-        }
-        let note = if job.provider == Provider::Fal || job.status == "queued" { t!("jobs-cancelled") } else { t!("jobs-cancelled-not-waiting") };
+        // fal stops a job only while it waits in its queue; one that runs already is billed whatever is asked
+        let stopped = match (job.provider, &job.handle, credentials::key(Provider::Fal)) {
+            (Provider::Fal, Some(handle), Some((key, _))) => match fal::cancel(&self.http, &key, handle).await {
+                Ok(()) => true,
+                Err(error) => {
+                    tracing::warn!("job {id}: fal did not take the cancel: {error}");
+                    false
+                }
+            },
+            _ => false,
+        };
+        let note = if stopped || job.status == "queued" { t!("jobs-cancelled") } else { t!("jobs-cancelled-not-waiting") };
         self.update(id, |job| {
             job.status = "cancelled".into();
             job.error = Some(note);
@@ -618,6 +668,19 @@ impl Jobs {
         let total: f64 = by_provider.iter().filter_map(|item| item["usd"].as_f64()).fold(0.0, |sum, usd| sum + usd);
         json!({ "total": total, "today": today, "providers": by_provider })
     }
+}
+
+/// The values a run is sent with, which its price is worked out from too. OpenRouter's defaults are this
+/// program's picks from the model's lists (its first voice), not the provider's, so they are sent; schema
+/// defaults of fal and Runware are the provider's own. A required field left at its default is still sent.
+pub fn with_defaults(form: &ModelForm, mut values: Map<String, Value>) -> Map<String, Value> {
+    for field in &form.fields {
+        let ours = form.provider == Provider::Openrouter || field.required;
+        if let (true, Some(default)) = (ours, &field.default) {
+            values.entry(field.key.clone()).or_insert_with(|| default.clone());
+        }
+    }
+    values
 }
 
 /// The first bytes of a file say what it is when the provider did not.
@@ -693,11 +756,14 @@ async fn create(State(state): State<AppState>, Json(request): Json<CreateRequest
             return bad(t!("jobs-field-required", field = field.label.clone()));
         }
     }
-    if let Some(limit) = crate::spend::agent_limit_left(&request, &form) {
-        return bad(limit);
-    }
     let name = state.catalog.find(provider, &request.model).map(|entry| entry.name).unwrap_or_else(|| request.model.clone());
-    let created = state.jobs.create(request, &form, name);
+    let created = {
+        let _held = crate::spend::CHECK_AND_RECORD.lock().unwrap_or_else(|p| p.into_inner());
+        if let Some(limit) = crate::spend::agent_limit_left(&request, &form) {
+            return bad(limit);
+        }
+        state.jobs.create(request, &form, name)
+    };
     Json(json!({ "jobs": created })).into_response()
 }
 
