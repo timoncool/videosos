@@ -131,6 +131,15 @@ export interface CatalogAnswer {
 /** A file named in a job's request. */
 export type MediaRef = { media: string } | { job: string; index: number } | { file: string } | string
 
+/** What was spent on finished generations, in total and broken down. */
+export interface Spend {
+  total: number
+  today: number
+  providers: Array<{ provider: Provider; usd: number; jobs: number }>
+  tasks: Array<{ task: Task | ''; usd: number; jobs: number }>
+  models: Array<{ provider: Provider; model: string; model_name: string; usd: number; jobs: number }>
+}
+
 export interface OutputFile {
   index: number
   kind: 'image' | 'video' | 'audio' | 'text' | 'file'
@@ -245,10 +254,7 @@ export const generateApi = {
     request<{ ok: boolean; balance?: number | null; error?: string }>(`/api/keys/${provider}/check`, {
       method: 'POST',
     }),
-  spend: (projectId: string | null) =>
-    request<{ total: number; today: number; providers: Array<{ provider: Provider; usd: number; jobs: number }> }>(
-      `/api/spend?${new URLSearchParams({ project: projectId ?? '' })}`,
-    ),
+  spend: (projectId: string | null) => request<Spend>(`/api/spend?${new URLSearchParams({ project: projectId ?? '' })}`),
   settings: () => request<{ agent_daily_budget_usd: number | null }>('/api/settings'),
   storeSettings: (settings: { agent_daily_budget_usd: number | null }) =>
     request<{ agent_daily_budget_usd: number | null }>('/api/settings', {

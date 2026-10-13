@@ -6,7 +6,7 @@
  */
 
 import { create } from 'zustand'
-import type { Job, ModelForm, Provider, Task } from '../services/generate-api'
+import type { Job, MediaRef, ModelForm, Provider, Role, Task } from '../services/generate-api'
 
 const STORAGE_KEY = 'videosos-generate'
 
@@ -46,7 +46,16 @@ export function modelKey(provider: Provider, id: string): string {
   return `${provider}:${id}`
 }
 
+/** A result to be put into a slot of another task's form ("use as..."), applied once that form is open. */
+export interface PendingUse {
+  task: Task
+  role: Role
+  ref: MediaRef
+}
+
 interface GenerateState extends Persisted {
+  pendingUse: PendingUse | null
+  useAs: (use: PendingUse | null) => void
   jobs: Job[]
   keys: Partial<Record<Provider, boolean>>
   forms: Record<string, ModelForm>
@@ -82,6 +91,14 @@ export const useGenerateStore = create<GenerateState>()((set, get) => ({
   keys: {},
   forms: {},
   serverError: null,
+  pendingUse: null,
+  useAs: (pendingUse) => {
+    set({ pendingUse })
+    if (pendingUse) {
+      set({ task: pendingUse.task })
+      save(persisted(get()))
+    }
+  },
   setServerError: (serverError) => set({ serverError }),
   setTask: (task) => {
     set({ task })

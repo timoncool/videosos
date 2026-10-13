@@ -2,7 +2,9 @@
 # The Linux x86-64 .deb and AppImage, built on this machine in an Ubuntu 22.04 container (glibc 2.35, so they run
 # there and on anything newer; Docker under WSL on Windows) from the committed HEAD, as Dub Studio builds its own.
 #   scripts/build-linux-docker.sh <output folder> [cache folder]
-# The cache keeps Rust, Node and the cargo target between runs.
+# The cache keeps Rust, Node and the cargo target between runs. With VIDEOSOS_SOURCE_READY=1 the committed tree is
+# taken from <output folder>/.source.tar and .source-commit, made beforehand (on Windows: git archive HEAD -o ...),
+# for a worktree whose git folder WSL cannot read.
 set -euo pipefail
 
 if [ "${1:-}" = "--inside" ]; then
@@ -44,13 +46,10 @@ cache="${2:-$HOME/videosos-linux2204-cache}"
 repo="$(cd "$(dirname "$0")/.." && pwd)"
 mkdir -p "$out" "$cache"
 cp "$repo/scripts/build-linux-docker.sh" "$out/.build-linux-docker.sh"
-# the committed tree, taken here: a worktree's git folder is not reachable from inside the container, and under WSL
-# a worktree made on Windows is read by Windows' own git
-if command -v wslpath >/dev/null && command -v git.exe >/dev/null; then
-  git.exe -C "$(wslpath -w "$repo")" archive HEAD -o "$(wslpath -w "$out")\\.source.tar"
-  git.exe -C "$(wslpath -w "$repo")" rev-parse --short HEAD | tr -d '\r' > "$out/.source-commit"
-else
+# the committed tree, taken here: a worktree's git folder is not reachable from inside the container
+if [ "${VIDEOSOS_SOURCE_READY:-}" != "1" ]; then
   git -C "$repo" archive HEAD -o "$out/.source.tar"
   git -C "$repo" rev-parse --short HEAD > "$out/.source-commit"
 fi
+[ -s "$out/.source.tar" ] || { echo "[ERROR] no committed tree in $out/.source.tar"; exit 1; }
 docker run --rm -v "$(cd "$out" && pwd):/out" -v "$cache:/cache" ubuntu:22.04 bash /out/.build-linux-docker.sh --inside
