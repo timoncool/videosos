@@ -652,21 +652,23 @@ impl Jobs {
 
     pub fn spend(&self, project: Option<&str>) -> Value {
         let db = self.db();
-        let query = "SELECT provider, COALESCE(SUM(cost), 0), COUNT(*) FROM jobs WHERE status = 'done' AND (?1 IS NULL OR project_id = ?1) GROUP BY provider";
-        let by_provider: Vec<Value> = db
-            .prepare(query)
-            .and_then(|mut statement| {
-                statement
-                    .query_map(params![project], |row| Ok(json!({ "provider": row.get::<_, String>(0)?, "usd": row.get::<_, f64>(1)?, "jobs": row.get::<_, i64>(2)? })))?
-                    .collect::<rusqlite::Result<Vec<_>>>()
-            })
-            .unwrap_or_default();
+        let grouped = |columns: &str, shape: &dyn Fn(&rusqlite::Row) -> rusqlite::Result<Value>| -> Vec<Value> {
+            let query = format!("SELECT {columns}, COALESCE(SUM(cost), 0), COUNT(*) FROM jobs WHERE status = 'done' AND (?1 IS NULL OR project_id = ?1) GROUP BY {columns} ORDER BY 2 DESC");
+            db.prepare(&query)
+                .and_then(|mut statement| statement.query_map(params![project], |row| shape(row))?.collect::<rusqlite::Result<Vec<_>>>())
+                .unwrap_or_default()
+        };
+        let by_provider = grouped("provider", &|row| Ok(json!({ "provider": row.get::<_, String>(0)?, "usd": row.get::<_, f64>(1)?, "jobs": row.get::<_, i64>(2)? })));
+        let by_task = grouped("task", &|row| Ok(json!({ "task": row.get::<_, String>(0)?, "usd": row.get::<_, f64>(1)?, "jobs": row.get::<_, i64>(2)? })));
+        let by_model = grouped("provider, model, model_name", &|row| {
+            Ok(json!({ "provider": row.get::<_, String>(0)?, "model": row.get::<_, String>(1)?, "model_name": row.get::<_, String>(2)?, "usd": row.get::<_, f64>(3)?, "jobs": row.get::<_, i64>(4)? }))
+        });
         let today_start = chrono::Local::now().date_naive().and_hms_opt(0, 0, 0).and_then(|time| time.and_local_timezone(chrono::Local).single()).map(|time| time.timestamp_millis()).unwrap_or(0);
         let today: f64 = db
-            .query_row("SELECT COALESCE(SUM(cost), 0) FROM jobs WHERE status = 'done' AND updated >= ?1", params![today_start], |row| row.get(0))
+            .query_row("SELECT COALESCE(SUM(cost), 0) FROM jobs WHERE status = 'done' AND updated >= ?1 AND (?2 IS NULL OR project_id = ?2)", params![today_start, project], |row| row.get(0))
             .unwrap_or(0.0);
         let total: f64 = by_provider.iter().filter_map(|item| item["usd"].as_f64()).fold(0.0, |sum, usd| sum + usd);
-        json!({ "total": total, "today": today, "providers": by_provider })
+        json!({ "total": total, "today": today, "providers": by_provider, "tasks": by_task, "models": by_model })
     }
 }
 
