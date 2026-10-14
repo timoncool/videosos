@@ -326,6 +326,58 @@
       "input": {
         "prompt": "prompt",
         "media": "files"
+      },
+      "workflow": {
+        "templates": "Templates",
+        "save": "Save workflow",
+        "open": "Open workflow",
+        "failed": "The workflow did not open: {{reason}}",
+        "template": {
+          "frameToVideo": {
+            "name": "Frame to video",
+            "about": "A prompt makes a picture, the picture starts a video with its own motion prompt.",
+            "prompts": {
+              "idea": "A lighthouse on a cliff at dusk, waves breaking below, warm light in the window",
+              "motion": "Slow push in, the beam of the lighthouse sweeps across the sea"
+            }
+          },
+          "compareImages": {
+            "name": "Compare picture models",
+            "about": "One prompt into three picture models side by side; the panel's model and the compared ones are set.",
+            "prompts": {
+              "idea": "Portrait of an old fisherman in a yellow raincoat, soft overcast light, 85 mm"
+            }
+          },
+          "promptWriter": {
+            "name": "Prompt writer",
+            "about": "A language model writes the prompt from an idea, a picture model draws it.",
+            "prompts": {
+              "idea": "Write one vivid prompt for a picture model: a cozy ramen shop on a rainy night in Tokyo. Answer with the prompt only."
+            }
+          },
+          "productShot": {
+            "name": "Product shot",
+            "about": "A product photo: background removed, placed in a new scene by an edit model, then upscaled.",
+            "prompts": {
+              "scene": "Place the product on a marble table in morning sunlight, soft shadows, shallow depth of field"
+            }
+          },
+          "talkingHead": {
+            "name": "Talking head",
+            "about": "Words read by a voice, and a face from the library made to speak them.",
+            "prompts": {
+              "words": "Hello! Today I will show you three tricks for editing video faster."
+            }
+          },
+          "soundtrack": {
+            "name": "Music and sound",
+            "about": "A piece of music and a sound effect from two prompts.",
+            "prompts": {
+              "mood": "Calm ambient piano with soft strings, slow tempo, hopeful",
+              "effect": "Waves on a pebble beach, gulls in the distance"
+            }
+          }
+        }
       }
     },
     "motion": {

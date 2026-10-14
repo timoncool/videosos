@@ -28,9 +28,28 @@ import {
   type NodeProps,
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
-import { Film, ImageIcon, Loader2, Play, Plus, Sparkles, Type, X } from 'lucide-react'
+import {
+  FileDown,
+  FileUp,
+  Film,
+  ImageIcon,
+  LayoutTemplate,
+  Loader2,
+  Play,
+  Plus,
+  Sparkles,
+  Type,
+  X,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { toast } from 'sonner'
 import { getMediaDragData, useMediaLibraryStore, useProjectStore } from '../deps/editor'
 import {
   formatUsd,
@@ -51,6 +70,16 @@ import {
   type CanvasNode,
 } from '../services/canvas-graph'
 import { placeMediaAtPlayhead } from '../services/timeline-actions'
+import {
+  besideGraph,
+  instantiate,
+  moveTo,
+  readWorkflowFile,
+  workflowFile,
+  WORKFLOW_TEMPLATES,
+  type WorkflowTemplate,
+} from '../services/canvas-templates'
+import { saveWorkflow } from '../services/workflow-save'
 import { useEstimate } from '../hooks/use-estimate'
 import { modelKey, useGenerateStore, type ModelRef } from '../stores/generate-store'
 import { MediaThumb, OUTPUT_DRAG_TYPE } from './field-control'
@@ -418,6 +447,50 @@ function Canvas({ projectId }: { projectId: string }) {
     }))
   }
 
+  const newId = () => crypto.randomUUID()
+  /** Puts a piece of graph to the right of what is on the canvas and brings it into view. */
+  const insert = (piece: CanvasGraph) => {
+    update((current) => ({
+      nodes: [...current.nodes, ...piece.nodes],
+      edges: [...current.edges, ...piece.edges],
+    }))
+    const ids = new Set(piece.nodes.map((node) => node.id))
+    setTimeout(
+      () => void flow.fitView({ nodes: [...ids].map((id) => ({ id })), maxZoom: 1, duration: 300 }),
+      50,
+    )
+  }
+  const placeTemplate = (template: WorkflowTemplate) => {
+    const { modelByTask, extraModelsByTask } = useGenerateStore.getState()
+    const models = (task: Task) =>
+      [modelByTask[task], ...(extraModelsByTask[task] ?? [])].filter(
+        (model): model is ModelRef => !!model,
+      )
+    insert(
+      instantiate(
+        template,
+        besideGraph(latest.current),
+        models,
+        (id, key) => t(`generate.canvas.workflow.template.${id}.prompts.${key}`),
+        newId,
+      ),
+    )
+  }
+  const fileInput = useRef<HTMLInputElement | null>(null)
+  const openWorkflow = async (file: File) => {
+    try {
+      const { graph: piece } = readWorkflowFile(await file.text(), newId)
+      insert(moveTo(piece, besideGraph(latest.current)))
+    } catch (failure) {
+      toast.error(
+        t('generate.canvas.workflow.failed', {
+          reason: failure instanceof Error ? failure.message : String(failure),
+        }),
+      )
+    }
+  }
+  const projectName = useProjectStore((state) => state.currentProject?.name ?? '')
+
   // React Flow shows a node once it has measured it; the sizes it reports are kept beside the stored graph
   const [measured, setMeasured] = useState<Record<string, { width: number; height: number }>>({})
   const nodes: Node[] = graph.nodes.map((node) => ({
@@ -550,6 +623,62 @@ function Canvas({ projectId }: { projectId: string }) {
               {t(`generate.canvas.${type}`)}
             </Button>
           ))}
+          <span className="mx-0.5 h-5 w-px bg-[var(--color-border)]" aria-hidden />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="sm" variant="ghost" className="h-7 gap-1 px-2 text-xs">
+                <LayoutTemplate className="size-3" />
+                {t('generate.canvas.workflow.templates')}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-72">
+              {WORKFLOW_TEMPLATES.map((template) => (
+                <DropdownMenuItem
+                  key={template.id}
+                  onSelect={() => placeTemplate(template)}
+                  className="flex-col items-start gap-0.5"
+                >
+                  <span className="text-xs font-medium">
+                    {t(`generate.canvas.workflow.template.${template.id}.name`)}
+                  </span>
+                  <span className="text-[11px] text-[var(--color-muted)]">
+                    {t(`generate.canvas.workflow.template.${template.id}.about`)}
+                  </span>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <Button
+            size="sm"
+            variant="ghost"
+            className="h-7 gap-1 px-2 text-xs"
+            disabled={graph.nodes.length === 0}
+            onClick={() => void saveWorkflow(workflowFile(graph, projectName), projectName)}
+          >
+            <FileDown className="size-3" />
+            {t('generate.canvas.workflow.save')}
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            className="h-7 gap-1 px-2 text-xs"
+            onClick={() => fileInput.current?.click()}
+          >
+            <FileUp className="size-3" />
+            {t('generate.canvas.workflow.open')}
+          </Button>
+          <input
+            ref={fileInput}
+            type="file"
+            accept=".json,application/json"
+            className="hidden"
+            aria-label={t('generate.canvas.workflow.open')}
+            onChange={(event) => {
+              const file = event.target.files?.[0]
+              event.target.value = ''
+              if (file) void openWorkflow(file)
+            }}
+          />
         </div>
         {graph.nodes.length === 0 && (
           <p className="pointer-events-none absolute left-1/2 top-1/2 z-10 max-w-md -translate-x-1/2 -translate-y-1/2 text-center text-sm text-[var(--color-muted)]">
