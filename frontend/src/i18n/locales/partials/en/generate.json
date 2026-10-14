@@ -235,6 +235,19 @@
     "describe": {
       "button": "Prompt from the picture",
       "hint": "A model looks at the form's first picture and writes the prompt that would make it. The OpenRouter key pays."
+    },
+    "presets": {
+      "button": "Presets",
+      "hint": "Kept prompts: put one into the field or keep the current one",
+      "empty": "No kept prompts yet. Name the current one and keep it.",
+      "name": "Preset name",
+      "keep": "Keep",
+      "keepHint": "Keep the field's text under this name",
+      "remove": "Remove the preset \"{{name}}\""
+    },
+    "variables": {
+      "title": "Prompt variables",
+      "missing": "Fill in the variables: {{names}}"
     }
   }
 }

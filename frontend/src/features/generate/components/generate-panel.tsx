@@ -44,6 +44,8 @@ import { modelKey, useGenerateStore } from '../stores/generate-store'
 import { useProjectStore } from '../deps/editor'
 import { FieldControl } from './field-control'
 import { describeImage, improvePrompt } from '../services/prompt-assist'
+import { fillVariables, variablesOf } from '../services/prompt-variables'
+import { PromptPresets } from './prompt-presets'
 import { GenerationHistory } from './generation-history'
 import { ModelPicker } from './model-picker'
 import { fieldLabel, overLength, providerWords } from '../services/field-label'
@@ -180,6 +182,9 @@ export function GeneratePanel() {
   const [moreOpen, setMoreOpen] = useState(false)
   const [improving, setImproving] = useState(false)
   const [improveError, setImproveError] = useState<string | null>(null)
+  const variables = useGenerateStore((state) => state.variables)
+  const variableNames = useMemo(() => variablesOf(values), [values])
+  const unfilled = variableNames.filter((name) => !variables[name]?.trim())
   // the picture a prompt can be written from: the first one put into any of the form's picture slots
   const firstImage = useMemo(() => {
     for (const field of form?.fields ?? []) {
@@ -260,7 +265,7 @@ export function GeneratePanel() {
         provider: model.provider,
         model: model.id,
         task,
-        values,
+        values: fillVariables(values, variables),
         project_id: projectId,
         repeat,
         place: placeOnTimeline,
@@ -363,6 +368,10 @@ export function GeneratePanel() {
                       {improving ? <Loader2 className="h-3 w-3 animate-spin" /> : <WandSparkles className="h-3 w-3" />}
                       {t('generate.improve.button')}
                     </button>
+                    <PromptPresets
+                      text={typeof values[field.key] === 'string' ? (values[field.key] as string) : ''}
+                      onUse={(text) => useGenerateStore.getState().setValue(model, field.key, text)}
+                    />
                     {firstImage && (
                       <button
                         type="button"
@@ -402,6 +411,20 @@ export function GeneratePanel() {
                   </div>
                 )}
                 {field.role === 'prompt' && improveError && <p className="text-[11px] text-destructive">{improveError}</p>}
+                {field.role === 'prompt' && variableNames.length > 0 && (
+                  <div className="grid grid-cols-2 gap-2 rounded-md border border-border bg-secondary/20 p-2" aria-label={t('generate.variables.title')}>
+                    {variableNames.map((name) => (
+                      <label key={name} className="flex flex-col gap-1 text-[11px] text-muted-foreground">
+                        <span className="font-mono">{`{{${name}}}`}</span>
+                        <Input
+                          value={variables[name] ?? ''}
+                          onChange={(event) => useGenerateStore.getState().setVariable(name, event.target.value)}
+                          className="h-7 text-xs"
+                        />
+                      </label>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
             {more.length > 0 && (
@@ -451,7 +474,7 @@ export function GeneratePanel() {
         </div>
         <Button
           className="h-9 w-full gap-2"
-          disabled={!form || !hasKey || submitting || missing.length > 0 || tooLong.length > 0 || !projectId}
+          disabled={!form || !hasKey || submitting || missing.length > 0 || tooLong.length > 0 || unfilled.length > 0 || !projectId}
           onClick={() => void generate()}
           data-testid="generate-submit"
         >
@@ -467,6 +490,9 @@ export function GeneratePanel() {
           <p className="text-[11px] text-muted-foreground">
             {t('generate.form.missing', { fields: missing.map((field) => fieldLabel(t, field)).join(', ') })}
           </p>
+        )}
+        {unfilled.length > 0 && (
+          <p className="text-[11px] text-muted-foreground">{t('generate.variables.missing', { names: unfilled.join(', ') })}</p>
         )}
         {tooLong.map(({ field, count, max }) => (
           <p key={field.key} className="text-[11px] text-destructive">

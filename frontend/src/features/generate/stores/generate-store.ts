@@ -22,9 +22,18 @@ export interface Persisted {
   placeOnTimeline: boolean
   /** Models pinned to the top of the picker, as `provider:id`. */
   favorites: string[]
+  /** Prompts kept under a name, to be put into any form. */
+  presets: PromptPreset[]
+  /** What each `{{variable}}` of a prompt is filled with. */
+  variables: Record<string, string>
 }
 
-const DEFAULTS: Persisted = { task: 'image', modelByTask: {}, valuesByModel: {}, repeat: 1, placeOnTimeline: false, favorites: [] }
+export interface PromptPreset {
+  name: string
+  text: string
+}
+
+const DEFAULTS: Persisted = { task: 'image', modelByTask: {}, valuesByModel: {}, repeat: 1, placeOnTimeline: false, favorites: [], presets: [], variables: {} }
 
 let saving: ReturnType<typeof setTimeout> | null = null
 
@@ -72,6 +81,9 @@ interface GenerateState extends Persisted {
   setRepeat: (repeat: number) => void
   setPlaceOnTimeline: (place: boolean) => void
   toggleFavorite: (key: string) => void
+  savePreset: (name: string, text: string) => void
+  removePreset: (name: string) => void
+  setVariable: (name: string, value: string) => void
   setJobs: (jobs: Job[]) => void
   upsertJob: (job: Job) => void
   removeJob: (id: string) => void
@@ -87,6 +99,8 @@ function persisted(state: GenerateState): Persisted {
     repeat: state.repeat,
     placeOnTimeline: state.placeOnTimeline,
     favorites: state.favorites,
+    presets: state.presets,
+    variables: state.variables,
   }
 }
 
@@ -134,6 +148,18 @@ export const useGenerateStore = create<GenerateState>()((set, get) => ({
   toggleFavorite: (key) => {
     const favorites = get().favorites
     set({ favorites: favorites.includes(key) ? favorites.filter((each) => each !== key) : [...favorites, key] })
+    save(get())
+  },
+  savePreset: (name, text) => {
+    set({ presets: [...get().presets.filter((preset) => preset.name !== name), { name, text }] })
+    save(get())
+  },
+  removePreset: (name) => {
+    set({ presets: get().presets.filter((preset) => preset.name !== name) })
+    save(get())
+  },
+  setVariable: (name, value) => {
+    set({ variables: { ...get().variables, [name]: value } })
     save(get())
   },
   setRepeat: (repeat) => {
