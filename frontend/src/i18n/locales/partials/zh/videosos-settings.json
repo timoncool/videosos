@@ -31,14 +31,19 @@
       "agentHint": "超出后，VideoSOS 将在当天剩余时间内拒绝智能体的生成请求。留空表示不限制。",
       "budget": "智能体每日限额，$",
       "noLimit": "无限制",
-      "badBudget": "限额是以美元为单位的数字。"
+      "badBudget": "限额是以美元为单位的数字。",
+      "confirmEdits": "智能体对时间线的编辑需经我确认",
+      "confirmEditsHint": "智能体的编辑会显示将发生的更改，在你接受之前不会有任何改变。"
     },
     "general": {
       "language": "界面语言",
       "languageHint": "窗口和程序消息的语言。",
       "autoSaveHint": "每隔几分钟自动保存打开的项目",
       "undoHistoryDepthHint": "可以撤销多少步",
-      "uiSoundsHint": "点击、结果和错误的短提示音"
+      "uiSoundsHint": "点击、结果和错误的短提示音",
+      "audioOutput": "声音输出",
+      "audioOutputHint": "预览的播放位置：系统设备或所选设备。允许使用麦克风后才会出现列表——浏览器此时才会给出设备名称。",
+      "audioOutputDefault": "系统默认"
     },
     "done": "完成",
     "timeline": {

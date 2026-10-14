@@ -54,7 +54,10 @@
       "noMedia": "ライブラリにはまだ{{kind}}がありません。",
       "tooMany": "ここには最大{{max}}ファイルまで追加できます。",
       "wrongKind": "このスロットには{{kind}}を指定します。",
-      "missing": "入力してください: {{fields}}"
+      "missing": "入力してください: {{fields}}",
+      "length": "{{count}} / {{max}}",
+      "tooLong": "{{count}} / {{max}} ― モデルが受け付ける長さを超えています",
+      "shorten": "「{{field}}」を短くしてください：{{count}}文字（モデルが受け付けるのは最大{{max}}文字）"
     },
     "placeOnTimeline": "タイムラインに配置",
     "repeat": "実行回数",
@@ -107,7 +110,8 @@
       "transcribe": "文字起こし",
       "needsProject": "先にプロジェクトを開いてください。フレームはそのメディアライブラリに追加されます。",
       "noSlot": "{{model}}はこの種類のファイルを受け付けません。このタスクの別のモデルを選択してください。",
-      "placed": "「{{field}}」に配置しました"
+      "placed": "「{{field}}」に配置しました",
+      "lastFrameName": "{{title}}、最後のフレーム"
     },
     "compare": {
       "pick": "比較",
@@ -223,6 +227,86 @@
       "interrupted": "ジョブの送信中にVideoSOSが終了しました",
       "details": "エラーの内容",
       "openKeys": "キーを開く"
+    },
+    "placeholder": "生成中、{{model}}：{{state}}",
+    "rate": {
+      "second": "1秒あたり{{price}}",
+      "characters": "1000文字あたり{{price}}",
+      "tokens": "100万トークンあたり{{input}} / {{output}}"
+    },
+    "describe": {
+      "button": "画像からプロンプト",
+      "hint": "モデルがフォームの最初の画像を見て、それを生成できるプロンプトを書きます。料金はOpenRouterキーで支払われます。"
+    },
+    "presets": {
+      "button": "プリセット",
+      "hint": "保存したプロンプト：フィールドに入れるか、現在のものを保存します",
+      "empty": "保存したプロンプトはまだありません。現在のものに名前を付けて保存してください。",
+      "name": "プリセット名",
+      "keep": "保存",
+      "keepHint": "フィールドのテキストをこの名前で保存",
+      "remove": "プリセット「{{name}}」を削除"
+    },
+    "elements": {
+      "button": "エレメント",
+      "hint": "画像付きのキャラクター・オブジェクト・場所：プロンプト内の「@名前」で画像がモデルに送られます",
+      "empty": "キャラクター、オブジェクト、場所を保存します：画像をフォームの画像フィールドに入れて、名前を付けてください。プロンプトでは @名前 で呼び出します。",
+      "use": "@{{name}}をプロンプトに入れる",
+      "pictures_one": "画像{{count}}枚",
+      "pictures_other": "画像{{count}}枚",
+      "remove": "@{{name}}を削除",
+      "name": "名前（1語）",
+      "keep": "保存",
+      "keepHint": "フォーム内の画像：{{count}}枚。この名前で保存されます",
+      "noPictures": "先に画像をフォームに入れてください",
+      "badName": "1語のみ：文字、数字、_ と -",
+      "left": "{{names}}：このモデルには画像を入れる場所がないため、言葉で送られます"
+    },
+    "variables": {
+      "title": "プロンプト変数",
+      "missing": "変数を入力してください：{{names}}"
+    },
+    "batch": {
+      "add": "別のモデルと比較",
+      "remove": "バッチからモデルを外す",
+      "lacks": "不足：{{fields}}",
+      "noKey": "{{provider}}のキーがありません"
+    },
+    "segment": {
+      "cutting": "クリップの{{from}}–{{to}}秒を切り出し中…",
+      "ready": "区間を「動画を編集」にソースとして入れました：変更したい内容を指示してください",
+      "failed": "区間を切り出せませんでした：{{reason}}",
+      "noFile": "{{name}}のファイルがメディアライブラリにありません",
+      "name": "{{title}}、{{from}}–{{to}}秒"
+    },
+    "storyboard": {
+      "tabLabel": "ストーリーボード",
+      "noProject": "プロジェクトを開いてください。ストーリーボードはプロジェクトと一緒に保存されます。",
+      "script": "脚本またはアイデア",
+      "scriptHint": "何が起こるかを、シーンごとまたは一文で。@エレメント名でその画像が加わります。",
+      "count": "ショット数",
+      "split": "ショットに分割",
+      "splitHint": "ショットはOpenRouterの言語モデルが書きます。「プロンプトを改善」と同じく有料です",
+      "frameModel": "フレームの生成元",
+      "clipModel": "クリップの生成元",
+      "shots": "ショット",
+      "shot": "ショット{{number}}",
+      "seconds": "秒",
+      "remove": "ショット{{number}}を削除",
+      "frame": "フレーム",
+      "frameAgain": "フレームを再生成",
+      "clip": "クリップ",
+      "clipNeedsFrame": "このモデルはフレームからクリップを始めます：先にフレームを作ってください",
+      "frameDone": "フレーム完了",
+      "clipDone": "タイムライン上のクリップ",
+      "frameFailed": "フレームに失敗しました：{{reason}}",
+      "clipFailed": "クリップに失敗しました：{{reason}}",
+      "add": "ショットを追加",
+      "allFrames_one": "{{count}}ショット分のフレーム",
+      "allFrames_other": "{{count}}ショット分のフレーム",
+      "allClips_one": "{{count}}ショット分のクリップをタイムラインへ",
+      "allClips_other": "{{count}}ショット分のクリップをタイムラインへ",
+      "allClipsHint": "クリップは再生ヘッドの位置から順に並びます"
     }
   }
 }

@@ -234,7 +234,9 @@
     "low": "Seuil bas",
     "high": "Seuil haut",
     "length": "Longueur",
-    "orientation": "Orientation"
+    "orientation": "Orientation",
+    "lift": "Lift",
+    "gain": "Gain"
   },
   "options": {
     "fire": "Feu",

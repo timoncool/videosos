@@ -212,6 +212,15 @@
         }
       },
       "smartCopyPath": "Caminho da cópia inteligente"
+    },
+    "fcpxml": {
+      "noProject": "Abra um projeto primeiro.",
+      "failed": "O FCPXML não foi criado: {{reason}}",
+      "left": {
+        "kind": "Fora do FCPXML (sem equivalente): {{items}}",
+        "file": "Fora do FCPXML (sem arquivo no espaço de trabalho): {{items}}",
+        "speed": "Fora do FCPXML (velocidade alterada): {{items}}"
+      }
     }
   }
 }

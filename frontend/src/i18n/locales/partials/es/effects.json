@@ -234,7 +234,9 @@
     "low": "Umbral mínimo",
     "high": "Umbral máximo",
     "length": "Longitud",
-    "orientation": "Orientación"
+    "orientation": "Orientación",
+    "lift": "Lift",
+    "gain": "Ganancia"
   },
   "options": {
     "fire": "Fuego",

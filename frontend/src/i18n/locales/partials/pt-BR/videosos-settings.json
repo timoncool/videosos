@@ -31,14 +31,19 @@
       "agentHint": "Ao ultrapassá-lo, o VideoSOS recusa as gerações de um agente pelo resto do dia. Vazio significa sem limite.",
       "budget": "Limite diário para agentes, $",
       "noLimit": "sem limite",
-      "badBudget": "O limite é um valor em dólares."
+      "badBudget": "O limite é um valor em dólares.",
+      "confirmEdits": "As edições do agente na linha do tempo esperam por mim",
+      "confirmEditsHint": "Uma edição do agente mostra o que vai mudar, e nada muda até você aceitar."
     },
     "general": {
       "language": "Idioma da interface",
       "languageHint": "A janela e as mensagens do programa.",
       "autoSaveHint": "Salva o projeto aberto sozinho a cada poucos minutos",
       "undoHistoryDepthHint": "Quantos passos o Desfazer pode voltar",
-      "uiSoundsHint": "Sons curtos para cliques, resultados e erros"
+      "uiSoundsHint": "Sons curtos para cliques, resultados e erros",
+      "audioOutput": "Saída de som",
+      "audioOutputHint": "Onde a prévia toca: o dispositivo do sistema ou um escolhido. A lista aparece depois que o microfone é permitido – é quando o navegador dá nome aos dispositivos.",
+      "audioOutputDefault": "Padrão do sistema"
     },
     "done": "Concluído",
     "timeline": {

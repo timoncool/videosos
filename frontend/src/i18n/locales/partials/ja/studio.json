@@ -139,13 +139,17 @@
       "imported": "インポート",
       "exported": "エクスポート",
       "undone": "元に戻す",
-      "redone": "やり直し"
+      "redone": "やり直し",
+      "created": "作成",
+      "restored": "復元"
     },
     "kind": {
       "generation": "生成",
       "timeline": "タイムライン",
       "media": "メディア",
-      "video": "動画"
+      "video": "動画",
+      "download": "リンクからのダウンロード",
+      "checkpoint": "復元ポイント"
     }
   },
   "files": {
@@ -196,5 +200,46 @@
         "text": "プロバイダーに直接支払い、私たちを経由しません"
       }
     }
+  },
+  "share": {
+    "title": "共有",
+    "text": "「{{title}}」― VideoSOSで作成",
+    "file": "ファイルを送信…",
+    "fileUnavailable": "ここではファイルを送信できません",
+    "fileRefused": "システムがこのファイルの送信を受け付けません。保存して自分で送信してください",
+    "failed": "共有できませんでした：{{reason}}",
+    "copyText": "リンク付きテキストをコピー",
+    "copied": "リンク付きテキストをコピーしました",
+    "places": {
+      "telegram": "Telegram",
+      "x": "X (Twitter)",
+      "vk": "VK",
+      "whatsapp": "WhatsApp",
+      "reddit": "Reddit"
+    }
+  },
+  "chat": {
+    "tabLabel": "チャット",
+    "model": "モデル",
+    "costHint": "OpenRouterの請求でのこの会話の費用",
+    "clear": "会話をクリア",
+    "intro": "アシスタントは、接続されたエージェントと同じツールでVideoSOSを操作します。タイムラインの確認、生成、編集、書き出しを行い、すべての手順が表示されます。料金はあなたのOpenRouterキーで支払われ、生成はエージェントの1日の上限に含まれます。",
+    "suggestions": {
+      "what": "今タイムラインには何がありますか？",
+      "picture": "海に沈む夕日の画像を生成して、タイムラインに置いて",
+      "cut": "最初のクリップを半分に分割して、間になめらかなトランジションを追加して",
+      "captions": "最初にプロジェクト名のタイトルを追加して"
+    },
+    "tools": "アシスタントの手順",
+    "toolRunning": "実行中",
+    "toolDone": "完了",
+    "toolFailed": "失敗",
+    "thinking": "考え中",
+    "placeholder": "やりたいことを書いてください…",
+    "send": "送信",
+    "stop": "停止",
+    "footnote": "Enterで送信、Shift+Enterで改行。費用のかかる生成の前にアシスタントが確認します。",
+    "needsKey": "チャットにはOpenRouterキーが必要です：アシスタントはOpenRouterのモデルで応答し、VideoSOSのツールで作業します。",
+    "openKeys": "キーを開く"
   }
 }

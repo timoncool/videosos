@@ -31,14 +31,19 @@
       "agentHint": "この上限を超えると、VideoSOSはその日の残りの時間、エージェントによる生成を拒否します。空欄の場合は上限なしです。",
       "budget": "エージェントの1日あたりの上限($)",
       "noLimit": "上限なし",
-      "badBudget": "上限はドル単位の数値で指定してください。"
+      "badBudget": "上限はドル単位の数値で指定してください。",
+      "confirmEdits": "エージェントのタイムライン編集は承認を待つ",
+      "confirmEditsHint": "エージェントの編集は変更内容を表示し、承認するまで何も変わりません。"
     },
     "general": {
       "language": "表示言語",
       "languageHint": "ウィンドウとプログラムのメッセージの言語です。",
       "autoSaveHint": "開いているプロジェクトを数分ごとに自動保存します",
       "undoHistoryDepthHint": "元に戻せるステップ数",
-      "uiSoundsHint": "クリック、結果、エラーの短いサウンド"
+      "uiSoundsHint": "クリック、結果、エラーの短いサウンド",
+      "audioOutput": "音声出力",
+      "audioOutputHint": "プレビューの再生先：システムのデバイスまたは選択したデバイス。マイクを許可するとリストが表示されます。ブラウザーがデバイス名を取得できるのはそのときです。",
+      "audioOutputDefault": "システムのデフォルト"
     },
     "done": "完了",
     "timeline": {

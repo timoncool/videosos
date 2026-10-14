@@ -15,7 +15,29 @@
       "playback": "재생하거나 일시 정지합니다",
       "editor_tab": "탭을 엽니다",
       "project_open": "프로젝트를 엽니다",
-      "export_video": "동영상을 내보냅니다"
+      "export_video": "동영상을 내보냅니다",
+      "checkpoint_create": "복원 지점 저장",
+      "checkpoint_restore": "복원 지점으로 되돌리기"
+    },
+    "proposal": {
+      "title": "에이전트가 편집을 제안합니다",
+      "hint": "적용하기 전에 복원 지점이 저장됩니다.",
+      "accept": "수락",
+      "decline": "거부",
+      "problem_one": "편집 {{count}}개만 적용됩니다: {{reason}}",
+      "problem_other": "편집 {{count}}개만 적용됩니다: {{reason}}",
+      "op": {
+        "addClip": "{{at}}초에 {{name}} 추가",
+        "addText": "{{at}}초에 “{{text}}” 텍스트 추가",
+        "moveItem": "{{name}}을(를) {{at}}초로 이동",
+        "removeItems": "{{names}} 제거",
+        "split": "{{at}}초에서 {{name}} 분할",
+        "trimStartCut": "{{name}} 시작 부분 {{seconds}}초 잘라내기",
+        "trimStartExtend": "{{name}} 시작 부분 {{seconds}}초 늘리기",
+        "trimEndCut": "{{name}} 끝 부분 {{seconds}}초 잘라내기",
+        "trimEndExtend": "{{name}} 끝 부분 {{seconds}}초 늘리기",
+        "other": "{{op}}: {{name}}"
+      }
     }
   }
 }

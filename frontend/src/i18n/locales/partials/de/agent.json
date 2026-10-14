@@ -15,7 +15,29 @@
       "playback": "startet oder pausiert die Wiedergabe",
       "editor_tab": "öffnet einen Tab",
       "project_open": "öffnet ein Projekt",
-      "export_video": "exportiert das Video"
+      "export_video": "exportiert das Video",
+      "checkpoint_create": "speichert einen Wiederherstellungspunkt",
+      "checkpoint_restore": "kehrt zu einem Wiederherstellungspunkt zurück"
+    },
+    "proposal": {
+      "title": "Der Agent schlägt eine Änderung vor",
+      "hint": "Vor dem Anwenden wird ein Wiederherstellungspunkt gespeichert.",
+      "accept": "Annehmen",
+      "decline": "Ablehnen",
+      "problem_one": "Nur {{count}} Änderung wird übernommen: {{reason}}",
+      "problem_other": "Nur {{count}} Änderungen werden übernommen: {{reason}}",
+      "op": {
+        "addClip": "{{name}} bei {{at}} s hinzufügen",
+        "addText": "Text „{{text}}“ bei {{at}} s hinzufügen",
+        "moveItem": "{{name}} auf {{at}} s verschieben",
+        "removeItems": "{{names}} entfernen",
+        "split": "{{name}} bei {{at}} s teilen",
+        "trimStartCut": "{{seconds}} s am Anfang von {{name}} abschneiden",
+        "trimStartExtend": "Anfang von {{name}} um {{seconds}} s verlängern",
+        "trimEndCut": "{{seconds}} s am Ende von {{name}} abschneiden",
+        "trimEndExtend": "Ende von {{name}} um {{seconds}} s verlängern",
+        "other": "{{op}}: {{name}}"
+      }
     }
   }
 }

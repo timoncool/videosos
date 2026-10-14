@@ -54,7 +54,10 @@
       "noMedia": "媒体库中还没有{{kind}}。",
       "tooMany": "此处最多 {{max}} 个文件。",
       "wrongKind": "此插槽接受{{kind}}。",
-      "missing": "请填写：{{fields}}"
+      "missing": "请填写：{{fields}}",
+      "length": "{{count}} / {{max}}",
+      "tooLong": "{{count}} / {{max}}，超出模型可接受的长度",
+      "shorten": "请缩短“{{field}}”：{{count}} 个字符，模型最多接受 {{max}} 个"
     },
     "placeOnTimeline": "放到时间轴上",
     "repeat": "运行次数",
@@ -107,7 +110,8 @@
       "transcribe": "转写",
       "needsProject": "请先打开项目：该帧将放入项目的媒体库。",
       "noSlot": "{{model}} 不接受此类文件：请为此任务选择其他模型。",
-      "placed": "已放入「{{field}}」"
+      "placed": "已放入「{{field}}」",
+      "lastFrameName": "{{title}}，尾帧"
     },
     "compare": {
       "pick": "对比",
@@ -223,6 +227,86 @@
       "interrupted": "任务发送过程中 VideoSOS 已关闭",
       "details": "错误信息",
       "openKeys": "打开密钥"
+    },
+    "placeholder": "正在生成，{{model}}：{{state}}",
+    "rate": {
+      "second": "每秒 {{price}}",
+      "characters": "每 1000 字符 {{price}}",
+      "tokens": "每百万 token {{input}} / {{output}}"
+    },
+    "describe": {
+      "button": "根据图片生成提示词",
+      "hint": "模型会查看表单中的第一张图片，并写出能生成它的提示词。费用由 OpenRouter 密钥支付。"
+    },
+    "presets": {
+      "button": "预设",
+      "hint": "已保存的提示词：放入输入框，或保存当前提示词",
+      "empty": "还没有已保存的提示词。为当前提示词起个名字并保存。",
+      "name": "预设名称",
+      "keep": "保存",
+      "keepHint": "以此名称保存输入框中的文字",
+      "remove": "移除预设“{{name}}”"
+    },
+    "elements": {
+      "button": "元素",
+      "hint": "带图片的角色、物体和场所：提示词中的“@名称”会把图片发送给模型",
+      "empty": "保存一个角色、物体或场所：把它的图片放进表单的图片栏并起个名字。在提示词中以 @名称 调用。",
+      "use": "把 @{{name}} 放入提示词",
+      "pictures_one": "{{count}} 张图片",
+      "pictures_other": "{{count}} 张图片",
+      "remove": "移除 @{{name}}",
+      "name": "名称，一个词",
+      "keep": "保存",
+      "keepHint": "表单中的图片：{{count}} 张；将以此名称保存",
+      "noPictures": "请先把它的图片放入表单",
+      "badName": "一个词：字母、数字、_ 和 -",
+      "left": "{{names}}：此模型没有放置它们图片的位置，将以文字形式发送"
+    },
+    "variables": {
+      "title": "提示词变量",
+      "missing": "请填写变量：{{names}}"
+    },
+    "batch": {
+      "add": "与另一个模型对比",
+      "remove": "从批量中移除该模型",
+      "lacks": "缺少：{{fields}}",
+      "noKey": "没有 {{provider}} 密钥"
+    },
+    "segment": {
+      "cutting": "正在截取片段的 {{from}}–{{to}} 秒…",
+      "ready": "该区间已作为源放入“编辑视频”：请说明要修改什么",
+      "failed": "区间未能截取：{{reason}}",
+      "noFile": "{{name}} 的文件不在媒体库中",
+      "name": "{{title}}，{{from}}–{{to}} 秒"
+    },
+    "storyboard": {
+      "tabLabel": "故事板",
+      "noProject": "请先打开一个项目：故事板随项目一起保存。",
+      "script": "剧本或创意",
+      "scriptHint": "发生了什么，按场景描述或用一句话。@元素名称 会带上它们的图片。",
+      "count": "镜头数",
+      "split": "拆分为镜头",
+      "splitHint": "镜头由 OpenRouter 的语言模型撰写；与“优化提示词”一样收费",
+      "frameModel": "帧来源",
+      "clipModel": "片段来源",
+      "shots": "镜头",
+      "shot": "镜头 {{number}}",
+      "seconds": "秒",
+      "remove": "移除镜头 {{number}}",
+      "frame": "帧",
+      "frameAgain": "重新生成帧",
+      "clip": "片段",
+      "clipNeedsFrame": "该模型以一帧作为片段的起点：请先生成帧",
+      "frameDone": "帧已完成",
+      "clipDone": "片段已在时间线上",
+      "frameFailed": "帧生成失败：{{reason}}",
+      "clipFailed": "片段生成失败：{{reason}}",
+      "add": "添加镜头",
+      "allFrames_one": "为 {{count}} 个镜头生成帧",
+      "allFrames_other": "为 {{count}} 个镜头生成帧",
+      "allClips_one": "为 {{count}} 个镜头生成片段并放到时间线",
+      "allClips_other": "为 {{count}} 个镜头生成片段并放到时间线",
+      "allClipsHint": "片段从播放头处依次排列"
     }
   }
 }

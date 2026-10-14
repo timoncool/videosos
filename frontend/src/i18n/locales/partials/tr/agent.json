@@ -15,7 +15,29 @@
       "playback": "oynatır veya duraklatır",
       "editor_tab": "bir sekme açar",
       "project_open": "bir proje açar",
-      "export_video": "videoyu dışa aktarır"
+      "export_video": "videoyu dışa aktarır",
+      "checkpoint_create": "bir geri yükleme noktası saklar",
+      "checkpoint_restore": "bir geri yükleme noktasına döner"
+    },
+    "proposal": {
+      "title": "Ajan bir düzenleme öneriyor",
+      "hint": "Uygulanmadan önce bir geri yükleme noktası saklanır.",
+      "accept": "Kabul et",
+      "decline": "Reddet",
+      "problem_one": "Yalnızca {{count}} düzenleme uygulanır: {{reason}}",
+      "problem_other": "Yalnızca {{count}} düzenleme uygulanır: {{reason}}",
+      "op": {
+        "addClip": "{{name}} öğesini {{at}} sn konumuna ekle",
+        "addText": "“{{text}}” metnini {{at}} sn konumuna ekle",
+        "moveItem": "{{name}} öğesini {{at}} sn konumuna taşı",
+        "removeItems": "Kaldır: {{names}}",
+        "split": "{{name}} öğesini {{at}} sn konumunda böl",
+        "trimStartCut": "{{name}} başlangıcından {{seconds}} sn kes",
+        "trimStartExtend": "{{name}} başlangıcını {{seconds}} sn uzat",
+        "trimEndCut": "{{name}} sonundan {{seconds}} sn kes",
+        "trimEndExtend": "{{name}} sonunu {{seconds}} sn uzat",
+        "other": "{{op}}: {{name}}"
+      }
     }
   }
 }

@@ -212,6 +212,15 @@
         }
       },
       "smartCopyPath": "スマートコピーの経路"
+    },
+    "fcpxml": {
+      "noProject": "先にプロジェクトを開いてください。",
+      "failed": "FCPXMLを作成できませんでした：{{reason}}",
+      "left": {
+        "kind": "FCPXMLに含まれません（対応するものがありません）：{{items}}",
+        "file": "FCPXMLに含まれません（ワークスペースにファイルがありません）：{{items}}",
+        "speed": "FCPXMLに含まれません（速度が変更されています）：{{items}}"
+      }
     }
   }
 }

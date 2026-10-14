@@ -139,13 +139,17 @@
       "imported": "Importiert",
       "exported": "Exportiert",
       "undone": "Rückgängig gemacht",
-      "redone": "Wiederholt"
+      "redone": "Wiederholt",
+      "created": "Erstellt",
+      "restored": "Wiederhergestellt"
     },
     "kind": {
       "generation": "Generierung",
       "timeline": "Zeitleiste",
       "media": "Medien",
-      "video": "Video"
+      "video": "Video",
+      "download": "Link-Download",
+      "checkpoint": "Wiederherstellungspunkt"
     }
   },
   "files": {
@@ -196,5 +200,46 @@
         "text": "Du zahlst Anbieter direkt, nichts läuft über uns"
       }
     }
+  },
+  "share": {
+    "title": "Teilen",
+    "text": "„{{title}}“ – erstellt in VideoSOS",
+    "file": "Datei senden…",
+    "fileUnavailable": "Das Senden von Dateien ist hier nicht verfügbar",
+    "fileRefused": "Das System nimmt diese Datei nicht zum Senden an – speichern und selbst senden",
+    "failed": "Teilen nicht möglich: {{reason}}",
+    "copyText": "Text mit Link kopieren",
+    "copied": "Text mit Link kopiert",
+    "places": {
+      "telegram": "Telegram",
+      "x": "X (Twitter)",
+      "vk": "VK",
+      "whatsapp": "WhatsApp",
+      "reddit": "Reddit"
+    }
+  },
+  "chat": {
+    "tabLabel": "Chat",
+    "model": "Modell",
+    "costHint": "Was dieses Gespräch laut OpenRouter-Abrechnung gekostet hat",
+    "clear": "Gespräch leeren",
+    "intro": "Der Assistent bedient VideoSOS mit denselben Werkzeugen wie ein verbundener Agent: Er liest die Zeitleiste, generiert, schneidet und exportiert, und du siehst jeden Schritt. Bezahlt wird über deinen OpenRouter-Schlüssel; Generierungen zählen zum Tageslimit der Agenten.",
+    "suggestions": {
+      "what": "Was liegt gerade auf der Zeitleiste?",
+      "picture": "Generiere ein Bild eines Sonnenuntergangs über dem Meer und lege es auf die Zeitleiste",
+      "cut": "Teile den ersten Clip in der Mitte und füge zwischen den Teilen einen weichen Übergang ein",
+      "captions": "Füge am Anfang einen Titel mit dem Namen des Projekts hinzu"
+    },
+    "tools": "Schritte des Assistenten",
+    "toolRunning": "Läuft",
+    "toolDone": "Fertig",
+    "toolFailed": "Fehlgeschlagen",
+    "thinking": "Denkt nach",
+    "placeholder": "Schreibe, was zu tun ist…",
+    "send": "Senden",
+    "stop": "Stoppen",
+    "footnote": "Enter sendet, Umschalt+Enter macht eine neue Zeile. Vor kostspieligen Generierungen fragt der Assistent nach.",
+    "needsKey": "Der Chat braucht einen OpenRouter-Schlüssel: Der Assistent antwortet mit einem OpenRouter-Modell und arbeitet mit den Werkzeugen von VideoSOS.",
+    "openKeys": "Schlüssel öffnen"
   }
 }

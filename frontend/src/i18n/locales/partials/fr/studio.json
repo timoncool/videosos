@@ -139,13 +139,17 @@
       "imported": "Importé",
       "exported": "Exporté",
       "undone": "Annulé",
-      "redone": "Rétabli"
+      "redone": "Rétabli",
+      "created": "Créé",
+      "restored": "Restauré"
     },
     "kind": {
       "generation": "génération",
       "timeline": "timeline",
       "media": "média",
-      "video": "vidéo"
+      "video": "vidéo",
+      "download": "téléchargement par lien",
+      "checkpoint": "point de restauration"
     }
   },
   "files": {
@@ -196,5 +200,46 @@
         "text": "Vous payez les fournisseurs directement ; rien ne passe par nous"
       }
     }
+  },
+  "share": {
+    "title": "Partager",
+    "text": "« {{title}} » – fait dans VideoSOS",
+    "file": "Envoyer le fichier…",
+    "fileUnavailable": "L’envoi de fichiers n’est pas disponible ici",
+    "fileRefused": "Le système n’accepte pas ce fichier pour l’envoi – enregistrez-le et envoyez-le vous-même",
+    "failed": "Partage impossible : {{reason}}",
+    "copyText": "Copier le texte avec le lien",
+    "copied": "Texte avec le lien copié",
+    "places": {
+      "telegram": "Telegram",
+      "x": "X (Twitter)",
+      "vk": "VK",
+      "whatsapp": "WhatsApp",
+      "reddit": "Reddit"
+    }
+  },
+  "chat": {
+    "tabLabel": "Chat",
+    "model": "Modèle",
+    "costHint": "Ce que cette conversation a coûté d’après le compte OpenRouter",
+    "clear": "Effacer la conversation",
+    "intro": "L’assistant travaille dans VideoSOS avec les mêmes outils qu’un agent connecté : il lit la timeline, génère, monte et exporte, et vous voyez chaque étape. C’est votre clé OpenRouter qui paie ; les générations comptent dans la limite quotidienne des agents.",
+    "suggestions": {
+      "what": "Qu’y a-t-il sur la timeline en ce moment ?",
+      "picture": "Génère une image d’un coucher de soleil sur la mer et place-la sur la timeline",
+      "cut": "Coupe le premier clip en deux et ajoute une transition fluide entre les parties",
+      "captions": "Ajoute au début un titre avec le nom du projet"
+    },
+    "tools": "Étapes de l’assistant",
+    "toolRunning": "En cours",
+    "toolDone": "Terminé",
+    "toolFailed": "Échec",
+    "thinking": "Réflexion",
+    "placeholder": "Écrivez ce qu’il faut faire…",
+    "send": "Envoyer",
+    "stop": "Arrêter",
+    "footnote": "Entrée envoie, Maj+Entrée passe à la ligne. Avant les générations coûteuses, l’assistant demande confirmation.",
+    "needsKey": "Le chat a besoin d’une clé OpenRouter : l’assistant répond avec un modèle OpenRouter et travaille avec les outils de VideoSOS.",
+    "openKeys": "Ouvrir les clés"
   }
 }

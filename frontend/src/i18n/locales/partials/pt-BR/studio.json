@@ -139,13 +139,17 @@
       "imported": "Importado",
       "exported": "Exportado",
       "undone": "Desfeito",
-      "redone": "Refeito"
+      "redone": "Refeito",
+      "created": "Criado",
+      "restored": "Restaurado"
     },
     "kind": {
       "generation": "geração",
       "timeline": "linha do tempo",
       "media": "mídia",
-      "video": "vídeo"
+      "video": "vídeo",
+      "download": "download por link",
+      "checkpoint": "ponto de restauração"
     }
   },
   "files": {
@@ -196,5 +200,46 @@
         "text": "Você paga os provedores diretamente; nada passa por nós"
       }
     }
+  },
+  "share": {
+    "title": "Compartilhar",
+    "text": "“{{title}}” – feito no VideoSOS",
+    "file": "Enviar o arquivo…",
+    "fileUnavailable": "Aqui não é possível enviar arquivos",
+    "fileRefused": "O sistema não aceita este arquivo para envio – salve e envie você mesmo",
+    "failed": "Não foi possível compartilhar: {{reason}}",
+    "copyText": "Copiar o texto com o link",
+    "copied": "Texto com o link copiado",
+    "places": {
+      "telegram": "Telegram",
+      "x": "X (Twitter)",
+      "vk": "VK",
+      "whatsapp": "WhatsApp",
+      "reddit": "Reddit"
+    }
+  },
+  "chat": {
+    "tabLabel": "Chat",
+    "model": "Modelo",
+    "costHint": "Quanto esta conversa custou na conta do OpenRouter",
+    "clear": "Limpar a conversa",
+    "intro": "O assistente trabalha no VideoSOS com as mesmas ferramentas de um agente conectado: lê a linha do tempo, gera, edita e exporta, e você vê cada passo. Quem paga é a sua chave do OpenRouter; as gerações contam no limite diário dos agentes.",
+    "suggestions": {
+      "what": "O que há na linha do tempo agora?",
+      "picture": "Gere uma imagem de um pôr do sol sobre o mar e coloque na linha do tempo",
+      "cut": "Divida o primeiro clipe ao meio e adicione uma transição suave entre as partes",
+      "captions": "Adicione no início um título com o nome do projeto"
+    },
+    "tools": "Passos do assistente",
+    "toolRunning": "Em andamento",
+    "toolDone": "Concluído",
+    "toolFailed": "Falhou",
+    "thinking": "Pensando",
+    "placeholder": "Escreva o que fazer…",
+    "send": "Enviar",
+    "stop": "Parar",
+    "footnote": "Enter envia, Shift+Enter quebra a linha. Antes de gerações caras, o assistente pergunta.",
+    "needsKey": "O chat precisa de uma chave do OpenRouter: o assistente responde com um modelo do OpenRouter e trabalha com as ferramentas do VideoSOS.",
+    "openKeys": "Abrir chaves"
   }
 }

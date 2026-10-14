@@ -15,7 +15,29 @@
       "playback": "再生または一時停止する",
       "editor_tab": "タブを開く",
       "project_open": "プロジェクトを開く",
-      "export_video": "動画を書き出す"
+      "export_video": "動画を書き出す",
+      "checkpoint_create": "復元ポイントを保存する",
+      "checkpoint_restore": "復元ポイントに戻す"
+    },
+    "proposal": {
+      "title": "エージェントが編集を提案しています",
+      "hint": "適用する前に復元ポイントが保存されます。",
+      "accept": "承認",
+      "decline": "却下",
+      "problem_one": "適用される編集は{{count}}件のみ：{{reason}}",
+      "problem_other": "適用される編集は{{count}}件のみ：{{reason}}",
+      "op": {
+        "addClip": "{{name}}を{{at}}秒に追加",
+        "addText": "テキスト「{{text}}」を{{at}}秒に追加",
+        "moveItem": "{{name}}を{{at}}秒に移動",
+        "removeItems": "{{names}}を削除",
+        "split": "{{name}}を{{at}}秒で分割",
+        "trimStartCut": "{{name}}の先頭から{{seconds}}秒をカット",
+        "trimStartExtend": "{{name}}の先頭を{{seconds}}秒延長",
+        "trimEndCut": "{{name}}の末尾から{{seconds}}秒をカット",
+        "trimEndExtend": "{{name}}の末尾を{{seconds}}秒延長",
+        "other": "{{op}}: {{name}}"
+      }
     }
   }
 }

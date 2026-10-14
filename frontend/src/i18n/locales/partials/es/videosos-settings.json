@@ -31,14 +31,19 @@
       "agentHint": "Al superarlo, VideoSOS rechaza las generaciones de un agente durante el resto del día. Vacío significa sin límite.",
       "budget": "Límite diario para agentes, $",
       "noLimit": "sin límite",
-      "badBudget": "El límite es una cantidad en dólares."
+      "badBudget": "El límite es una cantidad en dólares.",
+      "confirmEdits": "Las ediciones del agente en la línea de tiempo esperan mi aprobación",
+      "confirmEditsHint": "Una edición del agente muestra qué cambiará y nada cambia hasta que la aceptes."
     },
     "general": {
       "language": "Idioma de la interfaz",
       "languageHint": "La ventana y los mensajes del programa.",
       "autoSaveHint": "Guarda el proyecto abierto solo cada pocos minutos",
       "undoHistoryDepthHint": "Cuántos pasos puede deshacer",
-      "uiSoundsHint": "Sonidos cortos para clics, resultados y errores"
+      "uiSoundsHint": "Sonidos cortos para clics, resultados y errores",
+      "audioOutput": "Salida de sonido",
+      "audioOutputHint": "Dónde suena la vista previa: el dispositivo del sistema o uno elegido. La lista aparece tras permitir el micrófono, que es cuando el navegador da nombre a los dispositivos.",
+      "audioOutputDefault": "Predeterminado del sistema"
     },
     "done": "Listo",
     "timeline": {

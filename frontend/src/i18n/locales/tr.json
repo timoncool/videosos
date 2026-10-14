@@ -60,7 +60,8 @@
     "saveAria": "Projeyi kaydet",
     "export": "Dışa Aktar",
     "exportVideo": "Videoyu Dışa Aktar",
-    "downloadProjectZip": "Projeyi İndir (.zip)"
+    "downloadProjectZip": "Projeyi İndir (.zip)",
+    "exportFcpxml": "Final Cut, DaVinci, Premiere için FCPXML"
   },
   "unsavedChanges": {
     "title": "Kaydedilmemiş Değişiklikler",

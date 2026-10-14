@@ -88,7 +88,8 @@
       "unreverse": "Desfazer reversao",
       "updatingCaptions": "Atualizando legendas",
       "copyGrade": "Copiar correção de cor",
-      "pasteGrade": "Colar correção de cor"
+      "pasteGrade": "Colar correção de cor",
+      "regenerateSegment": "Gerar este trecho de novo"
     },
     "fadeHandles": {
       "adjustAudioFadeIn": "Ajustar fade de entrada do audio",
@@ -341,6 +342,22 @@
       "adjustClipVolume": "Ajustar volume do clipe"
     },
     "emptyTitle": "Arraste mídia aqui para começar a editar",
-    "emptyDescription": "Solte clipes nas faixas e pressione Espaço para visualizar."
+    "emptyDescription": "Solte clipes nas faixas e pressione Espaço para visualizar.",
+    "checkpoints": {
+      "title": "Pontos de restauração",
+      "hint": "A linha do tempo como estava antes de cada edição do agente e onde você a salvou. Ao voltar, a atual também é salva, e Desfazer a traz de volta.",
+      "empty": "Ainda não há pontos de restauração: um é salvo antes de cada edição do agente, ou salve um aqui.",
+      "reason": {
+        "agent_one": "Antes de {{count}} edição do agente",
+        "agent_other": "Antes de {{count}} edições do agente",
+        "restore": "Antes de voltar",
+        "asked": "Salvo aqui"
+      },
+      "restore": "Voltar",
+      "restored": "A linha do tempo voltou para {{time}}",
+      "label": "O que é, se quiser",
+      "keep": "Salvar",
+      "kept": "Ponto de restauração salvo"
+    }
   }
 }

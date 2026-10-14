@@ -234,7 +234,9 @@
     "low": "Unterer Schwellenwert",
     "high": "Oberer Schwellenwert",
     "length": "Länge",
-    "orientation": "Ausrichtung"
+    "orientation": "Ausrichtung",
+    "lift": "Lift",
+    "gain": "Gain"
   },
   "options": {
     "fire": "Feuer",

@@ -88,7 +88,8 @@
       "unreverse": "取消反向",
       "updatingCaptions": "正在更新字幕",
       "copyGrade": "复制调色",
-      "pasteGrade": "粘贴调色"
+      "pasteGrade": "粘贴调色",
+      "regenerateSegment": "重新生成此区间"
     },
     "fadeHandles": {
       "adjustAudioFadeIn": "调整音频淡入",
@@ -337,6 +338,22 @@
       "adjustClipVolume": "调整剪辑音量"
     },
     "emptyTitle": "将媒体拖到这里开始编辑",
-    "emptyDescription": "把片段拖到轨道上，然后按空格键预览。"
+    "emptyDescription": "把片段拖到轨道上，然后按空格键预览。",
+    "checkpoints": {
+      "title": "还原点",
+      "hint": "智能体每次编辑之前，以及你保存时的时间线。回退时当前的时间线也会被保存，“撤销”可以把它找回来。",
+      "empty": "还没有还原点：智能体每次编辑前都会保存一个，你也可以在这里手动保存。",
+      "reason": {
+        "agent_one": "智能体 {{count}} 项编辑之前",
+        "agent_other": "智能体 {{count}} 项编辑之前",
+        "restore": "回退之前",
+        "asked": "在此处保存"
+      },
+      "restore": "回退",
+      "restored": "时间线已回到 {{time}}",
+      "label": "说明（可选）",
+      "keep": "保存",
+      "kept": "还原点已保存"
+    }
   }
 }

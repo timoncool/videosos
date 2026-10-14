@@ -88,7 +88,8 @@
       "unreverse": "Umkehrung aufheben",
       "updatingCaptions": "Aktualisieren Untertitel",
       "copyGrade": "Farbkorrektur kopieren",
-      "pasteGrade": "Farbkorrektur einfügen"
+      "pasteGrade": "Farbkorrektur einfügen",
+      "regenerateSegment": "Diesen Abschnitt neu generieren"
     },
     "fadeHandles": {
       "adjustAudioFadeIn": "Anpassen Audio Fade ein",
@@ -341,6 +342,22 @@
       "adjustClipVolume": "Anpassen Clip Lautstarke"
     },
     "emptyTitle": "Ziehe Medien hierher, um mit dem Schnitt zu beginnen",
-    "emptyDescription": "Lege Clips auf Spuren ab und drücke dann die Leertaste für die Vorschau."
+    "emptyDescription": "Lege Clips auf Spuren ab und drücke dann die Leertaste für die Vorschau.",
+    "checkpoints": {
+      "title": "Wiederherstellungspunkte",
+      "hint": "Die Zeitleiste, wie sie vor jeder Änderung des Agenten war und wo immer du sie gespeichert hast. Beim Zurückgehen wird auch der aktuelle Stand gespeichert, und Rückgängig holt ihn zurück.",
+      "empty": "Noch keine Wiederherstellungspunkte: Vor jeder Änderung des Agenten wird einer gespeichert, oder speichere hier einen.",
+      "reason": {
+        "agent_one": "Vor {{count}} Änderung des Agenten",
+        "agent_other": "Vor {{count}} Änderungen des Agenten",
+        "restore": "Vor dem Zurückgehen",
+        "asked": "Hier gespeichert"
+      },
+      "restore": "Zurück",
+      "restored": "Die Zeitleiste ist wieder bei {{time}}",
+      "label": "Was es ist, falls gewünscht",
+      "keep": "Speichern",
+      "kept": "Wiederherstellungspunkt gespeichert"
+    }
   }
 }

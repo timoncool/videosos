@@ -234,7 +234,9 @@
     "low": "しきい値(下限)",
     "high": "しきい値(上限)",
     "length": "長さ",
-    "orientation": "向き"
+    "orientation": "向き",
+    "lift": "リフト",
+    "gain": "ゲイン"
   },
   "options": {
     "fire": "ファイア",

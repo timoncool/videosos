@@ -31,14 +31,19 @@
       "agentHint": "Au-delà, VideoSOS refuse les générations d’un agent pour le reste de la journée. Vide : aucune limite.",
       "budget": "Limite quotidienne pour les agents, $",
       "noLimit": "aucune limite",
-      "badBudget": "La limite est un montant en dollars."
+      "badBudget": "La limite est un montant en dollars.",
+      "confirmEdits": "Les modifications de l’agent sur la timeline attendent mon accord",
+      "confirmEditsHint": "Une modification de l’agent montre ce qui va changer, et rien ne change tant que vous ne l’acceptez pas."
     },
     "general": {
       "language": "Langue de l’interface",
       "languageHint": "La fenêtre et les messages du programme.",
       "autoSaveHint": "Enregistre le projet ouvert toutes les quelques minutes",
       "undoHistoryDepthHint": "Combien d'étapes l'annulation peut remonter",
-      "uiSoundsHint": "Sons courts pour les clics, résultats et erreurs"
+      "uiSoundsHint": "Sons courts pour les clics, résultats et erreurs",
+      "audioOutput": "Sortie audio",
+      "audioOutputHint": "Où la préécoute est jouée : le périphérique du système ou un autre choisi. La liste apparaît une fois le micro autorisé – c’est alors que le navigateur nomme les périphériques.",
+      "audioOutputDefault": "Par défaut du système"
     },
     "done": "Terminé",
     "timeline": {

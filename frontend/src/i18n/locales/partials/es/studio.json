@@ -139,13 +139,17 @@
       "imported": "Importado",
       "exported": "Exportado",
       "undone": "Deshecho",
-      "redone": "Rehecho"
+      "redone": "Rehecho",
+      "created": "Creado",
+      "restored": "Restaurado"
     },
     "kind": {
       "generation": "generación",
       "timeline": "línea de tiempo",
       "media": "medio",
-      "video": "vídeo"
+      "video": "vídeo",
+      "download": "descarga por enlace",
+      "checkpoint": "punto de restauración"
     }
   },
   "files": {
@@ -196,5 +200,46 @@
         "text": "Pagas a los proveedores directamente; nada pasa por nosotros"
       }
     }
+  },
+  "share": {
+    "title": "Compartir",
+    "text": "«{{title}}»: hecho en VideoSOS",
+    "file": "Enviar el archivo…",
+    "fileUnavailable": "Aquí no se pueden enviar archivos",
+    "fileRefused": "El sistema no acepta este archivo para enviarlo: guárdalo y envíalo tú mismo",
+    "failed": "No se pudo compartir: {{reason}}",
+    "copyText": "Copiar el texto con el enlace",
+    "copied": "Texto con el enlace copiado",
+    "places": {
+      "telegram": "Telegram",
+      "x": "X (Twitter)",
+      "vk": "VK",
+      "whatsapp": "WhatsApp",
+      "reddit": "Reddit"
+    }
+  },
+  "chat": {
+    "tabLabel": "Chat",
+    "model": "Modelo",
+    "costHint": "Lo que ha costado esta conversación según la cuenta de OpenRouter",
+    "clear": "Borrar la conversación",
+    "intro": "El asistente trabaja en VideoSOS con las mismas herramientas que un agente conectado: lee la línea de tiempo, genera, edita y exporta, y tú ves cada paso. Lo paga tu clave de OpenRouter; las generaciones cuentan para el límite diario de los agentes.",
+    "suggestions": {
+      "what": "¿Qué hay ahora en la línea de tiempo?",
+      "picture": "Genera una imagen de una puesta de sol sobre el mar y ponla en la línea de tiempo",
+      "cut": "Divide el primer clip por la mitad y añade una transición suave entre las partes",
+      "captions": "Añade al principio un título con el nombre del proyecto"
+    },
+    "tools": "Pasos del asistente",
+    "toolRunning": "En curso",
+    "toolDone": "Hecho",
+    "toolFailed": "Falló",
+    "thinking": "Pensando",
+    "placeholder": "Escribe qué hacer…",
+    "send": "Enviar",
+    "stop": "Detener",
+    "footnote": "Intro envía, Mayús+Intro hace un salto de línea. Antes de las generaciones costosas el asistente pregunta.",
+    "needsKey": "El chat necesita una clave de OpenRouter: el asistente responde con un modelo de OpenRouter y trabaja con las herramientas de VideoSOS.",
+    "openKeys": "Abrir claves"
   }
 }

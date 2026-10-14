@@ -234,7 +234,9 @@
     "low": "Limiar mínimo",
     "high": "Limiar máximo",
     "length": "Comprimento",
-    "orientation": "Orientação"
+    "orientation": "Orientação",
+    "lift": "Lift",
+    "gain": "Ganho"
   },
   "options": {
     "fire": "Fogo",

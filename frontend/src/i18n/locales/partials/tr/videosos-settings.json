@@ -31,14 +31,19 @@
       "agentHint": "Bu sınır aşıldığında VideoSOS, günün geri kalanında ajanın üretimlerini reddeder. Boş bırakılırsa sınır yoktur.",
       "budget": "Ajanlar için günlük sınır, $",
       "noLimit": "sınır yok",
-      "badBudget": "Sınır, dolar cinsinden bir sayıdır."
+      "badBudget": "Sınır, dolar cinsinden bir sayıdır.",
+      "confirmEdits": "Ajanın zaman çizelgesi düzenlemeleri onayımı beklesin",
+      "confirmEditsHint": "Ajanın düzenlemesi nelerin değişeceğini gösterir; sen kabul edene kadar hiçbir şey değişmez."
     },
     "general": {
       "language": "Arayüz dili",
       "languageHint": "Programın penceresi ve iletileri.",
       "autoSaveHint": "Açık projeyi birkaç dakikada bir kendisi kaydeder",
       "undoHistoryDepthHint": "Geri alma kaç adım geriye gidebilir",
-      "uiSoundsHint": "Tıklama, sonuç ve hatalar için kısa sesler"
+      "uiSoundsHint": "Tıklama, sonuç ve hatalar için kısa sesler",
+      "audioOutput": "Ses çıkışı",
+      "audioOutputHint": "Önizlemenin çalacağı yer: sistem aygıtı ya da seçilen bir aygıt. Liste, mikrofona izin verildikten sonra görünür – tarayıcı aygıtları o zaman adlandırır.",
+      "audioOutputDefault": "Sistem varsayılanı"
     },
     "done": "Bitti",
     "timeline": {

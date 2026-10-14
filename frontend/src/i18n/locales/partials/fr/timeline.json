@@ -88,7 +88,8 @@
       "unreverse": "Annuler inversion",
       "updatingCaptions": "Mise a jour Sous-titres",
       "copyGrade": "Copier l'étalonnage",
-      "pasteGrade": "Coller l'étalonnage"
+      "pasteGrade": "Coller l'étalonnage",
+      "regenerateSegment": "Régénérer cette partie"
     },
     "fadeHandles": {
       "adjustAudioFadeIn": "Ajuster Audio fondu entree",
@@ -341,6 +342,22 @@
       "adjustClipVolume": "Ajuster clip volume"
     },
     "emptyTitle": "Faites glisser des médias ici pour commencer le montage",
-    "emptyDescription": "Déposez des clips sur les pistes, puis appuyez sur Espace pour prévisualiser."
+    "emptyDescription": "Déposez des clips sur les pistes, puis appuyez sur Espace pour prévisualiser.",
+    "checkpoints": {
+      "title": "Points de restauration",
+      "hint": "La timeline telle qu’elle était avant chaque modification de l’agent et là où vous l’avez enregistrée. Un retour en arrière enregistre aussi la timeline actuelle, et Annuler la rétablit.",
+      "empty": "Aucun point de restauration pour l’instant : un est enregistré avant chaque modification de l’agent, ou enregistrez-en un ici.",
+      "reason": {
+        "agent_one": "Avant {{count}} modification de l’agent",
+        "agent_other": "Avant {{count}} modifications de l’agent",
+        "restore": "Avant le retour en arrière",
+        "asked": "Enregistré ici"
+      },
+      "restore": "Revenir",
+      "restored": "La timeline est revenue à {{time}}",
+      "label": "De quoi il s’agit, si vous voulez",
+      "keep": "Enregistrer",
+      "kept": "Point de restauration enregistré"
+    }
   }
 }

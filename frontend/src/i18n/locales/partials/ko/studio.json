@@ -139,13 +139,17 @@
       "imported": "가져옴",
       "exported": "내보냄",
       "undone": "실행 취소됨",
-      "redone": "다시 실행됨"
+      "redone": "다시 실행됨",
+      "created": "생성됨",
+      "restored": "복원됨"
     },
     "kind": {
       "generation": "생성",
       "timeline": "타임라인",
       "media": "미디어",
-      "video": "동영상"
+      "video": "동영상",
+      "download": "링크 다운로드",
+      "checkpoint": "복원 지점"
     }
   },
   "files": {
@@ -196,5 +200,46 @@
         "text": "제공자에게 직접 결제하며 우리를 거치지 않습니다"
       }
     }
+  },
+  "share": {
+    "title": "공유",
+    "text": "“{{title}}” - VideoSOS로 제작",
+    "file": "파일 보내기…",
+    "fileUnavailable": "여기서는 파일을 보낼 수 없습니다",
+    "fileRefused": "시스템이 이 파일의 전송을 받지 않습니다 - 저장한 뒤 직접 보내세요",
+    "failed": "공유하지 못했습니다: {{reason}}",
+    "copyText": "링크가 포함된 텍스트 복사",
+    "copied": "링크가 포함된 텍스트를 복사했습니다",
+    "places": {
+      "telegram": "Telegram",
+      "x": "X (Twitter)",
+      "vk": "VK",
+      "whatsapp": "WhatsApp",
+      "reddit": "Reddit"
+    }
+  },
+  "chat": {
+    "tabLabel": "채팅",
+    "model": "모델",
+    "costHint": "OpenRouter 계정 기준 이 대화의 비용",
+    "clear": "대화 지우기",
+    "intro": "어시스턴트는 연결된 에이전트와 같은 도구로 VideoSOS를 다룹니다. 타임라인을 읽고, 생성하고, 편집하고, 내보내며, 모든 단계를 볼 수 있습니다. 사용자의 OpenRouter 키로 결제되며, 생성은 에이전트의 일일 한도에 포함됩니다.",
+    "suggestions": {
+      "what": "지금 타임라인에 무엇이 있나요?",
+      "picture": "바다 위 석양 이미지를 생성해서 타임라인에 올려 줘",
+      "cut": "첫 번째 클립을 반으로 나누고 두 부분 사이에 부드러운 전환을 추가해 줘",
+      "captions": "시작 부분에 프로젝트 이름으로 된 제목을 추가해 줘"
+    },
+    "tools": "어시스턴트의 단계",
+    "toolRunning": "실행 중",
+    "toolDone": "완료",
+    "toolFailed": "실패",
+    "thinking": "생각 중",
+    "placeholder": "할 일을 입력하세요…",
+    "send": "보내기",
+    "stop": "중지",
+    "footnote": "Enter는 보내기, Shift+Enter는 줄 바꿈입니다. 비용이 큰 생성 전에는 어시스턴트가 먼저 묻습니다.",
+    "needsKey": "채팅에는 OpenRouter 키가 필요합니다: 어시스턴트는 OpenRouter 모델로 답하고 VideoSOS 도구로 작업합니다.",
+    "openKeys": "키 열기"
   }
 }

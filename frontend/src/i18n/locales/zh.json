@@ -60,7 +60,8 @@
     "saveAria": "保存项目",
     "export": "导出",
     "exportVideo": "导出视频",
-    "downloadProjectZip": "下载项目 (.zip)"
+    "downloadProjectZip": "下载项目 (.zip)",
+    "exportFcpxml": "适用于 Final Cut、DaVinci、Premiere 的 FCPXML"
   },
   "unsavedChanges": {
     "title": "未保存的更改",

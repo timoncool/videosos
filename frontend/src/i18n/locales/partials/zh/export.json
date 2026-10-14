@@ -212,6 +212,15 @@
         }
       },
       "smartCopyPath": "智能复制路径"
+    },
+    "fcpxml": {
+      "noProject": "请先打开一个项目。",
+      "failed": "FCPXML 未生成：{{reason}}",
+      "left": {
+        "kind": "不在 FCPXML 中（没有对应项）：{{items}}",
+        "file": "不在 FCPXML 中（工作区中没有文件）：{{items}}",
+        "speed": "不在 FCPXML 中（速度已更改）：{{items}}"
+      }
     }
   }
 }

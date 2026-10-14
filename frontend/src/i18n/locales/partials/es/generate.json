@@ -54,7 +54,10 @@
       "noMedia": "La biblioteca aún no tiene {{kind}}.",
       "tooMany": "Como máximo {{max}} archivos aquí.",
       "wrongKind": "Este espacio admite {{kind}}.",
-      "missing": "Rellena: {{fields}}"
+      "missing": "Rellena: {{fields}}",
+      "length": "{{count}} / {{max}}",
+      "tooLong": "{{count}} / {{max}}: más largo de lo que admite el modelo",
+      "shorten": "Acorta «{{field}}»: {{count}} caracteres, el modelo admite como máximo {{max}}"
     },
     "placeOnTimeline": "Poner en la línea de tiempo",
     "repeat": "Ejecuciones",
@@ -107,7 +110,8 @@
       "transcribe": "Transcribir",
       "needsProject": "Abre primero un proyecto: el fotograma se guarda en su biblioteca de medios.",
       "noSlot": "{{model}} no admite archivos de este tipo: elige otro modelo para esta tarea.",
-      "placed": "Colocado en «{{field}}»"
+      "placed": "Colocado en «{{field}}»",
+      "lastFrameName": "{{title}}, último fotograma"
     },
     "compare": {
       "pick": "Comparar",
@@ -223,6 +227,86 @@
       "interrupted": "VideoSOS se cerró mientras se enviaba la tarea",
       "details": "Texto del error",
       "openKeys": "Abrir claves"
+    },
+    "placeholder": "Generando, {{model}}: {{state}}",
+    "rate": {
+      "second": "{{price}} por segundo",
+      "characters": "{{price}} por 1000 caracteres",
+      "tokens": "{{input}} / {{output}} por millón de tokens"
+    },
+    "describe": {
+      "button": "Prompt desde la imagen",
+      "hint": "Un modelo mira la primera imagen del formulario y escribe el prompt que la produciría. Lo paga la clave de OpenRouter."
+    },
+    "presets": {
+      "button": "Preajustes",
+      "hint": "Prompts guardados: ponlos en el campo o guarda el actual",
+      "empty": "Aún no hay prompts guardados. Ponle nombre al actual y guárdalo.",
+      "name": "Nombre del preajuste",
+      "keep": "Guardar",
+      "keepHint": "Guardar el texto del campo con este nombre",
+      "remove": "Quitar el preajuste «{{name}}»"
+    },
+    "elements": {
+      "button": "Elementos",
+      "hint": "Personajes, objetos y lugares con sus imágenes: «@nombre» en el prompt envía las imágenes al modelo",
+      "empty": "Guarda un personaje, un objeto o un lugar: pon sus imágenes en los campos de imagen del formulario y dale un nombre. Nómbralo en el prompt como @nombre.",
+      "use": "Poner @{{name}} en el prompt",
+      "pictures_one": "{{count}} imagen",
+      "pictures_other": "{{count}} imágenes",
+      "remove": "Quitar @{{name}}",
+      "name": "Nombre, una palabra",
+      "keep": "Guardar",
+      "keepHint": "Imágenes en el formulario: {{count}}; se guardan con este nombre",
+      "noPictures": "Primero pon sus imágenes en el formulario",
+      "badName": "Una palabra: letras, dígitos, _ y -",
+      "left": "{{names}}: este modelo no tiene sitio para sus imágenes, se envían como texto"
+    },
+    "variables": {
+      "title": "Variables del prompt",
+      "missing": "Rellena las variables: {{names}}"
+    },
+    "batch": {
+      "add": "Comparar con otro modelo",
+      "remove": "Quitar el modelo del lote",
+      "lacks": "falta: {{fields}}",
+      "noKey": "sin clave de {{provider}}"
+    },
+    "segment": {
+      "cutting": "Cortando {{from}}–{{to}} s del clip…",
+      "ready": "El fragmento está en «Editar vídeo» como origen: indica qué cambiar en él",
+      "failed": "No se cortó el fragmento: {{reason}}",
+      "noFile": "El archivo de {{name}} no está en la biblioteca",
+      "name": "{{title}}, {{from}}–{{to}} s"
+    },
+    "storyboard": {
+      "tabLabel": "Storyboard",
+      "noProject": "Abre un proyecto: el storyboard se guarda con él.",
+      "script": "Guion o idea",
+      "scriptHint": "Qué ocurre, escena por escena o en una frase. Los nombres @elemento traen sus imágenes.",
+      "count": "Planos",
+      "split": "Dividir en planos",
+      "splitHint": "Un modelo de lenguaje de OpenRouter escribe los planos; se paga como Mejorar prompt",
+      "frameModel": "Fotogramas de",
+      "clipModel": "Clips de",
+      "shots": "Planos",
+      "shot": "Plano {{number}}",
+      "seconds": "s",
+      "remove": "Quitar el plano {{number}}",
+      "frame": "Fotograma",
+      "frameAgain": "Repetir fotograma",
+      "clip": "Clip",
+      "clipNeedsFrame": "Este modelo empieza un clip desde un fotograma: crea primero el fotograma",
+      "frameDone": "fotograma listo",
+      "clipDone": "clip en la línea de tiempo",
+      "frameFailed": "El fotograma falló: {{reason}}",
+      "clipFailed": "El clip falló: {{reason}}",
+      "add": "Añadir un plano",
+      "allFrames_one": "Fotograma para {{count}} plano",
+      "allFrames_other": "Fotogramas para {{count}} planos",
+      "allClips_one": "Clip para {{count}} plano en la línea de tiempo",
+      "allClips_other": "Clips para {{count}} planos en la línea de tiempo",
+      "allClipsHint": "Los clips se colocan uno tras otro desde el cabezal de reproducción"
     }
   }
 }

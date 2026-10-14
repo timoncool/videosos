@@ -54,7 +54,10 @@
       "noMedia": "Kitaplıkta henüz {{kind}} yok.",
       "tooMany": "Burada en fazla {{max}} dosya olabilir.",
       "wrongKind": "Bu yuva {{kind}} kabul eder.",
-      "missing": "Doldurun: {{fields}}"
+      "missing": "Doldurun: {{fields}}",
+      "length": "{{count}} / {{max}}",
+      "tooLong": "{{count}} / {{max}} – modelin kabul ettiğinden uzun",
+      "shorten": "“{{field}}” alanını kısalt: {{count}} karakter, model en fazla {{max}} kabul eder"
     },
     "placeOnTimeline": "Zaman çizelgesine yerleştir",
     "repeat": "Çalıştırma sayısı",
@@ -107,7 +110,8 @@
       "transcribe": "Yazıya dök",
       "needsProject": "Önce bir proje açın: kare, projenin medya kitaplığına eklenir.",
       "noSlot": "{{model}} bu türde dosya kabul etmiyor: bu görev için başka bir model seçin.",
-      "placed": "\"{{field}}\" alanına yerleştirildi"
+      "placed": "\"{{field}}\" alanına yerleştirildi",
+      "lastFrameName": "{{title}}, son kare"
     },
     "compare": {
       "pick": "Karşılaştır",
@@ -223,6 +227,86 @@
       "interrupted": "İş gönderilirken VideoSOS kapandı",
       "details": "Hata metni",
       "openKeys": "Anahtarları aç"
+    },
+    "placeholder": "Üretiliyor, {{model}}: {{state}}",
+    "rate": {
+      "second": "saniye başına {{price}}",
+      "characters": "1000 karakter başına {{price}}",
+      "tokens": "bir milyon token başına {{input}} / {{output}}"
+    },
+    "describe": {
+      "button": "Görselden istem",
+      "hint": "Bir model formdaki ilk görsele bakar ve onu üretecek istemi yazar. Ücreti OpenRouter anahtarı öder."
+    },
+    "presets": {
+      "button": "Ön ayarlar",
+      "hint": "Kaydedilmiş istemler: birini alana koy ya da mevcut olanı kaydet",
+      "empty": "Henüz kaydedilmiş istem yok. Mevcut olana bir ad ver ve kaydet.",
+      "name": "Ön ayar adı",
+      "keep": "Kaydet",
+      "keepHint": "Alanın metnini bu adla kaydet",
+      "remove": "“{{name}}” ön ayarını kaldır"
+    },
+    "elements": {
+      "button": "Öğeler",
+      "hint": "Görselleriyle birlikte karakterler, nesneler ve yerler: istemdeki “@ad” görselleri modele gönderir",
+      "empty": "Bir karakteri, nesneyi ya da yeri kaydet: görsellerini formun görsel alanlarına koy ve bir ad ver. İstemde @ad olarak an.",
+      "use": "@{{name}} öğesini isteme ekle",
+      "pictures_one": "{{count}} görsel",
+      "pictures_other": "{{count}} görsel",
+      "remove": "@{{name}} öğesini kaldır",
+      "name": "Ad, tek sözcük",
+      "keep": "Kaydet",
+      "keepHint": "Formdaki görseller: {{count}}; bu adla kaydedilir",
+      "noPictures": "Önce görsellerini forma koy",
+      "badName": "Tek sözcük: harf, rakam, _ ve -",
+      "left": "{{names}}: bu modelde görselleri için yer yok, sözcük olarak gider"
+    },
+    "variables": {
+      "title": "İstem değişkenleri",
+      "missing": "Değişkenleri doldur: {{names}}"
+    },
+    "batch": {
+      "add": "Başka bir modelle karşılaştır",
+      "remove": "Modeli gruptan kaldır",
+      "lacks": "eksik: {{fields}}",
+      "noKey": "{{provider}} anahtarı yok"
+    },
+    "segment": {
+      "cutting": "Klibin {{from}}–{{to}} sn aralığı kesiliyor…",
+      "ready": "Bölüm kaynak olarak “Videoyu düzenle” içinde: neyin değişeceğini söyle",
+      "failed": "Bölüm kesilemedi: {{reason}}",
+      "noFile": "{{name}} dosyası medya kitaplığında yok",
+      "name": "{{title}}, {{from}}–{{to}} sn"
+    },
+    "storyboard": {
+      "tabLabel": "Storyboard",
+      "noProject": "Bir proje aç: storyboard onunla birlikte saklanır.",
+      "script": "Senaryo veya fikir",
+      "scriptHint": "Ne oluyor, sahne sahne ya da tek cümleyle. @öğe adları görsellerini getirir.",
+      "count": "Çekim",
+      "split": "Çekimlere böl",
+      "splitHint": "Çekimleri OpenRouter’ın bir dil modeli yazar; “İstemi iyileştir” gibi ücretlidir",
+      "frameModel": "Kareler şuradan",
+      "clipModel": "Klipler şuradan",
+      "shots": "Çekimler",
+      "shot": "Çekim {{number}}",
+      "seconds": "sn",
+      "remove": "{{number}}. çekimi kaldır",
+      "frame": "Kare",
+      "frameAgain": "Kareyi yeniden üret",
+      "clip": "Klip",
+      "clipNeedsFrame": "Bu model klibi bir kareden başlatır: önce kareyi üret",
+      "frameDone": "kare hazır",
+      "clipDone": "klip zaman çizelgesinde",
+      "frameFailed": "Kare başarısız oldu: {{reason}}",
+      "clipFailed": "Klip başarısız oldu: {{reason}}",
+      "add": "Çekim ekle",
+      "allFrames_one": "{{count}} çekim için kare",
+      "allFrames_other": "{{count}} çekim için kareler",
+      "allClips_one": "{{count}} çekim için klip zaman çizelgesine",
+      "allClips_other": "{{count}} çekim için klipler zaman çizelgesine",
+      "allClipsHint": "Klipler oynatma başlığından itibaren peş peşe yerleşir"
     }
   }
 }

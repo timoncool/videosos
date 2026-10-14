@@ -234,7 +234,9 @@
     "low": "임계값 하한",
     "high": "임계값 상한",
     "length": "길이",
-    "orientation": "방향"
+    "orientation": "방향",
+    "lift": "리프트",
+    "gain": "게인"
   },
   "options": {
     "fire": "불",

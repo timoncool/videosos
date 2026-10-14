@@ -31,14 +31,19 @@
       "agentHint": "이 한도를 넘으면 VideoSOS는 그날 남은 시간 동안 에이전트의 생성 요청을 거부합니다. 비워 두면 한도가 없습니다.",
       "budget": "에이전트 일일 한도($)",
       "noLimit": "한도 없음",
-      "badBudget": "한도는 달러 단위의 숫자로 입력하세요."
+      "badBudget": "한도는 달러 단위의 숫자로 입력하세요.",
+      "confirmEdits": "에이전트의 타임라인 편집은 내 승인을 기다림",
+      "confirmEditsHint": "에이전트의 편집은 무엇이 바뀌는지 보여주며, 수락하기 전에는 아무것도 바뀌지 않습니다."
     },
     "general": {
       "language": "인터페이스 언어",
       "languageHint": "창과 프로그램 메시지에 적용됩니다.",
       "autoSaveHint": "열린 프로젝트를 몇 분마다 자동으로 저장합니다",
       "undoHistoryDepthHint": "실행 취소로 되돌릴 수 있는 단계 수",
-      "uiSoundsHint": "클릭, 결과, 오류에 짧은 소리"
+      "uiSoundsHint": "클릭, 결과, 오류에 짧은 소리",
+      "audioOutput": "소리 출력",
+      "audioOutputHint": "미리보기가 재생될 위치: 시스템 장치 또는 선택한 장치. 마이크를 허용하면 목록이 표시됩니다 - 그때 브라우저가 장치 이름을 알려 줍니다.",
+      "audioOutputDefault": "시스템 기본값"
     },
     "done": "완료",
     "timeline": {

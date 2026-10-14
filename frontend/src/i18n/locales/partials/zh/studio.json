@@ -139,13 +139,17 @@
       "imported": "已导入",
       "exported": "已导出",
       "undone": "已撤销",
-      "redone": "已重做"
+      "redone": "已重做",
+      "created": "已创建",
+      "restored": "已还原"
     },
     "kind": {
       "generation": "生成",
       "timeline": "时间线",
       "media": "媒体",
-      "video": "视频"
+      "video": "视频",
+      "download": "链接下载",
+      "checkpoint": "还原点"
     }
   },
   "files": {
@@ -196,5 +200,46 @@
         "text": "直接付费给服务商，不经过我们"
       }
     }
+  },
+  "share": {
+    "title": "分享",
+    "text": "“{{title}}”——用 VideoSOS 制作",
+    "file": "发送文件…",
+    "fileUnavailable": "此处无法发送文件",
+    "fileRefused": "系统不接受发送此文件——请保存后自行发送",
+    "failed": "无法分享：{{reason}}",
+    "copyText": "复制带链接的文字",
+    "copied": "已复制带链接的文字",
+    "places": {
+      "telegram": "Telegram",
+      "x": "X (Twitter)",
+      "vk": "VK",
+      "whatsapp": "WhatsApp",
+      "reddit": "Reddit"
+    }
+  },
+  "chat": {
+    "tabLabel": "聊天",
+    "model": "模型",
+    "costHint": "按 OpenRouter 账单计算，这次对话的费用",
+    "clear": "清空对话",
+    "intro": "助手使用与已连接智能体相同的工具来操作 VideoSOS：读取时间线、生成、剪辑和导出，每一步你都看得到。费用由你的 OpenRouter 密钥支付；生成次数计入智能体的每日限额。",
+    "suggestions": {
+      "what": "时间线上现在有什么？",
+      "picture": "生成一张海上日落的图片并放到时间线上",
+      "cut": "把第一个片段从中间分成两段，并在两段之间加一个平滑过渡",
+      "captions": "在开头加一个标题，内容为项目名称"
+    },
+    "tools": "助手的步骤",
+    "toolRunning": "运行中",
+    "toolDone": "已完成",
+    "toolFailed": "失败",
+    "thinking": "思考中",
+    "placeholder": "写下要做什么…",
+    "send": "发送",
+    "stop": "停止",
+    "footnote": "Enter 发送，Shift+Enter 换行。进行费用较高的生成前，助手会先询问。",
+    "needsKey": "聊天需要 OpenRouter 密钥：助手使用 OpenRouter 模型回答，并使用 VideoSOS 的工具工作。",
+    "openKeys": "打开密钥"
   }
 }

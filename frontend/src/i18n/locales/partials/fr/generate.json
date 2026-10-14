@@ -54,7 +54,10 @@
       "noMedia": "La bibliothèque ne contient pas encore de {{kind}}.",
       "tooMany": "{{max}} fichiers au maximum ici.",
       "wrongKind": "Cet emplacement accepte {{kind}}.",
-      "missing": "À renseigner : {{fields}}"
+      "missing": "À renseigner : {{fields}}",
+      "length": "{{count}} / {{max}}",
+      "tooLong": "{{count}} / {{max}} – plus long que ce que le modèle accepte",
+      "shorten": "Raccourcissez « {{field}} » : {{count}} caractères, le modèle en accepte {{max}} au maximum"
     },
     "placeOnTimeline": "Placer sur la timeline",
     "repeat": "Exécutions",
@@ -107,7 +110,8 @@
       "transcribe": "Transcrire",
       "needsProject": "Ouvrez d’abord un projet : l’image est placée dans sa médiathèque.",
       "noSlot": "{{model}} n’accepte pas de fichier de ce type : choisissez un autre modèle pour cette tâche.",
-      "placed": "Placé dans « {{field}} »"
+      "placed": "Placé dans « {{field}} »",
+      "lastFrameName": "{{title}}, dernière image"
     },
     "compare": {
       "pick": "Comparer",
@@ -223,6 +227,86 @@
       "interrupted": "VideoSOS s’est fermé pendant l’envoi de la tâche",
       "details": "Texte de l’erreur",
       "openKeys": "Ouvrir les clés"
+    },
+    "placeholder": "Génération, {{model}} : {{state}}",
+    "rate": {
+      "second": "{{price}} par seconde",
+      "characters": "{{price}} pour 1000 caractères",
+      "tokens": "{{input}} / {{output}} par million de tokens"
+    },
+    "describe": {
+      "button": "Prompt depuis l’image",
+      "hint": "Un modèle regarde la première image du formulaire et écrit le prompt qui la produirait. C’est la clé OpenRouter qui paie."
+    },
+    "presets": {
+      "button": "Préréglages",
+      "hint": "Prompts enregistrés : en insérer un dans le champ ou enregistrer l’actuel",
+      "empty": "Aucun prompt enregistré pour l’instant. Nommez l’actuel et enregistrez-le.",
+      "name": "Nom du préréglage",
+      "keep": "Enregistrer",
+      "keepHint": "Enregistrer le texte du champ sous ce nom",
+      "remove": "Retirer le préréglage « {{name}} »"
+    },
+    "elements": {
+      "button": "Éléments",
+      "hint": "Personnages, objets et lieux avec leurs images : « @nom » dans le prompt envoie les images au modèle",
+      "empty": "Enregistrez un personnage, un objet ou un lieu : placez ses images dans les champs d’image du formulaire et donnez-lui un nom. Citez-le dans le prompt avec @nom.",
+      "use": "Insérer @{{name}} dans le prompt",
+      "pictures_one": "{{count}} image",
+      "pictures_other": "{{count}} images",
+      "remove": "Retirer @{{name}}",
+      "name": "Nom, un seul mot",
+      "keep": "Enregistrer",
+      "keepHint": "Images dans le formulaire : {{count}} ; elles sont enregistrées sous ce nom",
+      "noPictures": "Placez d’abord ses images dans le formulaire",
+      "badName": "Un seul mot : lettres, chiffres, _ et -",
+      "left": "{{names}} : ce modèle n’a pas de place pour leurs images, elles partent sous forme de texte"
+    },
+    "variables": {
+      "title": "Variables du prompt",
+      "missing": "Renseignez les variables : {{names}}"
+    },
+    "batch": {
+      "add": "Comparer avec un autre modèle",
+      "remove": "Retirer le modèle du lot",
+      "lacks": "manque : {{fields}}",
+      "noKey": "pas de clé {{provider}}"
+    },
+    "segment": {
+      "cutting": "Découpe de {{from}}–{{to}} s du clip…",
+      "ready": "La partie est dans « Modifier la vidéo » comme source : indiquez ce qu’il faut y changer",
+      "failed": "La partie n’a pas été découpée : {{reason}}",
+      "noFile": "Le fichier de {{name}} n’est pas dans la médiathèque",
+      "name": "{{title}}, {{from}}–{{to}} s"
+    },
+    "storyboard": {
+      "tabLabel": "Storyboard",
+      "noProject": "Ouvrez un projet : son storyboard est enregistré avec lui.",
+      "script": "Scénario ou idée",
+      "scriptHint": "Ce qui se passe, scène par scène ou en une phrase. Les noms @élément apportent leurs images.",
+      "count": "Plans",
+      "split": "Découper en plans",
+      "splitHint": "Un modèle de langage d’OpenRouter écrit les plans ; payant, comme Améliorer le prompt",
+      "frameModel": "Images de",
+      "clipModel": "Clips de",
+      "shots": "Plans",
+      "shot": "Plan {{number}}",
+      "seconds": "s",
+      "remove": "Retirer le plan {{number}}",
+      "frame": "Image",
+      "frameAgain": "Refaire l’image",
+      "clip": "Clip",
+      "clipNeedsFrame": "Ce modèle démarre un clip à partir d’une image : créez d’abord l’image",
+      "frameDone": "image prête",
+      "clipDone": "clip sur la timeline",
+      "frameFailed": "L’image a échoué : {{reason}}",
+      "clipFailed": "Le clip a échoué : {{reason}}",
+      "add": "Ajouter un plan",
+      "allFrames_one": "Image pour {{count}} plan",
+      "allFrames_other": "Images pour {{count}} plans",
+      "allClips_one": "Clip pour {{count}} plan sur la timeline",
+      "allClips_other": "Clips pour {{count}} plans sur la timeline",
+      "allClipsHint": "Les clips se posent les uns après les autres à partir de la tête de lecture"
     }
   }
 }

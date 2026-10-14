@@ -15,7 +15,29 @@
       "playback": "播放或暂停",
       "editor_tab": "打开标签页",
       "project_open": "打开项目",
-      "export_video": "导出视频"
+      "export_video": "导出视频",
+      "checkpoint_create": "保存还原点",
+      "checkpoint_restore": "回到还原点"
+    },
+    "proposal": {
+      "title": "智能体提出了一项编辑",
+      "hint": "应用前会先保存一个还原点。",
+      "accept": "接受",
+      "decline": "拒绝",
+      "problem_one": "仅 {{count}} 项编辑可通过：{{reason}}",
+      "problem_other": "仅 {{count}} 项编辑可通过：{{reason}}",
+      "op": {
+        "addClip": "在 {{at}} 秒处添加 {{name}}",
+        "addText": "在 {{at}} 秒处添加文字“{{text}}”",
+        "moveItem": "将 {{name}} 移动到 {{at}} 秒",
+        "removeItems": "移除 {{names}}",
+        "split": "在 {{at}} 秒处分割 {{name}}",
+        "trimStartCut": "从 {{name}} 开头裁掉 {{seconds}} 秒",
+        "trimStartExtend": "将 {{name}} 的开头延长 {{seconds}} 秒",
+        "trimEndCut": "从 {{name}} 末尾裁掉 {{seconds}} 秒",
+        "trimEndExtend": "将 {{name}} 的末尾延长 {{seconds}} 秒",
+        "other": "{{op}}: {{name}}"
+      }
     }
   }
 }

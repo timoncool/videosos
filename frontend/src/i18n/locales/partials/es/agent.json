@@ -15,7 +15,29 @@
       "playback": "reproduce o pausa",
       "editor_tab": "abre una pestaña",
       "project_open": "abre un proyecto",
-      "export_video": "exporta el vídeo"
+      "export_video": "exporta el vídeo",
+      "checkpoint_create": "guarda un punto de restauración",
+      "checkpoint_restore": "vuelve a un punto de restauración"
+    },
+    "proposal": {
+      "title": "El agente propone una edición",
+      "hint": "Antes de aplicarla se guarda un punto de restauración.",
+      "accept": "Aceptar",
+      "decline": "Rechazar",
+      "problem_one": "Solo se aplica {{count}} edición: {{reason}}",
+      "problem_other": "Solo se aplican {{count}} ediciones: {{reason}}",
+      "op": {
+        "addClip": "Añadir {{name}} en {{at}} s",
+        "addText": "Añadir el texto «{{text}}» en {{at}} s",
+        "moveItem": "Mover {{name}} a {{at}} s",
+        "removeItems": "Quitar {{names}}",
+        "split": "Dividir {{name}} en {{at}} s",
+        "trimStartCut": "Recortar {{seconds}} s del inicio de {{name}}",
+        "trimStartExtend": "Alargar el inicio de {{name}} en {{seconds}} s",
+        "trimEndCut": "Recortar {{seconds}} s del final de {{name}}",
+        "trimEndExtend": "Alargar el final de {{name}} en {{seconds}} s",
+        "other": "{{op}}: {{name}}"
+      }
     }
   }
 }

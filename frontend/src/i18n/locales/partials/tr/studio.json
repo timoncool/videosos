@@ -139,13 +139,17 @@
       "imported": "İçe aktarıldı",
       "exported": "Dışa aktarıldı",
       "undone": "Geri alındı",
-      "redone": "Yinelendi"
+      "redone": "Yinelendi",
+      "created": "Oluşturuldu",
+      "restored": "Geri yüklendi"
     },
     "kind": {
       "generation": "üretim",
       "timeline": "zaman çizelgesi",
       "media": "medya",
-      "video": "video"
+      "video": "video",
+      "download": "bağlantıdan indirme",
+      "checkpoint": "geri yükleme noktası"
     }
   },
   "files": {
@@ -196,5 +200,46 @@
         "text": "Sağlayıcılara doğrudan ödersin; hiçbir şey bizden geçmez"
       }
     }
+  },
+  "share": {
+    "title": "Paylaş",
+    "text": "“{{title}}” – VideoSOS’ta yapıldı",
+    "file": "Dosyayı gönder…",
+    "fileUnavailable": "Burada dosya gönderilemiyor",
+    "fileRefused": "Sistem bu dosyayı gönderim için kabul etmiyor – kaydet ve kendin gönder",
+    "failed": "Paylaşılamadı: {{reason}}",
+    "copyText": "Bağlantılı metni kopyala",
+    "copied": "Bağlantılı metin kopyalandı",
+    "places": {
+      "telegram": "Telegram",
+      "x": "X (Twitter)",
+      "vk": "VK",
+      "whatsapp": "WhatsApp",
+      "reddit": "Reddit"
+    }
+  },
+  "chat": {
+    "tabLabel": "Sohbet",
+    "model": "Model",
+    "costHint": "OpenRouter hesabına göre bu görüşmenin maliyeti",
+    "clear": "Görüşmeyi temizle",
+    "intro": "Asistan, bağlı bir ajanın sahip olduğu araçlarla VideoSOS’u kullanır: zaman çizelgesini okur, üretir, düzenler ve dışa aktarır; sen de her adımı görürsün. Ücreti senin OpenRouter anahtarın öder; üretimler ajanların günlük sınırına sayılır.",
+    "suggestions": {
+      "what": "Şu an zaman çizelgesinde ne var?",
+      "picture": "Deniz üzerinde gün batımı görseli üret ve zaman çizelgesine koy",
+      "cut": "İlk klibi ortadan böl ve parçaların arasına yumuşak bir geçiş ekle",
+      "captions": "Başa projenin adıyla bir başlık ekle"
+    },
+    "tools": "Asistanın adımları",
+    "toolRunning": "Çalışıyor",
+    "toolDone": "Bitti",
+    "toolFailed": "Başarısız",
+    "thinking": "Düşünüyor",
+    "placeholder": "Ne yapılacağını yaz…",
+    "send": "Gönder",
+    "stop": "Durdur",
+    "footnote": "Enter gönderir, Shift+Enter yeni satır açar. Pahalı üretimlerden önce asistan sorar.",
+    "needsKey": "Sohbet için bir OpenRouter anahtarı gerekir: asistan bir OpenRouter modeliyle yanıt verir ve VideoSOS araçlarıyla çalışır.",
+    "openKeys": "Anahtarları aç"
   }
 }

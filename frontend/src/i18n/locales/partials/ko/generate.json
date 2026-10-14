@@ -54,7 +54,10 @@
       "noMedia": "라이브러리에 아직 {{kind}}이(가) 없습니다.",
       "tooMany": "여기에는 최대 {{max}}개 파일까지 넣을 수 있습니다.",
       "wrongKind": "이 슬롯은 {{kind}}을(를) 받습니다.",
-      "missing": "입력하세요: {{fields}}"
+      "missing": "입력하세요: {{fields}}",
+      "length": "{{count}} / {{max}}",
+      "tooLong": "{{count}} / {{max}} - 모델이 받는 길이를 초과합니다",
+      "shorten": "“{{field}}” 줄이기: {{count}}자, 모델은 최대 {{max}}자까지 받습니다"
     },
     "placeOnTimeline": "타임라인에 배치",
     "repeat": "실행 횟수",
@@ -107,7 +110,8 @@
       "transcribe": "받아쓰기",
       "needsProject": "먼저 프로젝트를 여세요. 프레임이 해당 프로젝트의 미디어 라이브러리에 추가됩니다.",
       "noSlot": "{{model}}은(는) 이 종류의 파일을 받지 않습니다. 이 작업에 맞는 다른 모델을 선택하세요.",
-      "placed": "\"{{field}}\"에 배치했습니다"
+      "placed": "\"{{field}}\"에 배치했습니다",
+      "lastFrameName": "{{title}}, 마지막 프레임"
     },
     "compare": {
       "pick": "비교",
@@ -223,6 +227,86 @@
       "interrupted": "작업을 전송하는 중에 VideoSOS가 종료되었습니다",
       "details": "오류 내용",
       "openKeys": "키 열기"
+    },
+    "placeholder": "생성 중, {{model}}: {{state}}",
+    "rate": {
+      "second": "초당 {{price}}",
+      "characters": "1000자당 {{price}}",
+      "tokens": "100만 토큰당 {{input}} / {{output}}"
+    },
+    "describe": {
+      "button": "이미지로 프롬프트 만들기",
+      "hint": "모델이 폼의 첫 이미지를 보고, 그 이미지를 만들어 낼 프롬프트를 작성합니다. OpenRouter 키로 결제됩니다."
+    },
+    "presets": {
+      "button": "프리셋",
+      "hint": "저장된 프롬프트: 필드에 넣거나 현재 프롬프트를 저장하세요",
+      "empty": "저장된 프롬프트가 아직 없습니다. 현재 프롬프트에 이름을 붙여 저장하세요.",
+      "name": "프리셋 이름",
+      "keep": "저장",
+      "keepHint": "필드의 텍스트를 이 이름으로 저장",
+      "remove": "프리셋 “{{name}}” 제거"
+    },
+    "elements": {
+      "button": "요소",
+      "hint": "이미지가 있는 캐릭터, 사물, 장소: 프롬프트의 “@이름”이 이미지를 모델에 보냅니다",
+      "empty": "캐릭터, 사물 또는 장소를 저장하세요: 폼의 이미지 필드에 이미지를 넣고 이름을 지정합니다. 프롬프트에서는 @이름으로 부릅니다.",
+      "use": "프롬프트에 @{{name}} 넣기",
+      "pictures_one": "이미지 {{count}}개",
+      "pictures_other": "이미지 {{count}}개",
+      "remove": "@{{name}} 제거",
+      "name": "이름, 한 단어",
+      "keep": "저장",
+      "keepHint": "폼의 이미지: {{count}}개. 이 이름으로 저장됩니다",
+      "noPictures": "먼저 이미지를 폼에 넣으세요",
+      "badName": "한 단어만: 글자, 숫자, _ 및 -",
+      "left": "{{names}}: 이 모델에는 이미지를 넣을 자리가 없어 글로 전달됩니다"
+    },
+    "variables": {
+      "title": "프롬프트 변수",
+      "missing": "변수를 채우세요: {{names}}"
+    },
+    "batch": {
+      "add": "다른 모델과 비교",
+      "remove": "일괄 작업에서 모델 제거",
+      "lacks": "부족: {{fields}}",
+      "noKey": "{{provider}} 키 없음"
+    },
+    "segment": {
+      "cutting": "클립의 {{from}}–{{to}}초를 잘라내는 중…",
+      "ready": "구간이 소스로 “동영상 편집”에 들어갔습니다: 무엇을 바꿀지 설명하세요",
+      "failed": "구간을 잘라내지 못했습니다: {{reason}}",
+      "noFile": "{{name}}의 파일이 미디어 라이브러리에 없습니다",
+      "name": "{{title}}, {{from}}–{{to}}초"
+    },
+    "storyboard": {
+      "tabLabel": "스토리보드",
+      "noProject": "프로젝트를 여세요: 스토리보드는 프로젝트와 함께 저장됩니다.",
+      "script": "시나리오 또는 아이디어",
+      "scriptHint": "무슨 일이 일어나는지 장면별로 또는 한 문장으로 적으세요. @요소 이름은 해당 이미지를 가져옵니다.",
+      "count": "샷 수",
+      "split": "샷으로 나누기",
+      "splitHint": "샷은 OpenRouter 언어 모델이 작성하며, “프롬프트 개선”처럼 유료입니다",
+      "frameModel": "프레임 생성 모델",
+      "clipModel": "클립 생성 모델",
+      "shots": "샷",
+      "shot": "샷 {{number}}",
+      "seconds": "초",
+      "remove": "샷 {{number}} 제거",
+      "frame": "프레임",
+      "frameAgain": "프레임 다시 만들기",
+      "clip": "클립",
+      "clipNeedsFrame": "이 모델은 프레임에서 클립을 시작합니다: 먼저 프레임을 만드세요",
+      "frameDone": "프레임 완료",
+      "clipDone": "타임라인의 클립",
+      "frameFailed": "프레임 생성 실패: {{reason}}",
+      "clipFailed": "클립 생성 실패: {{reason}}",
+      "add": "샷 추가",
+      "allFrames_one": "샷 {{count}}개의 프레임",
+      "allFrames_other": "샷 {{count}}개의 프레임",
+      "allClips_one": "샷 {{count}}개의 클립을 타임라인에",
+      "allClips_other": "샷 {{count}}개의 클립을 타임라인에",
+      "allClipsHint": "클립이 재생 헤드부터 차례로 놓입니다"
     }
   }
 }

@@ -212,6 +212,15 @@
         }
       },
       "smartCopyPath": "스마트 복사 경로"
+    },
+    "fcpxml": {
+      "noProject": "먼저 프로젝트를 여세요.",
+      "failed": "FCPXML을 만들지 못했습니다: {{reason}}",
+      "left": {
+        "kind": "FCPXML에 없음(대응하는 항목 없음): {{items}}",
+        "file": "FCPXML에 없음(작업 공간에 파일 없음): {{items}}",
+        "speed": "FCPXML에 없음(속도 변경됨): {{items}}"
+      }
     }
   }
 }

@@ -234,7 +234,9 @@
     "low": "阈值下限",
     "high": "阈值上限",
     "length": "长度",
-    "orientation": "朝向"
+    "orientation": "朝向",
+    "lift": "提升",
+    "gain": "增益"
   },
   "options": {
     "fire": "火焰",

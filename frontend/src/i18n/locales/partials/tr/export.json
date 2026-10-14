@@ -212,6 +212,15 @@
         }
       },
       "smartCopyPath": "Akıllı kopyalama yolu"
+    },
+    "fcpxml": {
+      "noProject": "Önce bir proje aç.",
+      "failed": "FCPXML oluşturulamadı: {{reason}}",
+      "left": {
+        "kind": "FCPXML’de yok (karşılığı yok): {{items}}",
+        "file": "FCPXML’de yok (çalışma alanında dosya yok): {{items}}",
+        "speed": "FCPXML’de yok (hız değişti): {{items}}"
+      }
     }
   }
 }

@@ -54,7 +54,10 @@
       "noMedia": "Die Bibliothek enthält noch kein(e) {{kind}}.",
       "tooMany": "Hier sind höchstens {{max}} Dateien möglich.",
       "wrongKind": "Dieser Platz nimmt {{kind}} auf.",
-      "missing": "Ausfüllen: {{fields}}"
+      "missing": "Ausfüllen: {{fields}}",
+      "length": "{{count}} / {{max}}",
+      "tooLong": "{{count}} / {{max}} – länger, als das Modell annimmt",
+      "shorten": "„{{field}}“ kürzen: {{count}} Zeichen, das Modell nimmt höchstens {{max}}"
     },
     "placeOnTimeline": "Auf die Zeitleiste legen",
     "repeat": "Durchläufe",
@@ -107,7 +110,8 @@
       "transcribe": "Transkribieren",
       "needsProject": "Öffnen Sie zuerst ein Projekt: Der Frame wird in dessen Medienbibliothek abgelegt.",
       "noSlot": "{{model}} akzeptiert keine Datei dieser Art: Wählen Sie ein anderes Modell für diese Aufgabe.",
-      "placed": "In „{{field}}“ eingefügt"
+      "placed": "In „{{field}}“ eingefügt",
+      "lastFrameName": "{{title}}, letztes Bild"
     },
     "compare": {
       "pick": "Vergleichen",
@@ -223,6 +227,86 @@
       "interrupted": "VideoSOS wurde beendet, während der Auftrag gesendet wurde",
       "details": "Fehlertext",
       "openKeys": "Schlüssel öffnen"
+    },
+    "placeholder": "Wird generiert, {{model}}: {{state}}",
+    "rate": {
+      "second": "{{price}} pro Sekunde",
+      "characters": "{{price}} pro 1000 Zeichen",
+      "tokens": "{{input}} / {{output}} pro Million Tokens"
+    },
+    "describe": {
+      "button": "Prompt aus dem Bild",
+      "hint": "Ein Modell betrachtet das erste Bild des Formulars und schreibt den Prompt, der es erzeugen würde. Bezahlt wird über den OpenRouter-Schlüssel."
+    },
+    "presets": {
+      "button": "Vorgaben",
+      "hint": "Gespeicherte Prompts: in das Feld einfügen oder den aktuellen speichern",
+      "empty": "Noch keine gespeicherten Prompts. Den aktuellen benennen und speichern.",
+      "name": "Name der Vorgabe",
+      "keep": "Speichern",
+      "keepHint": "Text des Felds unter diesem Namen speichern",
+      "remove": "Vorgabe „{{name}}“ entfernen"
+    },
+    "elements": {
+      "button": "Elemente",
+      "hint": "Figuren, Objekte und Orte samt ihren Bildern: „@name“ im Prompt sendet die Bilder an das Modell",
+      "empty": "Eine Figur, ein Objekt oder einen Ort speichern: die Bilder in die Bildfelder des Formulars legen und einen Namen vergeben. Im Prompt als @name nennen.",
+      "use": "@{{name}} in den Prompt einfügen",
+      "pictures_one": "{{count}} Bild",
+      "pictures_other": "{{count}} Bilder",
+      "remove": "@{{name}} entfernen",
+      "name": "Name, ein Wort",
+      "keep": "Speichern",
+      "keepHint": "Bilder im Formular: {{count}}; sie werden unter diesem Namen gespeichert",
+      "noPictures": "Zuerst die Bilder in das Formular legen",
+      "badName": "Ein Wort: Buchstaben, Ziffern, _ und -",
+      "left": "{{names}}: Dieses Modell hat keinen Platz für ihre Bilder, sie werden als Text mitgeschickt"
+    },
+    "variables": {
+      "title": "Prompt-Variablen",
+      "missing": "Variablen ausfüllen: {{names}}"
+    },
+    "batch": {
+      "add": "Mit einem anderen Modell vergleichen",
+      "remove": "Modell aus dem Stapel entfernen",
+      "lacks": "fehlt: {{fields}}",
+      "noKey": "kein {{provider}}-Schlüssel"
+    },
+    "segment": {
+      "cutting": "{{from}}–{{to}} s des Clips werden ausgeschnitten…",
+      "ready": "Der Abschnitt liegt als Quelle unter „Video bearbeiten“: beschreiben, was daran geändert werden soll",
+      "failed": "Der Abschnitt wurde nicht ausgeschnitten: {{reason}}",
+      "noFile": "Die Datei von {{name}} ist nicht in der Mediathek",
+      "name": "{{title}}, {{from}}–{{to}} s"
+    },
+    "storyboard": {
+      "tabLabel": "Storyboard",
+      "noProject": "Ein Projekt öffnen: Das Storyboard wird mit ihm gespeichert.",
+      "script": "Skript oder Idee",
+      "scriptHint": "Was passiert, szenenweise oder in einem Satz. @Element-Namen bringen ihre Bilder mit.",
+      "count": "Einstellungen",
+      "split": "In Einstellungen aufteilen",
+      "splitHint": "Die Einstellungen schreibt ein Sprachmodell von OpenRouter; kostenpflichtig wie „Prompt verbessern“",
+      "frameModel": "Frames von",
+      "clipModel": "Clips von",
+      "shots": "Einstellungen",
+      "shot": "Einstellung {{number}}",
+      "seconds": "s",
+      "remove": "Einstellung {{number}} entfernen",
+      "frame": "Frame",
+      "frameAgain": "Frame neu erzeugen",
+      "clip": "Clip",
+      "clipNeedsFrame": "Dieses Modell startet einen Clip mit einem Frame: zuerst den Frame erzeugen",
+      "frameDone": "Frame fertig",
+      "clipDone": "Clip auf der Zeitleiste",
+      "frameFailed": "Der Frame ist fehlgeschlagen: {{reason}}",
+      "clipFailed": "Der Clip ist fehlgeschlagen: {{reason}}",
+      "add": "Einstellung hinzufügen",
+      "allFrames_one": "Frame für {{count}} Einstellung",
+      "allFrames_other": "Frames für {{count}} Einstellungen",
+      "allClips_one": "Clip für {{count}} Einstellung auf die Zeitleiste",
+      "allClips_other": "Clips für {{count}} Einstellungen auf die Zeitleiste",
+      "allClipsHint": "Die Clips folgen ab dem Abspielkopf nacheinander"
     }
   }
 }

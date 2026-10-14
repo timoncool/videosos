@@ -88,7 +88,8 @@
       "unreverse": "反転を解除",
       "updatingCaptions": "キャプションを更新中",
       "copyGrade": "グレーディングをコピー",
-      "pasteGrade": "グレーディングをペースト"
+      "pasteGrade": "グレーディングをペースト",
+      "regenerateSegment": "この区間を再生成"
     },
     "fadeHandles": {
       "adjustAudioFadeIn": "オーディオのフェードインを調整",
@@ -341,6 +342,22 @@
       "adjustClipVolume": "クリップ音量を調整"
     },
     "emptyTitle": "編集を始めるにはメディアをここにドラッグ",
-    "emptyDescription": "クリップをトラックにドロップし、Space キーでプレビューします。"
+    "emptyDescription": "クリップをトラックにドロップし、Space キーでプレビューします。",
+    "checkpoints": {
+      "title": "復元ポイント",
+      "hint": "エージェントの各編集の前と、あなたが保存した時点のタイムライン。戻すと現在のタイムラインも保存され、「元に戻す」で取り戻せます。",
+      "empty": "復元ポイントはまだありません。エージェントの編集の前に自動で保存されます。ここで保存することもできます。",
+      "reason": {
+        "agent_one": "エージェントの編集{{count}}件の前",
+        "agent_other": "エージェントの編集{{count}}件の前",
+        "restore": "戻す前",
+        "asked": "ここで保存"
+      },
+      "restore": "戻す",
+      "restored": "タイムラインを{{time}}の状態に戻しました",
+      "label": "内容（任意）",
+      "keep": "保存",
+      "kept": "復元ポイントを保存しました"
+    }
   }
 }

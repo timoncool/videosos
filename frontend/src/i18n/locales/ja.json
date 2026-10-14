@@ -60,7 +60,8 @@
     "saveAria": "プロジェクトを保存",
     "export": "書き出し",
     "exportVideo": "動画を書き出し",
-    "downloadProjectZip": "プロジェクトをダウンロード (.zip)"
+    "downloadProjectZip": "プロジェクトをダウンロード (.zip)",
+    "exportFcpxml": "Final Cut、DaVinci、Premiere用のFCPXML"
   },
   "unsavedChanges": {
     "title": "未保存の変更",

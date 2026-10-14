@@ -234,7 +234,9 @@
     "low": "Alt Eşik",
     "high": "Üst Eşik",
     "length": "Uzunluk",
-    "orientation": "Yönelim"
+    "orientation": "Yönelim",
+    "lift": "Lift",
+    "gain": "Kazanç"
   },
   "options": {
     "fire": "Ateş",

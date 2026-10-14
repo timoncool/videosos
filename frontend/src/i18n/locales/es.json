@@ -60,7 +60,8 @@
     "saveAria": "Guardar proyecto",
     "export": "Exportar",
     "exportVideo": "Exportar vídeo",
-    "downloadProjectZip": "Descargar proyecto (.zip)"
+    "downloadProjectZip": "Descargar proyecto (.zip)",
+    "exportFcpxml": "FCPXML para Final Cut, DaVinci, Premiere"
   },
   "unsavedChanges": {
     "title": "Cambios sin guardar",
