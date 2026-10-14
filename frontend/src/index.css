@@ -17,12 +17,12 @@ body.canvas-translate-cursor-not-allowed * {
    `var(--ease-out-strong)` in raw CSS / inline styles) AND generate Tailwind
    utilities: `ease-out-strong`, `ease-in-out-strong`, `ease-drawer`. Reference
    these instead of hand-rolling cubic-beziers so "feels right" is the default. */
-/* FreeCut marks its active states with the orange scale; in VideoSOS that is the studios' accent. */
+/* FreeCut marks its active states with the orange scale; in VideoSOS that is the program's own teal. */
 @theme {
-  --color-orange-300: #d9f78a;
-  --color-orange-400: #cff46b;
-  --color-orange-500: #c6f24e;
-  --color-orange-600: #a9d23a;
+  --color-orange-300: #5eead4;
+  --color-orange-400: #40dcc8;
+  --color-orange-500: #2dd4bf;
+  --color-orange-600: #14b8a6;
 }
 
 @theme {
@@ -33,8 +33,9 @@ body.canvas-translate-cursor-not-allowed * {
 
 @layer base {
   :root {
-    /* The studios' "dark studio console" (Dub Studio): a near-black instrument panel, one acid-lime signal
-       accent, depth by luminance steps and 1px hairlines rather than shadows. */
+    /* The studios' "dark studio console" (Dub Studio): a near-black instrument panel, one signal accent, depth
+       by luminance steps and 1px hairlines rather than shadows. Each program has its own accent; VideoSOS's is
+       the teal of its icon. */
     --color-bg: #0b0c0e;
     --color-surface: #121317;
     --color-surface-2: #1a1c22;
@@ -43,9 +44,9 @@ body.canvas-translate-cursor-not-allowed * {
     --color-hairline: #ffffff14;
     --color-text: #e8eaed;
     --color-muted: #888e99;
-    --color-accent: #c6f24e;
+    --color-accent: #2dd4bf;
     --color-on-accent: #0b0c0e;
-    --color-accent-2: #5be0c8;
+    --color-accent-2: #22d3ee;
     --color-warn: #ffb020;
     --color-danger: #ef4444;
     --font-ui: 'Onest', 'Noto Sans SC', ui-sans-serif, system-ui, sans-serif;

@@ -18,10 +18,10 @@
   --color-timeline-motion-segment: oklch(0.38 0 0);
   --color-timeline-image: oklch(0.62 0.17 250);
   --color-timeline-text: oklch(0.671 0 290);
-  --color-timeline-shape: #c6f24e;
+  --color-timeline-shape: #2dd4bf;
 
   /* Playhead color */
-  --color-timeline-playhead: #c6f24e; /* the accent (matches primary) */
+  --color-timeline-playhead: #2dd4bf; /* the accent (matches primary) */
 
   /* In/Out marker colors */
   --color-timeline-in: oklch(0.65 0.18 142); /* Green - in point */
