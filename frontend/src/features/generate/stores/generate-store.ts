@@ -9,6 +9,7 @@
 import { create } from 'zustand'
 import { generateApi, type Job, type MediaKind, type MediaRef, type ModelForm, type Provider, type Role, type Task } from '../services/generate-api'
 import type { PromptElement } from '../services/prompt-elements'
+import type { Shot, Storyboard } from '../services/storyboard'
 
 export interface ModelRef {
   provider: Provider
@@ -31,6 +32,10 @@ export interface Persisted {
   extraModelsByTask: Partial<Record<Task, ModelRef[]>>
   /** Characters, objects and places kept under a name with their pictures, named in a prompt as "@name". */
   elements: PromptElement[]
+  /** Each project's storyboard: its script and shots with the jobs of their frames and clips. */
+  storyboards: Record<string, Storyboard>
+  /** The picture model the storyboard's frames come from and the video model of its clips. */
+  storyboardModels: { image?: ModelRef; video?: ModelRef }
 }
 
 export interface PromptPreset {
@@ -38,7 +43,7 @@ export interface PromptPreset {
   text: string
 }
 
-const DEFAULTS: Persisted = { task: 'image', modelByTask: {}, valuesByModel: {}, repeat: 1, placeOnTimeline: false, favorites: [], presets: [], variables: {}, extraModelsByTask: {}, elements: [] }
+const DEFAULTS: Persisted = { task: 'image', modelByTask: {}, valuesByModel: {}, repeat: 1, placeOnTimeline: false, favorites: [], presets: [], variables: {}, extraModelsByTask: {}, elements: [], storyboards: {}, storyboardModels: {} }
 
 let saving: ReturnType<typeof setTimeout> | null = null
 
@@ -89,6 +94,9 @@ interface GenerateState extends Persisted {
   savePreset: (name: string, text: string) => void
   removePreset: (name: string) => void
   saveElement: (element: PromptElement) => void
+  setStoryboard: (projectId: string, storyboard: Storyboard) => void
+  updateShot: (projectId: string, id: string, change: Partial<Shot>) => void
+  setStoryboardModel: (kind: 'image' | 'video', model: ModelRef) => void
   removeElement: (name: string) => void
   setVariable: (name: string, value: string) => void
   setExtraModels: (task: Task, models: ModelRef[]) => void
@@ -111,6 +119,8 @@ function persisted(state: GenerateState): Persisted {
     variables: state.variables,
     extraModelsByTask: state.extraModelsByTask,
     elements: state.elements,
+    storyboards: state.storyboards,
+    storyboardModels: state.storyboardModels,
   }
 }
 
@@ -166,6 +176,20 @@ export const useGenerateStore = create<GenerateState>()((set, get) => ({
   },
   removePreset: (name) => {
     set({ presets: get().presets.filter((preset) => preset.name !== name) })
+    save(get())
+  },
+  setStoryboard: (projectId, storyboard) => {
+    set({ storyboards: { ...get().storyboards, [projectId]: storyboard } })
+    save(get())
+  },
+  updateShot: (projectId, id, change) => {
+    const board = get().storyboards[projectId]
+    if (!board) return
+    set({ storyboards: { ...get().storyboards, [projectId]: { ...board, shots: board.shots.map((shot) => (shot.id === id ? { ...shot, ...change } : shot)) } } })
+    save(get())
+  },
+  setStoryboardModel: (kind, model) => {
+    set({ storyboardModels: { ...get().storyboardModels, [kind]: model } })
     save(get())
   },
   saveElement: (element) => {

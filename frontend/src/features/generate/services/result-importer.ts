@@ -6,6 +6,7 @@
  * again. A result is named by what its prompt asked for. Jobs started with "put on the timeline" are placed where the playhead was when they were asked for.
  */
 
+import type { MediaMetadata } from '@/types/storage'
 import { createLogger } from '@/shared/logging/logger'
 import { i18n } from '@/i18n'
 import { generateApi, type Job } from './generate-api'
@@ -30,6 +31,7 @@ function needsImport(job: Job, projectId: string | null): boolean {
 
 async function importJob(job: Job, projectId: string): Promise<void> {
   const mediaIds: string[] = []
+  const importedItems: MediaMetadata[] = []
   const tags = ['generated', job.provider, job.model_name]
   const media = job.outputs.filter((output) => output.kind === 'image' || output.kind === 'video' || output.kind === 'audio')
   for (const [position, output] of media.entries()) {
@@ -45,8 +47,12 @@ async function importJob(job: Job, projectId: string): Promise<void> {
           ? await mediaLibraryService.importGeneratedVideo(file, projectId, { tags })
           : await mediaLibraryService.importGeneratedAudio(file, projectId, { tags })
     mediaIds.push(imported.id)
+    importedItems.push(imported)
   }
   await useMediaLibraryStore.getState().loadMediaItems()
+  // another import's load can still be running and end without these: they are put in before they are placed
+  const library = useMediaLibraryStore.getState()
+  for (const item of importedItems) if (!library.mediaById[item.id]) library.prependMediaItem(item)
   const updated = await generateApi.markImported(job.id, mediaIds)
   useGenerateStore.getState().upsertJob(updated)
   if (job.place) {

@@ -278,6 +278,35 @@
       "failed": "The part was not cut: {{reason}}",
       "noFile": "The file of {{name}} is not in the library",
       "name": "{{title}}, {{from}}–{{to}} s"
+    },
+    "storyboard": {
+      "tabLabel": "Storyboard",
+      "noProject": "Open a project: its storyboard is kept with it.",
+      "script": "Script or idea",
+      "scriptHint": "What happens, scene by scene or in a sentence. @element names bring their pictures.",
+      "count": "Shots",
+      "split": "Split into shots",
+      "splitHint": "A language model of OpenRouter writes the shots; it is paid like Improve prompt",
+      "frameModel": "Frames from",
+      "clipModel": "Clips from",
+      "shots": "Shots",
+      "shot": "Shot {{number}}",
+      "seconds": "s",
+      "remove": "Remove shot {{number}}",
+      "frame": "Frame",
+      "frameAgain": "Frame again",
+      "clip": "Clip",
+      "clipNeedsFrame": "This model starts a clip on a frame: make the frame first",
+      "frameDone": "frame made",
+      "clipDone": "clip on the timeline",
+      "frameFailed": "The frame failed: {{reason}}",
+      "clipFailed": "The clip failed: {{reason}}",
+      "add": "Add a shot",
+      "allFrames_one": "Frame for {{count}} shot",
+      "allFrames_other": "Frames for {{count}} shots",
+      "allClips_one": "Clip for {{count}} shot onto the timeline",
+      "allClips_other": "Clips for {{count}} shots onto the timeline",
+      "allClipsHint": "The clips land one after another from the playhead"
     }
   }
 }

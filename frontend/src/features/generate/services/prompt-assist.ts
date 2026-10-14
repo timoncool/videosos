@@ -59,3 +59,26 @@ export async function describeImage(image: MediaRef, task: Task, modelName: stri
   const system = `You write prompts for the generative model "${modelName}". Look at the picture and write the prompt that would make it, as ${goal}. Write it in the language with the code "${language}". Answer with the prompt only, no quotes, no comments.`
   return runText({ prompt: 'Write the prompt for this picture.', system, temperature: 0.4, input_images: [image] })
 }
+
+/** A script split into shots by the prompt model: each shot's prompt for a video model and its length. */
+export async function splitScript(script: string, count: number, language: string): Promise<Array<{ prompt: string; seconds: number }>> {
+  const system = `You are a storyboard artist. Split the script into exactly ${count} shots of a short video. For each shot write one prompt for a video model: ${GOALS.video}. Describe every recurring character, object and place the same way in every shot, and keep words starting with @ exactly as they are. Write the prompts in the language with the code "${language}". Give each shot a length of 2 to 10 seconds. Answer with a JSON array only, no comments: [{"prompt": "...", "seconds": 5}]`
+  const text = await runText({ prompt: script, system, temperature: 0.5 })
+  const json = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '')
+  let parsed: unknown
+  try {
+    parsed = JSON.parse(json)
+  } catch {
+    throw new Error(`the model did not answer with a list of shots: ${text.slice(0, 200)}`)
+  }
+  if (!Array.isArray(parsed)) throw new Error(`the model did not answer with a list of shots: ${text.slice(0, 200)}`)
+  const shots = parsed.flatMap((each: unknown) => {
+    if (!each || typeof each !== 'object') return []
+    const { prompt, seconds } = each as { prompt?: unknown; seconds?: unknown }
+    if (typeof prompt !== 'string' || !prompt.trim()) return []
+    const length = typeof seconds === 'number' && Number.isFinite(seconds) ? Math.min(10, Math.max(2, seconds)) : 5
+    return [{ prompt: prompt.trim(), seconds: length }]
+  })
+  if (shots.length === 0) throw new Error(`the model answered with no shot: ${text.slice(0, 200)}`)
+  return shots
+}

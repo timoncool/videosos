@@ -448,7 +448,7 @@ fn tools() -> &'static [Tool] {
             },
             Tool {
                 name: "editor_tab",
-                description: "Opens a tab of the editor's left sidebar: generate, media, text, shapes, effects, transitions, lottie, transcript, ai.",
+                description: "Opens a tab of the editor's left sidebar: generate, storyboard, media, text, shapes, effects, transitions, lottie, transcript, ai, chat.",
                 looks: false,
                 schema: || object(json!({ "tab": { "type": "string" } }), &["tab"]),
                 call: |args| window("editor_tab", args, 15),

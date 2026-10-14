@@ -1,28 +1,6 @@
 import { useCallback, useMemo, useRef, useEffect, memo, lazy, Suspense, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  ChevronUp,
-  Film,
-  Layers,
-  Type,
-  Square,
-  Circle,
-  Triangle,
-  Star,
-  Hexagon,
-  Heart,
-  Pentagon,
-  Blend,
-  Pen,
-  Captions,
-  Sticker,
-  WandSparkles,
-  MessagesSquare,
-  Sparkles,
-} from 'lucide-react'
+import { Blend, Captions, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Circle, Clapperboard, Film, Heart, Hexagon, Layers, MessagesSquare, Pen, Pentagon, Sparkles, Square, Star, Sticker, Triangle, Type, WandSparkles } from 'lucide-react'
 import { motion, useReducedMotion } from 'motion/react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/shared/ui/cn'
@@ -69,6 +47,9 @@ const LazyAiPanel = lazy(() => import('./ai-tab').then((m) => ({ default: m.AiTa
 const LazyChatTab = lazy(() => import('./chat-tab').then((m) => ({ default: m.ChatTab })))
 const LazyGeneratePanel = lazy(() =>
   import('../deps/generate').then((m) => ({ default: m.GeneratePanel })),
+)
+const LazyStoryboardPanel = lazy(() =>
+  import('../deps/generate').then((m) => ({ default: m.StoryboardPanel })),
 )
 const LazyTranscriptEditorPanel = lazy(() =>
   importTranscriptEditorPanel().then(({ TranscriptEditorPanel }) => ({
@@ -312,6 +293,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
   const [aiTabActivated, setAiTabActivated] = useState(activeTab === 'ai')
   const [chatTabActivated, setChatTabActivated] = useState(activeTab === 'chat')
   const [generateTabActivated, setGenerateTabActivated] = useState(activeTab === 'generate')
+  const [storyboardTabActivated, setStoryboardTabActivated] = useState(activeTab === 'storyboard')
   // The Lottie panel hits an external API on mount, so keep it unmounted until
   // the tab is first opened; it then stays mounted (state preserved).
   const [lottieTabActivated, setLottieTabActivated] = useState(activeTab === 'lottie')
@@ -319,6 +301,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
     if (activeTab === 'ai') setAiTabActivated(true)
     if (activeTab === 'chat') setChatTabActivated(true)
     if (activeTab === 'generate') setGenerateTabActivated(true)
+    if (activeTab === 'storyboard') setStoryboardTabActivated(true)
     if (activeTab === 'lottie') setLottieTabActivated(true)
   }, [activeTab])
 
@@ -550,6 +533,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
   // Category items for the vertical nav
   const categories = [
     { id: 'generate' as const, icon: Sparkles, label: t('generate.tabLabel') },
+    { id: 'storyboard' as const, icon: Clapperboard, label: t('generate.storyboard.tabLabel') },
     { id: 'media' as const, icon: Film, label: t('editor.mediaSidebar.media') },
     { id: 'text' as const, icon: Type, label: t('editor.mediaSidebar.text') },
     { id: 'shapes' as const, icon: Pentagon, label: t('editor.mediaSidebar.shapes') },
@@ -1183,6 +1167,15 @@ export const MediaSidebar = memo(function MediaSidebar() {
               {generateTabActivated && (
                 <Suspense fallback={null}>
                   <LazyGeneratePanel />
+                </Suspense>
+              )}
+            </div>
+
+            {/* Storyboard Tab */}
+            <div className={`min-h-0 flex-1 overflow-hidden ${activeTab === 'storyboard' ? 'flex flex-col' : 'hidden'}`}>
+              {storyboardTabActivated && (
+                <Suspense fallback={null}>
+                  <LazyStoryboardPanel />
                 </Suspense>
               )}
             </div>

@@ -30,6 +30,7 @@ makes it, and the release notes on GitHub are taken from the release's section.
 - **Each generation card's details**: the model, every value it was asked with, the time it took.
 - **Results named and tagged by their prompt**: a picture carries the prompt and the model in its metadata (Windows
   shows them as its title and comment), a video or a sound in its tags, and the library item has the same title.
+- **Storyboard, as LTX Studio's**: a sidebar tab where a language model splits a script into shots, each shot gets a frame from a chosen picture model and a clip from a chosen video model that starts on that frame, and the clips land one after another on the timeline from the playhead; shot lengths follow the model's own durations, the frame matches the project's aspect, @elements keep a character the same from shot to shot, and both runs show their price first.
 - **Elements, as Kling's**: a character, an object or a place kept under a name with its pictures; "@name" in the prompt sends its pictures in the model's reference pictures, in every model of a batch too, and says when a model has no room for them.
 - **Regenerate a part of a clip**: a video clip's menu on the timeline cuts the part it shows from its file in the window, puts it into the library and into Edit video as the source, and moves the playhead to the clip, so the new take lands over it with Put on the timeline.
 - **Generation placeholder on the timeline**: a run put on the timeline is drawn where it will land, with its model and progress, while it runs; the result lands at that moment, on a free track when the spot is taken, instead of after what is in the way. Agents can name the moment (`place_at_seconds`) and keep a clip at its time (`keepFrom`).
@@ -59,6 +60,7 @@ makes it, and the release notes on GitHub are taken from the release's section.
 
 ### Fixed
 
+- **Several results finishing together all land on the timeline**: a library load that ends after a newer one no longer overwrites it, and an import puts its own files into the library before placing them.
 - **A result put on a new track is in view**: the timeline scrolls its tracks to it.
 - **Choosing another model keeps what the form held**: the prompt, the pictures and the video put in through "Use as" go to the new model's fields of the same meaning, where it has nothing of its own yet.
 - **OpenRouter video editing models take their source video**: FLUX Video Edit and Aleph show a source video field and send it as OpenRouter's video reference; a file of this computer, which OpenRouter does not take, is refused before the run with a word to pick a fal or Runware model.

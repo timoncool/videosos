@@ -24,7 +24,7 @@ import {
 } from '../deps/editor'
 import { bridgeError, failed, numberArg, registerBridgeCommand, takeArgs, textArg } from './bridge'
 
-const TABS: EditorSidebarTab[] = ['generate', 'media', 'text', 'shapes', 'effects', 'transitions', 'lottie', 'transcript', 'ai', 'chat']
+const TABS: EditorSidebarTab[] = ['generate', 'media', 'text', 'shapes', 'effects', 'transitions', 'lottie', 'transcript', 'ai', 'chat', 'storyboard']
 
 function openProject() {
   const project = useProjectStore.getState().currentProject
