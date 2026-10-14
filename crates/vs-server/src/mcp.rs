@@ -106,6 +106,63 @@ fn nothing() -> Value {
 
 const TASKS: &str = "image, image_edit, video, video_edit, lip_sync, upscale, remove_background, music, speech, sound, transcribe, text";
 
+/// The edit operations of timeline_edit with their fields: one file the description, the schema and the window's
+/// test of its handlers are all read from.
+const EDIT_OPS: &str = include_str!("edit-ops.json");
+
+fn edit_ops() -> &'static [Value] {
+    static OPS: OnceLock<Vec<Value>> = OnceLock::new();
+    OPS.get_or_init(|| serde_json::from_str::<Value>(EDIT_OPS).ok().and_then(|value| value["ops"].as_array().cloned()).unwrap_or_default())
+}
+
+fn timeline_edit_description() -> &'static str {
+    static TEXT: OnceLock<String> = OnceLock::new();
+    TEXT.get_or_init(|| {
+        let ops: Vec<String> = edit_ops()
+            .iter()
+            .map(|op| {
+                let fields: Vec<String> = op["fields"].as_object().into_iter().flatten().map(|(name, field)| if field["required"] == true { name.clone() } else { format!("{name}?") }).collect();
+                let about = op["about"].as_str().filter(|about| !about.is_empty()).map(|about| format!(" ({about})")).unwrap_or_default();
+                format!("{} {{{}}}{about}", op["op"].as_str().unwrap_or_default(), fields.join(", "))
+            })
+            .collect();
+        format!("Edits the open project's timeline with the editor's own operations, as one undoable step each. ops is a list of {{op, ...}}: {}. Frames are of the project's frame rate. An op may name the result of an earlier one with {{\"$ref\": \"<callerId>#/detail/created/0/id\"}} (addClip) or \"<callerId>#/detail/id\" (addText, addShape, addMarker) when it carries callerId. Before the edit the window keeps a checkpoint of the timeline (checkpoint_list, checkpoint_restore). With dry_run the ops are rehearsed: the answer is what they would make, and the timeline is left as it was. When the person has asked to accept agents' edits (Settings, Agents), the window shows them what will change and the call waits for their answer; a declined edit answers with an error saying so. The answer shows what the edit touched and a summary; response_format detailed gives the whole timeline.", ops.join("; "))
+    })
+}
+
+/// The ops as JSON Schema: each op with its own fields, so a client checks an edit before it is sent.
+fn edit_ops_schema() -> Value {
+    let id = json!({ "anyOf": [{ "type": "string" }, { "type": "object", "properties": { "$ref": { "type": "string" } }, "required": ["$ref"] }] });
+    let each: Vec<Value> = edit_ops()
+        .iter()
+        .map(|op| {
+            let mut properties = serde_json::Map::new();
+            properties.insert("op".into(), json!({ "const": op["op"] }));
+            properties.insert("callerId".into(), json!({ "type": "string" }));
+            let mut required = vec![json!("op")];
+            for (name, field) in op["fields"].as_object().into_iter().flatten() {
+                let mut schema = match field["type"].as_str().unwrap_or("string") {
+                    "id" => id.clone(),
+                    "ids" => json!({ "type": "array", "items": id }),
+                    other => json!({ "type": other }),
+                };
+                if let Some(options) = field.get("enum") {
+                    schema["enum"] = options.clone();
+                }
+                if let Some(about) = field["about"].as_str() {
+                    schema["description"] = json!(about);
+                }
+                properties.insert(name.clone(), schema);
+                if field["required"] == true {
+                    required.push(json!(name));
+                }
+            }
+            json!({ "type": "object", "properties": properties, "required": required })
+        })
+        .collect();
+    json!({ "type": "array", "minItems": 1, "items": { "oneOf": each } })
+}
+
 fn tools() -> &'static [Tool] {
     static TOOLS: OnceLock<Vec<Tool>> = OnceLock::new();
     TOOLS.get_or_init(|| {
@@ -526,9 +583,9 @@ fn tools() -> &'static [Tool] {
             },
             Tool {
                 name: "timeline_edit",
-                description: "Edits the open project's timeline with the editor's own operations, as one undoable step each. ops is a list of {op, ...}: addClip {mediaId, from, trackId?, keepFrom?} (keepFrom: true lands it at from on a track free there, a new one when none is, instead of after what is in the way); addText {text, from, durationInFrames, fontSize?, color?}; moveItem {id, from, trackId?, alone?} (its linked sound and captions move with it unless alone); updateItem {id, updates}; removeItems {ids}; split {id, frame}; trimStart {id, amount} (frames; positive cuts the start off, negative brings it back); trimEnd {id, amount} (frames; negative cuts the end off, positive lengthens); addTransition {leftClipId, rightClipId, type?, durationInFrames?}; removeTransition {id}; addTrack {kind: video|audio}; addKeyframe {itemId, property, frame, value, easing?}; addEffect {itemId, effect}; setTransform {id, transform}; addShape {shape: rectangle|circle|triangle|ellipse|star|polygon|heart, from, durationInFrames, trackId?, color?}; updateTrack {id, name?, muted?, solo?, locked?, visible?, volume? (dB, -60..12)}; removeTrack {id} (an empty track); addMarker {frame, label?, color?}; updateMarker {id, frame?, label?, color?}; removeMarker {id}. Frames are of the project's frame rate. An op may name the result of an earlier one with {\"$ref\": \"<callerId>#/detail/created/0/id\"} (addClip) or \"<callerId>#/detail/id\" (addText, addShape, addMarker) when it carries callerId. Before the edit the window keeps a checkpoint of the timeline (checkpoint_list, checkpoint_restore). With dry_run the ops are rehearsed: the answer is what they would make, and the timeline is left as it was. When the person has asked to accept agents' edits (Settings, Agents), the window shows them what will change and the call waits for their answer; a declined edit answers with an error saying so. The answer shows what the edit touched and a summary; response_format detailed gives the whole timeline.",
+                description: timeline_edit_description(),
                 looks: false,
-                schema: || object(json!({ "ops": { "type": "array", "items": { "type": "object" } }, "dry_run": { "type": "boolean" }, "response_format": { "type": "string", "enum": ["concise", "detailed"], "description": "concise (default): the clips, tracks, markers and transitions the edit touched and a summary of the rest; detailed: the whole timeline" } }), &["ops"]),
+                schema: || object(json!({ "ops": edit_ops_schema(), "dry_run": { "type": "boolean" }, "response_format": { "type": "string", "enum": ["concise", "detailed"], "description": "concise (default): the clips, tracks, markers and transitions the edit touched and a summary of the rest; detailed: the whole timeline" } }), &["ops"]),
                 // the person may be asked to accept the edit first
                 call: |args| window("timeline_edit", args, 300),
             },
@@ -2060,6 +2117,25 @@ mod tests {
         }
         for name in ["studio_status", "timeline_get", "media_list", "studio_wait"] {
             assert_eq!(hint(name, "readOnlyHint"), true, "{name}");
+        }
+    }
+
+    #[test]
+    fn timeline_edit_tells_every_operation_and_its_fields() {
+        assert!(edit_ops().len() >= 25, "the operations file is read");
+        let schema = edit_ops_schema();
+        let each = schema["items"]["oneOf"].as_array().unwrap();
+        assert_eq!(each.len(), edit_ops().len());
+        for op in edit_ops() {
+            let name = op["op"].as_str().unwrap();
+            assert!(timeline_edit_description().contains(&format!("{name} {{")), "{name} is in the description");
+            let own = each.iter().find(|schema| schema["properties"]["op"]["const"] == name).unwrap();
+            for (field, about) in op["fields"].as_object().unwrap() {
+                assert!(own["properties"].get(field).is_some(), "{name}.{field}");
+                if about["required"] == true {
+                    assert!(own["required"].as_array().unwrap().contains(&json!(field)), "{name}.{field} is required");
+                }
+            }
         }
     }
 

@@ -1,0 +1,48 @@
+{
+  "ops": [
+    { "op": "addClip", "about": "a media item of the library onto the timeline; keepFrom: true lands it at from on a track free there, a new one when none is, instead of after what is in the way; a video brings its sound on an audio track", "fields": {
+      "mediaId": { "type": "id", "required": true }, "from": { "type": "integer", "about": "frame" }, "trackId": { "type": "id" }, "keepFrom": { "type": "boolean" }, "durationInFrames": { "type": "integer" } } },
+    { "op": "addText", "about": "a text clip", "fields": {
+      "text": { "type": "string", "required": true }, "from": { "type": "integer", "required": true }, "durationInFrames": { "type": "integer", "required": true }, "trackId": { "type": "id" },
+      "fontSize": { "type": "number" }, "fontFamily": { "type": "string" }, "fontWeight": { "type": "string" }, "color": { "type": "string", "about": "#rrggbb" },
+      "textAlign": { "type": "string" }, "verticalAlign": { "type": "string" }, "label": { "type": "string" } } },
+    { "op": "addShape", "about": "a shape clip", "fields": {
+      "shape": { "type": "string", "required": true, "enum": ["rectangle", "circle", "triangle", "ellipse", "star", "polygon", "heart"] }, "from": { "type": "integer", "required": true },
+      "durationInFrames": { "type": "integer", "required": true }, "trackId": { "type": "id" }, "color": { "type": "string" } } },
+    { "op": "addItem", "about": "any timeline item whole, as timeline_get shows items (for what the other ops do not make)", "fields": {
+      "item": { "type": "object", "required": true } } },
+    { "op": "moveItem", "about": "its linked sound and captions move with it unless alone", "fields": {
+      "id": { "type": "id", "required": true }, "from": { "type": "integer" }, "trackId": { "type": "id" }, "alone": { "type": "boolean" } } },
+    { "op": "updateItem", "about": "changes fields of an item: volume (dB), audioFadeIn/audioFadeOut and fadeIn/fadeOut (seconds), text, color, label...", "fields": {
+      "id": { "type": "id", "required": true }, "updates": { "type": "object", "required": true } } },
+    { "op": "removeItems", "about": "", "fields": { "ids": { "type": "ids", "required": true } } },
+    { "op": "split", "about": "cuts a clip in two at a frame", "fields": { "id": { "type": "id", "required": true }, "frame": { "type": "integer", "required": true } } },
+    { "op": "trimStart", "about": "frames; positive cuts the start off, negative brings it back", "fields": { "id": { "type": "id", "required": true }, "amount": { "type": "integer", "required": true } } },
+    { "op": "trimEnd", "about": "frames; negative cuts the end off, positive lengthens", "fields": { "id": { "type": "id", "required": true }, "amount": { "type": "integer", "required": true } } },
+    { "op": "addTransition", "about": "between two clips that touch on one track", "fields": {
+      "leftClipId": { "type": "id", "required": true }, "rightClipId": { "type": "id", "required": true }, "type": { "type": "string" }, "durationInFrames": { "type": "integer" },
+      "presentation": { "type": "string" }, "direction": { "type": "string" }, "alignment": { "type": "number" } } },
+    { "op": "updateTransition", "about": "", "fields": {
+      "id": { "type": "id", "required": true }, "durationInFrames": { "type": "integer" }, "presentation": { "type": "string" }, "direction": { "type": "string" },
+      "timing": { "type": "string" }, "alignment": { "type": "number" }, "properties": { "type": "object" } } },
+    { "op": "removeTransition", "about": "", "fields": { "id": { "type": "id", "required": true } } },
+    { "op": "addTrack", "about": "", "fields": { "kind": { "type": "string", "required": true, "enum": ["video", "audio"] }, "order": { "type": "number" } } },
+    { "op": "updateTrack", "about": "volume in dB, -60..12", "fields": {
+      "id": { "type": "id", "required": true }, "name": { "type": "string" }, "muted": { "type": "boolean" }, "solo": { "type": "boolean" }, "locked": { "type": "boolean" },
+      "visible": { "type": "boolean" }, "volume": { "type": "number" } } },
+    { "op": "removeTrack", "about": "an empty track", "fields": { "id": { "type": "id", "required": true } } },
+    { "op": "addKeyframe", "about": "animates a property of an item", "fields": {
+      "itemId": { "type": "id", "required": true }, "property": { "type": "string", "required": true }, "frame": { "type": "integer", "required": true },
+      "value": { "type": "number", "required": true }, "easing": { "type": "string" }, "easingConfig": { "type": "object" } } },
+    { "op": "removeKeyframes", "about": "every keyframe of one property of an item", "fields": {
+      "itemId": { "type": "id", "required": true }, "property": { "type": "string", "required": true } } },
+    { "op": "addEffect", "about": "", "fields": { "itemId": { "type": "id", "required": true }, "effect": { "type": "object", "required": true } } },
+    { "op": "removeEffect", "about": "", "fields": { "itemId": { "type": "id", "required": true }, "effectId": { "type": "string", "required": true } } },
+    { "op": "setTransform", "about": "position, size, rotation, opacity of an item", "fields": { "id": { "type": "id", "required": true }, "transform": { "type": "object", "required": true } } },
+    { "op": "setTransformParent", "about": "binds an item to move with another (parentItemId), or frees it without one", "fields": {
+      "id": { "type": "id", "required": true }, "parentItemId": { "type": "id" }, "behavior": { "type": "string" }, "frame": { "type": "integer" } } },
+    { "op": "addMarker", "about": "", "fields": { "frame": { "type": "integer", "required": true }, "label": { "type": "string" }, "color": { "type": "string" } } },
+    { "op": "updateMarker", "about": "", "fields": { "id": { "type": "id", "required": true }, "frame": { "type": "integer" }, "label": { "type": "string" }, "color": { "type": "string" } } },
+    { "op": "removeMarker", "about": "", "fields": { "id": { "type": "id", "required": true } } }
+  ]
+}
