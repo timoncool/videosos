@@ -157,7 +157,7 @@ function resolveOrCreateTrack(preferred: unknown, kind: 'video' | 'audio'): stri
  * draws on top), the nearest one, or a new track at the top. Sound mixes, so a free audio track is enough.
  */
 /** The unlocked track whose last clip before `from` ends nearest to it: where a sequence goes on, as a person cuts. */
-export function continuedTrack(
+function continuedTrack(
   candidates: readonly { id: string; locked?: boolean }[],
   from: number,
 ): string | undefined {

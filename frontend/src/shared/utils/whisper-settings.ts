@@ -15,7 +15,7 @@ export function normalizeSelectableWhisperModel(
   return normalizeSelectableBrowserWhisperModel(model)
 }
 
-export const WHISPER_QUANTIZATION_OPTIONS: ReadonlyArray<{
+const WHISPER_QUANTIZATION_OPTIONS: ReadonlyArray<{
   value: MediaTranscriptQuantization
   label: string
   description: string

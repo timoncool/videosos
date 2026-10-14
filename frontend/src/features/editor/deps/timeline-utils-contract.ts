@@ -20,4 +20,3 @@ export { resolveEffectiveTrackStates } from '@/features/timeline/utils/group-uti
 export { getMaxTransitionDurationForHandles } from '@/features/timeline/utils/transition-utils'
 export { resolveTransitionTargetFromSelection } from '@/features/timeline/utils/transition-targets'
 export { timelineToSourceFrames, sourceToTimelineFrames } from '@/features/timeline/utils/source-calculations'
-export { linkItems } from '@/features/timeline/stores/actions/item-actions'

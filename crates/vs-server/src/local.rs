@@ -485,41 +485,47 @@ fn taken() -> &'static Mutex<std::collections::HashMap<&'static str, String>> {
     TAKEN.get_or_init(Default::default)
 }
 
-/// Model files being looked for at another program now, so a second poll does not start the same search.
-fn linking() -> &'static Mutex<std::collections::HashSet<PathBuf>> {
-    static LINKING: OnceLock<Mutex<std::collections::HashSet<PathBuf>>> = OnceLock::new();
-    LINKING.get_or_init(Default::default)
+/// Models the person removed in this run: another program still has their files, and linking them back on the
+/// next look would undo the removal.
+fn removed() -> &'static Mutex<std::collections::HashSet<&'static str>> {
+    static REMOVED: OnceLock<Mutex<std::collections::HashSet<&'static str>>> = OnceLock::new();
+    REMOVED.get_or_init(Default::default)
 }
 
 /// The setup screen links in what another program of the author's has on the same drive: a hard link, checked
 /// by SHA-256 before it is used; another drive waits for the install, which copies.
 pub(crate) fn link_from_neighbors(data: &Path) {
-    if installing().load(Ordering::SeqCst) {
+    static LINKING: AtomicBool = AtomicBool::new(false);
+    if installing().load(Ordering::SeqCst) || LINKING.swap(true, Ordering::SeqCst) {
         return;
     }
-    for model in MODELS {
-        for file in all_files(model) {
-            let download = &file.download;
-            let dest = data.join(download.dest);
-            if download.unzip_into.is_some() || file_there(data, download) || !linking().lock().unwrap_or_else(|p| p.into_inner()).insert(dest.clone()) {
-                continue;
-            }
-            tokio::task::spawn_blocking(move || {
-                if let Some(name) = dest.file_name()
-                    && let Some((source, app)) = studio_hub_client::neighbors::find_file(name, download.size, None)
-                {
-                    match studio_hub_client::neighbors::take_file(&source, &dest, false, |staged| sha256_of(staged).is_some_and(|got| got == download.sha256)) {
-                        Ok(()) => {
-                            taken().lock().unwrap_or_else(|p| p.into_inner()).insert(model.id, app);
-                            changed();
-                        }
-                        Err(error) => tracing::warn!("[ERROR] {} from {app} was not linked in: {error}", source.display()),
-                    }
+    let data = data.to_path_buf();
+    tokio::task::spawn_blocking(move || {
+        let removed = removed().lock().unwrap_or_else(|p| p.into_inner()).clone();
+        let mut linked = false;
+        for model in MODELS.iter().filter(|model| !removed.contains(model.id)) {
+            for file in all_files(model) {
+                let download = &file.download;
+                let dest = data.join(download.dest);
+                if download.unzip_into.is_some() || file_there(&data, download) {
+                    continue;
                 }
-                linking().lock().unwrap_or_else(|p| p.into_inner()).remove(&dest);
-            });
+                let Some(name) = dest.file_name() else { continue };
+                let Some((source, app)) = studio_hub_client::neighbors::find_file(name, download.size, None) else { continue };
+                match studio_hub_client::neighbors::take_file(&source, &dest, false, |staged| sha256_of(staged).is_some_and(|got| got == download.sha256)) {
+                    Ok(()) => {
+                        taken().lock().unwrap_or_else(|p| p.into_inner()).insert(model.id, app);
+                        linked = true;
+                    }
+                    Err(error) => tracing::warn!("[ERROR] {} from {app} was not linked in: {error}", source.display()),
+                }
+            }
         }
-    }
+        LINKING.store(false, Ordering::SeqCst);
+        if linked {
+            changed();
+        }
+    });
 }
 
 fn install_state() -> &'static Mutex<Install> {
@@ -561,6 +567,9 @@ fn missing_for(data: &Path, what: &str) -> Result<Vec<&'static Download>, String
 
 /// Downloads a model (with the engine when it is missing) or an engine build, in the background.
 pub fn start_install(data: &Path, what: &str) -> Result<bool, String> {
+    if let Some(model) = model(what) {
+        removed().lock().unwrap_or_else(|p| p.into_inner()).remove(model.id);
+    }
     let files = missing_for(data, what)?;
     let needs_ffmpeg = model(what).is_some_and(|model| model.kind == Kind::Video) && !ffmpeg(data).is_file();
     if files.is_empty() && !needs_ffmpeg {
@@ -758,6 +767,8 @@ pub fn remove(data: &Path, id: &str) -> Result<(), String> {
         return Err(t!("local-install-busy"));
     }
     unload_if(id);
+    removed().lock().unwrap_or_else(|p| p.into_inner()).insert(model.id);
+    taken().lock().unwrap_or_else(|p| p.into_inner()).remove(model.id);
     for file in all_files(model) {
         let path = data.join(file.download.dest);
         for each in [path.clone(), PathBuf::from(format!("{}.part", path.display()))] {
@@ -796,7 +807,7 @@ pub fn status(data: &Path) -> Value {
             "download_bytes": all_files(model).iter().filter(|file| !file_there(data, &file.download)).map(|file| file.download.size).sum::<u64>(),
             "size_bytes": all_files(model).iter().map(|file| file.download.size).sum::<u64>(),
             "presets": model.presets.iter().map(|preset| json!({ "id": preset.id, "label": preset_label(preset) })).collect::<Vec<_>>(),
-            "taken_from": taken().lock().unwrap_or_else(|p| p.into_inner()).get(model.id),
+            "taken_from": model_installed(data, model).then(|| taken().lock().unwrap_or_else(|p| p.into_inner()).get(model.id).cloned()).flatten(),
         })).collect::<Vec<_>>(),
         "loaded": loaded,
         "install": install,
@@ -905,6 +916,24 @@ fn number(values: &Map<String, Value>, key: &str) -> Option<f64> {
     }
 }
 
+/// The frames a video run makes: the asked length if the model has it, else its first, on the model's frame grid.
+fn video_frames(model: &LocalModel, values: &Map<String, Value>) -> i32 {
+    let seconds = number(values, "duration").map(|n| n.round() as u32).filter(|s| model.seconds.contains(s)).unwrap_or(model.seconds[0]);
+    let wanted = seconds as i32 * model.fps;
+    ((wanted - model.frame_offset).max(0) + model.frame_step - 1) / model.frame_step * model.frame_step + model.frame_offset
+}
+
+/// Seconds of video a run of `id` with these values makes; None for a picture model.
+pub fn video_seconds(id: &str, values: &Map<String, Value>) -> Option<f64> {
+    let model = model(id).filter(|model| model.kind == Kind::Video)?;
+    Some(video_frames(model, values) as f64 / model.fps as f64)
+}
+
+/// Whether local runs go on the video card: a run on the processor says nothing of the card's speed.
+pub fn on_card(data: &Path) -> bool {
+    chosen_device(data).is_ok_and(|device| device != Device::Cpu)
+}
+
 /// Runs a local model with the job's values; the result is a file in `out_dir`. Blocking: call it off the runtime.
 pub fn run(data: &Path, id: &str, values: &Map<String, Value>, out_dir: &Path, progress: &(dyn Fn(f64) + Sync)) -> Result<Vec<Output>, String> {
     let model = model(id).ok_or_else(|| t!("local-unknown", what = id.to_string()))?;
@@ -962,9 +991,7 @@ pub fn run(data: &Path, id: &str, values: &Map<String, Value>, out_dir: &Path, p
                 .image(&ImageParams { prompt: prompt.clone(), negative_prompt: negative.clone(), width: width as i32, height: height as i32, steps, cfg_scale: cfg, seed, sigmas, ref_images: Vec::new(), loras: loras.clone() }, Some(sink))
                 .map(Made::Image),
             Kind::Video => {
-                let seconds = number(values, "duration").map(|n| n.round() as u32).filter(|s| model.seconds.contains(s)).unwrap_or(model.seconds[0]);
-                let wanted = seconds as i32 * model.fps;
-                let frames = ((wanted - model.frame_offset).max(0) + model.frame_step - 1) / model.frame_step * model.frame_step + model.frame_offset;
+                let frames = video_frames(model, values);
                 let first_frame = match values.get("first_frame").and_then(Value::as_str) {
                     Some(address) => Some(frame_from(data, address, width, height)?),
                     None => None,

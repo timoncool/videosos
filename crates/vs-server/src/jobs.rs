@@ -491,7 +491,8 @@ impl Jobs {
         let what = if job.task.is_empty() { "generation".to_string() } else { job.task.clone() };
         crate::request_log::asked(&what, &job.model, 0);
         let started = std::time::Instant::now();
-        let seconds = values.get("duration").and_then(|value| value.as_f64().or_else(|| value.as_str()?.parse().ok()));
+        // the studio counts its own songs; a video made here on the card measures the card
+        let measured = if !studio && crate::local::on_card(&data) { crate::local::video_seconds(&job.model, &values) } else { None };
         let preset = values.get("preset").and_then(Value::as_str).map(str::to_string);
         let out_dir = self.dir.join(&id).join("_local");
         let jobs = self.clone();
@@ -524,8 +525,7 @@ impl Jobs {
         match made {
             Ok(outputs) => {
                 crate::request_log::answered(&what, &job.model, 200, started.elapsed().as_secs_f64(), 0);
-                // the studio counts its own songs; a video made here measures this card
-                if !studio && what == "video" && let Some(seconds) = seconds {
+                if let Some(seconds) = measured {
                     crate::hub::worked("video", seconds, started.elapsed());
                 }
                 if !studio {

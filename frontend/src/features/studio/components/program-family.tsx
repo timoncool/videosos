@@ -1,20 +1,21 @@
 import { useTranslation } from 'react-i18next'
 import { ExternalLink } from 'lucide-react'
+import { PROGRAM_NAMES } from '../services/links'
 
 /** The author's other programs for the About page, as the music studios show their family. */
 const PROGRAMS = [
-  { id: 'dub', name: 'Dub Studio', page: 'https://timoncool.github.io/dub-studio/' },
-  { id: 'yue2', name: 'YuE2 Studio', page: 'https://timoncool.github.io/YuE2-Studio/' },
+  { id: 'dub', name: PROGRAM_NAMES.dub, page: 'https://timoncool.github.io/dub-studio/' },
+  { id: 'yue2', name: PROGRAM_NAMES.yue2, page: 'https://timoncool.github.io/YuE2-Studio/' },
   {
     id: 'minimax',
-    name: 'MiniMax Music3 Studio',
+    name: PROGRAM_NAMES.minimax,
     page: 'https://timoncool.github.io/MiniMax-Music3-Studio/',
   },
-  { id: 'ace', name: 'ACE-Step Studio', page: 'https://timoncool.github.io/ACE-Step-Studio/' },
-  { id: 'bulka', name: 'Bulka', page: 'https://bulka.app/' },
+  { id: 'ace', name: PROGRAM_NAMES.ace, page: 'https://timoncool.github.io/ACE-Step-Studio/' },
+  { id: 'bulka', name: PROGRAM_NAMES.bulka, page: 'https://bulka.app/' },
   {
     id: 'dungeon',
-    name: 'Dungeon Ultimate',
+    name: PROGRAM_NAMES.dungeon,
     page: 'https://github.com/timoncool/dungeon-ultimate',
   },
 ] as const

@@ -117,6 +117,9 @@ export default function AboutSection() {
   const [known, setKnown] = useState<{ gpu: string | null; os: string | null }>({ gpu: null, os: null })
   useEffect(() => {
     void Promise.allSettled([api.hwSnapshot(), api.info()]).then(([hw, info]) => {
+      for (const failed of [hw, info])
+        if (failed.status === 'rejected')
+          console.error('[ERROR] the issue form goes without the card or the system:', failed.reason)
       const card = hw.status === 'fulfilled' && hw.value.gpuName ? hw.value : null
       setKnown({
         gpu: card

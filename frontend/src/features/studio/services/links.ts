@@ -19,6 +19,18 @@ export function issueReportUrl(known: { version: string; gpu?: string | null; os
   return `${REPO}/issues/new/choose?${query.toString()}`
 }
 
+/** The author's programs by their id in `music-studios/CONTRACT.md`. */
+export const PROGRAM_NAMES: Record<string, string> = {
+  dub: 'Dub Studio',
+  yue2: 'YuE2 Studio',
+  minimax: 'MiniMax Music3 Studio',
+  ace: 'ACE-Step Studio',
+  speech: 'Speech Studio',
+  bulka: 'Bulka',
+  dungeon: 'Dungeon Ultimate',
+  videosos: 'VideoSOS',
+}
+
 export const DONATE = {
   boosty: 'https://boosty.to/neuro_art',
   dalink: 'https://dalink.to/nerual_dreming',

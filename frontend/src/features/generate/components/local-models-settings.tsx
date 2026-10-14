@@ -13,20 +13,9 @@ import {
 import { formatBytes } from '@/shared/utils/format-utils'
 import { generateApi, type LocalModelState, type LocalStatus } from '../services/generate-api'
 import { useLocalStatus } from '../hooks/use-local-status'
+import { PROGRAM_NAMES } from '../deps/studio-contract'
 
 const DEVICES: LocalStatus['device'][] = ['auto', 'cuda', 'vulkan', 'cpu']
-
-/** The author's programs by their id in CONTRACT.md, for "taken from". */
-const PROGRAMS: Record<string, string> = {
-  yue2: 'YuE2 Studio',
-  minimax: 'MiniMax Music3 Studio',
-  ace: 'ACE-Step Studio',
-  dub: 'Dub Studio',
-  speech: 'Speech Studio',
-  dungeon: 'Dungeon Ultimate',
-  bulka: 'Bulka',
-  videosos: 'VideoSOS',
-}
 
 function InstallProgress({ status, what }: { status: LocalStatus; what: string }) {
   const { t } = useTranslation()
@@ -145,7 +134,7 @@ function ModelRow({
       </div>
       {model.taken_from && (
         <p className="text-[11px] text-muted-foreground">
-          {t('generate.local.takenFrom', { app: PROGRAMS[model.taken_from] ?? model.taken_from })}
+          {t('generate.local.takenFrom', { app: PROGRAM_NAMES[model.taken_from] ?? model.taken_from })}
         </p>
       )}
       {model.presets.length > 1 && (
