@@ -264,7 +264,7 @@ Linux или Mac. **Если вы живёте на Linux или macOS, буде
 Я делаю открытый софт и исследую ИИ — почти всё, что я создаю, доступно бесплатно. Донаты помогают делать и
 исследовать больше.
 
-**[Все способы поддержки](DONATE.md)** | **[dalink.to/nerual_dreming](https://dalink.to/nerual_dreming)** | **[boosty.to/neuro_art](https://boosty.to/neuro_art)**
+**[Все способы поддержки](DONATE.ru.md)** | **[dalink.to/nerual_dreming](https://dalink.to/nerual_dreming)** | **[boosty.to/neuro_art](https://boosty.to/neuro_art)**
 
 - **BTC:** `1E7dHL22RpyhJGVpcvKdbyZgksSYkYeEBC`
 - **ETH (ERC20):** `0xb5db65adf478983186d4897ba92fe2c25c594a0c`
