@@ -5,10 +5,11 @@
  */
 
 import { applyOp } from '@/headless/edit-ops'
-import { setEditCanvas } from '@/headless/edit-op-support'
+import { requireItem, setEditCanvas } from '@/headless/edit-op-support'
 import { usePlaybackStore } from '@/shared/state/playback'
 import { useSelectionStore } from '@/shared/state/selection'
 import { useProjectStore } from '../deps/editor'
+import type { SpeechEdges } from './speech-edges'
 
 function syncCanvas(): void {
   const metadata = useProjectStore.getState().currentProject?.metadata
@@ -43,6 +44,26 @@ export function placeMediaAt(mediaId: string, seconds: number | null): unknown {
   const trackId = result.created?.[0]?.trackId
   // the timeline scrolls its track list to the active track, so a clip on a new track at the top is in view
   if (trackId) useSelectionStore.getState().setActiveTrack(trackId)
+  return result
+}
+
+/**
+ * A voice-over placed as placeMediaAt places it, with the silence before and after its speech trimmed off the
+ * clip, as Dub Studio's voice-overs are; the file keeps it, so pulling the edges back brings it again.
+ */
+export function placeSpeechAt(mediaId: string, seconds: number | null, edges: SpeechEdges): unknown {
+  const result = placeMediaAt(mediaId, seconds) as { created?: Array<{ id: string }> }
+  const clip = result.created?.[0]
+  if (!clip) return result
+  const fps = useProjectStore.getState().currentProject?.metadata?.fps ?? 30
+  const lead = Math.floor(edges.leadSeconds * fps)
+  const tail = Math.floor(edges.tailSeconds * fps)
+  const from = requireItem(clip.id).from
+  if (lead > 0) {
+    applyOp({ op: 'trimStart', id: clip.id, amount: lead })
+    applyOp({ op: 'moveItem', id: clip.id, from })
+  }
+  if (tail > 0) applyOp({ op: 'trimEnd', id: clip.id, amount: -tail })
   return result
 }
 

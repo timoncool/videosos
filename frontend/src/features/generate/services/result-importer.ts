@@ -17,7 +17,8 @@ import {
   useProjectStore,
 } from '../deps/editor'
 import { useGenerateStore } from '../stores/generate-store'
-import { placeMediaAt } from './timeline-actions'
+import { placeMediaAt, placeSpeechAt } from './timeline-actions'
+import { speechEdgesOf, type SpeechEdges } from './speech-edges'
 import { resultFileName } from './result-title'
 
 const logger = createLogger('GenerateImport')
@@ -39,6 +40,7 @@ function needsImport(job: Job, projectId: string | null): boolean {
 async function importJob(job: Job, projectId: string): Promise<void> {
   const mediaIds: string[] = []
   const importedItems: MediaMetadata[] = []
+  const edges = new Map<string, SpeechEdges>()
   const tags = ['generated', job.provider, job.model_name]
   const media = job.outputs.filter(
     (output) => output.kind === 'image' || output.kind === 'video' || output.kind === 'audio',
@@ -59,6 +61,8 @@ async function importJob(job: Job, projectId: string): Promise<void> {
           : await mediaLibraryService.importGeneratedAudio(file, projectId, { tags })
     mediaIds.push(imported.id)
     importedItems.push(imported)
+    if (job.place && job.task === 'speech' && output.kind === 'audio')
+      edges.set(imported.id, await speechEdgesOf(blob))
   }
   await useMediaLibraryStore.getState().loadMediaItems()
   // another import's load can still be running and end without these: they are put in before they are placed
@@ -67,7 +71,11 @@ async function importJob(job: Job, projectId: string): Promise<void> {
   const updated = await generateApi.markImported(job.id, mediaIds)
   useGenerateStore.getState().upsertJob(updated)
   if (job.place) {
-    for (const mediaId of mediaIds) placeMediaAt(mediaId, job.place_at)
+    for (const mediaId of mediaIds) {
+      const speech = edges.get(mediaId)
+      if (speech) placeSpeechAt(mediaId, job.place_at, speech)
+      else placeMediaAt(mediaId, job.place_at)
+    }
     await saveTimeline(projectId)
   }
 }
