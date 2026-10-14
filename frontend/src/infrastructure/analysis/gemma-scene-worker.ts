@@ -27,6 +27,7 @@ import { SCENE_CAPTION_PROMPT, parseSceneCaptionResponse } from './captioning/sc
 
 const MODEL_ID = 'onnx-community/gemma-4-E4B-it-ONNX'
 const DESCRIBE_MAX_NEW_TOKENS = 160
+const COMPILE_HEARTBEAT_MS = 10_000
 
 // Configure transformers.js for browser worker context
 env.useBrowserCache = true
@@ -69,11 +70,21 @@ async function loadModel(): Promise<void> {
       ;(loadedProcessor.image_processor as { max_soft_tokens?: number }).max_soft_tokens = 140
     }
 
+    // building the WebGPU sessions of a 5 GB model takes minutes with no download to report, and the
+    // callers give up after 30 s of silence
+    let percent = 5
+    const report = (message: Record<string, unknown>) => {
+      if (typeof message.percent === 'number') percent = message.percent
+      post(message)
+    }
+    const compiling = setInterval(() => {
+      if (!disposed) post({ type: 'progress', stage: 'loading-model', percent })
+    }, COMPILE_HEARTBEAT_MS)
     const loadedModel = await Gemma4ForConditionalGeneration.from_pretrained(MODEL_ID, {
       dtype: 'q4f16',
       device: 'webgpu',
-      progress_callback: disposed ? undefined : createModelLoadProgressCallback(post),
-    })
+      progress_callback: disposed ? undefined : createModelLoadProgressCallback(report),
+    }).finally(() => clearInterval(compiling))
 
     if (disposed || thisGen !== loadGeneration) {
       if (typeof loadedModel.dispose === 'function') loadedModel.dispose()
