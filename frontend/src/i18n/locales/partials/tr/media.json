@@ -114,7 +114,17 @@
       "size": "Boyut",
       "transcript": "Transkript",
       "transcriptWithCount": "Transkript ({{count}})",
-      "type": "Tür"
+      "type": "Tür",
+      "source": "Kaynak",
+      "sourceStatus": {
+        "app-storage": "Uygulama depolaması",
+        "changed": "Bağlı dosya değişti",
+        "checking": "Denetleniyor...",
+        "linked": "Bağlı dosya",
+        "needs-permission": "İzin gerekli",
+        "unavailable": "Kullanılamıyor",
+        "workspace-copy": "Çalışma alanı kopyası"
+      }
     },
     "library": {
       "aiAnalysisProgress": "YZ analiz ilerlemesi",
@@ -224,7 +234,10 @@
       "importFailed_one": "{{count}} dosya içe aktarılamadı. Dosyayı kontrol edip tekrar deneyin.",
       "importFailed_other": "{{count}} dosya içe aktarılamadı. Dosyaları kontrol edip tekrar deneyin.",
       "upscalingVideo": "Video ölçekleniyor",
-      "upscaleProgress": "Ölçekleme ilerlemesi"
+      "upscaleProgress": "Ölçekleme ilerlemesi",
+      "importCopyToWorkspace": "Çalışma alanına kopyala",
+      "importLinkOriginal": "Orijinal dosyaları bağla",
+      "importMoreOptions": "İçe aktarma seçenekleri"
     },
     "missingMedia": {
       "title": "Eksik medya",

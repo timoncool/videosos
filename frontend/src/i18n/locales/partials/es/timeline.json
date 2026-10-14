@@ -190,7 +190,11 @@
       "zoomOutTooltip": "zoom salida",
       "zoomSlider": "zoom control",
       "zoomToFit": "zoom a ajustar",
-      "zoomToFitTooltip": "zoom a ajustar"
+      "zoomToFitTooltip": "zoom a ajustar",
+      "disableAudioSkimming": "Desactivar el skimming de audio",
+      "enableAudioSkimming": "Activar el skimming de audio",
+      "audioSkimmingDisabled": "Skimming de audio desactivado",
+      "audioSkimmingEnabled": "Skimming de audio activado"
     },
     "itemActions": {
       "appliedEffectToClips": "Applied efecto a clips",
@@ -208,7 +212,7 @@
         "easeIn": "Entrada suave",
         "easeInOut": "Entrada/Salida",
         "overshoot": "Rebote",
-        "snap": "Snap",
+        "snap": "Ajuste",
         "outCubic": "Salida Cubic",
         "outQuart": "Salida Quart",
         "outQuint": "Salida Quint",

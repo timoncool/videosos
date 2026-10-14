@@ -101,7 +101,14 @@
         "frameRate": "Taxa de quadros",
         "durationSeconds": "Duração (segundos)",
         "create": "Criar"
-      }
+      },
+      "controllerLayer": "Objeto nulo",
+      "parentColumn": "Pai",
+      "shiftToggleAllLayers": "Shift + clique para expandir ou recolher todas as camadas",
+      "parentPickWhipForLayer": "Pick whip de pai para {{name}}",
+      "parentPickWhipHelp": "Arraste até uma camada pai. Shift: ajustar posição. Alt: usar pose local. Ctrl/Cmd + clique: desvincular.",
+      "parentForLayer": "Pai de {{name}}",
+      "nullObjectNonRendering": "Objeto nulo (não é renderizado)"
     },
     "miniTimeline": {
       "inPoint": "Ponto de entrada",
@@ -357,7 +364,38 @@
       "directionTop": "Cima",
       "directionBottom": "Baixo",
       "resetParam": "Redefinir {{label}}",
-      "paramColorAria": "Cor de {{label}}"
+      "paramColorAria": "Cor de {{label}}",
+      "params": {
+        "warp": "Distorção",
+        "color": "Cor",
+        "size": "Tamanho",
+        "intensity": "Intensidade",
+        "density": "Densidade",
+        "glow": "Brilho",
+        "blocks": "Blocos",
+        "rgb_split": "Divisão RGB",
+        "block_size": "Tamanho do bloco",
+        "spread": "Dispersão",
+        "blur": "Desfoque",
+        "spin": "Giro",
+        "scale": "Escala",
+        "turbulence": "Turbulência",
+        "chroma": "Croma",
+        "swirl": "Redemoinho",
+        "shine": "Brilho intenso",
+        "zoom": "Zoom",
+        "vignette": "Vinheta",
+        "warmth": "Calor",
+        "burn": "Queimado",
+        "grain": "Granulação",
+        "slip": "Deslizamento",
+        "shake": "Tremor",
+        "exposure": "Exposição",
+        "gate_width": "Largura da janela",
+        "roll": "Rolagem",
+        "dim": "Escurecimento",
+        "softness": "Suavidade"
+      }
     },
     "propertiesSidebar": {
       "title": "Propriedades",
@@ -366,7 +404,9 @@
       "dockToPreview": "Encaixar na pré-visualização",
       "expandFullColumn": "Expandir coluna inteira",
       "showPanel": "Mostrar painel de propriedades",
-      "clipsSelected": "{{count}} clipes selecionados"
+      "clipsSelected": "{{count}} clipes selecionados",
+      "layer": "Camada",
+      "composition": "Composição"
     },
     "markerPanel": {
       "notFound": "Marcador não encontrado",
@@ -398,7 +438,10 @@
       "switchToFrames": "Alternar para quadros",
       "timecode": "Código de tempo",
       "frameRate": "Taxa de quadros",
-      "totalFrames": "Total de quadros"
+      "totalFrames": "Total de quadros",
+      "composition": "Composição",
+      "matchProject": "Ajustar ao projeto",
+      "matchProjectBackground": "Ajustar o plano de fundo ao projeto"
     },
     "clipPanel": {
       "tabVideo": "Vídeo",
@@ -407,7 +450,10 @@
       "adjustmentLayerHint": "Os efeitos em camadas de ajuste se aplicam a todos os itens das faixas acima.",
       "tabText": "Texto",
       "tabAnimation": "Animação",
-      "tabShape": "Forma"
+      "tabShape": "Forma",
+      "tabProperties": "Propriedades",
+      "tabController": "Objeto nulo",
+      "tabAnimate": "Animar"
     },
     "gifSection": {
       "animation": "Animação",
@@ -420,7 +466,7 @@
       "resetSpeed": "Redefinir para 1x",
       "reverse": "Inverter",
       "loop": "Repetir",
-      "pingpong": "Ping-pong",
+      "pingpong": "Vai e volta",
       "trimIn": "Quadro inicial",
       "trimOut": "Quadro final",
       "text": "Texto",
@@ -750,7 +796,7 @@
       "effects": "Efeitos",
       "presets": "Predefinições",
       "fontWeights": {
-        "regular": "Regular",
+        "regular": "Normal",
         "medium": "Médio",
         "semibold": "Seminegrito",
         "bold": "Negrito"
@@ -862,7 +908,7 @@
         "savedToLibrary": "\"{{fileName}}\" foi salvo na biblioteca de mídia.",
         "savedAndAdded": "\"{{fileName}}\" foi salvo e adicionado à linha do tempo."
       },
-      "defaultTtsPrompt": "Welcome to freecut. This voice was generated locally in the browser.",
+      "defaultTtsPrompt": "Bem-vindo ao freecut. Esta voz foi gerada localmente no navegador.",
       "musicPresets": {
         "lofiChillLabel": "Lo-fi tranquilo",
         "lofiChillPrompt": "Batida lo-fi quente com bateria vintage, baixo suave e lead de sintetizador sonhador",
@@ -880,7 +926,29 @@
     },
     "colorPanel": {
       "emptyState": "Selecione um clipe para corrigir as cores",
-      "adjustmentLayerLabel": "Correção de cor"
+      "adjustmentLayerLabel": "Correção de cor",
+      "dockLabel": "Espaço de trabalho de correção de cor",
+      "dockTitle": "Cor"
+    },
+    "transformHierarchy": {
+      "controllerOption": "Nulo: {{name}}",
+      "none": "Nenhum"
+    },
+    "compositionControls": {
+      "authoringTitle": "Controles publicados ({{v0}})",
+      "authoringHint": "Escolha os textos e as cores que permanecem editáveis quando esta composição for reutilizada.",
+      "addAnother": "Expor outra propriedade",
+      "add": "Expor propriedade",
+      "allExposed": "Todas as propriedades compatíveis estão expostas.",
+      "noCandidates": "Adicione uma camada de texto ou de forma para expor propriedades editáveis.",
+      "resetOverride": "Redefinir a substituição de {{name}}",
+      "overridden": "{{name}} foi substituído",
+      "instanceTitle": "Substituições do modelo",
+      "instanceHint": "As alterações se aplicam apenas a esta instância. Um ponto azul marca os valores que diferem da origem.",
+      "resetAll": "Redefinir todas as substituições"
+    },
+    "textProperties": {
+      "scale": "Escala"
     }
   }
 }

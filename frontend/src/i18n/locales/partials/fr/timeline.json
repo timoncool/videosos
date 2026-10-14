@@ -190,7 +190,11 @@
       "zoomOutTooltip": "zoom sortie",
       "zoomSlider": "zoom curseur",
       "zoomToFit": "zoom a adapter",
-      "zoomToFitTooltip": "zoom a adapter"
+      "zoomToFitTooltip": "zoom a adapter",
+      "disableAudioSkimming": "Désactiver le survol audio",
+      "enableAudioSkimming": "Activer le survol audio",
+      "audioSkimmingDisabled": "Survol audio désactivé",
+      "audioSkimmingEnabled": "Survol audio activé"
     },
     "itemActions": {
       "appliedEffectToClips": "Applied effet a clips",
@@ -208,7 +212,7 @@
         "easeIn": "Entrée douce",
         "easeInOut": "Entrée/Sortie",
         "overshoot": "Dépassement",
-        "snap": "Snap",
+        "snap": "Aimantation",
         "outCubic": "Sortie Cubic",
         "outQuart": "Sortie Quart",
         "outQuint": "Sortie Quint",
@@ -242,7 +246,7 @@
       "unableToPasteCutDescription": "Impossible de coller ici les images clés coupées. {{reasons}}",
       "presetNameRequired": "Le nom du préréglage est requis",
       "springTension": "Tension",
-      "springFriction": "Friction",
+      "springFriction": "Frottement",
       "trimmedKeyframes": "{{count}} rognées",
       "trimmedKeyframesLabel": "Images clés rognées",
       "trimmedKeyframesDetail": "{{count}} images clés sont hors du clip.",

@@ -1,11 +1,11 @@
 {
   "settings": {
     "sections": {
-      "providers": "Providers",
+      "providers": "Fournisseurs",
       "agents": "Agents",
-      "network": "Network",
-      "privacy": "Privacy",
-      "about": "About",
+      "network": "Réseau",
+      "privacy": "Confidentialité",
+      "about": "À propos",
       "providersHint": "Clés OpenRouter, fal et Runware, et les dépenses",
       "agentsHint": "Adresse MCP et limite quotidienne des agents",
       "generalHint": "Langue, sauvegarde auto, annulation, sons",
@@ -17,25 +17,25 @@
       "aboutHint": "Version, liens, dossiers, soutien"
     },
     "providers": {
-      "intro": "VideoSOS generates through your own accounts: add a key of OpenRouter, fal or Runware. Keys stay on this computer and are never shown to agents.",
-      "fromEnv": "from the {{variable}} variable",
-      "stored": "key saved",
-      "none": "no key",
-      "replace": "Paste a new key to replace it",
-      "check": "Check",
-      "remove": "Remove",
-      "spend": "Spent on generations",
-      "spendLine": "Today {{today}}, in total {{total}}",
-      "jobs_one": "{{count}} run",
-      "jobs_other": "{{count}} runs",
-      "agentHint": "Past it, VideoSOS refuses an agent's generations for the rest of the day. Empty means no limit.",
-      "budget": "Daily limit for agents, $",
-      "noLimit": "no limit",
-      "badBudget": "The limit is a number of dollars."
+      "intro": "VideoSOS génère via vos propres comptes : ajoutez une clé OpenRouter, fal ou Runware. Les clés restent sur cet ordinateur et ne sont jamais montrées aux agents.",
+      "fromEnv": "depuis la variable {{variable}}",
+      "stored": "clé enregistrée",
+      "none": "aucune clé",
+      "replace": "Collez une nouvelle clé pour la remplacer",
+      "check": "Vérifier",
+      "remove": "Supprimer",
+      "spend": "Dépensé en générations",
+      "spendLine": "Aujourd’hui {{today}}, au total {{total}}",
+      "jobs_one": "{{count}} exécution",
+      "jobs_other": "{{count}} exécutions",
+      "agentHint": "Au-delà, VideoSOS refuse les générations d’un agent pour le reste de la journée. Vide : aucune limite.",
+      "budget": "Limite quotidienne pour les agents, $",
+      "noLimit": "aucune limite",
+      "badBudget": "La limite est un montant en dollars."
     },
     "general": {
-      "language": "Interface language",
-      "languageHint": "The window and the messages of the program.",
+      "language": "Langue de l’interface",
+      "languageHint": "La fenêtre et les messages du programme.",
       "autoSaveHint": "Enregistre le projet ouvert toutes les quelques minutes",
       "undoHistoryDepthHint": "Combien d'étapes l'annulation peut remonter",
       "uiSoundsHint": "Sons courts pour les clics, résultats et erreurs"

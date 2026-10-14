@@ -96,7 +96,30 @@
         "embeddedDescription": "Eine umschaltbare Untertitelspur (WebM/MKV)."
       },
       "subtitles": "Untertitel",
-      "video": "Video"
+      "video": "Video",
+      "rateControl": "Bitratensteuerung",
+      "rateControlAuto": "Auto (quellenabhängig)",
+      "rateControlCbr": "CBR (konstante Bitrate)",
+      "rateControlVbr": "VBR (variable Bitrate)",
+      "targetBitrate": "Ziel-Bitrate",
+      "useSourceBitrate": "Quelle verwenden",
+      "smartCopy": "Smart Copy, wenn möglich",
+      "smartCopyPath": "Smart Copy · ohne Neukodierung",
+      "estimatedSize": "Geschätzt: {{size}}",
+      "sourceBitrate": "Quelle: {{bitrate}}",
+      "smartCopyStatus": {
+        "eligible": "Verfügbar: Die Originalmedien werden Byte für Byte kopiert.",
+        "disabled": "Deaktiviert. Die Zeitleiste wird gerendert und kodiert.",
+        "not-video": "Nur für Videoexporte verfügbar.",
+        "range": "Beim Export eines In/Out-Bereichs nicht verfügbar.",
+        "timeline-layout": "Erfordert einen vollständigen Quellclip ohne zusätzliche Ebenen.",
+        "source-unavailable": "Die Originaldatei oder ihre Metadaten sind nicht verfügbar.",
+        "trimmed-or-retimed": "Nicht verfügbar, da die Quelle gekürzt, geteilt, umgekehrt oder zeitlich verändert wurde.",
+        "visual-processing": "Nicht verfügbar, da visuelle Bearbeitungen, Untertitel, Übergänge oder Keyframes gerendert werden müssen.",
+        "audio-processing": "Nicht verfügbar, da Audio oder Spurmischung geändert wurde.",
+        "project-mismatch": "Auflösung oder Bildrate des Projekts stimmt nicht mit der Quelle überein.",
+        "format-mismatch": "Das gewählte Format oder der Codec stimmt nicht mit der Quelle überein."
+      }
     },
     "videoContainer": {
       "mp4": "Breite Unterstützung, ideal zum Teilen",
@@ -182,8 +205,13 @@
         "worker-export-ready": {
           "title": "Worker-Exportpfad bereit",
           "detail": "Der Export-Worker kann diese Komposition ohne bekannten Fallback zum Hauptthread rendern."
+        },
+        "smart-copy-ready": {
+          "title": "Smart Copy bereit",
+          "detail": "Die Originalmedien werden ohne Rendern und Neukodierung kopiert."
         }
-      }
+      },
+      "smartCopyPath": "Smart-Copy-Pfad"
     }
   }
 }

@@ -63,7 +63,7 @@
       "clearKeyframes": "키프레임 지우기",
       "consolidateCaptionsToSegment": "자막을 구간으로 병합",
       "createCompoundClip": "복합 클립 만들기",
-      "detectScenesAi": "AI ({{model}})",
+      "detectScenesAi": "AI({{model}})",
       "detectScenesAndSplit": "장면 감지 및 분할",
       "detectScenesFast": "빠름 (히스토그램)",
       "detectingFillers": "군더더기 감지 중",
@@ -190,7 +190,11 @@
       "zoomOutTooltip": "축소",
       "zoomSlider": "줌 슬라이더",
       "zoomToFit": "화면에 맞추기",
-      "zoomToFitTooltip": "화면에 맞추기"
+      "zoomToFitTooltip": "화면에 맞추기",
+      "disableAudioSkimming": "오디오 스키밍 끄기",
+      "enableAudioSkimming": "오디오 스키밍 켜기",
+      "audioSkimmingDisabled": "오디오 스키밍이 꺼져 있습니다",
+      "audioSkimmingEnabled": "오디오 스키밍이 켜져 있습니다"
     },
     "itemActions": {
       "appliedEffectToClips": "클립에 효과 적용됨",
@@ -208,7 +212,7 @@
         "easeIn": "이즈 인",
         "easeInOut": "이즈 인/아웃",
         "overshoot": "오버슈트",
-        "snap": "Snap",
+        "snap": "스냅",
         "outCubic": "아웃 Cubic",
         "outQuart": "아웃 Quart",
         "outQuint": "아웃 Quint",

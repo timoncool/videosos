@@ -96,7 +96,30 @@
         "embeddedDescription": "Una pista de subtítulos activable (WebM/MKV)."
       },
       "subtitles": "Subtítulos",
-      "video": "Vídeo"
+      "video": "Vídeo",
+      "rateControl": "Control de velocidad de bits",
+      "rateControlAuto": "Auto (según el origen)",
+      "rateControlCbr": "CBR (velocidad de bits constante)",
+      "rateControlVbr": "VBR (velocidad de bits variable)",
+      "targetBitrate": "Velocidad de bits objetivo",
+      "useSourceBitrate": "Usar el origen",
+      "smartCopy": "Copia inteligente cuando sea posible",
+      "smartCopyPath": "Copia inteligente · sin recodificar",
+      "estimatedSize": "Estimado: {{size}}",
+      "sourceBitrate": "Origen: {{bitrate}}",
+      "smartCopyStatus": {
+        "eligible": "Disponible: los medios originales se copiarán byte a byte.",
+        "disabled": "Desactivada. La línea de tiempo se renderizará y codificará.",
+        "not-video": "Disponible solo para exportaciones de vídeo.",
+        "range": "No disponible al exportar un rango de entrada/salida.",
+        "timeline-layout": "Requiere un único clip de origen completo sin capas adicionales.",
+        "source-unavailable": "El archivo de origen o sus metadatos no están disponibles.",
+        "trimmed-or-retimed": "No disponible porque el origen está recortado, dividido, invertido o con la velocidad modificada.",
+        "visual-processing": "No disponible porque hay que renderizar ediciones visuales, subtítulos, transiciones o fotogramas clave.",
+        "audio-processing": "No disponible porque se ha cambiado el audio o la mezcla de pistas.",
+        "project-mismatch": "La resolución o la velocidad de fotogramas del proyecto no coincide con el origen.",
+        "format-mismatch": "El formato o el códec seleccionado no coincide con el origen."
+      }
     },
     "videoContainer": {
       "mp4": "Compatible con casi cualquier reproductor",
@@ -182,8 +205,13 @@
         "worker-export-ready": {
           "title": "Ruta de exportación con worker lista",
           "detail": "El worker de exportación puede renderizar esta composición sin un modo alternativo conocido al hilo principal."
+        },
+        "smart-copy-ready": {
+          "title": "Copia inteligente lista",
+          "detail": "Los medios originales se copiarán sin renderizar ni recodificar."
         }
-      }
+      },
+      "smartCopyPath": "Ruta de copia inteligente"
     }
   }
 }

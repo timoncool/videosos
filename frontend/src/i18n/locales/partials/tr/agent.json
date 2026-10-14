@@ -2,20 +2,20 @@
   "agent": {
     "name": "Ajan",
     "commands": {
-      "click": "clicks",
-      "type": "types",
-      "select": "chooses",
-      "press_key": "presses a key",
-      "scroll": "scrolls",
-      "timeline_edit": "edits the timeline",
-      "timeline_undo": "undoes",
-      "timeline_redo": "redoes",
-      "media_import": "imports media",
-      "playhead_seek": "moves the playhead",
-      "playback": "plays or pauses",
-      "editor_tab": "opens a tab",
-      "project_open": "opens a project",
-      "export_video": "exports the video"
+      "click": "tıklar",
+      "type": "yazar",
+      "select": "seçer",
+      "press_key": "bir tuşa basar",
+      "scroll": "kaydırır",
+      "timeline_edit": "zaman çizelgesini düzenler",
+      "timeline_undo": "geri alır",
+      "timeline_redo": "yeniden yapar",
+      "media_import": "medya içe aktarır",
+      "playhead_seek": "oynatma kafasını taşır",
+      "playback": "oynatır veya duraklatır",
+      "editor_tab": "bir sekme açar",
+      "project_open": "bir proje açar",
+      "export_video": "videoyu dışa aktarır"
     }
   }
 }

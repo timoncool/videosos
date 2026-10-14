@@ -23,6 +23,25 @@
     "toastRemoved": "已移除 {{count}} 个片段",
     "toastNothingRemoved": "未移除任何内容",
     "toastRemoveFailed": "无法移除所选词语",
-    "toastTranscribeFailed": "转写失败"
+    "toastTranscribeFailed": "转写失败",
+    "boundaryClip": "新片段",
+    "jumpTo": "跳转到 {{time}}",
+    "toastCopied": "已复制 {{count}} 个词",
+    "toastCut": "已剪切 {{count}} 个词",
+    "selectedClips": "已选中 {{count}} 个片段",
+    "selectedClip": "已选中的片段",
+    "approxMatches": "近似匹配",
+    "emptyProject": "此项目中还没有视频或音频片段。",
+    "pendingHidden": "{{count}} 个词已标记删除 · {{seconds}} 秒",
+    "restoreAll": "全部还原",
+    "applyEdits": "删除已标记内容",
+    "ignoreHint": "选择文字，然后按退格键将其标记为删除",
+    "copy": "复制",
+    "copyHint": "复制文字（用 Ctrl+V 粘贴到时间轴）",
+    "cut": "剪切",
+    "restoreSelection": "还原",
+    "ignoreSelection": "标记为删除",
+    "scopeSelection": "所选内容",
+    "scopeProject": "整个项目"
   }
 }

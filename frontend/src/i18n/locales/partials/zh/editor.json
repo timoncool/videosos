@@ -101,7 +101,14 @@
         "frameRate": "帧率",
         "durationSeconds": "时长（秒）",
         "create": "创建"
-      }
+      },
+      "controllerLayer": "空对象",
+      "parentColumn": "父级",
+      "shiftToggleAllLayers": "按住 Shift 点击可展开或折叠所有图层",
+      "parentPickWhipForLayer": "{{name}} 的父级关联器",
+      "parentPickWhipHelp": "拖动到父图层。Shift：吸附位置。Alt：使用局部姿态。Ctrl/Cmd 点击：解除关联。",
+      "parentForLayer": "{{name}} 的父级",
+      "nullObjectNonRendering": "空对象（不渲染）"
     },
     "miniTimeline": {
       "inPoint": "入点",
@@ -357,7 +364,38 @@
       "directionTop": "上",
       "directionBottom": "下",
       "resetParam": "重置{{label}}",
-      "paramColorAria": "{{label}}颜色"
+      "paramColorAria": "{{label}}颜色",
+      "params": {
+        "warp": "扭曲",
+        "color": "颜色",
+        "size": "大小",
+        "intensity": "强度",
+        "density": "密度",
+        "glow": "辉光",
+        "blocks": "方块",
+        "rgb_split": "RGB 分离",
+        "block_size": "方块大小",
+        "spread": "扩散",
+        "blur": "模糊",
+        "spin": "旋转",
+        "scale": "缩放",
+        "turbulence": "湍流",
+        "chroma": "色度",
+        "swirl": "漩涡",
+        "shine": "闪耀",
+        "zoom": "变焦",
+        "vignette": "暗角",
+        "warmth": "暖度",
+        "burn": "灼烧",
+        "grain": "颗粒",
+        "slip": "滑移",
+        "shake": "抖动",
+        "exposure": "曝光",
+        "gate_width": "片门宽度",
+        "roll": "滚动",
+        "dim": "变暗",
+        "softness": "柔和度"
+      }
     },
     "propertiesSidebar": {
       "title": "属性",
@@ -366,7 +404,9 @@
       "dockToPreview": "停靠到预览",
       "expandFullColumn": "展开为整列",
       "showPanel": "显示属性面板",
-      "clipsSelected": "已选择 {{count}} 个剪辑"
+      "clipsSelected": "已选择 {{count}} 个剪辑",
+      "layer": "图层",
+      "composition": "合成"
     },
     "markerPanel": {
       "notFound": "未找到标记",
@@ -398,7 +438,10 @@
       "switchToFrames": "切换为帧",
       "timecode": "时间码",
       "frameRate": "帧率",
-      "totalFrames": "总帧数"
+      "totalFrames": "总帧数",
+      "composition": "合成",
+      "matchProject": "匹配项目",
+      "matchProjectBackground": "匹配项目背景"
     },
     "clipPanel": {
       "tabVideo": "视频",
@@ -407,7 +450,10 @@
       "adjustmentLayerHint": "调整图层上的效果会应用到上方所有轨道的项目。",
       "tabText": "文本",
       "tabAnimation": "动画",
-      "tabShape": "形状"
+      "tabShape": "形状",
+      "tabProperties": "属性",
+      "tabController": "空对象",
+      "tabAnimate": "动画"
     },
     "gifSection": {
       "animation": "动画",
@@ -862,7 +908,7 @@
         "savedToLibrary": "已将\"{{fileName}}\"保存到媒体库。",
         "savedAndAdded": "已保存\"{{fileName}}\"并添加到时间线。"
       },
-      "defaultTtsPrompt": "Welcome to freecut. This voice was generated locally in the browser.",
+      "defaultTtsPrompt": "欢迎使用 freecut。此语音在浏览器中本地生成。",
       "musicPresets": {
         "lofiChillLabel": "Lo-fi 放松",
         "lofiChillPrompt": "温暖的 lo-fi 节拍，配有复古鼓点、柔和低音和梦幻合成器主旋律",
@@ -880,7 +926,29 @@
     },
     "colorPanel": {
       "emptyState": "选择要调色的剪辑",
-      "adjustmentLayerLabel": "调色"
+      "adjustmentLayerLabel": "调色",
+      "dockLabel": "调色工作区",
+      "dockTitle": "颜色"
+    },
+    "transformHierarchy": {
+      "controllerOption": "空：{{name}}",
+      "none": "无"
+    },
+    "compositionControls": {
+      "authoringTitle": "已发布的控件（{{v0}}）",
+      "authoringHint": "选择在重复使用此合成时保持可编辑的文本和颜色。",
+      "addAnother": "公开另一个属性",
+      "add": "公开属性",
+      "allExposed": "所有受支持的属性均已公开。",
+      "noCandidates": "添加文本或形状图层以公开可编辑的属性。",
+      "resetOverride": "重置 {{name}} 的覆盖",
+      "overridden": "{{name}} 已被覆盖",
+      "instanceTitle": "模板覆盖",
+      "instanceHint": "更改仅应用于此实例。蓝点表示与源不同的值。",
+      "resetAll": "重置所有覆盖"
+    },
+    "textProperties": {
+      "scale": "缩放"
     }
   }
 }

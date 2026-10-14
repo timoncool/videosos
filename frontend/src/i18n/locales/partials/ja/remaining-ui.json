@@ -186,7 +186,7 @@
         "savedToLibrary": "\"{{fileName}}\" をメディアライブラリに保存しました。",
         "savedAndAdded": "\"{{fileName}}\" を保存してタイムラインに追加しました。"
       },
-      "defaultTtsPrompt": "Welcome to freecut. This voice was generated locally in the browser.",
+      "defaultTtsPrompt": "freecutへようこそ。この音声はブラウザー内でローカルに生成されました。",
       "musicPresets": {
         "lofiChillLabel": "Lo-fi チル",
         "lofiChillPrompt": "温かい lo-fi ビート、ダスティなドラム、メロウなベース、夢のようなシンセリード",

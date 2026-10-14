@@ -114,7 +114,17 @@
       "size": "Größe",
       "transcript": "Transkript",
       "transcriptWithCount": "Transkript ({{count}})",
-      "type": "Typ"
+      "type": "Typ",
+      "source": "Quelle",
+      "sourceStatus": {
+        "app-storage": "App-Speicher",
+        "changed": "Verknüpfte Datei geändert",
+        "checking": "Wird geprüft …",
+        "linked": "Verknüpfte Datei",
+        "needs-permission": "Berechtigung erforderlich",
+        "unavailable": "Nicht verfügbar",
+        "workspace-copy": "Kopie im Arbeitsbereich"
+      }
     },
     "library": {
       "aiAnalysisProgress": "KI-Analyse",
@@ -224,7 +234,10 @@
       "importFailed_one": "{{count}} Datei konnte nicht importiert werden. Prüfe die Datei und versuche es erneut.",
       "importFailed_other": "{{count}} Dateien konnten nicht importiert werden. Prüfe die Dateien und versuche es erneut.",
       "upscalingVideo": "Video wird hochskaliert",
-      "upscaleProgress": "Fortschritt beim Hochskalieren"
+      "upscaleProgress": "Fortschritt beim Hochskalieren",
+      "importCopyToWorkspace": "In den Arbeitsbereich kopieren",
+      "importLinkOriginal": "Originaldateien verknüpfen",
+      "importMoreOptions": "Importoptionen"
     },
     "missingMedia": {
       "title": "Fehlende Medien",

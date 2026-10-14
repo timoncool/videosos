@@ -23,6 +23,25 @@
     "toastRemoved": "{{count}} clip(s) supprimé(s)",
     "toastNothingRemoved": "Rien n’a été supprimé",
     "toastRemoveFailed": "Impossible de supprimer les mots sélectionnés",
-    "toastTranscribeFailed": "Échec de la transcription"
+    "toastTranscribeFailed": "Échec de la transcription",
+    "boundaryClip": "Nouveau clip",
+    "jumpTo": "Aller à {{time}}",
+    "toastCopied": "{{count}} mots copiés",
+    "toastCut": "{{count}} mots coupés",
+    "selectedClips": "{{count}} clips sélectionnés",
+    "selectedClip": "Clip sélectionné",
+    "approxMatches": "Correspondances approximatives",
+    "emptyProject": "Aucun clip vidéo ou audio dans ce projet pour l’instant.",
+    "pendingHidden": "{{count}} marqués pour suppression · {{seconds}} s",
+    "restoreAll": "Tout restaurer",
+    "applyEdits": "Supprimer les éléments marqués",
+    "ignoreHint": "Sélectionnez des mots, puis appuyez sur Retour arrière pour les marquer pour suppression",
+    "copy": "Copier",
+    "copyHint": "Copier les mots (collez-les sur la timeline avec Ctrl+V)",
+    "cut": "Couper",
+    "restoreSelection": "Restaurer",
+    "ignoreSelection": "Marquer pour suppression",
+    "scopeSelection": "Sélection",
+    "scopeProject": "Projet entier"
   }
 }

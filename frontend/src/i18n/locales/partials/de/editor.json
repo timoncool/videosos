@@ -101,7 +101,14 @@
         "frameRate": "Bildrate",
         "durationSeconds": "Dauer (Sekunden)",
         "create": "Erstellen"
-      }
+      },
+      "controllerLayer": "Null-Objekt",
+      "parentColumn": "Übergeordnet",
+      "shiftToggleAllLayers": "Mit Umschalt klicken, um alle Ebenen ein- oder auszuklappen",
+      "parentPickWhipForLayer": "Parent-Pickwhip für {{name}}",
+      "parentPickWhipHelp": "Auf eine übergeordnete Ebene ziehen. Umschalt: Position einrasten. Alt: lokale Pose verwenden. Strg/Cmd-Klick: lösen.",
+      "parentForLayer": "Übergeordnete Ebene für {{name}}",
+      "nullObjectNonRendering": "Null-Objekt (wird nicht gerendert)"
     },
     "miniTimeline": {
       "inPoint": "In-Punkt",
@@ -357,7 +364,38 @@
       "directionTop": "Oben",
       "directionBottom": "Unten",
       "resetParam": "{{label}} zurücksetzen",
-      "paramColorAria": "Farbe von {{label}}"
+      "paramColorAria": "Farbe von {{label}}",
+      "params": {
+        "warp": "Verzerrung",
+        "color": "Farbe",
+        "size": "Größe",
+        "intensity": "Intensität",
+        "density": "Dichte",
+        "glow": "Leuchten",
+        "blocks": "Blöcke",
+        "rgb_split": "RGB-Trennung",
+        "block_size": "Blockgröße",
+        "spread": "Streuung",
+        "blur": "Weichzeichnung",
+        "spin": "Drehung",
+        "scale": "Skalierung",
+        "turbulence": "Turbulenz",
+        "chroma": "Chroma",
+        "swirl": "Wirbel",
+        "shine": "Glanz",
+        "zoom": "Zoom",
+        "vignette": "Vignette",
+        "warmth": "Wärme",
+        "burn": "Ausbrennen",
+        "grain": "Körnung",
+        "slip": "Verschiebung",
+        "shake": "Wackeln",
+        "exposure": "Belichtung",
+        "gate_width": "Bildfensterbreite",
+        "roll": "Rollen",
+        "dim": "Abdunkeln",
+        "softness": "Weichheit"
+      }
     },
     "propertiesSidebar": {
       "title": "Eigenschaften",
@@ -366,7 +404,9 @@
       "dockToPreview": "An Vorschau andocken",
       "expandFullColumn": "Auf volle Spalte erweitern",
       "showPanel": "Eigenschaftenleiste anzeigen",
-      "clipsSelected": "{{count}} Clips ausgewählt"
+      "clipsSelected": "{{count}} Clips ausgewählt",
+      "layer": "Ebene",
+      "composition": "Komposition"
     },
     "markerPanel": {
       "notFound": "Marker nicht gefunden",
@@ -388,7 +428,7 @@
       "updateFailed": "Canvas-Einstellungen konnten nicht aktualisiert werden",
       "tryAgain": "Bitte erneut versuchen.",
       "noProjectLoaded": "Kein Projekt geladen",
-      "canvas": "Canvas",
+      "canvas": "Leinwand",
       "swap": "Tauschen",
       "background": "Hintergrund",
       "resetToBlack": "Auf Schwarz zurücksetzen",
@@ -398,7 +438,10 @@
       "switchToFrames": "Auf Frames umschalten",
       "timecode": "Timecode",
       "frameRate": "Bildrate",
-      "totalFrames": "Frames gesamt"
+      "totalFrames": "Frames gesamt",
+      "composition": "Komposition",
+      "matchProject": "An Projekt anpassen",
+      "matchProjectBackground": "Hintergrund an Projekt anpassen"
     },
     "clipPanel": {
       "tabVideo": "Video",
@@ -407,7 +450,10 @@
       "adjustmentLayerHint": "Effekte auf Einstellungsebenen gelten für alle Elemente auf Spuren darüber.",
       "tabText": "Text",
       "tabAnimation": "Animation",
-      "tabShape": "Form"
+      "tabShape": "Form",
+      "tabProperties": "Eigenschaften",
+      "tabController": "Null-Objekt",
+      "tabAnimate": "Animieren"
     },
     "gifSection": {
       "animation": "Animation",
@@ -862,25 +908,47 @@
         "savedToLibrary": "\"{{fileName}}\" wurde in der Medienbibliothek gespeichert.",
         "savedAndAdded": "\"{{fileName}}\" wurde gespeichert und zur Timeline hinzugefügt."
       },
-      "defaultTtsPrompt": "Welcome to freecut. This voice was generated locally in the browser.",
+      "defaultTtsPrompt": "Willkommen bei freecut. Diese Stimme wurde lokal im Browser erzeugt.",
       "musicPresets": {
         "lofiChillLabel": "Lo-fi Chill",
-        "lofiChillPrompt": "Warm lo-fi beat with dusty drums, mellow bass, and a dreamy synth lead",
-        "pop80sLabel": "80s Pop",
-        "pop80sPrompt": "80s pop track with bassy drums and synth",
-        "rock90sLabel": "90s Rock",
-        "rock90sPrompt": "90s rock song with loud guitars and heavy drums",
+        "lofiChillPrompt": "Warmer Lo-fi-Beat mit staubigen Drums, sanftem Bass und einem verträumten Synthesizer-Lead",
+        "pop80sLabel": "80er-Pop",
+        "pop80sPrompt": "80er-Pop-Track mit druckvollen Drums und Synthesizer",
+        "rock90sLabel": "90er-Rock",
+        "rock90sPrompt": "90er-Rock-Song mit lauten Gitarren und schweren Drums",
         "upbeatEdmLabel": "Upbeat EDM",
-        "upbeatEdmPrompt": "A light and cheery EDM track, with syncopated drums, airy pads, and strong emotions bpm: 130",
+        "upbeatEdmPrompt": "Ein leichter, fröhlicher EDM-Track mit synkopierten Drums, luftigen Pads und starken Emotionen, bpm: 130",
         "countryLabel": "Country",
-        "countryPrompt": "A cheerful country song with acoustic guitars",
+        "countryPrompt": "Ein fröhlicher Country-Song mit akustischen Gitarren",
         "lofiElectroLabel": "Lo-fi Electro",
-        "lofiElectroPrompt": "Lofi slow bpm electro chill with organic samples"
+        "lofiElectroPrompt": "Langsamer Lo-fi-Electro-Chill mit organischen Samples"
       }
     },
     "colorPanel": {
       "emptyState": "Wähle einen Clip für die Farbkorrektur aus",
-      "adjustmentLayerLabel": "Farbkorrektur"
+      "adjustmentLayerLabel": "Farbkorrektur",
+      "dockLabel": "Arbeitsbereich Farbkorrektur",
+      "dockTitle": "Farbe"
+    },
+    "transformHierarchy": {
+      "controllerOption": "Null: {{name}}",
+      "none": "Keine"
+    },
+    "compositionControls": {
+      "authoringTitle": "Veröffentlichte Steuerelemente ({{v0}})",
+      "authoringHint": "Wählen Sie Texte und Farben aus, die beim Wiederverwenden dieser Komposition bearbeitbar bleiben.",
+      "addAnother": "Weitere Eigenschaft freigeben",
+      "add": "Eigenschaft freigeben",
+      "allExposed": "Alle unterstützten Eigenschaften sind freigegeben.",
+      "noCandidates": "Fügen Sie eine Text- oder Formebene hinzu, um bearbeitbare Eigenschaften freizugeben.",
+      "resetOverride": "Überschreibung von {{name}} zurücksetzen",
+      "overridden": "{{name}} ist überschrieben",
+      "instanceTitle": "Vorlagen-Überschreibungen",
+      "instanceHint": "Änderungen gelten nur für diese Instanz. Ein blauer Punkt markiert Werte, die von der Quelle abweichen.",
+      "resetAll": "Alle Überschreibungen zurücksetzen"
+    },
+    "textProperties": {
+      "scale": "Skalierung"
     }
   }
 }

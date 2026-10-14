@@ -63,7 +63,7 @@
       "clearKeyframes": "キーフレームをクリア",
       "consolidateCaptionsToSegment": "キャプションをセグメントに統合",
       "createCompoundClip": "複合クリップを作成",
-      "detectScenesAi": "AI ({{model}})",
+      "detectScenesAi": "AI({{model}})",
       "detectScenesAndSplit": "シーンを検出して分割",
       "detectScenesFast": "高速 (ヒストグラム)",
       "detectingFillers": "フィラーを検出中",
@@ -190,7 +190,11 @@
       "zoomOutTooltip": "縮小",
       "zoomSlider": "ズームスライダー",
       "zoomToFit": "全体表示",
-      "zoomToFitTooltip": "全体表示"
+      "zoomToFitTooltip": "全体表示",
+      "disableAudioSkimming": "オーディオスキミングを無効にする",
+      "enableAudioSkimming": "オーディオスキミングを有効にする",
+      "audioSkimmingDisabled": "オーディオスキミングは無効です",
+      "audioSkimmingEnabled": "オーディオスキミングは有効です"
     },
     "itemActions": {
       "appliedEffectToClips": "クリップにエフェクトを適用しました",
@@ -208,7 +212,7 @@
         "easeIn": "イーズイン",
         "easeInOut": "イーズイン/アウト",
         "overshoot": "オーバーシュート",
-        "snap": "Snap",
+        "snap": "スナップ",
         "outCubic": "アウト Cubic",
         "outQuart": "アウト Quart",
         "outQuint": "アウト Quint",

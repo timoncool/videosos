@@ -74,7 +74,7 @@
       "effects": "Efectos",
       "presets": "Preajustes",
       "fontWeights": {
-        "regular": "Regular",
+        "regular": "Normal",
         "medium": "Medio",
         "semibold": "Seminegrita",
         "bold": "Negrita"
@@ -186,20 +186,20 @@
         "savedToLibrary": "Se guardó \"{{fileName}}\" en la biblioteca multimedia.",
         "savedAndAdded": "Se guardó \"{{fileName}}\" y se añadió a la línea de tiempo."
       },
-      "defaultTtsPrompt": "Welcome to freecut. This voice was generated locally in the browser.",
+      "defaultTtsPrompt": "Te damos la bienvenida a freecut. Esta voz se generó localmente en el navegador.",
       "musicPresets": {
         "lofiChillLabel": "Lo-fi Chill",
-        "lofiChillPrompt": "Warm lo-fi beat with dusty drums, mellow bass, and a dreamy synth lead",
-        "pop80sLabel": "80s Pop",
-        "pop80sPrompt": "80s pop track with bassy drums and synth",
-        "rock90sLabel": "90s Rock",
-        "rock90sPrompt": "90s rock song with loud guitars and heavy drums",
-        "upbeatEdmLabel": "Upbeat EDM",
-        "upbeatEdmPrompt": "A light and cheery EDM track, with syncopated drums, airy pads, and strong emotions bpm: 130",
+        "lofiChillPrompt": "Beat lo-fi cálido con batería polvorienta, bajo suave y un lead de sintetizador onírico",
+        "pop80sLabel": "Pop de los 80",
+        "pop80sPrompt": "Tema pop de los 80 con batería contundente y sintetizador",
+        "rock90sLabel": "Rock de los 90",
+        "rock90sPrompt": "Canción de rock de los 90 con guitarras potentes y batería pesada",
+        "upbeatEdmLabel": "EDM animado",
+        "upbeatEdmPrompt": "Un tema EDM ligero y alegre, con batería sincopada, pads aéreos y mucha emoción, bpm: 130",
         "countryLabel": "Country",
-        "countryPrompt": "A cheerful country song with acoustic guitars",
+        "countryPrompt": "Una canción country alegre con guitarras acústicas",
         "lofiElectroLabel": "Lo-fi Electro",
-        "lofiElectroPrompt": "Lofi slow bpm electro chill with organic samples"
+        "lofiElectroPrompt": "Electro chill lo-fi de ritmo lento con samples orgánicos"
       }
     },
     "clearKeyframesDialog": {

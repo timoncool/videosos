@@ -96,7 +96,30 @@
         "embeddedDescription": "켜고 끌 수 있는 자막 트랙 (WebM/MKV)."
       },
       "subtitles": "자막",
-      "video": "동영상"
+      "video": "동영상",
+      "rateControl": "비트레이트 제어",
+      "rateControlAuto": "자동(원본에 맞춤)",
+      "rateControlCbr": "CBR(고정 비트레이트)",
+      "rateControlVbr": "VBR(가변 비트레이트)",
+      "targetBitrate": "목표 비트레이트",
+      "useSourceBitrate": "원본 사용",
+      "smartCopy": "가능하면 스마트 복사",
+      "smartCopyPath": "스마트 복사 · 재인코딩 없음",
+      "estimatedSize": "예상 {{size}}",
+      "sourceBitrate": "원본 {{bitrate}}",
+      "smartCopyStatus": {
+        "eligible": "사용 가능: 원본 미디어를 바이트 단위로 그대로 복사합니다.",
+        "disabled": "사용 안 함. 타임라인이 렌더링되고 인코딩됩니다.",
+        "not-video": "동영상 내보내기에서만 사용할 수 있습니다.",
+        "range": "인/아웃 범위를 내보낼 때는 사용할 수 없습니다.",
+        "timeline-layout": "추가 레이어가 없는 전체 원본 클립 하나가 필요합니다.",
+        "source-unavailable": "원본 파일 또는 메타데이터를 사용할 수 없습니다.",
+        "trimmed-or-retimed": "원본이 잘렸거나, 분할, 역재생 또는 속도 변경되어 사용할 수 없습니다.",
+        "visual-processing": "시각 편집, 자막, 전환 또는 키프레임을 렌더링해야 하므로 사용할 수 없습니다.",
+        "audio-processing": "오디오 또는 트랙 믹스가 변경되어 사용할 수 없습니다.",
+        "project-mismatch": "프로젝트 해상도 또는 프레임 속도가 원본과 일치하지 않습니다.",
+        "format-mismatch": "선택한 형식 또는 코덱이 원본과 일치하지 않습니다."
+      }
     },
     "videoContainer": {
       "mp4": "광범위한 지원, 공유에 적합",
@@ -182,8 +205,13 @@
         "worker-export-ready": {
           "title": "워커 내보내기 경로 준비 완료",
           "detail": "내보내기 워커가 알려진 메인 스레드 폴백 없이 이 컴포지션을 렌더링할 수 있습니다."
+        },
+        "smart-copy-ready": {
+          "title": "스마트 복사 준비됨",
+          "detail": "원본 미디어를 렌더링이나 재인코딩 없이 복사합니다."
         }
-      }
+      },
+      "smartCopyPath": "스마트 복사 경로"
     }
   }
 }

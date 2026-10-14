@@ -74,7 +74,7 @@
       "effects": "Efeitos",
       "presets": "Predefinições",
       "fontWeights": {
-        "regular": "Regular",
+        "regular": "Normal",
         "medium": "Médio",
         "semibold": "Seminegrito",
         "bold": "Negrito"
@@ -186,7 +186,7 @@
         "savedToLibrary": "\"{{fileName}}\" foi salvo na biblioteca de mídia.",
         "savedAndAdded": "\"{{fileName}}\" foi salvo e adicionado à linha do tempo."
       },
-      "defaultTtsPrompt": "Welcome to freecut. This voice was generated locally in the browser.",
+      "defaultTtsPrompt": "Bem-vindo ao freecut. Esta voz foi gerada localmente no navegador.",
       "musicPresets": {
         "lofiChillLabel": "Lo-fi tranquilo",
         "lofiChillPrompt": "Batida lo-fi quente com bateria vintage, baixo suave e lead de sintetizador sonhador",
@@ -311,7 +311,7 @@
     "sort": {
       "label": "Ordenar",
       "relevance": "Relevância",
-      "time": "Timestamp",
+      "time": "Marca de tempo",
       "name": "Nome da mídia"
     },
     "scope": {

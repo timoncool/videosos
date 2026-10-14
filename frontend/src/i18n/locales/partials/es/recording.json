@@ -21,7 +21,7 @@
     "syncOffsetEarlier": "Adelantar la toma",
     "syncOffsetLater": "Retrasar la toma",
     "headphonesHint": "Usa auriculares para que el audio de la línea de tiempo no sea captado por el micrófono.",
-    "fileNamePrefix": "voiceover",
+    "fileNamePrefix": "locución",
     "errors": {
       "unsupported": "La grabación con micrófono no es compatible con este navegador.",
       "noProject": "Abre un proyecto antes de grabar.",

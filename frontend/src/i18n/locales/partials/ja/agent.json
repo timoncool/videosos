@@ -2,20 +2,20 @@
   "agent": {
     "name": "エージェント",
     "commands": {
-      "click": "clicks",
-      "type": "types",
-      "select": "chooses",
-      "press_key": "presses a key",
-      "scroll": "scrolls",
-      "timeline_edit": "edits the timeline",
-      "timeline_undo": "undoes",
-      "timeline_redo": "redoes",
-      "media_import": "imports media",
-      "playhead_seek": "moves the playhead",
-      "playback": "plays or pauses",
-      "editor_tab": "opens a tab",
-      "project_open": "opens a project",
-      "export_video": "exports the video"
+      "click": "クリックする",
+      "type": "入力する",
+      "select": "選択する",
+      "press_key": "キーを押す",
+      "scroll": "スクロールする",
+      "timeline_edit": "タイムラインを編集する",
+      "timeline_undo": "元に戻す",
+      "timeline_redo": "やり直す",
+      "media_import": "メディアを読み込む",
+      "playhead_seek": "再生ヘッドを移動する",
+      "playback": "再生または一時停止する",
+      "editor_tab": "タブを開く",
+      "project_open": "プロジェクトを開く",
+      "export_video": "動画を書き出す"
     }
   }
 }

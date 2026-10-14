@@ -101,7 +101,14 @@
         "frameRate": "フレームレート",
         "durationSeconds": "デュレーション（秒）",
         "create": "作成"
-      }
+      },
+      "controllerLayer": "ヌルオブジェクト",
+      "parentColumn": "親",
+      "shiftToggleAllLayers": "Shiftキーを押しながらクリックすると、すべてのレイヤーを展開または折りたたみます",
+      "parentPickWhipForLayer": "{{name}}の親ピックウィップ",
+      "parentPickWhipHelp": "親レイヤーにドラッグします。Shift: 位置にスナップ。Alt: ローカルポーズを使用。Ctrl/Cmd+クリック: 親子関係を解除。",
+      "parentForLayer": "{{name}}の親",
+      "nullObjectNonRendering": "ヌルオブジェクト(レンダリングされません)"
     },
     "miniTimeline": {
       "inPoint": "イン点",
@@ -357,7 +364,38 @@
       "directionTop": "上",
       "directionBottom": "下",
       "resetParam": "{{label}}をリセット",
-      "paramColorAria": "{{label}}の色"
+      "paramColorAria": "{{label}}の色",
+      "params": {
+        "warp": "ワープ",
+        "color": "カラー",
+        "size": "サイズ",
+        "intensity": "強度",
+        "density": "密度",
+        "glow": "グロー",
+        "blocks": "ブロック",
+        "rgb_split": "RGBスプリット",
+        "block_size": "ブロックサイズ",
+        "spread": "拡散",
+        "blur": "ぼかし",
+        "spin": "スピン",
+        "scale": "スケール",
+        "turbulence": "乱流",
+        "chroma": "クロマ",
+        "swirl": "渦巻き",
+        "shine": "輝き",
+        "zoom": "ズーム",
+        "vignette": "ビネット",
+        "warmth": "暖かさ",
+        "burn": "焼き込み",
+        "grain": "粒状感",
+        "slip": "ずれ",
+        "shake": "シェイク",
+        "exposure": "露出",
+        "gate_width": "ゲート幅",
+        "roll": "ロール",
+        "dim": "減光",
+        "softness": "やわらかさ"
+      }
     },
     "propertiesSidebar": {
       "title": "プロパティ",
@@ -366,7 +404,9 @@
       "dockToPreview": "プレビューにドッキング",
       "expandFullColumn": "フルカラムに展開",
       "showPanel": "プロパティパネルを表示",
-      "clipsSelected": "{{count}} クリップを選択中"
+      "clipsSelected": "{{count}} クリップを選択中",
+      "layer": "レイヤー",
+      "composition": "コンポジション"
     },
     "markerPanel": {
       "notFound": "マーカーが見つかりません",
@@ -398,7 +438,10 @@
       "switchToFrames": "フレームに切り替え",
       "timecode": "タイムコード",
       "frameRate": "フレームレート",
-      "totalFrames": "総フレーム数"
+      "totalFrames": "総フレーム数",
+      "composition": "コンポジション",
+      "matchProject": "プロジェクトに合わせる",
+      "matchProjectBackground": "背景をプロジェクトに合わせる"
     },
     "clipPanel": {
       "tabVideo": "ビデオ",
@@ -407,7 +450,10 @@
       "adjustmentLayerHint": "調整レイヤーのエフェクトは、上のトラックのすべてのアイテムに適用されます。",
       "tabText": "テキスト",
       "tabAnimation": "アニメーション",
-      "tabShape": "シェイプ"
+      "tabShape": "シェイプ",
+      "tabProperties": "プロパティ",
+      "tabController": "ヌルオブジェクト",
+      "tabAnimate": "アニメート"
     },
     "gifSection": {
       "animation": "アニメーション",
@@ -862,7 +908,7 @@
         "savedToLibrary": "\"{{fileName}}\" をメディアライブラリに保存しました。",
         "savedAndAdded": "\"{{fileName}}\" を保存してタイムラインに追加しました。"
       },
-      "defaultTtsPrompt": "Welcome to freecut. This voice was generated locally in the browser.",
+      "defaultTtsPrompt": "freecutへようこそ。この音声はブラウザー内でローカルに生成されました。",
       "musicPresets": {
         "lofiChillLabel": "Lo-fi チル",
         "lofiChillPrompt": "温かい lo-fi ビート、ダスティなドラム、メロウなベース、夢のようなシンセリード",
@@ -880,7 +926,29 @@
     },
     "colorPanel": {
       "emptyState": "グレーディングするクリップを選択してください",
-      "adjustmentLayerLabel": "グレーディング"
+      "adjustmentLayerLabel": "グレーディング",
+      "dockLabel": "カラーグレーディング用ワークスペース",
+      "dockTitle": "カラー"
+    },
+    "transformHierarchy": {
+      "controllerOption": "ヌル: {{name}}",
+      "none": "なし"
+    },
+    "compositionControls": {
+      "authoringTitle": "公開するコントロール({{v0}})",
+      "authoringHint": "このコンポジションを再利用するときに編集可能なままにするテキストと色を選択します。",
+      "addAnother": "別のプロパティを公開",
+      "add": "プロパティを公開",
+      "allExposed": "サポートされているすべてのプロパティが公開されています。",
+      "noCandidates": "編集可能なプロパティを公開するには、テキストまたはシェイプレイヤーを追加してください。",
+      "resetOverride": "{{name}}のオーバーライドをリセット",
+      "overridden": "{{name}}はオーバーライドされています",
+      "instanceTitle": "テンプレートのオーバーライド",
+      "instanceHint": "変更はこのインスタンスにのみ適用されます。青い点は、元の値と異なる値を示します。",
+      "resetAll": "すべてのオーバーライドをリセット"
+    },
+    "textProperties": {
+      "scale": "スケール"
     }
   }
 }

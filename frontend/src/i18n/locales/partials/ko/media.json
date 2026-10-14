@@ -114,7 +114,17 @@
       "size": "크기",
       "transcript": "전사",
       "transcriptWithCount": "전사 ({{count}})",
-      "type": "유형"
+      "type": "유형",
+      "source": "원본",
+      "sourceStatus": {
+        "app-storage": "앱 저장소",
+        "changed": "연결된 파일이 변경되었습니다",
+        "checking": "확인 중...",
+        "linked": "연결된 파일",
+        "needs-permission": "권한이 필요합니다",
+        "unavailable": "사용할 수 없음",
+        "workspace-copy": "작업 영역 사본"
+      }
     },
     "library": {
       "aiAnalysisProgress": "AI 분석",
@@ -224,7 +234,10 @@
       "importFailed_one": "{{count}}개 파일을 가져오지 못했습니다. 파일을 확인하고 다시 시도하세요.",
       "importFailed_other": "{{count}}개 파일을 가져오지 못했습니다. 파일을 확인하고 다시 시도하세요.",
       "upscalingVideo": "동영상 업스케일 중",
-      "upscaleProgress": "업스케일 진행률"
+      "upscaleProgress": "업스케일 진행률",
+      "importCopyToWorkspace": "작업 영역으로 복사",
+      "importLinkOriginal": "원본 파일 연결",
+      "importMoreOptions": "가져오기 옵션"
     },
     "missingMedia": {
       "title": "누락된 미디어",

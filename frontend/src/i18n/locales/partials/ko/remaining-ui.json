@@ -186,7 +186,7 @@
         "savedToLibrary": "\"{{fileName}}\"이(가) 미디어 라이브러리에 저장되었습니다.",
         "savedAndAdded": "\"{{fileName}}\"이(가) 저장되어 타임라인에 추가되었습니다."
       },
-      "defaultTtsPrompt": "Welcome to freecut. This voice was generated locally in the browser.",
+      "defaultTtsPrompt": "freecut에 오신 것을 환영합니다. 이 음성은 브라우저에서 로컬로 생성되었습니다.",
       "musicPresets": {
         "lofiChillLabel": "Lo-fi 칠",
         "lofiChillPrompt": "따뜻한 lo-fi 비트, 먼지 느낌의 드럼, 부드러운 베이스, 꿈같은 신스 리드",

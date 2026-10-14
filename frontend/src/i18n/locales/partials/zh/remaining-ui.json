@@ -186,7 +186,7 @@
         "savedToLibrary": "已将\"{{fileName}}\"保存到媒体库。",
         "savedAndAdded": "已保存\"{{fileName}}\"并添加到时间线。"
       },
-      "defaultTtsPrompt": "Welcome to freecut. This voice was generated locally in the browser.",
+      "defaultTtsPrompt": "欢迎使用 freecut。此语音在浏览器中本地生成。",
       "musicPresets": {
         "lofiChillLabel": "Lo-fi 放松",
         "lofiChillPrompt": "温暖的 lo-fi 节拍，配有复古鼓点、柔和低音和梦幻合成器主旋律",

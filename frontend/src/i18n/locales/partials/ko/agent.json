@@ -2,20 +2,20 @@
   "agent": {
     "name": "에이전트",
     "commands": {
-      "click": "clicks",
-      "type": "types",
-      "select": "chooses",
-      "press_key": "presses a key",
-      "scroll": "scrolls",
-      "timeline_edit": "edits the timeline",
-      "timeline_undo": "undoes",
-      "timeline_redo": "redoes",
-      "media_import": "imports media",
-      "playhead_seek": "moves the playhead",
-      "playback": "plays or pauses",
-      "editor_tab": "opens a tab",
-      "project_open": "opens a project",
-      "export_video": "exports the video"
+      "click": "클릭합니다",
+      "type": "입력합니다",
+      "select": "선택합니다",
+      "press_key": "키를 누릅니다",
+      "scroll": "스크롤합니다",
+      "timeline_edit": "타임라인을 편집합니다",
+      "timeline_undo": "실행 취소합니다",
+      "timeline_redo": "다시 실행합니다",
+      "media_import": "미디어를 가져옵니다",
+      "playhead_seek": "재생 헤드를 이동합니다",
+      "playback": "재생하거나 일시 정지합니다",
+      "editor_tab": "탭을 엽니다",
+      "project_open": "프로젝트를 엽니다",
+      "export_video": "동영상을 내보냅니다"
     }
   }
 }

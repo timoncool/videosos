@@ -23,7 +23,7 @@
       "gap": "Espacamento",
       "noItemsToArrange": "Nenhum item para organizar",
       "padding": "Preenchimento",
-      "presetAuto": "Auto",
+      "presetAuto": "Automático",
       "presetFocusSidebar": "Foco com barra lateral",
       "presetGrid2": "Grade 2x2",
       "presetGrid3": "Grade 3x3",
@@ -190,7 +190,11 @@
       "zoomOutTooltip": "Afastar",
       "zoomSlider": "Controle de zoom",
       "zoomToFit": "Ajustar zoom",
-      "zoomToFitTooltip": "Ajustar zoom"
+      "zoomToFitTooltip": "Ajustar zoom",
+      "disableAudioSkimming": "Desativar a navegação rápida de áudio",
+      "enableAudioSkimming": "Ativar a navegação rápida de áudio",
+      "audioSkimmingDisabled": "Navegação rápida de áudio desativada",
+      "audioSkimmingEnabled": "Navegação rápida de áudio ativada"
     },
     "itemActions": {
       "appliedEffectToClips": "Efeito aplicado aos clipes",
@@ -208,7 +212,7 @@
         "easeIn": "Entrada suave",
         "easeInOut": "Entrada/Saída",
         "overshoot": "Ultrapassagem",
-        "snap": "Snap",
+        "snap": "Ajuste",
         "outCubic": "Saída Cubic",
         "outQuart": "Saída Quart",
         "outQuint": "Saída Quint",

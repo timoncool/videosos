@@ -101,7 +101,14 @@
         "frameRate": "프레임 속도",
         "durationSeconds": "길이(초)",
         "create": "만들기"
-      }
+      },
+      "controllerLayer": "널 오브젝트",
+      "parentColumn": "부모",
+      "shiftToggleAllLayers": "Shift 키를 누른 채 클릭하면 모든 레이어를 펼치거나 접습니다",
+      "parentPickWhipForLayer": "{{name}}의 부모 픽 휩",
+      "parentPickWhipHelp": "부모 레이어로 드래그하세요. Shift: 위치 스냅. Alt: 로컬 포즈 사용. Ctrl/Cmd+클릭: 연결 해제.",
+      "parentForLayer": "{{name}}의 부모",
+      "nullObjectNonRendering": "널 오브젝트(렌더링되지 않음)"
     },
     "miniTimeline": {
       "inPoint": "인 포인트",
@@ -357,7 +364,38 @@
       "directionTop": "위",
       "directionBottom": "아래",
       "resetParam": "{{label}} 재설정",
-      "paramColorAria": "{{label}} 색상"
+      "paramColorAria": "{{label}} 색상",
+      "params": {
+        "warp": "워프",
+        "color": "색상",
+        "size": "크기",
+        "intensity": "강도",
+        "density": "밀도",
+        "glow": "글로우",
+        "blocks": "블록",
+        "rgb_split": "RGB 분리",
+        "block_size": "블록 크기",
+        "spread": "확산",
+        "blur": "흐림",
+        "spin": "회전 효과",
+        "scale": "배율",
+        "turbulence": "난류",
+        "chroma": "크로마",
+        "swirl": "소용돌이",
+        "shine": "광택",
+        "zoom": "확대/축소",
+        "vignette": "비네팅",
+        "warmth": "따뜻함",
+        "burn": "번 효과",
+        "grain": "입자",
+        "slip": "밀림",
+        "shake": "흔들림",
+        "exposure": "노출",
+        "gate_width": "게이트 너비",
+        "roll": "롤",
+        "dim": "어둡게",
+        "softness": "부드러움"
+      }
     },
     "propertiesSidebar": {
       "title": "속성",
@@ -366,7 +404,9 @@
       "dockToPreview": "미리보기에 도킹",
       "expandFullColumn": "전체 열로 확장",
       "showPanel": "속성 패널 표시",
-      "clipsSelected": "{{count}}개 클립 선택됨"
+      "clipsSelected": "{{count}}개 클립 선택됨",
+      "layer": "레이어",
+      "composition": "컴포지션"
     },
     "markerPanel": {
       "notFound": "마커를 찾을 수 없습니다",
@@ -398,7 +438,10 @@
       "switchToFrames": "프레임 단위로 전환",
       "timecode": "타임코드",
       "frameRate": "프레임 레이트",
-      "totalFrames": "총 프레임 수"
+      "totalFrames": "총 프레임 수",
+      "composition": "컴포지션",
+      "matchProject": "프로젝트에 맞춤",
+      "matchProjectBackground": "배경을 프로젝트에 맞춤"
     },
     "clipPanel": {
       "tabVideo": "비디오",
@@ -407,7 +450,10 @@
       "adjustmentLayerHint": "조정 레이어의 효과는 위쪽 트랙의 모든 항목에 적용됩니다.",
       "tabText": "텍스트",
       "tabAnimation": "애니메이션",
-      "tabShape": "도형"
+      "tabShape": "도형",
+      "tabProperties": "속성",
+      "tabController": "널 오브젝트",
+      "tabAnimate": "애니메이션"
     },
     "gifSection": {
       "animation": "애니메이션",
@@ -862,7 +908,7 @@
         "savedToLibrary": "\"{{fileName}}\"이(가) 미디어 라이브러리에 저장되었습니다.",
         "savedAndAdded": "\"{{fileName}}\"이(가) 저장되어 타임라인에 추가되었습니다."
       },
-      "defaultTtsPrompt": "Welcome to freecut. This voice was generated locally in the browser.",
+      "defaultTtsPrompt": "freecut에 오신 것을 환영합니다. 이 음성은 브라우저에서 로컬로 생성되었습니다.",
       "musicPresets": {
         "lofiChillLabel": "Lo-fi 칠",
         "lofiChillPrompt": "따뜻한 lo-fi 비트, 먼지 느낌의 드럼, 부드러운 베이스, 꿈같은 신스 리드",
@@ -880,7 +926,29 @@
     },
     "colorPanel": {
       "emptyState": "색 보정할 클립을 선택하세요",
-      "adjustmentLayerLabel": "색 보정"
+      "adjustmentLayerLabel": "색 보정",
+      "dockLabel": "색보정 작업 영역",
+      "dockTitle": "색상"
+    },
+    "transformHierarchy": {
+      "controllerOption": "널: {{name}}",
+      "none": "없음"
+    },
+    "compositionControls": {
+      "authoringTitle": "게시된 컨트롤({{v0}})",
+      "authoringHint": "이 컴포지션을 재사용할 때 계속 편집할 수 있게 둘 텍스트와 색상을 선택하세요.",
+      "addAnother": "다른 속성 노출",
+      "add": "속성 노출",
+      "allExposed": "지원되는 모든 속성이 노출되어 있습니다.",
+      "noCandidates": "편집 가능한 속성을 노출하려면 텍스트 또는 도형 레이어를 추가하세요.",
+      "resetOverride": "{{name}} 재정의 초기화",
+      "overridden": "{{name}}이(가) 재정의되었습니다",
+      "instanceTitle": "템플릿 재정의",
+      "instanceHint": "변경 사항은 이 인스턴스에만 적용됩니다. 파란 점은 원본과 다른 값을 나타냅니다.",
+      "resetAll": "모든 재정의 초기화"
+    },
+    "textProperties": {
+      "scale": "배율"
     }
   }
 }

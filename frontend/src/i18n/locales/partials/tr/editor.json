@@ -101,7 +101,14 @@
         "frameRate": "Kare hızı",
         "durationSeconds": "Süre (saniye)",
         "create": "Oluştur"
-      }
+      },
+      "controllerLayer": "Boş Nesne",
+      "parentColumn": "Üst",
+      "shiftToggleAllLayers": "Tüm katmanları genişletmek veya daraltmak için Shift tuşuyla tıklayın",
+      "parentPickWhipForLayer": "{{name}} için üst katman seçici",
+      "parentPickWhipHelp": "Bir üst katmana sürükleyin. Shift: konuma yapış. Alt: yerel pozu kullan. Ctrl/Cmd+tıklama: bağlantıyı kopar.",
+      "parentForLayer": "{{name}} için üst katman",
+      "nullObjectNonRendering": "Boş Nesne (işlenmez)"
     },
     "miniTimeline": {
       "inPoint": "Giriş noktası",
@@ -357,7 +364,38 @@
       "directionTop": "Üst",
       "directionBottom": "Alt",
       "resetParam": "{{label}} sıfırla",
-      "paramColorAria": "{{label}} rengi"
+      "paramColorAria": "{{label}} rengi",
+      "params": {
+        "warp": "Çarpıtma",
+        "color": "Renk",
+        "size": "Boyut",
+        "intensity": "Yoğunluk",
+        "density": "Sıklık",
+        "glow": "Parlama",
+        "blocks": "Bloklar",
+        "rgb_split": "RGB Ayrımı",
+        "block_size": "Blok Boyutu",
+        "spread": "Yayılma",
+        "blur": "Bulanıklık",
+        "spin": "Döndürme",
+        "scale": "Ölçek",
+        "turbulence": "Türbülans",
+        "chroma": "Kroma",
+        "swirl": "Girdap",
+        "shine": "Parıltı",
+        "zoom": "Yakınlaştırma",
+        "vignette": "Vinyet",
+        "warmth": "Sıcaklık",
+        "burn": "Yanma",
+        "grain": "Gren",
+        "slip": "Kayma",
+        "shake": "Sarsıntı",
+        "exposure": "Pozlama",
+        "gate_width": "Kapı Genişliği",
+        "roll": "Kaydırma",
+        "dim": "Loşluk",
+        "softness": "Yumuşaklık"
+      }
     },
     "propertiesSidebar": {
       "title": "Özellikler",
@@ -366,7 +404,9 @@
       "dockToPreview": "Önizlemeye sabitle",
       "expandFullColumn": "Tam sütuna genişlet",
       "showPanel": "Özellikler Panelini Göster",
-      "clipsSelected": "{{count}} klip seçildi"
+      "clipsSelected": "{{count}} klip seçildi",
+      "layer": "Katman",
+      "composition": "Kompozisyon"
     },
     "markerPanel": {
       "notFound": "İşaretçi bulunamadı",
@@ -398,7 +438,10 @@
       "switchToFrames": "Kareye geç",
       "timecode": "Zaman Kodu",
       "frameRate": "Kare Hızı",
-      "totalFrames": "Toplam Kare"
+      "totalFrames": "Toplam Kare",
+      "composition": "Kompozisyon",
+      "matchProject": "Projeye Uydur",
+      "matchProjectBackground": "Arka planı projeye uydur"
     },
     "clipPanel": {
       "tabVideo": "Video",
@@ -407,7 +450,10 @@
       "adjustmentLayerHint": "Ayar katmanlarındaki efektler, üst izlerdeki tüm öğelere uygulanır.",
       "tabText": "Metin",
       "tabAnimation": "Animasyon",
-      "tabShape": "Şekil"
+      "tabShape": "Şekil",
+      "tabProperties": "Özellikler",
+      "tabController": "Boş Nesne",
+      "tabAnimate": "Canlandır"
     },
     "gifSection": {
       "animation": "Animasyon",
@@ -880,7 +926,29 @@
     },
     "colorPanel": {
       "emptyState": "Renk düzenlemek için bir klip seçin",
-      "adjustmentLayerLabel": "Renk düzenleme"
+      "adjustmentLayerLabel": "Renk düzenleme",
+      "dockLabel": "Renk derecelendirme çalışma alanı",
+      "dockTitle": "Renk"
+    },
+    "transformHierarchy": {
+      "controllerOption": "Boş: {{name}}",
+      "none": "Yok"
+    },
+    "compositionControls": {
+      "authoringTitle": "Yayımlanan denetimler ({{v0}})",
+      "authoringHint": "Bu kompozisyon yeniden kullanıldığında düzenlenebilir kalacak metinleri ve renkleri seçin.",
+      "addAnother": "Başka bir özelliği göster",
+      "add": "Özelliği göster",
+      "allExposed": "Desteklenen tüm özellikler gösteriliyor.",
+      "noCandidates": "Düzenlenebilir özellikleri göstermek için bir metin veya şekil katmanı ekleyin.",
+      "resetOverride": "{{name}} geçersiz kılmasını sıfırla",
+      "overridden": "{{name}} geçersiz kılındı",
+      "instanceTitle": "Şablon geçersiz kılmaları",
+      "instanceHint": "Değişiklikler yalnızca bu örneğe uygulanır. Mavi nokta, kaynaktan farklı değerleri işaretler.",
+      "resetAll": "Tüm geçersiz kılmaları sıfırla"
+    },
+    "textProperties": {
+      "scale": "Ölçek"
     }
   }
 }

@@ -23,6 +23,25 @@
     "toastRemoved": "{{count}} Clip(s) entfernt",
     "toastNothingRemoved": "Es wurde nichts entfernt",
     "toastRemoveFailed": "Die ausgewählten Wörter konnten nicht entfernt werden",
-    "toastTranscribeFailed": "Transkription fehlgeschlagen"
+    "toastTranscribeFailed": "Transkription fehlgeschlagen",
+    "boundaryClip": "Neuer Clip",
+    "jumpTo": "Zu {{time}} springen",
+    "toastCopied": "{{count}} Wörter kopiert",
+    "toastCut": "{{count}} Wörter ausgeschnitten",
+    "selectedClips": "{{count}} ausgewählte Clips",
+    "selectedClip": "Ausgewählter Clip",
+    "approxMatches": "Ungefähre Treffer",
+    "emptyProject": "In diesem Projekt gibt es noch keine Video- oder Audioclips.",
+    "pendingHidden": "{{count}} zum Löschen markiert · {{seconds}} s",
+    "restoreAll": "Alle wiederherstellen",
+    "applyEdits": "Markierte löschen",
+    "ignoreHint": "Wörter auswählen und mit der Rücktaste zum Löschen markieren",
+    "copy": "Kopieren",
+    "copyHint": "Wörter kopieren (mit Strg+V in die Zeitleiste einfügen)",
+    "cut": "Ausschneiden",
+    "restoreSelection": "Wiederherstellen",
+    "ignoreSelection": "Zum Löschen markieren",
+    "scopeSelection": "Auswahl",
+    "scopeProject": "Gesamtes Projekt"
   }
 }

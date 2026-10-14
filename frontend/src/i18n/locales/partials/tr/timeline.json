@@ -190,7 +190,11 @@
       "zoomOutTooltip": "Uzaklaştır",
       "zoomSlider": "Yakınlaştırma kaydırıcısı",
       "zoomToFit": "Sığdır",
-      "zoomToFitTooltip": "Sığdır"
+      "zoomToFitTooltip": "Sığdır",
+      "disableAudioSkimming": "Ses Taramasını Kapat",
+      "enableAudioSkimming": "Ses Taramasını Aç",
+      "audioSkimmingDisabled": "Ses Taraması Kapalı",
+      "audioSkimmingEnabled": "Ses Taraması Açık"
     },
     "itemActions": {
       "appliedEffectToClips": "Efekt kliplere uygulandı",
@@ -208,7 +212,7 @@
         "easeIn": "Hızlanarak",
         "easeInOut": "Yavaş/Hızlı",
         "overshoot": "Aşma",
-        "snap": "Snap",
+        "snap": "Yapış",
         "outCubic": "Çıkış Cubic",
         "outQuart": "Çıkış Quart",
         "outQuint": "Çıkış Quint",

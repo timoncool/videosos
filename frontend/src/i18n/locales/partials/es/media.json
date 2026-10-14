@@ -114,7 +114,17 @@
       "size": "Tamaño",
       "transcript": "Transcripción",
       "transcriptWithCount": "Transcripción ({{count}})",
-      "type": "Tipo"
+      "type": "Tipo",
+      "source": "Origen",
+      "sourceStatus": {
+        "app-storage": "Almacenamiento de la app",
+        "changed": "El archivo vinculado ha cambiado",
+        "checking": "Comprobando...",
+        "linked": "Archivo vinculado",
+        "needs-permission": "Requiere permiso",
+        "unavailable": "No disponible",
+        "workspace-copy": "Copia en el espacio de trabajo"
+      }
     },
     "library": {
       "aiAnalysisProgress": "Análisis con IA",
@@ -154,7 +164,7 @@
       "groupGifs": "GIF",
       "groupImages": "Imagenes",
       "groupLottie": "Lottie",
-      "groupVideos": "Videos",
+      "groupVideos": "Vídeos",
       "import": "Importar",
       "importFromUrlDescription": "Importa un archivo multimedia desde una URL directa.",
       "importFromUrlHint": "Pega un enlace directo a un archivo de video, audio, imagen o GIF.",
@@ -193,7 +203,7 @@
       "checkingWorkspaceHealthShort": "Comprobando",
       "allShort": "TODO",
       "typeShort": {
-        "video": "VIDEO",
+        "video": "VÍDEO",
         "audio": "AUDIO",
         "image": "IMAGEN",
         "lottie": "LOTTIE"
@@ -224,7 +234,10 @@
       "importFailed_one": "{{count}} archivo no se pudo importar. Revisa el archivo e inténtalo de nuevo.",
       "importFailed_other": "{{count}} archivos no se pudieron importar. Revisa los archivos e inténtalo de nuevo.",
       "upscalingVideo": "Escalando vídeo",
-      "upscaleProgress": "Progreso del escalado"
+      "upscaleProgress": "Progreso del escalado",
+      "importCopyToWorkspace": "Copiar al espacio de trabajo",
+      "importLinkOriginal": "Vincular los archivos originales",
+      "importMoreOptions": "Opciones de importación"
     },
     "missingMedia": {
       "title": "Medios faltantes",
@@ -291,7 +304,7 @@
       "audio": "Audio",
       "image": "Imagen",
       "lottie": "Lottie",
-      "video": "Video"
+      "video": "Vídeo"
     },
     "unsupportedCodec": {
       "bodyMultiple": "{{count}} archivos usan códecs que tu navegador no puede decodificar. Es posible que no se reproduzcan correctamente.",

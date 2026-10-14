@@ -96,7 +96,30 @@
         "embeddedDescription": "Uma faixa de legendas alternável (WebM/MKV)."
       },
       "subtitles": "Legendas",
-      "video": "Vídeo"
+      "video": "Vídeo",
+      "rateControl": "Controle de taxa",
+      "rateControlAuto": "Automático (conforme a origem)",
+      "rateControlCbr": "CBR (taxa de bits constante)",
+      "rateControlVbr": "VBR (taxa de bits variável)",
+      "targetBitrate": "Taxa de bits alvo",
+      "useSourceBitrate": "Usar a origem",
+      "smartCopy": "Cópia inteligente quando possível",
+      "smartCopyPath": "Cópia inteligente · sem recodificação",
+      "estimatedSize": "Estimado: {{size}}",
+      "sourceBitrate": "Origem: {{bitrate}}",
+      "smartCopyStatus": {
+        "eligible": "Disponível: a mídia original será copiada byte a byte.",
+        "disabled": "Desativada. A linha do tempo será renderizada e codificada.",
+        "not-video": "Disponível apenas para exportações de vídeo.",
+        "range": "Indisponível ao exportar um intervalo de entrada/saída.",
+        "timeline-layout": "Requer um único clipe de origem completo, sem camadas adicionais.",
+        "source-unavailable": "O arquivo de origem original ou seus metadados não estão disponíveis.",
+        "trimmed-or-retimed": "Indisponível porque a origem foi cortada, dividida, invertida ou teve a velocidade alterada.",
+        "visual-processing": "Indisponível porque edições visuais, legendas, transições ou quadros-chave precisam ser renderizados.",
+        "audio-processing": "Indisponível porque o áudio ou a mixagem das faixas foi alterado.",
+        "project-mismatch": "A resolução ou a taxa de quadros do projeto não corresponde à origem.",
+        "format-mismatch": "O formato ou o codec selecionado não corresponde à origem."
+      }
     },
     "videoContainer": {
       "mp4": "Amplo suporte, ideal para compartilhar",
@@ -182,8 +205,13 @@
         "worker-export-ready": {
           "title": "Caminho de exportação por worker pronto",
           "detail": "O worker de exportação pode renderizar esta composição sem fallback conhecido para a thread principal."
+        },
+        "smart-copy-ready": {
+          "title": "Cópia inteligente pronta",
+          "detail": "A mídia original será copiada sem renderização nem recodificação."
         }
-      }
+      },
+      "smartCopyPath": "Caminho da cópia inteligente"
     }
   }
 }

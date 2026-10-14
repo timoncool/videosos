@@ -177,7 +177,7 @@
       "slipTool": "Slip Werkzeug",
       "snapDisabled": "Einrasten deaktiviert",
       "snapEnabled": "Einrasten aktiviert",
-      "title": "Timeline",
+      "title": "Zeitleiste",
       "trimEditTool": "Trimmen Bearbeitung Werkzeug",
       "trimEditToolTooltip": "Trimmen Bearbeitung Werkzeug",
       "undo": "Ruckgangig",
@@ -190,7 +190,11 @@
       "zoomOutTooltip": "Zoom aus",
       "zoomSlider": "Zoom Regler",
       "zoomToFit": "Zoom zu anpassen",
-      "zoomToFitTooltip": "Zoom zu anpassen"
+      "zoomToFitTooltip": "Zoom zu anpassen",
+      "disableAudioSkimming": "Audio-Skimming deaktivieren",
+      "enableAudioSkimming": "Audio-Skimming aktivieren",
+      "audioSkimmingDisabled": "Audio-Skimming deaktiviert",
+      "audioSkimmingEnabled": "Audio-Skimming aktiviert"
     },
     "itemActions": {
       "appliedEffectToClips": "Applied Effekt zu Clips",
@@ -208,7 +212,7 @@
         "easeIn": "Einklang",
         "easeInOut": "Ein/Ausklang",
         "overshoot": "Überschwingen",
-        "snap": "Snap",
+        "snap": "Einrasten",
         "outCubic": "Ausklang Cubic",
         "outQuart": "Ausklang Quart",
         "outQuint": "Ausklang Quint",

@@ -101,7 +101,14 @@
         "frameRate": "Fréquence d’images",
         "durationSeconds": "Durée (secondes)",
         "create": "Créer"
-      }
+      },
+      "controllerLayer": "Objet nul",
+      "parentColumn": "Parent",
+      "shiftToggleAllLayers": "Maj+clic pour développer ou réduire tous les calques",
+      "parentPickWhipForLayer": "Lasso de parentage pour {{name}}",
+      "parentPickWhipHelp": "Faites glisser vers un calque parent. Maj : aimanter la position. Alt : utiliser la pose locale. Ctrl/Cmd+clic : détacher.",
+      "parentForLayer": "Parent de {{name}}",
+      "nullObjectNonRendering": "Objet nul (non rendu)"
     },
     "miniTimeline": {
       "inPoint": "Point d'entrée",
@@ -357,7 +364,38 @@
       "directionTop": "Haut",
       "directionBottom": "Bas",
       "resetParam": "Réinitialiser {{label}}",
-      "paramColorAria": "Couleur de {{label}}"
+      "paramColorAria": "Couleur de {{label}}",
+      "params": {
+        "warp": "Déformation",
+        "color": "Couleur",
+        "size": "Taille",
+        "intensity": "Intensité",
+        "density": "Densité",
+        "glow": "Lueur",
+        "blocks": "Blocs",
+        "rgb_split": "Séparation RVB",
+        "block_size": "Taille des blocs",
+        "spread": "Dispersion",
+        "blur": "Flou",
+        "spin": "Rotation",
+        "scale": "Échelle",
+        "turbulence": "Turbulence",
+        "chroma": "Chroma",
+        "swirl": "Tourbillon",
+        "shine": "Éclat",
+        "zoom": "Zoom",
+        "vignette": "Vignettage",
+        "warmth": "Chaleur",
+        "burn": "Brûlure",
+        "grain": "Grain",
+        "slip": "Décalage",
+        "shake": "Secousse",
+        "exposure": "Exposition",
+        "gate_width": "Largeur du couloir",
+        "roll": "Défilement",
+        "dim": "Assombrissement",
+        "softness": "Douceur"
+      }
     },
     "propertiesSidebar": {
       "title": "Propriétés",
@@ -366,7 +404,9 @@
       "dockToPreview": "Ancrer à l'aperçu",
       "expandFullColumn": "Étendre en colonne complète",
       "showPanel": "Afficher le panneau de propriétés",
-      "clipsSelected": "{{count}} clips sélectionnés"
+      "clipsSelected": "{{count}} clips sélectionnés",
+      "layer": "Calque",
+      "composition": "Composition"
     },
     "markerPanel": {
       "notFound": "Marqueur introuvable",
@@ -398,7 +438,10 @@
       "switchToFrames": "Passer aux images",
       "timecode": "Code temporel",
       "frameRate": "Fréquence d'images",
-      "totalFrames": "Images totales"
+      "totalFrames": "Images totales",
+      "composition": "Composition",
+      "matchProject": "Adapter au projet",
+      "matchProjectBackground": "Adapter l’arrière-plan au projet"
     },
     "clipPanel": {
       "tabVideo": "Vidéo",
@@ -407,7 +450,10 @@
       "adjustmentLayerHint": "Les effets sur les calques de réglage s'appliquent à tous les éléments des pistes situées au-dessus.",
       "tabText": "Texte",
       "tabAnimation": "Animation",
-      "tabShape": "Forme"
+      "tabShape": "Forme",
+      "tabProperties": "Propriétés",
+      "tabController": "Objet nul",
+      "tabAnimate": "Animer"
     },
     "gifSection": {
       "animation": "Animation",
@@ -862,25 +908,47 @@
         "savedToLibrary": "« {{fileName}} » a été enregistré dans la bibliothèque multimédia.",
         "savedAndAdded": "« {{fileName}} » a été enregistré et ajouté à la timeline."
       },
-      "defaultTtsPrompt": "Welcome to freecut. This voice was generated locally in the browser.",
+      "defaultTtsPrompt": "Bienvenue dans freecut. Cette voix a été générée localement dans le navigateur.",
       "musicPresets": {
         "lofiChillLabel": "Lo-fi Chill",
-        "lofiChillPrompt": "Warm lo-fi beat with dusty drums, mellow bass, and a dreamy synth lead",
-        "pop80sLabel": "80s Pop",
-        "pop80sPrompt": "80s pop track with bassy drums and synth",
-        "rock90sLabel": "90s Rock",
-        "rock90sPrompt": "90s rock song with loud guitars and heavy drums",
-        "upbeatEdmLabel": "Upbeat EDM",
-        "upbeatEdmPrompt": "A light and cheery EDM track, with syncopated drums, airy pads, and strong emotions bpm: 130",
+        "lofiChillPrompt": "Beat lo-fi chaleureux avec batterie poussiéreuse, basse moelleuse et lead de synthé rêveur",
+        "pop80sLabel": "Pop années 80",
+        "pop80sPrompt": "Morceau pop des années 80 avec batterie basse profonde et synthé",
+        "rock90sLabel": "Rock années 90",
+        "rock90sPrompt": "Morceau rock des années 90 avec guitares puissantes et batterie lourde",
+        "upbeatEdmLabel": "EDM énergique",
+        "upbeatEdmPrompt": "Un morceau EDM léger et joyeux, avec batterie syncopée, nappes aériennes et fortes émotions, bpm : 130",
         "countryLabel": "Country",
-        "countryPrompt": "A cheerful country song with acoustic guitars",
+        "countryPrompt": "Un morceau country enjoué avec guitares acoustiques",
         "lofiElectroLabel": "Lo-fi Electro",
-        "lofiElectroPrompt": "Lofi slow bpm electro chill with organic samples"
+        "lofiElectroPrompt": "Electro chill lo-fi au tempo lent avec samples organiques"
       }
     },
     "colorPanel": {
       "emptyState": "Sélectionnez un clip à étalonner",
-      "adjustmentLayerLabel": "Étalonnage"
+      "adjustmentLayerLabel": "Étalonnage",
+      "dockLabel": "Espace d’étalonnage",
+      "dockTitle": "Couleur"
+    },
+    "transformHierarchy": {
+      "controllerOption": "Nul : {{name}}",
+      "none": "Aucun"
+    },
+    "compositionControls": {
+      "authoringTitle": "Contrôles publiés ({{v0}})",
+      "authoringHint": "Choisissez les textes et les couleurs qui restent modifiables lorsque cette composition est réutilisée.",
+      "addAnother": "Exposer une autre propriété",
+      "add": "Exposer la propriété",
+      "allExposed": "Toutes les propriétés prises en charge sont exposées.",
+      "noCandidates": "Ajoutez un calque de texte ou de forme pour exposer des propriétés modifiables.",
+      "resetOverride": "Réinitialiser la substitution de {{name}}",
+      "overridden": "{{name}} est substitué",
+      "instanceTitle": "Substitutions du modèle",
+      "instanceHint": "Les modifications ne s’appliquent qu’à cette instance. Un point bleu signale les valeurs qui diffèrent de la source.",
+      "resetAll": "Réinitialiser toutes les substitutions"
+    },
+    "textProperties": {
+      "scale": "Échelle"
     }
   }
 }

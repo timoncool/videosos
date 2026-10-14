@@ -2,20 +2,20 @@
   "agent": {
     "name": "智能体",
     "commands": {
-      "click": "clicks",
-      "type": "types",
-      "select": "chooses",
-      "press_key": "presses a key",
-      "scroll": "scrolls",
-      "timeline_edit": "edits the timeline",
-      "timeline_undo": "undoes",
-      "timeline_redo": "redoes",
-      "media_import": "imports media",
-      "playhead_seek": "moves the playhead",
-      "playback": "plays or pauses",
-      "editor_tab": "opens a tab",
-      "project_open": "opens a project",
-      "export_video": "exports the video"
+      "click": "点击",
+      "type": "输入",
+      "select": "选择",
+      "press_key": "按键",
+      "scroll": "滚动",
+      "timeline_edit": "编辑时间轴",
+      "timeline_undo": "撤销",
+      "timeline_redo": "重做",
+      "media_import": "导入媒体",
+      "playhead_seek": "移动播放头",
+      "playback": "播放或暂停",
+      "editor_tab": "打开标签页",
+      "project_open": "打开项目",
+      "export_video": "导出视频"
     }
   }
 }

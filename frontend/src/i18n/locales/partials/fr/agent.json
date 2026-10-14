@@ -2,20 +2,20 @@
   "agent": {
     "name": "Agent",
     "commands": {
-      "click": "clicks",
-      "type": "types",
-      "select": "chooses",
-      "press_key": "presses a key",
-      "scroll": "scrolls",
-      "timeline_edit": "edits the timeline",
-      "timeline_undo": "undoes",
-      "timeline_redo": "redoes",
-      "media_import": "imports media",
-      "playhead_seek": "moves the playhead",
-      "playback": "plays or pauses",
-      "editor_tab": "opens a tab",
-      "project_open": "opens a project",
-      "export_video": "exports the video"
+      "click": "clique",
+      "type": "saisit",
+      "select": "choisit",
+      "press_key": "appuie sur une touche",
+      "scroll": "fait défiler",
+      "timeline_edit": "modifie la timeline",
+      "timeline_undo": "annule",
+      "timeline_redo": "rétablit",
+      "media_import": "importe des médias",
+      "playhead_seek": "déplace la tête de lecture",
+      "playback": "lance ou met en pause la lecture",
+      "editor_tab": "ouvre un onglet",
+      "project_open": "ouvre un projet",
+      "export_video": "exporte la vidéo"
     }
   }
 }

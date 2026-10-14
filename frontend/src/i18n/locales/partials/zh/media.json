@@ -114,7 +114,17 @@
       "size": "大小",
       "transcript": "字幕",
       "transcriptWithCount": "字幕（{{count}}）",
-      "type": "类型"
+      "type": "类型",
+      "source": "源",
+      "sourceStatus": {
+        "app-storage": "应用存储",
+        "changed": "链接的文件已更改",
+        "checking": "正在检查...",
+        "linked": "链接的文件",
+        "needs-permission": "需要权限",
+        "unavailable": "不可用",
+        "workspace-copy": "工作区副本"
+      }
     },
     "library": {
       "aiAnalysisProgress": "AI 分析",
@@ -224,7 +234,10 @@
       "importFailed_one": "{{count}} 个文件导入失败。请检查文件后重试。",
       "importFailed_other": "{{count}} 个文件导入失败。请检查文件后重试。",
       "upscalingVideo": "正在超分辨率处理视频",
-      "upscaleProgress": "超分辨率进度"
+      "upscaleProgress": "超分辨率进度",
+      "importCopyToWorkspace": "复制到工作区",
+      "importLinkOriginal": "链接原始文件",
+      "importMoreOptions": "导入选项"
     },
     "missingMedia": {
       "title": "缺失媒体",

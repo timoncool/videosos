@@ -186,20 +186,20 @@
         "savedToLibrary": "\"{{fileName}}\" wurde in der Medienbibliothek gespeichert.",
         "savedAndAdded": "\"{{fileName}}\" wurde gespeichert und zur Timeline hinzugefügt."
       },
-      "defaultTtsPrompt": "Welcome to freecut. This voice was generated locally in the browser.",
+      "defaultTtsPrompt": "Willkommen bei freecut. Diese Stimme wurde lokal im Browser erzeugt.",
       "musicPresets": {
         "lofiChillLabel": "Lo-fi Chill",
-        "lofiChillPrompt": "Warm lo-fi beat with dusty drums, mellow bass, and a dreamy synth lead",
-        "pop80sLabel": "80s Pop",
-        "pop80sPrompt": "80s pop track with bassy drums and synth",
-        "rock90sLabel": "90s Rock",
-        "rock90sPrompt": "90s rock song with loud guitars and heavy drums",
+        "lofiChillPrompt": "Warmer Lo-fi-Beat mit staubigen Drums, sanftem Bass und einem verträumten Synthesizer-Lead",
+        "pop80sLabel": "80er-Pop",
+        "pop80sPrompt": "80er-Pop-Track mit druckvollen Drums und Synthesizer",
+        "rock90sLabel": "90er-Rock",
+        "rock90sPrompt": "90er-Rock-Song mit lauten Gitarren und schweren Drums",
         "upbeatEdmLabel": "Upbeat EDM",
-        "upbeatEdmPrompt": "A light and cheery EDM track, with syncopated drums, airy pads, and strong emotions bpm: 130",
+        "upbeatEdmPrompt": "Ein leichter, fröhlicher EDM-Track mit synkopierten Drums, luftigen Pads und starken Emotionen, bpm: 130",
         "countryLabel": "Country",
-        "countryPrompt": "A cheerful country song with acoustic guitars",
+        "countryPrompt": "Ein fröhlicher Country-Song mit akustischen Gitarren",
         "lofiElectroLabel": "Lo-fi Electro",
-        "lofiElectroPrompt": "Lofi slow bpm electro chill with organic samples"
+        "lofiElectroPrompt": "Langsamer Lo-fi-Electro-Chill mit organischen Samples"
       }
     },
     "clearKeyframesDialog": {

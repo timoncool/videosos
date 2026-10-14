@@ -114,7 +114,17 @@
       "size": "Tamanho",
       "transcript": "Transcricao",
       "transcriptWithCount": "Transcricao ({{count}})",
-      "type": "Tipo"
+      "type": "Tipo",
+      "source": "Origem",
+      "sourceStatus": {
+        "app-storage": "Armazenamento do app",
+        "changed": "O arquivo vinculado foi alterado",
+        "checking": "Verificando...",
+        "linked": "Arquivo vinculado",
+        "needs-permission": "Requer permissão",
+        "unavailable": "Indisponível",
+        "workspace-copy": "Cópia no espaço de trabalho"
+      }
     },
     "library": {
       "aiAnalysisProgress": "Progresso da analise de IA",
@@ -122,9 +132,9 @@
       "analyzingMultiple": "Analisando varios",
       "analyzingSingle": "Analisando um item",
       "andJoiner": "e",
-      "assetsCount": "{{count}} assets",
-      "assetsCount_one": "{{count}} asset",
-      "assetsCount_other": "{{count}} assets",
+      "assetsCount": "{{count}} itens",
+      "assetsCount_one": "{{count}} item",
+      "assetsCount_other": "{{count}} itens",
       "back": "Voltar",
       "cancelAll": "Cancelar tudo",
       "cancelling": "Cancelando",
@@ -150,11 +160,11 @@
       "interpolationProgress": "Progresso da interpolação de quadros",
       "timeRemaining": "{{time}} restante",
       "gridItemSize": "Tamanho dos itens da grade",
-      "groupAudio": "Audio",
+      "groupAudio": "Áudio",
       "groupGifs": "GIFs",
       "groupImages": "Imagens",
       "groupLottie": "Lottie",
-      "groupVideos": "Videos",
+      "groupVideos": "Vídeos",
       "import": "Importar",
       "importFromUrlDescription": "Importe um arquivo de mídia de uma URL direta.",
       "importFromUrlHint": "Cole um link direto para um arquivo de vídeo, áudio, imagem ou GIF.",
@@ -193,8 +203,8 @@
       "checkingWorkspaceHealthShort": "Verificando",
       "allShort": "TODOS",
       "typeShort": {
-        "video": "VIDEO",
-        "audio": "AUDIO",
+        "video": "VÍDEO",
+        "audio": "ÁUDIO",
         "image": "IMAGEM",
         "lottie": "LOTTIE"
       },
@@ -224,7 +234,10 @@
       "importFailed_one": "Falha ao importar {{count}} arquivo. Verifique o arquivo e tente novamente.",
       "importFailed_other": "Falha ao importar {{count}} arquivos. Verifique os arquivos e tente novamente.",
       "upscalingVideo": "Ampliando vídeo",
-      "upscaleProgress": "Progresso da ampliação"
+      "upscaleProgress": "Progresso da ampliação",
+      "importCopyToWorkspace": "Copiar para o espaço de trabalho",
+      "importLinkOriginal": "Vincular os arquivos originais",
+      "importMoreOptions": "Opções de importação"
     },
     "missingMedia": {
       "title": "Mídia ausente",
@@ -288,10 +301,10 @@
       "whisperLanguageHint": "Escolha o idioma falado para melhorar a precisão ou use a detecção automática."
     },
     "type": {
-      "audio": "Audio",
+      "audio": "Áudio",
       "image": "Imagem",
       "lottie": "Lottie",
-      "video": "Video"
+      "video": "Vídeo"
     },
     "unsupportedCodec": {
       "bodyMultiple": "Corpo para multiplos itens",

@@ -114,7 +114,17 @@
       "size": "Taille",
       "transcript": "Transcription",
       "transcriptWithCount": "Transcription ({{count}})",
-      "type": "Type"
+      "type": "Type",
+      "source": "Source",
+      "sourceStatus": {
+        "app-storage": "Stockage de l’application",
+        "changed": "Le fichier lié a changé",
+        "checking": "Vérification...",
+        "linked": "Fichier lié",
+        "needs-permission": "Autorisation requise",
+        "unavailable": "Indisponible",
+        "workspace-copy": "Copie dans l’espace de travail"
+      }
     },
     "library": {
       "aiAnalysisProgress": "Analyse IA",
@@ -154,7 +164,7 @@
       "groupGifs": "GIF",
       "groupImages": "Images",
       "groupLottie": "Lottie",
-      "groupVideos": "Videos",
+      "groupVideos": "Vidéos",
       "import": "Importer",
       "importFromUrlDescription": "Importez un fichier multimédia depuis une URL directe.",
       "importFromUrlHint": "Collez un lien direct vers une vidéo, un audio, une image ou un GIF.",
@@ -173,7 +183,7 @@
       "missingCount": "{{count}} manquants",
       "proxyCount": "{{count}} proxys",
       "proxyGenerationProgress": "Progression des proxys",
-      "scenesTab": "Scenes",
+      "scenesTab": "Scènes",
       "searchScenes": "Rechercher des scènes",
       "selected": "Sélectionné",
       "selectedAssetsCount": "{{count}} ressources sélectionnées",
@@ -193,7 +203,7 @@
       "checkingWorkspaceHealthShort": "Vérification",
       "allShort": "TOUT",
       "typeShort": {
-        "video": "VIDEO",
+        "video": "VIDÉO",
         "audio": "AUDIO",
         "image": "IMAGE",
         "lottie": "LOTTIE"
@@ -224,7 +234,10 @@
       "importFailed_one": "{{count}} fichier n’a pas pu être importé. Vérifiez le fichier et réessayez.",
       "importFailed_other": "{{count}} fichiers n’ont pas pu être importés. Vérifiez les fichiers et réessayez.",
       "upscalingVideo": "Agrandissement de la vidéo",
-      "upscaleProgress": "Progression de l'agrandissement"
+      "upscaleProgress": "Progression de l'agrandissement",
+      "importCopyToWorkspace": "Copier dans l’espace de travail",
+      "importLinkOriginal": "Lier les fichiers d’origine",
+      "importMoreOptions": "Options d’importation"
     },
     "missingMedia": {
       "title": "Médias manquants",
@@ -291,7 +304,7 @@
       "audio": "Audio",
       "image": "Image",
       "lottie": "Lottie",
-      "video": "Video"
+      "video": "Vidéo"
     },
     "unsupportedCodec": {
       "bodyMultiple": "{{count}} fichiers utilisent des codecs que votre navigateur ne peut pas décoder. Ils risquent de ne pas se lire correctement.",

@@ -101,7 +101,14 @@
         "frameRate": "Velocidad de fotogramas",
         "durationSeconds": "Duración (segundos)",
         "create": "Crear"
-      }
+      },
+      "controllerLayer": "Objeto nulo",
+      "parentColumn": "Principal",
+      "shiftToggleAllLayers": "Haz clic con Mayús para expandir o contraer todas las capas",
+      "parentPickWhipForLayer": "Selector de capa principal para {{name}}",
+      "parentPickWhipHelp": "Arrastra a una capa principal. Mayús: ajustar posición. Alt: usar pose local. Ctrl/Cmd+clic: desvincular.",
+      "parentForLayer": "Capa principal de {{name}}",
+      "nullObjectNonRendering": "Objeto nulo (no se renderiza)"
     },
     "miniTimeline": {
       "inPoint": "Punto de entrada",
@@ -357,7 +364,38 @@
       "directionTop": "Arriba",
       "directionBottom": "Abajo",
       "resetParam": "Restablecer {{label}}",
-      "paramColorAria": "Color de {{label}}"
+      "paramColorAria": "Color de {{label}}",
+      "params": {
+        "warp": "Distorsión",
+        "color": "Color",
+        "size": "Tamaño",
+        "intensity": "Intensidad",
+        "density": "Densidad",
+        "glow": "Resplandor",
+        "blocks": "Bloques",
+        "rgb_split": "División RGB",
+        "block_size": "Tamaño de bloque",
+        "spread": "Dispersión",
+        "blur": "Desenfoque",
+        "spin": "Giro",
+        "scale": "Escala",
+        "turbulence": "Turbulencia",
+        "chroma": "Croma",
+        "swirl": "Remolino",
+        "shine": "Brillo",
+        "zoom": "Zoom",
+        "vignette": "Viñeta",
+        "warmth": "Calidez",
+        "burn": "Quemado",
+        "grain": "Grano",
+        "slip": "Desplazamiento",
+        "shake": "Sacudida",
+        "exposure": "Exposición",
+        "gate_width": "Ancho de ventana",
+        "roll": "Rodillo",
+        "dim": "Atenuación",
+        "softness": "Suavidad"
+      }
     },
     "propertiesSidebar": {
       "title": "Propiedades",
@@ -366,7 +404,9 @@
       "dockToPreview": "Acoplar a la vista previa",
       "expandFullColumn": "Expandir columna completa",
       "showPanel": "Mostrar panel de propiedades",
-      "clipsSelected": "{{count}} clips seleccionados"
+      "clipsSelected": "{{count}} clips seleccionados",
+      "layer": "Capa",
+      "composition": "Composición"
     },
     "markerPanel": {
       "notFound": "Marcador no encontrado",
@@ -398,7 +438,10 @@
       "switchToFrames": "Cambiar a fotogramas",
       "timecode": "Código de tiempo",
       "frameRate": "Velocidad de fotogramas",
-      "totalFrames": "Fotogramas totales"
+      "totalFrames": "Fotogramas totales",
+      "composition": "Composición",
+      "matchProject": "Ajustar al proyecto",
+      "matchProjectBackground": "Ajustar el fondo al proyecto"
     },
     "clipPanel": {
       "tabVideo": "Vídeo",
@@ -407,7 +450,10 @@
       "adjustmentLayerHint": "Los efectos en capas de ajuste se aplican a todos los elementos de las pistas superiores.",
       "tabText": "Texto",
       "tabAnimation": "Animación",
-      "tabShape": "Forma"
+      "tabShape": "Forma",
+      "tabProperties": "Propiedades",
+      "tabController": "Objeto nulo",
+      "tabAnimate": "Animar"
     },
     "gifSection": {
       "animation": "Animación",
@@ -750,7 +796,7 @@
       "effects": "Efectos",
       "presets": "Preajustes",
       "fontWeights": {
-        "regular": "Regular",
+        "regular": "Normal",
         "medium": "Medio",
         "semibold": "Seminegrita",
         "bold": "Negrita"
@@ -862,25 +908,47 @@
         "savedToLibrary": "Se guardó \"{{fileName}}\" en la biblioteca multimedia.",
         "savedAndAdded": "Se guardó \"{{fileName}}\" y se añadió a la línea de tiempo."
       },
-      "defaultTtsPrompt": "Welcome to freecut. This voice was generated locally in the browser.",
+      "defaultTtsPrompt": "Te damos la bienvenida a freecut. Esta voz se generó localmente en el navegador.",
       "musicPresets": {
         "lofiChillLabel": "Lo-fi Chill",
-        "lofiChillPrompt": "Warm lo-fi beat with dusty drums, mellow bass, and a dreamy synth lead",
-        "pop80sLabel": "80s Pop",
-        "pop80sPrompt": "80s pop track with bassy drums and synth",
-        "rock90sLabel": "90s Rock",
-        "rock90sPrompt": "90s rock song with loud guitars and heavy drums",
-        "upbeatEdmLabel": "Upbeat EDM",
-        "upbeatEdmPrompt": "A light and cheery EDM track, with syncopated drums, airy pads, and strong emotions bpm: 130",
+        "lofiChillPrompt": "Beat lo-fi cálido con batería polvorienta, bajo suave y un lead de sintetizador onírico",
+        "pop80sLabel": "Pop de los 80",
+        "pop80sPrompt": "Tema pop de los 80 con batería contundente y sintetizador",
+        "rock90sLabel": "Rock de los 90",
+        "rock90sPrompt": "Canción de rock de los 90 con guitarras potentes y batería pesada",
+        "upbeatEdmLabel": "EDM animado",
+        "upbeatEdmPrompt": "Un tema EDM ligero y alegre, con batería sincopada, pads aéreos y mucha emoción, bpm: 130",
         "countryLabel": "Country",
-        "countryPrompt": "A cheerful country song with acoustic guitars",
+        "countryPrompt": "Una canción country alegre con guitarras acústicas",
         "lofiElectroLabel": "Lo-fi Electro",
-        "lofiElectroPrompt": "Lofi slow bpm electro chill with organic samples"
+        "lofiElectroPrompt": "Electro chill lo-fi de ritmo lento con samples orgánicos"
       }
     },
     "colorPanel": {
       "emptyState": "Selecciona un clip para etalonar",
-      "adjustmentLayerLabel": "Etalonaje"
+      "adjustmentLayerLabel": "Etalonaje",
+      "dockLabel": "Espacio de trabajo de etalonaje",
+      "dockTitle": "Color"
+    },
+    "transformHierarchy": {
+      "controllerOption": "Nulo: {{name}}",
+      "none": "Ninguno"
+    },
+    "compositionControls": {
+      "authoringTitle": "Controles publicados ({{v0}})",
+      "authoringHint": "Elige los textos y colores que seguirán siendo editables al reutilizar esta composición.",
+      "addAnother": "Exponer otra propiedad",
+      "add": "Exponer propiedad",
+      "allExposed": "Todas las propiedades compatibles están expuestas.",
+      "noCandidates": "Añade una capa de texto o de forma para exponer propiedades editables.",
+      "resetOverride": "Restablecer la anulación de {{name}}",
+      "overridden": "{{name}} está anulado",
+      "instanceTitle": "Anulaciones de la plantilla",
+      "instanceHint": "Los cambios solo se aplican a esta instancia. Un punto azul marca los valores que difieren del original.",
+      "resetAll": "Restablecer todas las anulaciones"
+    },
+    "textProperties": {
+      "scale": "Escala"
     }
   }
 }
