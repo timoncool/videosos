@@ -19,6 +19,7 @@ export type EditorSidebarTab =
   | 'lottie'
   | 'transcript'
   | 'ai'
+  | 'chat'
 export type EditorClipInspectorTab = 'video' | 'motion' | 'audio' | 'effects'
 
 /** The slice of editor UI state that a workspace controls. */

@@ -5,3 +5,4 @@ export { default as AboutSection } from '@/features/studio/components/about-sect
 export { default as NetworkSection } from '@/features/studio/components/network-section'
 export { OPEN_SETTINGS_EVENT, parseSettingsTarget } from '@/features/studio/services/settings-nav'
 export { SettingRow, SettingsTable } from '@/features/studio/components/setting-row'
+export { ChatPanel } from '@/features/studio/components/chat-panel'

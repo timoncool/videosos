@@ -214,5 +214,29 @@
       "whatsapp": "WhatsApp",
       "reddit": "Reddit"
     }
+  },
+  "chat": {
+    "tabLabel": "Chat",
+    "model": "Model",
+    "costHint": "What this conversation cost by OpenRouter's account",
+    "clear": "Clear the conversation",
+    "intro": "The assistant works VideoSOS with the tools a connected agent has: it reads the timeline, generates, edits and exports while you see every step. Your OpenRouter key pays; generations count against the agents' daily limit.",
+    "suggestions": {
+      "what": "What is on the timeline now?",
+      "picture": "Generate a picture of a sunset over the sea and put it on the timeline",
+      "cut": "Split the first clip in half and add a smooth transition between the parts",
+      "captions": "Add a title with the project's name at the start"
+    },
+    "tools": "The assistant's steps",
+    "toolRunning": "Running",
+    "toolDone": "Done",
+    "toolFailed": "Failed",
+    "thinking": "Thinking",
+    "placeholder": "Write what to do…",
+    "send": "Send",
+    "stop": "Stop",
+    "footnote": "Enter sends, Shift+Enter makes a new line. The assistant asks before costly generations.",
+    "needsKey": "The chat needs an OpenRouter key: the assistant answers with an OpenRouter model and works with VideoSOS's tools.",
+    "openKeys": "Open keys"
   }
 }

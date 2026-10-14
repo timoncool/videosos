@@ -20,6 +20,7 @@ import {
   Captions,
   Sticker,
   WandSparkles,
+  MessagesSquare,
   Sparkles,
 } from 'lucide-react'
 import { motion, useReducedMotion } from 'motion/react'
@@ -65,6 +66,7 @@ import { createLogger } from '@/shared/logging/logger'
 import { useSettingsStore } from '@/features/editor/deps/settings'
 import { resolveGeneratedLayerCanvasSize } from '../utils/generated-layer-canvas-size'
 const LazyAiPanel = lazy(() => import('./ai-tab').then((m) => ({ default: m.AiTab })))
+const LazyChatTab = lazy(() => import('./chat-tab').then((m) => ({ default: m.ChatTab })))
 const LazyGeneratePanel = lazy(() =>
   import('../deps/generate').then((m) => ({ default: m.GeneratePanel })),
 )
@@ -308,12 +310,14 @@ export const MediaSidebar = memo(function MediaSidebar() {
   const prefersReducedMotion = useReducedMotion()
 
   const [aiTabActivated, setAiTabActivated] = useState(activeTab === 'ai')
+  const [chatTabActivated, setChatTabActivated] = useState(activeTab === 'chat')
   const [generateTabActivated, setGenerateTabActivated] = useState(activeTab === 'generate')
   // The Lottie panel hits an external API on mount, so keep it unmounted until
   // the tab is first opened; it then stays mounted (state preserved).
   const [lottieTabActivated, setLottieTabActivated] = useState(activeTab === 'lottie')
   useEffect(() => {
     if (activeTab === 'ai') setAiTabActivated(true)
+    if (activeTab === 'chat') setChatTabActivated(true)
     if (activeTab === 'generate') setGenerateTabActivated(true)
     if (activeTab === 'lottie') setLottieTabActivated(true)
   }, [activeTab])
@@ -554,6 +558,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
     { id: 'lottie' as const, icon: Sticker, label: t('lottieBrowser.tabLabel') },
     { id: 'transcript' as const, icon: Captions, label: t('transcript.tabLabel') },
     { id: 'ai' as const, icon: WandSparkles, label: t('editor.mediaSidebar.ai') },
+    { id: 'chat' as const, icon: MessagesSquare, label: t('chat.tabLabel') },
   ]
 
   const shouldSuppressGeneratedItemClick = useCallback(() => {
@@ -1189,6 +1194,15 @@ export const MediaSidebar = memo(function MediaSidebar() {
               {aiTabActivated && (
                 <Suspense fallback={null}>
                   <LazyAiPanel />
+                </Suspense>
+              )}
+            </div>
+
+            {/* Chat Tab */}
+            <div className={`min-h-0 flex-1 overflow-hidden ${activeTab === 'chat' ? 'flex flex-col' : 'hidden'}`}>
+              {chatTabActivated && (
+                <Suspense fallback={null}>
+                  <LazyChatTab />
                 </Suspense>
               )}
             </div>
