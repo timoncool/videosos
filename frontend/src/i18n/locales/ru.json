@@ -60,7 +60,8 @@
     "saveAria": "Сохранить проект",
     "export": "Экспорт",
     "exportVideo": "Экспортировать видео",
-    "downloadProjectZip": "Скачать проект (.zip)"
+    "downloadProjectZip": "Скачать проект (.zip)",
+    "exportFcpxml": "FCPXML для Final Cut, DaVinci, Premiere"
   },
   "unsavedChanges": {
     "title": "Несохранённые изменения",

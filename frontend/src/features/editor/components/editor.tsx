@@ -49,6 +49,7 @@ import { useProjectStore } from '@/features/editor/deps/projects'
 import {
   importExportDialog,
   importExportsDialog,
+  exportFcpxml,
   RenderQueuePersistence,
   RenderQueueRunner,
   useRenderQueueStore,
@@ -653,6 +654,10 @@ export const LoadedEditor = memo(function LoadedEditor({
     setBundleExportDialogOpen(true)
   }, [project.name])
 
+  const handleExportFcpxml = useCallback(() => {
+    exportFcpxml().catch((error: unknown) => toast.error(i18n.t('export.fcpxml.failed', { reason: error instanceof Error ? error.message : String(error) })))
+  }, [])
+
   // Enable keyboard shortcuts
   useEditorHotkeys({
     onSave: handleSave,
@@ -687,6 +692,7 @@ export const LoadedEditor = memo(function LoadedEditor({
           onSave={handleSave}
           onExport={handleExport}
           onExportBundle={handleExportBundle}
+          onExportFcpxml={handleExportFcpxml}
           onOpenRenderQueue={handleOpenRenderQueue}
           renderQueueCount={renderQueueActiveCount}
         />

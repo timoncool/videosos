@@ -110,6 +110,7 @@ export {
 // Media source files
 export {
   hasMediaSource,
+  mediaSourcePath,
   readMediaSource,
   writeMediaSource,
 } from '@/infrastructure/storage/workspace-fs/media-source'

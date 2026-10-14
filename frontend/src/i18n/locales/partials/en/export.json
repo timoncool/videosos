@@ -212,6 +212,15 @@
           "detail": "The export worker can render this composition without a known main-thread fallback."
         }
       }
+    },
+    "fcpxml": {
+      "noProject": "Open a project first.",
+      "failed": "FCPXML was not made: {{reason}}",
+      "left": {
+        "kind": "Not in FCPXML (no counterpart there): {{items}}",
+        "file": "Not in FCPXML (no file in the workspace): {{items}}",
+        "speed": "Not in FCPXML (speed changed): {{items}}"
+      }
     }
   }
 }
