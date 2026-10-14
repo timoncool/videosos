@@ -19,7 +19,14 @@
     "card": "Card / PayPal",
     "donateTitle": "Support the author",
     "founder": "founder of",
-    "madeBy": "Built by"
+    "madeBy": "Built by",
+    "crypto": "Kripto",
+    "copy": "Kopyala",
+    "tier5": "bir haftalık CI/CD ve alan adları",
+    "tier25": "bir aylık barındırma",
+    "tier100": "bir günlük geliştirme",
+    "tier500": "koca bir özellik",
+    "thanks": "Açık kaynağı yaşattığın için teşekkürler!"
   },
   "hub": {
     "byEnv": "Turned off by DO_NOT_TRACK or STUDIO_TELEMETRY in the environment.",

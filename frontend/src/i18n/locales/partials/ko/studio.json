@@ -19,7 +19,14 @@
     "card": "Card / PayPal",
     "donateTitle": "Support the author",
     "founder": "founder of",
-    "madeBy": "Built by"
+    "madeBy": "Built by",
+    "crypto": "암호화폐",
+    "copy": "복사",
+    "tier5": "CI/CD와 도메인 1주일",
+    "tier25": "호스팅 1개월",
+    "tier100": "개발 하루",
+    "tier500": "기능 하나 전체",
+    "thanks": "오픈 소스를 지켜 주셔서 감사합니다!"
   },
   "hub": {
     "byEnv": "Turned off by DO_NOT_TRACK or STUDIO_TELEMETRY in the environment.",

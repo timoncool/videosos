@@ -5,6 +5,43 @@ import { api, type AppPaths } from "../services/studio-api";
 import { DONATE, LINKS } from "../services/links";
 import { ProgramFamily } from "./program-family";
 
+/** The author's crypto addresses, the same as in DONATE.md and Bulka's support tab. */
+const CRYPTO = [
+  { name: "BTC — Bitcoin", address: "1E7dHL22RpyhJGVpcvKdbyZgksSYkYeEBC" },
+  { name: "ETH — Ethereum (ERC20)", address: "0xb5db65adf478983186d4897ba92fe2c25c594a0c" },
+  { name: "USDT — Tether (TRC20)", address: "TQST9Lp2TjK6FiVkn4fwfGUee7NmkxEE7C" },
+] as const;
+const TIERS = ["5", "25", "100", "500"] as const;
+
+function CryptoRow({ name, address }: { name: string; address: string }) {
+  const { t } = useTranslation();
+  const [copied, setCopied] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const copy = async () => {
+    setError(null);
+    try {
+      await navigator.clipboard.writeText(address);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1200);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    }
+  };
+  return (
+    <div className="px-3 py-2">
+      <div className="flex items-center gap-2">
+        <span className="w-40 shrink-0 text-[12px] text-[var(--color-muted)]">{name}</span>
+        <span className="mono min-w-0 flex-1 truncate text-[11px]" title={address}>{address}</span>
+        <button type="button" onClick={() => void copy()} aria-label={t("help.copy")} title={copied ? t("prefs.copied") : t("help.copy")}
+          className="shrink-0 rounded-md p-1 text-[var(--color-muted)] hover:text-[var(--color-text)]">
+          {copied ? <Check size={13} className="text-[var(--color-accent)]" /> : <Copy size={13} />}
+        </button>
+      </div>
+      {error && <p role="alert" className="mono mt-1 break-words text-[10px] text-[var(--color-warn)]">{error}</p>}
+    </div>
+  );
+}
+
 function PathRow({ label, path }: { label: string; path: string }) {
   const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
@@ -99,6 +136,19 @@ export default function AboutSection() {
           <a href={DONATE.boosty} target="_blank" rel="noreferrer" className={link}>{t("help.boostySub")}</a>
           <a href={DONATE.telegram} target="_blank" rel="noreferrer" className={link}>Telegram</a>
         </div>
+        <p className="mt-3 mb-1 text-[12px] font-medium text-[var(--color-text)]">{t("help.crypto")}</p>
+        <div className="rounded-lg border border-[var(--color-border)] divide-y divide-[var(--color-border)] bg-[var(--color-surface-2)]/40">
+          {CRYPTO.map((coin) => <CryptoRow key={coin.address} name={coin.name} address={coin.address} />)}
+        </div>
+        <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] sm:grid-cols-4">
+          {TIERS.map((tier) => (
+            <div key={tier} className="rounded-md border border-[var(--color-border)] p-2 text-center">
+              <div className="font-medium text-[var(--color-text)]">${tier}</div>
+              <div className="text-[var(--color-muted)]">{t(`help.tier${tier}`)}</div>
+            </div>
+          ))}
+        </div>
+        <p className="mt-2 text-[11px] text-[var(--color-muted)]">{t("help.thanks")}</p>
       </section>
     </div>
   );

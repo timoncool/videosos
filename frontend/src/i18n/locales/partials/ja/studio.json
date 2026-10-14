@@ -19,7 +19,14 @@
     "card": "Card / PayPal",
     "donateTitle": "Support the author",
     "founder": "founder of",
-    "madeBy": "Built by"
+    "madeBy": "Built by",
+    "crypto": "暗号資産",
+    "copy": "コピー",
+    "tier5": "CI/CD とドメイン 1 週間分",
+    "tier25": "ホスティング 1 か月分",
+    "tier100": "開発 1 日分",
+    "tier500": "機能まるごと 1 つ",
+    "thanks": "オープンソースを支えてくれてありがとう！"
   },
   "hub": {
     "byEnv": "Turned off by DO_NOT_TRACK or STUDIO_TELEMETRY in the environment.",

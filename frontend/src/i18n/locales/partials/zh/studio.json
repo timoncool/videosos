@@ -19,7 +19,14 @@
     "card": "银行卡 / PayPal",
     "donateTitle": "支持作者",
     "founder": "创始人",
-    "madeBy": "作者"
+    "madeBy": "作者",
+    "crypto": "加密货币",
+    "copy": "复制",
+    "tier5": "一周的 CI/CD 和域名",
+    "tier25": "一个月的托管",
+    "tier100": "一天的开发",
+    "tier500": "一整个功能",
+    "thanks": "感谢你让开源继续下去！"
   },
   "hub": {
     "byEnv": "已被环境变量 DO_NOT_TRACK 或 STUDIO_TELEMETRY 关闭。",

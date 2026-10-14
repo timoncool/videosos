@@ -19,7 +19,14 @@
     "card": "Carte / PayPal",
     "donateTitle": "Soutenir l'auteur",
     "founder": "fondateur de",
-    "madeBy": "Réalisé par"
+    "madeBy": "Réalisé par",
+    "crypto": "Crypto",
+    "copy": "Copier",
+    "tier5": "une semaine de CI/CD et de domaines",
+    "tier25": "un mois d'hébergement",
+    "tier100": "une journée de développement",
+    "tier500": "une fonctionnalité entière",
+    "thanks": "Merci de faire vivre l’open source !"
   },
   "hub": {
     "byEnv": "Désactivées par DO_NOT_TRACK ou STUDIO_TELEMETRY dans l'environnement.",
