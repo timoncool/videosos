@@ -5,8 +5,8 @@ import { fetchOnnxModelBytes, fetchOnnxModelText } from '@/shared/utils/onnx-mod
 
 // Parakeet TDT 0.6B v3 (NVIDIA, CC-BY-4.0) on-device ASR. Clean-room ORT-web pipeline
 // (nemo128 log-mel preprocessor -> FastConformer encoder -> token-and-duration greedy
-// decode -> BPE detokenize), authored from the published onnx-asr algorithm. The encoder
-// runs on WebGPU (fp16) while the tiny autoregressive joint runs on WASM/CPU — the joint
+// decode -> BPE detokenize), authored from the published onnx-asr algorithm. The int8 encoder
+// runs on WebGPU where it can, else on WASM, while the tiny autoregressive joint runs on WASM/CPU — the joint
 // has hundreds of sequential steps per span and per-step GPU dispatch sync dominates, so
 // keeping it on CPU is ~7x faster overall (measured). Implements the same worker message
 // protocol as whisper.worker.ts so the Bridge can drive either engine.
@@ -15,11 +15,12 @@ const logger = createLogger('ParakeetWorker')
 
 const ORT_WASM_PATH =
   'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.26.0-dev.20260410-5e55544225/dist/'
-const HF_BASE = 'https://huggingface.co/Olicorne/parakeet-tdt-0.6b-v3-smoothquant-onnx/resolve/main'
+// a fixed revision: the repository moved its files into per-precision folders once, and main may move them again
+const HF_BASE =
+  'https://huggingface.co/Olicorne/parakeet-tdt-0.6b-v3-smoothquant-onnx/resolve/0185392e8c7fe5e6bbcc00fb6793236c38b01fe5'
 
-const ENCODER_FP16 = 'encoder-model.fp16.onnx'
-const ENCODER_INT8 = 'encoder-model.int8.onnx'
-const DECODER_INT8 = 'decoder_joint-model.int8.onnx'
+const ENCODER_INT8 = 'int8/encoder-model.int8.onnx'
+const DECODER_INT8 = 'int8/decoder_joint-model.int8.onnx'
 const PREPROCESSOR = 'nemo128.onnx'
 const VOCAB_FILE = 'vocab.txt'
 
@@ -32,8 +33,8 @@ const RECENT_WORD_RETENTION_SECONDS = 8
 const DUPLICATE_WORD_START_TOLERANCE_SECONDS = 0.5
 
 const ESTIMATED_BYTES: Record<'webgpu' | 'wasm', number> = {
-  webgpu: Math.round(1_270 * 1024 * 1024),
-  wasm: Math.round(820 * 1024 * 1024),
+  webgpu: Math.round(670 * 1024 * 1024),
+  wasm: Math.round(670 * 1024 * 1024),
 }
 
 // Approximate on-disk sizes, summing to ESTIMATED_BYTES. These only weight the aggregate
@@ -42,9 +43,8 @@ const ESTIMATED_BYTES: Record<'webgpu' | 'wasm', number> = {
 // costs nothing beyond a slightly uneven first chunk.
 const APPROX_FILE_BYTES: Record<string, number> = {
   [PREPROCESSOR]: Math.round(1 * 1024 * 1024),
-  [ENCODER_FP16]: Math.round(1_199 * 1024 * 1024),
-  [ENCODER_INT8]: Math.round(749 * 1024 * 1024),
-  [DECODER_INT8]: Math.round(70 * 1024 * 1024),
+  [ENCODER_INT8]: Math.round(650 * 1024 * 1024),
+  [DECODER_INT8]: Math.round(18 * 1024 * 1024),
 }
 
 type OrtModule = typeof import('onnxruntime-web')
@@ -169,11 +169,7 @@ class DownloadProgress {
   private readonly loaded = new Map<string, number>()
   private sawNetwork = false
 
-  /** `restarted` marks a transfer opened after `preparing` began — see the fp16 fallback. */
-  constructor(
-    files: string[],
-    private readonly restarted = false,
-  ) {
+  constructor(files: string[]) {
     for (const file of files) {
       this.totals.set(file, APPROX_FILE_BYTES[file] ?? 0)
       this.loaded.set(file, 0)
@@ -201,7 +197,6 @@ class DownloadProgress {
           receivedBytes,
           totalBytes,
           fromCache: !this.sawNetwork,
-          ...(this.restarted && { restarted: true }),
         },
       })
     }
@@ -229,10 +224,10 @@ async function initPipeline(): Promise<void> {
     const ort = await getOrt()
     vocab = await loadVocab()
 
-    // The heavy encoder prefers WebGPU (fp16) and falls back to the int8 WASM encoder.
+    // The heavy encoder prefers WebGPU and falls back to WASM, the same int8 weights either way.
     const webgpuAvailable =
       typeof navigator !== 'undefined' && 'gpu' in navigator && navigator.gpu != null
-    const encoderFile = webgpuAvailable ? ENCODER_FP16 : ENCODER_INT8
+    const encoderFile = ENCODER_INT8
 
     // Pass 1 — fetch every weight file under a single aggregate byte counter. Compiling each
     // session as its bytes land would interleave `preparing` between downloads, and the
@@ -251,8 +246,8 @@ async function initPipeline(): Promise<void> {
       download.track(DECODER_INT8),
     )
 
-    // Pass 2 — compile. ORT reports no progress here and the fp16 encoder costs ~20 s on
-    // WebGPU, so the UI renders `preparing` as an indeterminate bar rather than a stalled one.
+    // Pass 2 — compile. ORT reports no progress here and the encoder takes a while on WebGPU, so
+    // the UI renders `preparing` as an indeterminate bar rather than a stalled one.
     postMain({ type: 'progress', event: { stage: 'preparing', progress: 0 } })
 
     // Preprocessor + autoregressive joint always run on WASM (tiny graphs, no per-step GPU sync).
@@ -270,20 +265,8 @@ async function initPipeline(): Promise<void> {
         encoder = null
       }
     }
-    let fallbackBytes = encoderBytes
-    if (!encoder && webgpuAvailable) {
-      // Rare: WebGPU rejected the fp16 graph, so the int8 encoder must still be fetched. That
-      // is a real ~749 MB transfer, so hand the bar back to `downloading` with its own byte
-      // counter — parking on the indeterminate `preparing` would hide a multi-minute download.
-      const fallbackDownload = new DownloadProgress([ENCODER_INT8], true)
-      fallbackBytes = await fetchOnnxModelBytes(
-        `${HF_BASE}/${ENCODER_INT8}`,
-        fallbackDownload.track(ENCODER_INT8),
-      )
-      postMain({ type: 'progress', event: { stage: 'preparing', progress: 0 } })
-    }
     if (!encoder) {
-      encoder = await ort.InferenceSession.create(fallbackBytes, sessionOptions('wasm'))
+      encoder = await ort.InferenceSession.create(encoderBytes, sessionOptions('wasm'))
       encoderBackend = 'wasm'
     }
 

@@ -6,6 +6,7 @@
  */
 
 import type { TimelineItem } from '@/types/timeline'
+import { timelineCaptionCues } from '@/shared/timeline/caption-cues'
 
 export interface FcpxmlTrack {
   id: string
@@ -216,6 +217,23 @@ export function buildFcpxml(input: FcpxmlInput): FcpxmlResult {
       continue
     }
     end = Math.max(end, item.from + item.durationInFrames)
+  }
+
+  // a clip's transcript captions as titles on a lane above every picture
+  const captionLane = video.length + 1
+  for (const item of input.items) {
+    for (const cue of timelineCaptionCues(item, input.fps)) {
+      if (!titleEffect) {
+        titleEffect = `r${resources.length + 1}`
+        resources.push(`<effect id="${titleEffect}" name="Basic Title" uid="${TITLE_EFFECT}"/>`)
+      }
+      const style = `ts${clips.length + 1}`
+      clips.push(
+        `<title ref="${titleEffect}" lane="${captionLane}" offset="${time(cue.from)}" duration="${time(cue.to - cue.from)}" name="${escape(cue.text)}" start="0s"><text><text-style ref="${style}">${escape(cue.text)}</text-style></text>` +
+          `<text-style-def id="${style}"><text-style font="Helvetica" fontSize="48" fontColor="1 1 1 1" alignment="center"/></text-style-def></title>`,
+      )
+      end = Math.max(end, cue.to)
+    }
   }
 
   // a transition joins clips of a storyline; the clips here are connected ones, which FCPXML gives none

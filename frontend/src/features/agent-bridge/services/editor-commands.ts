@@ -9,6 +9,8 @@ import type { EditOp } from '@/headless/edit-op-support'
 import { setEditCanvas } from '@/headless/edit-op-support'
 import { useEditorStore } from '@/shared/state/editor'
 import { usePlaybackStore } from '@/shared/state/playback'
+import { timelineCaptionCues } from '@/shared/timeline/caption-cues'
+import type { TimelineItem } from '@/types/timeline'
 import type { EditorSidebarTab } from '@/config/editor-workspaces'
 import type { ExtendedExportSettings, VideoContainer } from '@/types/export'
 import {
@@ -103,6 +105,18 @@ async function confirmsEdits(): Promise<boolean> {
   return ((await response.json()) as { agent_confirm_edits?: boolean }).agent_confirm_edits === true
 }
 
+/** The captions a clip shows, in the timeline's seconds; none when it has none. */
+function captionsOf(item: TimelineItem, fps: number) {
+  const cues = timelineCaptionCues(item, fps)
+  return cues.length > 0
+    ? cues.map((cue) => ({
+        text: cue.text,
+        start_s: round(cue.from / fps),
+        end_s: round(cue.to / fps),
+      }))
+    : undefined
+}
+
 function timeline() {
   const project = openProject()
   const fps = fpsOf(project)
@@ -134,6 +148,7 @@ function timeline() {
       text: 'text' in item ? item.text : undefined,
       shape: item.type === 'shape' ? item.shapeType : undefined,
       label: item.label,
+      captions: captionsOf(item, fps),
     })),
     transitions: useTransitionsStore.getState().transitions,
     markers: useMarkersStore

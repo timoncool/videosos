@@ -13,11 +13,11 @@ const WHISPER_MODEL_BASE_ESTIMATES_MIB: Record<MediaTranscriptModel, number> = {
   'whisper-large': 2_600,
 }
 
-// Parakeet ONNX footprint: fp16 encoder (~1.24 GB) + int8 decoder_joint (~18 MB) +
-// nemo128 preprocessor on WebGPU; the WASM-only fallback uses the int8 encoder (~0.79 GB).
+// Parakeet ONNX footprint: the int8 encoder (~650 MB) + int8 decoder_joint (~18 MB) + nemo128
+// preprocessor, on WebGPU or WASM alike.
 const PARAKEET_RUNTIME_MIB: Record<'webgpu' | 'wasm', number> = {
-  webgpu: 1_270,
-  wasm: 820,
+  webgpu: 670,
+  wasm: 670,
 }
 
 const QUANTIZATION_MULTIPLIER: Record<MediaTranscriptQuantization, number> = {

@@ -170,6 +170,22 @@ describe('FCPXML of a mixed edit', () => {
         audioFadeIn: 1,
       }),
       item({
+        id: 'voice',
+        type: 'audio',
+        trackId: 'a2',
+        from: 150,
+        durationInFrames: 60,
+        mediaId: 'm3',
+        label: 'voice.mp3',
+        transcriptCaptions: {
+          type: 'transcript',
+          mediaId: 'm3',
+          enabled: true,
+          updatedAt: 0,
+          cues: [{ id: 'c1', startSeconds: 0.5, endSeconds: 1.5, text: 'Where <to>?' }],
+        },
+      }),
+      item({
         id: 'h',
         type: 'image',
         trackId: 'v2',
@@ -210,6 +226,12 @@ describe('FCPXML of a mixed edit', () => {
       '<marker start="60/30s" duration="1/30s" value="Boat &lt;sails&gt;"/></gap>',
     )
     expect(xml).not.toContain('Past the end')
+  })
+
+  it("writes a clip's captions as titles above every picture, at their place in the timeline", () => {
+    expect(xml).toContain(
+      '<title ref="r5" lane="3" offset="165/30s" duration="30/30s" name="Where &lt;to&gt;?" start="0s">',
+    )
   })
 
   it('names the transitions it cannot carry', () => {
