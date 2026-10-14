@@ -205,7 +205,7 @@ fn fragmentMain(input: VertexOutput) -> @location(0) vec4f {
     outlineProgress = fract(outlineProgress - u.trimParams.z + 1.0);
     let trimStart = u.trimParams.x;
     let trimEnd = u.trimParams.y;
-    // WGSL reads `a < b, c >` across arguments as a template list: every comparison in parentheses
+    // WGSL reads a < b, c > across arguments as a template list: every comparison in parentheses
     strokeVisible = select(
       (outlineProgress >= trimStart) || (outlineProgress < trimEnd),
       (outlineProgress >= trimStart) && (outlineProgress < trimEnd),
