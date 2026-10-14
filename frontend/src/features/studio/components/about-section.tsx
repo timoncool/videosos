@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Bug, Check, CodeXml, Copy, FolderOpen, Scale, Tag } from "lucide-react";
 import { api, type AppPaths } from "../services/studio-api";
 import { DONATE, LINKS } from "../services/links";
+import { ProgramFamily } from "./program-family";
 
 function PathRow({ label, path }: { label: string; path: string }) {
   const { t } = useTranslation();
@@ -85,6 +86,8 @@ export default function AboutSection() {
           </div>
         )}
       </section>
+
+      <ProgramFamily />
 
       <section>
         <h4 className={heading}>{t("help.donateTitle")}</h4>

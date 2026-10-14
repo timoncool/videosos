@@ -144,5 +144,14 @@
   "files": {
     "title": "Arquivos",
     "showInFolder": "Mostrar na pasta"
+  },
+  "family": {
+    "title": "Outros programas do autor",
+    "dub": "Dublagem de vídeo offline com voz clonada",
+    "yue2": "Músicas com IA e partitura editável",
+    "minimax": "Estúdio de música com IA local e na nuvem",
+    "ace": "Estúdio de música com IA: músicas, vocais, covers, clipes",
+    "bulka": "Música em live coding com um agente de IA",
+    "dungeon": "Um RPG local com IA"
   }
 }

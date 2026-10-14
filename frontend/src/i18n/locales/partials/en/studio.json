@@ -144,5 +144,14 @@
   "files": {
     "title": "Files",
     "showInFolder": "Show in folder"
+  },
+  "family": {
+    "title": "Other programs by the author",
+    "dub": "Offline video dubbing with a cloned voice",
+    "yue2": "AI songs with an editable score",
+    "minimax": "Local and cloud AI music studio",
+    "ace": "AI music studio: songs, vocals, covers, clips",
+    "bulka": "Live-coding music with an AI agent",
+    "dungeon": "A local AI role-playing game"
   }
 }

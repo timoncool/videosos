@@ -144,5 +144,14 @@
   "files": {
     "title": "Dateien",
     "showInFolder": "Im Ordner zeigen"
+  },
+  "family": {
+    "title": "Weitere Programme des Autors",
+    "dub": "Offline-Videovertonung mit geklonter Stimme",
+    "yue2": "KI-Songs mit bearbeitbarer Partitur",
+    "minimax": "Lokales und Cloud-KI-Musikstudio",
+    "ace": "KI-Musikstudio: Songs, Gesang, Cover, Clips",
+    "bulka": "Live-Coding-Musik mit KI-Agent",
+    "dungeon": "Ein lokales KI-Rollenspiel"
   }
 }

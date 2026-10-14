@@ -144,5 +144,14 @@
   "files": {
     "title": "Fichiers",
     "showInFolder": "Afficher dans le dossier"
+  },
+  "family": {
+    "title": "Autres programmes de l'auteur",
+    "dub": "Doublage vidéo hors ligne avec une voix clonée",
+    "yue2": "Chansons IA avec partition modifiable",
+    "minimax": "Studio de musique IA local et cloud",
+    "ace": "Studio de musique IA : chansons, voix, reprises, clips",
+    "bulka": "Musique en live coding avec un agent IA",
+    "dungeon": "Un jeu de rôle IA local"
   }
 }
