@@ -35,8 +35,15 @@
     },
     "general": {
       "language": "Interface language",
-      "languageHint": "The window and the messages of the program."
+      "languageHint": "The window and the messages of the program.",
+      "autoSaveHint": "開いているプロジェクトを数分ごとに自動保存します",
+      "undoHistoryDepthHint": "元に戻せるステップ数",
+      "uiSoundsHint": "クリック、結果、エラーの短いサウンド"
     },
-    "done": "完了"
+    "done": "完了",
+    "timeline": {
+      "showWaveformsHint": "タイムラインにオーディオクリップの波形を表示",
+      "showFilmstripsHint": "ビデオクリップに沿ってフレームを表示"
+    }
   }
 }

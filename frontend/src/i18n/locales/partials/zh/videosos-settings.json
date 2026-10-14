@@ -35,8 +35,15 @@
     },
     "general": {
       "language": "Interface language",
-      "languageHint": "The window and the messages of the program."
+      "languageHint": "The window and the messages of the program.",
+      "autoSaveHint": "每隔几分钟自动保存打开的项目",
+      "undoHistoryDepthHint": "可以撤销多少步",
+      "uiSoundsHint": "点击、结果和错误的短提示音"
     },
-    "done": "完成"
+    "done": "完成",
+    "timeline": {
+      "showWaveformsHint": "在时间线上绘制音频片段的波形",
+      "showFilmstripsHint": "沿视频片段显示画面"
+    }
   }
 }

@@ -35,8 +35,15 @@
     },
     "general": {
       "language": "Interface language",
-      "languageHint": "The window and the messages of the program."
+      "languageHint": "The window and the messages of the program.",
+      "autoSaveHint": "Saves the open project on its own every few minutes",
+      "undoHistoryDepthHint": "How many steps Undo can go back",
+      "uiSoundsHint": "Short sounds for clicks, results and errors"
     },
-    "done": "Done"
+    "done": "Done",
+    "timeline": {
+      "showWaveformsHint": "Draws the sound of audio clips on the timeline",
+      "showFilmstripsHint": "Shows frames along video clips"
+    }
   }
 }

@@ -35,8 +35,15 @@
     },
     "general": {
       "language": "Interface language",
-      "languageHint": "The window and the messages of the program."
+      "languageHint": "The window and the messages of the program.",
+      "autoSaveHint": "열린 프로젝트를 몇 분마다 자동으로 저장합니다",
+      "undoHistoryDepthHint": "실행 취소로 되돌릴 수 있는 단계 수",
+      "uiSoundsHint": "클릭, 결과, 오류에 짧은 소리"
     },
-    "done": "완료"
+    "done": "완료",
+    "timeline": {
+      "showWaveformsHint": "타임라인에 오디오 클립의 파형을 표시",
+      "showFilmstripsHint": "비디오 클립을 따라 프레임 표시"
+    }
   }
 }

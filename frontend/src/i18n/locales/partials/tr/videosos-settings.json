@@ -35,8 +35,15 @@
     },
     "general": {
       "language": "Interface language",
-      "languageHint": "The window and the messages of the program."
+      "languageHint": "The window and the messages of the program.",
+      "autoSaveHint": "Açık projeyi birkaç dakikada bir kendisi kaydeder",
+      "undoHistoryDepthHint": "Geri alma kaç adım geriye gidebilir",
+      "uiSoundsHint": "Tıklama, sonuç ve hatalar için kısa sesler"
     },
-    "done": "Bitti"
+    "done": "Bitti",
+    "timeline": {
+      "showWaveformsHint": "Zaman çizelgesinde ses kliplerinin sesini çizer",
+      "showFilmstripsHint": "Video klipleri boyunca kareleri gösterir"
+    }
   }
 }

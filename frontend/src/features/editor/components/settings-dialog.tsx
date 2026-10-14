@@ -16,8 +16,6 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
-import { Label } from '@/components/ui/label'
-import { Separator } from '@/components/ui/separator'
 import { Switch } from '@/components/ui/switch'
 import { Slider } from '@/components/ui/slider'
 import { Input } from '@/components/ui/input'
@@ -40,6 +38,19 @@ import {
   ShieldCheck,
   Info,
   X,
+  Languages,
+  Save,
+  Timer,
+  Undo2,
+  Volume2,
+  Volume1,
+  Music,
+  ScanText,
+  Captions,
+  Magnet,
+  AudioWaveform,
+  Images,
+  Eraser,
 } from 'lucide-react'
 import {
   LocalInferenceUnloadControl,
@@ -72,6 +83,7 @@ import { Select, SelectContent, SelectTrigger, SelectValue } from '@/components/
 import { createLogger } from '@/shared/logging/logger'
 import { cn } from '@/shared/ui/cn'
 import { LanguageSwitcher } from '@/shared/ui/language-switcher'
+import { SettingRow, SettingsTable } from '../deps/studio'
 
 const log = createLogger('SettingsDialog')
 
@@ -691,491 +703,330 @@ export function SettingsDialog({ open, onOpenChange, target }: SettingsDialogPro
                     )}
 
                     {activeSection === 'general' && (
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between gap-3">
-                          <div>
-                            <Label className="text-sm">{t('settings.general.language')}</Label>
-                            <p className="text-[11px] text-muted-foreground">{t('settings.general.languageHint')}</p>
-                          </div>
+                      <SettingsTable>
+                        <SettingRow icon={Languages} label={t('settings.general.language')} hint={t('settings.general.languageHint')}>
                           <LanguageSwitcher size="sm" align="end" side="left" />
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <Label className="text-sm">{t('settings.general.autoSave')}</Label>
+                        </SettingRow>
+                        <SettingRow icon={Save} label={t('settings.general.autoSave')} hint={t('settings.general.autoSaveHint')}>
                           <Switch
                             aria-label={t('settings.general.autoSave')}
                             checked={autoSaveInterval > 0}
                             onCheckedChange={(v) => setSetting('autoSaveInterval', v ? 5 : 0)}
                           />
-                        </div>
+                        </SettingRow>
                         {autoSaveInterval > 0 && (
-                          <div className="flex items-center justify-between">
-                            <Label className="text-sm text-muted-foreground">
-                              {t('settings.general.interval')}
-                            </Label>
-                            <div className="w-32 flex items-center gap-2">
-                              <Slider
-                                aria-label={t('settings.general.interval')}
-                                value={[autoSaveInterval]}
-                                onValueChange={([v]) => setSetting('autoSaveInterval', v || 5)}
-                                min={5}
-                                max={30}
-                                step={5}
-                              />
-                              <span className="text-xs text-muted-foreground w-6">
-                                {t('settings.general.intervalMinutes', { count: autoSaveInterval })}
-                              </span>
-                            </div>
-                          </div>
-                        )}
-                        <div className="flex items-center justify-between">
-                          <Label className="text-sm">
-                            {t('settings.general.undoHistoryDepth')}
-                          </Label>
-                          <div className="w-32 flex items-center gap-2">
+                          <SettingRow icon={Timer} label={t('settings.general.interval')}>
                             <Slider
-                              aria-label={t('settings.general.undoHistoryDepth')}
-                              value={[maxUndoHistory]}
-                              onValueChange={([v]) => setSetting('maxUndoHistory', v || 10)}
-                              min={10}
-                              max={200}
-                              step={10}
+                              aria-label={t('settings.general.interval')}
+                              className="w-32"
+                              value={[autoSaveInterval]}
+                              onValueChange={([v]) => setSetting('autoSaveInterval', v || 5)}
+                              min={5}
+                              max={30}
+                              step={5}
                             />
-                            <span className="text-xs text-muted-foreground w-6">
-                              {maxUndoHistory}
+                            <span className="tabnum w-14 text-right text-[12px] text-[var(--color-muted)]">
+                              {t('settings.general.intervalMinutes', { count: autoSaveInterval })}
                             </span>
-                          </div>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <Label className="text-sm">{t('settings.general.uiSounds')}</Label>
+                          </SettingRow>
+                        )}
+                        <SettingRow icon={Undo2} label={t('settings.general.undoHistoryDepth')} hint={t('settings.general.undoHistoryDepthHint')}>
+                          <Slider
+                            aria-label={t('settings.general.undoHistoryDepth')}
+                            className="w-32"
+                            value={[maxUndoHistory]}
+                            onValueChange={([v]) => setSetting('maxUndoHistory', v || 10)}
+                            min={10}
+                            max={200}
+                            step={10}
+                          />
+                          <span className="tabnum w-14 text-right text-[12px] text-[var(--color-muted)]">{maxUndoHistory}</span>
+                        </SettingRow>
+                        <SettingRow icon={Volume2} label={t('settings.general.uiSounds')} hint={t('settings.general.uiSoundsHint')}>
                           <Switch
                             aria-label={t('settings.general.uiSounds')}
                             checked={uiSoundsEnabled}
                             onCheckedChange={(v) => {
                               setUiSoundEnabled(v)
-                              // Give immediate audible confirmation when turning sounds on.
                               if (v) emitUiSound('confirm')
                             }}
                           />
-                        </div>
+                        </SettingRow>
                         {uiSoundsEnabled && (
-                          <div className="flex items-center justify-between">
-                            <Label className="text-sm text-muted-foreground">
-                              {t('settings.general.uiSoundVolume')}
-                            </Label>
-                            <div className="w-32 flex items-center gap-2">
-                              <Slider
-                                aria-label={t('settings.general.uiSoundVolume')}
-                                value={[uiSoundVolume]}
-                                onValueChange={([v]) => {
-                                  setUiSoundVolume(v ?? 0.6)
-                                  // Preview the new level as the user drags.
-                                  emitUiSound('select')
-                                }}
-                                min={0}
-                                max={1}
-                                step={0.05}
-                              />
-                              <span className="text-xs text-muted-foreground w-8">
-                                {Math.round(uiSoundVolume * 100)}%
-                              </span>
-                            </div>
-                          </div>
+                          <SettingRow icon={Volume1} label={t('settings.general.uiSoundVolume')}>
+                            <Slider
+                              aria-label={t('settings.general.uiSoundVolume')}
+                              className="w-32"
+                              value={[uiSoundVolume]}
+                              onValueChange={([v]) => {
+                                setUiSoundVolume(v ?? 0.6)
+                                emitUiSound('select')
+                              }}
+                              min={0}
+                              max={1}
+                              step={0.05}
+                            />
+                            <span className="tabnum w-14 text-right text-[12px] text-[var(--color-muted)]">{Math.round(uiSoundVolume * 100)}%</span>
+                          </SettingRow>
                         )}
                         {uiSoundsEnabled && (
-                          <div className="flex items-center justify-between">
-                            <Label className="text-sm text-muted-foreground">
-                              {t('settings.general.uiSoundVoice')}
-                            </Label>
-                            <div className="flex items-center gap-1.5">
-                              <Select
-                                value={uiSoundVoice}
-                                onValueChange={(value) => {
-                                  setUiSoundVoice(value as VoiceName)
-                                  // Preview the newly selected voice.
-                                  emitUiSound('confirm')
-                                }}
-                              >
-                                <SelectTrigger className="w-32">
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {VOICE_OPTIONS.map((option) => (
-                                    <SelectPrimitive.Item
-                                      key={option.value}
-                                      value={option.value}
-                                      className="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
-                                    >
-                                      <SelectPrimitive.ItemText>
-                                        <span
-                                          className={
-                                            option.value === uiSoundVoice
-                                              ? 'font-medium text-primary'
-                                              : undefined
-                                          }
-                                        >
-                                          {option.label}
-                                        </span>
-                                      </SelectPrimitive.ItemText>
-                                    </SelectPrimitive.Item>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                              {/* Audition the selected voice — a real, keyboard-reachable
-                            button beside the Select rather than a control nested
-                            inside each (non-focusable) option row. */}
-                              <button
-                                type="button"
-                                aria-label={t('settings.general.uiSoundPreview')}
-                                onClick={() => previewUiSound(uiSoundVoice)}
-                                className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-white/10 bg-white/5 text-muted-foreground transition-colors hover:bg-white/10 hover:text-foreground"
-                              >
-                                <Play className="h-3.5 w-3.5" />
-                              </button>
-                            </div>
-                          </div>
+                          <SettingRow icon={Music} label={t('settings.general.uiSoundVoice')}>
+                            <Select
+                              value={uiSoundVoice}
+                              onValueChange={(value) => {
+                                setUiSoundVoice(value as VoiceName)
+                                emitUiSound('confirm')
+                              }}
+                            >
+                              <SelectTrigger className="h-8 w-32" aria-label={t('settings.general.uiSoundVoice')}>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {VOICE_OPTIONS.map((option) => (
+                                  <SelectPrimitive.Item
+                                    key={option.value}
+                                    value={option.value}
+                                    className="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+                                  >
+                                    <SelectPrimitive.ItemText>
+                                      <span className={option.value === uiSoundVoice ? 'font-medium text-primary' : undefined}>{option.label}</span>
+                                    </SelectPrimitive.ItemText>
+                                  </SelectPrimitive.Item>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <button
+                              type="button"
+                              aria-label={t('settings.general.uiSoundPreview')}
+                              title={t('settings.general.uiSoundPreview')}
+                              onClick={() => previewUiSound(uiSoundVoice)}
+                              className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-muted)] transition-colors hover:text-[var(--color-text)]"
+                            >
+                              <Play className="h-3.5 w-3.5" />
+                            </button>
+                          </SettingRow>
                         )}
-                      </div>
+                      </SettingsTable>
                     )}
 
                     {activeSection === 'ai' && (
-                      <div className="space-y-3">
-                        <div className="space-y-2">
-                          <div className="flex items-center justify-between">
-                            <div className="space-y-0.5">
-                              <Label className="text-sm">
-                                {t('settings.ai.captionSampleInterval')}
-                              </Label>
-                              <p className="text-xs text-muted-foreground">
-                                {t('settings.ai.captionSampleIntervalDescription')}
+                      <SettingsTable>
+                        <SettingRow
+                          icon={ScanText}
+                          label={t('settings.ai.captionSampleInterval')}
+                          hint={t('settings.ai.captionSampleIntervalDescription')}
+                          below={
+                            <div className="space-y-2">
+                              <div className="flex flex-wrap items-center gap-2">
+                                <div className="flex items-center rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-0.5" role="group" aria-label={t('settings.ai.captionSampleInterval')}>
+                                  {(['seconds', 'frames'] as const).map((unit) => (
+                                    <button
+                                      key={unit}
+                                      type="button"
+                                      aria-pressed={captioningIntervalUnit === unit}
+                                      onClick={() => setSetting('captioningIntervalUnit', unit)}
+                                      className={cn(
+                                        'rounded px-2.5 py-1 text-xs transition-colors',
+                                        captioningIntervalUnit === unit
+                                          ? 'bg-primary/15 text-primary'
+                                          : 'text-muted-foreground hover:text-foreground',
+                                      )}
+                                    >
+                                      {unit === 'seconds' ? t('settings.ai.seconds') : t('settings.ai.frames')}
+                                    </button>
+                                  ))}
+                                </div>
+                                <Input
+                                  aria-label={t('settings.ai.captionSampleInterval')}
+                                  type="number"
+                                  inputMode="decimal"
+                                  className="h-8 w-24"
+                                  min={intervalBounds.min}
+                                  max={intervalBounds.max}
+                                  step={intervalInputStep}
+                                  value={captioningIntervalValue}
+                                  onChange={(event) => {
+                                    const parsed = Number(event.target.value)
+                                    if (Number.isFinite(parsed)) {
+                                      setSetting('captioningIntervalValue', parsed)
+                                    }
+                                  }}
+                                />
+                                <span className="text-xs text-muted-foreground">{intervalUnitLabel}</span>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-8 px-2 text-xs text-muted-foreground"
+                                  onClick={() => {
+                                    setSetting('captioningIntervalUnit', 'seconds')
+                                    setSetting('captioningIntervalValue', DEFAULT_CAPTIONING_INTERVAL_SECONDS)
+                                  }}
+                                  disabled={
+                                    captioningIntervalUnit === 'seconds' &&
+                                    captioningIntervalValue === DEFAULT_CAPTIONING_INTERVAL_SECONDS
+                                  }
+                                >
+                                  {t('common.reset')}
+                                </Button>
+                              </div>
+                              <p className="text-[11px] leading-snug text-[var(--color-muted)]">
+                                {t('settings.ai.captionIntervalHint', {
+                                  estimate: formatCaptionEstimate(t, captioningIntervalUnit, captioningIntervalValue),
+                                })}
                               </p>
                             </div>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <div className="flex items-center rounded-md border border-border bg-secondary p-0.5">
-                              {(['seconds', 'frames'] as const).map((unit) => (
+                          }
+                        />
+                        <SettingRow
+                          icon={Captions}
+                          label={t('settings.ai.defaultCaptionStyle')}
+                          hint={t('settings.ai.defaultCaptionStyleDescription')}
+                          below={
+                            <div className="flex flex-wrap gap-1.5">
+                              {CAPTION_STYLE_PRESETS.map((preset) => (
                                 <button
-                                  key={unit}
+                                  key={preset.id}
                                   type="button"
-                                  onClick={() => setSetting('captioningIntervalUnit', unit)}
+                                  title={t(preset.hintKey)}
+                                  aria-pressed={defaultCaptionStylePresetId === preset.id}
+                                  onClick={() => setSetting('defaultCaptionStylePresetId', preset.id)}
                                   className={cn(
-                                    'rounded px-2.5 py-1 text-xs transition-colors',
-                                    captioningIntervalUnit === unit
-                                      ? 'bg-primary/15 text-primary'
-                                      : 'text-muted-foreground hover:text-foreground',
+                                    'rounded-md border px-2.5 py-1 text-xs transition-colors',
+                                    defaultCaptionStylePresetId === preset.id
+                                      ? 'border-primary bg-primary/15 text-primary'
+                                      : 'border-[var(--color-border)] text-muted-foreground hover:text-foreground',
                                   )}
                                 >
-                                  {unit === 'seconds'
-                                    ? t('settings.ai.seconds')
-                                    : t('settings.ai.frames')}
+                                  {preset.label}
                                 </button>
                               ))}
                             </div>
-                            <Input
-                              aria-label={t('settings.ai.captionSampleInterval')}
-                              type="number"
-                              inputMode="decimal"
-                              className="h-8 w-24"
-                              min={intervalBounds.min}
-                              max={intervalBounds.max}
-                              step={intervalInputStep}
-                              value={captioningIntervalValue}
-                              onChange={(event) => {
-                                const parsed = Number(event.target.value)
-                                if (Number.isFinite(parsed)) {
-                                  setSetting('captioningIntervalValue', parsed)
-                                }
-                              }}
-                            />
-                            <span className="text-xs text-muted-foreground">
-                              {intervalUnitLabel}
-                            </span>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-7 px-2 text-xs text-muted-foreground"
-                              onClick={() => {
-                                setSetting('captioningIntervalUnit', 'seconds')
-                                setSetting(
-                                  'captioningIntervalValue',
-                                  DEFAULT_CAPTIONING_INTERVAL_SECONDS,
-                                )
-                              }}
-                              disabled={
-                                captioningIntervalUnit === 'seconds' &&
-                                captioningIntervalValue === DEFAULT_CAPTIONING_INTERVAL_SECONDS
-                              }
-                            >
-                              {t('common.reset')}
-                            </Button>
-                          </div>
-                          <p className="text-xs text-muted-foreground">
-                            {t('settings.ai.captionIntervalHint', {
-                              estimate: formatCaptionEstimate(
-                                t,
-                                captioningIntervalUnit,
-                                captioningIntervalValue,
-                              ),
-                            })}
-                          </p>
-                        </div>
-
-                        <div className="space-y-2">
-                          <div className="space-y-0.5">
-                            <Label className="text-sm">
-                              {t('settings.ai.defaultCaptionStyle')}
-                            </Label>
-                            <p className="text-xs text-muted-foreground">
-                              {t('settings.ai.defaultCaptionStyleDescription')}
-                            </p>
-                          </div>
-                          <div className="flex flex-wrap gap-1.5">
-                            {CAPTION_STYLE_PRESETS.map((preset) => (
-                              <button
-                                key={preset.id}
-                                type="button"
-                                title={t(preset.hintKey)}
-                                onClick={() => setSetting('defaultCaptionStylePresetId', preset.id)}
-                                className={cn(
-                                  'rounded-md border px-2.5 py-1 text-xs transition-colors',
-                                  defaultCaptionStylePresetId === preset.id
-                                    ? 'border-primary bg-primary/15 text-primary'
-                                    : 'border-border text-muted-foreground hover:text-foreground',
-                                )}
-                              >
-                                {preset.label}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
+                          }
+                        />
+                      </SettingsTable>
                     )}
 
                     {activeSection === 'timeline' && (
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <Label className="text-sm">
-                              {t('settings.timeline.snapByDefault')}
-                            </Label>
-                            <p className="text-xs text-muted-foreground">
-                              {t('settings.timeline.snapByDefaultDescription')}
-                            </p>
-                          </div>
+                      <SettingsTable>
+                        <SettingRow icon={Magnet} label={t('settings.timeline.snapByDefault')} hint={t('settings.timeline.snapByDefaultDescription')}>
                           <Switch
                             aria-label={t('settings.timeline.snapByDefault')}
                             checked={snapEnabled}
                             onCheckedChange={(v) => setSetting('snapEnabled', v)}
                           />
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <Label className="text-sm">{t('settings.timeline.showWaveforms')}</Label>
+                        </SettingRow>
+                        <SettingRow icon={AudioWaveform} label={t('settings.timeline.showWaveforms')} hint={t('settings.timeline.showWaveformsHint')}>
                           <Switch
                             aria-label={t('settings.timeline.showWaveforms')}
                             checked={showWaveforms}
                             onCheckedChange={(v) => setSetting('showWaveforms', v)}
                           />
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <Label className="text-sm">{t('settings.timeline.showFilmstrips')}</Label>
+                        </SettingRow>
+                        <SettingRow icon={Film} label={t('settings.timeline.showFilmstrips')} hint={t('settings.timeline.showFilmstripsHint')}>
                           <Switch
                             aria-label={t('settings.timeline.showFilmstrips')}
                             checked={showFilmstrips}
                             onCheckedChange={(v) => setSetting('showFilmstrips', v)}
                           />
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <Label className="text-sm">
-                              {t('settings.timeline.enableFilmstripExtraction')}
-                            </Label>
-                            <p className="text-xs text-muted-foreground">
-                              {t('settings.timeline.enableFilmstripExtractionDescription')}
-                            </p>
-                          </div>
+                        </SettingRow>
+                        <SettingRow icon={Images} label={t('settings.timeline.enableFilmstripExtraction')} hint={t('settings.timeline.enableFilmstripExtractionDescription')}>
                           <Switch
                             aria-label={t('settings.timeline.enableFilmstripExtraction')}
                             checked={enableFilmstripExtraction}
                             onCheckedChange={(v) => setSetting('enableFilmstripExtraction', v)}
                           />
-                        </div>
-                      </div>
+                        </SettingRow>
+                      </SettingsTable>
                     )}
 
                     {activeSection === 'storage' && (
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <Label className="text-sm">
-                              {t('settings.storage.generateMissingProxies')}
-                            </Label>
-                            <p className="text-xs text-muted-foreground mt-0.5">
-                              {t('settings.storage.generateMissingProxiesDescription')}
-                            </p>
-                          </div>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="h-8 w-28 gap-1.5"
-                            onClick={handleGenerateMissingProxies}
-                            disabled={
-                              proxyGenerateState !== 'idle' || missingProjectProxyCount === 0
-                            }
+                      <div className="space-y-4">
+                        <SettingsTable>
+                          <SettingRow icon={Film} label={t('settings.storage.generateMissingProxies')} hint={t('settings.storage.generateMissingProxiesDescription')}>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-8 min-w-28 gap-1.5"
+                              onClick={handleGenerateMissingProxies}
+                              disabled={proxyGenerateState !== 'idle' || missingProjectProxyCount === 0}
+                            >
+                              {proxyGenerateState === 'queueing' && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                              {proxyGenerateState === 'done' && <Check className="w-3.5 h-3.5" />}
+                              {proxyGenerateState === 'queueing'
+                                ? t('common.queueing')
+                                : proxyGenerateState === 'done'
+                                  ? t('settings.storage.queued')
+                                  : missingProjectProxyCount > 0
+                                    ? t('settings.storage.generateWithCount', { count: missingProjectProxyCount })
+                                    : t('settings.storage.upToDate')}
+                            </Button>
+                          </SettingRow>
+                          <SettingRow
+                            icon={Eraser}
+                            label={t('settings.storage.clearProjectCache')}
+                            hint={t('settings.storage.clearProjectCacheDescription')}
+                            below={clearFeedback && <p className={cn('text-[11px]', clearFeedback.tone === 'error' ? 'text-[var(--color-warn)]' : 'text-[var(--color-muted)]')}>{clearFeedback.message}</p>}
                           >
-                            {proxyGenerateState === 'queueing' && (
-                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                            )}
-                            {proxyGenerateState === 'done' && <Check className="w-3.5 h-3.5" />}
-                            {proxyGenerateState === 'idle' && <Film className="w-3.5 h-3.5" />}
-                            {proxyGenerateState === 'queueing'
-                              ? t('common.queueing')
-                              : proxyGenerateState === 'done'
-                                ? t('settings.storage.queued')
-                                : missingProjectProxyCount > 0
-                                  ? t('settings.storage.generateWithCount', {
-                                      count: missingProjectProxyCount,
-                                    })
-                                  : t('settings.storage.upToDate')}
-                          </Button>
-                        </div>
-                        <Separator className="bg-white/8" />
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <Label className="text-sm">
-                              {t('settings.storage.clearProjectCache')}
-                            </Label>
-                            <p className="text-xs text-muted-foreground mt-0.5">
-                              {t('settings.storage.clearProjectCacheDescription')}
-                            </p>
-                            {clearFeedback && (
-                              <p
-                                className={cn(
-                                  'mt-1 text-xs',
-                                  clearFeedback.tone === 'error'
-                                    ? 'text-amber-400'
-                                    : 'text-muted-foreground',
-                                )}
-                              >
-                                {clearFeedback.message}
-                              </p>
-                            )}
-                          </div>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="h-8 w-28 gap-1.5"
-                            onClick={() => setShowClearConfirm(true)}
-                            disabled={clearState !== 'idle'}
+                            <Button variant="outline" size="sm" className="h-8 min-w-28 gap-1.5" onClick={() => setShowClearConfirm(true)} disabled={clearState !== 'idle'}>
+                              {clearState === 'clearing' && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                              {clearState === 'done' && <Check className="w-3.5 h-3.5" />}
+                              {clearState === 'partial' && <TriangleAlert className="w-3.5 h-3.5" />}
+                              {clearState === 'clearing'
+                                ? t('common.clearing')
+                                : clearState === 'done'
+                                  ? t('settings.storage.cleared')
+                                  : clearState === 'partial'
+                                    ? t('common.partial')
+                                    : t('settings.storage.clear')}
+                            </Button>
+                          </SettingRow>
+                          <SettingRow
+                            icon={ImagePlus}
+                            label={t('settings.storage.regenerateThumbnails')}
+                            hint={t('settings.storage.regenerateThumbnailsDescription')}
+                            below={regenFeedback && <p className={cn('text-[11px]', regenFeedback.tone === 'error' ? 'text-[var(--color-warn)]' : 'text-[var(--color-muted)]')}>{regenFeedback.message}</p>}
                           >
-                            {clearState === 'clearing' && (
-                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                            )}
-                            {clearState === 'done' && <Check className="w-3.5 h-3.5" />}
-                            {clearState === 'partial' && <TriangleAlert className="w-3.5 h-3.5" />}
-                            {clearState === 'idle' && <Trash2 className="w-3.5 h-3.5" />}
-                            {clearState === 'clearing'
-                              ? t('common.clearing')
-                              : clearState === 'done'
-                                ? t('settings.storage.cleared')
-                                : clearState === 'partial'
-                                  ? t('common.partial')
-                                  : t('settings.storage.clear')}
-                          </Button>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <Label className="text-sm">
-                              {t('settings.storage.regenerateThumbnails')}
-                            </Label>
-                            <p className="text-xs text-muted-foreground mt-0.5">
-                              {t('settings.storage.regenerateThumbnailsDescription')}
-                            </p>
-                            {regenFeedback && (
-                              <p
-                                className={cn(
-                                  'mt-1 text-xs',
-                                  regenFeedback.tone === 'error'
-                                    ? 'text-amber-400'
-                                    : 'text-muted-foreground',
-                                )}
-                              >
-                                {regenFeedback.message}
-                              </p>
-                            )}
-                          </div>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="h-8 w-28 gap-1.5"
-                            onClick={handleRegenThumbnails}
-                            disabled={regenState !== 'idle'}
+                            <Button variant="outline" size="sm" className="h-8 min-w-28 gap-1.5" onClick={handleRegenThumbnails} disabled={regenState !== 'idle'}>
+                              {regenState === 'working' && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                              {regenState === 'done' && <Check className="w-3.5 h-3.5" />}
+                              {regenState === 'partial' && <TriangleAlert className="w-3.5 h-3.5" />}
+                              {regenState === 'working'
+                                ? regenProgress
+                                : regenState === 'done'
+                                  ? t('common.done')
+                                  : regenState === 'partial'
+                                    ? t('common.partial')
+                                    : t('settings.storage.regenerate')}
+                            </Button>
+                          </SettingRow>
+                          <SettingRow
+                            icon={Trash2}
+                            label={t('settings.storage.deleteProxies')}
+                            hint={t('settings.storage.deleteProxiesDescription')}
+                            below={proxyFeedback && <p className={cn('text-[11px]', proxyFeedback.tone === 'error' ? 'text-[var(--color-warn)]' : 'text-[var(--color-muted)]')}>{proxyFeedback.message}</p>}
                           >
-                            {regenState === 'working' && (
-                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                            )}
-                            {regenState === 'done' && <Check className="w-3.5 h-3.5" />}
-                            {regenState === 'partial' && <TriangleAlert className="w-3.5 h-3.5" />}
-                            {regenState === 'idle' && <ImagePlus className="w-3.5 h-3.5" />}
-                            {regenState === 'working'
-                              ? regenProgress
-                              : regenState === 'done'
-                                ? t('common.done')
-                                : regenState === 'partial'
-                                  ? t('common.partial')
-                                  : t('settings.storage.regenerate')}
-                          </Button>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <Label className="text-sm">{t('settings.storage.deleteProxies')}</Label>
-                            <p className="text-xs text-muted-foreground mt-0.5">
-                              {t('settings.storage.deleteProxiesDescription')}
-                            </p>
-                            {proxyFeedback && (
-                              <p
-                                className={cn(
-                                  'mt-1 text-xs',
-                                  proxyFeedback.tone === 'error'
-                                    ? 'text-amber-400'
-                                    : 'text-muted-foreground',
-                                )}
-                              >
-                                {proxyFeedback.message}
-                              </p>
-                            )}
-                          </div>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="h-8 w-28 gap-1.5"
-                            onClick={handleClearProxies}
-                            disabled={proxyState !== 'idle'}
-                          >
-                            {proxyState === 'clearing' && (
-                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                            )}
-                            {proxyState === 'done' && <Check className="w-3.5 h-3.5" />}
-                            {proxyState === 'partial' && <TriangleAlert className="w-3.5 h-3.5" />}
-                            {proxyState === 'idle' && <Film className="w-3.5 h-3.5" />}
-                            {proxyState === 'clearing'
-                              ? t('common.deleting')
-                              : proxyState === 'done'
-                                ? t('settings.storage.deleted')
-                                : proxyState === 'partial'
-                                  ? t('common.partial')
-                                  : t('common.delete')}
-                          </Button>
-                        </div>
-                        <Separator className="bg-white/8" />
-                        <div className="space-y-3">
-                          <div className="space-y-1">
-                            <Label className="text-sm">{t('settings.storage.localAi')}</Label>
-                            <p className="text-xs text-muted-foreground">
-                              {t('settings.storage.localAiDescription')}
-                            </p>
-                          </div>
-                          <LocalInferenceUnloadControl />
+                            <Button variant="outline" size="sm" className="h-8 min-w-28 gap-1.5" onClick={handleClearProxies} disabled={proxyState !== 'idle'}>
+                              {proxyState === 'clearing' && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                              {proxyState === 'done' && <Check className="w-3.5 h-3.5" />}
+                              {proxyState === 'partial' && <TriangleAlert className="w-3.5 h-3.5" />}
+                              {proxyState === 'clearing'
+                                ? t('common.deleting')
+                                : proxyState === 'done'
+                                  ? t('settings.storage.deleted')
+                                  : proxyState === 'partial'
+                                    ? t('common.partial')
+                                    : t('common.delete')}
+                            </Button>
+                          </SettingRow>
+                        </SettingsTable>
+                        <section className="space-y-2">
+                          <h4 className="text-[11px] font-semibold uppercase tracking-wide text-[var(--color-muted)]">{t('settings.storage.localAi')}</h4>
+                          <p className="text-[12px] text-[var(--color-muted)]">{t('settings.storage.localAiDescription')}</p>
+                          <SettingsTable>
+                            <LocalInferenceUnloadControl className="px-3 py-2.5" labelClassName="text-[13px] font-medium" descriptionClassName="text-[11px] leading-snug" />
+                          </SettingsTable>
                           <LocalModelCacheControl />
-                        </div>
+                        </section>
                       </div>
                     )}
                   </motion.div>

@@ -35,8 +35,15 @@
     },
     "general": {
       "language": "Interface language",
-      "languageHint": "The window and the messages of the program."
+      "languageHint": "The window and the messages of the program.",
+      "autoSaveHint": "Salva o projeto aberto sozinho a cada poucos minutos",
+      "undoHistoryDepthHint": "Quantos passos o Desfazer pode voltar",
+      "uiSoundsHint": "Sons curtos para cliques, resultados e erros"
     },
-    "done": "Concluído"
+    "done": "Concluído",
+    "timeline": {
+      "showWaveformsHint": "Desenha o som dos clipes de áudio na linha do tempo",
+      "showFilmstripsHint": "Mostra quadros ao longo dos clipes de vídeo"
+    }
   }
 }

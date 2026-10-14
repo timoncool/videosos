@@ -35,8 +35,15 @@
     },
     "general": {
       "language": "Interface language",
-      "languageHint": "The window and the messages of the program."
+      "languageHint": "The window and the messages of the program.",
+      "autoSaveHint": "Guarda el proyecto abierto solo cada pocos minutos",
+      "undoHistoryDepthHint": "Cuántos pasos puede deshacer",
+      "uiSoundsHint": "Sonidos cortos para clics, resultados y errores"
     },
-    "done": "Listo"
+    "done": "Listo",
+    "timeline": {
+      "showWaveformsHint": "Dibuja el sonido de los clips de audio en la línea de tiempo",
+      "showFilmstripsHint": "Muestra fotogramas a lo largo de los clips de vídeo"
+    }
   }
 }

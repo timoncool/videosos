@@ -35,8 +35,15 @@
     },
     "general": {
       "language": "Interface language",
-      "languageHint": "The window and the messages of the program."
+      "languageHint": "The window and the messages of the program.",
+      "autoSaveHint": "Speichert das offene Projekt alle paar Minuten von selbst",
+      "undoHistoryDepthHint": "Wie viele Schritte Rückgängig zurückgehen kann",
+      "uiSoundsHint": "Kurze Töne für Klicks, Ergebnisse und Fehler"
     },
-    "done": "Fertig"
+    "done": "Fertig",
+    "timeline": {
+      "showWaveformsHint": "Zeigt den Ton von Audioclips in der Zeitleiste",
+      "showFilmstripsHint": "Zeigt Bilder entlang von Videoclips"
+    }
   }
 }
