@@ -618,11 +618,11 @@ export function SettingsDialog({ open, onOpenChange, target }: SettingsDialogPro
           section's title and hint on top, its content scrolling between them, Done at the bottom. */}
       <DialogContent
         hideCloseButton
-        className="flex h-[min(88vh,760px)] w-[min(94vw,900px)] max-w-none gap-0 overflow-hidden rounded-xl p-0 glass-panel"
+        className="flex h-[min(90dvh,960px)] w-[min(94vw,1280px)] max-w-none gap-0 overflow-hidden rounded-xl p-0 glass-panel"
       >
         <nav
           aria-label={t('settings.title')}
-          className="hidden w-56 shrink-0 flex-col gap-1 overflow-y-auto border-r border-[var(--color-border)] p-3 sm:flex"
+          className="hidden w-60 shrink-0 flex-col gap-1 overflow-y-auto border-r border-[var(--color-border)] p-3 sm:flex lg:w-72"
         >
           <h2 className="px-2 pb-2 pt-1 text-[15px] font-semibold">{t('settings.title')}</h2>
           {SETTINGS_SECTIONS.map((section) => {
@@ -648,10 +648,10 @@ export function SettingsDialog({ open, onOpenChange, target }: SettingsDialogPro
                   )}
                 />
                 <span className="min-w-0">
-                  <span className="block truncate text-[13px] font-medium">
+                  <span className="block text-[13px] font-medium leading-snug">
                     {t(section.labelKey)}
                   </span>
-                  <span className="block truncate text-[11px] text-[var(--color-muted)]">
+                  <span className="block text-[11px] leading-snug text-[var(--color-muted)]">
                     {t(`${section.labelKey}Hint`)}
                   </span>
                 </span>
@@ -666,7 +666,7 @@ export function SettingsDialog({ open, onOpenChange, target }: SettingsDialogPro
               <DialogTitle className="truncate text-[15px] font-semibold">
                 {t(SECTION_LABEL[activeSection])}
               </DialogTitle>
-              <DialogDescription className="truncate text-[12px] text-[var(--color-muted)]">
+              <DialogDescription className="text-[12px] leading-snug text-[var(--color-muted)]">
                 {t(`${SECTION_LABEL[activeSection]}Hint`)}
               </DialogDescription>
             </div>

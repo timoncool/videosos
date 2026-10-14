@@ -116,16 +116,16 @@ function ModelRow({
       className="space-y-1.5 rounded-lg border border-border p-3"
       data-testid={`local-model-${model.id}`}
     >
-      <div className="flex items-center gap-2">
-        <span className="text-sm font-medium">{model.name}</span>
-        <span className="text-[11px] text-muted-foreground">
+      <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+        <span className="whitespace-nowrap text-sm font-medium">{model.name}</span>
+        <span className="whitespace-nowrap text-[11px] text-muted-foreground">
           {t(`generate.local.task.${model.task}`)} · {formatBytes(model.size_bytes)}
         </span>
         <span
           className={
             model.installed
-              ? 'ml-auto text-[11px] text-emerald-400'
-              : 'ml-auto text-[11px] text-muted-foreground'
+              ? 'ml-auto whitespace-nowrap text-[11px] text-emerald-400'
+              : 'ml-auto whitespace-nowrap text-[11px] text-muted-foreground'
           }
         >
           {model.installed ? t('generate.local.installed') : t('generate.local.notInstalled')}
