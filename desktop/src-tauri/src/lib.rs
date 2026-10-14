@@ -44,6 +44,11 @@ fn fatal(message: &str) {
         .show();
 }
 
+/// The page the embedded server serves this window; anything else opens in the person's browser.
+fn own_page(url: &tauri::Url, port: u16) -> bool {
+    url.host_str() == Some("127.0.0.1") && url.port() == Some(port)
+}
+
 fn open_in_browser(app: &tauri::AppHandle, url: &tauri::Url) {
     use tauri_plugin_opener::OpenerExt;
     if let Err(e) = app.opener().open_url(url.as_str(), None::<&str>) {
@@ -329,17 +334,14 @@ pub fn run() {
                 })
                 // the window shows only VideoSOS's own page: its microphone requests (the sound outputs' names,
                 // the voice-over) are the person's own clicks
-                .on_permission_request(|webview, kind| match kind {
-                    tauri::webview::PermissionKind::Microphone
-                        if webview.url().is_ok_and(|url| matches!(url.host_str(), Some("127.0.0.1" | "localhost"))) =>
-                    {
+                .on_permission_request(move |webview, kind| match kind {
+                    tauri::webview::PermissionKind::Microphone if webview.url().is_ok_and(|url| own_page(&url, port)) => {
                         tauri::webview::PermissionResponse::Allow
                     }
                     _ => tauri::webview::PermissionResponse::Default,
                 })
                 .on_navigation(move |target| {
-                    let own = target.host_str() == Some("127.0.0.1") && target.port() == Some(port);
-                    if own || !matches!(target.scheme(), "http" | "https") {
+                    if own_page(target, port) || !matches!(target.scheme(), "http" | "https") {
                         return true;
                     }
                     open_in_browser(&for_links, target);

@@ -287,9 +287,12 @@ function readPage(): string {
         element.getAttribute('role') ||
         (tag === 'input' ? `input ${(element as HTMLInputElement).type}` : tag)
       const context = element.closest('[data-mcp-context]')?.getAttribute('data-mcp-context')
+      // a list's option is aria-selected only while focused; its data-state says whether it is the chosen one
+      const chosen = element.getAttribute('data-state')
       const pressed =
         element.getAttribute('aria-checked') ??
         element.getAttribute('aria-pressed') ??
+        (chosen === 'checked' || chosen === 'unchecked' ? String(chosen === 'checked') : null) ??
         element.getAttribute('aria-selected')
       const state = pressed ? (pressed === 'true' ? ' on' : ' off') : ''
       const disabled = (element as HTMLButtonElement).disabled ? ' (disabled)' : ''
