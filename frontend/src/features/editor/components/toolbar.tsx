@@ -177,7 +177,7 @@ export const Toolbar = memo(function Toolbar({
         </Button>
 
             <h1
-              className="max-w-[220px] truncate text-[13px] font-medium"
+              className="max-w-[140px] truncate text-[13px] font-medium min-[1440px]:max-w-[220px]"
               title={`${project?.name || t('common.untitledProject')}\n${t('toolbar.specsDetailed', {
                 width: project?.width,
                 height: project?.height,
@@ -216,6 +216,7 @@ export const Toolbar = memo(function Toolbar({
           className="h-8 gap-1.5"
           onClick={handleSave}
           aria-label={t('toolbar.saveAria')}
+          title={t('toolbar.save')}
         >
           <div className="relative">
             {isSaveAnimating ? (
@@ -225,7 +226,7 @@ export const Toolbar = memo(function Toolbar({
             )}
             <SaveDirtyIndicator />
           </div>
-          {t('toolbar.save')}
+          <span className="hidden min-[1440px]:inline">{t('toolbar.save')}</span>
         </Button>
 
         {onOpenRenderQueue && (

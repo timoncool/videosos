@@ -40,12 +40,12 @@ function StatusBar() {
 export function TopBar({ go }: { go: (place: TopBarPlace) => void }) {
   const { t } = useTranslation();
   return (
-    <header className="flex h-14 shrink-0 items-center gap-2 border-b border-[var(--color-border)] bg-[var(--color-surface)] px-5">
+    <header className="flex h-14 shrink-0 items-center gap-2 border-b border-[var(--color-border)] bg-[var(--color-surface)] px-4 min-[1440px]:px-5">
       <div className="flex shrink-0 items-center gap-3">
         <button type="button" onClick={() => go("/projects")} title={t("topbar.projects")} className="flex items-center gap-2 font-bold tracking-tight">
           <img src="/videosos-icon.svg" alt="" width={20} height={20} className="rounded-[5px] shadow-[0_0_10px_rgba(45,212,191,0.25)]" />
           {t("app.name")}
-          <span className="text-[11px] font-normal tracking-normal text-[var(--color-muted)]">v{__APP_VERSION__}</span>
+          <span className="hidden text-[11px] font-normal tracking-normal text-[var(--color-muted)] min-[1440px]:inline">v{__APP_VERSION__}</span>
         </button>
         <div id="editor-modes-slot" className="flex items-center gap-2" />
       </div>
@@ -55,8 +55,8 @@ export function TopBar({ go }: { go: (place: TopBarPlace) => void }) {
         <div id="editor-actions-slot" className="flex items-center gap-2" />
         <button type="button" onClick={() => go("/projects/new")} title={t("topbar.newTitle")}
           className="inline-flex flex-col items-center justify-center rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-2)] px-3 py-1 text-[var(--color-text)] shadow-sm transition-colors hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]">
-          <span className="flex items-center gap-1 text-[12px] font-bold"><Plus size={13} /> {t("topbar.new")}</span>
-          <span className="mt-0.5 text-[9px] font-normal leading-none text-[var(--color-muted)]">{t("topbar.newSub")}</span>
+          <span className="flex items-center gap-1 whitespace-nowrap text-[12px] font-bold"><Plus size={13} /> {t("topbar.new")}</span>
+          <span className="mt-0.5 hidden text-[9px] font-normal leading-none text-[var(--color-muted)] min-[1440px]:block">{t("topbar.newSub")}</span>
         </button>
         <WhatsNew />
         <button type="button" onClick={() => go("/docs")} title={t("topbar.help")} aria-label={t("topbar.help")}
