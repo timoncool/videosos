@@ -150,7 +150,9 @@
       "video": "動画",
       "download": "リンクからのダウンロード",
       "checkpoint": "復元ポイント",
-      "blocking": "3Dブロッキング"
+      "blocking": "3Dブロッキング",
+      "key": "キー",
+      "proxy": "プロキシ"
     }
   },
   "files": {

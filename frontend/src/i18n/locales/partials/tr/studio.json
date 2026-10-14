@@ -150,7 +150,9 @@
       "video": "video",
       "download": "bağlantıdan indirme",
       "checkpoint": "geri yükleme noktası",
-      "blocking": "3D blocking"
+      "blocking": "3D blocking",
+      "key": "anahtar",
+      "proxy": "proxy"
     }
   },
   "files": {

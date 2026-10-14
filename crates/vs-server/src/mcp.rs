@@ -237,6 +237,62 @@ fn tools() -> &'static [Tool] {
                 call: |args| send(Method::POST, format!("/api/keys/{}/check", segment(&text(args, "provider")?)), json!({})),
             },
             Tool {
+                name: "key_set",
+                description: "Keeps a provider key the person gave you, as Settings, Providers keeps it; it is never shown back. Check it with key_check.",
+                looks: false,
+                schema: || object(json!({ "provider": { "type": "string", "enum": ["openrouter", "fal", "runware"] }, "key": { "type": "string" } }), &["provider", "key"]),
+                call: |args| send(Method::PUT, format!("/api/keys/{}", segment(&text(args, "provider")?)), json!({ "key": text(args, "key")? })),
+            },
+            Tool {
+                name: "key_delete",
+                description: "Removes a provider's key from VideoSOS; its models stop running until a key is set again.",
+                looks: false,
+                schema: || object(json!({ "provider": { "type": "string", "enum": ["openrouter", "fal", "runware"] } }), &["provider"]),
+                call: |args| send(Method::PUT, format!("/api/keys/{}", segment(&text(args, "provider")?)), json!({ "key": null })),
+            },
+            Tool {
+                name: "settings_get",
+                description: "The person's guards for agents: the daily spending limit (agent_daily_budget_usd, null for none) and whether agents' timeline edits wait for their Accept (agent_confirm_edits). Only the person changes them, in Settings, Agents. The window's own settings are window_settings_get.",
+                looks: true,
+                schema: nothing,
+                call: |_| get_call("/api/settings".into()),
+            },
+            Tool {
+                name: "proxy_get",
+                description: "Where requests to the providers and downloads go: mode off (straight), system (as the computer is set) or custom, the proxy kind and its address without the login and password; problem names what is wrong with it.",
+                looks: true,
+                schema: nothing,
+                call: |_| composite("proxy"),
+            },
+            Tool {
+                name: "proxy_set",
+                description: "Sets the proxy for the providers and downloads, at once for every request, as Settings, Network does: mode off|system|custom; for custom, kind http|https|socks5|socks4 and address as the person gave it (host:port, a URL with a login, or a seller's host:port:login:password). Try it first with proxy_test.",
+                looks: false,
+                schema: || object(json!({ "mode": { "type": "string", "enum": ["off", "system", "custom"] }, "kind": { "type": "string", "enum": ["http", "https", "socks5", "socks4"] }, "address": { "type": "string" } }), &["mode"]),
+                call: |args| send(Method::PUT, "/api/network/proxy".into(), json!({ "mode": text(args, "mode")?, "kind": opt(args, "kind").unwrap_or_else(|| "http".into()), "address": opt(args, "address") })),
+            },
+            Tool {
+                name: "proxy_test",
+                description: "Tries a proxy without keeping it: whether it answers and how the providers are reached through it. Same fields as proxy_set.",
+                looks: true,
+                schema: || object(json!({ "mode": { "type": "string", "enum": ["off", "system", "custom"] }, "kind": { "type": "string", "enum": ["http", "https", "socks5", "socks4"] }, "address": { "type": "string" } }), &["mode"]),
+                call: |args| send(Method::POST, "/api/network/proxy/test".into(), json!({ "mode": text(args, "mode")?, "kind": opt(args, "kind").unwrap_or_else(|| "http".into()), "address": opt(args, "address") })),
+            },
+            Tool {
+                name: "network_status",
+                description: "Whether VideoSOS can be opened from another computer's browser (Settings, Network, Access from the network) and on which addresses. Only the person turns it on.",
+                looks: true,
+                schema: nothing,
+                call: |_| get_call("/api/network".into()),
+            },
+            Tool {
+                name: "studio_paths",
+                description: "Where VideoSOS keeps its things on this computer: data, projects, generations, exports and logs.",
+                looks: true,
+                schema: nothing,
+                call: |_| get_call("/api/app/paths".into()),
+            },
+            Tool {
                 name: "catalog_refresh",
                 description: "Reads the model catalogues again (all providers, or one). Runs in the background; models_list shows progress.",
                 looks: false,
@@ -361,6 +417,13 @@ fn tools() -> &'static [Tool] {
                 looks: false,
                 schema: || object(json!({ "fetch_id": { "type": "string" } }), &["fetch_id"]),
                 call: |args| send(Method::POST, format!("/api/url/fetches/{}/cancel", segment(&text(args, "fetch_id")?)), json!({})),
+            },
+            Tool {
+                name: "url_fetch_delete",
+                description: "Forgets a finished, failed or cancelled download by link and removes its files (media already imported into a project stays there).",
+                looks: false,
+                schema: || object(json!({ "fetch_id": { "type": "string" } }), &["fetch_id"]),
+                call: |args| send(Method::DELETE, format!("/api/url/fetches/{}", segment(&text(args, "fetch_id")?)), json!({})),
             },
             Tool {
                 name: "url_fetch_resume",
@@ -661,6 +724,10 @@ const JOURNAL: &[(&str, &str, &str)] = &[
     ("timeline_redo", "redone", "timeline"),
     ("checkpoint_create", "created", "checkpoint"),
     ("motion_render", "imported", "media"),
+    ("key_set", "updated", "key"),
+    ("key_delete", "deleted", "key"),
+    ("proxy_set", "updated", "proxy"),
+    ("url_fetch_delete", "deleted", "download"),
     ("previs_render", "created", "blocking"),
     ("checkpoint_restore", "restored", "timeline"),
     ("media_import", "imported", "media"),
@@ -894,6 +961,28 @@ const LIST_TTL_MS: u64 = 300_000;
 
 const INSTRUCTIONS: &str = "You drive VideoSOS, a video studio on this computer: it generates images, video, music, speech, sound effects and text through the person's own OpenRouter, fal and Runware keys, keeps the results in a project's media library and edits them on a multitrack timeline that renders to MP4. Start with studio_status. To make something: models_list for a task, model_form for its settings, price_estimate, then generate with project_id of the open project and job_wait. Results land in the project's library (media_list) and, with place_on_timeline, at the playhead; timeline_get and timeline_edit change the open project with undo while the person watches. Generations are paid: say the price before large runs. The whole guide is the resource videosos://skill (prompt 'videosos').";
 
+/// The proxy as an agent may read it: the login and password the person typed stay with VideoSOS.
+fn proxy_without_login() -> Value {
+    let settings = vs_providers::net::current();
+    let problem = settings.clone().validated().err().map(|error| format!("{error:#}"));
+    let mut value = serde_json::to_value(&settings).unwrap_or_default();
+    value["address"] = json!(settings.address.as_deref().map(host_and_port));
+    value["problem"] = json!(problem);
+    value
+}
+
+/// `host:port` of a proxy address in any of the forms the person may type.
+fn host_and_port(address: &str) -> String {
+    let rest = address.split_once("://").map_or(address, |(_, rest)| rest);
+    let rest = rest.rsplit_once('@').map_or(rest, |(_, host)| host);
+    let rest = rest.trim_end_matches('/');
+    let mut parts = rest.split(':');
+    match (parts.next(), parts.next()) {
+        (Some(host), Some(port)) => format!("{host}:{port}"),
+        _ => rest.to_string(),
+    }
+}
+
 fn server_info() -> Value {
     json!({ "name": "videosos", "title": STUDIO, "version": crate::service::app_version() })
 }
@@ -1063,6 +1152,7 @@ async fn run_tool(state: &AppState, tool: &Tool, args: &Value) -> Result<Answer,
         Payload::Composite("wait") => wait_for(state, args).await.map(Answer::Json),
         Payload::Composite("projects") => Ok(Answer::Json(projects(state))),
         Payload::Composite("project") => project(state, args).map(Answer::Json),
+        Payload::Composite("proxy") => Ok(Answer::Json(proxy_without_login())),
         Payload::Composite("activity") => state.journal.read(crate::journal::KEPT).map(|lines| Answer::Json(json!({ "lines": lines }))).map_err(|error| error.to_string()),
         Payload::Composite("import") => import_media(state, args).await.map(Answer::Json),
         Payload::Composite(other) => Err(format!("unknown composite {other}")),
@@ -1122,6 +1212,14 @@ pub fn router() -> Router<AppState> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn a_proxy_is_read_without_its_login() {
+        assert_eq!(host_and_port("socks5://user:secret@10.0.0.2:1080"), "10.0.0.2:1080");
+        assert_eq!(host_and_port("proxy.example:8000:login:password"), "proxy.example:8000");
+        assert_eq!(host_and_port("http://proxy.example:3128/"), "proxy.example:3128");
+        assert_eq!(host_and_port("127.0.0.1:9000"), "127.0.0.1:9000");
+    }
 
     #[tokio::test]
     async fn a_command_to_a_window_that_closed_fails_at_once() {

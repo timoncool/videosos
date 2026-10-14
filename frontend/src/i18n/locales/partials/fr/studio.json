@@ -150,7 +150,9 @@
       "video": "vidéo",
       "download": "téléchargement par lien",
       "checkpoint": "point de restauration",
-      "blocking": "blocking 3D"
+      "blocking": "blocking 3D",
+      "key": "clé",
+      "proxy": "proxy"
     }
   },
   "files": {

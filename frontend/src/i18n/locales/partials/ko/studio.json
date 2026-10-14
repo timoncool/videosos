@@ -150,7 +150,9 @@
       "video": "동영상",
       "download": "링크 다운로드",
       "checkpoint": "복원 지점",
-      "blocking": "3D 블로킹"
+      "blocking": "3D 블로킹",
+      "key": "키",
+      "proxy": "프록시"
     }
   },
   "files": {
