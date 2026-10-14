@@ -5,7 +5,16 @@
       "agents": "Agents",
       "network": "Network",
       "privacy": "Privacy",
-      "about": "About"
+      "about": "About",
+      "providersHint": "Schlüssel für OpenRouter, fal und Runware, Ausgaben",
+      "agentsHint": "MCP-Adresse und Tageslimit der Agenten",
+      "generalHint": "Sprache, Autospeichern, Rückgängig, Töne",
+      "timelineHint": "Einrasten, Wellenformen, Filmstreifen",
+      "aiHint": "Szenenbeschreibungen und lokale Modelle",
+      "storageHint": "Proxys und zwischengespeicherte Dateien",
+      "networkHint": "Proxy und Zugriff von anderen Computern",
+      "privacyHint": "Anonyme Statistik und Neuigkeiten",
+      "aboutHint": "Version, Links, Ordner, Unterstützung"
     },
     "providers": {
       "intro": "VideoSOS generates through your own accounts: add a key of OpenRouter, fal or Runware. Keys stay on this computer and are never shown to agents.",
@@ -27,6 +36,7 @@
     "general": {
       "language": "Interface language",
       "languageHint": "The window and the messages of the program."
-    }
+    },
+    "done": "Fertig"
   }
 }

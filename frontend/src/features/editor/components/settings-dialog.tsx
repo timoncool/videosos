@@ -4,7 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import type { TFunction } from 'i18next'
 import type { MediaMetadata } from '@/types/storage'
 import { toast } from 'sonner'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,7 +20,6 @@ import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { Switch } from '@/components/ui/switch'
 import { Slider } from '@/components/ui/slider'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { Input } from '@/components/ui/input'
 import {
   RotateCcw,
@@ -40,6 +39,7 @@ import {
   Globe,
   ShieldCheck,
   Info,
+  X,
 } from 'lucide-react'
 import {
   LocalInferenceUnloadControl,
@@ -72,14 +72,9 @@ import { Select, SelectContent, SelectTrigger, SelectValue } from '@/components/
 import { createLogger } from '@/shared/logging/logger'
 import { cn } from '@/shared/ui/cn'
 import { LanguageSwitcher } from '@/shared/ui/language-switcher'
-import { useNaturalHeight } from '@/shared/ui/use-natural-height'
 
 const log = createLogger('SettingsDialog')
 
-/** Minimum content height so short sections don't collapse the dialog. */
-const MIN_SECTION_HEIGHT = 360
-/** Fraction of the viewport a section may occupy before it scrolls instead. */
-const MAX_SECTION_HEIGHT_VH = 0.7
 
 const LazyProvidersSettings = lazy(() =>
   import('../deps/generate').then((m) => ({ default: m.ProvidersSettings })),
@@ -118,6 +113,11 @@ function formatCaptionEstimate(t: TFunction, unit: CaptioningIntervalUnit, value
 }
 
 type SettingsSectionId = (typeof SETTINGS_SECTIONS)[number]['id']
+
+const SECTION_LABEL = Object.fromEntries(SETTINGS_SECTIONS.map((section) => [section.id, section.labelKey])) as Record<SettingsSectionId, string>
+
+/** The sections whose settings are the editor's own and go back to their defaults with Reset. */
+const RESETTABLE = new Set<SettingsSectionId>(['general', 'timeline', 'ai', 'storage'])
 
 interface SettingsDialogProps {
   open: boolean
@@ -426,29 +426,8 @@ export function SettingsDialog({ open, onOpenChange, target }: SettingsDialogPro
     return () => window.cancelAnimationFrame(frame)
   }, [open, target])
 
-  // Animate the content area's height as sections change (width is fixed, so a
-  // pure vertical morph). Measure the active section's natural height and spring
-  // the wrapper to it, clamped to [min, 70vh]; taller sections cap and scroll.
   const reduceMotion = useReducedMotion()
   const contentRef = useRef<HTMLDivElement>(null)
-  const naturalHeight = useNaturalHeight(contentRef, open)
-  const [heightReady, setHeightReady] = useState(false)
-  // First measured height applies instantly; later section switches animate.
-  useEffect(() => {
-    if (naturalHeight > 0 && !heightReady) setHeightReady(true)
-  }, [naturalHeight, heightReady])
-  // Reset the instant-apply gate on close so reopening doesn't animate from a
-  // stale height.
-  useEffect(() => {
-    if (!open) setHeightReady(false)
-  }, [open])
-  const maxSectionHeight = Math.round(
-    (typeof window === 'undefined' ? 900 : window.innerHeight) * MAX_SECTION_HEIGHT_VH,
-  )
-  const targetSectionHeight =
-    naturalHeight > 0
-      ? Math.min(Math.max(naturalHeight, MIN_SECTION_HEIGHT), maxSectionHeight)
-      : undefined
 
   const [clearState, setClearState] = useState<'idle' | 'clearing' | 'done' | 'partial'>('idle')
   const [showClearConfirm, setShowClearConfirm] = useState(false)
@@ -605,57 +584,74 @@ export function SettingsDialog({ open, onOpenChange, target }: SettingsDialogPro
   ).length
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl gap-0 overflow-hidden p-0 sm:top-16 sm:max-h-[calc(100vh-4rem)] sm:translate-y-0 sm:origin-top">
-        <DialogHeader className="flex flex-row items-center justify-between border-b px-6 py-4 pr-14">
-          <DialogTitle>{t('settings.title')}</DialogTitle>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={resetToDefaults}
-            className="h-8 shrink-0 gap-1.5"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-            {t('common.reset')}
-          </Button>
-        </DialogHeader>
-        <div className="flex min-h-0">
-          {/* Sidebar */}
-          <nav className="flex w-44 shrink-0 flex-col gap-0.5 border-r border-white/6 p-2">
-            {SETTINGS_SECTIONS.map((section) => {
-              const Icon = section.icon
-              return (
-                <button
-                  key={section.id}
-                  type="button"
-                  onClick={() => setActiveSection(section.id)}
-                  className={cn(
-                    'flex items-center gap-2 rounded-lg px-3 py-2 text-left text-[13px] transition-colors duration-150 ease-out motion-reduce:transition-none',
-                    activeSection === section.id
-                      ? 'bg-primary/15 text-primary'
-                      : 'text-muted-foreground hover:bg-white/5 hover:text-foreground/80',
-                  )}
-                >
-                  <Icon className="h-3.5 w-3.5 shrink-0" />
-                  {t(section.labelKey)}
-                </button>
-              )
-            })}
-          </nav>
+      {/* The studios' settings window (Dub Studio's SettingsModal): sections with a hint on the left, the open
+          section's title and hint on top, its content scrolling between them, Done at the bottom. */}
+      <DialogContent hideCloseButton className="flex h-[min(88vh,760px)] w-[min(94vw,900px)] max-w-none gap-0 overflow-hidden rounded-xl p-0 glass-panel">
+        <nav aria-label={t('settings.title')} className="hidden w-56 shrink-0 flex-col gap-1 overflow-y-auto border-r border-[var(--color-border)] p-3 sm:flex">
+          <h2 className="px-2 pb-2 pt-1 text-[15px] font-semibold">{t('settings.title')}</h2>
+          {SETTINGS_SECTIONS.map((section) => {
+            const Icon = section.icon
+            const current = activeSection === section.id
+            return (
+              <button
+                key={section.id}
+                type="button"
+                onClick={() => setActiveSection(section.id)}
+                aria-current={current ? 'page' : undefined}
+                className={cn(
+                  'flex w-full items-start gap-2.5 rounded-lg px-2.5 py-2 text-left transition-colors duration-150 motion-reduce:transition-none',
+                  current
+                    ? 'bg-[var(--color-surface-2)] text-[var(--color-text)] shadow-[inset_2px_0_0_var(--color-accent)]'
+                    : 'text-[var(--color-muted)] hover:bg-[var(--color-surface-2)]/60 hover:text-[var(--color-text)]',
+                )}
+              >
+                <Icon className={cn('mt-0.5 h-[15px] w-[15px] shrink-0', current && 'text-[var(--color-accent)]')} />
+                <span className="min-w-0">
+                  <span className="block truncate text-[13px] font-medium">{t(section.labelKey)}</span>
+                  <span className="block truncate text-[11px] text-[var(--color-muted)]">{t(`${section.labelKey}Hint`)}</span>
+                </span>
+              </button>
+            )
+          })}
+        </nav>
 
-          {/* Content — height animates between sections (fixed width, so a clean
-              vertical morph); tall sections cap at 70vh and scroll. */}
-          <motion.div
-            className="min-h-0 flex-1 overflow-hidden"
-            initial={false}
-            animate={{ height: targetSectionHeight ?? 'auto' }}
-            transition={
-              reduceMotion || !heightReady
-                ? { duration: 0 }
-                : { type: 'spring', stiffness: 460, damping: 40, mass: 0.9 }
-            }
-          >
-            <ScrollArea className="h-full">
-              <div ref={contentRef} className="relative space-y-3 px-6 py-5 pr-7">
+        <div className="flex min-w-0 flex-1 flex-col">
+          <div className="flex items-center justify-between gap-3 border-b border-[var(--color-border)] px-5 py-3.5">
+            <div className="min-w-0">
+              <DialogTitle className="truncate text-[15px] font-semibold">{t(SECTION_LABEL[activeSection])}</DialogTitle>
+              <DialogDescription className="truncate text-[12px] text-[var(--color-muted)]">{t(`${SECTION_LABEL[activeSection]}Hint`)}</DialogDescription>
+            </div>
+            <button
+              type="button"
+              onClick={() => onOpenChange(false)}
+              aria-label={t('common.close')}
+              title={t('common.close')}
+              className="shrink-0 rounded-md p-1.5 text-[var(--color-muted)] transition-colors hover:bg-[var(--color-surface-2)] hover:text-[var(--color-text)]"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+
+          <div className="flex gap-1 overflow-x-auto border-b border-[var(--color-border)] px-3 py-2 sm:hidden">
+            {SETTINGS_SECTIONS.map((section) => (
+              <button
+                key={section.id}
+                type="button"
+                onClick={() => setActiveSection(section.id)}
+                aria-current={activeSection === section.id ? 'page' : undefined}
+                className={cn(
+                  'shrink-0 rounded-full border px-3 py-1 text-[11px] font-medium',
+                  activeSection === section.id
+                    ? 'border-[var(--color-accent)] bg-[var(--color-surface-2)] text-[var(--color-text)]'
+                    : 'border-[var(--color-border)] text-[var(--color-muted)]',
+                )}
+              >
+                {t(section.labelKey)}
+              </button>
+            ))}
+          </div>
+
+          <div ref={contentRef} className="min-h-0 flex-1 space-y-3 overflow-y-auto px-5 py-4">
                 <AnimatePresence mode="popLayout" initial={false}>
                   <motion.div
                     key={activeSection}
@@ -1184,9 +1180,21 @@ export function SettingsDialog({ open, onOpenChange, target }: SettingsDialogPro
                     )}
                   </motion.div>
                 </AnimatePresence>
-              </div>
-            </ScrollArea>
-          </motion.div>
+          </div>
+
+          <div className="flex items-center justify-between gap-3 border-t border-[var(--color-border)] px-5 py-3">
+            {RESETTABLE.has(activeSection) ? (
+              <Button variant="ghost" size="sm" onClick={resetToDefaults} className="h-8 gap-1.5 text-[var(--color-muted)]">
+                <RotateCcw className="h-3.5 w-3.5" />
+                {t('common.reset')}
+              </Button>
+            ) : (
+              <span />
+            )}
+            <Button size="sm" onClick={() => onOpenChange(false)} className="h-8 px-5 font-semibold">
+              {t('settings.done')}
+            </Button>
+          </div>
         </div>
       </DialogContent>
 
