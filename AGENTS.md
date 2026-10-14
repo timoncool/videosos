@@ -30,12 +30,16 @@ same routes the window uses.
 - An agent's change goes through the same route as the window's, and every MCP tool that changes something has a
   journal line or is named among the window's own controls (`mcp.rs`, test
   `every_change_an_agent_can_make_is_journaled`).
+- Every file the program downloads is one entry of `TOOLS` in `crates/vs-server/src/tools.rs` with its URL, size
+  and SHA-256. The README download tables are checked against it; after a change run
+  `node scripts/readme-downloads.mjs --write` to regenerate the tables of every README.
 
 ## Interface text
 
 - No string a person reads is written in a `.tsx` file. Every text goes through `t("key")`, and the key exists
   in the partials of all ten languages in `frontend/src/i18n/locales/partials/<lang>/`: `en`, `ru`, `de`, `es`,
-  `fr`, `ja`, `ko`, `pt-BR`, `tr`, `zh`. The translations are real translations, never a copy of the English.
+  `fr`, `ja`, `ko`, `pt-BR`, `tr`, `zh`, and FreeCut's own keys in the base files `locales/<lang>.json` of the same
+  ten. The translations are real translations, never a copy of the English.
 - The server's own messages are Fluent keys in `crates/vs-server/locales/{en,ru}/server.ftl`, written in the
   language the window reports.
 - Dates, sizes, durations and prices are formatted with the window's language (`Intl`), not a fixed locale.
@@ -50,6 +54,7 @@ cd frontend && npm ci
 npm run check                                # lint, types, feature boundaries
 npm run check:unused-exports                 # no new unused exports
 npx vitest run                               # the window's tests
+node scripts/readme-downloads.mjs            # README download tables against tools.rs
 ```
 
 - Stop a running `vs-server.exe` before rebuilding it: Windows keeps the `.exe` locked.

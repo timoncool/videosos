@@ -51,6 +51,8 @@ jobs:
           npm run build
       - name: Test desktop shell
         run: cargo test --manifest-path desktop/src-tauri/Cargo.toml
+      - name: README download tables
+        run: node scripts/readme-downloads.mjs
 
   frontend:
     runs-on: windows-latest
