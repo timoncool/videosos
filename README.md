@@ -102,9 +102,9 @@ The server serves its guide as the resource `videosos://skill` (prompt `videosos
 
 - **Checkpoints.** The timeline is kept before every agent's edit; the Checkpoints button beside undo and redo brings
   any of them back. An agent can rehearse an edit (`dry_run`) and see what it would make without touching anything.
-- **Proposals.** With Settings, Providers and agent, *Agents' timeline edits wait for me* on, an agent's edit is shown in plain words
+- **Proposals.** With Settings, Agents, *Agents' timeline edits wait for me* on, an agent's edit is shown in plain words
   and applies only after you press Accept.
-- **A spending limit.** Generations are paid: Settings, Providers and agent sets a daily limit for agents, past which
+- **A spending limit.** Generations are paid: Settings, Agents sets a daily limit for agents, past which
   `generate` is refused. Only agents on this computer and the program's own window may connect; provider keys are never
   shown to them.
 - **Chat in the window.** The Chat tab runs an OpenRouter model of your choice with the same tools, step by step, with
@@ -189,7 +189,7 @@ codec or container.
 
 ## Anonymous statistics and news
 
-The first-run screen has a switch **Send anonymous statistics**; the same switch is in Settings, Providers and agent.
+The first-run screen has a switch **Send anonymous statistics**; the same switch is in Settings, Privacy.
 While it is on, the program sends once a day: a random install id, the version, the OS and the window language, how
 many generations finished or failed by task, and which models ran. Never prompts, files, keys or anything personal.
 `DO_NOT_TRACK=1` or `STUDIO_TELEMETRY=0` turns it off entirely.

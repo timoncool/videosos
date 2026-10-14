@@ -2,7 +2,7 @@
   "firstRun": {
     "title": "Willkommen bei VideoSOS 2",
     "what": "Erzeugen Sie Bilder, Videos, Musik, Stimmen und Soundeffekte mit den besten Modellen von OpenRouter, fal und Runware und schneiden Sie sie auf einer Mehrspur-Zeitleiste zu einem fertigen Video.",
-    "keys": "Die Generierung läuft über Ihre eigenen Konten: Öffnen Sie ein Projekt und den Tab „Generieren“ und fügen Sie dort oder unter „Einstellungen“, „Anbieter und Agent“ einen Anbieterschlüssel ein. Sie bezahlen den Anbieter direkt; VideoSOS zeigt den Preis vor jedem Lauf an.",
+    "keys": "Die Generierung läuft über Ihre eigenen Konten: Öffnen Sie ein Projekt und den Tab „Generieren“ und fügen Sie dort oder unter „Einstellungen“, „Anbieter“ einen Anbieterschlüssel ein. Sie bezahlen den Anbieter direkt; VideoSOS zeigt den Preis vor jedem Lauf an.",
     "agent": "Ein KI-Agent (Claude und andere) kann VideoSOS über seinen MCP-Server steuern; die Adresse finden Sie in den Einstellungen.",
     "statistics": "Anonyme Statistiken senden",
     "statisticsHint": "Wie viele Generierungen mit welchen Modellen liefen, die Version und das System. Niemals Prompts, Dateien oder Schlüssel. Sie können das in den Einstellungen ändern.",
