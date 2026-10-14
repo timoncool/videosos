@@ -94,7 +94,7 @@
       "smartCopy": "Smart copy when possible",
       "smartCopyPath": "Smart copy · no re-encoding",
       "estimatedSize": "Estimated {{size}}",
-      "sourceBitrate": "Source {{bitrate}} Mbps",
+      "sourceBitrate": "Source {{bitrate}}",
       "smartCopyStatus": {
         "eligible": "Available: the original media will be copied byte-for-byte.",
         "disabled": "Disabled. The timeline will be rendered and encoded.",

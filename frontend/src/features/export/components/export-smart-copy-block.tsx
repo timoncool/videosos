@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import type { ExportSettings, SourceVideoEncodingInfo } from '@/types/export'
 import type { SmartCopyAssessment } from '../utils/smart-copy'
-import { formatFileSize } from '../utils/export-format'
+import { formatBitrate, formatFileSize } from '../utils/export-format'
 
 export interface ExportSmartCopyBlockProps {
   settings: ExportSettings
@@ -34,7 +34,7 @@ export function ExportSmartCopyBlock({
   estimatedFileSizeBytes,
   sourceVideo,
 }: ExportSmartCopyBlockProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
 
   return (
     <>
@@ -60,17 +60,17 @@ export function ExportSmartCopyBlock({
         <span className="font-medium text-foreground">
           {willRun
             ? t('export.settings.smartCopyPath')
-            : `${(resolvedVideoBitrate / 1_000_000).toFixed(2)} Mbps ${
+            : `${formatBitrate(resolvedVideoBitrate, i18n.language)} ${
                 (settings.rateControl ?? 'auto') === 'constant' ? 'CBR' : 'VBR'
               }`}
         </span>
         <span className="text-muted-foreground">
-          {t('export.settings.estimatedSize', { size: formatFileSize(estimatedFileSizeBytes) })}
+          {t('export.settings.estimatedSize', { size: formatFileSize(estimatedFileSizeBytes, i18n.language) })}
         </span>
         {sourceVideo && (
           <span className="text-muted-foreground">
             {t('export.settings.sourceBitrate', {
-              bitrate: (sourceVideo.bitrate / 1_000_000).toFixed(2),
+              bitrate: formatBitrate(sourceVideo.bitrate, i18n.language),
             })}
           </span>
         )}

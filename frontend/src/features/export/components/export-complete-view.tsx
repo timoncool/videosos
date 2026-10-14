@@ -31,7 +31,7 @@ export function ExportCompleteView({
   onClose,
   onDownload,
 }: ExportCompleteViewProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
 
   return (
     <div className="space-y-4 py-4">
@@ -49,14 +49,14 @@ export function ExportCompleteView({
           <div className="flex items-center gap-2 text-sm">
             <HardDrive className="h-4 w-4 text-muted-foreground" />
             <span className="text-muted-foreground">{t('export.complete.fileSizeLabel')}</span>
-            <span className="font-medium">{formatFileSize(fileSize)}</span>
+            <span className="font-medium">{formatFileSize(fileSize, i18n.language)}</span>
           </div>
         )}
         {elapsedSeconds > 0 && (
           <div className="flex items-center gap-2 text-sm">
             <Clock className="h-4 w-4 text-muted-foreground" />
             <span className="text-muted-foreground">{t('export.complete.timeTakenLabel')}</span>
-            <span className="font-medium">{formatTime(elapsedSeconds)}</span>
+            <span className="font-medium">{formatTime(elapsedSeconds, i18n.language)}</span>
           </div>
         )}
       </div>
