@@ -105,6 +105,7 @@
       "removeBackground": "Убрать фон",
       "lipSync": "Липсинк этого лица",
       "continue": "Продолжить с последнего кадра",
+      "lastFrameName": "{{title}}, последний кадр",
       "editVideo": "Править видео",
       "sound": "Звук к этому видео",
       "lipSyncVoice": "Липсинк этим голосом",

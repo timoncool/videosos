@@ -105,6 +105,7 @@
       "removeBackground": "Remove the background",
       "lipSync": "Lip sync this face",
       "continue": "Continue from the last frame",
+      "lastFrameName": "{{title}}, last frame",
       "editVideo": "Edit the video",
       "sound": "Sound for this video",
       "lipSyncVoice": "Lip sync with this voice",

@@ -57,6 +57,7 @@ makes it, and the release notes on GitHub are taken from the release's section.
 
 ### Fixed
 
+- **A video's last frame is named by its prompt**: "Continue from the last frame" puts the frame into the library as "<prompt>, last frame", as every other result is named.
 - **Generation form labels name their fields**: a screen reader, a click on the label and an agent reading the page reach the prompt, the selects and the switches by their names.
 - **An agent's import of a file on this computer** works again.
 - **A command an agent sends to a window that closes** fails at once instead of waiting five minutes.

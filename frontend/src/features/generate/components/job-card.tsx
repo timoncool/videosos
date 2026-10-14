@@ -147,7 +147,8 @@ function UseAs({ job, output }: { job: Job; output: OutputFile }) {
   const choose = async (next: (typeof NEXT)[MediaKind][number]) => {
     if (next.lastFrame) {
       if (!projectId) throw new Error(t('generate.use.needsProject'))
-      const media = await importLastFrame(generateApi.fileUrl(job.id, output.index), `${job.model_name}-last-frame.png`, projectId)
+      const name = resultFileName({ title: t('generate.use.lastFrameName', { title: job.title }) }, 0, 1, 'png')
+      const media = await importLastFrame(generateApi.fileUrl(job.id, output.index), name, projectId)
       useGenerateStore.getState().useAs({ task: next.task, roles: next.roles, kind: 'image', ref: { media } })
       return
     }
