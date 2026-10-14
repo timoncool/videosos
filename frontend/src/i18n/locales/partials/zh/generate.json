@@ -29,7 +29,10 @@
       "refresh": "Read the catalogues again",
       "none": "No model fits this search.",
       "new": "new",
-      "deprecated": "retiring"
+      "deprecated": "retiring",
+      "typicalTime": "≈ {{time}}（按你的运行）",
+      "pin": "置顶",
+      "unpin": "取消置顶"
     },
     "keys": {
       "missing": "No key for this provider",

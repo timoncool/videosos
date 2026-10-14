@@ -21,10 +21,12 @@ interface Persisted {
   valuesByModel: Record<string, Record<string, unknown>>
   repeat: number
   placeOnTimeline: boolean
+  /** Models pinned to the top of the picker, as `provider:id`. */
+  favorites: string[]
 }
 
 function load(): Persisted {
-  const fallback: Persisted = { task: 'image', modelByTask: {}, valuesByModel: {}, repeat: 1, placeOnTimeline: false }
+  const fallback: Persisted = { task: 'image', modelByTask: {}, valuesByModel: {}, repeat: 1, placeOnTimeline: false, favorites: [] }
   try {
     const text = localStorage.getItem(STORAGE_KEY)
     if (!text) return fallback
@@ -70,6 +72,7 @@ interface GenerateState extends Persisted {
   replaceValues: (model: ModelRef, values: Record<string, unknown>) => void
   setRepeat: (repeat: number) => void
   setPlaceOnTimeline: (place: boolean) => void
+  toggleFavorite: (key: string) => void
   setJobs: (jobs: Job[]) => void
   upsertJob: (job: Job) => void
   removeJob: (id: string) => void
@@ -84,6 +87,7 @@ function persisted(state: GenerateState): Persisted {
     valuesByModel: state.valuesByModel,
     repeat: state.repeat,
     placeOnTimeline: state.placeOnTimeline,
+    favorites: state.favorites,
   }
 }
 
@@ -124,6 +128,11 @@ export const useGenerateStore = create<GenerateState>()((set, get) => ({
   },
   replaceValues: (model, values) => {
     set({ valuesByModel: { ...get().valuesByModel, [modelKey(model.provider, model.id)]: values } })
+    save(persisted(get()))
+  },
+  toggleFavorite: (key) => {
+    const favorites = get().favorites
+    set({ favorites: favorites.includes(key) ? favorites.filter((each) => each !== key) : [...favorites, key] })
     save(persisted(get()))
   },
   setRepeat: (repeat) => {

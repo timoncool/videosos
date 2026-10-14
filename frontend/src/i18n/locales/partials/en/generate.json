@@ -29,7 +29,10 @@
       "refresh": "Read the catalogues again",
       "none": "No model fits this search.",
       "new": "new",
-      "deprecated": "retiring"
+      "deprecated": "retiring",
+      "typicalTime": "≈ {{time}} on your runs",
+      "pin": "Pin to the top",
+      "unpin": "Unpin"
     },
     "keys": {
       "missing": "No key for this provider",

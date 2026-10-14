@@ -29,7 +29,10 @@
       "refresh": "Read the catalogues again",
       "none": "No model fits this search.",
       "new": "new",
-      "deprecated": "retiring"
+      "deprecated": "retiring",
+      "typicalTime": "≈ {{time}} (내 실행 기준)",
+      "pin": "위에 고정",
+      "unpin": "고정 해제"
     },
     "keys": {
       "missing": "No key for this provider",

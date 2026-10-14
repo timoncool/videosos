@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ChevronDown, KeyRound, Loader2, RefreshCw } from 'lucide-react'
+import { ChevronDown, KeyRound, Loader2, RefreshCw, Star } from 'lucide-react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/shared/ui/cn'
-import { generateApi, PROVIDER_LABELS, PROVIDERS, type CatalogAnswer, type ModelEntry, type Provider, type Task } from '../services/generate-api'
+import { generateApi, PROVIDER_LABELS, PROVIDERS, type CatalogAnswer, type Job, type ModelEntry, type Provider, type Task } from '../services/generate-api'
+import { modelKey, useGenerateStore } from '../stores/generate-store'
 
 const NEW_DAYS = 45
 
@@ -36,13 +37,31 @@ interface ModelPickerProps {
 }
 
 export function ModelPicker({ task, value, onChange, keys }: ModelPickerProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [provider, setProvider] = useState<Provider | 'all'>('all')
   const [answer, setAnswer] = useState<CatalogAnswer | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const favorites = useGenerateStore((state) => state.favorites)
+  const toggleFavorite = useGenerateStore((state) => state.toggleFavorite)
+  const [typical, setTypical] = useState<Record<string, number>>({})
+
+  // how long a model takes, as the median of this computer's finished runs of it (Krea shows speed in its picker)
+  useEffect(() => {
+    if (!open) return
+    let cancelled = false
+    generateApi
+      .jobs(null)
+      .then(({ jobs }) => {
+        if (!cancelled) setTypical(medianSeconds(jobs))
+      })
+      .catch((reason: unknown) => console.error('[ERROR] the run times were not read:', reason))
+    return () => {
+      cancelled = true
+    }
+  }, [open])
 
   useEffect(() => {
     let cancelled = false
@@ -77,12 +96,14 @@ export function ModelPicker({ task, value, onChange, keys }: ModelPickerProps) {
 
   const shown = useMemo(() => {
     const words = query.toLowerCase().split(/\s+/).filter(Boolean)
-    return (answer?.models ?? []).filter(
+    const found = (answer?.models ?? []).filter(
       (entry) =>
         (provider === 'all' || entry.provider === provider) &&
         words.every((word) => `${entry.name} ${entry.id} ${entry.description}`.toLowerCase().includes(word)),
     )
-  }, [answer, provider, query])
+    const pinned = (entry: ModelEntry) => (favorites.includes(modelKey(entry.provider, entry.id)) ? 0 : 1)
+    return found.sort((a, b) => pinned(a) - pinned(b))
+  }, [answer, provider, query, favorites])
 
   const refreshing = PROVIDERS.some((each) => answer?.providers[each]?.refreshing)
 
@@ -164,42 +185,84 @@ export function ModelPicker({ task, value, onChange, keys }: ModelPickerProps) {
           )}
           {shown.map((entry) => {
             const active = entry.provider === value?.provider && entry.id === value?.id
+            const key = modelKey(entry.provider, entry.id)
+            const pinned = favorites.includes(key)
+            const seconds = typical[key]
+            const strength = firstSentence(entry.description)
             return (
-              <button
-                key={`${entry.provider}:${entry.id}`}
-                type="button"
-                onClick={() => {
-                  onChange(entry)
-                  setOpen(false)
-                }}
-                className={cn(
-                  'flex w-full flex-col gap-0.5 px-3 py-1.5 text-left hover:bg-secondary/60',
-                  active && 'bg-secondary',
-                  entry.status !== 'live' && 'opacity-60',
-                )}
-              >
-                <div className="flex items-center gap-1.5">
-                  <ProviderBadge provider={entry.provider} />
-                  <span className="truncate text-xs font-medium">{entry.name}</span>
-                  {isNew(entry) && (
-                    <span className="rounded bg-primary/20 px-1 text-[9px] text-primary">{t('generate.model.new')}</span>
+              <div key={key} className={cn('group flex items-start gap-1 px-1.5 hover:bg-[var(--color-surface-2)]', active && 'bg-[var(--color-surface-2)]', entry.status !== 'live' && 'opacity-60')}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onChange(entry)
+                    setOpen(false)
+                  }}
+                  title={entry.id}
+                  className="flex min-w-0 flex-1 flex-col gap-0.5 px-1.5 py-1.5 text-left"
+                >
+                  <div className="flex items-center gap-1.5">
+                    <ProviderBadge provider={entry.provider} />
+                    <span className="truncate text-xs font-medium">{entry.name}</span>
+                    {isNew(entry) && (
+                      <span className="rounded bg-[var(--color-accent)]/15 px-1 text-[10px] text-[var(--color-accent)]">{t('generate.model.new')}</span>
+                    )}
+                    {entry.status !== 'live' && <span className="text-[10px] text-[var(--color-warn)]">{t('generate.model.deprecated')}</span>}
+                    {!keys[entry.provider] && (
+                      <KeyRound className="ml-auto h-3 w-3 shrink-0 text-[var(--color-warn)]" aria-label={t('generate.keys.missing')} />
+                    )}
+                  </div>
+                  {strength && <div className="truncate text-[11px] text-[var(--color-muted)]">{strength}</div>}
+                  <div className="tabnum flex gap-2 text-[11px] text-[var(--color-muted)]">
+                    {entry.price && <span className="text-[var(--color-text)]/80">{entry.price}</span>}
+                    {seconds !== undefined && <span>{t('generate.model.typicalTime', { time: formatSeconds(seconds, i18n.language) })}</span>}
+                  </div>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => toggleFavorite(key)}
+                  aria-pressed={pinned}
+                  aria-label={pinned ? t('generate.model.unpin') : t('generate.model.pin')}
+                  title={pinned ? t('generate.model.unpin') : t('generate.model.pin')}
+                  className={cn(
+                    'mt-1.5 shrink-0 rounded p-1 transition-opacity hover:bg-[var(--color-overlay)]',
+                    pinned ? 'text-[var(--color-accent)]' : 'text-[var(--color-muted)] opacity-0 focus-visible:opacity-100 group-hover:opacity-100',
                   )}
-                  {entry.status !== 'live' && (
-                    <span className="text-[9px] text-amber-400">{t('generate.model.deprecated')}</span>
-                  )}
-                  {!keys[entry.provider] && (
-                    <KeyRound className="ml-auto h-3 w-3 shrink-0 text-amber-400" aria-label={t('generate.keys.missing')} />
-                  )}
-                </div>
-                <div className="flex gap-2 text-[11px] text-muted-foreground">
-                  <span className="truncate">{entry.id}</span>
-                  {entry.price && <span className="ml-auto shrink-0">{entry.price}</span>}
-                </div>
-              </button>
+                >
+                  <Star className="h-3.5 w-3.5" fill={pinned ? 'currentColor' : 'none'} />
+                </button>
+              </div>
             )
           })}
         </div>
       </PopoverContent>
     </Popover>
   )
+}
+
+/** The median time of finished runs of each model, in seconds, keyed `provider:id`. */
+function medianSeconds(jobs: Job[]): Record<string, number> {
+  const times: Record<string, number[]> = {}
+  for (const job of jobs) {
+    if (job.status !== 'done' || job.updated <= job.created) continue
+    const key = modelKey(job.provider, job.model)
+    ;(times[key] ??= []).push((job.updated - job.created) / 1000)
+  }
+  return Object.fromEntries(
+    Object.entries(times).map(([key, list]) => {
+      const sorted = [...list].sort((a, b) => a - b)
+      return [key, sorted[Math.floor(sorted.length / 2)] ?? 0]
+    }),
+  )
+}
+
+function formatSeconds(seconds: number, language: string): string {
+  const minutes = seconds >= 90
+  return new Intl.NumberFormat(language, { style: 'unit', unit: minutes ? 'minute' : 'second', unitDisplay: 'short' }).format(Math.round(minutes ? seconds / 60 : seconds))
+}
+
+/** What a model is good at, as its description opens. */
+function firstSentence(text: string): string {
+  const line = text.trim().split(/\n/)[0] ?? ''
+  const end = line.search(/[.!?](\s|$)/)
+  return (end > 0 ? line.slice(0, end + 1) : line).slice(0, 140)
 }
