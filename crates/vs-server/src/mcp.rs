@@ -414,10 +414,12 @@ fn tools() -> &'static [Tool] {
 
 // ---------------------------------------------------------------- the window bridge
 
+/// A command waiting for its answer, with the window it went to.
+type Waiting = (u64, tokio::sync::oneshot::Sender<Result<Value, String>>);
+
 struct Bridge {
     commands: tokio::sync::broadcast::Sender<String>,
-    /// A command waiting for its answer, with the window it went to.
-    pending: Mutex<HashMap<String, (u64, tokio::sync::oneshot::Sender<Result<Value, String>>)>>,
+    pending: Mutex<HashMap<String, Waiting>>,
     windows: Mutex<Vec<u64>>,
     sequence: AtomicU64,
 }
