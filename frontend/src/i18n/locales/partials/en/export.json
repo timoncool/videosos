@@ -119,7 +119,18 @@
         "embeddedDescription": "A soft, toggleable subtitle track (WebM/MKV)."
       },
       "subtitles": "Subtitles",
-      "video": "Video"
+      "video": "Video",
+      "loudness": "Loudness",
+      "loudnessOption": {
+        "off": "Leave as is",
+        "stream": "−14 LUFS — YouTube, social",
+        "podcast": "−16 LUFS — podcasts, Apple",
+        "broadcast": "−23 LUFS — broadcast (EBU R128)"
+      },
+      "loudnessDescription": {
+        "off": "The audio is exported exactly as mixed, unprocessed.",
+        "on": "The whole mix is brought to {{lufs}} LUFS per EBU R128 and a limiter keeps peaks under −1 dBTP. The audio is re-encoded and smart copy is turned off."
+      }
     },
     "videoContainer": {
       "mp4": "Widely supported, great for sharing",

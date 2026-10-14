@@ -119,6 +119,17 @@
         "audio-processing": "No disponible porque se ha cambiado el audio o la mezcla de pistas.",
         "project-mismatch": "La resolución o la velocidad de fotogramas del proyecto no coincide con el origen.",
         "format-mismatch": "El formato o el códec seleccionado no coincide con el origen."
+      },
+      "loudness": "Sonoridad",
+      "loudnessOption": {
+        "off": "Dejar como está",
+        "stream": "−14 LUFS — YouTube, redes sociales",
+        "podcast": "−16 LUFS — pódcasts, Apple",
+        "broadcast": "−23 LUFS — televisión (EBU R128)"
+      },
+      "loudnessDescription": {
+        "off": "El audio se exporta exactamente como está mezclado, sin procesar.",
+        "on": "Toda la mezcla se lleva a {{lufs}} LUFS según EBU R128 y un limitador mantiene los picos por debajo de −1 dBTP. El audio se recodifica y la copia inteligente se desactiva."
       }
     },
     "videoContainer": {

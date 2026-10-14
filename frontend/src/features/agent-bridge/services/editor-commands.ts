@@ -474,7 +474,14 @@ export function registerEditorCommands(showProject: ShowProject): void {
   })
 
   registerBridgeCommand('export_video', async (args) => {
-    takeArgs('export_video', args, ['format', 'quality', 'width', 'height', 'file_name'])
+    takeArgs('export_video', args, [
+      'format',
+      'quality',
+      'width',
+      'height',
+      'file_name',
+      'loudness_lufs',
+    ])
     const project = openProject()
     const format = (textArg('export_video', args, 'format') ?? 'mp4') as VideoContainer
     if (!['mp4', 'webm', 'mov', 'mkv'].includes(format)) {
@@ -493,6 +500,14 @@ export function registerEditorCommands(showProject: ShowProject): void {
         expected: 'low, medium, high or ultra',
       })
     }
+    const loudnessLufs = numberArg('export_video', args, 'loudness_lufs')
+    if (loudnessLufs !== undefined && !(loudnessLufs >= -40 && loudnessLufs <= -5)) {
+      throw bridgeError('bad_value', {
+        command: 'export_video',
+        field: 'loudness_lufs',
+        expected: 'LUFS from -40 to -5',
+      })
+    }
     if (useItemsStore.getState().items.length === 0)
       throw failed('export_video', 'the timeline is empty')
     await save(project.id)
@@ -507,6 +522,7 @@ export function registerEditorCommands(showProject: ShowProject): void {
       videoContainer: format,
       renderWholeProject: true,
       subtitleMode: 'burn',
+      loudnessLufs,
     }
     const fileName = textArg('export_video', args, 'file_name')
       ?.replace(/[<>:"/\\|?*]+/g, '_')

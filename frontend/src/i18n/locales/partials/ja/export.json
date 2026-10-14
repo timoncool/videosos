@@ -119,6 +119,17 @@
         "audio-processing": "オーディオまたはトラックミックスが変更されているため利用できません。",
         "project-mismatch": "プロジェクトの解像度またはフレームレートがソースと一致しません。",
         "format-mismatch": "選択したフォーマットまたはコーデックがソースと一致しません。"
+      },
+      "loudness": "ラウドネス",
+      "loudnessOption": {
+        "off": "変更しない",
+        "stream": "−14 LUFS — YouTube、SNS",
+        "podcast": "−16 LUFS — ポッドキャスト、Apple",
+        "broadcast": "−23 LUFS — 放送 (EBU R128)"
+      },
+      "loudnessDescription": {
+        "off": "音声はミックスしたとおり、処理せずに書き出されます。",
+        "on": "ミックス全体を EBU R128 に従って {{lufs}} LUFS に揃え、リミッターでピークを −1 dBTP 以下に抑えます。音声は再エンコードされ、スマートコピーは無効になります。"
       }
     },
     "videoContainer": {

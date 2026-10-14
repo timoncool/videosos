@@ -119,6 +119,17 @@
         "audio-processing": "Ses veya iz karışımı değiştirildiği için kullanılamaz.",
         "project-mismatch": "Proje çözünürlüğü veya kare hızı kaynakla eşleşmiyor.",
         "format-mismatch": "Seçilen biçim veya kodek kaynakla eşleşmiyor."
+      },
+      "loudness": "Ses yüksekliği",
+      "loudnessOption": {
+        "off": "Olduğu gibi bırak",
+        "stream": "−14 LUFS — YouTube, sosyal medya",
+        "podcast": "−16 LUFS — podcast, Apple",
+        "broadcast": "−23 LUFS — yayın (EBU R128)"
+      },
+      "loudnessDescription": {
+        "off": "Ses, karıştırıldığı haliyle, işlenmeden dışa aktarılır.",
+        "on": "Tüm karışım EBU R128'e göre {{lufs}} LUFS'a getirilir ve bir limiter tepeleri −1 dBTP altında tutar. Ses yeniden kodlanır, akıllı kopyalama kapanır."
       }
     },
     "videoContainer": {

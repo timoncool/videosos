@@ -119,6 +119,17 @@
         "audio-processing": "Indisponible car l’audio ou le mixage des pistes a été modifié.",
         "project-mismatch": "La résolution ou la fréquence d’images du projet ne correspond pas à la source.",
         "format-mismatch": "Le format ou le codec sélectionné ne correspond pas à la source."
+      },
+      "loudness": "Sonie",
+      "loudnessOption": {
+        "off": "Laisser tel quel",
+        "stream": "−14 LUFS — YouTube, réseaux sociaux",
+        "podcast": "−16 LUFS — podcasts, Apple",
+        "broadcast": "−23 LUFS — diffusion (EBU R128)"
+      },
+      "loudnessDescription": {
+        "off": "Le son est exporté exactement tel qu'il est mixé, sans traitement.",
+        "on": "Tout le mixage est amené à {{lufs}} LUFS selon EBU R128 et un limiteur maintient les crêtes sous −1 dBTP. Le son est réencodé et la copie intelligente est désactivée."
       }
     },
     "videoContainer": {

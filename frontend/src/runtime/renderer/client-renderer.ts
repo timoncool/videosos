@@ -46,6 +46,7 @@ export interface ClientExportSettings {
   smartCopy?: boolean
   sampleRate?: number // For audio exports (default: 48000)
   subtitleMode?: SubtitleExportMode
+  loudnessLufs?: number
 }
 
 export interface RenderProgress {
@@ -196,6 +197,7 @@ export function mapToClientSettings(
     smartCopy: settings.smartCopy ?? true,
     audioBitrate: 192_000, // 192 kbps
     subtitleMode,
+    loudnessLufs: settings.loudnessLufs,
   }
 }
 

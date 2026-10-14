@@ -119,6 +119,17 @@
         "audio-processing": "오디오 또는 트랙 믹스가 변경되어 사용할 수 없습니다.",
         "project-mismatch": "프로젝트 해상도 또는 프레임 속도가 원본과 일치하지 않습니다.",
         "format-mismatch": "선택한 형식 또는 코덱이 원본과 일치하지 않습니다."
+      },
+      "loudness": "라우드니스",
+      "loudnessOption": {
+        "off": "그대로 두기",
+        "stream": "−14 LUFS — YouTube, 소셜",
+        "podcast": "−16 LUFS — 팟캐스트, Apple",
+        "broadcast": "−23 LUFS — 방송 (EBU R128)"
+      },
+      "loudnessDescription": {
+        "off": "오디오는 믹스한 그대로, 처리 없이 내보냅니다.",
+        "on": "전체 믹스를 EBU R128에 따라 {{lufs}} LUFS로 맞추고 리미터가 피크를 −1 dBTP 아래로 유지합니다. 오디오가 다시 인코딩되며 스마트 복사는 꺼집니다."
       }
     },
     "videoContainer": {

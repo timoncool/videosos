@@ -119,6 +119,17 @@
         "audio-processing": "Indisponível porque o áudio ou a mixagem das faixas foi alterado.",
         "project-mismatch": "A resolução ou a taxa de quadros do projeto não corresponde à origem.",
         "format-mismatch": "O formato ou o codec selecionado não corresponde à origem."
+      },
+      "loudness": "Loudness",
+      "loudnessOption": {
+        "off": "Deixar como está",
+        "stream": "−14 LUFS — YouTube, redes sociais",
+        "podcast": "−16 LUFS — podcasts, Apple",
+        "broadcast": "−23 LUFS — TV (EBU R128)"
+      },
+      "loudnessDescription": {
+        "off": "O áudio é exportado exatamente como foi mixado, sem processamento.",
+        "on": "Toda a mixagem é levada a {{lufs}} LUFS pelo EBU R128 e um limitador mantém os picos abaixo de −1 dBTP. O áudio é recodificado e a cópia inteligente é desativada."
       }
     },
     "videoContainer": {

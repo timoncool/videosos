@@ -119,6 +119,17 @@
         "audio-processing": "Nicht verfügbar, da Audio oder Spurmischung geändert wurde.",
         "project-mismatch": "Auflösung oder Bildrate des Projekts stimmt nicht mit der Quelle überein.",
         "format-mismatch": "Das gewählte Format oder der Codec stimmt nicht mit der Quelle überein."
+      },
+      "loudness": "Lautheit",
+      "loudnessOption": {
+        "off": "Unverändert lassen",
+        "stream": "−14 LUFS — YouTube, soziale Netzwerke",
+        "podcast": "−16 LUFS — Podcasts, Apple",
+        "broadcast": "−23 LUFS — Rundfunk (EBU R128)"
+      },
+      "loudnessDescription": {
+        "off": "Der Ton wird genau so exportiert, wie er gemischt ist, ohne Bearbeitung.",
+        "on": "Der gesamte Mix wird nach EBU R128 auf {{lufs}} LUFS gebracht, ein Limiter hält die Spitzen unter −1 dBTP. Der Ton wird neu kodiert, Smart Copy wird deaktiviert."
       }
     },
     "videoContainer": {

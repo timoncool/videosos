@@ -119,6 +119,17 @@
         "audio-processing": "不可用，因为音频或轨道混音已被更改。",
         "project-mismatch": "项目分辨率或帧率与源不一致。",
         "format-mismatch": "所选格式或编解码器与源不一致。"
+      },
+      "loudness": "响度",
+      "loudnessOption": {
+        "off": "保持不变",
+        "stream": "−14 LUFS — YouTube、社交平台",
+        "podcast": "−16 LUFS — 播客、Apple",
+        "broadcast": "−23 LUFS — 广播 (EBU R128)"
+      },
+      "loudnessDescription": {
+        "off": "音频按混音原样导出，不做处理。",
+        "on": "整个混音按 EBU R128 调整到 {{lufs}} LUFS，限幅器将峰值保持在 −1 dBTP 以下。音频会重新编码，智能复制将关闭。"
       }
     },
     "videoContainer": {

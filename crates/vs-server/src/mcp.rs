@@ -926,7 +926,7 @@ fn tools() -> &'static [Tool] {
             },
             Tool {
                 name: "export_video",
-                description: "Renders the open project to a video file in the project's exports folder (a new name beside earlier exports, never over them) with the editor's export: format mp4|webm|mov|mkv, quality low|medium|high|ultra, optional width and height. Answers with the file's path once it is written; a render longer than the call answers with a work_id, and studio_wait with it gives the path when it ends.",
+                description: "Renders the open project to a video file in the project's exports folder (a new name beside earlier exports, never over them) with the editor's export: format mp4|webm|mov|mkv, quality low|medium|high|ultra, optional width and height, and loudness_lufs only when asked for: without it the sound stays exactly as mixed; with it (-14 for YouTube, -16 podcasts, -23 broadcast) the whole mix is brought to that integrated loudness (EBU R128) under a -1 dBTP limiter. Answers with the file's path once it is written; a render longer than the call answers with a work_id, and studio_wait with it gives the path when it ends.",
                 looks: false,
                 schema: || object(json!({
                     "format": { "type": "string", "enum": ["mp4", "webm", "mov", "mkv"] },
@@ -934,6 +934,7 @@ fn tools() -> &'static [Tool] {
                     "width": { "type": "integer" },
                     "height": { "type": "integer" },
                     "file_name": { "type": "string" },
+                    "loudness_lufs": { "type": "number", "minimum": -40, "maximum": -5 },
                 }), &[]),
                 call: |args| window("export_video", args, 3600),
             },
