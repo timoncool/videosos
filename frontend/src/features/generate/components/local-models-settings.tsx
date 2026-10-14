@@ -275,6 +275,27 @@ export function LocalModelsSettings() {
           <ModelRow key={model.id} status={status} model={model} onStatus={setStatus} />
         ))}
       </div>
+
+      <div className="space-y-1.5 rounded-lg border border-border p-3">
+        <p className="text-sm font-medium">{t('generate.local.studios')}</p>
+        <p className="text-[11px] text-muted-foreground">{t('generate.local.studiosHint')}</p>
+        <ul className="space-y-1">
+          {status.studios.map((studio) => (
+            <li key={studio.id} className="flex flex-wrap items-baseline gap-x-2 text-[12px]">
+              <span className="whitespace-nowrap">{studio.name}</span>
+              <span
+                className={
+                  studio.running
+                    ? 'ml-auto whitespace-nowrap text-[11px] text-emerald-400'
+                    : 'ml-auto whitespace-nowrap text-[11px] text-muted-foreground'
+                }
+              >
+                {studio.running ? t('generate.local.studioRunning') : t('generate.local.studioOff')}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   )
 }

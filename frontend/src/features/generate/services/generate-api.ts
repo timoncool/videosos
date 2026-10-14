@@ -73,6 +73,8 @@ export interface LocalStatus {
   engines: { device: 'cuda' | 'vulkan' | 'cpu'; installed: boolean; download_bytes: number }[]
   ffmpeg: boolean
   models: LocalModelState[]
+  /** The author's studios VideoSOS looks for; a running one is a music model here. */
+  studios: { id: string; name: string; running: boolean }[]
   loaded: { model: string; device: string } | null
   install: {
     what: string

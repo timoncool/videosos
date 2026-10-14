@@ -109,6 +109,12 @@ async fn tool(client: &reqwest::Client, studio: &Studio, name: &str, arguments: 
     })
 }
 
+/// Every studio VideoSOS looks for, and whether it answers now.
+pub fn status() -> Vec<Value> {
+    let online = online().lock().unwrap_or_else(|p| p.into_inner());
+    STUDIOS.iter().map(|studio| json!({ "id": studio.id, "name": studio.name, "running": online.iter().any(|(id, _)| *id == studio.id) })).collect()
+}
+
 pub fn entries() -> Vec<ModelEntry> {
     let online = online().lock().unwrap_or_else(|p| p.into_inner());
     STUDIOS.iter().filter(|studio| online.iter().any(|(id, _)| *id == studio.id)).map(entry_of).collect()

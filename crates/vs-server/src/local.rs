@@ -682,6 +682,7 @@ pub fn status(data: &Path) -> Value {
         })).collect::<Vec<_>>(),
         "loaded": loaded,
         "install": install,
+        "studios": crate::studios::status(),
     })
 }
 
