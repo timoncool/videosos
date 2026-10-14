@@ -359,7 +359,7 @@ function ScopeModeBar({
         <button
           key={m.value}
           className={cn(
-            'h-4 px-1 text-[9px] font-semibold font-mono rounded transition-colors',
+            'h-4 px-1 text-[10px] font-semibold font-mono rounded transition-colors',
             mode === m.value ? 'text-white' : 'text-muted-foreground hover:text-foreground',
           )}
           style={

@@ -78,7 +78,7 @@ function renderTextTemplatePreview(preset?: TextStylePreset) {
         className={`${TEXT_TEMPLATE_PREVIEW_SHELL} flex flex-col items-center justify-center gap-1`}
       >
         <Type className="w-3.5 h-3.5 text-muted-foreground/80" />
-        <div className="text-[9px] leading-none tracking-wide text-muted-foreground/80 uppercase">
+        <div className="text-[11px] leading-none tracking-wide text-muted-foreground/80 uppercase">
           Text
         </div>
       </div>
@@ -90,7 +90,7 @@ function renderTextTemplatePreview(preset?: TextStylePreset) {
   if (preset.previewKind === 'clean') {
     return (
       <div className={`${TEXT_TEMPLATE_PREVIEW_SHELL} flex items-center justify-center px-1.5`}>
-        <div className="text-[10px] font-bold tracking-[-0.05em] text-white uppercase leading-none">
+        <div className="text-[11px] font-bold tracking-[-0.05em] text-white uppercase leading-none">
           {copy.title}
         </div>
       </div>
@@ -168,7 +168,7 @@ function renderTextTemplatePreview(preset?: TextStylePreset) {
     return (
       <div className={`${TEXT_TEMPLATE_PREVIEW_SHELL} p-1.5 flex items-center justify-center`}>
         <div className="w-full rounded-sm bg-cyan-950 px-1.5 py-1.5 text-center">
-          <div className="text-[10px] font-semibold tracking-[0.16em] text-cyan-300 drop-shadow-[0_0_6px_rgba(34,211,238,0.85)] uppercase">
+          <div className="text-[11px] font-semibold tracking-[0.16em] text-cyan-300 drop-shadow-[0_0_6px_rgba(34,211,238,0.85)] uppercase">
             {copy.title}
           </div>
         </div>
@@ -184,7 +184,7 @@ function renderTextTemplatePreview(preset?: TextStylePreset) {
         <div className="text-[6px] font-semibold tracking-[0.2em] text-amber-300 uppercase">
           {copy.eyebrow}
         </div>
-        <div className="mt-1 text-[10px] font-bold tracking-[-0.04em] text-white leading-none">
+        <div className="mt-1 text-[11px] font-bold tracking-[-0.04em] text-white leading-none">
           {copy.title}
         </div>
         <div className="mt-0.5 text-[7px] leading-none text-slate-300">{copy.subtitle}</div>
@@ -199,7 +199,7 @@ function renderTextTemplatePreview(preset?: TextStylePreset) {
           <div className="text-[6px] font-bold tracking-[0.18em] text-red-300 uppercase leading-none">
             {copy.eyebrow}
           </div>
-          <div className="mt-1 text-[9px] font-bold tracking-[-0.04em] text-slate-50 leading-none">
+          <div className="mt-1 text-[11px] font-bold tracking-[-0.04em] text-slate-50 leading-none">
             {copy.title}
           </div>
           <div className="mt-0.5 text-[7px] font-semibold leading-none text-amber-200">
@@ -217,7 +217,7 @@ function renderTextTemplatePreview(preset?: TextStylePreset) {
           <div className="text-[6px] font-bold tracking-[0.22em] text-cyan-300 uppercase">
             {copy.eyebrow}
           </div>
-          <div className="mt-1 text-[9px] font-bold tracking-[-0.04em] text-slate-50 leading-tight">
+          <div className="mt-1 text-[11px] font-bold tracking-[-0.04em] text-slate-50 leading-tight">
             {copy.title}
           </div>
           <div className="mt-0.5 text-[7px] leading-none text-blue-200">{copy.subtitle}</div>
@@ -233,7 +233,7 @@ function renderTextTemplatePreview(preset?: TextStylePreset) {
           <div className="text-[6px] font-bold tracking-[0.22em] text-rose-300 uppercase">
             {copy.eyebrow}
           </div>
-          <div className="mt-1 text-[9px] font-bold text-slate-50 leading-tight">{copy.title}</div>
+          <div className="mt-1 text-[11px] font-bold text-slate-50 leading-tight">{copy.title}</div>
           <div className="mt-0.5 text-[7px] text-blue-200 leading-none uppercase">
             {copy.subtitle}
           </div>
@@ -256,7 +256,7 @@ function renderTextTemplatePreview(preset?: TextStylePreset) {
     <div
       className={`${TEXT_TEMPLATE_PREVIEW_SHELL} flex flex-col items-center justify-center px-1.5`}
     >
-      <div className="text-[10px] font-bold tracking-[-0.04em] text-white uppercase leading-none">
+      <div className="text-[11px] font-bold tracking-[-0.04em] text-white uppercase leading-none">
         {copy.title}
       </div>
       <div className="mt-0.5 text-[7px] leading-none text-slate-300 uppercase">{copy.subtitle}</div>
@@ -733,7 +733,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
             >
               <div className="space-y-3">
                 <div className="space-y-3">
-                  <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+                  <div className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
                     {t('editor.mediaSidebar.templates')}
                   </div>
                   {TEXT_TEMPLATE_GROUPS.map((group) => {
@@ -746,7 +746,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
 
                     return (
                       <div key={group.key} className="space-y-1.5">
-                        <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+                        <div className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
                           {t(group.labelKey)}
                         </div>
                         <div className="grid grid-cols-3 gap-1.5">
@@ -765,7 +765,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                               className="flex flex-col items-center gap-1 p-1.5 rounded-md border border-border bg-secondary/30 hover:bg-secondary/50 hover:border-primary/50 transition-[transform,background-color,border-color,color] duration-150 active:scale-[0.98] group"
                             >
                               {renderTextTemplatePreview()}
-                              <span className="text-[9px] text-muted-foreground group-hover:text-foreground text-center leading-tight w-full">
+                              <span className="text-[11px] text-muted-foreground group-hover:text-foreground text-center leading-tight w-full">
                                 {t('names.addText')}
                               </span>
                             </button>
@@ -825,7 +825,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                   className="flex flex-col items-center justify-center gap-1 p-2 rounded-lg border border-border bg-secondary/30 hover:bg-secondary/50 hover:border-primary/50 transition-[transform,background-color,border-color,color] duration-150 active:scale-[0.98] group"
                 >
                   <div className="w-7 h-7 rounded border border-border bg-[#2d2d2d] shadow-inner group-hover:border-primary/50" />
-                  <span className="text-[9px] text-muted-foreground group-hover:text-foreground">
+                  <span className="text-[11px] text-muted-foreground group-hover:text-foreground">
                     {t('editor.shapeSection.solidColor')}
                   </span>
                 </button>
@@ -846,7 +846,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                   className="flex flex-col items-center justify-center gap-1 p-2 rounded-lg border border-border bg-secondary/30 hover:bg-secondary/50 hover:border-primary/50 transition-[transform,background-color,border-color,color] duration-150 active:scale-[0.98] group"
                 >
                   <div className="w-7 h-7 rounded border border-border bg-gradient-to-r from-blue-500 to-violet-500 shadow-inner group-hover:border-primary/50" />
-                  <span className="text-[9px] text-muted-foreground group-hover:text-foreground">
+                  <span className="text-[11px] text-muted-foreground group-hover:text-foreground">
                     {t('editor.shapeSection.gradient')}
                   </span>
                 </button>
@@ -868,7 +868,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                   <div className="w-7 h-7 rounded border border-border bg-secondary/50 flex items-center justify-center group-hover:bg-secondary/70">
                     <Square className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground" />
                   </div>
-                  <span className="text-[9px] text-muted-foreground group-hover:text-foreground">
+                  <span className="text-[11px] text-muted-foreground group-hover:text-foreground">
                     {t('editor.shapeSection.typeRectangle')}
                   </span>
                 </button>
@@ -890,7 +890,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                   <div className="w-7 h-7 rounded border border-border bg-secondary/50 flex items-center justify-center group-hover:bg-secondary/70">
                     <Circle className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground" />
                   </div>
-                  <span className="text-[9px] text-muted-foreground group-hover:text-foreground">
+                  <span className="text-[11px] text-muted-foreground group-hover:text-foreground">
                     {t('editor.shapeSection.typeCircle')}
                   </span>
                 </button>
@@ -912,7 +912,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                   <div className="w-7 h-7 rounded border border-border bg-secondary/50 flex items-center justify-center group-hover:bg-secondary/70">
                     <Triangle className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground" />
                   </div>
-                  <span className="text-[9px] text-muted-foreground group-hover:text-foreground">
+                  <span className="text-[11px] text-muted-foreground group-hover:text-foreground">
                     {t('editor.shapeSection.typeTriangle')}
                   </span>
                 </button>
@@ -934,7 +934,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                   <div className="w-7 h-7 rounded border border-border bg-secondary/50 flex items-center justify-center group-hover:bg-secondary/70">
                     <Circle className="w-3.5 h-2.5 text-muted-foreground group-hover:text-foreground" />
                   </div>
-                  <span className="text-[9px] text-muted-foreground group-hover:text-foreground">
+                  <span className="text-[11px] text-muted-foreground group-hover:text-foreground">
                     {t('editor.shapeSection.typeEllipse')}
                   </span>
                 </button>
@@ -956,7 +956,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                   <div className="w-7 h-7 rounded border border-border bg-secondary/50 flex items-center justify-center group-hover:bg-secondary/70">
                     <Star className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground" />
                   </div>
-                  <span className="text-[9px] text-muted-foreground group-hover:text-foreground">
+                  <span className="text-[11px] text-muted-foreground group-hover:text-foreground">
                     {t('editor.shapeSection.typeStar')}
                   </span>
                 </button>
@@ -978,7 +978,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                   <div className="w-7 h-7 rounded border border-border bg-secondary/50 flex items-center justify-center group-hover:bg-secondary/70">
                     <Hexagon className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground" />
                   </div>
-                  <span className="text-[9px] text-muted-foreground group-hover:text-foreground">
+                  <span className="text-[11px] text-muted-foreground group-hover:text-foreground">
                     {t('editor.shapeSection.typePolygon')}
                   </span>
                 </button>
@@ -1000,7 +1000,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                   <div className="w-7 h-7 rounded border border-border bg-secondary/50 flex items-center justify-center group-hover:bg-secondary/70">
                     <Heart className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground" />
                   </div>
-                  <span className="text-[9px] text-muted-foreground group-hover:text-foreground">
+                  <span className="text-[11px] text-muted-foreground group-hover:text-foreground">
                     {t('editor.shapeSection.typeHeart')}
                   </span>
                 </button>
@@ -1013,7 +1013,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                   <div className="w-7 h-7 rounded border border-border bg-secondary/50 flex items-center justify-center group-hover:bg-secondary/70">
                     <Pen className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground" />
                   </div>
-                  <span className="text-[9px] text-muted-foreground group-hover:text-foreground">
+                  <span className="text-[11px] text-muted-foreground group-hover:text-foreground">
                     {t('editor.mediaSidebar.pen')}
                   </span>
                 </button>
@@ -1051,7 +1051,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
 
                 {/* Presets */}
                 <div>
-                  <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5">
+                  <div className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5">
                     {t('editor.mediaSidebar.presets')}
                   </div>
                   <div className="grid grid-cols-3 gap-1.5">
@@ -1080,7 +1080,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                           active={hoveredEffectKey === `preset:${preset.id}`}
                           className="w-full aspect-video rounded-sm"
                         />
-                        <span className="text-[9px] text-muted-foreground group-hover:text-foreground text-center leading-tight">
+                        <span className="text-[11px] text-muted-foreground group-hover:text-foreground text-center leading-tight">
                           {t(`names.presetNames.${preset.id}`, { defaultValue: preset.name })}
                         </span>
                       </button>
@@ -1091,7 +1091,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                 {/* GPU Effects by Category */}
                 {gpuCategories.map(({ category, effects: catEffects }) => (
                   <div key={category}>
-                    <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5">
+                    <div className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5">
                       {t(`names.gpuCategories.${category}`, { defaultValue: category })}
                     </div>
                     <div className="grid grid-cols-3 gap-1.5">
@@ -1124,7 +1124,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                             active={hoveredEffectKey === def.id}
                             className="w-full aspect-video rounded-sm"
                           />
-                          <span className="text-[9px] text-muted-foreground group-hover:text-foreground text-center leading-tight truncate w-full">
+                          <span className="text-[11px] text-muted-foreground group-hover:text-foreground text-center leading-tight truncate w-full">
                             {t(`names.gpuNames.${def.id}`, { defaultValue: def.name })}
                           </span>
                         </button>

@@ -17,7 +17,7 @@ export function ProviderBadge({ provider, className }: { provider: Provider; cla
   return (
     <span
       className={cn(
-        'shrink-0 rounded px-1 py-px text-[9px] font-medium uppercase tracking-wide',
+        'shrink-0 rounded px-1 py-px text-[11px] font-medium uppercase tracking-wide',
         provider === 'openrouter' && 'bg-sky-500/15 text-sky-300',
         provider === 'fal' && 'bg-violet-500/15 text-violet-300',
         provider === 'runware' && 'bg-emerald-500/15 text-emerald-300',
@@ -206,9 +206,9 @@ export function ModelPicker({ task, value, onChange, keys, autoSelect = true }: 
                     <ProviderBadge provider={entry.provider} />
                     <span className="truncate text-xs font-medium">{entry.name}</span>
                     {isNew(entry) && (
-                      <span className="rounded bg-[var(--color-accent)]/15 px-1 text-[10px] text-[var(--color-accent)]">{t('generate.model.new')}</span>
+                      <span className="rounded bg-[var(--color-accent)]/15 px-1 text-[11px] text-[var(--color-accent)]">{t('generate.model.new')}</span>
                     )}
-                    {entry.status !== 'live' && <span className="text-[10px] text-[var(--color-warn)]">{t('generate.model.deprecated')}</span>}
+                    {entry.status !== 'live' && <span className="text-[11px] text-[var(--color-warn)]">{t('generate.model.deprecated')}</span>}
                     {!keys[entry.provider] && (
                       <KeyRound className="ml-auto h-3 w-3 shrink-0 text-[var(--color-warn)]" aria-label={t('generate.keys.missing')} />
                     )}

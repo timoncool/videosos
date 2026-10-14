@@ -52,7 +52,7 @@ export const SavedAnimationList = memo(function SavedAnimationList({
       {/* ── Saved animations — user-captured presets, also declarative ── */}
       {showList ? (
         <section className="flex flex-col gap-1">
-          <h3 className="text-[10px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
+          <h3 className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
             {t('editor.animatePresets.animationsHeading')}
           </h3>
           {presets.length === 0 ? (
@@ -85,7 +85,7 @@ export const SavedAnimationList = memo(function SavedAnimationList({
                           <span className="min-w-0 flex-1 truncate">{preset.name}</span>
                           {preset.motionModifiers?.length || preset.textMotion ? (
                             <span
-                              className="shrink-0 rounded bg-primary/10 px-1 py-0.5 text-[9px] font-medium text-primary"
+                              className="shrink-0 rounded bg-primary/10 px-1 py-0.5 text-[11px] font-medium text-primary"
                               title={t('editor.animateStages.liveBadge')}
                             >
                               ƒx

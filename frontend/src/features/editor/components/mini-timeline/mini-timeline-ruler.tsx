@@ -24,7 +24,7 @@ export const MiniTimelineRuler = memo(function MiniTimelineRuler({
         {RULER_RATIOS.map((ratio) => (
           <div
             key={ratio}
-            className="absolute top-0 h-full border-l border-zinc-500/45 pl-1 pt-0.5 text-[10px] text-zinc-500"
+            className="absolute top-0 h-full border-l border-zinc-500/45 pl-1 pt-0.5 text-[11px] text-zinc-500"
             style={{ left: `${ratio * 100}%` }}
           >
             {formatTime(Math.round(ratio * maxFrame), fps)}

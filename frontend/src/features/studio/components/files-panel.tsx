@@ -85,14 +85,14 @@ export default function FilesPanel() {
                   <Check size={14} className="shrink-0 text-[var(--color-accent)]" />
                 )}
                 <span className="min-w-0 flex-1 truncate text-[13px] text-[var(--color-text)]" title={file.path ?? file.name}>{file.name}</span>
-                <span className="tabnum shrink-0 text-[10px] text-[var(--color-muted)]">{size(file.size)}</span>
+                <span className="tabnum shrink-0 text-[11px] text-[var(--color-muted)]">{size(file.size)}</span>
               </div>
               {file.state === "saving" && (
                 <div className="mt-1.5 h-1 w-full overflow-hidden rounded-full bg-[var(--color-overlay)]">
                   <div className="h-full w-1/3 animate-pulse rounded-full bg-[var(--color-accent)]" />
                 </div>
               )}
-              {file.path && <div className="mt-1 truncate text-[10px] text-[var(--color-muted)]" title={file.path}>{file.path}</div>}
+              {file.path && <div className="mt-1 truncate text-[11px] text-[var(--color-muted)]" title={file.path}>{file.path}</div>}
               {file.state === "done" && file.path && (
                 <button type="button"
                         onClick={() => {

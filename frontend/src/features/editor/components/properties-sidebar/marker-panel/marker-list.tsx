@@ -69,7 +69,7 @@ export function MarkerList({ defaultOpen = true }: { defaultOpen?: boolean }) {
       {sortedMarkers.length === 0 ? (
         <div className="px-2 py-3 text-center">
           <p className="text-xs text-muted-foreground">{t('editor.markerList.empty')}</p>
-          <p className="mt-1 text-[10px] leading-tight text-muted-foreground/70">
+          <p className="mt-1 text-[11px] leading-tight text-muted-foreground/70">
             {t('editor.markerList.emptyHint')}
           </p>
         </div>
@@ -97,7 +97,7 @@ export function MarkerList({ defaultOpen = true }: { defaultOpen?: boolean }) {
                   <span className="flex-1 min-w-0 truncate text-xs">
                     {markerNames.get(marker.id)}
                   </span>
-                  <span className="text-[10px] font-mono tabular-nums text-muted-foreground shrink-0">
+                  <span className="text-[11px] font-mono tabular-nums text-muted-foreground shrink-0">
                     {formatTimecodeDotFrames(marker.frame, fps)}
                   </span>
                 </button>
@@ -116,7 +116,7 @@ export function MarkerList({ defaultOpen = true }: { defaultOpen?: boolean }) {
             <button
               type="button"
               onClick={handleClearAll}
-              className="text-[10px] text-muted-foreground hover:text-destructive transition-colors"
+              className="text-[11px] text-muted-foreground hover:text-destructive transition-colors"
             >
               {t('editor.markerList.clearAll')}
             </button>

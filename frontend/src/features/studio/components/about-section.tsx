@@ -37,7 +37,7 @@ function CryptoRow({ name, address }: { name: string; address: string }) {
           {copied ? <Check size={13} className="text-[var(--color-accent)]" /> : <Copy size={13} />}
         </button>
       </div>
-      {error && <p role="alert" className="mono mt-1 break-words text-[10px] text-[var(--color-warn)]">{error}</p>}
+      {error && <p role="alert" className="mono mt-1 break-words text-[11px] text-[var(--color-warn)]">{error}</p>}
     </div>
   );
 }
@@ -71,7 +71,7 @@ function PathRow({ label, path }: { label: string; path: string }) {
           <FolderOpen size={13} />
         </button>
       </div>
-      {error && <p role="alert" className="mt-1 mono text-[10px] text-[var(--color-warn)] break-words">{error}</p>}
+      {error && <p role="alert" className="mt-1 mono text-[11px] text-[var(--color-warn)] break-words">{error}</p>}
     </div>
   );
 }

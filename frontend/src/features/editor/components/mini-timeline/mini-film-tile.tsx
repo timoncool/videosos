@@ -60,7 +60,7 @@ export const MiniFilmTile = memo(function MiniFilmTile({
       }}
       title={label}
     >
-      <span className="flex min-w-0 items-center gap-1 border-b border-black/40 bg-[#24252b] px-1.5 text-[10px] font-semibold text-zinc-200">
+      <span className="flex min-w-0 items-center gap-1 border-b border-black/40 bg-[#24252b] px-1.5 text-[11px] font-semibold text-zinc-200">
         <span
           className={`rounded-[2px] border px-1 leading-3 ${
             selected
@@ -71,7 +71,7 @@ export const MiniFilmTile = memo(function MiniFilmTile({
           {clipNumber}
         </span>
         <span className="font-mono">{timecodeText}</span>
-        <span className="ml-auto text-[9px] text-zinc-400">{trackName}</span>
+        <span className="ml-auto text-[11px] text-zinc-400">{trackName}</span>
       </span>
 
       <span className="relative block min-h-0 overflow-hidden bg-black">
@@ -89,7 +89,7 @@ export const MiniFilmTile = memo(function MiniFilmTile({
         {overlay}
       </span>
 
-      <span className="truncate border-t border-black/40 bg-[#202127] px-1.5 text-[10px] font-medium text-zinc-300">
+      <span className="truncate border-t border-black/40 bg-[#202127] px-1.5 text-[11px] font-medium text-zinc-300">
         {label}
       </span>
     </button>

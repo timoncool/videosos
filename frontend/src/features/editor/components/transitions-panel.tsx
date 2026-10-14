@@ -139,7 +139,7 @@ const CategorySection = memo(function CategorySection({
 
   return (
     <div className="space-y-2">
-      <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+      <div className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
         {title}
       </div>
       <div className="grid grid-cols-3 gap-1.5">

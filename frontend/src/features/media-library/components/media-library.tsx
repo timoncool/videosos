@@ -189,7 +189,7 @@ const MediaTypeGroupBase = memo(function MediaTypeGroupBase({
         <span className="text-xs font-semibold tracking-wide uppercase text-muted-foreground">
           {label}
         </span>
-        <span className="text-[10px] tabular-nums text-muted-foreground">{items.length}</span>
+        <span className="text-[11px] tabular-nums text-muted-foreground">{items.length}</span>
       </CollapsibleTrigger>
       <CollapsibleContent className="pt-1 pb-2">
         <Grid items={items} onMediaSelect={onMediaSelect} itemSize={itemSize} />
@@ -816,7 +816,7 @@ export const MediaLibrary = memo(function MediaLibrary({ onMediaSelect }: MediaL
               variant="ghost"
               size="sm"
               onClick={clearError}
-              className="h-6 px-2 text-[10px] text-destructive hover:text-destructive hover:bg-destructive/10"
+              className="h-6 px-2 text-[11px] text-destructive hover:text-destructive hover:bg-destructive/10"
             >
               {t('media.library.dismiss')}
             </Button>
@@ -953,7 +953,7 @@ export const MediaLibrary = memo(function MediaLibrary({ onMediaSelect }: MediaL
                   <Button
                     variant="outline"
                     size="sm"
-                    className={`h-6 bg-secondary border text-[10px] px-2 flex-shrink-0 ${
+                    className={`h-6 bg-secondary border text-[11px] px-2 flex-shrink-0 ${
                       filterByType
                         ? 'border-primary text-primary hover:bg-primary/10'
                         : 'border-border text-muted-foreground hover:border-primary/50 hover:text-primary'
@@ -1012,7 +1012,7 @@ export const MediaLibrary = memo(function MediaLibrary({ onMediaSelect }: MediaL
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-6 bg-secondary border border-border text-muted-foreground hover:border-primary/50 hover:text-primary text-[10px] px-2 flex-shrink-0"
+                    className="h-6 bg-secondary border border-border text-muted-foreground hover:border-primary/50 hover:text-primary text-[11px] px-2 flex-shrink-0"
                   >
                     <SortAsc className="w-2.5 h-2.5" />
                     <span className="hidden @[280px]:inline ml-1">

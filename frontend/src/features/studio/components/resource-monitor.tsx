@@ -74,7 +74,7 @@ export default function ResourceMonitor() {
         className="inline-flex shrink-0 whitespace-nowrap items-center gap-2 px-2.5 h-8 rounded-md bg-[var(--color-surface-2)] border border-[var(--color-border)] hover:border-[var(--color-accent)] transition-colors">
         <Dot pct={lead} />
         {hasGpu && <span className="mono text-[11px] tabular-nums">{Math.round(hw.gpuUtilization)}%</span>}
-        <span className="mono text-[10px] text-[var(--color-muted)] tabular-nums hidden md:inline">{hasGpu ? `${fmtGb(hw.usedVram)}/${fmtGb(hw.totalVram)}` : `RAM ${Math.round(ramPct)}%`}</span>
+        <span className="mono text-[11px] text-[var(--color-muted)] tabular-nums hidden md:inline">{hasGpu ? `${fmtGb(hw.usedVram)}/${fmtGb(hw.totalVram)}` : `RAM ${Math.round(ramPct)}%`}</span>
         <PictureInPicture2 size={13} className="text-[var(--color-muted)]" />
       </button>,
       slot,
@@ -107,7 +107,7 @@ export default function ResourceMonitor() {
             </>
           )}
           <Bar label="RAM" pct={ramPct} right={`${fmtGb(hw.usedRam)} / ${fmtGb(hw.totalRam)}`} />
-          <div className="flex items-center justify-between text-[10px] text-[var(--color-muted)]">
+          <div className="flex items-center justify-between text-[11px] text-[var(--color-muted)]">
             <span>{t("monitor.process")}</span><span className="mono tabular-nums">{fmtGb(hw.processRam)}</span>
           </div>
         </div>

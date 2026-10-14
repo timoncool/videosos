@@ -128,7 +128,7 @@ export function CompositionControlsAuthoringSection({
           )}
           <div className="min-w-0 flex-1">
             <ControlNameInput compositionId={activeCompositionId} control={control} />
-            <div className="truncate px-2 pt-0.5 text-[10px] text-muted-foreground/70">
+            <div className="truncate px-2 pt-0.5 text-[11px] text-muted-foreground/70">
               {itemLabelById.get(control.targetItemId) ?? control.targetItemId} ·{' '}
               {propertyLabel(control.property)}
             </div>
@@ -187,7 +187,7 @@ export function CompositionControlsAuthoringSection({
                 )}
                 <span className="min-w-0">
                   <span className="block truncate text-xs">{candidate.targetLabel}</span>
-                  <span className="block text-[10px] text-muted-foreground">
+                  <span className="block text-[11px] text-muted-foreground">
                     {propertyLabel(candidate.property)}
                   </span>
                 </span>
@@ -197,7 +197,7 @@ export function CompositionControlsAuthoringSection({
         </PopoverContent>
       </Popover>
       {availableCandidates.length === 0 && (
-        <p className="px-1 pt-2 text-[10px] leading-snug text-muted-foreground/80">
+        <p className="px-1 pt-2 text-[11px] leading-snug text-muted-foreground/80">
           {controls.length > 0
             ? t('editor.compositionControls.allExposed', {
                 defaultValue: 'All supported properties are exposed.',

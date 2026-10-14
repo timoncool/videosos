@@ -76,7 +76,7 @@ export const AnimationPresetLibraryEdit = memo(function AnimationPresetLibraryEd
         <section className="flex flex-col gap-2">
           <div>
             <h3 className="text-xs font-medium">{t('editor.editAnimation.quickTitle')}</h3>
-            <p className="mt-0.5 text-[10px] leading-snug text-muted-foreground">
+            <p className="mt-0.5 text-[11px] leading-snug text-muted-foreground">
               {t('editor.editAnimation.quickHint')}
             </p>
           </div>
@@ -92,7 +92,7 @@ export const AnimationPresetLibraryEdit = memo(function AnimationPresetLibraryEd
                       disabled={disabledReason !== null}
                       onClick={() => onApplyPreset(preset)}
                       className={cn(
-                        'group flex min-h-14 flex-col items-center gap-1 rounded-md border border-border/60 p-1.5 text-[10px]',
+                        'group flex min-h-14 flex-col items-center gap-1 rounded-md border border-border/60 p-1.5 text-[11px]',
                         disabledReason
                           ? 'cursor-not-allowed text-muted-foreground/40'
                           : 'text-muted-foreground hover:border-border hover:bg-secondary/40 hover:text-foreground',
@@ -137,7 +137,7 @@ export const AnimationPresetLibraryEdit = memo(function AnimationPresetLibraryEd
             <section className="flex flex-col gap-2">
               <div>
                 <h3 className="text-xs font-medium">{t('textMotion.sectionTitle')}</h3>
-                <p className="mt-0.5 text-[10px] leading-snug text-muted-foreground">
+                <p className="mt-0.5 text-[11px] leading-snug text-muted-foreground">
                   {t('editor.editAnimation.textHint')}
                 </p>
               </div>
@@ -153,7 +153,7 @@ export const AnimationPresetLibraryEdit = memo(function AnimationPresetLibraryEd
             <Layers3 className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
             <div className="min-w-0 flex-1">
               <h3 className="text-xs font-medium">{t('editor.editAnimation.motionClipTitle')}</h3>
-              <p className="mt-0.5 text-[10px] leading-snug text-muted-foreground">
+              <p className="mt-0.5 text-[11px] leading-snug text-muted-foreground">
                 {isMotionClip
                   ? t('editor.editAnimation.motionClipOpenHint')
                   : t('editor.editAnimation.motionClipCreateHint')}
@@ -162,7 +162,7 @@ export const AnimationPresetLibraryEdit = memo(function AnimationPresetLibraryEd
                 type="button"
                 variant="secondary"
                 size="sm"
-                className="mt-2 h-7 gap-1.5 px-2 text-[10px]"
+                className="mt-2 h-7 gap-1.5 px-2 text-[11px]"
                 onClick={onMotionClip}
               >
                 {isMotionClip ? (

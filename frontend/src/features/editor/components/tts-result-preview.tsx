@@ -86,7 +86,7 @@ const MiniAudioPlayer = memo(function MiniAudioPlayer({ src }: { src: string }) 
         className="min-w-0 flex-1"
         aria-label={i18n.t('editor.tts.seek')}
       />
-      <span className="shrink-0 select-none font-mono text-[10px] tabular-nums text-muted-foreground">
+      <span className="shrink-0 select-none font-mono text-[11px] tabular-nums text-muted-foreground">
         {formatTime(currentTime)}
         <span className="text-muted-foreground"> / </span>
         {formatTime(duration)}

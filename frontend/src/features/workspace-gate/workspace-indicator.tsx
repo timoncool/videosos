@@ -172,7 +172,7 @@ export function WorkspaceIndicator() {
                   {record.name}
                 </span>
                 {isActive && (
-                  <span className="text-[10px] uppercase tracking-wide text-muted-foreground flex items-center gap-1">
+                  <span className="text-[11px] uppercase tracking-wide text-muted-foreground flex items-center gap-1">
                     <Check className="w-3 h-3" /> {t('projects.workspaceIndicator.active')}
                   </span>
                 )}

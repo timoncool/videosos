@@ -100,7 +100,7 @@ export const CaptionStyleControls = memo(function CaptionStyleControls({
   return (
     <div className="space-y-1">
       <div>
-        <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground pb-1.5">
+        <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground pb-1.5">
           {t('editor.captionStyleControls.stylePreset')}
         </p>
         <div className="grid grid-cols-3 gap-1.5">

@@ -57,7 +57,7 @@ export function TopBar({ go }: { go: (place: TopBarPlace) => void }) {
         <button type="button" onClick={() => go("/projects/new")} title={t("topbar.newTitle")}
           className="inline-flex flex-col items-center justify-center rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-2)] px-3 py-1 text-[var(--color-text)] shadow-sm transition-colors hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]">
           <span className="flex items-center gap-1 whitespace-nowrap text-[12px] font-bold"><Plus size={13} /> {t("topbar.new")}</span>
-          <span className="mt-0.5 hidden text-[9px] font-normal leading-none text-[var(--color-muted)] min-[1440px]:block">{t("topbar.newSub")}</span>
+          <span className="mt-0.5 hidden text-[11px] font-normal leading-none text-[var(--color-muted)] min-[1440px]:block">{t("topbar.newSub")}</span>
         </button>
         <WhatsNew />
         <button type="button" onClick={() => go("/docs")} title={t("topbar.help")} aria-label={t("topbar.help")}

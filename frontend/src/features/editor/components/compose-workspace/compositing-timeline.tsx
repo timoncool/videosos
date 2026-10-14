@@ -1495,7 +1495,7 @@ const CompositingTimelineCore = memo(function CompositingTimelineCore({
             <button
               type="button"
               onClick={() => setCreateDialogOpen(true)}
-              className="flex h-6 items-center gap-1 rounded bg-primary/10 px-2 text-[10px] text-primary hover:bg-primary/20"
+              className="flex h-6 items-center gap-1 rounded bg-primary/10 px-2 text-[11px] text-primary hover:bg-primary/20"
             >
               <Plus className="h-3 w-3" />
               {t('editor.compose.newComposition')}
@@ -1506,7 +1506,7 @@ const CompositingTimelineCore = memo(function CompositingTimelineCore({
               <p className="text-xs font-medium text-foreground">
                 {t('editor.compose.chooseTitle')}
               </p>
-              <p className="mt-1 text-[10px] leading-4 text-muted-foreground">
+              <p className="mt-1 text-[11px] leading-4 text-muted-foreground">
                 {t('editor.compose.chooseDescription')}
               </p>
             </div>
@@ -1602,13 +1602,13 @@ const CompositingTimelineCore = memo(function CompositingTimelineCore({
         >
           <SelectTrigger
             aria-label={t('editor.compose.compositionPicker')}
-            className="h-6 min-w-0 max-w-52 gap-1.5 bg-background px-2 text-[10px] font-semibold text-foreground"
+            className="h-6 min-w-0 max-w-52 gap-1.5 bg-background px-2 text-[11px] font-semibold text-foreground"
           >
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
             {compositeCompositions.map((candidate) => (
-              <SelectItem key={candidate.id} value={candidate.id} className="text-[10px]">
+              <SelectItem key={candidate.id} value={candidate.id} className="text-[11px]">
                 {candidate.name}
               </SelectItem>
             ))}
@@ -1617,7 +1617,7 @@ const CompositingTimelineCore = memo(function CompositingTimelineCore({
         <button
           type="button"
           onClick={() => setCreateDialogOpen(true)}
-          className="flex h-6 shrink-0 items-center gap-1 rounded border border-border/70 bg-background px-2 text-[10px] font-medium text-muted-foreground hover:bg-accent hover:text-foreground"
+          className="flex h-6 shrink-0 items-center gap-1 rounded border border-border/70 bg-background px-2 text-[11px] font-medium text-muted-foreground hover:bg-accent hover:text-foreground"
           title={t('editor.compose.newComposition')}
           aria-label={t('editor.compose.newComposition')}
         >
@@ -1628,7 +1628,7 @@ const CompositingTimelineCore = memo(function CompositingTimelineCore({
           <DropdownMenuTrigger asChild>
             <button
               type="button"
-              className="flex h-6 shrink-0 items-center gap-1 rounded border border-border/70 bg-background px-2 text-[10px] font-medium text-muted-foreground hover:bg-accent hover:text-foreground"
+              className="flex h-6 shrink-0 items-center gap-1 rounded border border-border/70 bg-background px-2 text-[11px] font-medium text-muted-foreground hover:bg-accent hover:text-foreground"
               aria-label={t('editor.compose.addItem')}
             >
               <Plus className="h-3 w-3" />
@@ -1663,7 +1663,7 @@ const CompositingTimelineCore = memo(function CompositingTimelineCore({
           type="button"
           onClick={createGroupFromSelection}
           disabled={!canGroupSelectedLayers}
-          className="flex h-6 shrink-0 items-center gap-1 rounded border border-border/70 bg-background px-2 text-[10px] font-medium text-muted-foreground hover:bg-accent hover:text-foreground disabled:pointer-events-none disabled:opacity-35"
+          className="flex h-6 shrink-0 items-center gap-1 rounded border border-border/70 bg-background px-2 text-[11px] font-medium text-muted-foreground hover:bg-accent hover:text-foreground disabled:pointer-events-none disabled:opacity-35"
           aria-label={t('editor.compose.groupSelected')}
           aria-description={t('editor.compose.layerGroupDescription')}
           title={t('editor.compose.layerGroupDescription')}
@@ -1673,7 +1673,7 @@ const CompositingTimelineCore = memo(function CompositingTimelineCore({
         </button>
         <span className="flex-1" aria-hidden="true" />
         <span
-          className="text-[10px] tabular-nums text-muted-foreground"
+          className="text-[11px] tabular-nums text-muted-foreground"
           data-testid="motion-composition-duration"
         >
           {compositionEndFrame ?? durationInFrames}f · {fps}fps
@@ -1732,7 +1732,7 @@ const CompositingTimelineCore = memo(function CompositingTimelineCore({
           <div className="relative min-h-full w-full min-w-0">
             <div className="sticky top-0 z-20 flex border-b border-border bg-panel-header">
               <div
-                className="flex shrink-0 border-r border-border text-[9px] font-medium uppercase tracking-[0.12em] text-muted-foreground"
+                className="flex shrink-0 border-r border-border text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground"
                 style={{
                   width: LAYER_COLUMN_WIDTH,
                   height: RULER_HEIGHT,
@@ -1746,15 +1746,15 @@ const CompositingTimelineCore = memo(function CompositingTimelineCore({
                   >
                     <SelectTrigger
                       aria-label="Property filter"
-                      className="h-5 w-28 gap-1 bg-background px-2 text-[9px] font-normal normal-case tracking-normal text-muted-foreground"
+                      className="h-5 w-28 gap-1 bg-background px-2 text-[11px] font-normal normal-case tracking-normal text-muted-foreground"
                     >
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all" className="text-[10px]">
+                      <SelectItem value="all" className="text-[11px]">
                         All properties
                       </SelectItem>
-                      <SelectItem value="keyframed" className="text-[10px]">
+                      <SelectItem value="keyframed" className="text-[11px]">
                         Animated properties
                       </SelectItem>
                     </SelectContent>
@@ -1810,7 +1810,7 @@ const CompositingTimelineCore = memo(function CompositingTimelineCore({
                       >
                         <span
                           data-motion-ruler-label-index={index}
-                          className="ml-1 text-[9px] tabular-nums text-muted-foreground"
+                          className="ml-1 text-[11px] tabular-nums text-muted-foreground"
                         >
                           {formatFrameTime(frame, fps)}
                         </span>

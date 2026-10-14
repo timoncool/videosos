@@ -629,7 +629,7 @@ export const GpuCurvesPanel = memo(function GpuCurvesPanel({
             </svg>
           </div>
           {!isDock && (
-            <div className="mt-1 text-center text-[10px] text-muted-foreground">
+            <div className="mt-1 text-center text-[11px] text-muted-foreground">
               {t('effects.curves.multiPointHint', { channel: activeChannelLabel.toLowerCase() })}
             </div>
           )}

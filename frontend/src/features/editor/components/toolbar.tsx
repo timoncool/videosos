@@ -244,7 +244,7 @@ export const Toolbar = memo(function Toolbar({
           >
             <ListVideo className="h-4 w-4" />
             {renderQueueCount > 0 && (
-              <span className="absolute -right-1 -top-1 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-medium leading-none text-primary-foreground">
+              <span className="absolute -right-1 -top-1 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-primary px-1 text-[11px] font-medium leading-none text-primary-foreground">
                 {renderQueueCount}
               </span>
             )}

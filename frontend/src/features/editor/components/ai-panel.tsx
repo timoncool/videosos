@@ -209,7 +209,7 @@ const MiniAudioPlayer = memo(function MiniAudioPlayer({ src }: { src: string }) 
         className="min-w-0 flex-1"
         aria-label={i18n.t('editor.tts.seek')}
       />
-      <span className="shrink-0 select-none font-mono text-[10px] tabular-nums text-muted-foreground">
+      <span className="shrink-0 select-none font-mono text-[11px] tabular-nums text-muted-foreground">
         {formatTime(currentTime)}
         <span className="text-muted-foreground/40"> / </span>
         {formatTime(duration)}
@@ -995,10 +995,10 @@ export const AiPanel = memo(function AiPanel() {
                   onOpenAutoFocus={(e) => e.preventDefault()}
                 >
                   <div className="flex flex-wrap items-center gap-1.5">
-                    <span className="rounded-full border border-border bg-background px-2 py-0.5 text-[10px] uppercase tracking-wide text-muted-foreground">
+                    <span className="rounded-full border border-border bg-background px-2 py-0.5 text-[11px] uppercase tracking-wide text-muted-foreground">
                       WebGPU
                     </span>
-                    <span className="rounded-full border border-border bg-background px-2 py-0.5 text-[10px] uppercase tracking-wide text-muted-foreground">
+                    <span className="rounded-full border border-border bg-background px-2 py-0.5 text-[11px] uppercase tracking-wide text-muted-foreground">
                       Local
                     </span>
                   </div>

@@ -53,7 +53,7 @@ export function MediaThumb({ reference }: { reference: MediaRef }) {
   return url ? (
     <img src={url} alt={name} className="h-full w-full object-cover" onError={() => setUrl(null)} />
   ) : (
-    <span className="line-clamp-3 break-all p-1 text-[9px] text-muted-foreground">{name}</span>
+    <span className="line-clamp-3 break-all p-1 text-[11px] text-muted-foreground">{name}</span>
   )
 }
 

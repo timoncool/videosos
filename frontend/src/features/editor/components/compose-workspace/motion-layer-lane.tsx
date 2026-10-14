@@ -56,7 +56,7 @@ function MotionLayerSpan({
         event.stopPropagation()
       }}
       className={cn(
-        '@container absolute top-1/2 h-5 -translate-y-1/2 touch-none overflow-hidden rounded-sm border px-1 text-left text-[9px] shadow-sm transition-colors',
+        '@container absolute top-1/2 h-5 -translate-y-1/2 touch-none overflow-hidden rounded-sm border px-1 text-left text-[11px] shadow-sm transition-colors',
         isLayerLocked ? 'cursor-not-allowed opacity-55' : 'cursor-grab active:cursor-grabbing',
         selected
           ? 'border-foreground/80 bg-timeline-motion-segment/90 text-foreground'

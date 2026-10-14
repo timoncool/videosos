@@ -220,7 +220,7 @@ export const GpuPowerWindowPanel = memo(function GpuPowerWindowPanel({
 
       {collapsed ? null : (
         <div className="space-y-0">
-          <div className="px-2 pb-1 pt-1 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+          <div className="px-2 pb-1 pt-1 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
             {t('effects.powerWindow.window')}
           </div>
           <div className="px-2 pb-1">
@@ -254,7 +254,7 @@ export const GpuPowerWindowPanel = memo(function GpuPowerWindowPanel({
           </div>
           {WINDOW_KEYS.map(renderNumberRow)}
 
-          <div className="px-2 pb-1 pt-2 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+          <div className="px-2 pb-1 pt-2 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
             {t('effects.powerWindow.matte')}
           </div>
           <div className="px-2 pb-1 flex gap-1">
@@ -262,7 +262,7 @@ export const GpuPowerWindowPanel = memo(function GpuPowerWindowPanel({
             {renderBooleanToggle('invertMask')}
           </div>
 
-          <div className="px-2 pb-1 pt-2 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+          <div className="px-2 pb-1 pt-2 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
             {t('effects.powerWindow.correction')}
           </div>
           {CORRECTION_KEYS.map(renderNumberRow)}

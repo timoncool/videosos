@@ -1691,7 +1691,7 @@ const MediaCardInternal = memo(function MediaCardInternal({
               {/* Info — single row: icon + name + duration */}
               <div className="flex-1 min-w-0 flex items-center gap-1.5">
                 {isImporting ? (
-                  <span className="text-[10px] text-muted-foreground">{preparingLabel}</span>
+                  <span className="text-[11px] text-muted-foreground">{preparingLabel}</span>
                 ) : (
                   <>
                     <div className="p-0.5 rounded bg-primary/90 text-primary-foreground flex-shrink-0">
@@ -1704,7 +1704,7 @@ const MediaCardInternal = memo(function MediaCardInternal({
                       {media.fileName}
                     </h3>
                     {(mediaType === 'video' || mediaType === 'audio') && media.duration > 0 && (
-                      <span className="text-[10px] text-muted-foreground flex-shrink-0">
+                      <span className="text-[11px] text-muted-foreground flex-shrink-0">
                         {formatDuration(media.duration)}
                       </span>
                     )}
@@ -1796,7 +1796,7 @@ const MediaCardInternal = memo(function MediaCardInternal({
               {isPreparingMedia && (
                 <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center gap-2 pointer-events-none">
                   <Loader2 className="w-6 h-6 text-white animate-spin" />
-                  <div className="text-[9px] text-white/60 uppercase tracking-wider">
+                  <div className="text-[11px] text-white/60 uppercase tracking-wider">
                     {preparingLabel}
                   </div>
                 </div>
@@ -1891,7 +1891,7 @@ const MediaCardInternal = memo(function MediaCardInternal({
             <div className="px-1.5 py-1 bg-panel-bg/50 flex-shrink-0">
               <div className="flex items-center justify-between gap-1">
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-[10px] font-medium text-foreground truncate group-hover:text-primary transition-colors">
+                  <h3 className="text-[11px] font-medium text-foreground truncate group-hover:text-primary transition-colors">
                     {media.fileName}
                   </h3>
                 </div>
