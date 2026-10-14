@@ -416,7 +416,8 @@ fn tools() -> &'static [Tool] {
 
 struct Bridge {
     commands: tokio::sync::broadcast::Sender<String>,
-    pending: Mutex<HashMap<String, tokio::sync::oneshot::Sender<Result<Value, String>>>>,
+    /// A command waiting for its answer, with the window it went to.
+    pending: Mutex<HashMap<String, (u64, tokio::sync::oneshot::Sender<Result<Value, String>>)>>,
     windows: Mutex<Vec<u64>>,
     sequence: AtomicU64,
 }
@@ -435,6 +436,14 @@ struct Listening(u64);
 impl Drop for Listening {
     fn drop(&mut self) {
         open_windows().retain(|window| *window != self.0);
+        // a window that went away answers nothing: its commands fail now, not at their timeout
+        let mut pending = bridge().pending.lock().unwrap_or_else(|poisoned| poisoned.into_inner());
+        let gone: Vec<String> = pending.iter().filter(|(_, (window, _))| *window == self.0).map(|(id, _)| id.clone()).collect();
+        for id in gone {
+            if let Some((_, sender)) = pending.remove(&id) {
+                let _ = sender.send(Err("The VideoSOS window closed before it answered. Call the tool again: it goes to another open window, or says that none is open.".into()));
+            }
+        }
     }
 }
 
@@ -491,7 +500,7 @@ struct WindowAnswer {
 async fn window_result(Json(answer): Json<WindowAnswer>) -> StatusCode {
     let waiting = bridge().pending.lock().unwrap_or_else(|poisoned| poisoned.into_inner()).remove(&answer.id);
     match waiting {
-        Some(sender) => {
+        Some((_, sender)) => {
             let _ = sender.send(match answer.error {
                 Some(error) => Err(error),
                 None => Ok(answer.result),
@@ -525,7 +534,7 @@ async fn ask_window(command: &str, args: Value, seconds: u64) -> Result<Value, S
     };
     let id = format!("w{}", bridge().sequence.fetch_add(1, Ordering::Relaxed));
     let (sender, receiver) = tokio::sync::oneshot::channel();
-    bridge().pending.lock().unwrap_or_else(|poisoned| poisoned.into_inner()).insert(id.clone(), sender);
+    bridge().pending.lock().unwrap_or_else(|poisoned| poisoned.into_inner()).insert(id.clone(), (window, sender));
     let _ = bridge().commands.send(json!({ "id": id, "window": window, "command": command, "args": args }).to_string());
     match tokio::time::timeout(Duration::from_secs(seconds), receiver).await {
         Ok(Ok(answer)) => answer,
@@ -970,6 +979,20 @@ pub fn router() -> Router<AppState> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[tokio::test]
+    async fn a_command_to_a_window_that_closed_fails_at_once() {
+        let window = bridge().sequence.fetch_add(1, Ordering::Relaxed);
+        open_windows().push(window);
+        let listening = Listening(window);
+        let asked = tokio::spawn(ask_window("read_page", json!({}), 300));
+        while !bridge().pending.lock().unwrap().values().any(|(to, _)| *to == window) {
+            tokio::task::yield_now().await;
+        }
+        drop(listening);
+        let answer = tokio::time::timeout(Duration::from_secs(5), asked).await.expect("an answer before the timeout").unwrap();
+        assert!(answer.unwrap_err().contains("closed"));
+    }
 
     #[test]
     fn tool_names_are_unique_and_schemas_are_objects() {
