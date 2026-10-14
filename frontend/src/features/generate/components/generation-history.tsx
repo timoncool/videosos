@@ -3,9 +3,23 @@ import { useTranslation } from 'react-i18next'
 import { ArrowUpDown, BarChart3, Columns2, Pause, Play, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
-import { formatUsd, generateApi, PROVIDER_LABELS, TASKS, type Job, type Spend, type Task } from '../services/generate-api'
+import {
+  formatUsd,
+  generateApi,
+  PROVIDER_LABELS,
+  TASKS,
+  type Job,
+  type Spend,
+  type Task,
+} from '../services/generate-api'
 import { JobCard } from './job-card'
 
 type StatusFilter = 'all' | 'done' | 'running' | 'failed'
@@ -48,12 +62,16 @@ function StatsDialog({ projectId, onClose }: { projectId: string; onClose: () =>
     generateApi
       .spend(projectId)
       .then(setSpend)
-      .catch((reason: unknown) => setError(reason instanceof Error ? reason.message : String(reason)))
+      .catch((reason: unknown) =>
+        setError(reason instanceof Error ? reason.message : String(reason)),
+      )
   }, [projectId])
   const row = (key: string, label: string, usd: number, jobs: number) => (
     <div key={key} className="flex items-baseline gap-2 text-xs">
       <span className="min-w-0 flex-1 truncate">{label}</span>
-      <span className="tabnum text-muted-foreground">{t('settings.providers.jobs', { count: jobs })}</span>
+      <span className="tabnum text-muted-foreground">
+        {t('settings.providers.jobs', { count: jobs })}
+      </span>
       <span className="tabnum w-16 text-right">{formatUsd(usd)}</span>
     </div>
   )
@@ -67,25 +85,52 @@ function StatsDialog({ projectId, onClose }: { projectId: string; onClose: () =>
         {spend && (
           <div className="space-y-4">
             <p className="text-sm">
-              {t('generate.stats.total', { total: formatUsd(spend.total), today: formatUsd(spend.today) })}
+              {t('generate.stats.total', {
+                total: formatUsd(spend.total),
+                today: formatUsd(spend.today),
+              })}
             </p>
-            {spend.total === 0 && <p className="text-xs text-muted-foreground">{t('generate.stats.empty')}</p>}
+            {spend.total === 0 && (
+              <p className="text-xs text-muted-foreground">{t('generate.stats.empty')}</p>
+            )}
             {spend.tasks.length > 0 && (
               <section className="space-y-1">
-                <h4 className="text-[11px] uppercase tracking-wide text-muted-foreground">{t('generate.stats.byTask')}</h4>
-                {spend.tasks.map((each) => row(each.task || 'other', each.task ? t(`generate.tasks.${each.task}`) : t('generate.stats.other'), each.usd, each.jobs))}
+                <h4 className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                  {t('generate.stats.byTask')}
+                </h4>
+                {spend.tasks.map((each) =>
+                  row(
+                    each.task || 'other',
+                    each.task ? t(`generate.tasks.${each.task}`) : t('generate.stats.other'),
+                    each.usd,
+                    each.jobs,
+                  ),
+                )}
               </section>
             )}
             {spend.providers.length > 0 && (
               <section className="space-y-1">
-                <h4 className="text-[11px] uppercase tracking-wide text-muted-foreground">{t('generate.stats.byProvider')}</h4>
-                {spend.providers.map((each) => row(each.provider, PROVIDER_LABELS[each.provider], each.usd, each.jobs))}
+                <h4 className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                  {t('generate.stats.byProvider')}
+                </h4>
+                {spend.providers.map((each) =>
+                  row(each.provider, PROVIDER_LABELS[each.provider], each.usd, each.jobs),
+                )}
               </section>
             )}
             {spend.models.length > 0 && (
               <section className="space-y-1">
-                <h4 className="text-[11px] uppercase tracking-wide text-muted-foreground">{t('generate.stats.byModel')}</h4>
-                {spend.models.map((each) => row(`${each.provider}:${each.model}`, `${each.model_name} · ${PROVIDER_LABELS[each.provider]}`, each.usd, each.jobs))}
+                <h4 className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                  {t('generate.stats.byModel')}
+                </h4>
+                {spend.models.map((each) =>
+                  row(
+                    `${each.provider}:${each.model}`,
+                    `${each.model_name} · ${PROVIDER_LABELS[each.provider]}`,
+                    each.usd,
+                    each.jobs,
+                  ),
+                )}
               </section>
             )}
           </div>
@@ -117,7 +162,12 @@ function CompareDialog({ jobs, onClose }: { jobs: Job[]; onClose: () => void }) 
           <DialogTitle>{t('generate.compare.title')}</DialogTitle>
         </DialogHeader>
         {hasVideo && (
-          <Button size="sm" variant="outline" className="w-fit gap-1.5" onClick={() => together(!playing)}>
+          <Button
+            size="sm"
+            variant="outline"
+            className="w-fit gap-1.5"
+            onClick={() => together(!playing)}
+          >
             {playing ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
             {playing ? t('generate.compare.pause') : t('generate.compare.play')}
           </Button>
@@ -129,7 +179,13 @@ function CompareDialog({ jobs, onClose }: { jobs: Job[]; onClose: () => void }) 
             const url = generateApi.fileUrl(job.id, output.index)
             return (
               <figure key={job.id} className="space-y-1">
-                {output.kind === 'image' && <img src={url} alt="" className="max-h-[38vh] w-full rounded border border-border bg-black object-contain" />}
+                {output.kind === 'image' && (
+                  <img
+                    src={url}
+                    alt=""
+                    className="max-h-[38vh] w-full rounded border border-border bg-black object-contain"
+                  />
+                )}
                 {output.kind === 'video' && (
                   <video
                     ref={(element) => {
@@ -142,8 +198,14 @@ function CompareDialog({ jobs, onClose }: { jobs: Job[]; onClose: () => void }) 
                     className="max-h-[38vh] w-full rounded border border-border bg-black"
                   />
                 )}
-                {output.kind === 'audio' && <audio src={url} controls preload="metadata" className="w-full" />}
-                {output.kind === 'text' && <p className="max-h-[38vh] overflow-y-auto whitespace-pre-wrap rounded border border-border p-2 text-xs">{output.text}</p>}
+                {output.kind === 'audio' && (
+                  <audio src={url} controls preload="metadata" className="w-full" />
+                )}
+                {output.kind === 'text' && (
+                  <p className="max-h-[38vh] overflow-y-auto whitespace-pre-wrap rounded border border-border p-2 text-xs">
+                    {output.text}
+                  </p>
+                )}
                 <figcaption className="text-[11px] text-muted-foreground">
                   {job.model_name} · {PROVIDER_LABELS[job.provider]}
                   {job.cost !== null && ` · ${formatUsd(job.cost)}`}
@@ -158,7 +220,15 @@ function CompareDialog({ jobs, onClose }: { jobs: Job[]; onClose: () => void }) 
 }
 
 /** The project's generations: find one by its words or model, narrow by task and state, compare, see the spend. */
-export function GenerationHistory({ jobs, projectId, onReuse }: { jobs: Job[]; projectId: string | null; onReuse: (job: Job) => void }) {
+export function GenerationHistory({
+  jobs,
+  projectId,
+  onReuse,
+}: {
+  jobs: Job[]
+  projectId: string | null
+  onReuse: (job: Job) => void
+}) {
   const { t } = useTranslation()
   const [query, setQuery] = useState('')
   const [task, setTask] = useState<Task | 'all'>('all')
@@ -174,20 +244,24 @@ export function GenerationHistory({ jobs, projectId, onReuse }: { jobs: Job[]; p
 
   const shown = useMemo(() => {
     const words = query.toLowerCase().split(/\s+/).filter(Boolean)
-    return jobs.filter((job) => {
-      if (task !== 'all' && job.task !== task) return false
-      if (status === 'done' && job.status !== 'done') return false
-      if (status === 'failed' && job.status !== 'failed' && job.status !== 'cancelled') return false
-      if (status === 'running' && !RUNNING.has(job.status)) return false
-      const haystack = `${promptOf(job)} ${job.model_name} ${job.model}`.toLowerCase()
-      return words.every((word) => haystack.includes(word))
-    }).sort(SORTERS[order])
+    return jobs
+      .filter((job) => {
+        if (task !== 'all' && job.task !== task) return false
+        if (status === 'done' && job.status !== 'done') return false
+        if (status === 'failed' && job.status !== 'failed' && job.status !== 'cancelled')
+          return false
+        if (status === 'running' && !RUNNING.has(job.status)) return false
+        const haystack = `${promptOf(job)} ${job.model_name} ${job.model}`.toLowerCase()
+        return words.every((word) => haystack.includes(word))
+      })
+      .sort(SORTERS[order])
   }, [jobs, query, task, status, order])
 
   const comparable = (job: Job) => job.status === 'done' && job.outputs.length > 0
   const pickedJobs = jobs.filter((job) => picked.includes(job.id))
-  const select = "h-8 min-w-0 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-2 text-[12px] text-[var(--color-text)] focus:border-[var(--color-accent)] focus:outline-none"
-  const icon = "h-7 w-7 p-0 text-[var(--color-muted)] hover:text-[var(--color-text)]"
+  const select =
+    'h-8 min-w-0 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-2 text-[12px] text-[var(--color-text)] focus:border-[var(--color-accent)] focus:outline-none'
+  const icon = 'h-7 w-7 p-0 text-[var(--color-muted)] hover:text-[var(--color-text)]'
 
   return (
     <div className="space-y-2 p-3" data-testid="generate-history">
@@ -197,38 +271,76 @@ export function GenerationHistory({ jobs, projectId, onReuse }: { jobs: Job[]; p
           <span className="tabnum tracking-normal">{jobs.length}</span>
         </h3>
         {picked.length >= 2 && (
-          <Button size="sm" variant="outline" className="h-7 gap-1 px-2 text-[11px]" onClick={() => setCompare(true)} data-testid="generate-compare">
+          <Button
+            size="sm"
+            variant="outline"
+            className="h-7 gap-1 px-2 text-[11px]"
+            onClick={() => setCompare(true)}
+            data-testid="generate-compare"
+          >
             <Columns2 className="h-3 w-3" />
             {t('generate.compare.button', { count: picked.length })}
           </Button>
         )}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button size="sm" variant="ghost" className={icon} aria-label={t('generate.sort.label', { order: t(`generate.sort.${order}`) })} title={t('generate.sort.label', { order: t(`generate.sort.${order}`) })}>
+            <Button
+              size="sm"
+              variant="ghost"
+              className={icon}
+              aria-label={t('generate.sort.label', { order: t(`generate.sort.${order}`) })}
+              title={t('generate.sort.label', { order: t(`generate.sort.${order}`) })}
+            >
               <ArrowUpDown className="h-3.5 w-3.5" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel className="text-[11px] uppercase tracking-wide text-muted-foreground">{t('generate.sort.title')}</DropdownMenuLabel>
+            <DropdownMenuLabel className="text-[11px] uppercase tracking-wide text-muted-foreground">
+              {t('generate.sort.title')}
+            </DropdownMenuLabel>
             {ORDERS.map((each) => (
-              <DropdownMenuCheckboxItem key={each} checked={each === order} onCheckedChange={() => choose(each)} className="text-xs">
+              <DropdownMenuCheckboxItem
+                key={each}
+                checked={each === order}
+                onCheckedChange={() => choose(each)}
+                className="text-xs"
+              >
                 {t(`generate.sort.${each}`)}
               </DropdownMenuCheckboxItem>
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
         {projectId && (
-          <Button size="sm" variant="ghost" className={icon} onClick={() => setStats(true)} aria-label={t('generate.stats.button')} title={t('generate.stats.button')} data-testid="generate-stats">
+          <Button
+            size="sm"
+            variant="ghost"
+            className={icon}
+            onClick={() => setStats(true)}
+            aria-label={t('generate.stats.button')}
+            title={t('generate.stats.button')}
+            data-testid="generate-stats"
+          >
             <BarChart3 className="h-3.5 w-3.5" />
           </Button>
         )}
       </div>
       <div className="relative">
         <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--color-muted)]" />
-        <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t('generate.filter.search')} aria-label={t('generate.filter.search')} className="h-8 pl-8 text-[12px]" />
+        <Input
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder={t('generate.filter.search')}
+          aria-label={t('generate.filter.search')}
+          className="h-8 pl-8 text-[12px]"
+        />
       </div>
       <div className="grid grid-cols-2 gap-1.5">
-        <select value={task} onChange={(event) => setTask(event.target.value as Task | 'all')} className={select} aria-label={t('generate.filter.task')}>
+        <select
+          value={task}
+          onChange={(event) => setTask(event.target.value as Task | 'all')}
+          className={select}
+          aria-label={t('generate.filter.task')}
+        >
           <option value="all">{t('generate.filter.allTasks')}</option>
           {TASKS.map((each) => (
             <option key={each} value={each}>
@@ -236,14 +348,21 @@ export function GenerationHistory({ jobs, projectId, onReuse }: { jobs: Job[]; p
             </option>
           ))}
         </select>
-        <select value={status} onChange={(event) => setStatus(event.target.value as StatusFilter)} className={select} aria-label={t('generate.filter.status')}>
+        <select
+          value={status}
+          onChange={(event) => setStatus(event.target.value as StatusFilter)}
+          className={select}
+          aria-label={t('generate.filter.status')}
+        >
           <option value="all">{t('generate.filter.allStates')}</option>
           <option value="done">{t('generate.status.done')}</option>
           <option value="running">{t('generate.status.running')}</option>
           <option value="failed">{t('generate.status.failed')}</option>
         </select>
       </div>
-      {shown.length === 0 && <p className="text-[11px] text-muted-foreground">{t('generate.filter.nothing')}</p>}
+      {shown.length === 0 && (
+        <p className="text-[11px] text-muted-foreground">{t('generate.filter.nothing')}</p>
+      )}
       {shown.map((job) => (
         <JobCard
           key={job.id}
@@ -252,13 +371,20 @@ export function GenerationHistory({ jobs, projectId, onReuse }: { jobs: Job[]; p
           selected={picked.includes(job.id)}
           onSelect={
             comparable(job)
-              ? (on) => setPicked((current) => (on ? [...current.filter((id) => id !== job.id), job.id].slice(-4) : current.filter((id) => id !== job.id)))
+              ? (on) =>
+                  setPicked((current) =>
+                    on
+                      ? [...current.filter((id) => id !== job.id), job.id].slice(-4)
+                      : current.filter((id) => id !== job.id),
+                  )
               : undefined
           }
         />
       ))}
       {stats && projectId && <StatsDialog projectId={projectId} onClose={() => setStats(false)} />}
-      {compare && pickedJobs.length >= 2 && <CompareDialog jobs={pickedJobs} onClose={() => setCompare(false)} />}
+      {compare && pickedJobs.length >= 2 && (
+        <CompareDialog jobs={pickedJobs} onClose={() => setCompare(false)} />
+      )}
     </div>
   )
 }

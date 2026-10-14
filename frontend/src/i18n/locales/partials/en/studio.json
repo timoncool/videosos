@@ -149,7 +149,8 @@
       "media": "media",
       "video": "video",
       "download": "link download",
-      "checkpoint": "checkpoint"
+      "checkpoint": "checkpoint",
+      "blocking": "3D blocking"
     }
   },
   "files": {

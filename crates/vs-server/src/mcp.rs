@@ -413,6 +413,13 @@ fn tools() -> &'static [Tool] {
                 call: |args| window("motion_render", args, 300),
             },
             Tool {
+                name: "previs_render",
+                description: "Blocks a shot in 3D before a paid generation, as AIMovieStudio's previs: stand-in shapes and figures, their moves and the camera's path over the shot. Give either scene (the JSON below, written by you) or description (words; the prompt model builds the scene, a request of about two cents, changing the project's current blocking when there is one, unless fresh is true). The scene is {version: 1, title, seconds (1-30), easing: smooth|linear, sky: #rrggbb, floor: #rrggbb, objects: [{id, name, shape: box|sphere|cylinder|cone|plane|figure|seated, position: [x,y,z], rotation: [deg,deg,deg], size: [w,h,d], color: #rrggbb, opacity? (0.05-1, for glass and water), moves: [{time, position, rotation}]}], camera: [{time, position, target, lens (mm, 12-200)}]} in metres, Y up, the floor at 0; a figure is a standing person with its position at its feet, rotation [0,180,0] facing -Z; a seated is a person sitting, of the same standing size, its position the floor under its hips; shapes are solid, so nothing opaque between the camera and what it films; the camera's keys start at 0 and end at seconds. output: frame (the camera's picture at time_seconds into the library, to give a video model as its first frame or an image model as its reference), video (the whole shot through the camera as an MP4 into the library, for a video edit model's motion), or scene (only builds it and shows it in the Blocking tab). The answer carries the scene, to change and send again. Rendered in the window: nothing is sent anywhere but the description.",
+                looks: false,
+                schema: || object(json!({ "scene": { "type": "object" }, "description": { "type": "string" }, "fresh": { "type": "boolean" }, "output": { "type": "string", "enum": ["frame", "video", "scene"] }, "time_seconds": { "type": "number", "minimum": 0 }, "name": { "type": "string" } }), &[]),
+                call: |args| window("previs_render", args, 300),
+            },
+            Tool {
                 name: "checkpoint_list",
                 description: "The checkpoints of a project's timeline, newest first: the timeline as it was before each agent's edit, before each going back, and where one was made on purpose.",
                 looks: true,
@@ -483,7 +490,7 @@ fn tools() -> &'static [Tool] {
             },
             Tool {
                 name: "editor_tab",
-                description: "Opens a tab of the editor's left sidebar: generate, storyboard, media, text, shapes, effects, transitions, lottie, transcript, ai, chat.",
+                description: "Opens a tab of the editor's left sidebar: generate, storyboard, blocking, media, text, graphics, shapes, effects, transitions, lottie, transcript, ai, chat.",
                 looks: false,
                 schema: || object(json!({ "tab": { "type": "string" } }), &["tab"]),
                 call: |args| window("editor_tab", args, 15),
@@ -654,6 +661,7 @@ const JOURNAL: &[(&str, &str, &str)] = &[
     ("timeline_redo", "redone", "timeline"),
     ("checkpoint_create", "created", "checkpoint"),
     ("motion_render", "imported", "media"),
+    ("previs_render", "created", "blocking"),
     ("checkpoint_restore", "restored", "timeline"),
     ("media_import", "imported", "media"),
     ("export_video", "exported", "video"),

@@ -17,7 +17,9 @@ const MENTION = /@([\p{L}\p{N}_-]+)/gu
 export function mentionedElements(text: string, elements: PromptElement[]): PromptElement[] {
   const found: PromptElement[] = []
   for (const match of text.matchAll(MENTION)) {
-    const element = elements.find((each) => each.name.toLocaleLowerCase() === match[1]!.toLocaleLowerCase())
+    const element = elements.find(
+      (each) => each.name.toLocaleLowerCase() === match[1]!.toLocaleLowerCase(),
+    )
     if (element && !found.includes(element)) found.push(element)
   }
   return found
@@ -27,8 +29,14 @@ export function mentionedElements(text: string, elements: PromptElement[]): Prom
 type MediaField = Extract<Field, { type: 'media' }>
 
 function elementSlot(fields: Field[]): MediaField | null {
-  const pictures = fields.filter((field): field is MediaField => field.type === 'media' && field.media === 'image')
-  return pictures.find((field) => field.role === 'reference') ?? pictures.find((field) => field.max > 1) ?? null
+  const pictures = fields.filter(
+    (field): field is MediaField => field.type === 'media' && field.media === 'image',
+  )
+  return (
+    pictures.find((field) => field.role === 'reference') ??
+    pictures.find((field) => field.max > 1) ??
+    null
+  )
 }
 
 export interface ElementsApplied {
@@ -38,21 +46,33 @@ export interface ElementsApplied {
 }
 
 /** The values a run is sent with: each named element's pictures added to the slot, "@name" written as "name". */
-export function applyElements(fields: Field[], values: Record<string, unknown>, elements: PromptElement[]): ElementsApplied {
-  const prompts = fields.filter((field) => field.role === 'prompt' && typeof values[field.key] === 'string')
+export function applyElements(
+  fields: Field[],
+  values: Record<string, unknown>,
+  elements: PromptElement[],
+): ElementsApplied {
+  const prompts = fields.filter(
+    (field) => field.role === 'prompt' && typeof values[field.key] === 'string',
+  )
   const named = prompts.flatMap((field) => mentionedElements(values[field.key] as string, elements))
   const unique = named.filter((element, index) => named.indexOf(element) === index)
   if (unique.length === 0) return { values, left: [] }
   const next = { ...values }
   for (const field of prompts) {
     next[field.key] = (values[field.key] as string).replace(MENTION, (whole, name: string) =>
-      unique.some((element) => element.name.toLocaleLowerCase() === name.toLocaleLowerCase()) ? name : whole,
+      unique.some((element) => element.name.toLocaleLowerCase() === name.toLocaleLowerCase())
+        ? name
+        : whole,
     )
   }
   const slot = elementSlot(fields)
   if (!slot) return { values: next, left: unique.map((element) => element.name) }
   const current = next[slot.key]
-  const refs: MediaRef[] = Array.isArray(current) ? [...(current as MediaRef[])] : current ? [current as MediaRef] : []
+  const refs: MediaRef[] = Array.isArray(current)
+    ? [...(current as MediaRef[])]
+    : current
+      ? [current as MediaRef]
+      : []
   const max = slot.max
   const left: string[] = []
   for (const element of unique) {

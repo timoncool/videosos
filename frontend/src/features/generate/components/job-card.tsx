@@ -1,11 +1,38 @@
 import { Fragment, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ArrowDownToLine, Ban, Check, ChevronDown, CircleAlert, Copy, Forward, KeyRound, Loader2, RotateCcw, SquarePen, Trash2 } from 'lucide-react'
+import {
+  ArrowDownToLine,
+  Ban,
+  Check,
+  ChevronDown,
+  CircleAlert,
+  Copy,
+  Forward,
+  KeyRound,
+  Loader2,
+  RotateCcw,
+  SquarePen,
+  Trash2,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { cn } from '@/shared/ui/cn'
 import { toast } from 'sonner'
-import { PROVIDER_LABELS, formatUsd, generateApi, type Job, type MediaKind, type OutputFile, type Role, type Task } from '../services/generate-api'
+import {
+  PROVIDER_LABELS,
+  formatUsd,
+  generateApi,
+  type Job,
+  type MediaKind,
+  type OutputFile,
+  type Role,
+  type Task,
+} from '../services/generate-api'
 import { useGenerateStore } from '../stores/generate-store'
 import { importLastFrame } from '../services/last-frame'
 import { useProjectStore } from '../deps/editor'
@@ -18,13 +45,33 @@ import { fieldLabel } from '../services/field-label'
 import { promptOf, resultFileName } from '../services/result-title'
 
 /** A result picture: dragged into a slot or the timeline, opened at full size by a click. */
-function ImagePreview({ url, name, onDragStart }: { url: string; name: string; onDragStart: (event: React.DragEvent) => void }) {
+function ImagePreview({
+  url,
+  name,
+  onDragStart,
+}: {
+  url: string
+  name: string
+  onDragStart: (event: React.DragEvent) => void
+}) {
   const { t } = useTranslation()
   const [zoomed, setZoomed] = useState(false)
   return (
     <>
-      <button type="button" onClick={() => setZoomed(true)} aria-label={t('generate.zoom.open')} title={t('generate.zoom.open')} className="block w-full cursor-zoom-in">
-        <img src={url} alt="" draggable onDragStart={onDragStart} className="max-h-40 w-full rounded border border-border bg-black object-contain" />
+      <button
+        type="button"
+        onClick={() => setZoomed(true)}
+        aria-label={t('generate.zoom.open')}
+        title={t('generate.zoom.open')}
+        className="block w-full cursor-zoom-in"
+      >
+        <img
+          src={url}
+          alt=""
+          draggable
+          onDragStart={onDragStart}
+          className="max-h-40 w-full rounded border border-border bg-black object-contain"
+        />
       </button>
       {zoomed && <ImageLightbox src={url} alt={name} onClose={() => setZoomed(false)} />}
     </>
@@ -65,25 +112,40 @@ function Preview({ job, output }: { job: Job; output: OutputFile }) {
       </p>
     )
   }
-  return <a href={url} className="text-[11px] underline">{output.file}</a>
+  return (
+    <a href={url} className="text-[11px] underline">
+      {output.file}
+    </a>
+  )
 }
 
 /** What the run was asked for, as VidRush shows a result's prompt, model and settings: enough to repeat it by hand. */
 function JobDetails({ job }: { job: Job }) {
   const { t } = useTranslation()
-  const took = job.status === 'done' && job.updated > job.created ? Math.round((job.updated - job.created) / 1000) : null
+  const took =
+    job.status === 'done' && job.updated > job.created
+      ? Math.round((job.updated - job.created) / 1000)
+      : null
   const shown = (value: unknown): string => {
     if (typeof value === 'string') return value
     if (Array.isArray(value)) return value.map(shown).join(', ')
     if (value && typeof value === 'object') {
       const ref = value as { media?: string; job?: string; file?: string }
-      return ref.media ? t('generate.details.media') : ref.job ? t('generate.details.result') : ref.file ? (ref.file.split(/[\\/]/).pop() ?? ref.file) : JSON.stringify(value)
+      return ref.media
+        ? t('generate.details.media')
+        : ref.job
+          ? t('generate.details.result')
+          : ref.file
+            ? (ref.file.split(/[\\/]/).pop() ?? ref.file)
+            : JSON.stringify(value)
     }
     return String(value)
   }
   return (
     <details className="text-[11px]">
-      <summary className="cursor-pointer select-none text-muted-foreground hover:text-[var(--color-text)]">{t('generate.details.title')}</summary>
+      <summary className="cursor-pointer select-none text-muted-foreground hover:text-[var(--color-text)]">
+        {t('generate.details.title')}
+      </summary>
       <dl className="mt-1.5 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-2">
         <dt className="text-muted-foreground">{t('generate.details.model')}</dt>
         <dd className="break-all">{job.model}</dd>
@@ -110,7 +172,9 @@ function attempt(work: () => unknown): void {
   try {
     const result = work()
     if (result instanceof Promise) {
-      result.catch((error: unknown) => toast.error(error instanceof Error ? error.message : String(error)))
+      result.catch((error: unknown) =>
+        toast.error(error instanceof Error ? error.message : String(error)),
+      )
     }
   } catch (error) {
     toast.error(error instanceof Error ? error.message : String(error))
@@ -118,7 +182,10 @@ function attempt(work: () => unknown): void {
 }
 
 /** Where a result can go next ("use as..."), by what it is: the task and the slots it fits there. */
-const NEXT: Record<MediaKind, Array<{ task: Task; roles: Role[]; label: string; lastFrame?: boolean }>> = {
+const NEXT: Record<
+  MediaKind,
+  Array<{ task: Task; roles: Role[]; label: string; lastFrame?: boolean }>
+> = {
   image: [
     { task: 'video', roles: ['first_frame'], label: 'generate.use.videoFromFrame' },
     { task: 'image_edit', roles: ['source', 'reference'], label: 'generate.use.edit' },
@@ -147,24 +214,49 @@ function UseAs({ job, output }: { job: Job; output: OutputFile }) {
   const choose = async (next: (typeof NEXT)[MediaKind][number]) => {
     if (next.lastFrame) {
       if (!projectId) throw new Error(t('generate.use.needsProject'))
-      const name = resultFileName({ title: t('generate.use.lastFrameName', { title: job.title }) }, 0, 1, 'png')
-      const media = await importLastFrame(generateApi.fileUrl(job.id, output.index), name, projectId)
-      useGenerateStore.getState().useAs({ task: next.task, roles: next.roles, kind: 'image', ref: { media } })
+      const name = resultFileName(
+        { title: t('generate.use.lastFrameName', { title: job.title }) },
+        0,
+        1,
+        'png',
+      )
+      const media = await importLastFrame(
+        generateApi.fileUrl(job.id, output.index),
+        name,
+        projectId,
+      )
+      useGenerateStore
+        .getState()
+        .useAs({ task: next.task, roles: next.roles, kind: 'image', ref: { media } })
       return
     }
-    useGenerateStore.getState().useAs({ task: next.task, roles: next.roles, kind, ref: { job: job.id, index: output.index } })
+    useGenerateStore.getState().useAs({
+      task: next.task,
+      roles: next.roles,
+      kind,
+      ref: { job: job.id, index: output.index },
+    })
   }
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button size="sm" variant="ghost" className="h-6 px-1.5 text-[11px]" data-testid="generate-use-as">
+        <Button
+          size="sm"
+          variant="ghost"
+          className="h-6 px-1.5 text-[11px]"
+          data-testid="generate-use-as"
+        >
           <Forward className="mr-1 h-3 w-3" />
           {t('generate.use.button')}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-56">
         {NEXT[kind].map((next) => (
-          <DropdownMenuItem key={next.label} className="text-xs" onClick={() => attempt(() => choose(next))}>
+          <DropdownMenuItem
+            key={next.label}
+            className="text-xs"
+            onClick={() => attempt(() => choose(next))}
+          >
             {t(next.label)}
           </DropdownMenuItem>
         ))}
@@ -189,12 +281,19 @@ function JobProblem({ job }: { job: Job }) {
   const { t } = useTranslation()
   const [details, setDetails] = useState(false)
   if (!job.error) return null
-  if (job.status !== 'failed') return <p className="break-words text-[11px] text-muted-foreground">{job.error}</p>
+  if (job.status !== 'failed')
+    return <p className="break-words text-[11px] text-muted-foreground">{job.error}</p>
   const title = job.error_code
-    ? t(`generate.jobError.${job.error_code}`, { provider: PROVIDER_LABELS[job.provider], defaultValue: job.error })
+    ? t(`generate.jobError.${job.error_code}`, {
+        provider: PROVIDER_LABELS[job.provider],
+        defaultValue: job.error,
+      })
     : job.error
   return (
-    <div role="alert" className="rounded-md border border-destructive/40 bg-destructive/10 px-2 py-1.5">
+    <div
+      role="alert"
+      className="rounded-md border border-destructive/40 bg-destructive/10 px-2 py-1.5"
+    >
       <p className="flex gap-1 text-[11px] font-medium text-destructive">
         <CircleAlert className="mt-px h-3 w-3 shrink-0" />
         <span className="break-words">{title}</span>
@@ -222,7 +321,9 @@ function JobProblem({ job }: { job: Job }) {
           </button>
         )}
       </div>
-      {details && <p className="mt-1 break-words font-mono text-[11px] text-foreground">{job.error}</p>}
+      {details && (
+        <p className="mt-1 break-words font-mono text-[11px] text-foreground">{job.error}</p>
+      )}
     </div>
   )
 }
@@ -235,7 +336,9 @@ async function resultFile(job: Job): Promise<File> {
   const response = await fetch(generateApi.fileUrl(job.id, output.index), { cache: 'no-store' })
   if (!response.ok) throw new Error(`${response.status} ${response.statusText}`)
   const extension = output.file.split('.').pop() ?? 'bin'
-  return new File([await response.blob()], resultFileName(job, 0, 1, extension), { type: output.mime })
+  return new File([await response.blob()], resultFileName(job, 0, 1, extension), {
+    type: output.mime,
+  })
 }
 
 export function JobCard({ job, onReuse, selected, onSelect }: JobCardProps) {
@@ -245,7 +348,10 @@ export function JobCard({ job, onReuse, selected, onSelect }: JobCardProps) {
   const text = job.outputs.find((output) => output.kind === 'text')?.text
 
   return (
-    <div className="space-y-1.5 rounded-lg border border-border bg-secondary/20 p-2" data-testid="generate-job">
+    <div
+      className="space-y-1.5 rounded-lg border border-border bg-secondary/20 p-2"
+      data-testid="generate-job"
+    >
       <div className="flex items-center gap-1.5">
         {onSelect && (
           <label className="relative grid h-3.5 w-3.5 shrink-0 cursor-pointer place-items-center">
@@ -257,7 +363,10 @@ export function JobCard({ job, onReuse, selected, onSelect }: JobCardProps) {
               title={t('generate.compare.pick')}
               className="peer h-3.5 w-3.5 cursor-pointer appearance-none rounded-[3px] border border-[var(--color-border)] bg-[var(--color-surface)] checked:border-[var(--color-accent)] checked:bg-[var(--color-accent)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--color-accent)]"
             />
-            <Check className="pointer-events-none absolute h-2.5 w-2.5 text-[var(--color-on-accent)] opacity-0 peer-checked:opacity-100" strokeWidth={3} />
+            <Check
+              className="pointer-events-none absolute h-2.5 w-2.5 text-[var(--color-on-accent)] opacity-0 peer-checked:opacity-100"
+              strokeWidth={3}
+            />
           </label>
         )}
         <ProviderBadge provider={job.provider} />
@@ -280,7 +389,10 @@ export function JobCard({ job, onReuse, selected, onSelect }: JobCardProps) {
       </div>
       {prompt && <p className="line-clamp-2 text-[11px] text-muted-foreground">{prompt}</p>}
       <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
-        <time dateTime={new Date(job.created).toISOString()} title={exactMoment(new Date(job.created), i18n.language)}>
+        <time
+          dateTime={new Date(job.created).toISOString()}
+          title={exactMoment(new Date(job.created), i18n.language)}
+        >
           {relativeMoment(new Date(job.created), i18n.language)}
         </time>
       </div>
@@ -290,7 +402,14 @@ export function JobCard({ job, onReuse, selected, onSelect }: JobCardProps) {
       ))}
       <JobProblem job={job} />
       <div className="flex flex-wrap items-center gap-1">
-        <span className="mr-auto text-[11px] text-muted-foreground" title={job.cost_source === 'estimate' ? t('generate.cost.estimated') : t('generate.cost.billed')}>
+        <span
+          className="mr-auto text-[11px] text-muted-foreground"
+          title={
+            job.cost_source === 'estimate'
+              ? t('generate.cost.estimated')
+              : t('generate.cost.billed')
+          }
+        >
           {job.cost !== null
             ? `${job.cost_source === 'estimate' ? '≈' : ''}${formatUsd(job.cost)}`
             : job.estimate !== null
@@ -298,7 +417,12 @@ export function JobCard({ job, onReuse, selected, onSelect }: JobCardProps) {
               : ''}
         </span>
         {running && (
-          <Button size="sm" variant="ghost" className="h-6 px-1.5 text-[11px]" onClick={() => attempt(() => generateApi.cancel(job.id))}>
+          <Button
+            size="sm"
+            variant="ghost"
+            className="h-6 px-1.5 text-[11px]"
+            onClick={() => attempt(() => generateApi.cancel(job.id))}
+          >
             <Ban className="mr-1 h-3 w-3" />
             {t('generate.actions.cancel')}
           </Button>
@@ -309,7 +433,9 @@ export function JobCard({ job, onReuse, selected, onSelect }: JobCardProps) {
             variant="ghost"
             className="h-6 px-1.5 text-[11px]"
             title={t('generate.actions.placeHint')}
-            onClick={() => attempt(() => job.imported.forEach((mediaId) => placeMediaAtPlayhead(mediaId)))}
+            onClick={() =>
+              attempt(() => job.imported.forEach((mediaId) => placeMediaAtPlayhead(mediaId)))
+            }
           >
             <ArrowDownToLine className="mr-1 h-3 w-3" />
             {t('generate.actions.place')}
@@ -317,11 +443,21 @@ export function JobCard({ job, onReuse, selected, onSelect }: JobCardProps) {
         )}
         {text && (
           <>
-            <Button size="sm" variant="ghost" className="h-6 px-1.5 text-[11px]" onClick={() => attempt(() => navigator.clipboard.writeText(text))}>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-6 px-1.5 text-[11px]"
+              onClick={() => attempt(() => navigator.clipboard.writeText(text))}
+            >
               <Copy className="mr-1 h-3 w-3" />
               {t('generate.actions.copy')}
             </Button>
-            <Button size="sm" variant="ghost" className="h-6 px-1.5 text-[11px]" onClick={() => attempt(() => placeTextAtPlayhead(text))}>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-6 px-1.5 text-[11px]"
+              onClick={() => attempt(() => placeTextAtPlayhead(text))}
+            >
               <ArrowDownToLine className="mr-1 h-3 w-3" />
               {t('generate.actions.placeText')}
             </Button>
@@ -333,11 +469,22 @@ export function JobCard({ job, onReuse, selected, onSelect }: JobCardProps) {
         )}
         {!running && (
           <>
-            <Button size="sm" variant="ghost" className="h-6 px-1.5 text-[11px]" title={t('generate.actions.reuseHint')} onClick={() => onReuse(job)}>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-6 px-1.5 text-[11px]"
+              title={t('generate.actions.reuseHint')}
+              onClick={() => onReuse(job)}
+            >
               <SquarePen className="mr-1 h-3 w-3" />
               {t('generate.actions.reuse')}
             </Button>
-            <Button size="sm" variant="ghost" className="h-6 px-1.5 text-[11px]" onClick={() => attempt(() => generateApi.retry(job.id))}>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-6 px-1.5 text-[11px]"
+              onClick={() => attempt(() => generateApi.retry(job.id))}
+            >
               <RotateCcw className="mr-1 h-3 w-3" />
               {t('generate.actions.again')}
             </Button>

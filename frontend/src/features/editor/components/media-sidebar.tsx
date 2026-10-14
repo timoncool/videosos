@@ -9,6 +9,7 @@ import {
   ChevronUp,
   Circle,
   Clapperboard,
+  Box,
   CodeXml,
   Film,
   Heart,
@@ -77,6 +78,9 @@ const LazyStoryboardPanel = lazy(() =>
 )
 const LazyMotionPanel = lazy(() =>
   import('../deps/generate').then((m) => ({ default: m.MotionPanel })),
+)
+const LazyPrevisPanel = lazy(() =>
+  import('../deps/generate').then((m) => ({ default: m.PrevisPanel })),
 )
 const LazyTranscriptEditorPanel = lazy(() =>
   importTranscriptEditorPanel().then(({ TranscriptEditorPanel }) => ({
@@ -322,6 +326,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
   const [generateTabActivated, setGenerateTabActivated] = useState(activeTab === 'generate')
   const [storyboardTabActivated, setStoryboardTabActivated] = useState(activeTab === 'storyboard')
   const [graphicsTabActivated, setGraphicsTabActivated] = useState(activeTab === 'graphics')
+  const [blockingTabActivated, setBlockingTabActivated] = useState(activeTab === 'blocking')
   // The Lottie panel hits an external API on mount, so keep it unmounted until
   // the tab is first opened; it then stays mounted (state preserved).
   const [lottieTabActivated, setLottieTabActivated] = useState(activeTab === 'lottie')
@@ -331,6 +336,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
     if (activeTab === 'generate') setGenerateTabActivated(true)
     if (activeTab === 'storyboard') setStoryboardTabActivated(true)
     if (activeTab === 'graphics') setGraphicsTabActivated(true)
+    if (activeTab === 'blocking') setBlockingTabActivated(true)
     if (activeTab === 'lottie') setLottieTabActivated(true)
   }, [activeTab])
 
@@ -562,6 +568,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
   const categories = [
     { id: 'generate' as const, icon: Sparkles, label: t('generate.tabLabel') },
     { id: 'storyboard' as const, icon: Clapperboard, label: t('generate.storyboard.tabLabel') },
+    { id: 'blocking' as const, icon: Box, label: t('generate.previs.tabLabel') },
     { id: 'media' as const, icon: Film, label: t('editor.mediaSidebar.media') },
     { id: 'text' as const, icon: Type, label: t('editor.mediaSidebar.text') },
     { id: 'graphics' as const, icon: CodeXml, label: t('generate.motion.tabLabel') },
@@ -1213,6 +1220,17 @@ export const MediaSidebar = memo(function MediaSidebar() {
               {graphicsTabActivated && (
                 <Suspense fallback={null}>
                   <LazyMotionPanel />
+                </Suspense>
+              )}
+            </div>
+
+            {/* Blocking Tab */}
+            <div
+              className={`min-h-0 flex-1 overflow-hidden ${activeTab === 'blocking' ? 'flex flex-col' : 'hidden'}`}
+            >
+              {blockingTabActivated && (
+                <Suspense fallback={null}>
+                  <LazyPrevisPanel />
                 </Suspense>
               )}
             </div>

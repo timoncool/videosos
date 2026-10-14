@@ -6,7 +6,13 @@ import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { cn } from '@/shared/ui/cn'
 import { generateApi, type Field, type MediaKind, type MediaRef } from '../services/generate-api'
 import { getMediaDragData, mediaLibraryService, useMediaLibraryStore } from '../deps/editor'
@@ -112,7 +118,10 @@ function MediaSlot({
         : data.type === 'media-items'
           ? (data.items ?? []).map((item) => ({ mediaId: item.mediaId, mediaType: item.mediaType }))
           : []
-    const fitting = items.filter((item): item is { mediaId: string; mediaType: string } => !!item.mediaId && item.mediaType === field.media)
+    const fitting = items.filter(
+      (item): item is { mediaId: string; mediaType: string } =>
+        !!item.mediaId && item.mediaType === field.media,
+    )
     if (fitting.length < items.length) {
       setError(t('generate.form.wrongKind', { kind: t(`generate.media.${field.media}`) }))
     }
@@ -210,13 +219,22 @@ interface FieldControlProps {
 /** How much of the model's limit a text uses, shown once it is past four fifths of it. */
 function LengthCount({ field, value }: { field: Field; value: unknown }) {
   const { t } = useTranslation()
-  if ((field.type !== 'text' && field.type !== 'textarea') || field.max_length === undefined) return null
+  if ((field.type !== 'text' && field.type !== 'textarea') || field.max_length === undefined)
+    return null
   const count = typeof value === 'string' ? Array.from(value).length : 0
   if (count < field.max_length * 0.8) return null
   const over = count > field.max_length
   return (
-    <p className={cn('text-right text-[11px] tabular-nums', over ? 'text-destructive' : 'text-muted-foreground')} aria-live="polite">
-      {over ? t('generate.form.tooLong', { count, max: field.max_length }) : t('generate.form.length', { count, max: field.max_length })}
+    <p
+      className={cn(
+        'text-right text-[11px] tabular-nums',
+        over ? 'text-destructive' : 'text-muted-foreground',
+      )}
+      aria-live="polite"
+    >
+      {over
+        ? t('generate.form.tooLong', { count, max: field.max_length })
+        : t('generate.form.length', { count, max: field.max_length })}
     </p>
   )
 }
@@ -226,7 +244,11 @@ export function FieldControl({ field, value, onChange }: FieldControlProps) {
   const effective = value ?? field.default
   const id = useId()
   const label = (
-    <Label htmlFor={field.type === 'media' ? undefined : id} className="flex items-baseline gap-1 text-[11px] text-muted-foreground" title={field.description && providerWords(t, field.description)}>
+    <Label
+      htmlFor={field.type === 'media' ? undefined : id}
+      className="flex items-baseline gap-1 text-[11px] text-muted-foreground"
+      title={field.description && providerWords(t, field.description)}
+    >
       <span>{fieldLabel(t, field)}</span>
       {field.required && <span className="text-destructive">*</span>}
     </Label>
@@ -244,7 +266,10 @@ export function FieldControl({ field, value, onChange }: FieldControlProps) {
             placeholder={field.description ? providerWords(t, field.description) : ''}
             data-testid={`generate-field-${field.key}`}
             aria-invalid={overLength(field, value) !== null}
-            className={cn('resize-y bg-secondary/30 text-xs', field.role === 'prompt' ? 'min-h-24' : 'min-h-14')}
+            className={cn(
+              'resize-y bg-secondary/30 text-xs',
+              field.role === 'prompt' ? 'min-h-24' : 'min-h-14',
+            )}
           />
           <LengthCount field={field} value={value} />
         </div>
@@ -276,7 +301,9 @@ export function FieldControl({ field, value, onChange }: FieldControlProps) {
             min={field.min ?? undefined}
             max={field.max ?? undefined}
             step={field.type === 'integer' ? 1 : 'any'}
-            placeholder={field.default !== undefined && field.default !== null ? String(field.default) : ''}
+            placeholder={
+              field.default !== undefined && field.default !== null ? String(field.default) : ''
+            }
             onChange={(event) => {
               const text = event.target.value
               if (text === '') return onChange(undefined)
@@ -291,7 +318,12 @@ export function FieldControl({ field, value, onChange }: FieldControlProps) {
       return (
         <div className="flex items-center justify-between gap-2 py-0.5">
           {label}
-          <Switch id={id} checked={effective === true} onCheckedChange={(checked) => onChange(checked)} aria-label={fieldLabel(t, field)} />
+          <Switch
+            id={id}
+            checked={effective === true}
+            onCheckedChange={(checked) => onChange(checked)}
+            aria-label={fieldLabel(t, field)}
+          />
         </div>
       )
     case 'select':
@@ -303,7 +335,11 @@ export function FieldControl({ field, value, onChange }: FieldControlProps) {
             value={optionIndex(field.options, effective)}
             onValueChange={(index) => onChange(field.options[Number(index)]?.value)}
           >
-            <SelectTrigger id={id} className="h-7 text-xs" data-testid={`generate-field-${field.key}`}>
+            <SelectTrigger
+              id={id}
+              className="h-7 text-xs"
+              data-testid={`generate-field-${field.key}`}
+            >
               <SelectValue placeholder={t('generate.form.default')} />
             </SelectTrigger>
             <SelectContent className="max-h-72">

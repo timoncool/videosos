@@ -62,7 +62,9 @@ export function useGenerateSync(projectId: string | null): void {
       if (event.kind === 'job') {
         if (event.data.project_id === projectId) {
           // a generation that ends while the window follows it sounds, as a finished job does in Dub Studio
-          const before = useGenerateStore.getState().jobs.find((job) => job.id === event.data.id)?.status
+          const before = useGenerateStore
+            .getState()
+            .jobs.find((job) => job.id === event.data.id)?.status
           if (before && before !== event.data.status) {
             if (event.data.status === 'done') emitUiSound('confirm')
             if (event.data.status === 'failed') emitUiSound('error')
@@ -78,7 +80,10 @@ export function useGenerateSync(projectId: string | null): void {
         void generateApi
           .jobs(projectId)
           .then(({ jobs }) => {
-            if (!cancelled) useGenerateStore.getState().setJobs(jobs.filter((job) => job.project_id === projectId))
+            if (!cancelled)
+              useGenerateStore
+                .getState()
+                .setJobs(jobs.filter((job) => job.project_id === projectId))
           })
           .catch(report)
       }

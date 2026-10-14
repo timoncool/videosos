@@ -24,18 +24,30 @@ export function PromptPresets({ text, onUse }: { text: string; onUse: (text: str
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <button type="button" className="inline-flex items-center gap-1 whitespace-nowrap text-[11px] text-muted-foreground hover:text-foreground" title={t('generate.presets.hint')}>
+        <button
+          type="button"
+          className="inline-flex items-center gap-1 whitespace-nowrap text-[11px] text-muted-foreground hover:text-foreground"
+          title={t('generate.presets.hint')}
+        >
           <BookMarked className="h-3 w-3" />
           {t('generate.presets.button')}
         </button>
       </PopoverTrigger>
       <PopoverContent align="start" className="w-72 space-y-2 p-2">
         {presets.length === 0 ? (
-          <p className="px-1 py-1 text-[11px] text-muted-foreground">{t('generate.presets.empty')}</p>
+          <p className="px-1 py-1 text-[11px] text-muted-foreground">
+            {t('generate.presets.empty')}
+          </p>
         ) : (
-          <ul className="max-h-56 space-y-0.5 overflow-y-auto" aria-label={t('generate.presets.button')}>
+          <ul
+            className="max-h-56 space-y-0.5 overflow-y-auto"
+            aria-label={t('generate.presets.button')}
+          >
             {presets.map((preset) => (
-              <li key={preset.name} className="group flex items-center gap-1 rounded hover:bg-secondary/60">
+              <li
+                key={preset.name}
+                className="group flex items-center gap-1 rounded hover:bg-secondary/60"
+              >
                 <button
                   type="button"
                   onClick={() => {
@@ -46,7 +58,9 @@ export function PromptPresets({ text, onUse }: { text: string; onUse: (text: str
                   title={preset.text}
                 >
                   <span className="block truncate text-xs font-medium">{preset.name}</span>
-                  <span className="block truncate text-[11px] text-muted-foreground">{preset.text}</span>
+                  <span className="block truncate text-[11px] text-muted-foreground">
+                    {preset.text}
+                  </span>
                 </button>
                 <button
                   type="button"
@@ -68,8 +82,20 @@ export function PromptPresets({ text, onUse }: { text: string; onUse: (text: str
           }}
           className="flex items-center gap-1.5 border-t border-border pt-2"
         >
-          <Input value={name} onChange={(event) => setName(event.target.value)} placeholder={t('generate.presets.name')} aria-label={t('generate.presets.name')} className="h-7 flex-1 text-xs" />
-          <Button type="submit" size="sm" className="h-7 gap-1 px-2 text-xs" disabled={!name.trim() || !text.trim()} title={t('generate.presets.keepHint')}>
+          <Input
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+            placeholder={t('generate.presets.name')}
+            aria-label={t('generate.presets.name')}
+            className="h-7 flex-1 text-xs"
+          />
+          <Button
+            type="submit"
+            size="sm"
+            className="h-7 gap-1 px-2 text-xs"
+            disabled={!name.trim() || !text.trim()}
+            title={t('generate.presets.keepHint')}
+          >
             <Plus className="h-3 w-3" />
             {t('generate.presets.keep')}
           </Button>

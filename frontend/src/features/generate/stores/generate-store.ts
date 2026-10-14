@@ -7,10 +7,20 @@
  */
 
 import { create } from 'zustand'
-import { generateApi, type Job, type MediaKind, type MediaRef, type ModelForm, type Provider, type Role, type Task } from '../services/generate-api'
+import {
+  generateApi,
+  type Job,
+  type MediaKind,
+  type MediaRef,
+  type ModelForm,
+  type Provider,
+  type Role,
+  type Task,
+} from '../services/generate-api'
 import type { PromptElement } from '../services/prompt-elements'
 import type { Shot, Storyboard } from '../services/storyboard'
 import type { CanvasGraph } from '../services/canvas-graph'
+import type { PrevisScene } from '../services/previs-scene'
 
 export interface ModelRef {
   provider: Provider
@@ -41,6 +51,13 @@ export interface Persisted {
   canvases: Record<string, CanvasGraph>
   /** The HTML graphics made into clips, newest first, with their code to change and make again. */
   motionClips: MotionClip[]
+  /** Each project's 3D blocking: the words it was built from and the scene. */
+  blockings: Record<string, Blocking>
+}
+
+export interface Blocking {
+  description: string
+  scene: PrevisScene | null
 }
 
 export interface MotionClip {
@@ -55,7 +72,23 @@ export interface PromptPreset {
   text: string
 }
 
-const DEFAULTS: Persisted = { task: 'image', modelByTask: {}, valuesByModel: {}, repeat: 1, placeOnTimeline: false, favorites: [], presets: [], variables: {}, extraModelsByTask: {}, elements: [], storyboards: {}, storyboardModels: {}, canvases: {}, motionClips: [] }
+const DEFAULTS: Persisted = {
+  task: 'image',
+  modelByTask: {},
+  valuesByModel: {},
+  repeat: 1,
+  placeOnTimeline: false,
+  favorites: [],
+  presets: [],
+  variables: {},
+  extraModelsByTask: {},
+  elements: [],
+  storyboards: {},
+  storyboardModels: {},
+  canvases: {},
+  motionClips: [],
+  blockings: {},
+}
 
 let saving: ReturnType<typeof setTimeout> | null = null
 
@@ -67,7 +100,11 @@ function save(state: GenerateState): void {
     saving = null
     generateApi
       .saveChoices({ ...persisted(useGenerateStore.getState()) })
-      .catch((error: unknown) => useGenerateStore.getState().setServerError(error instanceof Error ? error.message : String(error)))
+      .catch((error: unknown) =>
+        useGenerateStore
+          .getState()
+          .setServerError(error instanceof Error ? error.message : String(error)),
+      )
   }, 400)
 }
 
@@ -111,6 +148,7 @@ interface GenerateState extends Persisted {
   setStoryboardModel: (kind: 'image' | 'video', model: ModelRef) => void
   setCanvas: (projectId: string, graph: CanvasGraph) => void
   keepMotion: (clip: MotionClip) => void
+  setBlocking: (projectId: string, blocking: Blocking) => void
   removeElement: (name: string) => void
   setVariable: (name: string, value: string) => void
   setExtraModels: (task: Task, models: ModelRef[]) => void
@@ -137,6 +175,7 @@ function persisted(state: GenerateState): Persisted {
     storyboardModels: state.storyboardModels,
     canvases: state.canvases,
     motionClips: state.motionClips,
+    blockings: state.blockings,
   }
 }
 
@@ -169,7 +208,12 @@ export const useGenerateStore = create<GenerateState>()((set, get) => ({
     const id = modelKey(model.provider, model.id)
     const current = get().valuesByModel[id] ?? {}
     const next = { ...current }
-    if (value === undefined || value === null || value === '' || (Array.isArray(value) && value.length === 0)) {
+    if (
+      value === undefined ||
+      value === null ||
+      value === '' ||
+      (Array.isArray(value) && value.length === 0)
+    ) {
       delete next[key]
     } else {
       next[key] = value
@@ -183,7 +227,11 @@ export const useGenerateStore = create<GenerateState>()((set, get) => ({
   },
   toggleFavorite: (key) => {
     const favorites = get().favorites
-    set({ favorites: favorites.includes(key) ? favorites.filter((each) => each !== key) : [...favorites, key] })
+    set({
+      favorites: favorites.includes(key)
+        ? favorites.filter((each) => each !== key)
+        : [...favorites, key],
+    })
     save(get())
   },
   savePreset: (name, text) => {
@@ -201,11 +249,28 @@ export const useGenerateStore = create<GenerateState>()((set, get) => ({
   updateShot: (projectId, id, change) => {
     const board = get().storyboards[projectId]
     if (!board) return
-    set({ storyboards: { ...get().storyboards, [projectId]: { ...board, shots: board.shots.map((shot) => (shot.id === id ? { ...shot, ...change } : shot)) } } })
+    set({
+      storyboards: {
+        ...get().storyboards,
+        [projectId]: {
+          ...board,
+          shots: board.shots.map((shot) => (shot.id === id ? { ...shot, ...change } : shot)),
+        },
+      },
+    })
     save(get())
   },
   keepMotion: (clip) => {
-    set({ motionClips: [clip, ...get().motionClips.filter((each) => each.mediaId !== clip.mediaId)].slice(0, 20) })
+    set({
+      motionClips: [
+        clip,
+        ...get().motionClips.filter((each) => each.mediaId !== clip.mediaId),
+      ].slice(0, 20),
+    })
+    save(get())
+  },
+  setBlocking: (projectId, blocking) => {
+    set({ blockings: { ...get().blockings, [projectId]: blocking } })
     save(get())
   },
   setCanvas: (projectId, graph) => {

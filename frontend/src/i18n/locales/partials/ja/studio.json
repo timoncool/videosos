@@ -149,7 +149,8 @@
       "media": "メディア",
       "video": "動画",
       "download": "リンクからのダウンロード",
-      "checkpoint": "復元ポイント"
+      "checkpoint": "復元ポイント",
+      "blocking": "3Dブロッキング"
     }
   },
   "files": {

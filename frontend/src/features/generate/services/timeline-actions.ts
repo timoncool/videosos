@@ -34,7 +34,12 @@ export function placeMediaAt(mediaId: string, seconds: number | null): unknown {
   if (seconds === null) return placeMediaAtPlayhead(mediaId)
   syncCanvas()
   const fps = useProjectStore.getState().currentProject?.metadata?.fps ?? 30
-  const result = applyOp({ op: 'addClip', mediaId, from: Math.round(seconds * fps), keepFrom: true }) as { created?: Array<{ trackId: string }> }
+  const result = applyOp({
+    op: 'addClip',
+    mediaId,
+    from: Math.round(seconds * fps),
+    keepFrom: true,
+  }) as { created?: Array<{ trackId: string }> }
   const trackId = result.created?.[0]?.trackId
   // the timeline scrolls its track list to the active track, so a clip on a new track at the top is in view
   if (trackId) useSelectionStore.getState().setActiveTrack(trackId)

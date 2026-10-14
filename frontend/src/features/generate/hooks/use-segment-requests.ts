@@ -19,15 +19,26 @@ async function take(request: SegmentRequest): Promise<void> {
   const source = await mediaLibraryService.getMediaFile(request.mediaId)
   if (!source) throw new Error(i18n.t('generate.segment.noFile', { name: request.label }))
   const cut = await cutSegment(source, request.start, request.end)
-  const title = i18n.t('generate.segment.name', { title: request.label.replace(/\.[^.]+$/, ''), from: seconds(request.start), to: seconds(request.end) })
-  const file = new File([cut], resultFileName({ title }, 0, 1, 'mp4'), { type: 'video/mp4', lastModified: Date.now() })
-  const media = await mediaLibraryService.importGeneratedVideo(file, project.id, { tags: ['segment'] })
+  const title = i18n.t('generate.segment.name', {
+    title: request.label.replace(/\.[^.]+$/, ''),
+    from: seconds(request.start),
+    to: seconds(request.end),
+  })
+  const file = new File([cut], resultFileName({ title }, 0, 1, 'mp4'), {
+    type: 'video/mp4',
+    lastModified: Date.now(),
+  })
+  const media = await mediaLibraryService.importGeneratedVideo(file, project.id, {
+    tags: ['segment'],
+  })
   await useMediaLibraryStore.getState().loadMediaItems()
   const fps = project.metadata?.fps ?? 30
   usePlaybackStore.getState().setCurrentFrame(Math.round(request.at * fps))
   useEditorStore.getState().setLeftSidebarOpen(true)
   useEditorStore.getState().setActiveTab('generate')
-  useGenerateStore.getState().useAs({ task: 'video_edit', roles: ['source'], kind: 'video', ref: { media: media.id } })
+  useGenerateStore
+    .getState()
+    .useAs({ task: 'video_edit', roles: ['source'], kind: 'video', ref: { media: media.id } })
 }
 
 /**
@@ -44,7 +55,10 @@ export function useSegmentRequests(): void {
     toast.promise(take(request), {
       loading: i18n.t('generate.segment.cutting', range),
       success: i18n.t('generate.segment.ready', range),
-      error: (error: unknown) => i18n.t('generate.segment.failed', { reason: error instanceof Error ? error.message : String(error) }),
+      error: (error: unknown) =>
+        i18n.t('generate.segment.failed', {
+          reason: error instanceof Error ? error.message : String(error),
+        }),
     })
   }, [request])
 }

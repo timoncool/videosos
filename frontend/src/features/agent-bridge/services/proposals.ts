@@ -57,18 +57,28 @@ export const useProposalStore = create<ProposalState>((set, get) => ({
 export function describeOps(ops: EditOp[], fps: number): ProposalLine[] {
   const { itemById } = useItemsStore.getState()
   const { mediaById } = useMediaLibraryStore.getState()
-  const at = (frames: unknown) => (typeof frames === 'number' ? Math.round((frames / fps) * 10) / 10 : 0)
+  const at = (frames: unknown) =>
+    typeof frames === 'number' ? Math.round((frames / fps) * 10) / 10 : 0
   const itemName = (id: unknown) => (typeof id === 'string' ? (itemById[id]?.label ?? id) : '?')
   return ops.map((op): ProposalLine => {
     switch (op.op) {
       case 'addClip':
-        return { key: 'addClip', values: { name: mediaById[String(op.mediaId)]?.fileName ?? String(op.mediaId), at: at(op.from) } }
+        return {
+          key: 'addClip',
+          values: {
+            name: mediaById[String(op.mediaId)]?.fileName ?? String(op.mediaId),
+            at: at(op.from),
+          },
+        }
       case 'addText':
         return { key: 'addText', values: { text: String(op.text ?? ''), at: at(op.from) } }
       case 'moveItem':
         return { key: 'moveItem', values: { name: itemName(op.id), at: at(op.from) } }
       case 'removeItems':
-        return { key: 'removeItems', values: { names: (Array.isArray(op.ids) ? op.ids : []).map(itemName).join(', ') } }
+        return {
+          key: 'removeItems',
+          values: { names: (Array.isArray(op.ids) ? op.ids : []).map(itemName).join(', ') },
+        }
       case 'split':
         return { key: 'split', values: { name: itemName(op.id), at: at(op.frame) } }
       case 'trimStart':
@@ -76,7 +86,10 @@ export function describeOps(ops: EditOp[], fps: number): ProposalLine[] {
         const amount = Number(op.amount) || 0
         // trimStart cuts with a positive amount, trimEnd with a negative one
         const cuts = op.op === 'trimStart' ? amount > 0 : amount < 0
-        return { key: `${op.op}${cuts ? 'Cut' : 'Extend'}`, values: { name: itemName(op.id), seconds: at(Math.abs(amount)) } }
+        return {
+          key: `${op.op}${cuts ? 'Cut' : 'Extend'}`,
+          values: { name: itemName(op.id), seconds: at(Math.abs(amount)) },
+        }
       }
       default:
         return { key: 'other', values: { op: op.op, name: itemName(op.id ?? op.itemId) } }

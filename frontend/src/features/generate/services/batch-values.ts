@@ -7,7 +7,11 @@
 
 import type { Field } from './generate-api'
 
-export function carryValues(fromFields: Field[], values: Record<string, unknown>, toFields: Field[]): Record<string, unknown> {
+export function carryValues(
+  fromFields: Field[],
+  values: Record<string, unknown>,
+  toFields: Field[],
+): Record<string, unknown> {
   const carried: Record<string, unknown> = {}
   for (const field of toFields) {
     if (values[field.key] !== undefined) {
@@ -15,7 +19,9 @@ export function carryValues(fromFields: Field[], values: Record<string, unknown>
       continue
     }
     if (!field.role) continue
-    const twin = fromFields.find((each) => each.role === field.role && values[each.key] !== undefined)
+    const twin = fromFields.find(
+      (each) => each.role === field.role && values[each.key] !== undefined,
+    )
     if (twin) carried[field.key] = values[twin.key]
   }
   return carried

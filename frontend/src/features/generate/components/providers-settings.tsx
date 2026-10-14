@@ -5,7 +5,14 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/shared/ui/cn'
-import { formatUsd, generateApi, PROVIDER_LABELS, PROVIDERS, type KeyState, type Provider } from '../services/generate-api'
+import {
+  formatUsd,
+  generateApi,
+  PROVIDER_LABELS,
+  PROVIDERS,
+  type KeyState,
+  type Provider,
+} from '../services/generate-api'
 
 const KEY_PAGES: Record<Provider, string> = {
   openrouter: 'https://openrouter.ai/settings/keys',
@@ -49,17 +56,27 @@ function ProviderRow({ state, onChanged }: { state: KeyState; onChanged: () => v
     })
 
   return (
-    <div className="space-y-1.5 rounded-lg border border-border p-3" data-testid={`provider-${state.provider}`}>
+    <div
+      className="space-y-1.5 rounded-lg border border-border p-3"
+      data-testid={`provider-${state.provider}`}
+    >
       <div className="flex items-center gap-2">
         <span className="text-sm font-medium">{PROVIDER_LABELS[state.provider]}</span>
-        <span className={cn('text-[11px]', state.set ? 'text-emerald-400' : 'text-muted-foreground')}>
+        <span
+          className={cn('text-[11px]', state.set ? 'text-emerald-400' : 'text-muted-foreground')}
+        >
           {state.set
             ? state.source === 'environment'
               ? t('settings.providers.fromEnv', { variable: state.variable })
               : t('settings.providers.stored')
             : t('settings.providers.none')}
         </span>
-        <a href={KEY_PAGES[state.provider]} target="_blank" rel="noreferrer" className="ml-auto inline-flex items-center gap-1 text-[11px] text-muted-foreground underline">
+        <a
+          href={KEY_PAGES[state.provider]}
+          target="_blank"
+          rel="noreferrer"
+          className="ml-auto inline-flex items-center gap-1 text-[11px] text-muted-foreground underline"
+        >
           {t('generate.keys.getOne', { provider: PROVIDER_LABELS[state.provider] })}
           <ExternalLink className="h-3 w-3" />
         </a>
@@ -82,13 +99,23 @@ function ProviderRow({ state, onChanged }: { state: KeyState; onChanged: () => v
               await generateApi.storeKey(state.provider, value.trim())
               setValue('')
               const answer = await generateApi.checkKey(state.provider)
-              setMessage(answer.ok ? { ok: true, text: t('generate.keys.ok') } : { ok: false, text: answer.error ?? t('generate.keys.failed') })
+              setMessage(
+                answer.ok
+                  ? { ok: true, text: t('generate.keys.ok') }
+                  : { ok: false, text: answer.error ?? t('generate.keys.failed') },
+              )
             })
           }
         >
           {t('generate.keys.save')}
         </Button>
-        <Button size="sm" variant="outline" className="h-8" disabled={busy || !state.set} onClick={() => void check()}>
+        <Button
+          size="sm"
+          variant="outline"
+          className="h-8"
+          disabled={busy || !state.set}
+          onClick={() => void check()}
+        >
           {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : t('settings.providers.check')}
         </Button>
         {state.set && state.source === 'stored' && (
@@ -97,13 +124,19 @@ function ProviderRow({ state, onChanged }: { state: KeyState; onChanged: () => v
             variant="ghost"
             className="h-8 text-muted-foreground"
             disabled={busy}
-            onClick={() => void run(async () => void (await generateApi.storeKey(state.provider, null)))}
+            onClick={() =>
+              void run(async () => void (await generateApi.storeKey(state.provider, null)))
+            }
           >
             {t('settings.providers.remove')}
           </Button>
         )}
       </div>
-      {message && <p className={cn('text-[11px]', message.ok ? 'text-emerald-400' : 'text-destructive')}>{message.text}</p>}
+      {message && (
+        <p className={cn('text-[11px]', message.ok ? 'text-emerald-400' : 'text-destructive')}>
+          {message.text}
+        </p>
+      )}
     </div>
   )
 }
@@ -128,7 +161,9 @@ export function ProvidersSettings() {
         setSpend(spendAnswer)
         setError(null)
       })
-      .catch((reason: unknown) => setError(reason instanceof Error ? reason.message : String(reason)))
+      .catch((reason: unknown) =>
+        setError(reason instanceof Error ? reason.message : String(reason)),
+      )
   }, [])
 
   useEffect(() => load(), [load])
@@ -148,11 +183,15 @@ export function ProvidersSettings() {
         <div className="space-y-1 rounded-lg border border-border p-3">
           <Label className="text-sm">{t('settings.providers.spend')}</Label>
           <p className="text-xs text-muted-foreground">
-            {t('settings.providers.spendLine', { today: formatUsd(spend.today), total: formatUsd(spend.total) })}
+            {t('settings.providers.spendLine', {
+              today: formatUsd(spend.today),
+              total: formatUsd(spend.total),
+            })}
           </p>
           {spend.providers.map((each) => (
             <p key={each.provider} className="text-[11px] text-muted-foreground">
-              {PROVIDER_LABELS[each.provider]}: {formatUsd(each.usd)} · {t('settings.providers.jobs', { count: each.jobs })}
+              {PROVIDER_LABELS[each.provider]}: {formatUsd(each.usd)} ·{' '}
+              {t('settings.providers.jobs', { count: each.jobs })}
             </p>
           ))}
         </div>

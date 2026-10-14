@@ -19,10 +19,16 @@ export function variablesOf(values: Record<string, unknown>): string[] {
 }
 
 /** The form's values with every variable put in. */
-export function fillVariables(values: Record<string, unknown>, variables: Record<string, string>): Record<string, unknown> {
+export function fillVariables(
+  values: Record<string, unknown>,
+  variables: Record<string, string>,
+): Record<string, unknown> {
   const filled: Record<string, unknown> = {}
   for (const [key, value] of Object.entries(values)) {
-    filled[key] = typeof value === 'string' ? value.replace(VARIABLE, (whole, name: string) => variables[name] ?? whole) : value
+    filled[key] =
+      typeof value === 'string'
+        ? value.replace(VARIABLE, (whole, name: string) => variables[name] ?? whole)
+        : value
   }
   return filled
 }

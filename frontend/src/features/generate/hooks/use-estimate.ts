@@ -2,7 +2,12 @@ import { useEffect, useState } from 'react'
 import { generateApi, type Estimate, type Provider } from '../services/generate-api'
 
 /** The price of a run before it runs, asked of the server a moment after the form settles. */
-export function useEstimate(provider: Provider | undefined, id: string | undefined, values: Record<string, unknown>, repeat: number) {
+export function useEstimate(
+  provider: Provider | undefined,
+  id: string | undefined,
+  values: Record<string, unknown>,
+  repeat: number,
+) {
   const [estimate, setEstimate] = useState<Estimate | null>(null)
   const [error, setError] = useState<string | null>(null)
   const key = JSON.stringify([provider, id, values, repeat])

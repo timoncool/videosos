@@ -149,7 +149,8 @@
       "media": "媒体",
       "video": "视频",
       "download": "链接下载",
-      "checkpoint": "还原点"
+      "checkpoint": "还原点",
+      "blocking": "3D 走位预演"
     }
   },
   "files": {

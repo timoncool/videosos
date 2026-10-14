@@ -50,7 +50,9 @@ function durationValue(field: Field, seconds: number): unknown {
     return options.reduce((best, option) => {
       const gap = Math.abs(numberOf(option.value) - seconds)
       const bestGap = Math.abs(numberOf(best.value) - seconds)
-      return gap < bestGap || (gap === bestGap && numberOf(option.value) > numberOf(best.value)) ? option : best
+      return gap < bestGap || (gap === bestGap && numberOf(option.value) > numberOf(best.value))
+        ? option
+        : best
     }).value
   }
   if (field.type === 'integer' || field.type === 'number') {
@@ -70,7 +72,12 @@ export function shotValues(fields: Field[], shot: ShotInput): Record<string, unk
       if (value !== undefined) values[field.key] = value
     }
     if (field.role === 'first_frame' && shot.firstFrame) values[field.key] = [shot.firstFrame]
-    if (field.role === 'aspect' && shot.aspect && field.type === 'select' && field.options.some((option) => option.value === shot.aspect)) {
+    if (
+      field.role === 'aspect' &&
+      shot.aspect &&
+      field.type === 'select' &&
+      field.options.some((option) => option.value === shot.aspect)
+    ) {
       values[field.key] = shot.aspect
     }
   }
@@ -78,7 +85,11 @@ export function shotValues(fields: Field[], shot: ShotInput): Record<string, unk
 }
 
 /** How long a run with these values is, by the model's duration field; the shot's own seconds without one. */
-export function sentSeconds(fields: Field[], values: Record<string, unknown>, fallback: number): number {
+export function sentSeconds(
+  fields: Field[],
+  values: Record<string, unknown>,
+  fallback: number,
+): number {
   const field = fields.find((each) => each.role === 'duration')
   const seconds = field ? numberOf(values[field.key] ?? field.default) : NaN
   return Number.isFinite(seconds) && seconds > 0 ? seconds : fallback

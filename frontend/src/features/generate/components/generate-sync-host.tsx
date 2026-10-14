@@ -34,7 +34,11 @@ export function GenerateSyncHost() {
       asked.add(key)
       generateApi.form(job.provider, job.model).then(
         (answer) => useGenerateStore.getState().setForm(answer.form),
-        (error: unknown) => logger.warn(`The form of ${key} did not come; its placeholder on the timeline takes the length of a picture`, error),
+        (error: unknown) =>
+          logger.warn(
+            `The form of ${key} did not come; its placeholder on the timeline takes the length of a picture`,
+            error,
+          ),
       )
     }
   }, [jobs, projectId, forms])

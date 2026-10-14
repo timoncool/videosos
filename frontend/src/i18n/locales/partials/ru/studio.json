@@ -149,7 +149,8 @@
       "media": "медиа",
       "video": "видео",
       "download": "загрузка по ссылке",
-      "checkpoint": "точка отката"
+      "checkpoint": "точка отката",
+      "blocking": "3D-блокинг"
     }
   },
   "files": {

@@ -27,12 +27,14 @@ export function MotionPanel() {
   const width = metadata?.width ?? 1920
   const height = metadata?.height ?? 1080
   const srcDoc = useMemo(
-    () => `<!doctype html><html><head><meta charset="utf-8"><style>html{color-scheme:dark}html,body{margin:0;width:${width}px;height:${height}px;overflow:hidden;background:transparent}</style></head><body>${html}</body></html>`,
+    () =>
+      `<!doctype html><html><head><meta charset="utf-8"><style>html{color-scheme:dark}html,body{margin:0;width:${width}px;height:${height}px;overflow:hidden;background:transparent}</style></head><body>${html}</body></html>`,
     [html, width, height],
   )
   const scale = 288 / width
 
-  if (!projectId) return <p className="p-3 text-xs text-muted-foreground">{t('generate.storyboard.noProject')}</p>
+  if (!projectId)
+    return <p className="p-3 text-xs text-muted-foreground">{t('generate.storyboard.noProject')}</p>
 
   const make = async () => {
     setError(null)
@@ -68,7 +70,10 @@ export function MotionPanel() {
             </button>
           ))}
         </div>
-        <div className="relative overflow-hidden rounded-md border border-[var(--color-border)] bg-[repeating-conic-gradient(#1c1c20_0_25%,#141416_0_50%)] bg-[length:16px_16px]" style={{ width: 288, height: height * scale }}>
+        <div
+          className="relative overflow-hidden rounded-md border border-[var(--color-border)] bg-[repeating-conic-gradient(#1c1c20_0_25%,#141416_0_50%)] bg-[length:16px_16px]"
+          style={{ width: 288, height: height * scale }}
+        >
           <iframe
             title={t('generate.motion.preview')}
             sandbox="allow-same-origin"
@@ -81,21 +86,57 @@ export function MotionPanel() {
           <Label htmlFor="motion-code" className="text-[11px] text-muted-foreground">
             {t('generate.motion.code')}
           </Label>
-          <Textarea id="motion-code" value={html} onChange={(event) => setHtml(event.target.value)} spellCheck={false} className="min-h-48 resize-y bg-secondary/30 font-mono text-[11px]" />
+          <Textarea
+            id="motion-code"
+            value={html}
+            onChange={(event) => setHtml(event.target.value)}
+            spellCheck={false}
+            className="min-h-48 resize-y bg-secondary/30 font-mono text-[11px]"
+          />
         </div>
         <label className="flex items-center gap-2 text-[11px] text-muted-foreground">
           {t('generate.motion.seconds')}
-          <Input type="number" min={1} max={30} step={0.5} value={seconds} onChange={(event) => setSeconds(Math.min(30, Math.max(1, Number(event.target.value) || 1)))} className="h-7 w-16 px-1 text-center text-xs" />
+          <Input
+            type="number"
+            min={1}
+            max={30}
+            step={0.5}
+            value={seconds}
+            onChange={(event) =>
+              setSeconds(Math.min(30, Math.max(1, Number(event.target.value) || 1)))
+            }
+            className="h-7 w-16 px-1 text-center text-xs"
+          />
         </label>
-        {error && <p className="break-words rounded border border-destructive/40 bg-destructive/10 p-2 text-[11px] text-destructive">{t('generate.motion.failed', { reason: error })}</p>}
-        {done && <p className="text-[11px] text-muted-foreground">{t('generate.motion.done', { name: done })}</p>}
-        <Button className="bg-brand h-9 w-full gap-2" disabled={share !== null || !html.trim()} onClick={() => void make()}>
-          {share !== null ? <Loader2 className="h-4 w-4 animate-spin" /> : <Clapperboard className="h-4 w-4" />}
-          {share !== null ? t('generate.motion.rendering', { percent: Math.round(share * 100) }) : t('generate.motion.make')}
+        {error && (
+          <p className="break-words rounded border border-destructive/40 bg-destructive/10 p-2 text-[11px] text-destructive">
+            {t('generate.motion.failed', { reason: error })}
+          </p>
+        )}
+        {done && (
+          <p className="text-[11px] text-muted-foreground">
+            {t('generate.motion.done', { name: done })}
+          </p>
+        )}
+        <Button
+          className="bg-brand h-9 w-full gap-2"
+          disabled={share !== null || !html.trim()}
+          onClick={() => void make()}
+        >
+          {share !== null ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Clapperboard className="h-4 w-4" />
+          )}
+          {share !== null
+            ? t('generate.motion.rendering', { percent: Math.round(share * 100) })
+            : t('generate.motion.make')}
         </Button>
         {made.length > 0 && (
           <div className="space-y-1 border-t border-border pt-2">
-            <p className="text-[11px] font-medium text-muted-foreground">{t('generate.motion.made')}</p>
+            <p className="text-[11px] font-medium text-muted-foreground">
+              {t('generate.motion.made')}
+            </p>
             <ul className="space-y-0.5">
               {made.map((clip) => (
                 <li key={clip.mediaId}>

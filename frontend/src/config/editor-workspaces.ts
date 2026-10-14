@@ -22,6 +22,7 @@ export type EditorSidebarTab =
   | 'chat'
   | 'storyboard'
   | 'graphics'
+  | 'blocking'
 export type EditorClipInspectorTab = 'video' | 'motion' | 'audio' | 'effects'
 
 /** The slice of editor UI state that a workspace controls. */

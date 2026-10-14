@@ -15,8 +15,18 @@ export interface Position {
 
 export type CanvasNode =
   | { id: string; type: 'prompt'; position: Position; data: { text: string } }
-  | { id: string; type: 'media'; position: Position; data: { ref: MediaRef | null; kind: MediaKind | null; name: string } }
-  | { id: string; type: 'generate'; position: Position; data: { task: Task; model: ModelRef | null; job: string | null } }
+  | {
+      id: string
+      type: 'media'
+      position: Position
+      data: { ref: MediaRef | null; kind: MediaKind | null; name: string }
+    }
+  | {
+      id: string
+      type: 'generate'
+      position: Position
+      data: { task: Task; model: ModelRef | null; job: string | null }
+    }
 
 export interface CanvasEdge {
   id: string
@@ -34,14 +44,20 @@ export interface CanvasGraph {
 export const EMPTY_GRAPH: CanvasGraph = { nodes: [], edges: [] }
 
 /** What a node gives the nodes after it: text, or a file of a kind. */
-function outputOf(node: CanvasNode, jobs: Map<string, Job>): { text: string } | { ref: MediaRef; kind: MediaKind } | null {
+function outputOf(
+  node: CanvasNode,
+  jobs: Map<string, Job>,
+): { text: string } | { ref: MediaRef; kind: MediaKind } | null {
   if (node.type === 'prompt') return node.data.text.trim() ? { text: node.data.text } : null
-  if (node.type === 'media') return node.data.ref && node.data.kind ? { ref: node.data.ref, kind: node.data.kind } : null
+  if (node.type === 'media')
+    return node.data.ref && node.data.kind ? { ref: node.data.ref, kind: node.data.kind } : null
   const job = node.data.job ? jobs.get(node.data.job) : undefined
   if (!job || job.status !== 'done') return null
   const text = job.outputs.find((output) => output.kind === 'text')
   if (text?.text) return { text: text.text }
-  const file = job.outputs.find((output) => output.kind === 'image' || output.kind === 'video' || output.kind === 'audio')
+  const file = job.outputs.find(
+    (output) => output.kind === 'image' || output.kind === 'video' || output.kind === 'audio',
+  )
   return file ? { ref: { job: job.id, index: file.index }, kind: file.kind as MediaKind } : null
 }
 
@@ -49,7 +65,9 @@ function outputOf(node: CanvasNode, jobs: Map<string, Job>): { text: string } | 
 export function connects(source: CanvasNode, handle: 'prompt' | 'media'): boolean {
   if (source.type === 'prompt') return handle === 'prompt'
   if (source.type === 'media') return handle === 'media'
-  return source.data.task === 'text' || source.data.task === 'transcribe' ? handle === 'prompt' : handle === 'media'
+  return source.data.task === 'text' || source.data.task === 'transcribe'
+    ? handle === 'prompt'
+    : handle === 'media'
 }
 
 const SLOT_ORDER = ['first_frame', 'source', 'reference', 'audio', 'last_frame', 'mask']
@@ -58,7 +76,12 @@ const SLOT_ORDER = ['first_frame', 'source', 'reference', 'audio', 'last_frame',
  * A generation node's values from what is connected to it: the prompts joined in the model's prompt field, each
  * file in the first slot of its kind with room, by what the slots mean. Files without room are named back.
  */
-export function nodeValues(graph: CanvasGraph, nodeId: string, fields: Field[], jobs: Map<string, Job>): { values: Record<string, unknown>; waiting: string[]; left: number } {
+export function nodeValues(
+  graph: CanvasGraph,
+  nodeId: string,
+  fields: Field[],
+  jobs: Map<string, Job>,
+): { values: Record<string, unknown>; waiting: string[]; left: number } {
   const values: Record<string, unknown> = {}
   const waiting: string[] = []
   let left = 0
@@ -81,7 +104,11 @@ export function nodeValues(graph: CanvasGraph, nodeId: string, fields: Field[], 
     .filter((field): field is Extract<Field, { type: 'media' }> => field.type === 'media')
     .sort((a, b) => rank(a.role) - rank(b.role))
   for (const file of files) {
-    const slot = slots.find((each) => each.media === file.kind && ((values[each.key] as MediaRef[] | undefined)?.length ?? 0) < each.max)
+    const slot = slots.find(
+      (each) =>
+        each.media === file.kind &&
+        ((values[each.key] as MediaRef[] | undefined)?.length ?? 0) < each.max,
+    )
     if (!slot) {
       left += 1
       continue

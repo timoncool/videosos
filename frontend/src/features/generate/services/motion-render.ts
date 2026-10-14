@@ -20,7 +20,9 @@ async function frameOf(html: string, width: number, height: number): Promise<HTM
   frame.setAttribute('sandbox', 'allow-same-origin')
   frame.setAttribute('aria-hidden', 'true')
   frame.style.cssText = `position:fixed;left:-${width + 100}px;top:0;width:${width}px;height:${height}px;border:0;pointer-events:none`
-  const loaded = new Promise<void>((resolve) => frame.addEventListener('load', () => resolve(), { once: true }))
+  const loaded = new Promise<void>((resolve) =>
+    frame.addEventListener('load', () => resolve(), { once: true }),
+  )
   frame.srcdoc = page(html, width, height)
   document.body.appendChild(frame)
   await loaded
@@ -29,10 +31,15 @@ async function frameOf(html: string, width: number, height: number): Promise<HTM
 }
 
 /** Renders the code into a WebM clip with transparency; `progress` hears the share of frames done. */
-export async function renderMotion(html: string, options: MotionOptions, progress?: (share: number) => void): Promise<Blob> {
+export async function renderMotion(
+  html: string,
+  options: MotionOptions,
+  progress?: (share: number) => void,
+): Promise<Blob> {
   const { width, height, fps, seconds } = options
   const { domToCanvas } = await import('modern-screenshot')
-  const { Output, WebMOutputFormat, BufferTarget, CanvasSource, QUALITY_HIGH } = await import('mediabunny')
+  const { Output, WebMOutputFormat, BufferTarget, CanvasSource, QUALITY_HIGH } =
+    await import('mediabunny')
   const frame = await frameOf(html, width, height)
   try {
     const document = frame.contentDocument
@@ -53,7 +60,11 @@ export async function renderMotion(html: string, options: MotionOptions, progres
     for (let index = 0; index < total; index++) {
       const time = index / fps
       for (const animation of animations) animation.currentTime = time * 1000
-      const shot = await domToCanvas(document.documentElement, { width, height, backgroundColor: null })
+      const shot = await domToCanvas(document.documentElement, {
+        width,
+        height,
+        backgroundColor: null,
+      })
       context.clearRect(0, 0, width, height)
       context.drawImage(shot, 0, 0, width, height)
       await source.add(time, 1 / fps)

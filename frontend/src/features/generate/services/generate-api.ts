@@ -135,7 +135,11 @@ export interface CatalogAnswer {
 }
 
 /** A file named in a job's request. */
-export type MediaRef = { media: string } | { job: string; index: number } | { file: string } | string
+export type MediaRef =
+  | { media: string }
+  | { job: string; index: number }
+  | { file: string }
+  | string
 
 /** What was spent on finished generations, in total and broken down. */
 export interface Spend {
@@ -143,7 +147,13 @@ export interface Spend {
   today: number
   providers: Array<{ provider: Provider; usd: number; jobs: number }>
   tasks: Array<{ task: Task | ''; usd: number; jobs: number }>
-  models: Array<{ provider: Provider; model: string; model_name: string; usd: number; jobs: number }>
+  models: Array<{
+    provider: Provider
+    model: string
+    model_name: string
+    usd: number
+    jobs: number
+  }>
 }
 
 export interface OutputFile {
@@ -264,7 +274,10 @@ export const generateApi = {
   retry: (id: string) => request<{ jobs: Job[] }>(`/api/jobs/${id}/retry`, { method: 'POST' }),
   remove: (id: string) => request<void>(`/api/jobs/${id}`, { method: 'DELETE' }),
   markImported: (id: string, mediaIds: string[]) =>
-    request<Job>(`/api/jobs/${id}/imported`, { method: 'POST', body: JSON.stringify({ media_ids: mediaIds }) }),
+    request<Job>(`/api/jobs/${id}/imported`, {
+      method: 'POST',
+      body: JSON.stringify({ media_ids: mediaIds }),
+    }),
   fileUrl: (id: string, index: number) => `/api/jobs/${id}/files/${index}`,
   keys: () => request<{ keys: KeyState[] }>('/api/keys'),
   /** What the panel was left at, kept by the server for every window. */
@@ -272,12 +285,19 @@ export const generateApi = {
   saveChoices: (choices: Record<string, unknown>) =>
     request<null>('/api/generate/choices', { method: 'PUT', body: JSON.stringify(choices) }),
   storeKey: (provider: Provider, key: string | null) =>
-    request<{ keys: KeyState[] }>(`/api/keys/${provider}`, { method: 'PUT', body: JSON.stringify({ key }) }),
-  checkKey: (provider: Provider) =>
-    request<{ ok: boolean; balance?: number | null; error?: string }>(`/api/keys/${provider}/check`, {
-      method: 'POST',
+    request<{ keys: KeyState[] }>(`/api/keys/${provider}`, {
+      method: 'PUT',
+      body: JSON.stringify({ key }),
     }),
-  spend: (projectId: string | null) => request<Spend>(`/api/spend?${new URLSearchParams({ project: projectId ?? '' })}`),
+  checkKey: (provider: Provider) =>
+    request<{ ok: boolean; balance?: number | null; error?: string }>(
+      `/api/keys/${provider}/check`,
+      {
+        method: 'POST',
+      },
+    ),
+  spend: (projectId: string | null) =>
+    request<Spend>(`/api/spend?${new URLSearchParams({ project: projectId ?? '' })}`),
   settings: () => request<AgentSettings>('/api/settings'),
   /** Only the settings given change; the others stay as kept. */
   storeSettings: (settings: Partial<AgentSettings>) =>
@@ -303,12 +323,20 @@ export function onGenerateEvent(listener: (event: ServerEvent) => void): () => v
 export function priceLine(t: TFunction, entry: Pick<ModelEntry, 'price' | 'rates'>): string | null {
   const rate = (unit: string) => entry.rates?.find((each) => each.unit === unit)
   const second = rate('second')
-  if (second) return t('generate.rate.second', { price: formatUsd(second.amount) }) + (second.label ? ` · ${second.label}` : '')
+  if (second)
+    return (
+      t('generate.rate.second', { price: formatUsd(second.amount) }) +
+      (second.label ? ` · ${second.label}` : '')
+    )
   const character = rate('character')
   if (character) return t('generate.rate.characters', { price: formatUsd(character.amount * 1000) })
   const input = rate('token_in')
   const output = rate('token_out')
-  if (input && output) return t('generate.rate.tokens', { input: formatUsd(input.amount * 1e6), output: formatUsd(output.amount * 1e6) })
+  if (input && output)
+    return t('generate.rate.tokens', {
+      input: formatUsd(input.amount * 1e6),
+      output: formatUsd(output.amount * 1e6),
+    })
   return entry.price
 }
 

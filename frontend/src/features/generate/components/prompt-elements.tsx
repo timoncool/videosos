@@ -24,7 +24,15 @@ function picturesOf(fields: Field[], values: Record<string, unknown>): MediaRef[
  * into the prompt as "@name"; the pictures in the form are kept as a new one. They live with the panel's choices
  * on the server, so every window and every model has them.
  */
-export function PromptElements({ fields, values, onMention }: { fields: Field[]; values: Record<string, unknown>; onMention: (name: string) => void }) {
+export function PromptElements({
+  fields,
+  values,
+  onMention,
+}: {
+  fields: Field[]
+  values: Record<string, unknown>
+  onMention: (name: string) => void
+}) {
   const { t } = useTranslation()
   const elements = useGenerateStore((state) => state.elements)
   const [open, setOpen] = useState(false)
@@ -39,18 +47,30 @@ export function PromptElements({ fields, values, onMention }: { fields: Field[];
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <button type="button" className="inline-flex items-center gap-1 whitespace-nowrap text-[11px] text-muted-foreground hover:text-foreground" title={t('generate.elements.hint')}>
+        <button
+          type="button"
+          className="inline-flex items-center gap-1 whitespace-nowrap text-[11px] text-muted-foreground hover:text-foreground"
+          title={t('generate.elements.hint')}
+        >
           <UsersRound className="h-3 w-3" />
           {t('generate.elements.button')}
         </button>
       </PopoverTrigger>
       <PopoverContent align="start" className="w-80 space-y-2 p-2">
         {elements.length === 0 ? (
-          <p className="px-1 py-1 text-[11px] text-muted-foreground">{t('generate.elements.empty')}</p>
+          <p className="px-1 py-1 text-[11px] text-muted-foreground">
+            {t('generate.elements.empty')}
+          </p>
         ) : (
-          <ul className="max-h-64 space-y-0.5 overflow-y-auto" aria-label={t('generate.elements.button')}>
+          <ul
+            className="max-h-64 space-y-0.5 overflow-y-auto"
+            aria-label={t('generate.elements.button')}
+          >
             {elements.map((element) => (
-              <li key={element.name} className="group flex items-center gap-1 rounded hover:bg-secondary/60">
+              <li
+                key={element.name}
+                className="group flex items-center gap-1 rounded hover:bg-secondary/60"
+              >
                 <button
                   type="button"
                   onClick={() => {
@@ -69,7 +89,9 @@ export function PromptElements({ fields, values, onMention }: { fields: Field[];
                   </span>
                   <span className="min-w-0">
                     <span className="block truncate text-xs font-medium">@{element.name}</span>
-                    <span className="block text-[11px] text-muted-foreground">{t('generate.elements.pictures', { count: element.refs.length })}</span>
+                    <span className="block text-[11px] text-muted-foreground">
+                      {t('generate.elements.pictures', { count: element.refs.length })}
+                    </span>
                   </span>
                 </button>
                 <button
@@ -93,14 +115,36 @@ export function PromptElements({ fields, values, onMention }: { fields: Field[];
           className="space-y-1 border-t border-border pt-2"
         >
           <div className="flex items-center gap-1.5">
-            <Input value={name} onChange={(event) => setName(event.target.value)} placeholder={t('generate.elements.name')} aria-label={t('generate.elements.name')} aria-invalid={name.trim() !== '' && !valid} className="h-7 flex-1 text-xs" />
-            <Button type="submit" size="sm" className="h-7 gap-1 px-2 text-xs" disabled={!valid || pictures.length === 0}>
+            <Input
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              placeholder={t('generate.elements.name')}
+              aria-label={t('generate.elements.name')}
+              aria-invalid={name.trim() !== '' && !valid}
+              className="h-7 flex-1 text-xs"
+            />
+            <Button
+              type="submit"
+              size="sm"
+              className="h-7 gap-1 px-2 text-xs"
+              disabled={!valid || pictures.length === 0}
+            >
               <Plus className="h-3 w-3" />
               {t('generate.elements.keep')}
             </Button>
           </div>
-          <p className={name.trim() !== '' && !valid ? 'text-[11px] text-destructive' : 'text-[11px] text-muted-foreground'}>
-            {name.trim() !== '' && !valid ? t('generate.elements.badName') : pictures.length === 0 ? t('generate.elements.noPictures') : t('generate.elements.keepHint', { count: pictures.length })}
+          <p
+            className={
+              name.trim() !== '' && !valid
+                ? 'text-[11px] text-destructive'
+                : 'text-[11px] text-muted-foreground'
+            }
+          >
+            {name.trim() !== '' && !valid
+              ? t('generate.elements.badName')
+              : pictures.length === 0
+                ? t('generate.elements.noPictures')
+                : t('generate.elements.keepHint', { count: pictures.length })}
           </p>
         </form>
       </PopoverContent>

@@ -29,7 +29,11 @@ function seek(video: HTMLVideoElement, seconds: number): Promise<void> {
 }
 
 /** Imports the last frame of the video at `url` and answers with its media id. */
-export async function importLastFrame(url: string, name: string, projectId: string): Promise<string> {
+export async function importLastFrame(
+  url: string,
+  name: string,
+  projectId: string,
+): Promise<string> {
   const video = await loadVideo(url)
   await seek(video, Math.max(0, video.duration - BEFORE_END_SECONDS))
   const canvas = document.createElement('canvas')
@@ -39,7 +43,10 @@ export async function importLastFrame(url: string, name: string, projectId: stri
   if (!context) throw new Error('the window cannot draw a picture')
   context.drawImage(video, 0, 0)
   const blob = await new Promise<Blob>((resolve, reject) =>
-    canvas.toBlob((made) => (made ? resolve(made) : reject(new Error('the frame was not encoded'))), 'image/png'),
+    canvas.toBlob(
+      (made) => (made ? resolve(made) : reject(new Error('the frame was not encoded'))),
+      'image/png',
+    ),
   )
   const file = new File([blob], name, { type: 'image/png', lastModified: Date.now() })
   const media = await mediaLibraryService.importGeneratedImage(file, projectId, {

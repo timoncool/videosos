@@ -347,6 +347,36 @@
       "made": "Made",
       "edit": "Open its code",
       "defaultName": "HTML graphics"
+    },
+    "previs": {
+      "tabLabel": "3D blocking",
+      "hint": "Block the shot in 3D before paying for it: describe the place, who moves where and how the camera goes; the prompt model builds stand-in shapes and a camera path (about two cents). Look through the camera, from above or around, then give its frame to a video or picture model, or record the camera's move.",
+      "description": "The shot",
+      "placeholder": "A woman walks down a narrow corridor toward a door; the camera follows behind her, then comes round to face her as she stops. 6 seconds, 35 mm, ending at 50 mm.",
+      "build": "Build the blocking",
+      "change": "Change the current one by the words",
+      "building": "Building the blocking…",
+      "example": "Start from an example",
+      "failed": "Not done: {{reason}}",
+      "views": "View",
+      "view": {
+        "camera": "Camera",
+        "top": "Above",
+        "orbit": "Around"
+      },
+      "play": "Play",
+      "pause": "Pause",
+      "time": "Moment of the shot",
+      "toVideo": "Frame → first frame of a video",
+      "toPicture": "Frame → reference of a picture",
+      "video": "Record the camera's move",
+      "recording": "Recording… {{percent}}%",
+      "videoDone": "“{{name}}” is in the media library.",
+      "frameName": "{{title}}, blocking frame",
+      "videoName": "{{title}}, blocking",
+      "json": "Scene as JSON",
+      "apply": "Apply",
+      "badJson": "The text is not JSON: {{reason}}"
     }
   }
 }

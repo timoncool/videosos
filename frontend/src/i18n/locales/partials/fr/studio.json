@@ -149,7 +149,8 @@
       "media": "média",
       "video": "vidéo",
       "download": "téléchargement par lien",
-      "checkpoint": "point de restauration"
+      "checkpoint": "point de restauration",
+      "blocking": "blocking 3D"
     }
   },
   "files": {

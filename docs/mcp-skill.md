@@ -59,6 +59,12 @@ cannot cancel, the program only stops waiting.
 - `timeline_undo` / `timeline_redo`, `playhead_seek`, `playback`, `editor_tab`.
 - `motion_render {html, seconds?, name?}` makes HTML and CSS motion graphics (titles, lower thirds, counters,
   badges) into a transparent clip at the playhead; CSS animations only, no scripts. Free.
+- `previs_render {scene | description, fresh?, output?, time_seconds?, name?}` blocks a shot in 3D before paying for it:
+  stand-in shapes, standing and seated people, their moves and the camera's path. Write the scene yourself (its form
+  is in the tool's description) or give words for the prompt model (about two cents; `fresh` for a new shot instead
+  of changing the current one). `output: frame` puts the camera's picture into the library for a video model's first
+  frame or an image model's reference, `video` the camera's whole move as an MP4, `scene` only shows it in the
+  Blocking tab. The answer carries the scene to change and send again.
 - Rehearse a many-step edit first: `timeline_edit` with `"dry_run": true` answers with what the ops would make and
   leaves the timeline as it was.
 - When the person has asked to accept agents' edits, `timeline_edit` waits while they read what will change; a

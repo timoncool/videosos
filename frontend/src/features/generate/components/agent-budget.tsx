@@ -22,16 +22,21 @@ export function AgentBudget() {
     generateApi
       .settings()
       .then((settings) => {
-        setBudget(settings.agent_daily_budget_usd === null ? '' : String(settings.agent_daily_budget_usd))
+        setBudget(
+          settings.agent_daily_budget_usd === null ? '' : String(settings.agent_daily_budget_usd),
+        )
         setConfirmEdits(settings.agent_confirm_edits)
       })
-      .catch((reason: unknown) => setError(reason instanceof Error ? reason.message : String(reason)))
+      .catch((reason: unknown) =>
+        setError(reason instanceof Error ? reason.message : String(reason)),
+      )
   }, [])
 
   const save = async () => {
     const trimmed = budget.trim().replace(',', '.')
     const value = trimmed === '' ? null : Number(trimmed)
-    if (value !== null && !Number.isFinite(value)) return setError(t('settings.providers.badBudget'))
+    if (value !== null && !Number.isFinite(value))
+      return setError(t('settings.providers.badBudget'))
     try {
       await generateApi.storeSettings({ agent_daily_budget_usd: value })
       setError(null)
@@ -46,7 +51,12 @@ export function AgentBudget() {
     <div className="space-y-1.5 rounded-lg border border-border p-3" data-testid="agent-budget">
       <div className="flex items-center gap-2">
         <Label className="text-xs text-muted-foreground">{t('settings.providers.budget')}</Label>
-        <Input value={budget} onChange={(event) => setBudget(event.target.value)} placeholder={t('settings.providers.noLimit')} className="h-7 w-24 text-xs" />
+        <Input
+          value={budget}
+          onChange={(event) => setBudget(event.target.value)}
+          placeholder={t('settings.providers.noLimit')}
+          className="h-7 w-24 text-xs"
+        />
         <Button size="sm" className="h-7" onClick={() => void save()}>
           {saved ? <Check className="h-3.5 w-3.5" /> : t('generate.keys.save')}
         </Button>
@@ -55,7 +65,9 @@ export function AgentBudget() {
       <div className="flex items-center justify-between gap-3 border-t border-border pt-2">
         <Label htmlFor="agent-confirm-edits" className="text-xs">
           {t('settings.providers.confirmEdits')}
-          <span className="block text-[11px] font-normal text-muted-foreground">{t('settings.providers.confirmEditsHint')}</span>
+          <span className="block text-[11px] font-normal text-muted-foreground">
+            {t('settings.providers.confirmEditsHint')}
+          </span>
         </Label>
         <Switch
           id="agent-confirm-edits"

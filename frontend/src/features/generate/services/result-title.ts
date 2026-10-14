@@ -13,7 +13,12 @@ export function promptOf(values: Record<string, unknown>): string | null {
 }
 
 /** The file name of a job's output: its title, numbered when the job made more than one. */
-export function resultFileName(job: { title: string }, index: number, count: number, extension: string): string {
+export function resultFileName(
+  job: { title: string },
+  index: number,
+  count: number,
+  extension: string,
+): string {
   const title = job.title
     .replace(/[\\/:*?"<>|]+/g, ' ')
     .replace(/\s+/g, ' ')

@@ -103,11 +103,18 @@ function KeyPrompt({ provider }: { provider: Provider }) {
       })
       if (checked.ok) setValue('')
     } catch (error) {
-      setState({ busy: false, ok: false, message: error instanceof Error ? error.message : String(error) })
+      setState({
+        busy: false,
+        ok: false,
+        message: error instanceof Error ? error.message : String(error),
+      })
     }
   }
   return (
-    <div className="space-y-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 p-2" data-testid="generate-key-prompt">
+    <div
+      className="space-y-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 p-2"
+      data-testid="generate-key-prompt"
+    >
       <p className="flex items-center gap-1.5 text-[11px] text-amber-100">
         <KeyRound className="h-3.5 w-3.5" />
         {t('generate.keys.needed', { provider: PROVIDER_LABELS[provider] })}
@@ -120,7 +127,12 @@ function KeyPrompt({ provider }: { provider: Provider }) {
           placeholder={t('generate.keys.placeholder')}
           className="h-7 text-xs"
         />
-        <Button size="sm" className="h-7 text-xs" disabled={!value.trim() || state.busy} onClick={() => void save()}>
+        <Button
+          size="sm"
+          className="h-7 text-xs"
+          disabled={!value.trim() || state.busy}
+          onClick={() => void save()}
+        >
           {state.busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : t('generate.keys.save')}
         </Button>
       </div>
@@ -134,12 +146,13 @@ function KeyPrompt({ provider }: { provider: Provider }) {
         <ExternalLink className="h-3 w-3" />
       </a>
       {state.message && (
-        <p className={cn('text-[11px]', state.ok ? 'text-emerald-300' : 'text-destructive')}>{state.message}</p>
+        <p className={cn('text-[11px]', state.ok ? 'text-emerald-300' : 'text-destructive')}>
+          {state.message}
+        </p>
       )}
     </div>
   )
 }
-
 
 export function GeneratePanel() {
   const { t, i18n } = useTranslation()
@@ -151,8 +164,12 @@ export function GeneratePanel() {
   const repeat = useGenerateStore((state) => state.repeat)
   const placeOnTimeline = useGenerateStore((state) => state.placeOnTimeline)
   const serverError = useGenerateStore((state) => state.serverError)
-  const values = useGenerateStore((state) => (model ? (state.valuesByModel[modelKey(model.provider, model.id)] ?? NO_VALUES) : NO_VALUES))
-  const form = useGenerateStore((state) => (model ? state.forms[modelKey(model.provider, model.id)] : undefined))
+  const values = useGenerateStore((state) =>
+    model ? (state.valuesByModel[modelKey(model.provider, model.id)] ?? NO_VALUES) : NO_VALUES,
+  )
+  const form = useGenerateStore((state) =>
+    model ? state.forms[modelKey(model.provider, model.id)] : undefined,
+  )
   const [formError, setFormError] = useState<string | null>(null)
   const [formLoading, setFormLoading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -178,10 +195,21 @@ export function GeneratePanel() {
   const [previousPrompt, setPreviousPrompt] = useState<{ key: string; text: string } | null>(null)
   const elements = useGenerateStore((state) => state.elements)
   // what the run is sent with: variables filled, each "@element" named in the prompt brought in with its pictures
-  const sent = useMemo(() => applyElements(form?.fields ?? [], fillVariables(values, variables), elements), [form, values, variables, elements])
-  const { estimate, error: estimateError } = useEstimate(model?.provider, model?.id, sent.values, repeat)
+  const sent = useMemo(
+    () => applyElements(form?.fields ?? [], fillVariables(values, variables), elements),
+    [form, values, variables, elements],
+  )
+  const { estimate, error: estimateError } = useEstimate(
+    model?.provider,
+    model?.id,
+    sent.values,
+    repeat,
+  )
   // the price of the whole batch: unknown while any of its runs is
-  const total = estimate?.estimate && batchRuns.every((run) => run.usd !== null) ? estimate.estimate.usd + batchRuns.reduce((sum, run) => sum + (run.usd ?? 0), 0) : null
+  const total =
+    estimate?.estimate && batchRuns.every((run) => run.usd !== null)
+      ? estimate.estimate.usd + batchRuns.reduce((sum, run) => sum + (run.usd ?? 0), 0)
+      : null
   const totalExact = (estimate?.estimate?.exact ?? false) && batchRuns.every((run) => run.exact)
 
   useEffect(() => {
@@ -210,7 +238,9 @@ export function GeneratePanel() {
     if (!pendingUse || pendingUse.task !== task || !model || !form) return
     const media = form.fields.filter((field) => field.type === 'media')
     const slot =
-      pendingUse.roles.map((role) => media.find((field) => field.role === role)).find((field) => field !== undefined) ??
+      pendingUse.roles
+        .map((role) => media.find((field) => field.role === role))
+        .find((field) => field !== undefined) ??
       media.find((field) => field.type === 'media' && field.media === pendingUse.kind)
     useGenerateStore.getState().useAs(null)
     if (!slot) {
@@ -222,12 +252,16 @@ export function GeneratePanel() {
   }, [pendingUse, task, model, form, t])
 
   // another model of the task takes what the form held, field by meaning, where it has nothing of its own yet
-  const carryFrom = useRef<{ to: string; fields: Field[]; values: Record<string, unknown> } | null>(null)
+  const carryFrom = useRef<{ to: string; fields: Field[]; values: Record<string, unknown> } | null>(
+    null,
+  )
   useEffect(() => {
     const carry = carryFrom.current
     if (!carry || !model || !form || carry.to !== modelKey(model.provider, model.id)) return
     carryFrom.current = null
-    for (const [key, value] of Object.entries(carryValues(carry.fields, carry.values, form.fields))) {
+    for (const [key, value] of Object.entries(
+      carryValues(carry.fields, carry.values, form.fields),
+    )) {
       if (values[key] === undefined) useGenerateStore.getState().setValue(model, key, value)
     }
   }, [model, form, values])
@@ -245,10 +279,11 @@ export function GeneratePanel() {
     [fields, values],
   )
   const tooLong = useMemo(
-    () => fields.flatMap((field) => {
-      const over = overLength(field, values[field.key])
-      return over ? [{ field, ...over }] : []
-    }),
+    () =>
+      fields.flatMap((field) => {
+        const over = overLength(field, values[field.key])
+        return over ? [{ field, ...over }] : []
+      }),
     [fields, values],
   )
   const hasKey = model ? keys[model.provider] === true : false
@@ -299,7 +334,8 @@ export function GeneratePanel() {
   }
 
   const chooseModel = (entry: ModelEntry) => {
-    if (form) carryFrom.current = { to: modelKey(entry.provider, entry.id), fields: form.fields, values }
+    if (form)
+      carryFrom.current = { to: modelKey(entry.provider, entry.id), fields: form.fields, values }
     useGenerateStore.getState().setModel(task, { provider: entry.provider, id: entry.id })
   }
 
@@ -331,15 +367,26 @@ export function GeneratePanel() {
                     : 'border-[var(--color-border)] text-[var(--color-muted)] hover:border-[var(--color-overlay)] hover:text-[var(--color-text)]',
                 )}
               >
-                <Icon className={cn('h-4 w-4 shrink-0', task === each && 'text-[var(--color-accent)]')} />
-                <span className="flex h-[26px] items-center text-center"><span className="line-clamp-2">{t(`generate.tasks.${each}`)}</span></span>
+                <Icon
+                  className={cn('h-4 w-4 shrink-0', task === each && 'text-[var(--color-accent)]')}
+                />
+                <span className="flex h-[26px] items-center text-center">
+                  <span className="line-clamp-2">{t(`generate.tasks.${each}`)}</span>
+                </span>
               </button>
             )
           })}
         </div>
 
         <ModelPicker task={task} value={model} onChange={chooseModel} keys={keys} />
-        <BatchModels task={task} form={form} values={fillVariables(values, variables)} repeat={repeat} keys={keys} onRuns={setBatchRuns} />
+        <BatchModels
+          task={task}
+          form={form}
+          values={fillVariables(values, variables)}
+          repeat={repeat}
+          keys={keys}
+          onRuns={setBatchRuns}
+        />
 
         {model && !hasKey && <KeyPrompt provider={model.provider} />}
 
@@ -357,14 +404,25 @@ export function GeneratePanel() {
                 <FieldControl
                   field={field}
                   value={values[field.key]}
-                  onChange={(value) => useGenerateStore.getState().setValue(model, field.key, value)}
+                  onChange={(value) =>
+                    useGenerateStore.getState().setValue(model, field.key, value)
+                  }
                 />
                 {field.role === 'prompt' && task !== 'transcribe' && (
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                     <button
                       type="button"
-                      disabled={improving || typeof values[field.key] !== 'string' || !(values[field.key] as string).trim() || !keys.openrouter}
-                      title={keys.openrouter ? t('generate.improve.hint') : t('generate.improve.needsKey')}
+                      disabled={
+                        improving ||
+                        typeof values[field.key] !== 'string' ||
+                        !(values[field.key] as string).trim() ||
+                        !keys.openrouter
+                      }
+                      title={
+                        keys.openrouter
+                          ? t('generate.improve.hint')
+                          : t('generate.improve.needsKey')
+                      }
                       onClick={() => {
                         const original = values[field.key] as string
                         setImproving(true)
@@ -374,33 +432,55 @@ export function GeneratePanel() {
                             setPreviousPrompt({ key: field.key, text: original })
                             useGenerateStore.getState().setValue(model, field.key, better)
                           })
-                          .catch((error: unknown) => setImproveError(error instanceof Error ? error.message : String(error)))
+                          .catch((error: unknown) =>
+                            setImproveError(error instanceof Error ? error.message : String(error)),
+                          )
                           .finally(() => setImproving(false))
                       }}
                       className="inline-flex items-center gap-1 whitespace-nowrap text-[11px] text-muted-foreground hover:text-foreground disabled:opacity-40"
                     >
-                      {improving ? <Loader2 className="h-3 w-3 animate-spin" /> : <WandSparkles className="h-3 w-3" />}
+                      {improving ? (
+                        <Loader2 className="h-3 w-3 animate-spin" />
+                      ) : (
+                        <WandSparkles className="h-3 w-3" />
+                      )}
                       {t('generate.improve.button')}
                     </button>
                     <PromptPresets
-                      text={typeof values[field.key] === 'string' ? (values[field.key] as string) : ''}
+                      text={
+                        typeof values[field.key] === 'string' ? (values[field.key] as string) : ''
+                      }
                       onUse={(text) => useGenerateStore.getState().setValue(model, field.key, text)}
                     />
                     <PromptElements
                       fields={fields}
                       values={values}
                       onMention={(name) => {
-                        const text = typeof values[field.key] === 'string' ? (values[field.key] as string) : ''
-                        useGenerateStore.getState().setValue(model, field.key, `${text}${text && !/\s$/.test(text) ? ' ' : ''}@${name} `)
+                        const text =
+                          typeof values[field.key] === 'string' ? (values[field.key] as string) : ''
+                        useGenerateStore
+                          .getState()
+                          .setValue(
+                            model,
+                            field.key,
+                            `${text}${text && !/\s$/.test(text) ? ' ' : ''}@${name} `,
+                          )
                       }}
                     />
                     {firstImage && (
                       <button
                         type="button"
                         disabled={improving || !keys.openrouter}
-                        title={keys.openrouter ? t('generate.describe.hint') : t('generate.improve.needsKey')}
+                        title={
+                          keys.openrouter
+                            ? t('generate.describe.hint')
+                            : t('generate.improve.needsKey')
+                        }
                         onClick={() => {
-                          const original = typeof values[field.key] === 'string' ? (values[field.key] as string) : ''
+                          const original =
+                            typeof values[field.key] === 'string'
+                              ? (values[field.key] as string)
+                              : ''
                           setImproving(true)
                           setImproveError(null)
                           describeImage(firstImage, task, model.id, i18n.language)
@@ -408,7 +488,11 @@ export function GeneratePanel() {
                               setPreviousPrompt({ key: field.key, text: original })
                               useGenerateStore.getState().setValue(model, field.key, written)
                             })
-                            .catch((error: unknown) => setImproveError(error instanceof Error ? error.message : String(error)))
+                            .catch((error: unknown) =>
+                              setImproveError(
+                                error instanceof Error ? error.message : String(error),
+                              ),
+                            )
                             .finally(() => setImproving(false))
                         }}
                         className="inline-flex items-center gap-1 whitespace-nowrap text-[11px] text-muted-foreground hover:text-foreground disabled:opacity-40"
@@ -421,7 +505,9 @@ export function GeneratePanel() {
                       <button
                         type="button"
                         onClick={() => {
-                          useGenerateStore.getState().setValue(model, field.key, previousPrompt.text)
+                          useGenerateStore
+                            .getState()
+                            .setValue(model, field.key, previousPrompt.text)
                           setPreviousPrompt(null)
                         }}
                         className="inline-flex items-center gap-1 whitespace-nowrap text-[11px] text-muted-foreground hover:text-foreground"
@@ -432,18 +518,32 @@ export function GeneratePanel() {
                     )}
                   </div>
                 )}
-                {field.role === 'prompt' && improveError && <p className="text-[11px] text-destructive">{improveError}</p>}
+                {field.role === 'prompt' && improveError && (
+                  <p className="text-[11px] text-destructive">{improveError}</p>
+                )}
                 {field.role === 'prompt' && sent.left.length > 0 && (
-                  <p className="text-[11px] text-muted-foreground">{t('generate.elements.left', { names: sent.left.map((name) => `@${name}`).join(', ') })}</p>
+                  <p className="text-[11px] text-muted-foreground">
+                    {t('generate.elements.left', {
+                      names: sent.left.map((name) => `@${name}`).join(', '),
+                    })}
+                  </p>
                 )}
                 {field.role === 'prompt' && variableNames.length > 0 && (
-                  <div className="grid grid-cols-2 gap-2 rounded-md border border-border bg-secondary/20 p-2" aria-label={t('generate.variables.title')}>
+                  <div
+                    className="grid grid-cols-2 gap-2 rounded-md border border-border bg-secondary/20 p-2"
+                    aria-label={t('generate.variables.title')}
+                  >
                     {variableNames.map((name) => (
-                      <label key={name} className="flex flex-col gap-1 text-[11px] text-muted-foreground">
+                      <label
+                        key={name}
+                        className="flex flex-col gap-1 text-[11px] text-muted-foreground"
+                      >
                         <span className="font-mono">{`{{${name}}}`}</span>
                         <Input
                           value={variables[name] ?? ''}
-                          onChange={(event) => useGenerateStore.getState().setVariable(name, event.target.value)}
+                          onChange={(event) =>
+                            useGenerateStore.getState().setVariable(name, event.target.value)
+                          }
                           className="h-7 text-xs"
                         />
                       </label>
@@ -455,7 +555,9 @@ export function GeneratePanel() {
             {more.length > 0 && (
               <Collapsible open={moreOpen} onOpenChange={setMoreOpen}>
                 <CollapsibleTrigger className="flex w-full items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground">
-                  <ChevronDown className={cn('h-3.5 w-3.5 transition-transform', moreOpen && 'rotate-180')} />
+                  <ChevronDown
+                    className={cn('h-3.5 w-3.5 transition-transform', moreOpen && 'rotate-180')}
+                  />
                   {t('generate.form.more', { count: more.length })}
                 </CollapsibleTrigger>
                 <CollapsibleContent className="space-y-2.5 pt-2">
@@ -464,13 +566,19 @@ export function GeneratePanel() {
                       key={field.key}
                       field={field}
                       value={values[field.key]}
-                      onChange={(value) => useGenerateStore.getState().setValue(model, field.key, value)}
+                      onChange={(value) =>
+                        useGenerateStore.getState().setValue(model, field.key, value)
+                      }
                     />
                   ))}
                 </CollapsibleContent>
               </Collapsible>
             )}
-            {form.price.note && <p className="text-[11px] text-muted-foreground">{providerWords(t, form.price.note)}</p>}
+            {form.price.note && (
+              <p className="text-[11px] text-muted-foreground">
+                {providerWords(t, form.price.note)}
+              </p>
+            )}
           </div>
         )}
       </div>
@@ -485,37 +593,61 @@ export function GeneratePanel() {
             />
             {t('generate.placeOnTimeline')}
           </label>
-          <label className="flex items-center gap-1 text-[11px] text-muted-foreground" title={t('generate.repeatHint')}>
+          <label
+            className="flex items-center gap-1 text-[11px] text-muted-foreground"
+            title={t('generate.repeatHint')}
+          >
             {t('generate.repeat')}
             <Input
               type="number"
               min={1}
               max={8}
               value={repeat}
-              onChange={(event) => useGenerateStore.getState().setRepeat(Number(event.target.value) || 1)}
+              onChange={(event) =>
+                useGenerateStore.getState().setRepeat(Number(event.target.value) || 1)
+              }
               className="h-7 w-12 px-1 text-center text-xs"
             />
           </label>
         </div>
         <Button
           className="bg-brand h-9 w-full gap-2"
-          disabled={!form || !hasKey || submitting || missing.length > 0 || tooLong.length > 0 || unfilled.length > 0 || batchBlocked || !projectId}
+          disabled={
+            !form ||
+            !hasKey ||
+            submitting ||
+            missing.length > 0 ||
+            tooLong.length > 0 ||
+            unfilled.length > 0 ||
+            batchBlocked ||
+            !projectId
+          }
           onClick={() => void generate()}
           data-testid="generate-submit"
         >
-          {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+          {submitting ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Sparkles className="h-4 w-4" />
+          )}
           {t('generate.submit')}
           <span className="ml-auto text-xs opacity-80">
-            {total !== null ? `${totalExact ? '' : '≈'}${formatUsd(total)}` : t('generate.cost.unknown')}
+            {total !== null
+              ? `${totalExact ? '' : '≈'}${formatUsd(total)}`
+              : t('generate.cost.unknown')}
           </span>
         </Button>
         {missing.length > 0 && (
           <p className="text-[11px] text-muted-foreground">
-            {t('generate.form.missing', { fields: missing.map((field) => fieldLabel(t, field)).join(', ') })}
+            {t('generate.form.missing', {
+              fields: missing.map((field) => fieldLabel(t, field)).join(', '),
+            })}
           </p>
         )}
         {unfilled.length > 0 && (
-          <p className="text-[11px] text-muted-foreground">{t('generate.variables.missing', { names: unfilled.join(', ') })}</p>
+          <p className="text-[11px] text-muted-foreground">
+            {t('generate.variables.missing', { names: unfilled.join(', ') })}
+          </p>
         )}
         {tooLong.map(({ field, count, max }) => (
           <p key={field.key} className="text-[11px] text-destructive">
@@ -524,7 +656,9 @@ export function GeneratePanel() {
         ))}
         {submitError && <p className="text-[11px] text-destructive">{submitError}</p>}
         {estimateError && (
-          <p className="text-[11px] text-destructive">{t('generate.cost.failed', { reason: estimateError })}</p>
+          <p className="text-[11px] text-destructive">
+            {t('generate.cost.failed', { reason: estimateError })}
+          </p>
         )}
       </div>
 

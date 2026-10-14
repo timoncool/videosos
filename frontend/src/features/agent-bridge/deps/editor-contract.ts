@@ -6,6 +6,12 @@ export { useTimelineCommandStore } from '@/features/timeline/stores/timeline-com
 export { captureSnapshot, restoreSnapshot } from '@/features/timeline/stores/commands/snapshot'
 export { keepCheckpoint, restoreCheckpoint } from '@/features/timeline/services/checkpoints'
 export { makeMotionClip, motionName } from '@/features/generate/services/motion-clip'
+export {
+  agentBlocking,
+  importPrevisFrame,
+  importPrevisVideo,
+  withPrevisRenderer,
+} from '@/features/generate/services/previs-shot'
 export { useMediaLibraryStore } from '@/features/media-library/stores/media-library-store'
 export { mediaLibraryService } from '@/features/media-library/services/media-library-service'
 export { useProjectStore } from '@/features/projects/stores/project-store'
