@@ -23,12 +23,12 @@ pub enum DiffusionError {
     Library(#[from] libloading::Error),
     #[error("a text or path has a zero byte: {0}")]
     BadText(String),
-    #[error("the model did not load: check its files")]
-    ContextCreation,
+    #[error("the model did not load: {0}")]
+    ContextCreation(String),
     #[error("this model makes {0}, not what was asked")]
     WrongKind(&'static str),
-    #[error("the generation failed")]
-    GenerationFailed,
+    #[error("the generation failed: {0}")]
+    GenerationFailed(String),
 }
 
 /// Pixels of one picture or frame.
@@ -154,6 +154,17 @@ type ProgressSink = Box<dyn Fn(i32, i32) + Send + Sync>;
 /// The engine has one progress callback for the process; generations run one at a time, so one slot is enough.
 static PROGRESS: Mutex<Option<ProgressSink>> = Mutex::new(None);
 
+/// The engine's first error line since the operation began: the cause; the lines after it are its consequences.
+static FIRST_ERROR: Mutex<Option<String>> = Mutex::new(None);
+
+fn begin_operation() {
+    *FIRST_ERROR.lock().unwrap_or_else(|p| p.into_inner()) = None;
+}
+
+fn first_error() -> String {
+    FIRST_ERROR.lock().unwrap_or_else(|p| p.into_inner()).take().unwrap_or_else(|| "the engine gave no reason".into())
+}
+
 extern "C" fn progress_trampoline(step: c_int, steps: c_int, _time: f32, _data: *mut c_void) {
     if let Ok(guard) = PROGRESS.lock()
         && let Some(sink) = guard.as_ref()
@@ -169,7 +180,13 @@ extern "C" fn log_trampoline(level: c_int, text: *const c_char, _data: *mut c_vo
     let message = unsafe { CStr::from_ptr(text) }.to_string_lossy();
     let message = message.trim_end();
     match level {
-        LOG_ERROR => tracing::error!(target: "sd", "{message}"),
+        LOG_ERROR => {
+            tracing::error!(target: "sd", "{message}");
+            let mut first = FIRST_ERROR.lock().unwrap_or_else(|p| p.into_inner());
+            if first.is_none() && !message.is_empty() {
+                *first = Some(message.to_string());
+            }
+        }
         LOG_WARN => tracing::warn!(target: "sd", "{message}"),
         LOG_INFO => tracing::info!(target: "sd", "{message}"),
         _ => tracing::debug!(target: "sd", "{message}"),
@@ -314,9 +331,10 @@ impl Engine {
             params.sampler_rng_type = RNG_CPU;
         }
 
+        begin_operation();
         let ctx = unsafe { (self.symbols.new_sd_ctx)(&params) };
         if ctx.is_null() {
-            return Err(DiffusionError::ContextCreation);
+            return Err(DiffusionError::ContextCreation(first_error()));
         }
         Ok(Context { engine: self, ctx })
     }
@@ -400,12 +418,13 @@ impl Context<'_> {
         request.lora_count = loras.len() as u32;
 
         set_progress_sink(progress);
+        begin_operation();
         let mut out: *mut SdImage = std::ptr::null_mut();
         let mut count: c_int = 0;
         let ok = unsafe { (self.engine.symbols.generate_image)(self.ctx, &request, &mut out, &mut count) };
         set_progress_sink(None);
         if !ok || out.is_null() || count <= 0 {
-            return Err(DiffusionError::GenerationFailed);
+            return Err(DiffusionError::GenerationFailed(first_error()));
         }
         let mut images = unsafe { self.take_images(out, count) };
         Ok(images.remove(0))
@@ -472,6 +491,7 @@ impl Context<'_> {
         request.lora_count = loras.len() as u32;
 
         set_progress_sink(progress);
+        begin_operation();
         let mut frames: *mut SdImage = std::ptr::null_mut();
         let mut count: c_int = 0;
         let mut audio: *mut SdAudio = std::ptr::null_mut();
@@ -482,7 +502,7 @@ impl Context<'_> {
             if !audio.is_null() {
                 unsafe { (self.engine.symbols.free_sd_audio)(audio) };
             }
-            return Err(DiffusionError::GenerationFailed);
+            return Err(DiffusionError::GenerationFailed(first_error()));
         }
         let frames = unsafe { self.take_images(frames, count) };
         let audio = unsafe { self.take_audio(audio) };
@@ -597,6 +617,17 @@ unsafe fn load_library(path: &Path) -> Result<libloading::Library, libloading::E
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn a_failure_is_named_by_the_engines_first_error() {
+        begin_operation();
+        let cause = std::ffi::CString::new("CUDA error: out of memory").unwrap();
+        let consequence = std::ffi::CString::new("generate_video failed").unwrap();
+        log_trampoline(LOG_ERROR, cause.as_ptr(), std::ptr::null_mut());
+        log_trampoline(LOG_ERROR, consequence.as_ptr(), std::ptr::null_mut());
+        assert_eq!(first_error(), "CUDA error: out of memory");
+        assert_eq!(first_error(), "the engine gave no reason");
+    }
 
     #[test]
     fn a_missing_engine_is_reported_as_such() {

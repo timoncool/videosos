@@ -580,13 +580,16 @@ pub fn start_install(data: &Path, what: &str) -> Result<bool, String> {
     *install_state().lock().unwrap_or_else(|p| p.into_inner()) = Install { what: what.into(), installing: true, total, ..Install::default() };
     changed();
     let data = data.to_path_buf();
+    let what = what.to_string();
     tokio::spawn(async move {
         let mut result = download_all(&data, &files).await;
         if result.is_ok() && needs_ffmpeg {
             result = crate::tools::install_ffmpeg(&data).await.map_err(|e| ("ffmpeg", e.detail));
         }
         match &result {
-            Ok(()) => crate::hub::setup_ready(),
+            // the models got ready: an engine build alone is a tool, not the step the install report counts
+            Ok(()) if model(&what).is_some() => crate::hub::setup_ready(),
+            Ok(()) => {}
             Err((code, _)) => crate::hub::setup_failed(code),
         }
         let result = result.map_err(|(_, message)| message);
