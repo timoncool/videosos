@@ -190,6 +190,15 @@
       "generate_audio": "Генерировать звук",
       "enable_audio": "Генерировать звук"
     },
-    "historyTitle": "Генерации"
+    "historyTitle": "Генерации",
+    "details": {
+      "title": "Подробности",
+      "model": "Модель",
+      "took": "Заняло",
+      "seconds": "{{count}} с",
+      "job": "Задача",
+      "media": "медиа проекта",
+      "result": "прошлый результат"
+    }
   }
 }

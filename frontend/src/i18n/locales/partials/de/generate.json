@@ -190,6 +190,15 @@
       "generate_audio": "Ton erzeugen",
       "enable_audio": "Ton erzeugen"
     },
-    "historyTitle": "Generierungen"
+    "historyTitle": "Generierungen",
+    "details": {
+      "title": "Details",
+      "model": "Modell",
+      "took": "Dauer",
+      "seconds": "{{count}} s",
+      "job": "Auftrag",
+      "media": "Medien des Projekts",
+      "result": "ein früheres Ergebnis"
+    }
   }
 }

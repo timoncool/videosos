@@ -190,6 +190,15 @@
       "generate_audio": "生成声音",
       "enable_audio": "生成声音"
     },
-    "historyTitle": "生成记录"
+    "historyTitle": "生成记录",
+    "details": {
+      "title": "详情",
+      "model": "模型",
+      "took": "用时",
+      "seconds": "{{count}} 秒",
+      "job": "任务",
+      "media": "项目媒体",
+      "result": "之前的结果"
+    }
   }
 }

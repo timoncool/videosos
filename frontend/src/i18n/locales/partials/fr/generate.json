@@ -190,6 +190,15 @@
       "generate_audio": "Générer le son",
       "enable_audio": "Générer le son"
     },
-    "historyTitle": "Générations"
+    "historyTitle": "Générations",
+    "details": {
+      "title": "Détails",
+      "model": "Modèle",
+      "took": "Durée",
+      "seconds": "{{count}} s",
+      "job": "Tâche",
+      "media": "média du projet",
+      "result": "un résultat précédent"
+    }
   }
 }

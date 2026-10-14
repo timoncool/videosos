@@ -190,6 +190,15 @@
       "generate_audio": "音を生成",
       "enable_audio": "音を生成"
     },
-    "historyTitle": "生成履歴"
+    "historyTitle": "生成履歴",
+    "details": {
+      "title": "詳細",
+      "model": "モデル",
+      "took": "所要時間",
+      "seconds": "{{count}} 秒",
+      "job": "ジョブ",
+      "media": "プロジェクトのメディア",
+      "result": "以前の結果"
+    }
   }
 }

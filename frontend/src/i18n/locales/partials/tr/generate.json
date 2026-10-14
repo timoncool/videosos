@@ -190,6 +190,15 @@
       "generate_audio": "Ses üret",
       "enable_audio": "Ses üret"
     },
-    "historyTitle": "Üretimler"
+    "historyTitle": "Üretimler",
+    "details": {
+      "title": "Ayrıntılar",
+      "model": "Model",
+      "took": "Süre",
+      "seconds": "{{count}} sn",
+      "job": "İş",
+      "media": "projenin medyası",
+      "result": "önceki bir sonuç"
+    }
   }
 }

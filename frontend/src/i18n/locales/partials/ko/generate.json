@@ -190,6 +190,15 @@
       "generate_audio": "소리 생성",
       "enable_audio": "소리 생성"
     },
-    "historyTitle": "생성 기록"
+    "historyTitle": "생성 기록",
+    "details": {
+      "title": "자세히",
+      "model": "모델",
+      "took": "소요 시간",
+      "seconds": "{{count}}초",
+      "job": "작업",
+      "media": "프로젝트 미디어",
+      "result": "이전 결과"
+    }
   }
 }

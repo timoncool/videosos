@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ArrowDownToLine, Ban, Check, CircleAlert, Copy, Forward, Loader2, RotateCcw, SquarePen, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -14,6 +14,7 @@ import { OUTPUT_DRAG_TYPE } from './field-control'
 import { ProviderBadge } from './model-picker'
 import { ImageLightbox } from './image-lightbox'
 import { exactMoment, relativeMoment } from '../deps/studio'
+import { fieldLabel } from '../services/field-label'
 
 /** A result picture: dragged into a slot or the timeline, opened at full size by a click. */
 function ImagePreview({ url, name, onDragStart }: { url: string; name: string; onDragStart: (event: React.DragEvent) => void }) {
@@ -64,6 +65,44 @@ function Preview({ job, output }: { job: Job; output: OutputFile }) {
     )
   }
   return <a href={url} className="text-[11px] underline">{output.file}</a>
+}
+
+/** What the run was asked for, as VidRush shows a result's prompt, model and settings: enough to repeat it by hand. */
+function JobDetails({ job }: { job: Job }) {
+  const { t } = useTranslation()
+  const took = job.status === 'done' && job.updated > job.created ? Math.round((job.updated - job.created) / 1000) : null
+  const shown = (value: unknown): string => {
+    if (typeof value === 'string') return value
+    if (Array.isArray(value)) return value.map(shown).join(', ')
+    if (value && typeof value === 'object') {
+      const ref = value as { media?: string; job?: string; file?: string }
+      return ref.media ? t('generate.details.media') : ref.job ? t('generate.details.result') : ref.file ? (ref.file.split(/[\\/]/).pop() ?? ref.file) : JSON.stringify(value)
+    }
+    return String(value)
+  }
+  return (
+    <details className="text-[11px]">
+      <summary className="cursor-pointer select-none text-muted-foreground hover:text-[var(--color-text)]">{t('generate.details.title')}</summary>
+      <dl className="mt-1.5 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-2">
+        <dt className="text-muted-foreground">{t('generate.details.model')}</dt>
+        <dd className="break-all">{job.model}</dd>
+        {Object.entries(job.values).map(([key, value]) => (
+          <Fragment key={key}>
+            <dt className="text-muted-foreground">{fieldLabel(t, { key, label: key })}</dt>
+            <dd className="line-clamp-4 break-words">{shown(value)}</dd>
+          </Fragment>
+        ))}
+        {took !== null && (
+          <>
+            <dt className="text-muted-foreground">{t('generate.details.took')}</dt>
+            <dd className="tabnum">{t('generate.details.seconds', { count: took })}</dd>
+          </>
+        )}
+        <dt className="text-muted-foreground">{t('generate.details.job')}</dt>
+        <dd className="mono break-all">{job.id}</dd>
+      </dl>
+    </details>
+  )
 }
 
 function attempt(work: () => unknown): void {
@@ -181,9 +220,12 @@ export function JobCard({ job, onReuse, selected, onSelect }: JobCardProps) {
         </span>
       </div>
       {typeof prompt === 'string' && <p className="line-clamp-2 text-[11px] text-muted-foreground">{prompt}</p>}
-      <time dateTime={new Date(job.created).toISOString()} title={exactMoment(new Date(job.created), i18n.language)} className="block text-[11px] text-muted-foreground">
-        {relativeMoment(new Date(job.created), i18n.language)}
-      </time>
+      <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
+        <time dateTime={new Date(job.created).toISOString()} title={exactMoment(new Date(job.created), i18n.language)}>
+          {relativeMoment(new Date(job.created), i18n.language)}
+        </time>
+      </div>
+      <JobDetails job={job} />
       {job.outputs.map((output) => (
         <Preview key={output.index} job={job} output={output} />
       ))}
