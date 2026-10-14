@@ -2726,6 +2726,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "libloading"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "754ca22de805bb5744484a5b151a9e1a8e837d5dc232c2d7d8c2e3492edc8b60"
+dependencies = [
+ "cfg-if",
+ "windows-link",
+]
+
+[[package]]
 name = "libredox"
 version = "0.1.25"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5967,6 +5977,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "vs-diffusion"
+version = "2.1.0"
+dependencies = [
+ "libloading 0.9.0",
+ "thiserror 2.0.21",
+ "tracing",
+]
+
+[[package]]
 name = "vs-providers"
 version = "2.1.0"
 dependencies = [
@@ -6007,6 +6026,7 @@ dependencies = [
  "mime_guess",
  "nvml-wrapper",
  "percent-encoding",
+ "png 0.18.1",
  "regex",
  "reqwest",
  "rfd 0.17.2",
@@ -6026,6 +6046,7 @@ dependencies = [
  "tracing",
  "tracing-subscriber",
  "uuid",
+ "vs-diffusion",
  "vs-providers",
  "windows-sys 0.61.2",
  "zip 8.6.0",
