@@ -175,3 +175,9 @@ frames — or fade with `addKeyframe` on `opacity`.
 
 Every generation is paid from the person's account. The person sets a daily limit for agents in Settings;
 `generate` is refused past it — tell the person, never work around it. `spend` reports what was spent.
+
+## When something fails
+
+A failed job says why in `error` and `error_code` (`job_get`). When that is not enough, `providers_log` shows what
+was asked of the providers and what came back, `ui_console` the window's own errors, and `ui_screenshot` what the
+person sees. Report what you found; never retry a paid job blindly.

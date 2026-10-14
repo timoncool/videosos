@@ -314,6 +314,13 @@ fn tools() -> &'static [Tool] {
                 call: |_| get_call("/api/hw/snapshot".into()),
             },
             Tool {
+                name: "providers_log",
+                description: "What was asked of the providers and what came back, newest last: the task and model of each request, the HTTP status, how long it took, and the start of an answer that could not be used. For when a generation fails in a way its error does not explain.",
+                looks: true,
+                schema: || object(json!({ "lines": { "type": "integer", "minimum": 1, "maximum": 300 } }), &[]),
+                call: |_| composite("providers_log"),
+            },
+            Tool {
                 name: "studio_capabilities",
                 description: "What VideoSOS can make now: each task (image, video, music, speech...) with the providers that have models for it and whether their key is set, and what the window does on this computer for free.",
                 looks: true,
@@ -1737,6 +1744,10 @@ async fn run_tool(state: &AppState, tool: &Tool, args: &Value, before: &str) -> 
         Payload::Composite("wait") => wait_for(state, args).await.map(Answer::Json),
         Payload::Composite("studio_wait") => studio_wait(state, args).await,
         Payload::Composite("capabilities") => Ok(Answer::Json(capabilities(state))),
+        Payload::Composite("providers_log") => {
+            let lines = args.get("lines").and_then(Value::as_u64).unwrap_or(50).clamp(1, 300) as usize;
+            Ok(Answer::Json(json!({ "lines": crate::request_log::tail(lines) })))
+        }
         Payload::Composite("open_folder") => open_folder(state, args).await.map(Answer::Json),
         Payload::Composite("questions") => Ok(with_pictures(state, wait_for_questions(args).await)),
         Payload::Composite("answer") => answer_question(args).map(Answer::Json),
