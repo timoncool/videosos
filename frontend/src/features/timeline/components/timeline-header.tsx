@@ -685,7 +685,7 @@ export const TimelineHeader = memo(function TimelineHeader({
               aria-label={t('timeline.header.setInPoint')}
               data-tooltip={t('timeline.header.setInPointTooltip')}
             >
-              <span className="text-sm font-bold" style={{ color: 'var(--color-timeline-in)' }}>
+              <span className="text-sm font-bold">
                 [
               </span>
             </Button>
@@ -698,7 +698,7 @@ export const TimelineHeader = memo(function TimelineHeader({
               aria-label={t('timeline.header.setOutPoint')}
               data-tooltip={t('timeline.header.setOutPointTooltip')}
             >
-              <span className="text-sm font-bold" style={{ color: 'var(--color-timeline-out)' }}>
+              <span className="text-sm font-bold">
                 ]
               </span>
             </Button>
@@ -728,7 +728,7 @@ export const TimelineHeader = memo(function TimelineHeader({
               aria-label={t('timeline.header.addMarker')}
               data-tooltip={t('timeline.header.addMarkerTooltip')}
             >
-              <Flag className="w-3.5 h-3.5" style={{ color: 'var(--color-timeline-marker)' }} />
+              <Flag className="w-3.5 h-3.5" />
             </Button>
 
             <Button

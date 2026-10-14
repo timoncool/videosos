@@ -1114,7 +1114,7 @@ export const AudioMeterPanel = memo(function AudioMeterPanel() {
           className="flex min-w-0 items-center justify-between gap-1 border-b border-border bg-secondary/20 px-1.5"
           style={{ height: EDITOR_LAYOUT_CSS_VALUES.timelineTracksHeaderHeight }}
         >
-          <span className="min-w-0 text-xs text-muted-foreground font-mono uppercase tracking-[0.12em]">
+          <span className="min-w-0 truncate font-mono text-[11px] uppercase tracking-[0.04em] text-muted-foreground" title={t('editor.audioMeters.meters')}>
             {t('editor.audioMeters.meters')}
           </span>
           {modeDropdown}
