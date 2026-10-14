@@ -6,7 +6,7 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::time::Instant;
 
-use vs_diffusion::{Engine, ImageParams, ModelConfig, RawImage, VideoParams};
+use vs_diffusion::{Engine, ImageParams, ModelConfig, RawImage, Sampler, VideoParams};
 
 fn write_ppm(path: &Path, image: &RawImage) {
     let mut file = std::fs::File::create(path).expect("output file");
@@ -74,10 +74,13 @@ fn main() {
                 steps: 20,
                 cfg_scale: 5.0,
                 flow_shift: 3.0,
+                sigmas: Vec::new(),
+                sampler: Sampler::Engine,
                 seed: 42,
                 first_frame: None,
                 last_frame: None,
                 loras: Vec::new(),
+                upscale: None,
             };
             let video = context.video(&params, Some(Box::new(|step, steps| println!("[{}%] step {step}/{steps}", step * 100 / steps.max(1))))).expect("video");
             let dir = PathBuf::from(&args[5]);

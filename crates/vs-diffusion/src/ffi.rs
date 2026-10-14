@@ -19,11 +19,14 @@ pub const LOG_ERROR: c_int = 4;
 pub const RNG_CPU: c_int = 2;
 
 pub const SAMPLE_EULER: c_int = 0;
+pub const SAMPLE_EULER_A: c_int = 1;
 pub const SCHEDULER_SIMPLE: c_int = 6;
 
 pub const VAE_FORMAT_AUTO: c_int = -1;
 
 pub const LORA_APPLY_AUTO: c_int = 0;
+
+pub const HIRES_UPSCALER_MODEL: c_int = 9;
 
 pub const CANCEL_ALL: c_int = 0;
 

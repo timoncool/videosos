@@ -106,11 +106,30 @@ pub struct ImageParams {
     pub loras: Vec<Lora>,
 }
 
+/// The sampler; the engine picks the model's own when it is not named.
+#[derive(Debug, Clone, Copy, Default, PartialEq)]
+pub enum Sampler {
+    #[default]
+    Engine,
+    Euler,
+    EulerAncestral,
+}
+
+/// A second pass that upscales the first pass's latents with a model and denoises them again.
+#[derive(Debug, Clone)]
+pub struct Upscale {
+    pub model: PathBuf,
+    pub scale: f32,
+    /// The second pass's sigmas, the closing 0 included.
+    pub sigmas: Vec<f32>,
+}
+
 /// One video.
 #[derive(Debug, Clone)]
 pub struct VideoParams {
     pub prompt: String,
     pub negative_prompt: String,
+    /// The first pass's size; an upscale pass multiplies it.
     pub width: i32,
     pub height: i32,
     pub frames: i32,
@@ -120,10 +139,14 @@ pub struct VideoParams {
     pub cfg_scale: f32,
     /// The video stream's flow shift; 0 keeps the model's own.
     pub flow_shift: f32,
+    /// A fixed noise schedule a distilled model is trained on; empty keeps the scheduler's.
+    pub sigmas: Vec<f32>,
+    pub sampler: Sampler,
     pub seed: i64,
     pub first_frame: Option<RawImage>,
     pub last_frame: Option<RawImage>,
     pub loras: Vec<Lora>,
+    pub upscale: Option<Upscale>,
 }
 
 type ProgressSink = Box<dyn Fn(i32, i32) + Send + Sync>;
@@ -416,6 +439,27 @@ impl Context<'_> {
         request.sample_params.guidance.txt_cfg = params.cfg_scale;
         if params.flow_shift > 0.0 {
             request.sample_params.flow_shift = params.flow_shift;
+        }
+        match params.sampler {
+            Sampler::Engine => {}
+            Sampler::Euler => request.sample_params.sample_method = SAMPLE_EULER,
+            Sampler::EulerAncestral => request.sample_params.sample_method = SAMPLE_EULER_A,
+        }
+        let mut sigmas = params.sigmas.clone();
+        if !sigmas.is_empty() {
+            request.sample_params.custom_sigmas = sigmas.as_mut_ptr();
+            request.sample_params.custom_sigmas_count = sigmas.len() as c_int;
+        }
+        let upscaler = params.upscale.as_ref().map(|upscale| path_to_cstring(&upscale.model)).transpose()?;
+        let mut upscale_sigmas = params.upscale.as_ref().map(|upscale| upscale.sigmas.clone()).unwrap_or_default();
+        if let (Some(upscale), Some(model)) = (params.upscale.as_ref(), upscaler.as_ref()) {
+            request.hires.enabled = true;
+            request.hires.upscaler = HIRES_UPSCALER_MODEL;
+            request.hires.model_path = model.as_ptr();
+            request.hires.scale = upscale.scale;
+            request.hires.steps = upscale_sigmas.len().saturating_sub(1) as c_int;
+            request.hires.custom_sigmas = upscale_sigmas.as_mut_ptr();
+            request.hires.custom_sigmas_count = upscale_sigmas.len() as c_int;
         }
         if let Some(image) = params.first_frame.as_ref() {
             request.init_image = sd_image(image, &mut first_buffer);

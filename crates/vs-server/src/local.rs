@@ -11,7 +11,7 @@ use std::time::{Duration, Instant};
 
 use serde::Serialize;
 use serde_json::{json, Map, Value};
-use vs_diffusion::{Canceller, Context, Engine, ImageParams, Lora, ModelConfig, RawImage, VideoParams};
+use vs_diffusion::{Canceller, Context, Engine, ImageParams, Lora, ModelConfig, RawImage, Sampler, Upscale, VideoParams};
 use vs_providers::model::{Choice, Field, FieldKind, MediaKind, ModelEntry, ModelForm, Output, PriceRule, Provider, Role, Task};
 
 /// One file to download, relative to the data folder.
@@ -94,6 +94,8 @@ enum Slot {
     AudioVae,
     /// An adapter laid over the diffusion weights at generation time.
     Lora,
+    /// A model that upscales latents between two passes.
+    Upscaler,
 }
 
 struct ModelFile {
@@ -137,6 +139,10 @@ struct Preset {
     /// The video stream's flow shift the accelerator was trained with; 0 keeps the model's.
     flow_shift: f32,
     schedule: Schedule,
+    sampler: Sampler,
+    /// A second pass at twice the size over the first pass's latents, upscaled by the preset's upscaler file, on
+    /// these sigmas; empty for one pass at the chosen size.
+    upscale_sigmas: &'static [f32],
 }
 
 enum Schedule {
@@ -164,6 +170,9 @@ impl Schedule {
 
 const QWEN_IMAGE_2_1: ModelFile = ModelFile { slot: Slot::Diffusion, download: Download { url: "https://huggingface.co/unsloth/Qwen-Image-2.1-GGUF/resolve/2c31ccd392b367a6637841a143813320a02dff55/qwen-image-2.1-Q4_K_M.gguf", dest: "models/qwen-image-2.1/qwen-image-2.1-Q4_K_M.gguf", size: 4_199_565_024, sha256: "631d532e7ca71e8d90a87c71d3699761a812039d22e3370e87498d87754660fe", unzip_into: None } };
 
+/// Lightricks' schedule for the distilled checkpoint, the first pass of their DistilledPipeline.
+const LTX_DISTILLED_SIGMAS: &[f32] = &[1.0, 0.99375, 0.9875, 0.98125, 0.975, 0.909375, 0.725, 0.421875, 0.0];
+
 const MODELS: &[LocalModel] = &[
     LocalModel {
         id: "qwen-image-2.1",
@@ -183,6 +192,8 @@ const MODELS: &[LocalModel] = &[
                 cfg: 1.0,
                 flow_shift: 0.0,
                 schedule: Schedule::Fixed(&[1.0, 0.978453, 0.95418, 0.926626, 0.89508, 0.845148, 0.704534, 0.414568, 0.0]),
+                sampler: Sampler::Engine,
+                upscale_sigmas: &[],
             },
             Preset {
                 id: "lightning",
@@ -195,6 +206,8 @@ const MODELS: &[LocalModel] = &[
                 cfg: 1.0,
                 flow_shift: 0.0,
                 schedule: Schedule::QwenShifted(&[1.0, 0.75, 0.5, 0.25]),
+                sampler: Sampler::Engine,
+                upscale_sigmas: &[],
             },
             Preset {
                 id: "viggle",
@@ -207,6 +220,8 @@ const MODELS: &[LocalModel] = &[
                 cfg: 1.0,
                 flow_shift: 0.0,
                 schedule: Schedule::QwenShifted(&[1.0, 0.9375, 0.875, 0.75, 0.5, 0.25]),
+                sampler: Sampler::Engine,
+                upscale_sigmas: &[],
             },
         ],
         sizes: &[(1024, 1024), (1344, 768), (768, 1344), (1152, 896), (896, 1152), (1536, 640), (640, 1536)],
@@ -236,6 +251,8 @@ const MODELS: &[LocalModel] = &[
                 cfg: 1.0,
                 flow_shift: 6.0,
                 schedule: Schedule::Engine,
+                sampler: Sampler::Engine,
+                upscale_sigmas: &[],
             },
             Preset {
                 id: "turbo-4",
@@ -245,8 +262,10 @@ const MODELS: &[LocalModel] = &[
                 cfg: 1.0,
                 flow_shift: 6.0,
                 schedule: Schedule::Engine,
+                sampler: Sampler::Engine,
+                upscale_sigmas: &[],
             },
-            Preset { id: "full", name: "", files: &[], steps: 0, cfg: 1.0, flow_shift: 0.0, schedule: Schedule::Engine },
+            Preset { id: "full", name: "", files: &[], steps: 0, cfg: 1.0, flow_shift: 0.0, schedule: Schedule::Engine, sampler: Sampler::Engine, upscale_sigmas: &[] },
         ],
         sizes: &[(864, 480), (480, 864), (1280, 704), (704, 1280), (640, 640)],
         rng_cpu: true,
@@ -258,7 +277,7 @@ const MODELS: &[LocalModel] = &[
     LocalModel {
         id: "ltx-2.5",
         name: "LTX-2.5",
-        description: "Lightricks' video model of August 2026, distilled to 8 steps: video with its own sound, from a prompt or a first frame, at 24 fps; with Lightricks' own INT8 Gemma-4-12B text encoder.",
+        description: "Lightricks' video model of August 2026, distilled to 8 steps: video with its own sound, from a prompt or a first frame, at 24 fps; with Lightricks' own INT8 Gemma-4-12B text encoder. Sampled as Lightricks' DistilledPipeline: half the size first, then their ×2 latent upscaler and three refining steps.",
         kind: Kind::Video,
         files: &[
             ModelFile { slot: Slot::Diffusion, download: Download { url: "https://huggingface.co/unsloth/LTX-2.5-GGUF/resolve/6eae90030f7f15460a0ecf9ab16445d676b2bbb6/distilled/ltx-2.5-22b-distilled-Q4_K_M.gguf", dest: "models/ltx-2.5/ltx-2.5-22b-distilled-Q4_K_M.gguf", size: 13_584_703_872, sha256: "ba40d53770314e69e88361661e55c6cc3b12a363646ba2ea53c8bcd459b66747", unzip_into: None } },
@@ -266,8 +285,21 @@ const MODELS: &[LocalModel] = &[
             ModelFile { slot: Slot::Vae, download: Download { url: "https://huggingface.co/comfyicu/LTX-2.5/resolve/1026e00f808dbd9601911479b22d65b760737dc8/vae/ltx-2.5-video-vae-conv-bf16.safetensors", dest: "models/ltx-2.5/ltx-2.5-video-vae-conv-bf16.safetensors", size: 1_452_269_922, sha256: "685b06ee3d9b2039647698fc4ea33175112462fc374e2777312c907897dfce8d", unzip_into: None } },
             ModelFile { slot: Slot::AudioVae, download: Download { url: "https://huggingface.co/comfyicu/LTX-2.5/resolve/1026e00f808dbd9601911479b22d65b760737dc8/vae/ltx-2.5-audio-vae-bf16.safetensors", dest: "models/ltx-2.5/ltx-2.5-audio-vae-bf16.safetensors", size: 364_866_540, sha256: "c52733d37f6a7fb7949c3dc0fb468c6cb2169e4d836983a73babb9f0d54837a5", unzip_into: None } },
         ],
-        presets: &[Preset { id: "distilled", name: "LTX-2.5 Distilled", files: &[], steps: 8, cfg: 1.0, flow_shift: 0.0, schedule: Schedule::Engine }],
-        sizes: &[(1280, 704), (704, 1280), (832, 480), (480, 832)],
+        presets: &[
+            Preset {
+                id: "two-pass",
+                name: "LTX-2.5 Distilled ×2",
+                files: &[ModelFile { slot: Slot::Upscaler, download: Download { url: "https://huggingface.co/comfyicu/LTX-2.5/resolve/1026e00f808dbd9601911479b22d65b760737dc8/latent_upscale_models/ltx-2.5-latent-spatial-upscaler-x2-bf16-1.0.safetensors", dest: "models/ltx-2.5/ltx-2.5-latent-spatial-upscaler-x2-bf16-1.0.safetensors", size: 995_778_752, sha256: "eb5a71fe4068ee87ccdb1c3aa635e547ca76bd2d30ae20ae889f2c325c0677e8", unzip_into: None } }],
+                steps: 8,
+                cfg: 1.0,
+                flow_shift: 0.0,
+                schedule: Schedule::Fixed(LTX_DISTILLED_SIGMAS),
+                sampler: Sampler::EulerAncestral,
+                upscale_sigmas: &[0.909375, 0.725, 0.421875, 0.0],
+            },
+            Preset { id: "one-pass", name: "LTX-2.5 Distilled", files: &[], steps: 8, cfg: 1.0, flow_shift: 0.0, schedule: Schedule::Fixed(LTX_DISTILLED_SIGMAS), sampler: Sampler::EulerAncestral, upscale_sigmas: &[] },
+        ],
+        sizes: &[(1536, 1024), (1024, 1536), (1280, 704), (704, 1280), (768, 512), (512, 768)],
         rng_cpu: false,
         seconds: &[2, 3, 5],
         fps: 24,
@@ -718,7 +750,7 @@ fn config(data: &Path, model: &LocalModel, preset: &Preset, device: Device) -> M
             Slot::Llm => config.llm = path,
             Slot::Vae => config.vae = path,
             Slot::AudioVae => config.audio_vae = path,
-            Slot::Lora => {}
+            Slot::Lora | Slot::Upscaler => {}
         }
     }
     config
@@ -809,9 +841,32 @@ pub fn run(data: &Path, id: &str, values: &Map<String, Value>, out_dir: &Path, p
                     Some(address) => Some(frame_from(data, address, width, height)?),
                     None => None,
                 };
+                let upscaler = preset.files.iter().find(|file| file.slot == Slot::Upscaler).filter(|_| !preset.upscale_sigmas.is_empty());
+                let upscale = upscaler.map(|file| Upscale { model: data.join(file.download.dest), scale: 2.0, sigmas: preset.upscale_sigmas.to_vec() });
+                let (pass_width, pass_height) = if upscale.is_some() { (width / 2, height / 2) } else { (width, height) };
                 current
                     .context
-                    .video(&VideoParams { prompt: prompt.clone(), negative_prompt: negative.clone(), width: width as i32, height: height as i32, frames, fps: model.fps, steps, cfg_scale: cfg, flow_shift: preset.flow_shift, seed, first_frame, last_frame: None, loras: loras.clone() }, Some(sink))
+                    .video(
+                        &VideoParams {
+                            prompt: prompt.clone(),
+                            negative_prompt: negative.clone(),
+                            width: pass_width as i32,
+                            height: pass_height as i32,
+                            frames,
+                            fps: model.fps,
+                            steps,
+                            cfg_scale: cfg,
+                            flow_shift: preset.flow_shift,
+                            sigmas: sigmas.clone(),
+                            sampler: preset.sampler,
+                            seed,
+                            first_frame,
+                            last_frame: None,
+                            loras: loras.clone(),
+                            upscale,
+                        },
+                        Some(sink),
+                    )
                     .map(Made::Video)
             }
         };
@@ -937,7 +992,14 @@ mod tests {
                 let own = model.files.iter().filter(|file| file.slot == Slot::Diffusion).count();
                 let swapped = preset.files.iter().filter(|file| file.slot == Slot::Diffusion).count();
                 assert!(own + swapped >= 1 && swapped <= 1, "{} {}", model.id, preset.id);
-                assert!(preset.files.iter().all(|file| matches!(file.slot, Slot::Diffusion | Slot::Lora)), "{} {}", model.id, preset.id);
+                assert!(preset.files.iter().all(|file| matches!(file.slot, Slot::Diffusion | Slot::Lora | Slot::Upscaler)), "{} {}", model.id, preset.id);
+                let upscalers = preset.files.iter().filter(|file| file.slot == Slot::Upscaler).count();
+                assert_eq!(upscalers, usize::from(!preset.upscale_sigmas.is_empty()), "{} {}", model.id, preset.id);
+                if !preset.upscale_sigmas.is_empty() {
+                    assert_eq!(preset.upscale_sigmas.last(), Some(&0.0), "{} {}", model.id, preset.id);
+                    // both passes land on the 32-pixel latent grid
+                    assert!(model.sizes.iter().all(|(w, h)| w % 64 == 0 && h % 64 == 0), "{} {}", model.id, preset.id);
+                }
                 if let Schedule::Fixed(sigmas) | Schedule::QwenShifted(sigmas) = &preset.schedule {
                     let evaluations = if matches!(preset.schedule, Schedule::Fixed(_)) { sigmas.len() - 1 } else { sigmas.len() };
                     assert_eq!(evaluations as i32, preset.steps, "{} {}", model.id, preset.id);
