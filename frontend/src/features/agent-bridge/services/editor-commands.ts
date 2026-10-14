@@ -142,6 +142,50 @@ function timeline() {
   }
 }
 
+const TOUCHING = new Set([
+  'id',
+  'ids',
+  'itemId',
+  'trackId',
+  'moved',
+  'created',
+  'leftClipId',
+  'rightClipId',
+])
+
+/** What an edit touched in the timeline after it, with a summary of the rest: the answer an agent reads. */
+function touched(ops: unknown, results: unknown, whole: ReturnType<typeof timeline>) {
+  const ids = new Set<string>()
+  const take = (value: unknown): void => {
+    if (typeof value === 'string') ids.add(value)
+    else if (Array.isArray(value)) value.forEach(take)
+    else if (value && typeof value === 'object')
+      for (const [key, inner] of Object.entries(value)) {
+        if (TOUCHING.has(key) || typeof inner === 'object') take(inner)
+      }
+  }
+  take(ops)
+  take(results)
+  const end = Math.max(0, ...whole.items.map((item) => item.from + item.durationInFrames))
+  return {
+    items: whole.items.filter((item) => ids.has(item.id)),
+    tracks: whole.tracks.filter((track) => ids.has(track.id)),
+    transitions: whole.transitions.filter(
+      (transition) =>
+        ids.has(transition.id) || ids.has(transition.leftClipId) || ids.has(transition.rightClipId),
+    ),
+    markers: whole.markers.filter((marker) => ids.has(marker.id)),
+    summary: {
+      clips: whole.items.length,
+      tracks: whole.tracks.length,
+      transitions: whole.transitions.length,
+      markers: whole.markers.length,
+      end_s: round(end / (whole.project.fps ?? 30)),
+    },
+    note: 'what this edit touched; timeline_get or response_format detailed gives the whole timeline',
+  }
+}
+
 /** Opens a project in the editor, or the projects list for `null`; the app owns the router. */
 export type ShowProject = (projectId: string | null) => Promise<void>
 
@@ -178,7 +222,8 @@ export function registerEditorCommands(showProject: ShowProject): void {
   })
 
   registerBridgeCommand('timeline_edit', async (args) => {
-    takeArgs('timeline_edit', args, ['ops', 'dry_run'])
+    takeArgs('timeline_edit', args, ['ops', 'dry_run', 'response_format'])
+    const detailed = args.response_format === 'detailed'
     if (!Array.isArray(args.ops) || args.ops.length === 0)
       throw bridgeError('missing', { command: 'timeline_edit', field: 'ops' })
     const project = openProject()
@@ -194,7 +239,9 @@ export function registerEditorCommands(showProject: ShowProject): void {
         would_apply: rehearsal.wouldApply,
         error: rehearsal.error,
         results: rehearsal.results,
-        timeline: rehearsal.timeline,
+        timeline: detailed
+          ? rehearsal.timeline
+          : touched(args.ops, rehearsal.results, rehearsal.timeline),
       }
     }
     if (await confirmsEdits()) {
@@ -221,7 +268,12 @@ export function registerEditorCommands(showProject: ShowProject): void {
         `${outcome.error}. The ${applied.length} op(s) before it were applied and saved: ${JSON.stringify(applied)}`,
       )
     }
-    return { applied: applied.length, results: outcome.results, timeline: timeline() }
+    const now = timeline()
+    return {
+      applied: applied.length,
+      results: outcome.results,
+      timeline: detailed ? now : touched(args.ops, outcome.results, now),
+    }
   })
 
   registerBridgeCommand('motion_render', async (args) => {
