@@ -8,7 +8,7 @@ use std::time::Duration;
 
 use serde_json::{Map, Value, json};
 use vs_providers::schema_form::{Skip, fields_of_object};
-use vs_providers::{ModelEntry, ModelForm, Output, PriceRule, Provider, Task};
+use vs_providers::{ModelEntry, ModelForm, Output, Provider, Task};
 
 
 pub struct Studio {
@@ -146,7 +146,7 @@ pub fn form(id: &str) -> Result<ModelForm, String> {
     let schema = schema_of(id).ok_or_else(|| t!("studio-offline", studio = studio.name))?;
     let order: Vec<String> = ORDER.iter().map(|key| key.to_string()).collect();
     let fields = fields_of_object(&schema, &schema, "", &Skip { keys: &["playlist_id", "client_ref", "cover_of", "semantic_tokens"] }, false, Some(&order));
-    Ok(ModelForm { provider: Provider::Local, id: studio.id.into(), fields, price: PriceRule::default(), delivery: "sync".into(), source: Value::Null })
+    Ok(ModelForm { provider: Provider::Local, id: studio.id.into(), fields, price: crate::local::free(), delivery: "sync".into(), source: Value::Null })
 }
 
 pub fn ready(id: &str) -> Result<(), String> {

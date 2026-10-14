@@ -12,6 +12,8 @@ async function loadKeys(): Promise<void> {
   const [{ keys }, settings] = await Promise.all([generateApi.keys(), generateApi.settings()])
   const set: Partial<Record<Provider, boolean>> = {}
   for (const key of keys) set[key.provider] = key.set
+  // this computer needs no key, as the catalog says; whether a model is downloaded is told by /api/local
+  set.local = true
   useGenerateStore.getState().setKeys(set)
   useGenerateStore.getState().setAssistant(settings.assistant === 'agent' ? 'agent' : 'openrouter')
 }

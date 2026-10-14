@@ -12,7 +12,7 @@ use std::time::{Duration, Instant};
 use serde::Serialize;
 use serde_json::{json, Map, Value};
 use vs_diffusion::{Canceller, Context, Engine, ImageParams, Lora, ModelConfig, RawImage, Sampler, Upscale, VideoParams};
-use vs_providers::model::{Choice, Field, FieldKind, MediaKind, ModelEntry, ModelForm, Output, PriceRule, Provider, Role, Task};
+use vs_providers::model::{Choice, Field, FieldKind, MediaKind, ModelEntry, ModelForm, Output, PriceRule, Provider, Rate, Role, Task};
 
 /// One file to download, relative to the data folder.
 struct Download {
@@ -402,6 +402,11 @@ fn entry_of(model: &'static LocalModel) -> ModelEntry {
     }
 }
 
+/// What a run on this computer costs: nothing, so every estimate of it is exact.
+pub(crate) fn free() -> PriceRule {
+    PriceRule { rates: vec![Rate { amount: 0.0, unit: "output".into(), label: None }], note: Some(t!("local-price")) }
+}
+
 pub fn form(id: &str) -> Result<ModelForm, String> {
     if crate::studios::studio(id).is_some() {
         return crate::studios::form(id);
@@ -450,7 +455,7 @@ pub fn form(id: &str) -> Result<ModelForm, String> {
     fields.push(Field { key: "steps".into(), label: t!("local-field-steps"), description: Some(t!("local-field-steps-hint")), kind: FieldKind::Integer { min: Some(1.0), max: Some(80.0) }, required: false, default: None, advanced: true, role: None });
     fields.push(Field { key: "cfg".into(), label: t!("local-field-cfg"), description: Some(t!("local-field-cfg-hint")), kind: FieldKind::Number { min: Some(1.0), max: Some(15.0) }, required: false, default: None, advanced: true, role: None });
     fields.push(Field { key: "seed".into(), label: t!("local-field-seed"), description: None, kind: FieldKind::Integer { min: Some(-1.0), max: Some(2_147_483_647.0) }, required: false, default: Some(json!(-1)), advanced: true, role: Some(Role::Seed) });
-    Ok(ModelForm { provider: Provider::Local, id: model.id.into(), fields, price: PriceRule::default(), delivery: "sync".into(), source: Value::Null })
+    Ok(ModelForm { provider: Provider::Local, id: model.id.into(), fields, price: free(), delivery: "sync".into(), source: Value::Null })
 }
 
 // ---------------------------------------------------------------- downloads
@@ -991,6 +996,16 @@ mod tests {
             assert!(form.fields.iter().any(|field| matches!(&field.kind, FieldKind::Size { options, .. } if options.len() == model.sizes.len())));
             assert_eq!(form.fields.iter().any(|field| field.role == Some(Role::Duration)), model.kind == Kind::Video);
             assert_eq!(form.fields.iter().any(|field| field.key == "preset"), model.presets.len() > 1);
+        }
+    }
+
+    #[test]
+    fn a_run_on_this_computer_is_priced_at_exactly_nothing() {
+        for model in MODELS {
+            let form = form(model.id).expect("form");
+            let estimate = vs_providers::price::estimate(&form, &serde_json::Map::new()).expect("an estimate");
+            assert_eq!(estimate.usd, 0.0, "{}", model.id);
+            assert!(estimate.exact, "{}", model.id);
         }
     }
 

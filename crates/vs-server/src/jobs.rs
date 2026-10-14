@@ -927,7 +927,7 @@ fn one() -> u32 {
 
 async fn create(State(state): State<AppState>, Json(mut request): Json<CreateRequest>) -> Response {
     let Some(provider) = Provider::parse(&request.provider) else { return bad(t!("catalog-unknown-provider", provider = request.provider)) };
-    if credentials::key(provider).is_none() {
+    if provider != Provider::Local && credentials::key(provider).is_none() {
         return bad(t!("jobs-no-key", provider = provider.as_str()));
     }
     if request.place && request.project_id.as_deref().is_none_or(str::is_empty) {
