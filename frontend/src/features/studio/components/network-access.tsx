@@ -51,7 +51,7 @@ export function NetworkAccess() {
           onChange={(event) => void change({ enabled: event.target.checked })}
           className="h-4 w-4 accent-[var(--color-accent)]"
         />
-        <Wifi size={15} className="text-[var(--color-accent-2)]" />
+        <Wifi size={15} className="text-[var(--color-accent)]" />
         {t('network.access')}
       </label>
       <p className="text-[12px] leading-5 text-[var(--color-muted)]">{t('network.accessHint')}</p>

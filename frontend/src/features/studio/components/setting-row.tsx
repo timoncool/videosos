@@ -15,7 +15,7 @@ export function SettingRow({ icon: Icon, label, hint, children, below }: { icon:
   return (
     <div className="px-3 py-2.5" role="group" aria-labelledby={labelId}>
       <div className="flex items-center gap-3">
-        <Icon size={15} className="shrink-0 text-[var(--color-accent-2)]" aria-hidden="true" />
+        <Icon size={15} className="shrink-0 text-[var(--color-accent)]" aria-hidden="true" />
         <div className="min-w-0 flex-1">
           <div id={labelId} className="text-[13px] font-medium text-[var(--color-text)]">{label}</div>
           {hint && <div className="text-[11px] leading-snug text-[var(--color-muted)]">{hint}</div>}

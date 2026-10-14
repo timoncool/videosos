@@ -47,7 +47,7 @@ export function AgentBudget() {
       <div className="flex items-center gap-2">
         <Label className="text-xs text-muted-foreground">{t('settings.providers.budget')}</Label>
         <Input value={budget} onChange={(event) => setBudget(event.target.value)} placeholder={t('settings.providers.noLimit')} className="h-7 w-24 text-xs" />
-        <Button size="sm" variant="outline" className="h-7" onClick={() => void save()}>
+        <Button size="sm" className="h-7" onClick={() => void save()}>
           {saved ? <Check className="h-3.5 w-3.5" /> : t('generate.keys.save')}
         </Button>
       </div>

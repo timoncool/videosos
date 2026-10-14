@@ -58,7 +58,7 @@ export function JournalPanel({ onClose }: { onClose: () => void }) {
               return (
                 <li key={line.id} className="group flex items-start gap-2 rounded-md px-1 py-1.5 hover:bg-[var(--color-surface-2)]">
                   <span role="img" aria-label={agent ? t("journal.agent") : t("journal.app")} title={agent ? t("journal.agent") : t("journal.app")}
-                        className={`mt-0.5 shrink-0 ${agent ? "text-[var(--color-accent-2)]" : TONE[line.tone] ?? "text-[var(--color-muted)]"}`}>
+                        className={`mt-0.5 shrink-0 ${agent ? "text-[var(--color-accent)]" : TONE[line.tone] ?? "text-[var(--color-muted)]"}`}>
                     {agent ? <Bot size={15} /> : <Clapperboard size={15} />}
                   </span>
                   <span className="min-w-0 flex-1">

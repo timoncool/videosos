@@ -122,7 +122,7 @@ export function ProxySettings() {
   return (
     <section className="space-y-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-2)]/40 p-3">
       <h4 className="flex items-center gap-2 text-[13px] font-semibold">
-        <Globe size={15} className="text-[var(--color-accent-2)]" /> {t('network.proxyTitle')}
+        <Globe size={15} className="text-[var(--color-accent)]" /> {t('network.proxyTitle')}
       </h4>
       <p className="text-[12px] leading-5 text-[var(--color-muted)]">{t('network.proxyIntro')}</p>
       <Segments
