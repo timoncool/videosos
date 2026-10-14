@@ -126,8 +126,15 @@ pub struct Choice {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum FieldKind {
-    Text,
-    Textarea,
+    /// `max_length`: the most characters the model takes, when its schema says.
+    Text {
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        max_length: Option<u64>,
+    },
+    Textarea {
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        max_length: Option<u64>,
+    },
     Integer { min: Option<f64>, max: Option<f64> },
     Number { min: Option<f64>, max: Option<f64> },
     Boolean,

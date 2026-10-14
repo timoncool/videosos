@@ -44,7 +44,7 @@ import { FieldControl } from './field-control'
 import { improvePrompt } from '../services/prompt-assist'
 import { GenerationHistory } from './generation-history'
 import { ModelPicker } from './model-picker'
-import { fieldLabel, providerWords } from '../services/field-label'
+import { fieldLabel, overLength, providerWords } from '../services/field-label'
 
 const NO_VALUES: Record<string, unknown> = {}
 
@@ -230,6 +230,13 @@ export function GeneratePanel() {
       }),
     [fields, values],
   )
+  const tooLong = useMemo(
+    () => fields.flatMap((field) => {
+      const over = overLength(field, values[field.key])
+      return over ? [{ field, ...over }] : []
+    }),
+    [fields, values],
+  )
   const hasKey = model ? keys[model.provider] === true : false
 
   const generate = async () => {
@@ -409,7 +416,7 @@ export function GeneratePanel() {
         </div>
         <Button
           className="h-9 w-full gap-2"
-          disabled={!form || !hasKey || submitting || missing.length > 0 || !projectId}
+          disabled={!form || !hasKey || submitting || missing.length > 0 || tooLong.length > 0 || !projectId}
           onClick={() => void generate()}
           data-testid="generate-submit"
         >
@@ -426,6 +433,11 @@ export function GeneratePanel() {
             {t('generate.form.missing', { fields: missing.map((field) => fieldLabel(t, field)).join(', ') })}
           </p>
         )}
+        {tooLong.map(({ field, count, max }) => (
+          <p key={field.key} className="text-[11px] text-destructive">
+            {t('generate.form.shorten', { field: fieldLabel(t, field), count, max })}
+          </p>
+        ))}
         {submitError && <p className="text-[11px] text-destructive">{submitError}</p>}
         {estimateError && (
           <p className="text-[11px] text-destructive">{t('generate.cost.failed', { reason: estimateError })}</p>

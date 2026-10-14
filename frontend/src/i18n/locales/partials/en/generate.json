@@ -54,7 +54,10 @@
       "noMedia": "The library has no {{kind}} yet.",
       "tooMany": "At most {{max}} files here.",
       "wrongKind": "This slot takes {{kind}}.",
-      "missing": "Fill in: {{fields}}"
+      "missing": "Fill in: {{fields}}",
+      "length": "{{count}} / {{max}}",
+      "tooLong": "{{count}} / {{max}} - longer than the model takes",
+      "shorten": "Shorten {{field}}: {{count}} characters, the model takes at most {{max}}"
     },
     "placeOnTimeline": "Put on the timeline",
     "repeat": "Runs",

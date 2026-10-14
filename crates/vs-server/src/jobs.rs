@@ -359,7 +359,7 @@ impl Jobs {
             return;
         }
         let Some((key, _)) = credentials::key(job.provider) else {
-            return self.fail(&id, "no_key", ProviderError::NoKey(job.provider.as_str()).to_string());
+            return self.fail(&id, "no_key", t!("jobs-no-key", provider = job.provider.as_str()));
         };
         let form = match self.catalog.form(job.provider, &job.model).await {
             Ok(form) => form,
@@ -516,7 +516,7 @@ impl Jobs {
         let Some(job) = self.get(&id) else { return };
         let Some(handle) = job.handle.clone() else { return };
         let Some((key, _)) = credentials::key(job.provider) else {
-            return self.fail(&id, "no_key", ProviderError::NoKey(job.provider.as_str()).to_string());
+            return self.fail(&id, "no_key", t!("jobs-no-key", provider = job.provider.as_str()));
         };
         if job.status == "sending" {
             self.update(&id, |job| job.status = "running".into());
@@ -780,7 +780,7 @@ fn one() -> u32 {
 async fn create(State(state): State<AppState>, Json(request): Json<CreateRequest>) -> Response {
     let Some(provider) = Provider::parse(&request.provider) else { return bad(t!("catalog-unknown-provider", provider = request.provider)) };
     if credentials::key(provider).is_none() {
-        return bad(ProviderError::NoKey(provider.as_str()).to_string());
+        return bad(t!("jobs-no-key", provider = provider.as_str()));
     }
     if request.place && request.project_id.as_deref().is_none_or(str::is_empty) {
         return bad(t!("jobs-place-needs-project"));
@@ -798,6 +798,16 @@ async fn create(State(state): State<AppState>, Json(request): Json<CreateRequest
         };
         if missing && field.default.is_none() {
             return bad(t!("jobs-field-required", field = field.label.clone()));
+        }
+    }
+    // a text longer than the model takes is refused here, before it is sent and paid for
+    for field in &form.fields {
+        let (FieldKind::Text { max_length: Some(max) } | FieldKind::Textarea { max_length: Some(max) }) = field.kind else { continue };
+        if let Some(Value::String(text)) = request.values.get(&field.key) {
+            let count = text.chars().count() as u64;
+            if count > max {
+                return bad(t!("jobs-field-too-long", field = field.label.clone(), count = count, max = max));
+            }
         }
     }
     let name = state.catalog.find(provider, &request.model).map(|entry| entry.name).unwrap_or_else(|| request.model.clone());

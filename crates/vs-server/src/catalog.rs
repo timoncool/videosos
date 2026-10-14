@@ -174,6 +174,7 @@ impl Catalog {
             let fresh = meta.modified().ok().and_then(|time| time.elapsed().ok()).is_some_and(|age| age.as_secs() < 24 * 3600);
             if fresh
                 && let Some(cached) = std::fs::read_to_string(&path).ok().and_then(|text| serde_json::from_str::<CachedForm>(&text).ok())
+                && cached.version == FORM_VERSION
                 // fal tells its prices only to a key: a form read before the key was set is read again once it is
                 && (provider != Provider::Fal || cached.keyed || credentials::key(Provider::Fal).is_none())
             {
@@ -234,7 +235,7 @@ impl Catalog {
             }
         };
         let keyed = provider == Provider::Fal && credentials::key(Provider::Fal).is_some();
-        let cached = CachedForm { form: form.clone(), schema, keyed };
+        let cached = CachedForm { version: FORM_VERSION, form: form.clone(), schema, keyed };
         if let Ok(text) = serde_json::to_string(&cached) {
             let _ = std::fs::write(&path, text);
         }
@@ -291,8 +292,13 @@ pub async fn write_snapshot(dir: &std::path::Path) -> anyhow::Result<()> {
     Ok(())
 }
 
+/// What a form read today knows; a form kept by an older VideoSOS is read again.
+const FORM_VERSION: u32 = 2;
+
 #[derive(Serialize, Deserialize)]
 struct CachedForm {
+    #[serde(default)]
+    version: u32,
     form: ModelForm,
     #[serde(default)]
     schema: Value,

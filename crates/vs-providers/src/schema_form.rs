@@ -272,9 +272,9 @@ fn plain_field(root: &Value, key: &str, path: &str, node: &Value, required: bool
         let (kind, typed) = effective?;
         match kind {
             "string" => {
-                let long = matches!(role, Some(Role::Prompt) | Some(Role::NegativePrompt))
-                    || typed.get("maxLength").and_then(Value::as_u64).is_some_and(|max| max > 300);
-                if long { FieldKind::Textarea } else { FieldKind::Text }
+                let max_length = typed.get("maxLength").and_then(Value::as_u64);
+                let long = matches!(role, Some(Role::Prompt) | Some(Role::NegativePrompt)) || max_length.is_some_and(|max| max > 300);
+                if long { FieldKind::Textarea { max_length } } else { FieldKind::Text { max_length } }
             }
             "integer" => FieldKind::Integer { min: typed.get("minimum").and_then(Value::as_f64), max: typed.get("maximum").and_then(Value::as_f64) },
             "number" => FieldKind::Number { min: typed.get("minimum").and_then(Value::as_f64), max: typed.get("maximum").and_then(Value::as_f64) },

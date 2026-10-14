@@ -10,6 +10,13 @@ function normalKey(key: string): string {
 }
 
 /** A model's field in the window's language when it is a known one; otherwise the name the provider gave it. */
+/** A text longer than its model takes: how long it is and the limit, or null when it fits. */
+export function overLength(field: Field, value: unknown): { count: number; max: number } | null {
+  if ((field.type !== 'text' && field.type !== 'textarea') || field.max_length === undefined || typeof value !== 'string') return null
+  const count = Array.from(value).length
+  return count > field.max_length ? { count, max: field.max_length } : null
+}
+
 export function fieldLabel(t: TFunction, field: Pick<Field, 'key' | 'label'>): string {
   return t(`generate.fields.${normalKey(field.key)}`, { defaultValue: field.label })
 }

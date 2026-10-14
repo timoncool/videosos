@@ -93,8 +93,8 @@ interface FieldBase {
 
 export type Field = FieldBase &
   (
-    | { type: 'text' }
-    | { type: 'textarea' }
+    | { type: 'text'; max_length?: number }
+    | { type: 'textarea'; max_length?: number }
     | { type: 'integer'; min: number | null; max: number | null }
     | { type: 'number'; min: number | null; max: number | null }
     | { type: 'boolean' }

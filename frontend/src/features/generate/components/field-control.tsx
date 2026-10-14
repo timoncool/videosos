@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { cn } from '@/shared/ui/cn'
 import { generateApi, type Field, type MediaKind, type MediaRef } from '../services/generate-api'
 import { getMediaDragData, mediaLibraryService, useMediaLibraryStore } from '../deps/editor'
-import { fieldLabel, providerWords } from '../services/field-label'
+import { fieldLabel, overLength, providerWords } from '../services/field-label'
 
 /** Drag payload of a finished generation's file. */
 export const OUTPUT_DRAG_TYPE = 'application/x-videosos-output'
@@ -207,6 +207,20 @@ interface FieldControlProps {
   onChange: (value: unknown) => void
 }
 
+/** How much of the model's limit a text uses, shown once it is past four fifths of it. */
+function LengthCount({ field, value }: { field: Field; value: unknown }) {
+  const { t } = useTranslation()
+  if ((field.type !== 'text' && field.type !== 'textarea') || field.max_length === undefined) return null
+  const count = typeof value === 'string' ? Array.from(value).length : 0
+  if (count < field.max_length * 0.8) return null
+  const over = count > field.max_length
+  return (
+    <p className={cn('text-right text-[11px] tabular-nums', over ? 'text-destructive' : 'text-muted-foreground')} aria-live="polite">
+      {over ? t('generate.form.tooLong', { count, max: field.max_length }) : t('generate.form.length', { count, max: field.max_length })}
+    </p>
+  )
+}
+
 export function FieldControl({ field, value, onChange }: FieldControlProps) {
   const { t } = useTranslation()
   const effective = value ?? field.default
@@ -227,8 +241,10 @@ export function FieldControl({ field, value, onChange }: FieldControlProps) {
             onChange={(event) => onChange(event.target.value)}
             placeholder={field.description ? providerWords(t, field.description) : ''}
             data-testid={`generate-field-${field.key}`}
+            aria-invalid={overLength(field, value) !== null}
             className={cn('resize-y bg-secondary/30 text-xs', field.role === 'prompt' ? 'min-h-24' : 'min-h-14')}
           />
+          <LengthCount field={field} value={value} />
         </div>
       )
     case 'text':
@@ -239,8 +255,10 @@ export function FieldControl({ field, value, onChange }: FieldControlProps) {
             value={typeof value === 'string' ? value : ''}
             onChange={(event) => onChange(event.target.value)}
             placeholder={typeof field.default === 'string' ? field.default : ''}
+            aria-invalid={overLength(field, value) !== null}
             className="h-7 text-xs"
           />
+          <LengthCount field={field} value={value} />
         </div>
       )
     case 'integer':

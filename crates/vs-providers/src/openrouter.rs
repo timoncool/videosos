@@ -165,7 +165,7 @@ fn select(key: &str, label: &str, values: &Value, role: Option<Role>, advanced: 
 }
 
 fn prompt(key: &str, label: &str, required: bool) -> Field {
-    Field { key: key.into(), label: label.into(), description: None, kind: FieldKind::Textarea, required, default: None, advanced: false, role: Some(Role::Prompt) }
+    Field { key: key.into(), label: label.into(), description: None, kind: FieldKind::Textarea { max_length: None }, required, default: None, advanced: false, role: Some(Role::Prompt) }
 }
 
 fn media(key: &str, label: &str, kind: MediaKind, min: u32, max: u32, role: Role) -> Field {
@@ -237,7 +237,7 @@ pub fn form(entry: &ModelEntry) -> Result<ModelForm, ProviderError> {
             if let Some(field) = select("voice", "Voice", &source["voices"], Some(Role::Voice), false) {
                 fields.push(field);
             }
-            fields.push(Field { key: "instructions".into(), label: "How to read it".into(), description: Some("Tone, pace and emotion, in words.".into()), kind: FieldKind::Text, required: false, default: None, advanced: true, role: None });
+            fields.push(Field { key: "instructions".into(), label: "How to read it".into(), description: Some("Tone, pace and emotion, in words.".into()), kind: FieldKind::Text { max_length: None }, required: false, default: None, advanced: true, role: None });
             fields.push(Field { key: "speed".into(), label: "Speed".into(), description: None, kind: FieldKind::Number { min: Some(0.5), max: Some(2.0) }, required: false, default: None, advanced: true, role: None });
             if let Some(per_character) = price_number(&source["pricing"]["prompt"]).filter(|price| *price > 0.0) {
                 price.rates.push(Rate { amount: per_character, unit: "character".into(), label: None });
@@ -245,12 +245,12 @@ pub fn form(entry: &ModelEntry) -> Result<ModelForm, ProviderError> {
         }
         "transcribe" => {
             fields.push(media("input_audio", "Audio", MediaKind::Audio, 1, 1, Role::Audio));
-            fields.push(Field { key: "language".into(), label: "Language".into(), description: Some("ISO code, for example ru or en; empty to detect".into()), kind: FieldKind::Text, required: false, default: None, advanced: false, role: None });
+            fields.push(Field { key: "language".into(), label: "Language".into(), description: Some("ISO code, for example ru or en; empty to detect".into()), kind: FieldKind::Text { max_length: None }, required: false, default: None, advanced: false, role: None });
             price.note = Some("billed by the length of the recording".into());
         }
         "text" => {
             fields.push(prompt("prompt", "Request", true));
-            fields.push(Field { key: "system".into(), label: "Instructions".into(), description: Some("How the model should answer".into()), kind: FieldKind::Textarea, required: false, default: None, advanced: true, role: None });
+            fields.push(Field { key: "system".into(), label: "Instructions".into(), description: Some("How the model should answer".into()), kind: FieldKind::Textarea { max_length: None }, required: false, default: None, advanced: true, role: None });
             fields.push(Field { key: "temperature".into(), label: "Temperature".into(), description: None, kind: FieldKind::Number { min: Some(0.0), max: Some(2.0) }, required: false, default: None, advanced: true, role: None });
             if let (Some(input), Some(output)) = (price_number(&source["pricing"]["prompt"]), price_number(&source["pricing"]["completion"])) {
                 price.rates.push(Rate { amount: input, unit: "token_in".into(), label: None });
