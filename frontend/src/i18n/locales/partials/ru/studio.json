@@ -139,14 +139,17 @@
       "imported": "Импортировано",
       "exported": "Выгружено",
       "undone": "Отменено",
-      "redone": "Повторено"
+      "redone": "Повторено",
+      "created": "Сделана",
+      "restored": "Возвращён"
     },
     "kind": {
       "generation": "генерация",
       "timeline": "таймлайн",
       "media": "медиа",
       "video": "видео",
-      "download": "загрузка по ссылке"
+      "download": "загрузка по ссылке",
+      "checkpoint": "точка отката"
     }
   },
   "files": {

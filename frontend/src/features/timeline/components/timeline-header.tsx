@@ -51,6 +51,7 @@ import { ZOOM_MIN, ZOOM_MAX, SLIP_SLIDE_TOOLS_ENABLED } from '../constants'
 import { EDITOR_LAYOUT_CSS_VALUES } from '@/config/editor-layout'
 import { useResolvedHotkeys } from '@/features/timeline/deps/settings'
 import { MicRecordControl } from './mic-record-control'
+import { CheckpointsPopover } from './checkpoints-popover'
 
 interface TimelineHeaderProps {
   onZoomChange?: (newZoom: number) => void
@@ -671,6 +672,7 @@ export const TimelineHeader = memo(function TimelineHeader({
             >
               <Redo2 className="w-3.5 h-3.5" />
             </Button>
+            <CheckpointsPopover style={btnSize} />
           </div>
 
           <Separator orientation="vertical" className="h-5 mx-1.5" />

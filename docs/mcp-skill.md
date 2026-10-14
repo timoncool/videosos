@@ -57,6 +57,11 @@ cannot cancel, the program only stops waiting.
   - `{"op": "addKeyframe", "itemId": "...", "property": "opacity", "frame": 0, "value": 0}`.
   Give an op `callerId` and refer to what it created later: `{"$ref": "a#/detail/created/0"}`.
 - `timeline_undo` / `timeline_redo`, `playhead_seek`, `playback`, `editor_tab`.
+- Rehearse a many-step edit first: `timeline_edit` with `"dry_run": true` answers with what the ops would make and
+  leaves the timeline as it was.
+- Before every `timeline_edit` the window keeps a checkpoint of the timeline; `checkpoint_list {project_id}` lists
+  them, `checkpoint_restore {id}` goes back to one (the person can undo it), `checkpoint_create {label}` keeps one on
+  purpose before a risky series.
 - `media_import` with `path` (a file on this computer) or `url`.
 - `ui_screenshot` to see the result; `ui_read_page`, `ui_click`, `ui_type` for any control of the window.
 - `ui_notify` to tell the person what you did or what you need from them; it stays in the journal.

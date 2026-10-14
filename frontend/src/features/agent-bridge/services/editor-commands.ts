@@ -13,7 +13,11 @@ import type { EditorSidebarTab } from '@/config/editor-workspaces'
 import type { ExtendedExportSettings, VideoContainer } from '@/types/export'
 import {
   buildRenderJob,
+  captureSnapshot,
+  keepCheckpoint,
   mediaLibraryService,
+  restoreCheckpoint,
+  restoreSnapshot,
   saveTimeline,
   useRenderQueueStore,
   useItemsStore,
@@ -106,10 +110,24 @@ export function registerEditorCommands(showProject: ShowProject): void {
   })
 
   registerBridgeCommand('timeline_edit', async (args) => {
-    takeArgs('timeline_edit', args, ['ops'])
+    takeArgs('timeline_edit', args, ['ops', 'dry_run'])
     if (!Array.isArray(args.ops) || args.ops.length === 0) throw bridgeError('missing', { command: 'timeline_edit', field: 'ops' })
     const project = openProject()
     setEditCanvas({ width: project.metadata?.width ?? 1920, height: project.metadata?.height ?? 1080, fps: fpsOf(project) })
+    if (args.dry_run === true) {
+      // a rehearsal: the ops run on the live stores and everything, history included, is put back in the same tick
+      const before = captureSnapshot()
+      const { undoStack, redoStack } = useTimelineCommandStore.getState()
+      let rehearsal
+      try {
+        rehearsal = applyEditOpsLive(args.ops as EditOp[])
+        return { dry_run: true, would_apply: rehearsal.results.filter((result) => result.ok).length, error: rehearsal.error ?? null, results: rehearsal.results, timeline: timeline() }
+      } finally {
+        restoreSnapshot(before)
+        useTimelineCommandStore.setState({ undoStack, redoStack, canUndo: undoStack.length > 0, canRedo: redoStack.length > 0 })
+      }
+    }
+    await keepCheckpoint(project.id, 'agent', { edits: args.ops.length })
     let outcome
     try {
       outcome = applyEditOpsLive(args.ops as EditOp[])
@@ -125,6 +143,25 @@ export function registerEditorCommands(showProject: ShowProject): void {
       )
     }
     return { applied: applied.length, results: outcome.results, timeline: timeline() }
+  })
+
+  registerBridgeCommand('checkpoint_create', async (args) => {
+    takeArgs('checkpoint_create', args, ['label'])
+    const project = openProject()
+    return keepCheckpoint(project.id, 'asked', { label: textArg('checkpoint_create', args, 'label') })
+  })
+
+  registerBridgeCommand('checkpoint_restore', async (args) => {
+    takeArgs('checkpoint_restore', args, ['id'])
+    openProject()
+    const id = textArg('checkpoint_restore', args, 'id')
+    if (!id) throw bridgeError('missing', { command: 'checkpoint_restore', field: 'id' })
+    try {
+      await restoreCheckpoint(id)
+    } catch (problem) {
+      throw failed('checkpoint_restore', problem)
+    }
+    return { restored: id, timeline: timeline() }
   })
 
   registerBridgeCommand('timeline_undo', async (args) => {

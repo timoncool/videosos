@@ -139,14 +139,17 @@
       "imported": "Imported",
       "exported": "Exported",
       "undone": "Undone",
-      "redone": "Redone"
+      "redone": "Redone",
+      "created": "Made",
+      "restored": "Restored"
     },
     "kind": {
       "generation": "generation",
       "timeline": "timeline",
       "media": "media",
       "video": "video",
-      "download": "link download"
+      "download": "link download",
+      "checkpoint": "checkpoint"
     }
   },
   "files": {

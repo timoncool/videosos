@@ -9,6 +9,7 @@
 pub mod i18n;
 pub mod catalog;
 mod chat;
+mod checkpoints;
 mod choices;
 pub use vs_providers;
 pub mod credentials;
@@ -91,6 +92,7 @@ impl AppState {
         request_log::init(&data);
         settings::init(&data);
         choices::init(&data);
+        checkpoints::init(&data);
         let http = vs_providers::http::Http::new(reqwest::Client::builder()).map_err(|e| anyhow::anyhow!(e.to_string()))?;
         let catalog = catalog::Catalog::open(&data, http.clone());
         let jobs = jobs::Jobs::open(&data, &workspace, http.clone(), catalog.clone())?;
@@ -177,6 +179,7 @@ pub fn app(state: AppState) -> Router {
         .merge(keys::router())
         .merge(settings::router())
         .merge(choices::router())
+        .merge(checkpoints::router())
         .merge(url_import::router())
         .merge(chat::router())
         .merge(exports::router())

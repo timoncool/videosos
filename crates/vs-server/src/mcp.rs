@@ -399,10 +399,37 @@ fn tools() -> &'static [Tool] {
             },
             Tool {
                 name: "timeline_edit",
-                description: "Edits the open project's timeline with the editor's own operations, as one undoable step each. ops is a list of {op, ...}: addClip {mediaId, from, trackId?, keepFrom?} (keepFrom: true lands it at from on a track free there, a new one when none is, instead of after what is in the way); addText {text, from, durationInFrames, fontSize?, color?}; moveItem {id, from, trackId?}; updateItem {id, updates}; removeItems {ids}; split {id, frame}; trimStart {id, amount} (frames; positive cuts the start off, negative brings it back); trimEnd {id, amount} (frames; negative cuts the end off, positive lengthens); addTransition {leftClipId, rightClipId, type?, durationInFrames?}; removeTransition {id}; addTrack {kind: video|audio}; addKeyframe {itemId, property, frame, value, easing?}; addEffect {itemId, effect}; setTransform {id, transform}. Frames are of the project's frame rate. An op may name the result of an earlier one with {\"$ref\": \"<callerId>#/detail/created/0\"} when it carries callerId.",
+                description: "Edits the open project's timeline with the editor's own operations, as one undoable step each. ops is a list of {op, ...}: addClip {mediaId, from, trackId?, keepFrom?} (keepFrom: true lands it at from on a track free there, a new one when none is, instead of after what is in the way); addText {text, from, durationInFrames, fontSize?, color?}; moveItem {id, from, trackId?}; updateItem {id, updates}; removeItems {ids}; split {id, frame}; trimStart {id, amount} (frames; positive cuts the start off, negative brings it back); trimEnd {id, amount} (frames; negative cuts the end off, positive lengthens); addTransition {leftClipId, rightClipId, type?, durationInFrames?}; removeTransition {id}; addTrack {kind: video|audio}; addKeyframe {itemId, property, frame, value, easing?}; addEffect {itemId, effect}; setTransform {id, transform}. Frames are of the project's frame rate. An op may name the result of an earlier one with {\"$ref\": \"<callerId>#/detail/created/0\"} when it carries callerId. Before the edit the window keeps a checkpoint of the timeline (checkpoint_list, checkpoint_restore). With dry_run the ops are rehearsed: the answer is what they would make, and the timeline is left as it was.",
                 looks: false,
-                schema: || object(json!({ "ops": { "type": "array", "items": { "type": "object" } } }), &["ops"]),
+                schema: || object(json!({ "ops": { "type": "array", "items": { "type": "object" } }, "dry_run": { "type": "boolean" } }), &["ops"]),
                 call: |args| window("timeline_edit", args, 60),
+            },
+            Tool {
+                name: "checkpoint_list",
+                description: "The checkpoints of a project's timeline, newest first: the timeline as it was before each agent's edit, before each going back, and where one was made on purpose.",
+                looks: true,
+                schema: || object(json!({ "project_id": { "type": "string" } }), &["project_id"]),
+                call: |args| {
+                    let project = text(args, "project_id")?;
+                    if !project.chars().all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_') {
+                        return Err(format!("{project} is not a project id"));
+                    }
+                    send(Method::GET, format!("/api/checkpoints/{project}"), Value::Null)
+                },
+            },
+            Tool {
+                name: "checkpoint_create",
+                description: "Keeps the open project's timeline as a checkpoint to come back to, with a label.",
+                looks: false,
+                schema: || object(json!({ "label": { "type": "string" } }), &[]),
+                call: |args| window("checkpoint_create", args, 30),
+            },
+            Tool {
+                name: "checkpoint_restore",
+                description: "Brings the open project's timeline back to a checkpoint (checkpoint_list). The timeline as it was is kept as a checkpoint first, and the step can be undone.",
+                looks: false,
+                schema: || object(json!({ "id": { "type": "string" } }), &["id"]),
+                call: |args| window("checkpoint_restore", args, 30),
             },
             Tool {
                 name: "timeline_undo",
@@ -617,6 +644,8 @@ const JOURNAL: &[(&str, &str, &str)] = &[
     ("timeline_edit", "updated", "timeline"),
     ("timeline_undo", "undone", "timeline"),
     ("timeline_redo", "redone", "timeline"),
+    ("checkpoint_create", "created", "checkpoint"),
+    ("checkpoint_restore", "restored", "timeline"),
     ("media_import", "imported", "media"),
     ("export_video", "exported", "video"),
     ("url_fetch", "started", "download"),
@@ -661,6 +690,10 @@ fn change_target(kind: &str, args: &Value, before: &str, answer: &Value) -> Stri
 /// Writes an agent's change into the journal, where the person reads it.
 fn journal_change(state: &AppState, name: &str, args: &Value, before: &str, answer: &Value) {
     let Some((verb, kind)) = journal_facts(name) else { return };
+    // a rehearsal changes nothing
+    if name == "timeline_edit" && args.get("dry_run").and_then(Value::as_bool) == Some(true) {
+        return;
+    }
     let line = crate::journal::Line {
         id: 0,
         at: 0,
