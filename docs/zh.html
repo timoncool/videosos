@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>VideoSOS — 桌面上的 AI 视频工作室：用顶级模型生成，规划影片，在时间线上剪辑</title>
+<meta name="description" content="适用于 Windows、Linux 和 macOS 的桌面 AI 视频工作室：使用你自己的密钥，调用 OpenRouter、fal 和 Runware 的顶级模型生成图像、视频、音乐、人声、音效和文本；用故事板、节点画布和 3D 走位预演规划影片，再用真正的多轨时间线剪辑成片。支持面向 AI 智能体的 MCP。免费开源。" />
+<link rel="canonical" href="https://timoncool.github.io/videosos/zh.html" />
+<link rel="alternate" hreflang="en" href="https://timoncool.github.io/videosos/" />
+<link rel="alternate" hreflang="ru" href="https://timoncool.github.io/videosos/ru.html" />
+<link rel="alternate" hreflang="zh" href="https://timoncool.github.io/videosos/zh.html" />
+<link rel="alternate" hreflang="ja" href="https://timoncool.github.io/videosos/ja.html" />
+<link rel="alternate" hreflang="ko" href="https://timoncool.github.io/videosos/ko.html" />
+<link rel="alternate" hreflang="es" href="https://timoncool.github.io/videosos/es.html" />
+<link rel="alternate" hreflang="fr" href="https://timoncool.github.io/videosos/fr.html" />
+<link rel="alternate" hreflang="pt" href="https://timoncool.github.io/videosos/pt.html" />
+<link rel="alternate" hreflang="x-default" href="https://timoncool.github.io/videosos/" />
+<link rel="icon" type="image/png" href="logo.png" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="VideoSOS" />
+<meta property="og:title" content="VideoSOS — 桌面上的 AI 视频工作室：用顶级模型生成，规划影片，在时间线上剪辑" />
+<meta property="og:description" content="适用于 Windows、Linux 和 macOS 的桌面 AI 视频工作室：使用你自己的密钥，调用 OpenRouter、fal 和 Runware 的顶级模型生成图像、视频、音乐、人声、音效和文本；用故事板、节点画布和 3D 走位预演规划影片，再用真正的多轨时间线剪辑成片。支持面向 AI 智能体的 MCP。免费开源。" />
+<meta property="og:url" content="https://timoncool.github.io/videosos/zh.html" />
+<meta property="og:locale" content="zh" />
+<meta property="og:image" content="https://timoncool.github.io/videosos/og-zh.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="在一个窗口里生成、规划并剪辑整部影片" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://timoncool.github.io/videosos/og-zh.jpg" />
+<link rel="preload" as="image" href="screenshots/editor-zh.webp" fetchpriority="high" />
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"SoftwareApplication","@id":"https://timoncool.github.io/videosos/#app","name":"VideoSOS","url":"https://timoncool.github.io/videosos/zh.html","inLanguage":"zh","description":"适用于 Windows、Linux 和 macOS 的桌面 AI 视频工作室：使用你自己的密钥，调用 OpenRouter、fal 和 Runware 的顶级模型生成图像、视频、音乐、人声、音效和文本；用故事板、节点画布和 3D 走位预演规划影片，再用真正的多轨时间线剪辑成片。支持面向 AI 智能体的 MCP。免费开源。","applicationCategory":"MultimediaApplication","applicationSubCategory":"AI video generation and editing","operatingSystem":"Windows 10, Windows 11, Linux, macOS","softwareVersion":"2.1.0","downloadUrl":"https://github.com/timoncool/videosos/releases/latest","isAccessibleForFree":true,"license":"https://opensource.org/licenses/MIT","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"image":"https://timoncool.github.io/videosos/og-zh.jpg","screenshot":"https://timoncool.github.io/videosos/screenshots/editor-zh.webp","codeRepository":"https://github.com/timoncool/videosos","sameAs":["https://github.com/timoncool/videosos"],"author":{"@id":"https://github.com/timoncool#person"},"dateModified":"2026-10-14"},{"@type":"Person","@id":"https://github.com/timoncool#person","name":"Nerual Dreming","url":"https://github.com/timoncool","sameAs":["https://github.com/timoncool","https://t.me/nerual_dreming","https://artgeneration.me"]},{"@type":"FAQPage","inLanguage":"zh","mainEntity":[{"@type":"Question","name":"免费吗？","acceptedAnswer":{"@type":"Answer","text":"是的。VideoSOS 免费且开源（MIT）。生成费用用你自己的密钥付给提供商；剪辑和导出不收费。"}},{"@type":"Question","name":"需要账号吗？","acceptedAnswer":{"@type":"Answer","text":"我们这边不需要。你需要至少一个提供商——OpenRouter、fal 或 Runware——的密钥，并直接向其付费；VideoSOS 看不到你的钱，也绝不会把你的密钥展示给智能体。"}},{"@type":"Question","name":"一段视频要花多少钱？","acceptedAnswer":{"@type":"Answer","text":"取决于模型：生成表单在每次运行前都会显示价格，从快速出图的不到一美分到长视频的几美元不等，历史记录会保存每次运行的花费。故事板会先审批便宜的画面，再生成收费的片段。"}},{"@type":"Question","name":"我的文件会被发送到别处吗？","acceptedAnswer":{"@type":"Answer","text":"只有生成所需的内容会发送给你选择的提供商。项目、媒体和结果都留在你的磁盘上；匿名统计默认关闭，除非你自己开启，并且永远不包含提示词、文件或密钥。"}},{"@type":"Question","name":"支持哪些系统？","acceptedAnswer":{"@type":"Answer","text":"Windows 10 和 11 x64；Linux x86-64 和搭载 Apple Silicon 的 macOS 为实验性构建。支持 WebGPU 的显卡用于运行预览和导出。"}},{"@type":"Question","name":"AI 智能体能使用它吗？","acceptedAnswer":{"@type":"Answer","text":"连接 Claude Code、Claude Desktop、Cursor 或 Codex，智能体就能做窗口里能做的一切：选择模型、估算价格、生成、逐步编辑时间线、在 3D 中安排镜头、制作图形并导出。每次智能体编辑之前都会保留时间线，编辑可以先预演，也可以要求每一次都由你亲自确认。"}},{"@type":"Question","name":"它是如何构建的？","acceptedAnswer":{"@type":"Answer","text":"Tauri 外壳在同一进程中运行 Rust 服务器；窗口是 FreeCut 编辑器的分支，加入了生成面板、故事板、画布、3D 走位预演和智能体桥接。任务保存在 SQLite 中，文件保存在你的磁盘上。"}}]}]}</script>
+<style>
+:root {
+  --bg: #0a0a0b;
+  --panel: #111113;
+  --panel-2: #18181b;
+  --line: rgba(255,255,255,.08);
+  --text: #f4f4f5;
+  --muted: #a1a1aa;
+  --violet: #7c3aed;
+  --blue: #2563eb;
+  --accent: #a78bfa;
+  --gold: #fbbf24;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.65 -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+img { max-width: 100%; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+
+header {
+  position: sticky; top: 0; z-index: 10;
+  background: rgba(10,10,11,.85); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.utility { border-bottom: 1px solid var(--line); }
+.utility-bar { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }
+.family { display: flex; gap: 4px; padding-top: 8px; overflow-x: auto; }
+.family a {
+  padding: 6px 14px; border: 1px solid transparent; border-bottom: none; border-radius: 9px 9px 0 0;
+  color: var(--muted); font-size: 13px; font-weight: 600; text-decoration: none; white-space: nowrap;
+}
+.family a:hover { color: var(--text); background: rgba(255,255,255,.04); }
+.family a[aria-current="page"] { color: var(--text); border-color: var(--line); background: rgba(124,58,237,.16); box-shadow: inset 0 2px 0 var(--accent); }
+.langs { display: flex; gap: 14px; padding: 0 0 8px; white-space: nowrap; }
+.langs a { font-size: 12px; color: var(--muted); text-decoration: none; }
+.langs a:hover { color: var(--text); }
+.langs a[aria-current="page"] { color: var(--text); font-weight: 700; }
+.bar { display: flex; align-items: center; gap: 12px; padding-block: 10px; }
+.mark { width: 30px; height: 30px; border-radius: 9px; flex: none; }
+.name { font-weight: 800; letter-spacing: -.01em; white-space: nowrap; }
+.head-github, .head-download {
+  box-sizing: border-box; height: 40px; display: inline-flex; align-items: center; gap: 8px;
+  padding: 0 16px; border-radius: 10px; border: 1px solid transparent;
+  font-size: 14px; font-weight: 700; line-height: 1; white-space: nowrap; text-decoration: none;
+  transition: border-color .15s, background .15s, filter .15s;
+}
+.head-github { margin-left: auto; padding-right: 10px; color: var(--text); background: #232327; }
+.head-github:hover { background: #2c2c31; }
+/* its word is mostly lowercase without ascenders: lifted 2px so the letters, not the line box, sit in the middle */
+.head-download { margin-left: 10px; padding-bottom: 4px; color: #fff; background: linear-gradient(135deg, var(--violet), #4f46e5 60%, var(--blue)); }
+.head-download:hover { filter: brightness(1.08); }
+
+.hero { padding-top: 56px; text-align: center; }
+h1 { font-size: clamp(34px, 6.4vw, 64px); line-height: 1.05; letter-spacing: -.025em; margin: 0 auto; max-width: 15em; }
+.lead { color: var(--muted); font-size: clamp(17px, 2.2vw, 20px); margin: 18px auto 0; max-width: 38em; }
+.cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 30px 0 10px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 10px; text-decoration: none;
+  border-radius: 12px; padding: 13px 20px; font-weight: 700; font-size: 16px;
+  border: 1px solid var(--line); color: var(--text); background: var(--panel);
+}
+.btn:hover { border-color: rgba(255,255,255,.2); }
+.btn small { font-weight: 600; font-size: 12px; opacity: .8; }
+.btn img { display: block; }
+.btn.primary { background: linear-gradient(135deg, var(--violet), #4f46e5 60%, var(--blue)); border-color: transparent; color: #fff; }
+.note { color: var(--muted); font-size: 13px; margin: 6px auto 0; max-width: 60em; }
+.hero-shot { margin: 36px 0 0; }
+.hero-shot img {
+  width: 100%; height: auto; display: block; border-radius: 16px; border: 1px solid var(--line); cursor: zoom-in;
+  box-shadow: 0 30px 80px rgba(124,58,237,.16), 0 10px 40px rgba(0,0,0,.5);
+}
+
+section { padding: 72px 0 0; }
+h2 { font-size: clamp(26px, 3.6vw, 36px); letter-spacing: -.02em; margin: 0 0 8px; }
+.sub { color: var(--muted); margin: 0 0 24px; max-width: 46em; }
+
+.samples { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
+.sample { margin: 0; padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); }
+.sample figcaption { display: grid; gap: 2px; margin-bottom: 10px; }
+.sample b { font-size: 15px; }
+.sample span { color: var(--muted); font-size: 13px; }
+.sample audio { width: 100%; height: 36px; }
+details.more summary { cursor: pointer; color: var(--muted); font-weight: 600; margin: 16px 0 12px; }
+
+/* each tile is title, picture, text; the three rows line up across tiles side by side */
+.bento { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 14px; row-gap: 0; margin-top: 24px; }
+.tile {
+  display: grid; grid-row: span 3; grid-template-rows: subgrid; row-gap: 14px; margin-bottom: 14px; padding: 22px;
+  border: 1px solid var(--line); border-radius: 20px; background: linear-gradient(180deg, var(--panel-2), var(--panel));
+}
+.tile h3 { margin: 0; font-size: 19px; letter-spacing: -.01em; align-self: start; }
+.tile p { margin: 0; color: var(--muted); font-size: 14.5px; line-height: 1.5; }
+.shot { margin: 0; align-self: start; }
+.shot img {
+  display: block; width: 100%; height: auto;
+  border-radius: 10px; border: 1px solid rgba(255,255,255,.1); cursor: zoom-in;
+  box-shadow: 0 12px 30px rgba(0,0,0,.45);
+}
+
+.gallery { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.gallery figure { margin: 0; }
+.gallery img {
+  display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: top left;
+  border-radius: 10px; border: 1px solid var(--line); cursor: zoom-in;
+}
+.gallery figcaption {
+  margin-top: 8px; color: var(--muted); font-size: 13px; line-height: 1.45;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.stars { display: block; }
+
+.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
+.card { padding: 16px 18px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); }
+.card h3 { margin: 0 0 6px; font-size: 15.5px; letter-spacing: -.01em; }
+.card p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
+
+.steps { list-style: none; margin: 20px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+.steps li { padding: 18px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); display: grid; gap: 6px; align-content: start; }
+.steps b { font-size: 16px; display: flex; align-items: baseline; gap: 10px; }
+.steps .num { color: var(--accent); font-weight: 800; }
+.steps span { color: var(--muted); font-size: 14px; line-height: 1.5; }
+#start .cta { justify-content: flex-start; margin-top: 24px; }
+
+#faq details { border-bottom: 1px solid var(--line); }
+#faq details:first-of-type { border-top: 1px solid var(--line); }
+#faq summary {
+  list-style: none; cursor: pointer; padding: 18px 36px 18px 0; font-weight: 700; font-size: 17px; position: relative;
+}
+#faq summary::-webkit-details-marker { display: none; }
+#faq summary::after { content: '+'; position: absolute; right: 4px; top: 14px; font-size: 24px; color: var(--muted); font-weight: 400; }
+#faq details[open] summary::after { content: '−'; }
+.answer { padding: 0 0 20px; color: var(--muted); max-width: 48em; }
+.answer p { margin: 0 0 10px; }
+.answer b { color: var(--text); }
+.answer ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
+
+.scroll { overflow-x: auto; margin: 10px 0; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+td { color: var(--text); }
+pre { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px; overflow-x: auto; font-size: 13px; color: var(--text); }
+
+.pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill { text-decoration: none; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); font-size: 14px; }
+.pill:hover { border-color: var(--accent); }
+footer { margin: 72px 0 40px; padding-top: 24px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+footer p { margin: 0 0 8px; }
+
+.viewer { position: fixed; inset: 0; background: rgba(0,0,0,.9); display: none; align-items: center; justify-content: center; z-index: 50; padding: 24px; }
+.viewer.open { display: flex; }
+.viewer img { max-width: 100%; max-height: 100%; border-radius: 10px; }
+.viewer button { position: absolute; top: 14px; right: 18px; background: none; border: 0; color: #fff; font-size: 34px; cursor: pointer; }
+
+@media (max-width: 860px) {
+  .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .hero { padding-top: 36px; }
+  .name { display: none; }
+  .utility-bar { flex-direction: column; align-items: stretch; gap: 0; }
+  .langs { order: -1; justify-content: flex-end; padding: 8px 0 0; }
+  .btn { width: 100%; justify-content: center; }
+  .bento, .cards { grid-template-columns: minmax(0, 1fr); }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="utility"><div class="wrap utility-bar">
+    <nav class="family" aria-label="Programs">
+    <a href="zh.html" aria-current="page">VideoSOS</a>
+    <a href="https://timoncool.github.io/dub-studio/">Dub Studio</a>
+    <a href="https://timoncool.github.io/YuE2-Studio/">YuE2 Studio</a>
+    <a href="https://timoncool.github.io/MiniMax-Music3-Studio/">MiniMax Music3 Studio</a>
+    <a href="https://timoncool.github.io/ACE-Step-Studio/">ACE-Step Studio</a>
+    </nav>
+    <nav class="langs" aria-label="Language">
+      <a href="index.html" hreflang="en">English</a>
+      <a href="ru.html" hreflang="ru">Русский</a>
+      <a href="zh.html" hreflang="zh" aria-current="page">中文</a>
+      <a href="ja.html" hreflang="ja">日本語</a>
+      <a href="ko.html" hreflang="ko">한국어</a>
+      <a href="es.html" hreflang="es">Español</a>
+      <a href="fr.html" hreflang="fr">Français</a>
+      <a href="pt.html" hreflang="pt">Português</a>
+    </nav>
+  </div></div>
+  <div class="wrap bar">
+    <img class="mark" src="logo.png" alt="" width="30" height="30" />
+    <div class="name">VideoSOS</div>
+    <a class="head-github" href="https://github.com/timoncool/videosos">GitHub<img class="stars" src="https://img.shields.io/github/stars/timoncool/videosos?style=flat&amp;label=%E2%98%85&amp;color=3f3f46" alt="GitHub 星标" height="20" /></a>
+    <a class="head-download" href="https://github.com/timoncool/videosos/releases/latest">下载</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h1>在一个窗口里生成、规划并剪辑整部影片</h1>
+    <p class="lead">VideoSOS 把 OpenRouter、fal 和 Runware 上最好的图像、视频、音乐和语音模型，与真正的多轨编辑器放在一起。在故事板、节点画布和 3D 走位预演中规划影片，用你自己的密钥生成每个镜头（价格在运行前就会显示），再剪辑成完整的视频——也可以让 AI 智能体与你一起完成。</p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/timoncool/videosos/releases/latest">下载<small data-release>v2.1.0</small></a>
+      <a class="btn" href="https://github.com/timoncool/videosos">在 GitHub 上加星<img class="stars" src="https://img.shields.io/github/stars/timoncool/videosos?style=flat&amp;label=%E2%98%85&amp;color=3f3f46" alt="GitHub 星标" height="20" /></a>
+    </div>
+    <p class="note">支持 Windows 10/11、Linux（实验性）以及搭载 Apple Silicon 的 macOS（实验性）。预览和导出需要支持 WebGPU 的显卡。生成需要 OpenRouter、fal 或 Runware 的密钥——费用直接付给它们。</p>
+    <figure class="hero-shot"><img src="screenshots/editor-zh.webp" alt="剪辑工作区：左侧是生成面板，旁边是预览和多轨时间线。" width="1600" height="900" fetchpriority="high" /></figure>
+  </section>
+
+  <section id="features">
+    <h2>功能一览</h2>
+    <p class="sub">生成、规划和剪辑集于一个程序，文件保存在你自己的磁盘上。</p>
+    <div class="bento">
+      <article class="tile">
+        <h3>故事板</h3>
+        <figure class="shot"><img src="screenshots/storyboard-zh-tile.webp" data-full="screenshots/storyboard-zh.webp" alt="故事板：拆分成镜头的剧本，每个镜头都有自己的画面和片段。" loading="lazy" width="960" height="844" /></figure>
+        <p>语言模型把剧本拆分成镜头；每个镜头由图像模型生成一帧，再由视频模型从这一帧开始生成片段，片段依次排到时间线上。</p>
+      </article>
+      <article class="tile">
+        <h3>节点画布与模板</h3>
+        <figure class="shot"><img src="screenshots/canvas-zh-tile.webp" data-full="screenshots/canvas-zh.webp" alt="节点画布：提示词连到图像模型，图片再连到视频模型——节点中是真实的结果。" loading="lazy" width="1030" height="410" /></figure>
+        <p>文本、图片、视频和生成任务都是节点，由它们传递的内容相连。</p>
+      </article>
+      <article class="tile">
+        <h3>3D 走位预演</h3>
+        <figure class="shot"><img src="screenshots/blocking-zh-tile.webp" data-full="screenshots/blocking-zh.webp" alt="3D 走位预演：用替身形体搭建的镜头，透过它的摄影机观看。" loading="lazy" width="960" height="844" /></figure>
+        <p>描述镜头，语言模型就会用替身形体、站立和坐着的人物、他们的动作以及摄影机路径来搭建它。</p>
+      </article>
+      <article class="tile">
+        <h3>HTML 图形</h3>
+        <figure class="shot"><img src="screenshots/graphics-zh-tile.webp" data-full="screenshots/graphics-zh.webp" alt="HTML 图形：用 HTML 和 CSS 编写的标题及其实时预览。" loading="lazy" width="960" height="844" /></figure>
+        <p>用 HTML 和 CSS 制作标题、字幕条、计数器和徽章，实时预览，并生成带透明通道的片段，叠放在播放头处的视频之上。</p>
+      </article>
+    </div>
+    <div class="cards">
+      <article class="card"><h3>全模态</h3><p>十二类任务：图像、编辑、由文本或某一帧生成视频、视频编辑、口型同步、放大、去除背景、音乐、人声、音效、转写和文本——来自 OpenRouter、fal 和 Runware 的一千多个模型，实时读取自各提供商。</p></article>
+      <article class="card"><h3>运行前先看价格</h3><p>表单根据模型自身的描述生成，价格在你点击“生成”之前就已算出；运行结束后会记录提供商的实际账单。每日限额可约束智能体。</p></article>
+      <article class="card"><h3>一次运行对比多个模型</h3><p>同一个提示词最多可再发给另外两个模型，结果与各自的价格并排显示。</p></article>
+      <article class="card"><h3>元素</h3><p>把角色、物体或场景连同其图片以名称保存：在提示词中写 @名称，就会把它们发送给模型，同一张脸便能在镜头之间一再出现。</p></article>
+      <article class="card"><h3>时间线上的多次尝试</h3><p>运行时，任务会画在时间线上它将落下的位置；任何片段的一部分都可以原地重新生成；下一个片段从上一个片段的最后一帧接着生成。</p></article>
+      <article class="card"><h3>真正的编辑器</h3><p>多条视频和音频轨道，波纹、滚动、内滑和外滑修剪，转场，带贝塞尔曲线图的关键帧，蒙版，混合模式，带示波器的调色，文本、形状和字幕。在显卡上快速导出为 MP4、WebM、MOV 或 MKV，或导出 FCPXML 供 Final Cut、DaVinci Resolve 和 Premiere 使用。</p></article>
+      <article class="card"><h3>由你的智能体驱动（MCP）</h3><p>连接 Claude Code、Claude Desktop、Cursor 或 Codex，智能体就能做窗口里能做的一切：选择模型、估算价格、生成、逐步编辑时间线、在 3D 中安排镜头、制作图形并导出。每次智能体编辑之前都会保留时间线，编辑可以先预演，也可以要求每一次都由你亲自确认。</p></article>
+      <article class="card"><h3>窗口内聊天</h3><p>你选择的 OpenRouter 模型用同样的工具操作程序，一步一步进行，并显示每一步的费用和“停止”按钮。</p></article>
+      <article class="card"><h3>通过链接导入视频</h3><p>YouTube 链接、yt-dlp 支持的任意网站或直接的文件链接都会进入素材库，带有进度显示，可取消和续传。</p></article>
+      <article class="card"><h3>你的密钥，你的磁盘</h3><p>没有我们的账号：你直接向提供商付费。项目和生成结果都是你磁盘上的普通文件；任务在发送前先保存，绝不会重复付费，结果会在提供商的链接过期前下载。</p></article>
+      <article class="card"><h3>十种语言</h3><p>英语、俄语、德语、西班牙语、法语、日语、韩语、巴西葡萄牙语、土耳其语和中文，包括特效及其参数。</p></article>
+      <article class="card"><h3>从另一台电脑使用</h3><p>为提供商和下载设置代理，并支持网络访问：另一台电脑或手机上的浏览器凭访问密钥即可打开同一个界面，而一切仍在这里运行。</p></article>
+    </div>
+  </section>
+
+  <section id="screenshots">
+    <h2>截图</h2>
+    <p class="sub">程序本身，使用你的语言。</p>
+    <div class="gallery">
+      <figure><img src="screenshots/editor-zh.webp" alt="剪辑工作区：左侧是生成面板，旁边是预览和多轨时间线。" loading="lazy" width="1600" height="900" /><figcaption>剪辑工作区：左侧是生成面板，旁边是预览和多轨时间线。</figcaption></figure>
+      <figure><img src="screenshots/storyboard-zh.webp" alt="故事板：拆分成镜头的剧本，每个镜头都有自己的画面和片段。" loading="lazy" width="1600" height="900" /><figcaption>故事板：拆分成镜头的剧本，每个镜头都有自己的画面和片段。</figcaption></figure>
+      <figure><img src="screenshots/canvas-zh.webp" alt="节点画布：提示词连到图像模型，图片再连到视频模型——节点中是真实的结果。" loading="lazy" width="1600" height="900" /><figcaption>节点画布：提示词连到图像模型，图片再连到视频模型——节点中是真实的结果。</figcaption></figure>
+      <figure><img src="screenshots/blocking-zh.webp" alt="3D 走位预演：用替身形体搭建的镜头，透过它的摄影机观看。" loading="lazy" width="1600" height="900" /><figcaption>3D 走位预演：用替身形体搭建的镜头，透过它的摄影机观看。</figcaption></figure>
+      <figure><img src="screenshots/graphics-zh.webp" alt="HTML 图形：用 HTML 和 CSS 编写的标题及其实时预览。" loading="lazy" width="1600" height="900" /><figcaption>HTML 图形：用 HTML 和 CSS 编写的标题及其实时预览。</figcaption></figure>
+    </div>
+  </section>
+
+  <section id="start">
+    <h2>快速上手</h2>
+    <ol class="steps">
+      <li><b><span class="num">1</span>安装</b><span>运行 Windows 安装程序、Linux 的 AppImage 或 .deb，或 macOS 的 .dmg。</span></li>
+      <li><b><span class="num">2</span>添加密钥</b><span>在“生成”标签页提示时，粘贴 OpenRouter、fal 或 Runware 的密钥；先有一个提供商就足以开始。</span></li>
+      <li><b><span class="num">3</span>生成</b><span>选择任务和模型，写下你想要的内容，然后点击“生成”：会先显示价格。</span></li>
+      <li><b><span class="num">4</span>剪辑</b><span>把结果放到时间线上，编辑并导出视频——也可以以 FCPXML 交给后期软件精修。</span></li>
+    </ol>
+    <div class="cta"><a class="btn primary" href="https://github.com/timoncool/videosos/releases/latest">下载<small data-release>v2.1.0</small></a></div>
+  </section>
+
+  <section id="faq">
+    <h2>常见问题</h2>
+    <details><summary>免费吗？</summary><div class="answer"><p>是的。VideoSOS 免费且开源（MIT）。生成费用用你自己的密钥付给提供商；剪辑和导出不收费。</p></div></details>
+    <details><summary>需要账号吗？</summary><div class="answer"><p>我们这边不需要。你需要至少一个提供商——OpenRouter、fal 或 Runware——的密钥，并直接向其付费；VideoSOS 看不到你的钱，也绝不会把你的密钥展示给智能体。</p></div></details>
+    <details><summary>一段视频要花多少钱？</summary><div class="answer"><p>取决于模型：生成表单在每次运行前都会显示价格，从快速出图的不到一美分到长视频的几美元不等，历史记录会保存每次运行的花费。故事板会先审批便宜的画面，再生成收费的片段。</p></div></details>
+    <details><summary>我的文件会被发送到别处吗？</summary><div class="answer"><p>只有生成所需的内容会发送给你选择的提供商。项目、媒体和结果都留在你的磁盘上；匿名统计默认关闭，除非你自己开启，并且永远不包含提示词、文件或密钥。</p></div></details>
+    <details><summary>支持哪些系统？</summary><div class="answer"><p>Windows 10 和 11 x64；Linux x86-64 和搭载 Apple Silicon 的 macOS 为实验性构建。支持 WebGPU 的显卡用于运行预览和导出。</p></div></details>
+    <details><summary>AI 智能体能使用它吗？</summary><div class="answer"><p>连接 Claude Code、Claude Desktop、Cursor 或 Codex，智能体就能做窗口里能做的一切：选择模型、估算价格、生成、逐步编辑时间线、在 3D 中安排镜头、制作图形并导出。每次智能体编辑之前都会保留时间线，编辑可以先预演，也可以要求每一次都由你亲自确认。</p><pre>claude mcp add --transport http videosos http://127.0.0.1:8796/mcp</pre></div></details>
+    <details><summary>它是如何构建的？</summary><div class="answer"><p>Tauri 外壳在同一进程中运行 Rust 服务器；窗口是 FreeCut 编辑器的分支，加入了生成面板、故事板、画布、3D 走位预演和智能体桥接。任务保存在 SQLite 中，文件保存在你的磁盘上。</p><pre>React window (FreeCut fork) ─┐
+                             ├─ VideoSOS.exe   (Tauri shell + Rust/axum server inside)
+Rust axum server ────────────┘        │
+                                      ├─ OpenRouter · fal · Runware   (your keys)
+                                      └─ MCP  http://127.0.0.1:8796/mcp</pre></div></details>
+  </section>
+
+  <section id="author">
+    <h2>作者</h2>
+    <p class="sub">Nerual Dreming——艺术家，ArtGeneration.me 和 Neuro-Cartel 社区的创办人，Dub Studio、YuE2 Studio、MiniMax Music3 Studio 和 ACE-Step Studio 的作者，本工作室与它们一脉相承。</p>
+    <div class="pills">
+      <a class="pill" href="https://github.com/timoncool">GitHub · @timoncool</a>
+      <a class="pill" href="https://t.me/nerual_dreming">Telegram · @nerual_dreming</a>
+      <a class="pill" href="https://t.me/neuroport">Telegram · @neuroport</a>
+      <a class="pill" href="https://artgeneration.me">ArtGeneration.me</a>
+      <a class="pill" href="https://github.com/timoncool/videosos/blob/main/DONATE.md">支持本项目</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>VideoSOS 采用 MIT 许可；编辑器窗口基于 FreeCut（MIT）。你生成的内容受你所用提供商和模型的条款约束。</p>
+    <p><a href="https://github.com/timoncool/videosos/blob/main/CHANGELOG.md">更新内容</a> · <a href="https://github.com/timoncool/videosos/issues">报告问题</a> · 更新于 <time datetime="2026-10-14">2026-10-14</time></p>
+  </footer>
+</main>
+
+<div class="viewer" id="viewer" aria-hidden="true">
+  <button type="button" aria-label="Close">×</button>
+  <img id="viewer-image" alt="" />
+</div>
+<script>
+const viewer = document.getElementById('viewer');
+const viewerImage = document.getElementById('viewer-image');
+const closeViewer = () => { viewer.classList.remove('open'); viewer.setAttribute('aria-hidden', 'true'); };
+document.addEventListener('click', (event) => {
+  const image = event.target.closest('.hero-shot img, .tile img, .gallery img');
+  if (image) {
+    viewerImage.src = image.dataset.full || image.src;
+    viewerImage.alt = image.alt;
+    viewer.classList.add('open');
+    viewer.setAttribute('aria-hidden', 'false');
+    return;
+  }
+  if (event.target.closest('#viewer')) closeViewer();
+});
+document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeViewer(); });
+// the download buttons name the latest release as GitHub has it, so a new release needs no new page
+fetch('https://api.github.com/repos/timoncool/videosos/releases/latest')
+  .then((response) => (response.ok ? response.json() : Promise.reject(new Error('GitHub answered ' + response.status))))
+  .then((release) => {
+    document.querySelectorAll('[data-release]').forEach((element) => { element.textContent = release.tag_name; });
+  })
+  .catch((error) => console.warn('Latest release not read; the page shows the one it was built with:', error));
+</script>
+</body>
+</html>

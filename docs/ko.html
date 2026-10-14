@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>VideoSOS — 데스크톱 AI 영상 스튜디오: 최고의 모델로 생성하고, 영화를 기획하고, 타임라인에서 편집</title>
+<meta name="description" content="Windows, Linux, macOS용 데스크톱 AI 영상 스튜디오: OpenRouter, fal, Runware의 최고 모델로 이미지, 영상, 음악, 음성, 효과음, 텍스트를 내 키로 생성하고, 스토리보드·노드 캔버스·3D 블로킹으로 영화를 기획하며, 본격적인 멀티트랙 타임라인에서 편집합니다. AI 에이전트를 위한 MCP. 무료 오픈 소스." />
+<link rel="canonical" href="https://timoncool.github.io/videosos/ko.html" />
+<link rel="alternate" hreflang="en" href="https://timoncool.github.io/videosos/" />
+<link rel="alternate" hreflang="ru" href="https://timoncool.github.io/videosos/ru.html" />
+<link rel="alternate" hreflang="zh" href="https://timoncool.github.io/videosos/zh.html" />
+<link rel="alternate" hreflang="ja" href="https://timoncool.github.io/videosos/ja.html" />
+<link rel="alternate" hreflang="ko" href="https://timoncool.github.io/videosos/ko.html" />
+<link rel="alternate" hreflang="es" href="https://timoncool.github.io/videosos/es.html" />
+<link rel="alternate" hreflang="fr" href="https://timoncool.github.io/videosos/fr.html" />
+<link rel="alternate" hreflang="pt" href="https://timoncool.github.io/videosos/pt.html" />
+<link rel="alternate" hreflang="x-default" href="https://timoncool.github.io/videosos/" />
+<link rel="icon" type="image/png" href="logo.png" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="VideoSOS" />
+<meta property="og:title" content="VideoSOS — 데스크톱 AI 영상 스튜디오: 최고의 모델로 생성하고, 영화를 기획하고, 타임라인에서 편집" />
+<meta property="og:description" content="Windows, Linux, macOS용 데스크톱 AI 영상 스튜디오: OpenRouter, fal, Runware의 최고 모델로 이미지, 영상, 음악, 음성, 효과음, 텍스트를 내 키로 생성하고, 스토리보드·노드 캔버스·3D 블로킹으로 영화를 기획하며, 본격적인 멀티트랙 타임라인에서 편집합니다. AI 에이전트를 위한 MCP. 무료 오픈 소스." />
+<meta property="og:url" content="https://timoncool.github.io/videosos/ko.html" />
+<meta property="og:locale" content="ko" />
+<meta property="og:image" content="https://timoncool.github.io/videosos/og-ko.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="하나의 창에서 영화 한 편을 생성하고, 기획하고, 편집하세요" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://timoncool.github.io/videosos/og-ko.jpg" />
+<link rel="preload" as="image" href="screenshots/editor-ko.webp" fetchpriority="high" />
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"SoftwareApplication","@id":"https://timoncool.github.io/videosos/#app","name":"VideoSOS","url":"https://timoncool.github.io/videosos/ko.html","inLanguage":"ko","description":"Windows, Linux, macOS용 데스크톱 AI 영상 스튜디오: OpenRouter, fal, Runware의 최고 모델로 이미지, 영상, 음악, 음성, 효과음, 텍스트를 내 키로 생성하고, 스토리보드·노드 캔버스·3D 블로킹으로 영화를 기획하며, 본격적인 멀티트랙 타임라인에서 편집합니다. AI 에이전트를 위한 MCP. 무료 오픈 소스.","applicationCategory":"MultimediaApplication","applicationSubCategory":"AI video generation and editing","operatingSystem":"Windows 10, Windows 11, Linux, macOS","softwareVersion":"2.1.0","downloadUrl":"https://github.com/timoncool/videosos/releases/latest","isAccessibleForFree":true,"license":"https://opensource.org/licenses/MIT","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"image":"https://timoncool.github.io/videosos/og-ko.jpg","screenshot":"https://timoncool.github.io/videosos/screenshots/editor-ko.webp","codeRepository":"https://github.com/timoncool/videosos","sameAs":["https://github.com/timoncool/videosos"],"author":{"@id":"https://github.com/timoncool#person"},"dateModified":"2026-10-14"},{"@type":"Person","@id":"https://github.com/timoncool#person","name":"Nerual Dreming","url":"https://github.com/timoncool","sameAs":["https://github.com/timoncool","https://t.me/nerual_dreming","https://artgeneration.me"]},{"@type":"FAQPage","inLanguage":"ko","mainEntity":[{"@type":"Question","name":"무료인가요?","acceptedAnswer":{"@type":"Answer","text":"네. VideoSOS는 무료 오픈 소스(MIT)입니다. 생성 비용은 내 키로 제공업체에 지불하며, 편집과 내보내기는 무료입니다."}},{"@type":"Question","name":"계정이 필요한가요?","acceptedAnswer":{"@type":"Answer","text":"저희 쪽에는 필요 없습니다. OpenRouter, fal, Runware 중 적어도 한 곳의 키가 필요하고, 그 제공업체에 직접 요금을 지불합니다. VideoSOS는 사용자의 돈을 보지 않으며 키를 에이전트에 보여 주지도 않습니다."}},{"@type":"Question","name":"영상 하나에 얼마인가요?","acceptedAnswer":{"@type":"Answer","text":"모델에 따라 다릅니다. 생성 양식은 실행할 때마다 먼저 가격을 보여 주며, 빠른 이미지는 1센트 미만부터 긴 영상은 몇 달러까지 다양합니다. 기록에는 각 실행의 비용이 남습니다. 스토리보드에서는 유료 클립 전에 저렴한 프레임을 먼저 승인합니다."}},{"@type":"Question","name":"내 파일이 어딘가로 전송되나요?","acceptedAnswer":{"@type":"Answer","text":"생성에 필요한 것만 선택한 제공업체로 전송됩니다. 프로젝트, 미디어, 결과물은 내 디스크에 그대로 남습니다. 익명 통계는 직접 켜기 전에는 꺼져 있으며, 프롬프트, 파일, 키는 포함되지 않습니다."}},{"@type":"Question","name":"어떤 시스템에서 실행되나요?","acceptedAnswer":{"@type":"Answer","text":"Windows 10 및 11 x64, 그리고 실험적 빌드로 Linux x86-64와 Apple Silicon의 macOS를 지원합니다. WebGPU를 지원하는 그래픽 카드로 미리보기와 내보내기를 실행합니다."}},{"@type":"Question","name":"AI 에이전트가 사용할 수 있나요?","acceptedAnswer":{"@type":"Answer","text":"Claude Code, Claude Desktop, Cursor, Codex를 연결하면 에이전트가 창에서 하는 일을 그대로 합니다. 모델 선택, 가격 추정, 생성, 타임라인 단계별 편집, 3D 샷 블로킹, 그래픽 제작, 내보내기. 에이전트가 편집하기 전에 타임라인이 매번 보관되고, 편집을 먼저 시험해 볼 수 있으며, 매 편집을 직접 수락하도록 요청할 수도 있습니다."}},{"@type":"Question","name":"어떻게 만들어졌나요?","acceptedAnswer":{"@type":"Answer","text":"Tauri 셸이 같은 프로세스에서 Rust 서버를 실행합니다. 창은 FreeCut 편집기의 포크이며 생성 패널, 스토리보드, 캔버스, 3D 블로킹, 에이전트 브리지가 추가되어 있습니다. 작업은 SQLite에, 파일은 내 디스크에 저장됩니다."}}]}]}</script>
+<style>
+:root {
+  --bg: #0a0a0b;
+  --panel: #111113;
+  --panel-2: #18181b;
+  --line: rgba(255,255,255,.08);
+  --text: #f4f4f5;
+  --muted: #a1a1aa;
+  --violet: #7c3aed;
+  --blue: #2563eb;
+  --accent: #a78bfa;
+  --gold: #fbbf24;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.65 -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+img { max-width: 100%; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+
+header {
+  position: sticky; top: 0; z-index: 10;
+  background: rgba(10,10,11,.85); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.utility { border-bottom: 1px solid var(--line); }
+.utility-bar { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }
+.family { display: flex; gap: 4px; padding-top: 8px; overflow-x: auto; }
+.family a {
+  padding: 6px 14px; border: 1px solid transparent; border-bottom: none; border-radius: 9px 9px 0 0;
+  color: var(--muted); font-size: 13px; font-weight: 600; text-decoration: none; white-space: nowrap;
+}
+.family a:hover { color: var(--text); background: rgba(255,255,255,.04); }
+.family a[aria-current="page"] { color: var(--text); border-color: var(--line); background: rgba(124,58,237,.16); box-shadow: inset 0 2px 0 var(--accent); }
+.langs { display: flex; gap: 14px; padding: 0 0 8px; white-space: nowrap; }
+.langs a { font-size: 12px; color: var(--muted); text-decoration: none; }
+.langs a:hover { color: var(--text); }
+.langs a[aria-current="page"] { color: var(--text); font-weight: 700; }
+.bar { display: flex; align-items: center; gap: 12px; padding-block: 10px; }
+.mark { width: 30px; height: 30px; border-radius: 9px; flex: none; }
+.name { font-weight: 800; letter-spacing: -.01em; white-space: nowrap; }
+.head-github, .head-download {
+  box-sizing: border-box; height: 40px; display: inline-flex; align-items: center; gap: 8px;
+  padding: 0 16px; border-radius: 10px; border: 1px solid transparent;
+  font-size: 14px; font-weight: 700; line-height: 1; white-space: nowrap; text-decoration: none;
+  transition: border-color .15s, background .15s, filter .15s;
+}
+.head-github { margin-left: auto; padding-right: 10px; color: var(--text); background: #232327; }
+.head-github:hover { background: #2c2c31; }
+/* its word is mostly lowercase without ascenders: lifted 2px so the letters, not the line box, sit in the middle */
+.head-download { margin-left: 10px; padding-bottom: 4px; color: #fff; background: linear-gradient(135deg, var(--violet), #4f46e5 60%, var(--blue)); }
+.head-download:hover { filter: brightness(1.08); }
+
+.hero { padding-top: 56px; text-align: center; }
+h1 { font-size: clamp(34px, 6.4vw, 64px); line-height: 1.05; letter-spacing: -.025em; margin: 0 auto; max-width: 15em; }
+.lead { color: var(--muted); font-size: clamp(17px, 2.2vw, 20px); margin: 18px auto 0; max-width: 38em; }
+.cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 30px 0 10px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 10px; text-decoration: none;
+  border-radius: 12px; padding: 13px 20px; font-weight: 700; font-size: 16px;
+  border: 1px solid var(--line); color: var(--text); background: var(--panel);
+}
+.btn:hover { border-color: rgba(255,255,255,.2); }
+.btn small { font-weight: 600; font-size: 12px; opacity: .8; }
+.btn img { display: block; }
+.btn.primary { background: linear-gradient(135deg, var(--violet), #4f46e5 60%, var(--blue)); border-color: transparent; color: #fff; }
+.note { color: var(--muted); font-size: 13px; margin: 6px auto 0; max-width: 60em; }
+.hero-shot { margin: 36px 0 0; }
+.hero-shot img {
+  width: 100%; height: auto; display: block; border-radius: 16px; border: 1px solid var(--line); cursor: zoom-in;
+  box-shadow: 0 30px 80px rgba(124,58,237,.16), 0 10px 40px rgba(0,0,0,.5);
+}
+
+section { padding: 72px 0 0; }
+h2 { font-size: clamp(26px, 3.6vw, 36px); letter-spacing: -.02em; margin: 0 0 8px; }
+.sub { color: var(--muted); margin: 0 0 24px; max-width: 46em; }
+
+.samples { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
+.sample { margin: 0; padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); }
+.sample figcaption { display: grid; gap: 2px; margin-bottom: 10px; }
+.sample b { font-size: 15px; }
+.sample span { color: var(--muted); font-size: 13px; }
+.sample audio { width: 100%; height: 36px; }
+details.more summary { cursor: pointer; color: var(--muted); font-weight: 600; margin: 16px 0 12px; }
+
+/* each tile is title, picture, text; the three rows line up across tiles side by side */
+.bento { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 14px; row-gap: 0; margin-top: 24px; }
+.tile {
+  display: grid; grid-row: span 3; grid-template-rows: subgrid; row-gap: 14px; margin-bottom: 14px; padding: 22px;
+  border: 1px solid var(--line); border-radius: 20px; background: linear-gradient(180deg, var(--panel-2), var(--panel));
+}
+.tile h3 { margin: 0; font-size: 19px; letter-spacing: -.01em; align-self: start; }
+.tile p { margin: 0; color: var(--muted); font-size: 14.5px; line-height: 1.5; }
+.shot { margin: 0; align-self: start; }
+.shot img {
+  display: block; width: 100%; height: auto;
+  border-radius: 10px; border: 1px solid rgba(255,255,255,.1); cursor: zoom-in;
+  box-shadow: 0 12px 30px rgba(0,0,0,.45);
+}
+
+.gallery { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.gallery figure { margin: 0; }
+.gallery img {
+  display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: top left;
+  border-radius: 10px; border: 1px solid var(--line); cursor: zoom-in;
+}
+.gallery figcaption {
+  margin-top: 8px; color: var(--muted); font-size: 13px; line-height: 1.45;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.stars { display: block; }
+
+.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
+.card { padding: 16px 18px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); }
+.card h3 { margin: 0 0 6px; font-size: 15.5px; letter-spacing: -.01em; }
+.card p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
+
+.steps { list-style: none; margin: 20px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+.steps li { padding: 18px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); display: grid; gap: 6px; align-content: start; }
+.steps b { font-size: 16px; display: flex; align-items: baseline; gap: 10px; }
+.steps .num { color: var(--accent); font-weight: 800; }
+.steps span { color: var(--muted); font-size: 14px; line-height: 1.5; }
+#start .cta { justify-content: flex-start; margin-top: 24px; }
+
+#faq details { border-bottom: 1px solid var(--line); }
+#faq details:first-of-type { border-top: 1px solid var(--line); }
+#faq summary {
+  list-style: none; cursor: pointer; padding: 18px 36px 18px 0; font-weight: 700; font-size: 17px; position: relative;
+}
+#faq summary::-webkit-details-marker { display: none; }
+#faq summary::after { content: '+'; position: absolute; right: 4px; top: 14px; font-size: 24px; color: var(--muted); font-weight: 400; }
+#faq details[open] summary::after { content: '−'; }
+.answer { padding: 0 0 20px; color: var(--muted); max-width: 48em; }
+.answer p { margin: 0 0 10px; }
+.answer b { color: var(--text); }
+.answer ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
+
+.scroll { overflow-x: auto; margin: 10px 0; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+td { color: var(--text); }
+pre { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px; overflow-x: auto; font-size: 13px; color: var(--text); }
+
+.pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill { text-decoration: none; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); font-size: 14px; }
+.pill:hover { border-color: var(--accent); }
+footer { margin: 72px 0 40px; padding-top: 24px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+footer p { margin: 0 0 8px; }
+
+.viewer { position: fixed; inset: 0; background: rgba(0,0,0,.9); display: none; align-items: center; justify-content: center; z-index: 50; padding: 24px; }
+.viewer.open { display: flex; }
+.viewer img { max-width: 100%; max-height: 100%; border-radius: 10px; }
+.viewer button { position: absolute; top: 14px; right: 18px; background: none; border: 0; color: #fff; font-size: 34px; cursor: pointer; }
+
+@media (max-width: 860px) {
+  .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .hero { padding-top: 36px; }
+  .name { display: none; }
+  .utility-bar { flex-direction: column; align-items: stretch; gap: 0; }
+  .langs { order: -1; justify-content: flex-end; padding: 8px 0 0; }
+  .btn { width: 100%; justify-content: center; }
+  .bento, .cards { grid-template-columns: minmax(0, 1fr); }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="utility"><div class="wrap utility-bar">
+    <nav class="family" aria-label="Programs">
+    <a href="ko.html" aria-current="page">VideoSOS</a>
+    <a href="https://timoncool.github.io/dub-studio/">Dub Studio</a>
+    <a href="https://timoncool.github.io/YuE2-Studio/">YuE2 Studio</a>
+    <a href="https://timoncool.github.io/MiniMax-Music3-Studio/">MiniMax Music3 Studio</a>
+    <a href="https://timoncool.github.io/ACE-Step-Studio/">ACE-Step Studio</a>
+    </nav>
+    <nav class="langs" aria-label="Language">
+      <a href="index.html" hreflang="en">English</a>
+      <a href="ru.html" hreflang="ru">Русский</a>
+      <a href="zh.html" hreflang="zh">中文</a>
+      <a href="ja.html" hreflang="ja">日本語</a>
+      <a href="ko.html" hreflang="ko" aria-current="page">한국어</a>
+      <a href="es.html" hreflang="es">Español</a>
+      <a href="fr.html" hreflang="fr">Français</a>
+      <a href="pt.html" hreflang="pt">Português</a>
+    </nav>
+  </div></div>
+  <div class="wrap bar">
+    <img class="mark" src="logo.png" alt="" width="30" height="30" />
+    <div class="name">VideoSOS</div>
+    <a class="head-github" href="https://github.com/timoncool/videosos">GitHub<img class="stars" src="https://img.shields.io/github/stars/timoncool/videosos?style=flat&amp;label=%E2%98%85&amp;color=3f3f46" alt="GitHub 스타" height="20" /></a>
+    <a class="head-download" href="https://github.com/timoncool/videosos/releases/latest">다운로드</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h1>하나의 창에서 영화 한 편을 생성하고, 기획하고, 편집하세요</h1>
+    <p class="lead">VideoSOS는 OpenRouter, fal, Runware의 최고 이미지·영상·음악·음성 모델을 본격적인 멀티트랙 편집기 옆에 놓았습니다. 스토리보드, 노드 캔버스, 3D 블로킹으로 영화를 기획하고, 실행 전에 표시되는 가격으로 내 키를 사용해 모든 샷을 생성한 뒤 완성된 영상으로 편집하세요. AI 에이전트와 함께 할 수도 있습니다.</p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/timoncool/videosos/releases/latest">다운로드<small data-release>v2.1.0</small></a>
+      <a class="btn" href="https://github.com/timoncool/videosos">GitHub에서 별 누르기<img class="stars" src="https://img.shields.io/github/stars/timoncool/videosos?style=flat&amp;label=%E2%98%85&amp;color=3f3f46" alt="GitHub 스타" height="20" /></a>
+    </div>
+    <p class="note">Windows 10/11, Linux(실험적), Apple Silicon의 macOS(실험적)를 지원합니다. 미리보기와 내보내기에는 WebGPU를 지원하는 그래픽 카드가 필요합니다. 생성에는 OpenRouter, fal 또는 Runware의 키가 필요하며, 요금은 해당 업체에 직접 지불합니다.</p>
+    <figure class="hero-shot"><img src="screenshots/editor-ko.webp" alt="편집 작업 공간: 왼쪽의 생성 패널, 미리보기, 멀티트랙 타임라인." width="1600" height="900" fetchpriority="high" /></figure>
+  </section>
+
+  <section id="features">
+    <h2>주요 기능</h2>
+    <p class="sub">생성, 기획, 편집을 하나의 프로그램에서, 파일은 내 디스크에 그대로.</p>
+    <div class="bento">
+      <article class="tile">
+        <h3>스토리보드</h3>
+        <figure class="shot"><img src="screenshots/storyboard-ko-tile.webp" data-full="screenshots/storyboard-ko.webp" alt="스토리보드: 샷으로 나뉜 대본, 각 샷마다 프레임과 클립이 있습니다." loading="lazy" width="960" height="844" /></figure>
+        <p>언어 모델이 대본을 샷으로 나눕니다.</p>
+      </article>
+      <article class="tile">
+        <h3>노드 캔버스와 템플릿</h3>
+        <figure class="shot"><img src="screenshots/canvas-ko-tile.webp" data-full="screenshots/canvas-ko.webp" alt="노드 캔버스: 프롬프트가 이미지 모델로, 이미지가 영상 모델로 — 노드에 실제 결과가 표시됩니다." loading="lazy" width="1030" height="410" /></figure>
+        <p>텍스트, 이미지, 영상, 생성 작업이 노드가 되어 서로 전달하는 내용으로 연결됩니다.</p>
+      </article>
+      <article class="tile">
+        <h3>3D 블로킹</h3>
+        <figure class="shot"><img src="screenshots/blocking-ko-tile.webp" data-full="screenshots/blocking-ko.webp" alt="3D 블로킹: 대역 도형으로 구성한 샷을 그 카메라로 본 모습." loading="lazy" width="960" height="844" /></figure>
+        <p>샷을 설명하면 언어 모델이 대역 도형, 서 있거나 앉아 있는 인물, 그 움직임, 카메라 경로로 샷을 구성합니다.</p>
+      </article>
+      <article class="tile">
+        <h3>HTML 그래픽</h3>
+        <figure class="shot"><img src="screenshots/graphics-ko-tile.webp" data-full="screenshots/graphics-ko.webp" alt="HTML 그래픽: HTML과 CSS로 쓴 제목과 실시간 미리보기." loading="lazy" width="960" height="844" /></figure>
+        <p>HTML과 CSS로 만든 제목, 로어서드, 카운터, 배지를 실시간으로 미리 보고, 투명도가 있는 클립으로 만들어 재생 헤드 위치의 영상 위에 올립니다.</p>
+      </article>
+    </div>
+    <div class="cards">
+      <article class="card"><h3>모든 모달리티</h3><p>열두 가지 작업: 이미지, 편집, 텍스트 또는 프레임에서 영상 만들기, 영상 편집, 립싱크, 업스케일, 배경 제거, 음악, 음성, 효과음, 받아쓰기, 텍스트 — OpenRouter, fal, Runware의 1,000개가 넘는 모델을 제공업체에서 실시간으로 불러옵니다.</p></article>
+      <article class="card"><h3>실행 전에 가격 확인</h3><p>양식은 모델 자체의 설명으로 만들어지고, “생성”을 누르기 전에 그에 따라 가격이 계산됩니다. 실행 후에는 제공업체의 실제 청구액이 기록됩니다. 일일 한도가 에이전트를 제어합니다.</p></article>
+      <article class="card"><h3>한 번에 모델 비교</h3><p>같은 프롬프트가 최대 두 개의 다른 모델에도 전송되고, 결과가 가격과 함께 나란히 표시됩니다.</p></article>
+      <article class="card"><h3>요소</h3><p>캐릭터, 사물, 장소를 이미지와 함께 이름으로 저장합니다. 프롬프트에 @이름을 쓰면 모델로 전달되어 샷이 바뀌어도 같은 얼굴이 나옵니다.</p></article>
+      <article class="card"><h3>타임라인의 테이크</h3><p>실행 중인 작업은 결과가 놓일 타임라인 위치에 표시됩니다. 클립의 일부를 그 자리에서 다시 생성할 수 있고, 다음 클립은 이전 클립의 마지막 프레임에서 이어집니다.</p></article>
+      <article class="card"><h3>본격적인 편집기</h3><p>여러 비디오·오디오 트랙, 리플·롤링·슬립·슬라이드 트림, 전환 효과, 베지어 그래프 키프레임, 마스크, 블렌드 모드, 스코프가 있는 컬러 그레이딩, 텍스트, 도형, 자막. 그래픽 카드에서 MP4, WebM, MOV, MKV로 빠르게 내보내거나, Final Cut, DaVinci Resolve, Premiere용 FCPXML로 내보냅니다.</p></article>
+      <article class="card"><h3>에이전트로 제어(MCP)</h3><p>Claude Code, Claude Desktop, Cursor, Codex를 연결하면 에이전트가 창에서 하는 일을 그대로 합니다. 모델 선택, 가격 추정, 생성, 타임라인 단계별 편집, 3D 샷 블로킹, 그래픽 제작, 내보내기. 에이전트가 편집하기 전에 타임라인이 매번 보관되고, 편집을 먼저 시험해 볼 수 있으며, 매 편집을 직접 수락하도록 요청할 수도 있습니다.</p></article>
+      <article class="card"><h3>창 안의 채팅</h3><p>내가 고른 OpenRouter 모델이 같은 도구로 프로그램을 단계별로 조작하며, 각 단계의 비용과 “중지” 버튼이 표시됩니다.</p></article>
+      <article class="card"><h3>링크로 영상 가져오기</h3><p>YouTube 링크, yt-dlp가 지원하는 모든 사이트, 또는 파일 직접 링크를 라이브러리에 가져오며, 진행률 표시, 취소, 이어받기를 지원합니다.</p></article>
+      <article class="card"><h3>내 키, 내 디스크</h3><p>우리 계정은 없습니다. 제공업체에 직접 요금을 지불합니다. 프로젝트와 생성물은 디스크의 일반 파일이며, 작업은 전송 전에 저장되어 두 번 결제되지 않고, 결과는 제공업체의 링크가 만료되기 전에 다운로드됩니다.</p></article>
+      <article class="card"><h3>열 가지 언어</h3><p>영어, 러시아어, 독일어, 스페인어, 프랑스어, 일본어, 한국어, 브라질 포르투갈어, 튀르키예어, 중국어 — 효과와 그 매개변수도 포함됩니다.</p></article>
+      <article class="card"><h3>다른 컴퓨터에서</h3><p>제공업체 및 다운로드용 프록시와 네트워크 접속을 지원합니다. 다른 컴퓨터나 휴대폰의 브라우저에서 접속 키로 같은 인터페이스를 열 수 있으며, 모든 작업은 이곳에서 실행됩니다.</p></article>
+    </div>
+  </section>
+
+  <section id="screenshots">
+    <h2>스크린샷</h2>
+    <p class="sub">프로그램 그대로, 내 언어로.</p>
+    <div class="gallery">
+      <figure><img src="screenshots/editor-ko.webp" alt="편집 작업 공간: 왼쪽의 생성 패널, 미리보기, 멀티트랙 타임라인." loading="lazy" width="1600" height="900" /><figcaption>편집 작업 공간: 왼쪽의 생성 패널, 미리보기, 멀티트랙 타임라인.</figcaption></figure>
+      <figure><img src="screenshots/storyboard-ko.webp" alt="스토리보드: 샷으로 나뉜 대본, 각 샷마다 프레임과 클립이 있습니다." loading="lazy" width="1600" height="900" /><figcaption>스토리보드: 샷으로 나뉜 대본, 각 샷마다 프레임과 클립이 있습니다.</figcaption></figure>
+      <figure><img src="screenshots/canvas-ko.webp" alt="노드 캔버스: 프롬프트가 이미지 모델로, 이미지가 영상 모델로 — 노드에 실제 결과가 표시됩니다." loading="lazy" width="1600" height="900" /><figcaption>노드 캔버스: 프롬프트가 이미지 모델로, 이미지가 영상 모델로 — 노드에 실제 결과가 표시됩니다.</figcaption></figure>
+      <figure><img src="screenshots/blocking-ko.webp" alt="3D 블로킹: 대역 도형으로 구성한 샷을 그 카메라로 본 모습." loading="lazy" width="1600" height="900" /><figcaption>3D 블로킹: 대역 도형으로 구성한 샷을 그 카메라로 본 모습.</figcaption></figure>
+      <figure><img src="screenshots/graphics-ko.webp" alt="HTML 그래픽: HTML과 CSS로 쓴 제목과 실시간 미리보기." loading="lazy" width="1600" height="900" /><figcaption>HTML 그래픽: HTML과 CSS로 쓴 제목과 실시간 미리보기.</figcaption></figure>
+    </div>
+  </section>
+
+  <section id="start">
+    <h2>시작하기</h2>
+    <ol class="steps">
+      <li><b><span class="num">1</span>설치</b><span>Windows용 설치 프로그램, Linux용 AppImage 또는 .deb, macOS용 .dmg를 실행하세요.</span></li>
+      <li><b><span class="num">2</span>키 추가</b><span>“생성” 탭에서 요청하면 OpenRouter, fal 또는 Runware의 키를 붙여 넣으세요. 시작하려면 제공업체 하나면 충분합니다.</span></li>
+      <li><b><span class="num">3</span>생성</b><span>작업과 모델을 고르고 원하는 내용을 쓴 뒤 “생성”을 누르세요. 가격이 먼저 표시됩니다.</span></li>
+      <li><b><span class="num">4</span>편집</b><span>결과물을 타임라인에 놓고 편집한 뒤 영상을 내보내세요. FCPXML로 마무리 편집기에 넘길 수도 있습니다.</span></li>
+    </ol>
+    <div class="cta"><a class="btn primary" href="https://github.com/timoncool/videosos/releases/latest">다운로드<small data-release>v2.1.0</small></a></div>
+  </section>
+
+  <section id="faq">
+    <h2>자주 묻는 질문</h2>
+    <details><summary>무료인가요?</summary><div class="answer"><p>네. VideoSOS는 무료 오픈 소스(MIT)입니다. 생성 비용은 내 키로 제공업체에 지불하며, 편집과 내보내기는 무료입니다.</p></div></details>
+    <details><summary>계정이 필요한가요?</summary><div class="answer"><p>저희 쪽에는 필요 없습니다. OpenRouter, fal, Runware 중 적어도 한 곳의 키가 필요하고, 그 제공업체에 직접 요금을 지불합니다. VideoSOS는 사용자의 돈을 보지 않으며 키를 에이전트에 보여 주지도 않습니다.</p></div></details>
+    <details><summary>영상 하나에 얼마인가요?</summary><div class="answer"><p>모델에 따라 다릅니다. 생성 양식은 실행할 때마다 먼저 가격을 보여 주며, 빠른 이미지는 1센트 미만부터 긴 영상은 몇 달러까지 다양합니다. 기록에는 각 실행의 비용이 남습니다. 스토리보드에서는 유료 클립 전에 저렴한 프레임을 먼저 승인합니다.</p></div></details>
+    <details><summary>내 파일이 어딘가로 전송되나요?</summary><div class="answer"><p>생성에 필요한 것만 선택한 제공업체로 전송됩니다. 프로젝트, 미디어, 결과물은 내 디스크에 그대로 남습니다. 익명 통계는 직접 켜기 전에는 꺼져 있으며, 프롬프트, 파일, 키는 포함되지 않습니다.</p></div></details>
+    <details><summary>어떤 시스템에서 실행되나요?</summary><div class="answer"><p>Windows 10 및 11 x64, 그리고 실험적 빌드로 Linux x86-64와 Apple Silicon의 macOS를 지원합니다. WebGPU를 지원하는 그래픽 카드로 미리보기와 내보내기를 실행합니다.</p></div></details>
+    <details><summary>AI 에이전트가 사용할 수 있나요?</summary><div class="answer"><p>Claude Code, Claude Desktop, Cursor, Codex를 연결하면 에이전트가 창에서 하는 일을 그대로 합니다. 모델 선택, 가격 추정, 생성, 타임라인 단계별 편집, 3D 샷 블로킹, 그래픽 제작, 내보내기. 에이전트가 편집하기 전에 타임라인이 매번 보관되고, 편집을 먼저 시험해 볼 수 있으며, 매 편집을 직접 수락하도록 요청할 수도 있습니다.</p><pre>claude mcp add --transport http videosos http://127.0.0.1:8796/mcp</pre></div></details>
+    <details><summary>어떻게 만들어졌나요?</summary><div class="answer"><p>Tauri 셸이 같은 프로세스에서 Rust 서버를 실행합니다. 창은 FreeCut 편집기의 포크이며 생성 패널, 스토리보드, 캔버스, 3D 블로킹, 에이전트 브리지가 추가되어 있습니다. 작업은 SQLite에, 파일은 내 디스크에 저장됩니다.</p><pre>React window (FreeCut fork) ─┐
+                             ├─ VideoSOS.exe   (Tauri shell + Rust/axum server inside)
+Rust axum server ────────────┘        │
+                                      ├─ OpenRouter · fal · Runware   (your keys)
+                                      └─ MCP  http://127.0.0.1:8796/mcp</pre></div></details>
+  </section>
+
+  <section id="author">
+    <h2>만든 사람</h2>
+    <p class="sub">Nerual Dreming — 아티스트이자 ArtGeneration.me와 Neuro-Cartel 커뮤니티의 창립자, Dub Studio, YuE2 Studio, MiniMax Music3 Studio, ACE-Step Studio의 제작자. 이 스튜디오는 그들과 같은 방식을 공유합니다.</p>
+    <div class="pills">
+      <a class="pill" href="https://github.com/timoncool">GitHub · @timoncool</a>
+      <a class="pill" href="https://t.me/nerual_dreming">Telegram · @nerual_dreming</a>
+      <a class="pill" href="https://t.me/neuroport">Telegram · @neuroport</a>
+      <a class="pill" href="https://artgeneration.me">ArtGeneration.me</a>
+      <a class="pill" href="https://github.com/timoncool/videosos/blob/main/DONATE.md">프로젝트 후원하기</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>VideoSOS는 MIT 라이선스이며, 편집기 창은 FreeCut(MIT)을 기반으로 합니다. 생성한 결과물에는 사용한 제공업체와 모델의 약관이 적용됩니다.</p>
+    <p><a href="https://github.com/timoncool/videosos/blob/main/CHANGELOG.md">변경 내역</a> · <a href="https://github.com/timoncool/videosos/issues">문제 신고</a> · 업데이트 <time datetime="2026-10-14">2026-10-14</time></p>
+  </footer>
+</main>
+
+<div class="viewer" id="viewer" aria-hidden="true">
+  <button type="button" aria-label="Close">×</button>
+  <img id="viewer-image" alt="" />
+</div>
+<script>
+const viewer = document.getElementById('viewer');
+const viewerImage = document.getElementById('viewer-image');
+const closeViewer = () => { viewer.classList.remove('open'); viewer.setAttribute('aria-hidden', 'true'); };
+document.addEventListener('click', (event) => {
+  const image = event.target.closest('.hero-shot img, .tile img, .gallery img');
+  if (image) {
+    viewerImage.src = image.dataset.full || image.src;
+    viewerImage.alt = image.alt;
+    viewer.classList.add('open');
+    viewer.setAttribute('aria-hidden', 'false');
+    return;
+  }
+  if (event.target.closest('#viewer')) closeViewer();
+});
+document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeViewer(); });
+// the download buttons name the latest release as GitHub has it, so a new release needs no new page
+fetch('https://api.github.com/repos/timoncool/videosos/releases/latest')
+  .then((response) => (response.ok ? response.json() : Promise.reject(new Error('GitHub answered ' + response.status))))
+  .then((release) => {
+    document.querySelectorAll('[data-release]').forEach((element) => { element.textContent = release.tag_name; });
+  })
+  .catch((error) => console.warn('Latest release not read; the page shows the one it was built with:', error));
+</script>
+</body>
+</html>

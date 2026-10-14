@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>VideoSOS — un studio vidéo IA sur votre bureau : générez avec les meilleurs modèles, préparez le film, montez-le sur une timeline</title>
+<meta name="description" content="Un studio vidéo IA de bureau pour Windows, Linux et macOS : images, vidéo, musique, voix, son et texte avec les meilleurs modèles d’OpenRouter, fal et Runware et vos propres clés, un storyboard, un canevas de nœuds et un blocking 3D pour préparer le film, et une vraie timeline multipiste pour le monter. MCP pour les agents IA. Gratuit et open source." />
+<link rel="canonical" href="https://timoncool.github.io/videosos/fr.html" />
+<link rel="alternate" hreflang="en" href="https://timoncool.github.io/videosos/" />
+<link rel="alternate" hreflang="ru" href="https://timoncool.github.io/videosos/ru.html" />
+<link rel="alternate" hreflang="zh" href="https://timoncool.github.io/videosos/zh.html" />
+<link rel="alternate" hreflang="ja" href="https://timoncool.github.io/videosos/ja.html" />
+<link rel="alternate" hreflang="ko" href="https://timoncool.github.io/videosos/ko.html" />
+<link rel="alternate" hreflang="es" href="https://timoncool.github.io/videosos/es.html" />
+<link rel="alternate" hreflang="fr" href="https://timoncool.github.io/videosos/fr.html" />
+<link rel="alternate" hreflang="pt" href="https://timoncool.github.io/videosos/pt.html" />
+<link rel="alternate" hreflang="x-default" href="https://timoncool.github.io/videosos/" />
+<link rel="icon" type="image/png" href="logo.png" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="VideoSOS" />
+<meta property="og:title" content="VideoSOS — un studio vidéo IA sur votre bureau : générez avec les meilleurs modèles, préparez le film, montez-le sur une timeline" />
+<meta property="og:description" content="Un studio vidéo IA de bureau pour Windows, Linux et macOS : images, vidéo, musique, voix, son et texte avec les meilleurs modèles d’OpenRouter, fal et Runware et vos propres clés, un storyboard, un canevas de nœuds et un blocking 3D pour préparer le film, et une vraie timeline multipiste pour le monter. MCP pour les agents IA. Gratuit et open source." />
+<meta property="og:url" content="https://timoncool.github.io/videosos/fr.html" />
+<meta property="og:locale" content="fr" />
+<meta property="og:image" content="https://timoncool.github.io/videosos/og-fr.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Générez, préparez et montez un film entier dans une seule fenêtre" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://timoncool.github.io/videosos/og-fr.jpg" />
+<link rel="preload" as="image" href="screenshots/editor-fr.webp" fetchpriority="high" />
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"SoftwareApplication","@id":"https://timoncool.github.io/videosos/#app","name":"VideoSOS","url":"https://timoncool.github.io/videosos/fr.html","inLanguage":"fr","description":"Un studio vidéo IA de bureau pour Windows, Linux et macOS : images, vidéo, musique, voix, son et texte avec les meilleurs modèles d’OpenRouter, fal et Runware et vos propres clés, un storyboard, un canevas de nœuds et un blocking 3D pour préparer le film, et une vraie timeline multipiste pour le monter. MCP pour les agents IA. Gratuit et open source.","applicationCategory":"MultimediaApplication","applicationSubCategory":"AI video generation and editing","operatingSystem":"Windows 10, Windows 11, Linux, macOS","softwareVersion":"2.1.0","downloadUrl":"https://github.com/timoncool/videosos/releases/latest","isAccessibleForFree":true,"license":"https://opensource.org/licenses/MIT","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"image":"https://timoncool.github.io/videosos/og-fr.jpg","screenshot":"https://timoncool.github.io/videosos/screenshots/editor-fr.webp","codeRepository":"https://github.com/timoncool/videosos","sameAs":["https://github.com/timoncool/videosos"],"author":{"@id":"https://github.com/timoncool#person"},"dateModified":"2026-10-14"},{"@type":"Person","@id":"https://github.com/timoncool#person","name":"Nerual Dreming","url":"https://github.com/timoncool","sameAs":["https://github.com/timoncool","https://t.me/nerual_dreming","https://artgeneration.me"]},{"@type":"FAQPage","inLanguage":"fr","mainEntity":[{"@type":"Question","name":"C’est gratuit ?","acceptedAnswer":{"@type":"Answer","text":"Oui. VideoSOS est gratuit et open source (MIT). La génération se paie aux fournisseurs avec vos propres clés ; le montage et l’export ne coûtent rien."}},{"@type":"Question","name":"Faut-il un compte ?","acceptedAnswer":{"@type":"Answer","text":"Pas chez nous. Il vous faut une clé d’au moins un fournisseur — OpenRouter, fal ou Runware — et vous le payez directement ; VideoSOS ne voit jamais votre argent et ne montre jamais vos clés aux agents."}},{"@type":"Question","name":"Combien coûte une vidéo ?","acceptedAnswer":{"@type":"Answer","text":"Cela dépend du modèle : le formulaire de génération affiche le prix avant chaque lancement, de quelques fractions de centime pour une image rapide à plusieurs dollars pour une longue vidéo, et l’historique conserve le coût de chaque lancement. Un storyboard approuve des images bon marché avant les clips payants."}},{"@type":"Question","name":"Mes fichiers sont-ils envoyés quelque part ?","acceptedAnswer":{"@type":"Answer","text":"Seul ce dont une génération a besoin part chez le fournisseur que vous avez choisi. Les projets, les médias et les résultats restent sur votre disque ; les statistiques anonymes sont désactivées sauf si vous les activez, et n’incluent jamais de prompts, de fichiers ni de clés."}},{"@type":"Question","name":"Sur quels systèmes fonctionne-t-il ?","acceptedAnswer":{"@type":"Answer","text":"Windows 10 et 11 x64 ; Linux x86-64 et macOS sur Apple Silicon en versions expérimentales. Une carte graphique avec WebGPU exécute l’aperçu et l’export."}},{"@type":"Question","name":"Un agent IA peut-il l’utiliser ?","acceptedAnswer":{"@type":"Answer","text":"Connectez Claude Code, Claude Desktop, Cursor ou Codex et l’agent fait ce que fait la fenêtre : choisit les modèles, estime les prix, génère, modifie la timeline pas à pas, prépare les plans en 3D, crée des graphiques et exporte. La timeline est conservée avant chaque modification de l’agent, une modification peut d’abord être répétée à blanc, et vous pouvez demander à accepter chacune vous-même."}},{"@type":"Question","name":"Comment est-il construit ?","acceptedAnswer":{"@type":"Answer","text":"Une coque Tauri exécute le serveur Rust dans le même processus ; la fenêtre est un fork de l’éditeur FreeCut auquel s’ajoutent le panneau de génération, le storyboard, le canevas, le blocking 3D et le pont de l’agent. Les tâches vivent dans SQLite, les fichiers sur votre disque."}}]}]}</script>
+<style>
+:root {
+  --bg: #0a0a0b;
+  --panel: #111113;
+  --panel-2: #18181b;
+  --line: rgba(255,255,255,.08);
+  --text: #f4f4f5;
+  --muted: #a1a1aa;
+  --violet: #7c3aed;
+  --blue: #2563eb;
+  --accent: #a78bfa;
+  --gold: #fbbf24;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.65 -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+img { max-width: 100%; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+
+header {
+  position: sticky; top: 0; z-index: 10;
+  background: rgba(10,10,11,.85); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.utility { border-bottom: 1px solid var(--line); }
+.utility-bar { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }
+.family { display: flex; gap: 4px; padding-top: 8px; overflow-x: auto; }
+.family a {
+  padding: 6px 14px; border: 1px solid transparent; border-bottom: none; border-radius: 9px 9px 0 0;
+  color: var(--muted); font-size: 13px; font-weight: 600; text-decoration: none; white-space: nowrap;
+}
+.family a:hover { color: var(--text); background: rgba(255,255,255,.04); }
+.family a[aria-current="page"] { color: var(--text); border-color: var(--line); background: rgba(124,58,237,.16); box-shadow: inset 0 2px 0 var(--accent); }
+.langs { display: flex; gap: 14px; padding: 0 0 8px; white-space: nowrap; }
+.langs a { font-size: 12px; color: var(--muted); text-decoration: none; }
+.langs a:hover { color: var(--text); }
+.langs a[aria-current="page"] { color: var(--text); font-weight: 700; }
+.bar { display: flex; align-items: center; gap: 12px; padding-block: 10px; }
+.mark { width: 30px; height: 30px; border-radius: 9px; flex: none; }
+.name { font-weight: 800; letter-spacing: -.01em; white-space: nowrap; }
+.head-github, .head-download {
+  box-sizing: border-box; height: 40px; display: inline-flex; align-items: center; gap: 8px;
+  padding: 0 16px; border-radius: 10px; border: 1px solid transparent;
+  font-size: 14px; font-weight: 700; line-height: 1; white-space: nowrap; text-decoration: none;
+  transition: border-color .15s, background .15s, filter .15s;
+}
+.head-github { margin-left: auto; padding-right: 10px; color: var(--text); background: #232327; }
+.head-github:hover { background: #2c2c31; }
+/* its word is mostly lowercase without ascenders: lifted 2px so the letters, not the line box, sit in the middle */
+.head-download { margin-left: 10px; padding-bottom: 4px; color: #fff; background: linear-gradient(135deg, var(--violet), #4f46e5 60%, var(--blue)); }
+.head-download:hover { filter: brightness(1.08); }
+
+.hero { padding-top: 56px; text-align: center; }
+h1 { font-size: clamp(34px, 6.4vw, 64px); line-height: 1.05; letter-spacing: -.025em; margin: 0 auto; max-width: 15em; }
+.lead { color: var(--muted); font-size: clamp(17px, 2.2vw, 20px); margin: 18px auto 0; max-width: 38em; }
+.cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 30px 0 10px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 10px; text-decoration: none;
+  border-radius: 12px; padding: 13px 20px; font-weight: 700; font-size: 16px;
+  border: 1px solid var(--line); color: var(--text); background: var(--panel);
+}
+.btn:hover { border-color: rgba(255,255,255,.2); }
+.btn small { font-weight: 600; font-size: 12px; opacity: .8; }
+.btn img { display: block; }
+.btn.primary { background: linear-gradient(135deg, var(--violet), #4f46e5 60%, var(--blue)); border-color: transparent; color: #fff; }
+.note { color: var(--muted); font-size: 13px; margin: 6px auto 0; max-width: 60em; }
+.hero-shot { margin: 36px 0 0; }
+.hero-shot img {
+  width: 100%; height: auto; display: block; border-radius: 16px; border: 1px solid var(--line); cursor: zoom-in;
+  box-shadow: 0 30px 80px rgba(124,58,237,.16), 0 10px 40px rgba(0,0,0,.5);
+}
+
+section { padding: 72px 0 0; }
+h2 { font-size: clamp(26px, 3.6vw, 36px); letter-spacing: -.02em; margin: 0 0 8px; }
+.sub { color: var(--muted); margin: 0 0 24px; max-width: 46em; }
+
+.samples { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
+.sample { margin: 0; padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); }
+.sample figcaption { display: grid; gap: 2px; margin-bottom: 10px; }
+.sample b { font-size: 15px; }
+.sample span { color: var(--muted); font-size: 13px; }
+.sample audio { width: 100%; height: 36px; }
+details.more summary { cursor: pointer; color: var(--muted); font-weight: 600; margin: 16px 0 12px; }
+
+/* each tile is title, picture, text; the three rows line up across tiles side by side */
+.bento { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 14px; row-gap: 0; margin-top: 24px; }
+.tile {
+  display: grid; grid-row: span 3; grid-template-rows: subgrid; row-gap: 14px; margin-bottom: 14px; padding: 22px;
+  border: 1px solid var(--line); border-radius: 20px; background: linear-gradient(180deg, var(--panel-2), var(--panel));
+}
+.tile h3 { margin: 0; font-size: 19px; letter-spacing: -.01em; align-self: start; }
+.tile p { margin: 0; color: var(--muted); font-size: 14.5px; line-height: 1.5; }
+.shot { margin: 0; align-self: start; }
+.shot img {
+  display: block; width: 100%; height: auto;
+  border-radius: 10px; border: 1px solid rgba(255,255,255,.1); cursor: zoom-in;
+  box-shadow: 0 12px 30px rgba(0,0,0,.45);
+}
+
+.gallery { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.gallery figure { margin: 0; }
+.gallery img {
+  display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: top left;
+  border-radius: 10px; border: 1px solid var(--line); cursor: zoom-in;
+}
+.gallery figcaption {
+  margin-top: 8px; color: var(--muted); font-size: 13px; line-height: 1.45;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.stars { display: block; }
+
+.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
+.card { padding: 16px 18px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); }
+.card h3 { margin: 0 0 6px; font-size: 15.5px; letter-spacing: -.01em; }
+.card p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
+
+.steps { list-style: none; margin: 20px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+.steps li { padding: 18px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); display: grid; gap: 6px; align-content: start; }
+.steps b { font-size: 16px; display: flex; align-items: baseline; gap: 10px; }
+.steps .num { color: var(--accent); font-weight: 800; }
+.steps span { color: var(--muted); font-size: 14px; line-height: 1.5; }
+#start .cta { justify-content: flex-start; margin-top: 24px; }
+
+#faq details { border-bottom: 1px solid var(--line); }
+#faq details:first-of-type { border-top: 1px solid var(--line); }
+#faq summary {
+  list-style: none; cursor: pointer; padding: 18px 36px 18px 0; font-weight: 700; font-size: 17px; position: relative;
+}
+#faq summary::-webkit-details-marker { display: none; }
+#faq summary::after { content: '+'; position: absolute; right: 4px; top: 14px; font-size: 24px; color: var(--muted); font-weight: 400; }
+#faq details[open] summary::after { content: '−'; }
+.answer { padding: 0 0 20px; color: var(--muted); max-width: 48em; }
+.answer p { margin: 0 0 10px; }
+.answer b { color: var(--text); }
+.answer ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
+
+.scroll { overflow-x: auto; margin: 10px 0; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+td { color: var(--text); }
+pre { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px; overflow-x: auto; font-size: 13px; color: var(--text); }
+
+.pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill { text-decoration: none; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); font-size: 14px; }
+.pill:hover { border-color: var(--accent); }
+footer { margin: 72px 0 40px; padding-top: 24px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+footer p { margin: 0 0 8px; }
+
+.viewer { position: fixed; inset: 0; background: rgba(0,0,0,.9); display: none; align-items: center; justify-content: center; z-index: 50; padding: 24px; }
+.viewer.open { display: flex; }
+.viewer img { max-width: 100%; max-height: 100%; border-radius: 10px; }
+.viewer button { position: absolute; top: 14px; right: 18px; background: none; border: 0; color: #fff; font-size: 34px; cursor: pointer; }
+
+@media (max-width: 860px) {
+  .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .hero { padding-top: 36px; }
+  .name { display: none; }
+  .utility-bar { flex-direction: column; align-items: stretch; gap: 0; }
+  .langs { order: -1; justify-content: flex-end; padding: 8px 0 0; }
+  .btn { width: 100%; justify-content: center; }
+  .bento, .cards { grid-template-columns: minmax(0, 1fr); }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="utility"><div class="wrap utility-bar">
+    <nav class="family" aria-label="Programs">
+    <a href="fr.html" aria-current="page">VideoSOS</a>
+    <a href="https://timoncool.github.io/dub-studio/">Dub Studio</a>
+    <a href="https://timoncool.github.io/YuE2-Studio/">YuE2 Studio</a>
+    <a href="https://timoncool.github.io/MiniMax-Music3-Studio/">MiniMax Music3 Studio</a>
+    <a href="https://timoncool.github.io/ACE-Step-Studio/">ACE-Step Studio</a>
+    </nav>
+    <nav class="langs" aria-label="Language">
+      <a href="index.html" hreflang="en">English</a>
+      <a href="ru.html" hreflang="ru">Русский</a>
+      <a href="zh.html" hreflang="zh">中文</a>
+      <a href="ja.html" hreflang="ja">日本語</a>
+      <a href="ko.html" hreflang="ko">한국어</a>
+      <a href="es.html" hreflang="es">Español</a>
+      <a href="fr.html" hreflang="fr" aria-current="page">Français</a>
+      <a href="pt.html" hreflang="pt">Português</a>
+    </nav>
+  </div></div>
+  <div class="wrap bar">
+    <img class="mark" src="logo.png" alt="" width="30" height="30" />
+    <div class="name">VideoSOS</div>
+    <a class="head-github" href="https://github.com/timoncool/videosos">GitHub<img class="stars" src="https://img.shields.io/github/stars/timoncool/videosos?style=flat&amp;label=%E2%98%85&amp;color=3f3f46" alt="Étoiles GitHub" height="20" /></a>
+    <a class="head-download" href="https://github.com/timoncool/videosos/releases/latest">Télécharger</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h1>Générez, préparez et montez un film entier dans une seule fenêtre</h1>
+    <p class="lead">VideoSOS place les meilleurs modèles d’image, de vidéo, de musique et de voix d’OpenRouter, fal et Runware à côté d’un vrai éditeur multipiste. Préparez le film sur un storyboard, un canevas de nœuds et un blocking 3D, générez chaque plan avec vos propres clés au prix affiché avant le lancement, puis montez le tout en une vidéo terminée — ou laissez un agent IA le faire avec vous.</p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/timoncool/videosos/releases/latest">Télécharger<small data-release>v2.1.0</small></a>
+      <a class="btn" href="https://github.com/timoncool/videosos">Mettre une étoile sur GitHub<img class="stars" src="https://img.shields.io/github/stars/timoncool/videosos?style=flat&amp;label=%E2%98%85&amp;color=3f3f46" alt="Étoiles GitHub" height="20" /></a>
+    </div>
+    <p class="note">Windows 10/11, Linux (expérimental) et macOS sur Apple Silicon (expérimental). Une carte graphique avec WebGPU est nécessaire pour l’aperçu et l’export. La génération demande une clé OpenRouter, fal ou Runware : vous les payez directement.</p>
+    <figure class="hero-shot"><img src="screenshots/editor-fr.webp" alt="L’espace de montage : le panneau de génération à gauche, l’aperçu et la timeline multipiste." width="1600" height="900" fetchpriority="high" /></figure>
+  </section>
+
+  <section id="features">
+    <h2>Ce qu’il fait</h2>
+    <p class="sub">Génération, préparation et montage dans un seul programme, avec vos fichiers sur votre disque.</p>
+    <div class="bento">
+      <article class="tile">
+        <h3>Storyboard</h3>
+        <figure class="shot"><img src="screenshots/storyboard-fr-tile.webp" data-full="screenshots/storyboard-fr.webp" alt="Le storyboard : un scénario découpé en plans, chacun avec son image et son clip." loading="lazy" width="960" height="844" /></figure>
+        <p>Un modèle de langage découpe un scénario en plans ; chaque plan reçoit une image d’un modèle d’image et un clip d’un modèle vidéo qui démarre sur cette image, et les clips se posent sur la timeline les uns après les autres.</p>
+      </article>
+      <article class="tile">
+        <h3>Canevas de nœuds et modèles</h3>
+        <figure class="shot"><img src="screenshots/canvas-fr-tile.webp" data-full="screenshots/canvas-fr.webp" alt="Le canevas de nœuds : un prompt vers un modèle d’image, l’image vers un modèle vidéo — de vrais résultats dans les nœuds." loading="lazy" width="1030" height="410" /></figure>
+        <p>Texte, images, vidéos et générations sont des nœuds reliés par ce qu’ils transmettent.</p>
+      </article>
+      <article class="tile">
+        <h3>Blocking 3D</h3>
+        <figure class="shot"><img src="screenshots/blocking-fr-tile.webp" data-full="screenshots/blocking-fr.webp" alt="Le blocking 3D : le plan construit avec des formes de substitution, vu par sa caméra." loading="lazy" width="960" height="844" /></figure>
+        <p>Décrivez le plan et un modèle de langage le construit à partir de formes de substitution, de personnages debout et assis, de leurs déplacements et du trajet de la caméra.</p>
+      </article>
+      <article class="tile">
+        <h3>Graphiques HTML</h3>
+        <figure class="shot"><img src="screenshots/graphics-fr-tile.webp" data-full="screenshots/graphics-fr.webp" alt="Graphiques HTML : un titre écrit en HTML et CSS avec son aperçu en direct." loading="lazy" width="960" height="844" /></figure>
+        <p>Titres, bandeaux, compteurs et badges en HTML et CSS, avec aperçu en direct, transformés en un clip avec transparence qui se superpose à la vidéo à la tête de lecture.</p>
+      </article>
+    </div>
+    <div class="cards">
+      <article class="card"><h3>Toutes les modalités</h3><p>Douze tâches : images, retouches, vidéo à partir d’un texte ou d’une image, retouche vidéo, synchronisation labiale, upscale, suppression d’arrière-plan, musique, voix, effets sonores, transcriptions et textes — plus de mille modèles d’OpenRouter, fal et Runware, lus en direct chez les fournisseurs.</p></article>
+      <article class="card"><h3>Le prix avant de lancer</h3><p>Le formulaire est construit à partir de la description du modèle lui-même et le prix en est déduit avant que vous ne cliquiez sur Générer ; après l’exécution, la facture du fournisseur est enregistrée. Une limite quotidienne retient les agents.</p></article>
+      <article class="card"><h3>Comparez des modèles en un seul lancement</h3><p>Le même prompt part vers deux autres modèles au plus, et les résultats s’affichent côte à côte avec leurs prix.</p></article>
+      <article class="card"><h3>Éléments</h3><p>Un personnage, un objet ou un lieu conservé sous un nom avec ses images : @nom dans un prompt les envoie au modèle, et le même visage revient plan après plan.</p></article>
+      <article class="card"><h3>Prises sur la timeline</h3><p>Un lancement est dessiné sur la timeline à l’endroit où il atterrira pendant qu’il s’exécute ; une partie de n’importe quel clip est régénérée sur place ; le clip suivant continue à partir de la dernière image du précédent.</p></article>
+      <article class="card"><h3>Un vrai éditeur</h3><p>Plusieurs pistes vidéo et audio, ajustements ripple, rolling, slip et slide, transitions, images clés avec courbe de Bézier, masques, modes de fusion, étalonnage avec scopes, texte, formes et sous-titres. Export rapide en MP4, WebM, MOV ou MKV sur la carte graphique, ou en FCPXML pour Final Cut, DaVinci Resolve et Premiere.</p></article>
+      <article class="card"><h3>Piloté par votre agent (MCP)</h3><p>Connectez Claude Code, Claude Desktop, Cursor ou Codex et l’agent fait ce que fait la fenêtre : choisit les modèles, estime les prix, génère, modifie la timeline pas à pas, prépare les plans en 3D, crée des graphiques et exporte. La timeline est conservée avant chaque modification de l’agent, une modification peut d’abord être répétée à blanc, et vous pouvez demander à accepter chacune vous-même.</p></article>
+      <article class="card"><h3>Chat dans la fenêtre</h3><p>Un modèle OpenRouter de votre choix manipule le programme avec les mêmes outils, pas à pas, avec le coût de chaque étape et un bouton Arrêter.</p></article>
+      <article class="card"><h3>Des vidéos par leurs liens</h3><p>Un lien YouTube, n’importe quel site connu de yt-dlp ou un fichier direct entre dans la bibliothèque avec progression, annulation et reprise.</p></article>
+      <article class="card"><h3>Vos clés, votre disque</h3><p>Pas de compte chez nous : vous payez directement les fournisseurs. Les projets et les générations sont de simples fichiers sur votre disque ; une tâche est enregistrée avant d’être envoyée et n’est jamais payée deux fois, et les résultats sont téléchargés avant l’expiration des liens des fournisseurs.</p></article>
+      <article class="card"><h3>Dix langues</h3><p>Anglais, russe, allemand, espagnol, français, japonais, coréen, portugais brésilien, turc et chinois, effets et paramètres compris.</p></article>
+      <article class="card"><h3>Depuis un autre ordinateur</h3><p>Un proxy pour les fournisseurs et les téléchargements, et un accès depuis le réseau : un navigateur sur un autre ordinateur ou un téléphone ouvre la même interface avec une clé d’accès pendant que tout s’exécute ici.</p></article>
+    </div>
+  </section>
+
+  <section id="screenshots">
+    <h2>Captures d’écran</h2>
+    <p class="sub">Le programme lui-même, dans votre langue.</p>
+    <div class="gallery">
+      <figure><img src="screenshots/editor-fr.webp" alt="L’espace de montage : le panneau de génération à gauche, l’aperçu et la timeline multipiste." loading="lazy" width="1600" height="900" /><figcaption>L’espace de montage : le panneau de génération à gauche, l’aperçu et la timeline multipiste.</figcaption></figure>
+      <figure><img src="screenshots/storyboard-fr.webp" alt="Le storyboard : un scénario découpé en plans, chacun avec son image et son clip." loading="lazy" width="1600" height="900" /><figcaption>Le storyboard : un scénario découpé en plans, chacun avec son image et son clip.</figcaption></figure>
+      <figure><img src="screenshots/canvas-fr.webp" alt="Le canevas de nœuds : un prompt vers un modèle d’image, l’image vers un modèle vidéo — de vrais résultats dans les nœuds." loading="lazy" width="1600" height="900" /><figcaption>Le canevas de nœuds : un prompt vers un modèle d’image, l’image vers un modèle vidéo — de vrais résultats dans les nœuds.</figcaption></figure>
+      <figure><img src="screenshots/blocking-fr.webp" alt="Le blocking 3D : le plan construit avec des formes de substitution, vu par sa caméra." loading="lazy" width="1600" height="900" /><figcaption>Le blocking 3D : le plan construit avec des formes de substitution, vu par sa caméra.</figcaption></figure>
+      <figure><img src="screenshots/graphics-fr.webp" alt="Graphiques HTML : un titre écrit en HTML et CSS avec son aperçu en direct." loading="lazy" width="1600" height="900" /><figcaption>Graphiques HTML : un titre écrit en HTML et CSS avec son aperçu en direct.</figcaption></figure>
+    </div>
+  </section>
+
+  <section id="start">
+    <h2>Pour commencer</h2>
+    <ol class="steps">
+      <li><b><span class="num">1</span>Installez</b><span>Lancez l’installeur pour Windows, l’AppImage ou le .deb pour Linux, ou le .dmg pour macOS.</span></li>
+      <li><b><span class="num">2</span>Ajoutez une clé</b><span>Collez une clé OpenRouter, fal ou Runware quand l’onglet Générer vous le demande ; un seul fournisseur suffit pour commencer.</span></li>
+      <li><b><span class="num">3</span>Générez</b><span>Choisissez une tâche et un modèle, écrivez ce que vous voulez et cliquez sur Générer : le prix s’affiche d’abord.</span></li>
+      <li><b><span class="num">4</span>Montez</b><span>Placez les résultats sur la timeline, montez et exportez la vidéo — ou confiez-la à un logiciel de finition en FCPXML.</span></li>
+    </ol>
+    <div class="cta"><a class="btn primary" href="https://github.com/timoncool/videosos/releases/latest">Télécharger<small data-release>v2.1.0</small></a></div>
+  </section>
+
+  <section id="faq">
+    <h2>Questions</h2>
+    <details><summary>C’est gratuit ?</summary><div class="answer"><p>Oui. VideoSOS est gratuit et open source (MIT). La génération se paie aux fournisseurs avec vos propres clés ; le montage et l’export ne coûtent rien.</p></div></details>
+    <details><summary>Faut-il un compte ?</summary><div class="answer"><p>Pas chez nous. Il vous faut une clé d’au moins un fournisseur — OpenRouter, fal ou Runware — et vous le payez directement ; VideoSOS ne voit jamais votre argent et ne montre jamais vos clés aux agents.</p></div></details>
+    <details><summary>Combien coûte une vidéo ?</summary><div class="answer"><p>Cela dépend du modèle : le formulaire de génération affiche le prix avant chaque lancement, de quelques fractions de centime pour une image rapide à plusieurs dollars pour une longue vidéo, et l’historique conserve le coût de chaque lancement. Un storyboard approuve des images bon marché avant les clips payants.</p></div></details>
+    <details><summary>Mes fichiers sont-ils envoyés quelque part ?</summary><div class="answer"><p>Seul ce dont une génération a besoin part chez le fournisseur que vous avez choisi. Les projets, les médias et les résultats restent sur votre disque ; les statistiques anonymes sont désactivées sauf si vous les activez, et n’incluent jamais de prompts, de fichiers ni de clés.</p></div></details>
+    <details><summary>Sur quels systèmes fonctionne-t-il ?</summary><div class="answer"><p>Windows 10 et 11 x64 ; Linux x86-64 et macOS sur Apple Silicon en versions expérimentales. Une carte graphique avec WebGPU exécute l’aperçu et l’export.</p></div></details>
+    <details><summary>Un agent IA peut-il l’utiliser ?</summary><div class="answer"><p>Connectez Claude Code, Claude Desktop, Cursor ou Codex et l’agent fait ce que fait la fenêtre : choisit les modèles, estime les prix, génère, modifie la timeline pas à pas, prépare les plans en 3D, crée des graphiques et exporte. La timeline est conservée avant chaque modification de l’agent, une modification peut d’abord être répétée à blanc, et vous pouvez demander à accepter chacune vous-même.</p><pre>claude mcp add --transport http videosos http://127.0.0.1:8796/mcp</pre></div></details>
+    <details><summary>Comment est-il construit ?</summary><div class="answer"><p>Une coque Tauri exécute le serveur Rust dans le même processus ; la fenêtre est un fork de l’éditeur FreeCut auquel s’ajoutent le panneau de génération, le storyboard, le canevas, le blocking 3D et le pont de l’agent. Les tâches vivent dans SQLite, les fichiers sur votre disque.</p><pre>React window (FreeCut fork) ─┐
+                             ├─ VideoSOS.exe   (Tauri shell + Rust/axum server inside)
+Rust axum server ────────────┘        │
+                                      ├─ OpenRouter · fal · Runware   (your keys)
+                                      └─ MCP  http://127.0.0.1:8796/mcp</pre></div></details>
+  </section>
+
+  <section id="author">
+    <h2>Qui l’a fait</h2>
+    <p class="sub">Nerual Dreming — artiste, fondateur d’ArtGeneration.me et de la communauté Neuro-Cartel, auteur de Dub Studio, YuE2 Studio, MiniMax Music3 Studio et ACE-Step Studio, dont ce studio partage les méthodes.</p>
+    <div class="pills">
+      <a class="pill" href="https://github.com/timoncool">GitHub · @timoncool</a>
+      <a class="pill" href="https://t.me/nerual_dreming">Telegram · @nerual_dreming</a>
+      <a class="pill" href="https://t.me/neuroport">Telegram · @neuroport</a>
+      <a class="pill" href="https://artgeneration.me">ArtGeneration.me</a>
+      <a class="pill" href="https://github.com/timoncool/videosos/blob/main/DONATE.md">Soutenir le projet</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>VideoSOS est sous licence MIT ; la fenêtre de l’éditeur est basée sur FreeCut (MIT). Ce que vous générez est régi par les conditions du fournisseur et du modèle que vous avez utilisés.</p>
+    <p><a href="https://github.com/timoncool/videosos/blob/main/CHANGELOG.md">Ce qui a changé</a> · <a href="https://github.com/timoncool/videosos/issues">Signaler un problème</a> · Mis à jour <time datetime="2026-10-14">2026-10-14</time></p>
+  </footer>
+</main>
+
+<div class="viewer" id="viewer" aria-hidden="true">
+  <button type="button" aria-label="Close">×</button>
+  <img id="viewer-image" alt="" />
+</div>
+<script>
+const viewer = document.getElementById('viewer');
+const viewerImage = document.getElementById('viewer-image');
+const closeViewer = () => { viewer.classList.remove('open'); viewer.setAttribute('aria-hidden', 'true'); };
+document.addEventListener('click', (event) => {
+  const image = event.target.closest('.hero-shot img, .tile img, .gallery img');
+  if (image) {
+    viewerImage.src = image.dataset.full || image.src;
+    viewerImage.alt = image.alt;
+    viewer.classList.add('open');
+    viewer.setAttribute('aria-hidden', 'false');
+    return;
+  }
+  if (event.target.closest('#viewer')) closeViewer();
+});
+document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeViewer(); });
+// the download buttons name the latest release as GitHub has it, so a new release needs no new page
+fetch('https://api.github.com/repos/timoncool/videosos/releases/latest')
+  .then((response) => (response.ok ? response.json() : Promise.reject(new Error('GitHub answered ' + response.status))))
+  .then((release) => {
+    document.querySelectorAll('[data-release]').forEach((element) => { element.textContent = release.tag_name; });
+  })
+  .catch((error) => console.warn('Latest release not read; the page shows the one it was built with:', error));
+</script>
+</body>
+</html>
