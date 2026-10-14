@@ -207,6 +207,22 @@
       "how_the_model_should_answer": "How the model should answer",
       "iso_code_for_example_ru_or_en_empty_to_detect": "ISO code, for example ru or en; empty to detect",
       "tone_pace_and_emotion_in_words": "Tone, pace and emotion, in words."
+    },
+    "jobError": {
+      "no_key": "No {{provider}} key",
+      "catalog": "The provider's model could not be read",
+      "invalid": "The form's values do not fit the model",
+      "refused": "The provider refused the request",
+      "busy": "The provider is busy - the job was not sent, send it again",
+      "network": "No connection to the provider",
+      "provider_failed": "The provider could not do the job",
+      "lost_contact": "Contact with the provider was lost",
+      "too_long": "The job ran too long",
+      "download_failed": "The result did not download",
+      "storage": "The result was not written to disk",
+      "interrupted": "VideoSOS closed while the job was being sent",
+      "details": "Error text",
+      "openKeys": "Open keys"
     }
   }
 }

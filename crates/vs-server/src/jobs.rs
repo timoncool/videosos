@@ -47,6 +47,8 @@ pub struct Job {
     pub status: String,
     pub progress: Option<f64>,
     pub error: Option<String>,
+    /// What kind of failure it was, for the window to put into words; `error` keeps what was said.
+    pub error_code: Option<String>,
     pub estimate: Option<f64>,
     pub cost: Option<f64>,
     /// `provider` when the provider reported it, `estimate` when it is the price worked out before.
@@ -72,11 +74,21 @@ pub struct Jobs {
     cancelled: Mutex<HashSet<String>>,
 }
 
+/// The kind of a provider's refusal, as the window words it.
+fn code_of(error: &ProviderError) -> &'static str {
+    match error {
+        ProviderError::Refused(_) => "refused",
+        ProviderError::Busy(_) => "busy",
+        ProviderError::NoKey(_) => "no_key",
+        ProviderError::Network(_) => "network",
+    }
+}
+
 fn now_ms() -> i64 {
     chrono::Utc::now().timestamp_millis()
 }
 
-const COLUMNS: &str = "id, project_id, provider, model, model_name, task, values_json, status, progress, error, estimate, cost, cost_source, outputs, imported, origin, created, updated, handle, place";
+const COLUMNS: &str = "id, project_id, provider, model, model_name, task, values_json, status, progress, error, estimate, cost, cost_source, outputs, imported, origin, created, updated, handle, place, error_code";
 
 fn row_to_job(row: &rusqlite::Row) -> rusqlite::Result<Job> {
     let parse = |text: Option<String>| text.and_then(|text| serde_json::from_str::<Value>(&text).ok());
@@ -101,6 +113,7 @@ fn row_to_job(row: &rusqlite::Row) -> rusqlite::Result<Job> {
         updated: row.get(17)?,
         handle: parse(row.get(18)?),
         place: row.get::<_, i64>(19)? != 0,
+        error_code: row.get(20)?,
     })
 }
 
@@ -126,12 +139,15 @@ impl Jobs {
                 id TEXT PRIMARY KEY, project_id TEXT, provider TEXT NOT NULL, model TEXT NOT NULL, model_name TEXT NOT NULL,
                 task TEXT NOT NULL, values_json TEXT NOT NULL, status TEXT NOT NULL, progress REAL, error TEXT,
                 estimate REAL, cost REAL, cost_source TEXT, outputs TEXT, imported TEXT, origin TEXT NOT NULL,
-                created INTEGER NOT NULL, updated INTEGER NOT NULL, handle TEXT, place INTEGER NOT NULL DEFAULT 0);
+                created INTEGER NOT NULL, updated INTEGER NOT NULL, handle TEXT, place INTEGER NOT NULL DEFAULT 0, error_code TEXT);
              CREATE INDEX IF NOT EXISTS jobs_project ON jobs(project_id, created);",
         )?;
         let columns: Vec<String> = db.prepare("PRAGMA table_info(jobs)")?.query_map([], |row| row.get::<_, String>(1))?.collect::<rusqlite::Result<_>>()?;
         if !columns.iter().any(|column| column == "place") {
             db.execute_batch("ALTER TABLE jobs ADD COLUMN place INTEGER NOT NULL DEFAULT 0;")?;
+        }
+        if !columns.iter().any(|column| column == "error_code") {
+            db.execute_batch("ALTER TABLE jobs ADD COLUMN error_code TEXT;")?;
         }
         let limits = HashMap::from([
             (Provider::Fal, Arc::new(Semaphore::new(2))),
@@ -170,7 +186,7 @@ impl Jobs {
         change(&mut job);
         job.updated = now_ms().max(before + 1);
         let saved = db.execute(
-            "UPDATE jobs SET status=?2, progress=?3, error=?4, estimate=?5, cost=?6, cost_source=?7, outputs=?8, imported=?9, updated=?10, handle=?11 WHERE id=?1",
+            "UPDATE jobs SET status=?2, progress=?3, error=?4, estimate=?5, cost=?6, cost_source=?7, outputs=?8, imported=?9, updated=?10, handle=?11, error_code=?12 WHERE id=?1",
             params![
                 id,
                 job.status,
@@ -183,6 +199,7 @@ impl Jobs {
                 job.imported.to_string(),
                 job.updated,
                 job.handle.as_ref().map(Value::to_string),
+                job.error_code,
             ],
         );
         drop(db);
@@ -195,7 +212,7 @@ impl Jobs {
 
     fn insert(&self, job: &Job) -> rusqlite::Result<()> {
         self.db().execute(
-            &format!("INSERT INTO jobs ({COLUMNS}) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20)"),
+            &format!("INSERT INTO jobs ({COLUMNS}) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21)"),
             params![
                 job.id,
                 job.project_id,
@@ -217,6 +234,7 @@ impl Jobs {
                 job.updated,
                 Option::<String>::None,
                 i64::from(job.place),
+                job.error_code,
             ],
         )?;
         Ok(())
@@ -255,6 +273,7 @@ impl Jobs {
                     self.update(&job.id, |job| {
                         job.status = "failed".into();
                         job.error = Some(t!("jobs-interrupted-sending"));
+                        job.error_code = Some("interrupted".into());
                     });
                 }
             }
@@ -278,6 +297,7 @@ impl Jobs {
                 status: "queued".into(),
                 progress: None,
                 error: None,
+                error_code: None,
                 estimate,
                 cost: None,
                 cost_source: None,
@@ -307,7 +327,7 @@ impl Jobs {
         self.cancelled.lock().unwrap_or_else(|p| p.into_inner()).remove(id)
     }
 
-    fn fail(&self, id: &str, message: String) {
+    fn fail(&self, id: &str, code: &'static str, message: String) {
         if self.forget_cancel(id) {
             return;
         }
@@ -315,6 +335,7 @@ impl Jobs {
         let ended = self.update(id, |job| {
             job.status = "failed".into();
             job.error = Some(message);
+            job.error_code = Some(code.into());
         });
         if let Some(job) = ended {
             crate::hub::job_ended(&job);
@@ -332,15 +353,15 @@ impl Jobs {
             return;
         }
         let Some((key, _)) = credentials::key(job.provider) else {
-            return self.fail(&id, ProviderError::NoKey(job.provider.as_str()).to_string());
+            return self.fail(&id, "no_key", ProviderError::NoKey(job.provider.as_str()).to_string());
         };
         let form = match self.catalog.form(job.provider, &job.model).await {
             Ok(form) => form,
-            Err(error) => return self.fail(&id, error),
+            Err(error) => return self.fail(&id, "catalog", error),
         };
         let values = match self.prepare(&key, &form, job.values.as_object().cloned().unwrap_or_default()).await {
             Ok(values) => values,
-            Err(error) => return self.fail(&id, error),
+            Err(error) => return self.fail(&id, "invalid", error),
         };
         // the last moment a cancel keeps the job from being sent and paid for
         if self.is_cancelled(&id) {
@@ -357,7 +378,7 @@ impl Jobs {
                 let task = match self.catalog.runware_schema(&form.id) {
                     Some(schema) => match runware::pick_valid(&schema, task, runware::default_size(&form).as_deref()) {
                         Ok(task) => task,
-                        Err(error) => return self.fail(&id, error.to_string()),
+                        Err(error) => return self.fail(&id, "invalid", error.to_string()),
                     },
                     None => task,
                 };
@@ -410,8 +431,8 @@ impl Jobs {
                 });
                 self.follow(id).await;
             }
-            Err(ProviderError::Busy(message)) => self.fail(&id, t!("jobs-busy", reason = message)),
-            Err(error) => self.fail(&id, error.to_string()),
+            Err(ProviderError::Busy(message)) => self.fail(&id, "busy", t!("jobs-busy", reason = message)),
+            Err(error) => self.fail(&id, code_of(&error), error.to_string()),
         }
     }
 
@@ -489,7 +510,7 @@ impl Jobs {
         let Some(job) = self.get(&id) else { return };
         let Some(handle) = job.handle.clone() else { return };
         let Some((key, _)) = credentials::key(job.provider) else {
-            return self.fail(&id, ProviderError::NoKey(job.provider.as_str()).to_string());
+            return self.fail(&id, "no_key", ProviderError::NoKey(job.provider.as_str()).to_string());
         };
         if job.status == "sending" {
             self.update(&id, |job| job.status = "running".into());
@@ -508,7 +529,7 @@ impl Jobs {
             };
             match polled {
                 Ok(Polled::Done { outputs, cost }) => return self.finish(&id, outputs, cost).await,
-                Ok(Polled::Failed { message }) => return self.fail(&id, message),
+                Ok(Polled::Failed { message }) => return self.fail(&id, "provider_failed", message),
                 Ok(Polled::Waiting { progress }) => {
                     failures = 0;
                     if progress.is_some() {
@@ -519,12 +540,12 @@ impl Jobs {
                     failures += 1;
                     tracing::warn!("job {id}: poll failed ({failures}): {error}");
                     if failures >= 40 {
-                        return self.fail(&id, t!("jobs-lost-contact", reason = error.to_string()));
+                        return self.fail(&id, "lost_contact", t!("jobs-lost-contact", reason = error.to_string()));
                     }
                 }
             }
             if started.elapsed() > Duration::from_secs(3 * 3600) {
-                return self.fail(&id, t!("jobs-too-long"));
+                return self.fail(&id, "too_long", t!("jobs-too-long"));
             }
             tokio::time::sleep(wait).await;
             wait = (wait + Duration::from_secs(1)).min(Duration::from_secs(12));
@@ -534,7 +555,7 @@ impl Jobs {
     async fn finish(&self, id: &str, outputs: Vec<Output>, cost: Option<f64>) {
         let dir = self.dir.join(id);
         if let Err(error) = std::fs::create_dir_all(&dir) {
-            return self.fail(id, error.to_string());
+            return self.fail(id, "storage", error.to_string());
         }
         let provider = self.get(id).map(|job| job.provider);
         let key = provider.and_then(credentials::key).map(|(key, _)| key);
@@ -542,7 +563,7 @@ impl Jobs {
         for (index, output) in outputs.into_iter().enumerate() {
             match self.save(&dir, index, output, key.as_deref()).await {
                 Ok(file) => files.push(file),
-                Err(error) => return self.fail(id, t!("jobs-download-failed", reason = error)),
+                Err(error) => return self.fail(id, "download_failed", t!("jobs-download-failed", reason = error)),
             }
         }
         let was_cancelled = self.forget_cancel(id);

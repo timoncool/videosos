@@ -1,11 +1,11 @@
 import { Fragment, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ArrowDownToLine, Ban, Check, CircleAlert, Copy, Forward, Loader2, RotateCcw, SquarePen, Trash2 } from 'lucide-react'
+import { ArrowDownToLine, Ban, Check, ChevronDown, CircleAlert, Copy, Forward, KeyRound, Loader2, RotateCcw, SquarePen, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { cn } from '@/shared/ui/cn'
 import { toast } from 'sonner'
-import { formatUsd, generateApi, type Job, type MediaKind, type OutputFile, type Role, type Task } from '../services/generate-api'
+import { PROVIDER_LABELS, formatUsd, generateApi, type Job, type MediaKind, type OutputFile, type Role, type Task } from '../services/generate-api'
 import { useGenerateStore } from '../stores/generate-store'
 import { importLastFrame } from '../services/last-frame'
 import { useProjectStore } from '../deps/editor'
@@ -13,7 +13,7 @@ import { placeMediaAtPlayhead, placeTextAtPlayhead } from '../services/timeline-
 import { OUTPUT_DRAG_TYPE } from './field-control'
 import { ProviderBadge } from './model-picker'
 import { ImageLightbox } from './image-lightbox'
-import { exactMoment, relativeMoment } from '../deps/studio'
+import { exactMoment, openSettings, relativeMoment } from '../deps/studio'
 import { fieldLabel } from '../services/field-label'
 
 /** A result picture: dragged into a slot or the timeline, opened at full size by a click. */
@@ -179,6 +179,52 @@ interface JobCardProps {
   onSelect?: (selected: boolean) => void
 }
 
+/**
+ * Why a job stopped, as Dub Studio's job failure reads: what happened in the window's words, the provider's own
+ * words under Details, and the way to fix it when there is one. A cancelled job's note is not a failure.
+ */
+function JobProblem({ job }: { job: Job }) {
+  const { t } = useTranslation()
+  const [details, setDetails] = useState(false)
+  if (!job.error) return null
+  if (job.status !== 'failed') return <p className="break-words text-[11px] text-muted-foreground">{job.error}</p>
+  const title = job.error_code
+    ? t(`generate.jobError.${job.error_code}`, { provider: PROVIDER_LABELS[job.provider], defaultValue: job.error })
+    : job.error
+  return (
+    <div role="alert" className="rounded-md border border-destructive/40 bg-destructive/10 px-2 py-1.5">
+      <p className="flex gap-1 text-[11px] font-medium text-destructive">
+        <CircleAlert className="mt-px h-3 w-3 shrink-0" />
+        <span className="break-words">{title}</span>
+      </p>
+      <div className="mt-1 flex flex-wrap items-center gap-2">
+        {title !== job.error && (
+          <button
+            type="button"
+            onClick={() => setDetails((open) => !open)}
+            aria-expanded={details}
+            className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground"
+          >
+            <ChevronDown className={cn('h-3 w-3 transition-transform', details && 'rotate-180')} />
+            {t('generate.jobError.details')}
+          </button>
+        )}
+        {job.error_code === 'no_key' && (
+          <button
+            type="button"
+            onClick={() => openSettings('providers')}
+            className="inline-flex items-center gap-1 text-[11px] text-[var(--color-accent)] hover:underline"
+          >
+            <KeyRound className="h-3 w-3" />
+            {t('generate.jobError.openKeys')}
+          </button>
+        )}
+      </div>
+      {details && <p className="mt-1 break-words font-mono text-[11px] text-foreground">{job.error}</p>}
+    </div>
+  )
+}
+
 export function JobCard({ job, onReuse, selected, onSelect }: JobCardProps) {
   const { t, i18n } = useTranslation()
   const running = job.status === 'queued' || job.status === 'sending' || job.status === 'running'
@@ -229,12 +275,7 @@ export function JobCard({ job, onReuse, selected, onSelect }: JobCardProps) {
       {job.outputs.map((output) => (
         <Preview key={output.index} job={job} output={output} />
       ))}
-      {job.error && (
-        <p className="flex gap-1 text-[11px] text-destructive">
-          <CircleAlert className="mt-px h-3 w-3 shrink-0" />
-          <span className="break-words">{job.error}</span>
-        </p>
-      )}
+      <JobProblem job={job} />
       <div className="flex flex-wrap items-center gap-1">
         <span className="mr-auto text-[11px] text-muted-foreground" title={job.cost_source === 'estimate' ? t('generate.cost.estimated') : t('generate.cost.billed')}>
           {job.cost !== null

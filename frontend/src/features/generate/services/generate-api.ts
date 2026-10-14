@@ -164,6 +164,8 @@ export interface Job {
   status: JobStatus
   progress: number | null
   error: string | null
+  /** What kind of failure it was: `no_key`, `refused`, `busy`, `network`, `provider_failed`, `lost_contact`, ... */
+  error_code: string | null
   estimate: number | null
   cost: number | null
   cost_source: 'provider' | 'estimate' | null
