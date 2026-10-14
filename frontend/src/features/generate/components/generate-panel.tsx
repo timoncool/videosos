@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   AudioLines,
@@ -35,6 +35,7 @@ import {
   TASKS,
   type Job,
   type MediaRef,
+  type Field,
   type ModelEntry,
   type Provider,
   type Task,
@@ -48,6 +49,7 @@ import { PromptPresets } from './prompt-presets'
 import { GenerationHistory } from './generation-history'
 import { ModelPicker } from './model-picker'
 import { BatchModels, type BatchRun } from './batch-models'
+import { carryValues } from '../services/batch-values'
 import { useEstimate } from '../hooks/use-estimate'
 import { fieldLabel, overLength, providerWords } from '../services/field-label'
 import { playheadSeconds } from '../services/timeline-actions'
@@ -214,6 +216,17 @@ export function GeneratePanel() {
     toast.success(t('generate.use.placed', { field: slot.label }))
   }, [pendingUse, task, model, form, t])
 
+  // another model of the task takes what the form held, field by meaning, where it has nothing of its own yet
+  const carryFrom = useRef<{ to: string; fields: Field[]; values: Record<string, unknown> } | null>(null)
+  useEffect(() => {
+    const carry = carryFrom.current
+    if (!carry || !model || !form || carry.to !== modelKey(model.provider, model.id)) return
+    carryFrom.current = null
+    for (const [key, value] of Object.entries(carryValues(carry.fields, carry.values, form.fields))) {
+      if (values[key] === undefined) useGenerateStore.getState().setValue(model, key, value)
+    }
+  }, [model, form, values])
+
   const fields = useMemo(() => form?.fields ?? [], [form])
   const main = fields.filter((field) => !field.advanced)
   const more = fields.filter((field) => field.advanced)
@@ -281,6 +294,7 @@ export function GeneratePanel() {
   }
 
   const chooseModel = (entry: ModelEntry) => {
+    if (form) carryFrom.current = { to: modelKey(entry.provider, entry.id), fields: form.fields, values }
     useGenerateStore.getState().setModel(task, { provider: entry.provider, id: entry.id })
   }
 

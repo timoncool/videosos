@@ -219,7 +219,7 @@ function applyAddTrack(op: EditOp): unknown {
 }
 
 /** One entry of addClip's `created` detail. */
-type CreatedClip = { id: string; type: string }
+type CreatedClip = { id: string; type: string; trackId: string }
 
 /** Everything an addClip placement needs, resolved once by applyAddClip. */
 interface ClipPlacement {
@@ -245,7 +245,7 @@ function placeImageClip(op: EditOp, { mediaId, media, from }: ClipPlacement): Cr
     ...(media.height ? { sourceHeight: media.height } : {}),
   }
   addItem(item)
-  return [{ id: item.id, type: 'image' }]
+  return [{ id: item.id, type: 'image', trackId: item.trackId }]
 }
 
 /** Place an `audio/` clip on an audio track. */
@@ -269,7 +269,7 @@ function placeAudioClip(
     ...sf,
   }
   addItem(item)
-  return [{ id: item.id, type: 'audio' }]
+  return [{ id: item.id, type: 'audio', trackId: item.trackId }]
 }
 
 /** Place a `video/` clip plus the linked audio companion the app creates on import. */
@@ -297,7 +297,7 @@ function placeVideoClip(
     ...(media.height ? { sourceHeight: media.height } : {}),
     ...sf,
   }
-  const created: CreatedClip[] = [{ id: video.id, type: 'video' }]
+  const created: CreatedClip[] = [{ id: video.id, type: 'video', trackId: video.trackId }]
   // Linked audio companion (as the app creates on import) so audio renders.
   if (!media.audioCodec) {
     addItem(video)
@@ -317,7 +317,7 @@ function placeVideoClip(
     ...sf,
   }
   addItems([video, audio])
-  created.push({ id: audio.id, type: 'audio' })
+  created.push({ id: audio.id, type: 'audio', trackId: audio.trackId })
   return created
 }
 

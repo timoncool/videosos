@@ -58,6 +58,8 @@ makes it, and the release notes on GitHub are taken from the release's section.
 
 ### Fixed
 
+- **A result put on a new track is in view**: the timeline scrolls its tracks to it.
+- **Choosing another model keeps what the form held**: the prompt, the pictures and the video put in through "Use as" go to the new model's fields of the same meaning, where it has nothing of its own yet.
 - **OpenRouter video editing models take their source video**: FLUX Video Edit and Aleph show a source video field and send it as OpenRouter's video reference; a file of this computer, which OpenRouter does not take, is refused before the run with a word to pick a fal or Runware model.
 - **A result put on the timeline is seen**: when its moment is taken, it lands on a free track above what is there (or a new one at the top), not under it.
 - **Agents' trim operations are described as they work**: `trimStart` and `trimEnd` take `amount`.
