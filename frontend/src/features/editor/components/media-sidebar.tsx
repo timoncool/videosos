@@ -621,10 +621,20 @@ export const MediaSidebar = memo(function MediaSidebar() {
   }, [])
 
   return (
-    <div className="flex h-full flex-shrink-0">
+    <div className="relative flex h-full flex-shrink-0">
+      {/* On a compact screen the open panel lies over the preview; a tap beside it closes it. */}
+      {leftSidebarOpen && (
+        <button
+          type="button"
+          tabIndex={-1}
+          aria-label={t('editor.mediaSidebar.collapsePanel')}
+          onClick={toggleLeftSidebar}
+          className="fixed inset-0 z-20 bg-black/40 lg:hidden"
+        />
+      )}
       {/* Vertical Category Bar */}
       <div
-        className="panel-header border-r border-border flex flex-col items-center flex-shrink-0"
+        className="panel-header relative z-30 border-r border-border flex flex-col items-center flex-shrink-0"
         style={{ width: EDITOR_LAYOUT_CSS_VALUES.sidebarRailWidth }}
       >
         {/* Header row - aligned with content panel header */}
@@ -701,7 +711,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
           a touch faster than open (exit < entrance). During a resize-drag we snap
           (duration 0) so width tracks the pointer instead of easing behind it. */}
       <motion.div
-        className="panel-bg border-r border-border overflow-hidden relative"
+        className="panel-bg border-r border-border overflow-hidden relative max-lg:absolute max-lg:left-full max-lg:top-0 max-lg:z-30 max-lg:h-full max-lg:max-w-[calc(100vw-3.5rem)] max-lg:shadow-2xl"
         initial={false}
         animate={{ width: leftSidebarOpen ? sidebarWidth : 0 }}
         transition={

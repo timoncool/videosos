@@ -294,8 +294,18 @@ export const PropertiesSidebar = memo(function PropertiesSidebar() {
           inner content while the panel closes. Close is a touch faster than open
           (exit < entrance). During a resize-drag we snap (duration 0) so width
           tracks the pointer instead of easing behind it. */}
+      {/* On a compact screen the open panel lies over the preview; a tap beside it closes it. */}
+      {rightSidebarOpen && (
+        <button
+          type="button"
+          tabIndex={-1}
+          aria-label={t('editor.mediaSidebar.collapsePanel')}
+          onClick={toggleRightSidebar}
+          className="fixed inset-0 z-20 bg-black/40 lg:hidden"
+        />
+      )}
       <motion.div
-        className="panel-bg border-l border-border shrink-0 relative h-full overflow-hidden"
+        className="panel-bg border-l border-border shrink-0 relative h-full overflow-hidden max-lg:absolute max-lg:right-0 max-lg:top-0 max-lg:z-30 max-lg:max-w-[calc(100vw-3.5rem)] max-lg:shadow-2xl"
         initial={false}
         animate={{ width: rightSidebarOpen ? rightSidebarWidth : 0 }}
         transition={

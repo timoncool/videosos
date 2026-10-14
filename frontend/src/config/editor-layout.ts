@@ -61,6 +61,9 @@ export function getEditorLayout(preset: unknown = DEFAULT_EDITOR_DENSITY_PRESET)
 
 export const EDITOR_LAYOUT = getEditorLayout()
 
+/** The track-header column on a compact screen, where the dopesheet's full width would leave the clips no room. */
+export const COMPACT_TIMELINE_SIDEBAR_WIDTH = 168
+
 const EDITOR_LAYOUT_CSS_VAR_NAMES = {
   toolbarHeight: '--editor-toolbar-height',
   sidebarRailWidth: '--editor-sidebar-rail-width',

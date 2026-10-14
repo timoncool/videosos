@@ -26,6 +26,7 @@ import {
 } from '@/features/editor/deps/timeline-ui'
 import { toast } from 'sonner'
 import { useEditorHotkeys } from '@/features/editor/hooks/use-editor-hotkeys'
+import { useCompactSidebars } from '@/features/editor/hooks/use-compact-layout'
 import { useAutoSave } from '../hooks/use-auto-save'
 import {
   useTimelineShortcuts,
@@ -54,7 +55,11 @@ import {
   RenderQueueRunner,
   useRenderQueueStore,
 } from '@/features/editor/deps/export-contract'
-import { getEditorLayout, getEditorLayoutCssVars } from '@/config/editor-layout'
+import {
+  COMPACT_TIMELINE_SIDEBAR_WIDTH,
+  getEditorLayout,
+  getEditorLayoutCssVars,
+} from '@/config/editor-layout'
 import { EDITOR_WORKSPACE_TIMELINE_SIZE, type EditorWorkspaceId } from '@/config/editor-workspaces'
 import {
   createProjectUpgradeBackup,
@@ -667,6 +672,7 @@ export const LoadedEditor = memo(function LoadedEditor({
 
   // Enable transition breakage notifications
   useTransitionBreakageNotifications()
+  const compact = useCompactSidebars()
 
   const timelineDuration = 30
   const isColorWorkspace = workspace === 'color'
@@ -678,7 +684,11 @@ export const LoadedEditor = memo(function LoadedEditor({
   return (
     <div
       className="h-full bg-background flex flex-col overflow-hidden"
-      style={editorLayoutCssVars as import('react').CSSProperties}
+      style={
+        (compact
+          ? { ...editorLayoutCssVars, '--editor-timeline-sidebar-width': `${COMPACT_TIMELINE_SIDEBAR_WIDTH}px` }
+          : editorLayoutCssVars) as import('react').CSSProperties
+      }
       role="application"
       aria-label={t('editor.editor.appLabel')}
     >
@@ -700,7 +710,7 @@ export const LoadedEditor = memo(function LoadedEditor({
       </InteractionLockRegion>
 
       {/* Main Layout: Full-height sidebar + vertical split */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="relative flex-1 flex overflow-hidden">
         {/* Left Sidebar - Media Library (full column mode) */}
         {mediaFullColumn && !hidesDefaultSidebars && (
           <InteractionLockRegion locked={isMaskEditingActive}>
@@ -813,7 +823,9 @@ export const LoadedEditor = memo(function LoadedEditor({
                         </Suspense>
                       )}
                     </div>
-                    <AudioMeterPanel />
+                    <div className="hidden md:flex">
+                      <AudioMeterPanel />
+                    </div>
                   </div>
                 </ErrorBoundary>
               </InteractionLockRegion>

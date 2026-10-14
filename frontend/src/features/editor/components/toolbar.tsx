@@ -180,7 +180,7 @@ export const Toolbar = memo(function Toolbar({
         </Button>
 
             <h1
-              className="max-w-[140px] truncate text-[13px] font-medium min-[1440px]:max-w-[220px]"
+              className="max-w-[96px] truncate text-[13px] font-medium sm:max-w-[140px] min-[1440px]:max-w-[220px]"
               title={`${project?.name || t('common.untitledProject')}\n${t('toolbar.specsDetailed', {
                 width: project?.width,
                 height: project?.height,
@@ -205,7 +205,7 @@ export const Toolbar = memo(function Toolbar({
         <Button
           variant="ghost"
           size="icon"
-          className="h-8 w-8 text-[var(--color-muted)] hover:text-[var(--color-text)]"
+          className="hidden h-8 w-8 text-[var(--color-muted)] hover:text-[var(--color-text)] lg:inline-flex"
           onClick={() => setShowShortcutsDialog(true)}
           data-tooltip={t('toolbar.keyboardShortcuts')}
           data-tooltip-side="bottom"
@@ -253,9 +253,9 @@ export const Toolbar = memo(function Toolbar({
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button size="sm" className="bg-brand gap-1.5 glow-primary-sm">
+            <Button size="sm" className="bg-brand gap-1.5 glow-primary-sm" aria-label={t('toolbar.export')}>
               <Download className="h-4 w-4" />
-              {t('toolbar.export')}
+              <span className="hidden sm:inline">{t('toolbar.export')}</span>
               <ChevronDown className="h-3 w-3" />
             </Button>
           </DropdownMenuTrigger>

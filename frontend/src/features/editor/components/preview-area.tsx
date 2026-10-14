@@ -705,13 +705,13 @@ export const PreviewArea = memo(function PreviewArea({
                     <ProgramShuttleIndicator />
                   </div>
 
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="flex min-w-0 flex-1 items-center justify-center @[560px]:pointer-events-none @[560px]:absolute @[560px]:inset-0">
                     <div className="flex items-center gap-2.5 pointer-events-auto">
                       <PlaybackControls totalFrames={totalFrames} fps={fps} />
                     </div>
                   </div>
 
-                  <div className="ml-auto flex-shrink-0">
+                  <div className="ml-auto hidden flex-shrink-0 @[560px]:block">
                     <PreviewZoomControls />
                   </div>
                 </div>

@@ -417,7 +417,7 @@ const TimelineZoomControls = memo(function TimelineZoomControls({
         min={0}
         max={1}
         step={0.005}
-        className="w-24"
+        className="w-14 md:w-24"
         aria-label={t('timeline.header.zoomSlider')}
       />
 
@@ -507,8 +507,8 @@ export const TimelineHeader = memo(function TimelineHeader({
       {/* Left: Title */}
       <div className="flex min-w-0 items-center gap-2.5">
         <h2 className="text-xs font-semibold tracking-wide uppercase text-muted-foreground flex items-center gap-2">
-          <Film className="w-3 h-3" />
-          {t('timeline.header.title')}
+          <Film className="w-3 h-3" aria-hidden="true" />
+          <span className="sr-only md:not-sr-only">{t('timeline.header.title')}</span>
         </h2>
       </div>
 

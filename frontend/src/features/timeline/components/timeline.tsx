@@ -32,7 +32,12 @@ import {
 import { createClassicTrack, getAdjacentTrackOrder, getTrackKind } from '../utils/classic-tracks'
 import { getEmptyTrackIdsForRemoval } from '../utils/track-removal'
 import { createLogger } from '@/shared/logging/logger'
-import { EDITOR_LAYOUT_CSS_VALUES, getEditorLayout } from '@/config/editor-layout'
+import {
+  COMPACT_TIMELINE_SIDEBAR_WIDTH,
+  EDITOR_LAYOUT_CSS_VALUES,
+  getEditorLayout,
+} from '@/config/editor-layout'
+import { useCompactLayout } from '@/shared/hooks/use-compact-layout'
 import { useTrackHeightResize } from '../hooks/use-track-height-resize'
 import { resizeTracksOfKindByDelta } from '../utils/track-resize'
 import { applyTrackSizePreset, commitTrackHeights } from '../stores/actions/track-height-actions'
@@ -86,6 +91,7 @@ export const Timeline = memo(function Timeline({ duration }: TimelineProps) {
   const { t } = useTranslation()
   const editorDensity = useSettingsStore((s) => s.editorDensity)
   const editorLayout = getEditorLayout(editorDensity)
+  const compact = useCompactLayout()
   const {
     tracks,
     addTrack,
@@ -1089,7 +1095,9 @@ export const Timeline = memo(function Timeline({ duration }: TimelineProps) {
         isOpen={keyframePanelOpen}
         placement="bottom"
         surface="edit"
-        propertyColumnWidth={editorLayout.timelineSidebarWidth - 1}
+        propertyColumnWidth={
+          (compact ? COMPACT_TIMELINE_SIDEBAR_WIDTH : editorLayout.timelineSidebarWidth) - 1
+        }
         timelineScrollContainerRef={timelineContentRef}
         onClose={() => setKeyframePanelOpen(false)}
       />
