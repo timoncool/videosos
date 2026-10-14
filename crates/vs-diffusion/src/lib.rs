@@ -155,10 +155,10 @@ type ProgressSink = Box<dyn Fn(i32, i32) + Send + Sync>;
 static PROGRESS: Mutex<Option<ProgressSink>> = Mutex::new(None);
 
 extern "C" fn progress_trampoline(step: c_int, steps: c_int, _time: f32, _data: *mut c_void) {
-    if let Ok(guard) = PROGRESS.lock() {
-        if let Some(sink) = guard.as_ref() {
-            sink(step, steps);
-        }
+    if let Ok(guard) = PROGRESS.lock()
+        && let Some(sink) = guard.as_ref()
+    {
+        sink(step, steps);
     }
 }
 
