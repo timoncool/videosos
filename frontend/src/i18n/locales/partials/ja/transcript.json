@@ -11,6 +11,7 @@
     "clearSearch": "検索をクリア",
     "noTranscript": "このクリップにはまだ文字起こしがありません。",
     "transcriptionFailed": "文字起こしに失敗しました。",
+    "outOfMemory": "音声認識モデルに必要なメモリが足りませんでした。ほかのプログラムを閉じて、もう一度お試しください。",
     "tryAgain": "再試行",
     "generate": "文字起こしを生成",
     "transcribing": "文字起こし中…",

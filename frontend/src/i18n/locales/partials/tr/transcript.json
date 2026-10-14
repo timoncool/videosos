@@ -11,6 +11,7 @@
     "clearSearch": "Aramayı temizle",
     "noTranscript": "Bu klibin henüz transkripti yok.",
     "transcriptionFailed": "Yazıya dökme başarısız oldu.",
+    "outOfMemory": "Konuşma tanıma modeli için bellek yetmedi. Diğer programları kapatıp yeniden deneyin.",
     "tryAgain": "Tekrar dene",
     "generate": "Transkript oluştur",
     "transcribing": "Yazıya dökülüyor…",

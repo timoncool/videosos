@@ -11,6 +11,7 @@
     "clearSearch": "Clear search",
     "noTranscript": "This clip has no transcript yet.",
     "transcriptionFailed": "Transcript generation failed.",
+    "outOfMemory": "The computer ran out of memory for the speech model. Close other programs and try again.",
     "tryAgain": "Try again",
     "generate": "Generate transcript",
     "transcribing": "Transcribing…",

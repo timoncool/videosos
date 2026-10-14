@@ -5,7 +5,8 @@ import {
 } from './browser-whisper-models'
 
 export const DEFAULT_WHISPER_MODEL: MediaTranscriptModel = DEFAULT_BROWSER_WHISPER_MODEL
-export const DEFAULT_WHISPER_QUANTIZATION: MediaTranscriptQuantization = 'q8'
+/** The one precision the window's Whisper runs at: the int8 files, as Dub Studio's; a transcript records it. */
+export const WHISPER_QUANTIZATION: MediaTranscriptQuantization = 'q8'
 export const DEFAULT_WHISPER_LANGUAGE = ''
 export const WHISPER_AUTO_LANGUAGE_VALUE = 'auto'
 
@@ -13,33 +14,6 @@ export function normalizeSelectableWhisperModel(
   model: MediaTranscriptModel | undefined,
 ): MediaTranscriptModel {
   return normalizeSelectableBrowserWhisperModel(model)
-}
-
-const WHISPER_QUANTIZATION_OPTIONS: ReadonlyArray<{
-  value: MediaTranscriptQuantization
-  label: string
-  description: string
-}> = [
-  {
-    value: 'q8',
-    label: 'Q8 (Recommended)',
-    description: 'int8 encoder and decoder on multi-threaded WASM, the precision Dub Studio runs Whisper at.',
-  },
-]
-
-export function normalizeWhisperQuantization(
-  value: MediaTranscriptQuantization | undefined,
-): MediaTranscriptQuantization {
-  return WHISPER_QUANTIZATION_OPTIONS.some((option) => option.value === value)
-    ? value!
-    : DEFAULT_WHISPER_QUANTIZATION
-}
-
-export function getWhisperQuantizationOption(
-  value: MediaTranscriptQuantization | undefined,
-): (typeof WHISPER_QUANTIZATION_OPTIONS)[number] {
-  const fallback = WHISPER_QUANTIZATION_OPTIONS[0]!
-  return WHISPER_QUANTIZATION_OPTIONS.find((option) => option.value === value) ?? fallback
 }
 
 const WHISPER_LANGUAGE_NAMES = {

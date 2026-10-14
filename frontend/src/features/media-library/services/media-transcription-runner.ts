@@ -1,8 +1,4 @@
-import type {
-  MediaTranscript,
-  MediaTranscriptModel,
-  MediaTranscriptQuantization,
-} from '@/types/storage'
+import type { MediaTranscript, MediaTranscriptModel } from '@/types/storage'
 import { isTranscriptionCancellationError } from '@/shared/utils/transcription-cancellation'
 import type { TranscribeOptions } from '../transcription/types'
 import type { MediaTranscriptStatus } from '../types'
@@ -13,7 +9,6 @@ type QueueState = 'queued' | 'running'
 
 export interface RunMediaTranscriptionJobOptions {
   model?: MediaTranscriptModel
-  quantization?: MediaTranscriptQuantization
   language?: string
   /**
    * Defaults to true. Keep this centralized so all UI launch paths either get
@@ -92,7 +87,6 @@ export async function runMediaTranscriptionJob(
   try {
     const transcript = await mediaTranscriptionService.transcribeMedia(mediaId, {
       model: options.model,
-      quantization: options.quantization,
       language: options.language || undefined,
       onQueueStatusChange: createQueueStatusHandler(mediaId, options.onQueueStatusChange),
       onProgress: createProgressHandler(mediaId, updateProgress, options.onProgress),

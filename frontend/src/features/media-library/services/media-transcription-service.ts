@@ -55,8 +55,7 @@ import {
 } from '@/features/media-library/deps/composition-runtime-contract'
 import {
   DEFAULT_WHISPER_MODEL,
-  DEFAULT_WHISPER_QUANTIZATION,
-  normalizeWhisperQuantization,
+  WHISPER_QUANTIZATION,
   normalizeSelectableWhisperModel,
   normalizeWhisperLanguage,
 } from '@/shared/utils/whisper-settings'
@@ -73,7 +72,6 @@ const MIN_TRANSCRIPT_CAPTION_WORDS = 2
 const TRANSCRIPT_CAPTION_BREAK_GAP_SECONDS = 0.18
 const TRANSCRIPT_CAPTION_TIMING_VERSION = 5
 const SENTENCE_END_PATTERN = /[.!?。！？]$/
-const DEFAULT_QUANTIZATION = DEFAULT_WHISPER_QUANTIZATION
 
 type CaptionableClip = AudioItem | VideoItem
 interface InsertTranscriptAsCaptionsOptions {
@@ -111,7 +109,6 @@ type QueueState = 'queued' | 'running'
 interface TranscriptionRequestOptions {
   language?: string
   model?: MediaTranscriptModel
-  quantization?: TranscribeOptions['quantization']
   onProgress?: TranscribeOptions['onProgress']
   onQueueStatusChange?: (state: QueueState) => void
 }
@@ -125,7 +122,6 @@ interface QueuedTranscriptionJob {
   mediaId: string
   requestKey: string
   model: MediaTranscriptModel
-  quantization: NonNullable<TranscribeOptions['quantization']>
   language?: string
   listeners: QueuedTranscriptionListener[]
   promise: Promise<MediaTranscript>
@@ -368,7 +364,6 @@ class MediaTranscriptionService {
   private readonly adapter = getDefaultMediaTranscriptionAdapter()
   private readonly transcriber = this.adapter.createTranscriber({
     model: DEFAULT_MODEL,
-    quantization: DEFAULT_QUANTIZATION,
   })
   private activeJob: QueuedTranscriptionJob | null = null
   private queue: QueuedTranscriptionJob[] = []
@@ -404,11 +399,8 @@ class MediaTranscriptionService {
     const model = normalizeSelectableWhisperModel(
       options.model ?? settings.defaultWhisperModel ?? DEFAULT_MODEL,
     )
-    const quantization = normalizeWhisperQuantization(
-      options.quantization ?? settings.defaultWhisperQuantization ?? DEFAULT_QUANTIZATION,
-    )
     const language = normalizeWhisperLanguage(options.language ?? settings.defaultWhisperLanguage)
-    const requestKey = `${mediaId}:${model}:${quantization}:${language ?? 'auto'}`
+    const requestKey = `${mediaId}:${model}:${language ?? 'auto'}`
     const listener: QueuedTranscriptionListener = {
       onProgress: options.onProgress,
       onQueueStatusChange: options.onQueueStatusChange,
@@ -424,7 +416,6 @@ class MediaTranscriptionService {
       mediaId,
       requestKey,
       model,
-      quantization,
       language,
       listener,
     })
@@ -472,14 +463,12 @@ class MediaTranscriptionService {
     mediaId,
     requestKey,
     model,
-    quantization,
     language,
     listener,
   }: {
     mediaId: string
     requestKey: string
     model: MediaTranscriptModel
-    quantization: NonNullable<TranscribeOptions['quantization']>
     language?: string
     listener: QueuedTranscriptionListener
   }): QueuedTranscriptionJob {
@@ -494,7 +483,6 @@ class MediaTranscriptionService {
       mediaId,
       requestKey,
       model,
-      quantization,
       language,
       listeners: [listener],
       promise,
@@ -600,7 +588,6 @@ class MediaTranscriptionService {
     const stream = this.transcriber.transcribe(file, {
       model: job.model,
       language: job.language,
-      quantization: job.quantization,
       onProgress: (progress) => {
         for (const listener of job.listeners) {
           listener.onProgress?.(progress)
@@ -616,7 +603,7 @@ class MediaTranscriptionService {
       mediaId,
       model: job.model,
       language: job.language,
-      quantization: job.quantization,
+      quantization: WHISPER_QUANTIZATION,
       text: joinTranscriptWords(segments.map((segment) => segment.text)),
       segments: segmentTranscriptForCaptions(segments),
       createdAt: Date.now(),

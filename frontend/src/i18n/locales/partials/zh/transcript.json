@@ -11,6 +11,7 @@
     "clearSearch": "清除搜索",
     "noTranscript": "此片段尚无字幕稿。",
     "transcriptionFailed": "转写失败。",
+    "outOfMemory": "语音识别模型所需的内存不足。请关闭其他程序后重试。",
     "tryAgain": "重试",
     "generate": "生成字幕稿",
     "transcribing": "转写中…",

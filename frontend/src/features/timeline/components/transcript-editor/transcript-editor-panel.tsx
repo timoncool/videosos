@@ -1,3 +1,4 @@
+import { i18n } from '@/i18n'
 import {
   Fragment,
   memo,
@@ -35,7 +36,6 @@ import { createLogger } from '@/shared/logging/logger'
 import { needsTranscriptWordSeparator } from '@/shared/utils/transcript-text'
 import {
   isTranscriptionOutOfMemoryError,
-  TRANSCRIPTION_OOM_HINT,
 } from '@/shared/utils/transcription-cancellation'
 import { useSelectionStore } from '@/shared/state/selection'
 import { usePlaybackStore } from '@/shared/state/playback'
@@ -750,7 +750,7 @@ export function TranscriptEditorPanel({ active }: TranscriptEditorPanelProps) {
         } catch (error) {
           logger.warn('Transcription failed', { mediaId, error })
           const errorMessage = isTranscriptionOutOfMemoryError(error)
-            ? TRANSCRIPTION_OOM_HINT
+            ? i18n.t('transcript.outOfMemory')
             : error instanceof Error && error.message.trim().length > 0
               ? error.message
               : t('transcript.toastTranscribeFailed')

@@ -145,7 +145,7 @@ vi.mock('./transcribe-dialog', () => ({
     onCancel,
   }: {
     open: boolean
-    onStart: (values: { model: string; quantization: string; language: string }) => void
+    onStart: (values: { model: string; language: string }) => void
     onCancel: () => void
   }) =>
     open ? (
@@ -155,7 +155,6 @@ vi.mock('./transcribe-dialog', () => ({
           onClick={() =>
             onStart({
               model: 'whisper-base',
-              quantization: 'hybrid',
               language: '',
             })
           }
@@ -462,7 +461,6 @@ describe('MediaCard', () => {
     expect(options).toEqual(
       expect.objectContaining({
         model: 'whisper-base',
-        quantization: 'hybrid',
         language: undefined,
       }),
     )

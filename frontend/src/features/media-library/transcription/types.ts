@@ -1,7 +1,6 @@
-import type { MediaTranscriptModel, MediaTranscriptQuantization } from '@/types/storage'
+import type { MediaTranscriptModel } from '@/types/storage'
 
 export type WhisperModel = MediaTranscriptModel
-export type QuantizationType = MediaTranscriptQuantization
 
 // Which on-device ASR backend handles a job. Resolved per-job from the selected model +
 // language + WebGPU availability (see `transcription-engine.ts`).
@@ -56,7 +55,6 @@ export interface TranscribeRuntimeInfo {
 export interface TranscribeOptions {
   model?: WhisperModel
   language?: string
-  quantization?: QuantizationType
   onSegment?: (segment: TranscriptSegment) => void
   onProgress?: (event: TranscribeProgress) => void
   onRuntimeInfo?: (info: TranscribeRuntimeInfo) => void
@@ -88,7 +86,6 @@ export type WhisperWorkerMessage =
       type: 'init'
       modelId: string
       language?: string
-      quantization?: QuantizationType
     }
   | { type: 'pause' }
   | { type: 'resume' }

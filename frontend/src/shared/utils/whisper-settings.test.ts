@@ -3,7 +3,6 @@
 import { describe, expect, it } from 'vite-plus/test'
 import {
   DEFAULT_WHISPER_LANGUAGE,
-  getWhisperQuantizationOption,
   getWhisperLanguageSelectValue,
   getWhisperLanguageSettingValue,
   normalizeWhisperLanguage,
@@ -32,12 +31,5 @@ describe('whisper-settings', () => {
   it('falls back to auto-detect when a stored language is unsupported', () => {
     expect(getWhisperLanguageSelectValue('english')).toBe(WHISPER_AUTO_LANGUAGE_VALUE)
     expect(getWhisperLanguageSelectValue('yue')).toBe(WHISPER_AUTO_LANGUAGE_VALUE)
-  })
-
-  it('runs Whisper at Q8 whatever was stored', () => {
-    expect(getWhisperQuantizationOption('q8')).toMatchObject({ value: 'q8', label: 'Q8 (Recommended)' })
-    expect(getWhisperQuantizationOption('q4').value).toBe('q8')
-    expect(getWhisperQuantizationOption(undefined).value).toBe('q8')
-    expect(getWhisperQuantizationOption('fp32').value).toBe('q8')
   })
 })

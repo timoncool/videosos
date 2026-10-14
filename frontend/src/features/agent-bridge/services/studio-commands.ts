@@ -77,7 +77,6 @@ const WINDOW_SETTINGS = [
   'maxUndoHistory',
   'autoSaveInterval',
   'defaultWhisperModel',
-  'defaultWhisperQuantization',
   'defaultWhisperLanguage',
   'captioningIntervalUnit',
   'captioningIntervalValue',

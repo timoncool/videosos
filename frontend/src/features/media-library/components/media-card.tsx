@@ -73,7 +73,6 @@ import {
 } from '@/shared/utils/transcription-progress'
 import {
   isTranscriptionOutOfMemoryError,
-  TRANSCRIPTION_OOM_HINT,
 } from '@/shared/utils/transcription-cancellation'
 import { TranscribeDialog, type TranscribeDialogValues } from './transcribe-dialog'
 import { useSubtitleScanProgressStore } from '../stores/subtitle-scan-progress-store'
@@ -953,7 +952,6 @@ const MediaCardInternal = memo(function MediaCardInternal({
             try {
               const result = await runMediaTranscriptionJob(target.id, {
                 model: values.model,
-                quantization: values.quantization,
                 language: values.language || undefined,
               })
               if (result.status === 'cancelled') {
@@ -964,7 +962,7 @@ const MediaCardInternal = memo(function MediaCardInternal({
               const baseMessage =
                 error instanceof Error ? error.message : i18n.t('media.card.transcribeFailed')
               lastErrorMessage = isTranscriptionOutOfMemoryError(error)
-                ? TRANSCRIPTION_OOM_HINT
+                ? i18n.t('transcript.outOfMemory')
                 : baseMessage
               failed += 1
             }

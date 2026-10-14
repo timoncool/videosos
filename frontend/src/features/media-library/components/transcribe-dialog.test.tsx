@@ -5,7 +5,6 @@ import { beforeEach, describe, expect, it, vi } from 'vite-plus/test'
 
 const settingsStoreState = vi.hoisted(() => ({
   defaultWhisperModel: 'whisper-base',
-  defaultWhisperQuantization: 'q8',
   defaultWhisperLanguage: '',
 }))
 
@@ -199,7 +198,6 @@ describe('TranscribeDialog', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     settingsStoreState.defaultWhisperModel = 'whisper-base'
-    settingsStoreState.defaultWhisperQuantization = 'q8'
     settingsStoreState.defaultWhisperLanguage = ''
   })
 
@@ -306,7 +304,6 @@ describe('TranscribeDialog', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Start' }))
     expect(onStart).toHaveBeenCalledWith({
       model: 'parakeet-tdt-v3',
-      quantization: 'q8',
       language: '',
     })
   })

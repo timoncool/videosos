@@ -3,7 +3,7 @@ import { toast } from 'sonner'
 import { i18n } from '@/i18n'
 import type { TimelineItem as TimelineItemType } from '@/types/timeline'
 import type { AnimatableProperty } from '@/types/keyframe'
-import type { MediaTranscriptModel, MediaTranscriptQuantization } from '@/types/storage'
+import type { MediaTranscriptModel } from '@/types/storage'
 import { useSelectionStore } from '@/shared/state/selection'
 import { usePlaybackStore } from '@/shared/state/playback'
 import { useClearKeyframesDialogStore } from '@/shared/state/clear-keyframes-dialog'
@@ -12,7 +12,6 @@ import { useSegmentRequestStore } from '@/shared/state/segment-request-store'
 import { getTextItemPlainText } from '@/shared/utils/text-item-spans'
 import {
   isTranscriptionOutOfMemoryError,
-  TRANSCRIPTION_OOM_HINT,
 } from '@/shared/utils/transcription-cancellation'
 import { useMediaLibraryStore } from '@/features/timeline/deps/media-library-store'
 import {
@@ -249,7 +248,6 @@ export function useTimelineItemActions({
       options?: {
         forceTranscription?: boolean
         replaceExisting?: boolean
-        quantization?: MediaTranscriptQuantization
         language?: string
         onError?: (error: unknown) => void
       },
@@ -273,7 +271,6 @@ export function useTimelineItemActions({
           if (needsTranscription) {
             const result = await runMediaTranscriptionJob(mediaId, {
               model,
-              quantization: options?.quantization,
               language: options?.language || undefined,
             })
             if (result.status === 'cancelled') {
@@ -307,7 +304,7 @@ export function useTimelineItemActions({
               ? error.message
               : i18n.t('timeline.captions.failedGenerateSegment')
           const friendlyMessage = isTranscriptionOutOfMemoryError(error)
-            ? TRANSCRIPTION_OOM_HINT
+            ? i18n.t('transcript.outOfMemory')
             : fallbackMessage
           options?.onError?.(error)
           store.showNotification({
@@ -329,7 +326,6 @@ export function useTimelineItemActions({
     (
       values: {
         model: MediaTranscriptModel
-        quantization: MediaTranscriptQuantization
         language: string
       },
       hasExistingCaptions: boolean,
@@ -340,7 +336,6 @@ export function useTimelineItemActions({
         // transcripts are auto-enabled as virtual captions when clips load.
         forceTranscription: true,
         replaceExisting: hasExistingCaptions,
-        quantization: values.quantization,
         language: values.language,
         onError,
       })

@@ -76,7 +76,6 @@ vi.mock('@/features/media-library/deps/settings-contract', () => ({
   useSettingsStore: {
     getState: () => ({
       defaultWhisperModel: 'tiny',
-      defaultWhisperQuantization: 'q8',
       defaultWhisperLanguage: 'auto',
       defaultCaptionStylePresetId: 'netflix',
     }),

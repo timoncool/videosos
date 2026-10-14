@@ -6,7 +6,6 @@ import type {
   TranscribeRuntimeInfo,
   WhisperModel,
 } from './types'
-import type { MediaTranscriptQuantization } from '@/types/storage'
 import { localInferenceRuntimeRegistry } from '@/shared/state/local-inference'
 import { LOCAL_INFERENCE_UNLOADED_MESSAGE } from '@/shared/state/local-inference'
 import {
@@ -19,7 +18,7 @@ import {
   resolveTranscriptionEngine,
   type ResolvedTranscriptionEngine,
 } from './transcription-engine'
-import { DEFAULT_WHISPER_MODEL, DEFAULT_WHISPER_QUANTIZATION } from '@/shared/utils/whisper-settings'
+import { DEFAULT_WHISPER_MODEL } from '@/shared/utils/whisper-settings'
 import { usePlaybackStore } from '@/shared/state/playback'
 
 export class BrowserTranscriber {
@@ -214,7 +213,6 @@ export class TranscribeStream implements AsyncIterable<TranscriptSegment> {
         this.file,
         this.resolved.model,
         this.options.language,
-        this.options.quantization,
         this.resolved.engine,
       )
       this.startPlaybackWatcher()
@@ -234,9 +232,6 @@ export class TranscribeStream implements AsyncIterable<TranscriptSegment> {
     this.runtimeRegistered = true
     const now = Date.now()
     const isParakeet = this.resolved.engine === 'parakeet'
-    const quantization =
-      (this.options.quantization as MediaTranscriptQuantization | undefined) ??
-      DEFAULT_WHISPER_QUANTIZATION
 
     localInferenceRuntimeRegistry.registerRuntime(
       {
@@ -246,12 +241,12 @@ export class TranscribeStream implements AsyncIterable<TranscriptSegment> {
         modelKey: this.resolved.model,
         modelLabel: isParakeet
           ? formatParakeetRuntimeModelLabel()
-          : formatWhisperRuntimeModelLabel(this.resolved.model, quantization),
+          : formatWhisperRuntimeModelLabel(this.resolved.model),
         backend: 'unknown',
         state: 'loading',
         estimatedBytes: isParakeet
           ? estimateParakeetRuntimeBytes()
-          : estimateWhisperRuntimeBytes(this.resolved.model, quantization),
+          : estimateWhisperRuntimeBytes(this.resolved.model),
         activeJobs: 1,
         loadedAt: now,
         lastUsedAt: now,

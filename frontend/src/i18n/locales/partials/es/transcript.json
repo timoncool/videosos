@@ -11,6 +11,7 @@
     "clearSearch": "Borrar búsqueda",
     "noTranscript": "Este clip aún no tiene transcripción.",
     "transcriptionFailed": "La transcripción falló.",
+    "outOfMemory": "No hubo memoria suficiente para el modelo de reconocimiento de voz. Cierra otros programas y vuelve a intentarlo.",
     "tryAgain": "Intentar de nuevo",
     "generate": "Generar transcripción",
     "transcribing": "Transcribiendo…",

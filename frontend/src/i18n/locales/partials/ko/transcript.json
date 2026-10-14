@@ -11,6 +11,7 @@
     "clearSearch": "검색 지우기",
     "noTranscript": "이 클립에는 아직 전사가 없습니다.",
     "transcriptionFailed": "전사에 실패했습니다.",
+    "outOfMemory": "음성 인식 모델에 필요한 메모리가 부족했습니다. 다른 프로그램을 닫고 다시 시도하세요.",
     "tryAgain": "다시 시도",
     "generate": "전사 생성",
     "transcribing": "전사 중…",

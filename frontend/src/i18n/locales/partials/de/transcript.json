@@ -11,6 +11,7 @@
     "clearSearch": "Suche löschen",
     "noTranscript": "Dieser Clip hat noch kein Transkript.",
     "transcriptionFailed": "Transkription fehlgeschlagen.",
+    "outOfMemory": "Für das Spracherkennungsmodell reichte der Arbeitsspeicher nicht. Schließen Sie andere Programme und versuchen Sie es erneut.",
     "tryAgain": "Erneut versuchen",
     "generate": "Transkript erstellen",
     "transcribing": "Transkribieren…",

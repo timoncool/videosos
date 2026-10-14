@@ -61,7 +61,6 @@ describe('runMediaTranscriptionJob', () => {
 
     const result = await runMediaTranscriptionJob('media-1', {
       model: 'whisper-base',
-      quantization: 'hybrid',
     })
 
     expect(result).toEqual({ status: 'completed', transcript })

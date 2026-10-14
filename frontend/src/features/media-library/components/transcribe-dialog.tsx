@@ -35,11 +35,10 @@ import {
   WHISPER_AUTO_LANGUAGE_VALUE,
   WHISPER_LANGUAGE_OPTIONS,
 } from '@/shared/utils/whisper-settings'
-import type { MediaTranscriptModel, MediaTranscriptQuantization } from '@/types/storage'
+import type { MediaTranscriptModel } from '@/types/storage'
 
 export interface TranscribeDialogValues {
   model: MediaTranscriptModel
-  quantization: MediaTranscriptQuantization
   language: string
 }
 
@@ -77,7 +76,6 @@ export function TranscribeDialog({
 }: TranscribeDialogProps) {
   const { t } = useTranslation()
   const defaultModel = useSettingsStore((s) => s.defaultWhisperModel)
-  const defaultQuantization = useSettingsStore((s) => s.defaultWhisperQuantization)
   const defaultLanguage = useSettingsStore((s) => s.defaultWhisperLanguage)
   const clearMediaSkimPreview = useEditorStore((s) => s.clearMediaSkimPreview)
   const clearCompoundClipSkimPreview = useEditorStore((s) => s.clearCompoundClipSkimPreview)
@@ -126,7 +124,6 @@ export function TranscribeDialog({
   const handleStart = () => {
     onStart({
       model,
-      quantization: defaultQuantization,
       language: isParakeetModel(model)
         ? getWhisperLanguageSettingValue(WHISPER_AUTO_LANGUAGE_VALUE)
         : getWhisperLanguageSettingValue(languageValue),
