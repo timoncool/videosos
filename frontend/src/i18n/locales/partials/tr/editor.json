@@ -667,7 +667,13 @@
       "youtubeHint": "Yumuşak gölgeli Roboto, kutusuz — otomatik altyazı havası.",
       "boldYellowHint": "Siyah gölgeli sinema sarısı Roboto Slab — DVD dönemi klasiği.",
       "outlinedHint": "İnce konturlu Manrope — temiz, modern, gölgesiz.",
-      "tiktokHint": "Anton display, büyük ve ortalanmış — dikey video viral görünümü."
+      "tiktokHint": "Anton display, büyük ve ortalanmış — dikey video viral görünümü.",
+      "lookMinimalHint": "Dub Studio'nun sade görünümleri: koyu bir plaka üzerinde yalın yazı.",
+      "lookViralHint": "Dub Studio'nun viral görünümleri: kalın yazı, söylenen kelime renkle vurgulanır.",
+      "lookKaraokeHint": "Dub Studio karaoke: söylenen kelime konuşuldukça parlar.",
+      "lookPlayfulHint": "Dub Studio'nun eğlenceli görünümleri: renkli bir balon üzerinde el yazısı.",
+      "lookNeonHint": "Dub Studio'nun neon görünümleri: plakasız parlayan yazı.",
+      "lookFreshHint": "Dub Studio'nun taze görünümleri: plakasız, konturlu yazı."
     },
     "alignment": {
       "left": "Sola Hizala",

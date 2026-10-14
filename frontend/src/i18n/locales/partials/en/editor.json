@@ -667,7 +667,13 @@
       "youtubeHint": "Roboto with a soft drop shadow, no box — the auto-captions vibe.",
       "boldYellowHint": "Roboto Slab in cinema yellow with a black drop shadow — DVD-era classic.",
       "outlinedHint": "Manrope with a hairline outline — clean, modern, no shadow.",
-      "tiktokHint": "Anton display, oversized and centered — vertical-video viral look."
+      "tiktokHint": "Anton display, oversized and centered — vertical-video viral look.",
+      "lookMinimalHint": "Dub Studio's clean looks: plain type on a dark plate.",
+      "lookViralHint": "Dub Studio's viral looks: heavy type, the spoken word lit in colour.",
+      "lookKaraokeHint": "Dub Studio's karaoke: the spoken word lit as it is sung or said.",
+      "lookPlayfulHint": "Dub Studio's playful looks: hand-drawn type on a bright bubble.",
+      "lookNeonHint": "Dub Studio's neon looks: glowing type with no plate.",
+      "lookFreshHint": "Dub Studio's fresh looks: outlined type with no plate."
     },
     "alignment": {
       "left": "Align Left",

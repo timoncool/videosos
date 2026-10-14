@@ -667,7 +667,13 @@
       "youtubeHint": "Roboto com uma sombra suave, sem caixa — o clima das legendas automáticas.",
       "boldYellowHint": "Roboto Slab em amarelo de cinema com sombra preta — clássico da era do DVD.",
       "outlinedHint": "Manrope com um contorno fino — limpo, moderno, sem sombra.",
-      "tiktokHint": "Fonte Anton, grande e centralizada — o visual viral do vídeo vertical."
+      "tiktokHint": "Fonte Anton, grande e centralizada — o visual viral do vídeo vertical.",
+      "lookMinimalHint": "Looks limpos do Dub Studio: letra simples sobre uma placa escura.",
+      "lookViralHint": "Looks virais do Dub Studio: letra grossa e a palavra falada destacada em cor.",
+      "lookKaraokeHint": "Karaokê do Dub Studio: a palavra falada acende conforme é dita.",
+      "lookPlayfulHint": "Looks divertidos do Dub Studio: letra manuscrita sobre uma bolha colorida.",
+      "lookNeonHint": "Looks neon do Dub Studio: letra brilhante sem placa.",
+      "lookFreshHint": "Looks frescos do Dub Studio: letra com contorno e sem placa."
     },
     "alignment": {
       "left": "Alinhar à esquerda",

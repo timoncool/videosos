@@ -667,7 +667,13 @@
       "youtubeHint": "부드러운 그림자가 있는 Roboto, 박스 없음 — 자동 자막 느낌.",
       "boldYellowHint": "검은 그림자가 있는 시네마 옐로의 Roboto Slab — DVD 시대의 클래식.",
       "outlinedHint": "가는 외곽선의 Manrope — 깔끔하고 현대적, 그림자 없음.",
-      "tiktokHint": "Anton 디스플레이, 큼직하고 가운데 정렬 — 세로 영상의 바이럴 스타일."
+      "tiktokHint": "Anton 디스플레이, 큼직하고 가운데 정렬 — 세로 영상의 바이럴 스타일.",
+      "lookMinimalHint": "Dub Studio의 깔끔한 룩: 어두운 판 위의 단정한 글자.",
+      "lookViralHint": "Dub Studio의 바이럴 룩: 굵은 글자, 말하는 단어를 색으로 강조.",
+      "lookKaraokeHint": "Dub Studio의 가라오케: 말하는 단어가 목소리에 맞춰 빛납니다.",
+      "lookPlayfulHint": "Dub Studio의 발랄한 룩: 밝은 말풍선 위 손글씨.",
+      "lookNeonHint": "Dub Studio의 네온 룩: 판 없이 빛나는 글자.",
+      "lookFreshHint": "Dub Studio의 프레시 룩: 판 없이 외곽선 글자."
     },
     "alignment": {
       "left": "왼쪽 정렬",

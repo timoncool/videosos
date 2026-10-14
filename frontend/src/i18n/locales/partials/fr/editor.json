@@ -667,7 +667,13 @@
       "youtubeHint": "Roboto avec une ombre portée douce, sans cadre — l'ambiance des sous-titres automatiques.",
       "boldYellowHint": "Roboto Slab en jaune cinéma avec une ombre noire — classique de l'ère DVD.",
       "outlinedHint": "Manrope avec un contour fin — net, moderne, sans ombre.",
-      "tiktokHint": "Police Anton, surdimensionnée et centrée — le look viral de la vidéo verticale."
+      "tiktokHint": "Police Anton, surdimensionnée et centrée — le look viral de la vidéo verticale.",
+      "lookMinimalHint": "Looks sobres de Dub Studio : texte simple sur une plaque sombre.",
+      "lookViralHint": "Looks viraux de Dub Studio : texte épais, le mot prononcé mis en couleur.",
+      "lookKaraokeHint": "Karaoké de Dub Studio : le mot prononcé s’allume au fil de la voix.",
+      "lookPlayfulHint": "Looks ludiques de Dub Studio : écriture manuscrite sur une bulle colorée.",
+      "lookNeonHint": "Looks néon de Dub Studio : texte lumineux sans plaque.",
+      "lookFreshHint": "Looks frais de Dub Studio : texte détouré sans plaque."
     },
     "alignment": {
       "left": "Aligner à gauche",

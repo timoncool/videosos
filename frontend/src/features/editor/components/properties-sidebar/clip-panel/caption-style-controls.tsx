@@ -107,12 +107,12 @@ export const CaptionStyleControls = memo(function CaptionStyleControls({
         <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground pb-1.5">
           {t('editor.captionStyleControls.stylePreset')}
         </p>
-        <div className="grid grid-cols-3 gap-1.5">
+        <div className="grid grid-cols-3 gap-1.5 max-h-52 overflow-y-auto pr-1">
           {CAPTION_STYLE_PRESETS.map((preset) => (
             <button
               key={preset.id}
               type="button"
-              title={t(preset.hintKey)}
+              title={`${preset.label} — ${t(preset.hintKey)}`}
               onClick={() => applyPreset(preset)}
               className={cn(
                 'rounded border px-2 py-1.5 text-[11px] text-center transition-colors',

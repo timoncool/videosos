@@ -983,7 +983,7 @@ export function SettingsDialog({ open, onOpenChange, target }: SettingsDialogPro
                             <button
                               key={preset.id}
                               type="button"
-                              title={t(preset.hintKey)}
+                              title={`${preset.label} — ${t(preset.hintKey)}`}
                               aria-pressed={defaultCaptionStylePresetId === preset.id}
                               onClick={() => setSetting('defaultCaptionStylePresetId', preset.id)}
                               className={cn(

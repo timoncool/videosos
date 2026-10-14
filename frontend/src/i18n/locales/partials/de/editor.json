@@ -667,7 +667,13 @@
       "youtubeHint": "Roboto mit weichem Schlagschatten, ohne Box — der Auto-Untertitel-Look.",
       "boldYellowHint": "Roboto Slab in Kino-Gelb mit schwarzem Schlagschatten — Klassiker aus der DVD-Ära.",
       "outlinedHint": "Manrope mit feiner Kontur — sauber, modern, ohne Schatten.",
-      "tiktokHint": "Anton-Schrift, übergroß und zentriert — der virale Look des Hochformat-Videos."
+      "tiktokHint": "Anton-Schrift, übergroß und zentriert — der virale Look des Hochformat-Videos.",
+      "lookMinimalHint": "Klare Looks aus Dub Studio: schlichte Schrift auf dunkler Fläche.",
+      "lookViralHint": "Virale Looks aus Dub Studio: kräftige Schrift, das gesprochene Wort farbig hervorgehoben.",
+      "lookKaraokeHint": "Karaoke aus Dub Studio: das gesprochene Wort wird beim Sprechen hervorgehoben.",
+      "lookPlayfulHint": "Verspielte Looks aus Dub Studio: Handschrift auf einer bunten Blase.",
+      "lookNeonHint": "Neon-Looks aus Dub Studio: leuchtende Schrift ohne Fläche.",
+      "lookFreshHint": "Frische Looks aus Dub Studio: Schrift mit Kontur ohne Fläche."
     },
     "alignment": {
       "left": "Links ausrichten",

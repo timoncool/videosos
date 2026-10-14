@@ -667,7 +667,13 @@
       "youtubeHint": "Roboto に柔らかいドロップシャドウ、ボックスなし — 自動字幕の雰囲気。",
       "boldYellowHint": "シネマイエローの Roboto Slab に黒いドロップシャドウ — DVD時代の定番。",
       "outlinedHint": "細いアウトラインの Manrope — すっきりとモダン、影なし。",
-      "tiktokHint": "Anton ディスプレイ、特大で中央寄せ — 縦型動画のバイラルな見た目。"
+      "tiktokHint": "Anton ディスプレイ、特大で中央寄せ — 縦型動画のバイラルな見た目。",
+      "lookMinimalHint": "Dub Studio のシンプルなルック：暗いプレートに飾らない文字。",
+      "lookViralHint": "Dub Studio のバイラルなルック：太い文字、話している単語を色で強調。",
+      "lookKaraokeHint": "Dub Studio のカラオケ：話している単語が声に合わせて光ります。",
+      "lookPlayfulHint": "Dub Studio の遊び心あるルック：明るいバブルに手書き風の文字。",
+      "lookNeonHint": "Dub Studio のネオンルック：プレートなしで光る文字。",
+      "lookFreshHint": "Dub Studio のフレッシュなルック：プレートなしで縁取りの文字。"
     },
     "alignment": {
       "left": "左揃え",

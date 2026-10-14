@@ -667,7 +667,13 @@
       "youtubeHint": "带柔和投影的 Roboto，无背景框——自动字幕的感觉。",
       "boldYellowHint": "影院黄的 Roboto Slab 配黑色投影——DVD 时代的经典。",
       "outlinedHint": "带细描边的 Manrope——简洁、现代、无阴影。",
-      "tiktokHint": "Anton 展示字体，超大居中——竖屏视频的爆款外观。"
+      "tiktokHint": "Anton 展示字体，超大居中——竖屏视频的爆款外观。",
+      "lookMinimalHint": "Dub Studio 的简洁样式：深色底板上的朴素文字。",
+      "lookViralHint": "Dub Studio 的爆款样式：粗体文字，正在说的词以颜色高亮。",
+      "lookKaraokeHint": "Dub Studio 的卡拉 OK：正在说的词随语音点亮。",
+      "lookPlayfulHint": "Dub Studio 的活泼样式：彩色气泡上的手写字体。",
+      "lookNeonHint": "Dub Studio 的霓虹样式：无底板的发光文字。",
+      "lookFreshHint": "Dub Studio 的清新样式：无底板的描边文字。"
     },
     "alignment": {
       "left": "左对齐",
