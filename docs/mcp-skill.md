@@ -75,7 +75,7 @@ You cannot hear or watch the window, so look at results before you use them:
   - `{"op": "addShape", "shape": "rectangle", "from": 0, "durationInFrames": 90, "color": "#000000"}`;
   - `{"op": "updateTrack", "id": "...", "name": "Music", "muted": false, "volume": -6}`, `{"op": "removeTrack", "id": "..."}` (empty);
   - `{"op": "addMarker", "frame": 120, "label": "Drop"}`, `updateMarker`, `removeMarker`.
-  Give an op `callerId` and refer to what it created later: `{"$ref": "a#/detail/created/0"}`.
+  Give an op `callerId` and refer to what it created later: `{"$ref": "a#/detail/created/0/id"}` (addClip answers `created: [{id, type, trackId}]`, addText and addShape `{id}`: `a#/detail/id`).
 - `timeline_undo` / `timeline_redo`, `playhead_seek`, `playback`, `editor_tab`.
 - `motion_render {html, seconds?, name?}` makes HTML and CSS motion graphics (titles, lower thirds, counters,
   badges) into a transparent clip at the playhead; CSS animations only, no scripts. Free.
@@ -136,6 +136,12 @@ first frame, `place_on_timeline: true` at the shot's moment) → `job_wait`, `me
 **A shot from a picture.** `generate` an image (task `image`), `job_wait`, then `generate` a video with the
 image as its first frame: `values: {"positivePrompt": "...", "inputs.frameImages": [{"job": "<image job>",
 "index": 0}]}` for Runware, `"frame_first"` for OpenRouter, `"image_url"` for fal — read the model's form.
+
+**Shots end to end.** A generated clip often runs a frame or two longer than asked, so clips placed at 0, 4 and 8 s
+overlap and land on separate tracks. `timeline_get`, then `moveItem` each next clip to the previous clip's end on one
+track (its sound goes with it). A transition needs spare frames beyond the cut, which a clip used whole has not:
+`trimEnd` the left clip by `-15` and `trimStart` the right one by `15`, butt them again, then `addTransition` of 15
+frames — or fade with `addKeyframe` on `opacity`.
 
 **Voice-over.** task `speech`, the text in the `prompt`-role field, a voice from the `voice` field's options,
 `place_on_timeline: true`.

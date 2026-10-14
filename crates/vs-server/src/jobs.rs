@@ -689,6 +689,41 @@ impl Jobs {
         })
     }
 
+    /// Keeps what a conversation of the window's chat cost, as a finished text job of OpenRouter started by an
+    /// agent, so the spending and the agents' daily limit count it.
+    pub fn record_chat(&self, project_id: Option<&str>, model: &str, asked: &str, cost: f64) {
+        let now = now_ms();
+        let job = Job {
+            id: uuid::Uuid::now_v7().simple().to_string(),
+            project_id: project_id.map(str::to_string),
+            provider: Provider::Openrouter,
+            model: model.to_string(),
+            model_name: model.to_string(),
+            title: format!("Chat: {}", asked.chars().take(60).collect::<String>()),
+            task: "text".into(),
+            values: json!({ "prompt": asked }),
+            status: "done".into(),
+            progress: None,
+            error: None,
+            error_code: None,
+            estimate: None,
+            cost: Some(cost),
+            cost_source: Some("provider".into()),
+            outputs: Vec::new(),
+            imported: json!([]),
+            place: false,
+            place_at: None,
+            origin: "agent".into(),
+            created: now,
+            updated: now,
+            handle: None,
+        };
+        match self.insert(&job) {
+            Ok(()) => events::send("job", serde_json::to_value(&job).unwrap_or(Value::Null)),
+            Err(error) => tracing::error!("[ERROR] the chat's cost of {cost} USD was not recorded: {error}"),
+        }
+    }
+
     pub fn agent_spent_today(&self) -> f64 {
         let today_start = chrono::Local::now().date_naive().and_hms_opt(0, 0, 0).and_then(|time| time.and_local_timezone(chrono::Local).single()).map(|time| time.timestamp_millis()).unwrap_or(0);
         self.db()
@@ -802,6 +837,15 @@ async fn create(State(state): State<AppState>, Json(mut request): Json<CreateReq
         Ok(form) => form,
         Err(error) => return (StatusCode::BAD_GATEWAY, Json(json!({ "error": error }))).into_response(),
     };
+    // a run asked for without its task (an agent's) takes the model's own when it has only one
+    if request.task.as_deref().is_none_or(str::is_empty) {
+        let tasks = state.catalog.find(provider, &request.model).map(|entry| entry.tasks).unwrap_or_default();
+        match tasks.as_slice() {
+            [only] => request.task = Some(only.as_str().to_string()),
+            [] => {}
+            several => return bad(t!("jobs-task-needed", tasks = several.iter().map(|task| task.as_str()).collect::<Vec<_>>().join(", "))),
+        }
+    }
     let elements = match crate::choices::current() {
         Ok(choices) => crate::elements::from_choices(&choices),
         Err(error) => return (StatusCode::INTERNAL_SERVER_ERROR, Json(json!({ "error": error }))).into_response(),

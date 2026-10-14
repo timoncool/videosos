@@ -20,7 +20,7 @@ use crate::AppState;
 
 const API: &str = "https://openrouter.ai/api/v1/chat/completions";
 /// Turns one message may take before the assistant has to stop and say where it got to.
-const MAX_TURNS: usize = 24;
+const MAX_TURNS: usize = 60;
 /// Models tried for a first chat, best first; the person picks any other.
 const PREFERRED: &[&str] = &["anthropic/claude-haiku-5.5", "google/gemini-3.8-flash", "anthropic/claude-sonnet-5.5"];
 
@@ -72,7 +72,9 @@ struct Turn {
 }
 
 async fn turn(http: &reqwest::Client, key: &str, model: &str, messages: &[Value], events: &mpsc::Sender<Value>) -> Result<Turn, String> {
-    let body = json!({ "model": model, "messages": messages, "tools": crate::mcp::chat_tools(), "stream": true, "usage": { "include": true } });
+    // the guide and the tools are the same every step: cached, they cost a tenth from the second step on (Claude);
+    // models that cache on their own ignore it
+    let body = json!({ "model": model, "messages": messages, "tools": crate::mcp::chat_tools(), "stream": true, "usage": { "include": true }, "cache_control": { "type": "ephemeral" } });
     let response = http.post(API).bearer_auth(key).header("X-Title", "VideoSOS").json(&body).send().await.map_err(|e| e.to_string())?;
     if !response.status().is_success() {
         let status = response.status();
@@ -130,6 +132,16 @@ async fn turn(http: &reqwest::Client, key: &str, model: &str, messages: &[Value]
 }
 
 async fn conversation(state: AppState, body: ChatBody, key: String, events: mpsc::Sender<Value>) {
+    let cost = converse(&state, &body, &key, &events).await;
+    // the conversation is paid like a generation: it goes into the spending and the agents' daily limit
+    if cost > 0.0 {
+        let asked = body.messages.iter().rev().find(|message| message.role == "user").map(|message| message.content.clone()).unwrap_or_default();
+        state.jobs.record_chat(body.project_id.as_deref(), &body.model, &asked, cost);
+    }
+}
+
+/// Runs the conversation to its end and answers with what it cost.
+async fn converse(state: &AppState, body: &ChatBody, key: &str, events: &mpsc::Sender<Value>) -> f64 {
     let mut messages = vec![json!({ "role": "system", "content": system_prompt(body.project_id.as_deref(), body.language.as_deref()) })];
     for message in &body.messages {
         if matches!(message.role.as_str(), "user" | "assistant") && !message.content.trim().is_empty() {
@@ -138,27 +150,30 @@ async fn conversation(state: AppState, body: ChatBody, key: String, events: mpsc
     }
     let mut cost = 0.0;
     for _ in 0..MAX_TURNS {
-        let turn = match turn(&state.http.client, &key, &body.model, &messages, &events).await {
+        let turn = match turn(&state.http.client, key, &body.model, &messages, events).await {
             Ok(turn) => turn,
             Err(error) => {
-                send(&events, json!({ "type": "error", "message": error, "cost": cost })).await;
-                return;
+                send(events, json!({ "type": "error", "message": error, "cost": cost })).await;
+                return cost;
             }
         };
         cost += turn.cost;
         if turn.calls.is_empty() {
-            send(&events, json!({ "type": "done", "cost": cost })).await;
-            return;
+            send(events, json!({ "type": "done", "cost": cost })).await;
+            return cost;
+        }
+        if !send(events, json!({ "type": "cost", "cost": cost })).await {
+            return cost;
         }
         let calls: Vec<Value> = turn.calls.iter().map(|(id, name, arguments)| json!({ "id": id, "type": "function", "function": { "name": name, "arguments": arguments } })).collect();
         messages.push(json!({ "role": "assistant", "content": turn.text, "tool_calls": calls }));
         let mut pictures = Vec::new();
         for (id, name, arguments) in &turn.calls {
             let args: Value = if arguments.trim().is_empty() { Value::Object(Map::new()) } else { serde_json::from_str(arguments).unwrap_or(Value::Object(Map::new())) };
-            if !send(&events, json!({ "type": "tool", "id": id, "name": name, "args": args })).await {
-                return;
+            if !send(events, json!({ "type": "tool", "id": id, "name": name, "args": args })).await {
+                return cost;
             }
-            let answer = crate::mcp::chat_call(&state, name, &args).await;
+            let answer = crate::mcp::chat_call(state, name, &args).await;
             let (ok, text) = match &answer {
                 Ok(answer) => (true, answer.text.clone()),
                 Err(problem) => (false, problem.clone()),
@@ -166,7 +181,7 @@ async fn conversation(state: AppState, body: ChatBody, key: String, events: mpsc
             if let Ok(crate::mcp::ChatAnswer { image: Some(image), .. }) = &answer {
                 pictures.push(image.clone());
             }
-            send(&events, json!({ "type": "tool_done", "id": id, "ok": ok, "summary": text.chars().take(240).collect::<String>() })).await;
+            send(events, json!({ "type": "tool_done", "id": id, "ok": ok, "summary": text.chars().take(240).collect::<String>() })).await;
             messages.push(json!({ "role": "tool", "tool_call_id": id, "content": if ok { text } else { format!("Error: {text}") } }));
         }
         // a tool's picture (the window's screenshot) reaches the model as a picture of the next message
@@ -176,7 +191,8 @@ async fn conversation(state: AppState, body: ChatBody, key: String, events: mpsc
             messages.push(json!({ "role": "user", "content": content }));
         }
     }
-    send(&events, json!({ "type": "error", "message": t!("chat-too-many-turns", turns = MAX_TURNS), "cost": cost })).await;
+    send(events, json!({ "type": "error", "message": t!("chat-too-many-turns", turns = MAX_TURNS), "cost": cost })).await;
+    cost
 }
 
 async fn chat(State(state): State<AppState>, Json(body): Json<ChatBody>) -> Response {

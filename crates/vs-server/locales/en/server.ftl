@@ -38,6 +38,7 @@ jobs-field-too-long = { $field } is { $count } characters long; the model takes 
 jobs-no-key = No { $provider } key: add it in Settings, Providers.
 jobs-place-needs-project = Placing on the timeline needs project_id: the project open in the window (editor_state names it).
 jobs-place-at-invalid = place_at is a moment of the timeline in seconds, 0 or more.
+jobs-task-needed = This model does several tasks ({ $tasks }): name the task of the run.
 elements-no-slot = This model takes no reference pictures, so the elements { $elements } cannot be sent: describe them in words or choose a model with references.
 elements-no-room = The model's { $field } takes at most { $max } pictures: no room for the elements { $elements }.
 jobs-openrouter-video-link = OpenRouter takes { $field } only as an https link, not as a file of this computer: choose a fal or Runware model of this task, or give a link.

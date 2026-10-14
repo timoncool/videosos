@@ -39,6 +39,7 @@ jobs-field-too-long = { $field }: { $count } символов, модель пр
 jobs-no-key = Нет ключа { $provider }: добавьте его в Настройках, раздел «Провайдеры».
 jobs-place-needs-project = Чтобы поставить результат на таймлайн, нужен project_id — проект, открытый в окне (его называет editor_state).
 jobs-place-at-invalid = place_at — момент таймлайна в секундах, от 0.
+jobs-task-needed = Эта модель делает несколько задач ({ $tasks }): назовите задачу запуска.
 elements-no-slot = Эта модель не принимает референсы, поэтому элементы { $elements } не отправить: опишите их словами или выберите модель с референсами.
 elements-no-room = Поле «{ $field }» модели берёт не больше { $max } картинок: нет места для элементов { $elements }.
 jobs-openrouter-video-link = OpenRouter принимает «{ $field }» только https-ссылкой, а не файлом с этого компьютера: выберите модель fal или Runware для этой задачи или дайте ссылку.
@@ -136,5 +137,9 @@ ytdlp-failed-silently = yt-dlp завершился с ошибкой без с�
 url-needs-project = видео по ссылке скачивается в проект: нужен project_id, проект, открытый в окне
 tools-unsupported-os = видео по ссылке скачиваются на Windows и Linux
 tools-incomplete = инструмент { $tool } после загрузки неполный: { $files }
-chat-too-many-turns = помощник сделал { $turns } шагов и не закончил: попросите его продолжить
+chat-too-many-turns = помощник сделал { $turns } { $turns ->
+    [one] шаг
+    [few] шага
+   *[many] шагов
+} и не закончил: попросите его продолжить
 chat-empty = выберите модель и напишите сообщение

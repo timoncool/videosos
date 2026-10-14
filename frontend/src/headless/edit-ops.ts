@@ -24,6 +24,7 @@ import {
   addItems,
   updateItem,
   moveItem,
+  moveItems,
   removeItems,
   splitItem,
   trimItemStart,
@@ -44,6 +45,11 @@ import {
   removeMarker,
 } from '@/features/timeline/stores/timeline-actions'
 import { useMarkersStore } from '@/features/timeline/stores/markers-store'
+import { getLinkedAndAttachedItemIds } from '@/features/timeline/utils/linked-items'
+import {
+  canAddTransition,
+  getMaxTransitionDurationForHandles,
+} from '@/features/timeline/utils/transition-utils'
 import { useItemsStore } from '@/features/timeline/stores/items-store'
 import {
   type EditOp,
@@ -94,11 +100,27 @@ function applyMoveItem(op: EditOp): unknown {
   const id = asString(op.id)
   const from = asNumber(op.from)
   if (!id || from === undefined) throw new Error('moveItem requires `id` and `from`')
-  requireItem(id)
+  const item = requireItem(id)
   const destination = asString(op.trackId)
   if (destination) requireTrack(destination)
-  moveItem(id, from, destination)
-  return { id, from }
+  // a clip's linked sound and its captions go with it, as the timeline moves them, unless asked to move it alone
+  const companions =
+    op.alone === true
+      ? []
+      : getLinkedAndAttachedItemIds(useItemsStore.getState().items, id).filter(
+          (each) => each !== id,
+        )
+  if (companions.length === 0) {
+    moveItem(id, from, destination)
+    return { id, from }
+  }
+  const shift = from - item.from
+  const { itemById } = useItemsStore.getState()
+  moveItems([
+    { id, from, ...(destination && { trackId: destination }) },
+    ...companions.map((each) => ({ id: each, from: Math.max(0, itemById[each]!.from + shift) })),
+  ])
+  return { id, from, moved: [id, ...companions] }
 }
 
 function applyRemoveItems(op: EditOp): unknown {
@@ -148,6 +170,32 @@ function applyTransitionOverrides(transitionId: string, op: EditOp): void {
   })
 }
 
+/** Why the timeline refuses a transition, with what makes it possible, as the person would be told. */
+function transitionRefusal(
+  left: string,
+  right: string,
+  duration: number | undefined,
+  alignment: number,
+): string {
+  const { itemById } = useItemsStore.getState()
+  const leftClip = itemById[left]!
+  const rightClip = itemById[right]!
+  const fps = useTimelineSettingsStore.getState().fps
+  const length = duration ?? 15
+  if (leftClip.trackId !== rightClip.trackId)
+    return 'the clips are on different tracks; move them onto one track, end to start'
+  if (leftClip.from + leftClip.durationInFrames !== rightClip.from) {
+    return `the clips do not meet: the left ends at frame ${leftClip.from + leftClip.durationInFrames}, the right starts at ${rightClip.from}; moveItem the right clip to the left's end`
+  }
+  if (getMaxTransitionDurationForHandles(leftClip, rightClip, alignment, fps) < 1) {
+    return `the clips have no spare frames beyond the cut (a generated clip is used whole); make them first: trimEnd the left clip by -${length} and trimStart the right clip by ${length} (frames), then moveItem the right clip to the left's new end, and add the transition of ${length} frames`
+  }
+  return (
+    canAddTransition(leftClip, rightClip, length, alignment, fps).reason ??
+    `the timeline did not take it for clips "${left}" and "${right}"`
+  )
+}
+
 function applyAddTransition(op: EditOp): unknown {
   const left = asString(op.leftClipId)
   const right = asString(op.rightClipId)
@@ -163,7 +211,10 @@ function applyAddTransition(op: EditOp): unknown {
     asString(op.direction) as Parameters<typeof addTransition>[5],
     asNumber(op.alignment) ?? 0.5,
   )
-  if (!added) throw new Error(`addTransition failed for clips "${left}" and "${right}"`)
+  if (!added)
+    throw new Error(
+      `addTransition: ${transitionRefusal(left, right, asNumber(op.durationInFrames), asNumber(op.alignment) ?? 0.5)}`,
+    )
   const created = useTransitionsStore
     .getState()
     .transitions.filter((t) => t.leftClipId === left && t.rightClipId === right)

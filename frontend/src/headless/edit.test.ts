@@ -288,6 +288,55 @@ describe('editProject', () => {
     expect(audio.from).toBe(video.from)
   })
 
+  it('a refused transition says why and what makes it possible', async () => {
+    const media = [{ mediaId: 'm-vid', metadata: videoMedia }]
+    await expect(
+      editProject({
+        project: baseProject(),
+        media,
+        ops: [
+          { op: 'addClip', mediaId: 'm-vid', from: 0, callerId: 'a' } as EditOp,
+          { op: 'addClip', mediaId: 'm-vid', from: 100, callerId: 'b' } as EditOp,
+          {
+            op: 'addTransition',
+            leftClipId: { $ref: 'a#/detail/created/0/id' },
+            rightClipId: { $ref: 'b#/detail/created/0/id' },
+          } as EditOp,
+        ],
+      }),
+    ).rejects.toThrow('no spare frames beyond the cut')
+  })
+
+  it('moveItem takes the linked sound of a clip along, unless asked to move it alone', async () => {
+    const result = await editProject({
+      project: baseProject(),
+      media: [{ mediaId: 'm-vid', metadata: videoMedia }],
+      ops: [
+        { op: 'addClip', mediaId: 'm-vid', from: 0, callerId: 'clip' } as EditOp,
+        { op: 'moveItem', id: { $ref: 'clip#/detail/created/0/id' }, from: 50 } as EditOp,
+      ],
+    })
+    const froms = result.project.timeline!.items.map((item) => [item.type, item.from])
+    expect(froms).toEqual([
+      ['video', 50],
+      ['audio', 50],
+    ])
+    const alone = await editProject({
+      project: baseProject(),
+      media: [{ mediaId: 'm-vid', metadata: videoMedia }],
+      ops: [
+        { op: 'addClip', mediaId: 'm-vid', from: 0, callerId: 'clip' } as EditOp,
+        {
+          op: 'moveItem',
+          id: { $ref: 'clip#/detail/created/0/id' },
+          from: 50,
+          alone: true,
+        } as EditOp,
+      ],
+    })
+    expect(alone.project.timeline!.items.map((item) => item.from).sort()).toEqual([0, 50])
+  })
+
   it('addClip with keepFrom lands at its moment on a track free there, the pair together', async () => {
     const result = await editProject({
       project: baseProject(),

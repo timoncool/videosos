@@ -50,14 +50,19 @@ export const useChatStore = create<ChatState>()(
       setModel: (model) => set({ model }),
       clear: () => set({ entries: [], cost: 0 }),
     }),
-    { name: 'videosos-chat', partialize: (state) => ({ entries: state.entries, model: state.model, cost: state.cost }) },
+    {
+      name: 'videosos-chat',
+      partialize: (state) => ({ entries: state.entries, model: state.model, cost: state.cost }),
+    },
   ),
 )
 
 const id = () => Math.random().toString(36).slice(2, 10)
 
 function update(entryId: string, change: (entry: ChatEntry) => ChatEntry): void {
-  useChatStore.setState((state) => ({ entries: state.entries.map((entry) => (entry.id === entryId ? change(entry) : entry)) }))
+  useChatStore.setState((state) => ({
+    entries: state.entries.map((entry) => (entry.id === entryId ? change(entry) : entry)),
+  }))
 }
 
 export async function chatModels(): Promise<{ models: ChatModel[]; default: string | null }> {
@@ -72,10 +77,16 @@ export function stopChat(): void {
 }
 
 /** Sends the person's message and follows the answer as the server streams it. */
-export async function sendChat(text: string, projectId: string | null, language: string): Promise<void> {
+export async function sendChat(
+  text: string,
+  projectId: string | null,
+  language: string,
+): Promise<void> {
   const state = useChatStore.getState()
   if (state.busy || !text.trim() || !state.model) return
-  const history = state.entries.filter((entry) => entry.text.trim()).map((entry) => ({ role: entry.role, content: entry.text }))
+  const history = state.entries
+    .filter((entry) => entry.text.trim())
+    .map((entry) => ({ role: entry.role, content: entry.text }))
   const asked: ChatEntry = { id: id(), role: 'user', text: text.trim(), tools: [], error: null }
   const answer: ChatEntry = { id: id(), role: 'assistant', text: '', tools: [], error: null }
   useChatStore.setState({ entries: [...state.entries, asked, answer], busy: true })
@@ -84,17 +95,31 @@ export async function sendChat(text: string, projectId: string | null, language:
     const response = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: state.model, messages: [...history, { role: 'user', content: asked.text }], project_id: projectId, language }),
+      body: JSON.stringify({
+        model: state.model,
+        messages: [...history, { role: 'user', content: asked.text }],
+        project_id: projectId,
+        language,
+      }),
       signal: stopper.signal,
     })
     if (!response.ok || !response.body) {
       const body = await response.text()
-      const message = response.headers.get('content-type')?.includes('application/json') ? ((JSON.parse(body) as { error?: string }).error ?? body) : body
+      const message = response.headers.get('content-type')?.includes('application/json')
+        ? ((JSON.parse(body) as { error?: string }).error ?? body)
+        : body
       throw new Error(message || `${response.status}`)
     }
     const reader = response.body.getReader()
     const decoder = new TextDecoder()
     let buffer = ''
+    // the server tells the answer's cost so far after every step; the total of the chat grows by what is new
+    let counted = 0
+    const addCost = (sofar: number | undefined) => {
+      const now = sofar ?? counted
+      useChatStore.setState((current) => ({ cost: current.cost + (now - counted) }))
+      counted = now
+    }
     for (;;) {
       const { done, value } = await reader.read()
       if (done) break
@@ -103,27 +128,72 @@ export async function sendChat(text: string, projectId: string | null, language:
       while ((end = buffer.indexOf('\n\n')) !== -1) {
         const block = buffer.slice(0, end)
         buffer = buffer.slice(end + 2)
-        const data = block.split('\n').filter((line) => line.startsWith('data:')).map((line) => line.slice(5).trimStart()).join('\n')
+        const data = block
+          .split('\n')
+          .filter((line) => line.startsWith('data:'))
+          .map((line) => line.slice(5).trimStart())
+          .join('\n')
         if (!data) continue
-        const event = JSON.parse(data) as { type: string; text?: string; id?: string; name?: string; args?: unknown; ok?: boolean; summary?: string; message?: string; cost?: number }
-        if (event.type === 'text') update(answer.id, (entry) => ({ ...entry, text: entry.text + (event.text ?? '') }))
-        else if (event.type === 'tool') update(answer.id, (entry) => ({ ...entry, tools: [...entry.tools, { id: event.id ?? id(), name: event.name ?? '', args: event.args, state: 'running', summary: '' }] }))
+        const event = JSON.parse(data) as {
+          type: string
+          text?: string
+          id?: string
+          name?: string
+          args?: unknown
+          ok?: boolean
+          summary?: string
+          message?: string
+          cost?: number
+        }
+        if (event.type === 'text')
+          update(answer.id, (entry) => ({ ...entry, text: entry.text + (event.text ?? '') }))
+        else if (event.type === 'tool')
+          update(answer.id, (entry) => ({
+            ...entry,
+            tools: [
+              ...entry.tools,
+              {
+                id: event.id ?? id(),
+                name: event.name ?? '',
+                args: event.args,
+                state: 'running',
+                summary: '',
+              },
+            ],
+          }))
         else if (event.type === 'tool_done')
-          update(answer.id, (entry) => ({ ...entry, tools: entry.tools.map((tool) => (tool.id === event.id ? { ...tool, state: event.ok ? 'ok' : 'error', summary: event.summary ?? '' } : tool)) }))
+          update(answer.id, (entry) => ({
+            ...entry,
+            tools: entry.tools.map((tool) =>
+              tool.id === event.id
+                ? { ...tool, state: event.ok ? 'ok' : 'error', summary: event.summary ?? '' }
+                : tool,
+            ),
+          }))
+        else if (event.type === 'cost') addCost(event.cost)
         else if (event.type === 'done' || event.type === 'error') {
-          useChatStore.setState((current) => ({ cost: current.cost + (event.cost ?? 0) }))
-          if (event.type === 'error') update(answer.id, (entry) => ({ ...entry, error: event.message ?? '' }))
+          addCost(event.cost)
+          if (event.type === 'error')
+            update(answer.id, (entry) => ({ ...entry, error: event.message ?? '' }))
         }
       }
     }
   } catch (error) {
     if (!(error instanceof DOMException && error.name === 'AbortError')) {
-      update(answer.id, (entry) => ({ ...entry, error: error instanceof Error ? error.message : String(error) }))
+      update(answer.id, (entry) => ({
+        ...entry,
+        error: error instanceof Error ? error.message : String(error),
+      }))
     }
   } finally {
     stopper = null
     // a tool still running when the answer stopped never finished
-    update(answer.id, (entry) => ({ ...entry, tools: entry.tools.map((tool) => (tool.state === 'running' ? { ...tool, state: 'error' } : tool)) }))
+    update(answer.id, (entry) => ({
+      ...entry,
+      tools: entry.tools.map((tool) =>
+        tool.state === 'running' ? { ...tool, state: 'error' } : tool,
+      ),
+    }))
     useChatStore.setState({ busy: false })
   }
 }

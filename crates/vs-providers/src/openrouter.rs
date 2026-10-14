@@ -345,6 +345,35 @@ pub fn build(form: &ModelForm, values: &Map<String, Value>) -> Map<String, Value
     body
 }
 
+/// 16-bit little-endian PCM as OpenRouter's speech answers it, put into a WAV file by the rate and the channels
+/// its Content-Type names (`audio/pcm;rate=24000;channels=1`).
+fn wav_of_pcm(content_type: &str, pcm: &[u8]) -> Result<Vec<u8>, ProviderError> {
+    let parameter = |name: &str| {
+        content_type.split(';').filter_map(|part| part.trim().split_once('=')).find(|(key, _)| key.trim().eq_ignore_ascii_case(name)).and_then(|(_, value)| value.trim().parse::<u32>().ok())
+    };
+    if !content_type.trim_start().to_ascii_lowercase().starts_with("audio/pcm") {
+        return Err(ProviderError::Refused(format!("OpenRouter answered the speech as {content_type}, not as PCM")));
+    }
+    let rate = parameter("rate").ok_or_else(|| ProviderError::Refused(format!("OpenRouter's speech did not say its sample rate ({content_type})")))?;
+    let channels = parameter("channels").unwrap_or(1) as u16;
+    let block = channels * 2;
+    let mut wav = Vec::with_capacity(44 + pcm.len());
+    wav.extend_from_slice(b"RIFF");
+    wav.extend_from_slice(&(36 + pcm.len() as u32).to_le_bytes());
+    wav.extend_from_slice(b"WAVEfmt ");
+    wav.extend_from_slice(&16u32.to_le_bytes());
+    wav.extend_from_slice(&1u16.to_le_bytes());
+    wav.extend_from_slice(&channels.to_le_bytes());
+    wav.extend_from_slice(&rate.to_le_bytes());
+    wav.extend_from_slice(&(rate * block as u32).to_le_bytes());
+    wav.extend_from_slice(&block.to_le_bytes());
+    wav.extend_from_slice(&16u16.to_le_bytes());
+    wav.extend_from_slice(b"data");
+    wav.extend_from_slice(&(pcm.len() as u32).to_le_bytes());
+    wav.extend_from_slice(pcm);
+    Ok(wav)
+}
+
 fn split_data_uri(uri: &str) -> (String, String) {
     let Some(rest) = uri.strip_prefix("data:") else { return ("mp3".into(), uri.into()) };
     let (meta, data) = rest.split_once(',').unwrap_or(("audio/mpeg;base64", ""));
@@ -400,15 +429,18 @@ pub async fn submit(http: &Http, key: &str, form: &ModelForm, values: &Map<Strin
             Ok(Submitted::Pending { handle: json!({ "id": id }) })
         }
         "speech" => {
-            body.insert("response_format".into(), json!("mp3"));
+            // pcm is the one format every speech model of OpenRouter answers in (Gemini's take nothing else)
+            body.insert("response_format".into(), json!("pcm"));
             let response = http.client.post(format!("{API}/audio/speech")).bearer_auth(key).json(&Value::Object(body)).send().await?;
             let status = response.status();
             if !status.is_success() {
                 return Err(refusal(status, &response.text().await.unwrap_or_default()));
             }
+            let kind = response.headers().get(reqwest::header::CONTENT_TYPE).and_then(|value| value.to_str().ok()).unwrap_or_default().to_string();
             let bytes = response.bytes().await?;
+            let wav = wav_of_pcm(&kind, &bytes)?;
             use base64::Engine;
-            Ok(Submitted::Done { outputs: vec![Output::Data { data_base64: base64::engine::general_purpose::STANDARD.encode(&bytes), mime: "audio/mpeg".into() }], cost: None })
+            Ok(Submitted::Done { outputs: vec![Output::Data { data_base64: base64::engine::general_purpose::STANDARD.encode(&wav), mime: "audio/wav".into() }], cost: None })
         }
         "transcribe" => {
             let answer = post(http, key, "/audio/transcriptions", &body).await?;
@@ -543,5 +575,11 @@ mod tests {
     #[test]
     fn audio_goes_as_raw_base64_with_its_format() {
         assert_eq!(split_data_uri("data:audio/wav;base64,UklG"), ("wav".to_string(), "UklG".to_string()));
+        let wav = wav_of_pcm("audio/pcm;rate=24000;channels=1", &[1, 0, 2, 0]).unwrap();
+        assert_eq!(&wav[..4], b"RIFF");
+        assert_eq!(u32::from_le_bytes(wav[24..28].try_into().unwrap()), 24000);
+        assert_eq!(&wav[44..], &[1, 0, 2, 0]);
+        assert!(wav_of_pcm("audio/pcm", &[0, 0]).is_err());
+        assert!(wav_of_pcm("audio/mpeg", &[0, 0]).is_err());
     }
 }
