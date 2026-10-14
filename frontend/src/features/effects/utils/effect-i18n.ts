@@ -1,4 +1,5 @@
 import type { TFunction } from 'i18next'
+import { i18n } from '@/i18n'
 import type { GpuEffectDefinition } from '@/infrastructure/gpu-effects'
 
 export function getEffectCategoryLabel(t: TFunction, category: string): string {
@@ -6,7 +7,7 @@ export function getEffectCategoryLabel(t: TFunction, category: string): string {
 }
 
 export function getEffectDefinitionName(definition: GpuEffectDefinition): string {
-  return definition.name
+  return i18n.t(`names.gpuNames.${definition.id}`, { defaultValue: definition.name })
 }
 
 export function getEffectParamLabel(
