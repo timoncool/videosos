@@ -98,6 +98,22 @@ body.canvas-translate-cursor-not-allowed * {
     --tw-ring-shadow: none !important;
   }
 
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']),
+  [role='tab'],
+  [role='menuitem'],
+  [role='option'],
+  label:has(> input[type='checkbox']),
+  select:not(:disabled),
+  summary {
+    cursor: pointer;
+  }
+
+  :is(button, a[href], input, select, textarea, summary, [role='button'], [role='tab'], [role='switch'], [role='checkbox'], [role='radio'], [role='menuitem'], [role='option'], [role='slider']):focus-visible {
+    outline: 2px solid var(--color-accent) !important;
+    outline-offset: 2px;
+  }
+
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-ui);
