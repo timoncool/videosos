@@ -199,6 +199,14 @@
       "job": "Tarea",
       "media": "medio del proyecto",
       "result": "un resultado anterior"
+    },
+    "providerWords": {
+      "billed_by_video_tokens_the_price_is_known_after_the_run": "billed by video tokens; the price is known after the run",
+      "billed_by_tokens_the_price_is_known_after_the_run": "billed by tokens; the price is known after the run",
+      "billed_by_the_length_of_the_recording": "billed by the length of the recording",
+      "how_the_model_should_answer": "How the model should answer",
+      "iso_code_for_example_ru_or_en_empty_to_detect": "ISO code, for example ru or en; empty to detect",
+      "tone_pace_and_emotion_in_words": "Tone, pace and emotion, in words."
     }
   }
 }

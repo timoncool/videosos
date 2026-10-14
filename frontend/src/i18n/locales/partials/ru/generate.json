@@ -199,6 +199,14 @@
       "job": "Задача",
       "media": "медиа проекта",
       "result": "прошлый результат"
+    },
+    "providerWords": {
+      "billed_by_video_tokens_the_price_is_known_after_the_run": "оплата по видеотокенам, цена известна после запуска",
+      "billed_by_tokens_the_price_is_known_after_the_run": "оплата по токенам, цена известна после запуска",
+      "billed_by_the_length_of_the_recording": "оплата по длине записи",
+      "how_the_model_should_answer": "Как модели отвечать",
+      "iso_code_for_example_ru_or_en_empty_to_detect": "Код ISO, например ru или en; пусто — определить самому",
+      "tone_pace_and_emotion_in_words": "Тон, темп и эмоции — словами"
     }
   }
 }

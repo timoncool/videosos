@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { cn } from '@/shared/ui/cn'
 import { generateApi, type Field, type MediaKind, type MediaRef } from '../services/generate-api'
 import { getMediaDragData, mediaLibraryService, useMediaLibraryStore } from '../deps/editor'
-import { fieldLabel } from '../services/field-label'
+import { fieldLabel, providerWords } from '../services/field-label'
 
 /** Drag payload of a finished generation's file. */
 export const OUTPUT_DRAG_TYPE = 'application/x-videosos-output'
@@ -211,7 +211,7 @@ export function FieldControl({ field, value, onChange }: FieldControlProps) {
   const { t } = useTranslation()
   const effective = value ?? field.default
   const label = (
-    <Label className="flex items-baseline gap-1 text-[11px] text-muted-foreground" title={field.description}>
+    <Label className="flex items-baseline gap-1 text-[11px] text-muted-foreground" title={field.description && providerWords(t, field.description)}>
       <span>{fieldLabel(t, field)}</span>
       {field.required && <span className="text-destructive">*</span>}
     </Label>
@@ -225,7 +225,7 @@ export function FieldControl({ field, value, onChange }: FieldControlProps) {
           <Textarea
             value={typeof value === 'string' ? value : ''}
             onChange={(event) => onChange(event.target.value)}
-            placeholder={field.description ?? ''}
+            placeholder={field.description ? providerWords(t, field.description) : ''}
             data-testid={`generate-field-${field.key}`}
             className={cn('resize-y bg-secondary/30 text-xs', field.role === 'prompt' ? 'min-h-24' : 'min-h-14')}
           />

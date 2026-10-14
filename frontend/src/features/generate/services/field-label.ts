@@ -13,3 +13,12 @@ function normalKey(key: string): string {
 export function fieldLabel(t: TFunction, field: Pick<Field, 'key' | 'label'>): string {
   return t(`generate.fields.${normalKey(field.key)}`, { defaultValue: field.label })
 }
+
+/**
+ * A sentence the server wrote in English (a price note, a field's hint) in the window's language when it is
+ * one VideoSOS words itself; a provider's own sentence has no translation and is shown as it came.
+ */
+export function providerWords(t: TFunction, text: string): string {
+  const key = text.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '')
+  return t(`generate.providerWords.${key}`, { defaultValue: text })
+}

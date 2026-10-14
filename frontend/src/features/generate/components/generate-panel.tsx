@@ -44,7 +44,7 @@ import { FieldControl } from './field-control'
 import { improvePrompt } from '../services/prompt-assist'
 import { GenerationHistory } from './generation-history'
 import { ModelPicker } from './model-picker'
-import { fieldLabel } from '../services/field-label'
+import { fieldLabel, providerWords } from '../services/field-label'
 
 const NO_VALUES: Record<string, unknown> = {}
 
@@ -380,7 +380,7 @@ export function GeneratePanel() {
                 </CollapsibleContent>
               </Collapsible>
             )}
-            {form.price.note && <p className="text-[11px] text-muted-foreground">{form.price.note}</p>}
+            {form.price.note && <p className="text-[11px] text-muted-foreground">{providerWords(t, form.price.note)}</p>}
           </div>
         )}
       </div>
