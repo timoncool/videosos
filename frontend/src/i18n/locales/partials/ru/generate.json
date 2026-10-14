@@ -226,6 +226,11 @@
       "interrupted": "VideoSOS закрылся, пока задача отправлялась",
       "details": "Текст ошибки",
       "openKeys": "Открыть ключи"
+    },
+    "rate": {
+      "second": "{{price}} за секунду",
+      "characters": "{{price}} за 1000 символов",
+      "tokens": "{{input}} / {{output}} за 1 млн токенов"
     }
   }
 }

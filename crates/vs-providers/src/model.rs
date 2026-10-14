@@ -99,9 +99,13 @@ pub struct ModelEntry {
     pub created: Option<i64>,
     /// `live` or `deprecated`.
     pub status: String,
-    /// The provider's own price line ("$0.03 per second 720p"), shown as is.
+    /// The provider's own price line, shown as is.
     #[serde(default)]
     pub price: Option<String>,
+    /// The rates VideoSOS works out itself (the lowest per second; per character; per input and output token),
+    /// for the window to word in its language.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub rates: Vec<Rate>,
     #[serde(default)]
     pub thumbnail: Option<String>,
     /// What the provider needs later to build the form: OpenRouter typed parameters, a schema URL, a category.

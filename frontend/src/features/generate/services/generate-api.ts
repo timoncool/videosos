@@ -4,6 +4,7 @@
  * Every failure carries the server's own message, which is shown as is.
  */
 
+import type { TFunction } from 'i18next'
 import { onServerEvent } from '@/infrastructure/desktop/server-events'
 
 export type Provider = 'openrouter' | 'fal' | 'runware'
@@ -53,7 +54,10 @@ export interface ModelEntry {
   tasks: Task[]
   created: number | null
   status: string
+  /** The provider's own price line, shown as is. */
   price: string | null
+  /** Rates VideoSOS worked out itself, worded by the window: `second`, `character`, `token_in` and `token_out`. */
+  rates?: Rate[]
   thumbnail: string | null
 }
 
@@ -283,6 +287,19 @@ export type ServerEvent =
 /** The server's events as the generation panel reads them. */
 export function onGenerateEvent(listener: (event: ServerEvent) => void): () => void {
   return onServerEvent((event) => listener(event as ServerEvent))
+}
+
+/** A model's price line in the window's language: its own rates when VideoSOS worked them out, else the provider's words. */
+export function priceLine(t: TFunction, entry: Pick<ModelEntry, 'price' | 'rates'>): string | null {
+  const rate = (unit: string) => entry.rates?.find((each) => each.unit === unit)
+  const second = rate('second')
+  if (second) return t('generate.rate.second', { price: formatUsd(second.amount) }) + (second.label ? ` · ${second.label}` : '')
+  const character = rate('character')
+  if (character) return t('generate.rate.characters', { price: formatUsd(character.amount * 1000) })
+  const input = rate('token_in')
+  const output = rate('token_out')
+  if (input && output) return t('generate.rate.tokens', { input: formatUsd(input.amount * 1e6), output: formatUsd(output.amount * 1e6) })
+  return entry.price
 }
 
 export function formatUsd(amount: number): string {

@@ -73,6 +73,7 @@ pub async fn catalog(http: &Http) -> Result<Vec<ModelEntry>, ProviderError> {
             created: None,
             status,
             price: None,
+            rates: Vec::new(),
             thumbnail: Some(format!("https://assets.runware.ai/covers/{slug}.jpg")),
             source: json!({ "schema": model["schema"], "slug": slug, "capabilities": capabilities }),
         });

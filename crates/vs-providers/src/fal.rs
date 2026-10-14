@@ -73,6 +73,7 @@ fn entry_of(model: &Value) -> Option<ModelEntry> {
         created,
         status: if meta["status"].as_str() == Some("deprecated") { "deprecated".into() } else { "live".into() },
         price: None,
+        rates: Vec::new(),
         thumbnail: meta["thumbnail_url"].as_str().map(str::to_string),
         source: json!({ "category": category }),
     })

@@ -226,6 +226,11 @@
       "interrupted": "VideoSOS closed while the job was being sent",
       "details": "Error text",
       "openKeys": "Open keys"
+    },
+    "rate": {
+      "second": "{{price}} per second",
+      "characters": "{{price}} per 1000 characters",
+      "tokens": "{{input}} / {{output}} per million tokens"
     }
   }
 }

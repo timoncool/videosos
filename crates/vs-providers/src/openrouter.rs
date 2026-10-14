@@ -55,6 +55,7 @@ pub async fn catalog(http: &Http) -> Result<Vec<ModelEntry>, ProviderError> {
             created: created(model),
             status: "live".into(),
             price: None,
+            rates: Vec::new(),
             thumbnail: None,
             source: json!({ "kind": "image", "parameters": model["supported_parameters"] }),
         });
@@ -81,7 +82,8 @@ pub async fn catalog(http: &Http) -> Result<Vec<ModelEntry>, ProviderError> {
             tasks: vec![task],
             created: created(model),
             status: "live".into(),
-            price: rule.rates.iter().filter(|rate| rate.unit == "second").min_by(|a, b| a.amount.total_cmp(&b.amount)).map(|rate| format!("${} per second ({})", money(rate.amount), rate.label.clone().unwrap_or_default())),
+            price: None,
+            rates: rule.rates.iter().filter(|rate| rate.unit == "second").min_by(|a, b| a.amount.total_cmp(&b.amount)).cloned().into_iter().collect(),
             thumbnail: None,
             source: json!({ "kind": "video", "model": model }),
         });
@@ -103,10 +105,13 @@ pub async fn catalog(http: &Http) -> Result<Vec<ModelEntry>, ProviderError> {
         } else {
             continue;
         };
-        let price = match kind {
-            "speech" => prompt_price.map(|price| format!("${} per 1000 characters", money(price * 1000.0))),
-            "text" => prompt_price.zip(price_number(&model["pricing"]["completion"])).map(|(input, output)| format!("${} / ${} per million tokens", money(input * 1e6), money(output * 1e6))),
-            _ => None,
+        let rates = match kind {
+            "speech" => prompt_price.map(|amount| vec![Rate { amount, unit: "character".into(), label: None }]).unwrap_or_default(),
+            "text" => prompt_price
+                .zip(price_number(&model["pricing"]["completion"]))
+                .map(|(input, output)| vec![Rate { amount: input, unit: "token_in".into(), label: None }, Rate { amount: output, unit: "token_out".into(), label: None }])
+                .unwrap_or_default(),
+            _ => Vec::new(),
         };
         entries.push(ModelEntry {
             provider: Provider::Openrouter,
@@ -116,7 +121,8 @@ pub async fn catalog(http: &Http) -> Result<Vec<ModelEntry>, ProviderError> {
             tasks: vec![task],
             created: created(model),
             status: if model["expiration_date"].is_null() { "live".into() } else { "deprecated".into() },
-            price,
+            price: None,
+            rates,
             thumbnail: None,
             source: json!({ "kind": kind, "voices": model["supported_voices"], "pricing": model["pricing"], "parameters": model["supported_parameters"] }),
         });

@@ -4,7 +4,7 @@ import { ChevronDown, KeyRound, Loader2, RefreshCw, Star } from 'lucide-react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/shared/ui/cn'
-import { generateApi, PROVIDER_LABELS, PROVIDERS, type CatalogAnswer, type Job, type ModelEntry, type Provider, type Task } from '../services/generate-api'
+import { generateApi, priceLine, PROVIDER_LABELS, PROVIDERS, type CatalogAnswer, type Job, type ModelEntry, type Provider, type Task } from '../services/generate-api'
 import { modelKey, useGenerateStore } from '../stores/generate-store'
 
 const NEW_DAYS = 45
@@ -122,7 +122,7 @@ export function ModelPicker({ task, value, onChange, keys }: ModelPickerProps) {
                 {selected?.name ?? value?.id ?? (loading ? t('generate.model.loading') : t('generate.model.choose'))}
               </span>
             </div>
-            {selected?.price && <div className="truncate text-[11px] text-muted-foreground">{selected.price}</div>}
+            {selected && priceLine(t, selected) && <div className="truncate text-[11px] text-muted-foreground">{priceLine(t, selected)}</div>}
           </div>
           <ChevronDown className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
         </button>
@@ -213,7 +213,7 @@ export function ModelPicker({ task, value, onChange, keys }: ModelPickerProps) {
                   </div>
                   {strength && <div className="truncate text-[11px] text-[var(--color-muted)]">{strength}</div>}
                   <div className="tabnum flex gap-2 text-[11px] text-[var(--color-muted)]">
-                    {entry.price && <span className="text-[var(--color-text)]/80">{entry.price}</span>}
+                    {priceLine(t, entry) && <span className="text-[var(--color-text)]/80">{priceLine(t, entry)}</span>}
                     {seconds !== undefined && <span>{t('generate.model.typicalTime', { time: formatSeconds(seconds, i18n.language) })}</span>}
                   </div>
                 </button>
