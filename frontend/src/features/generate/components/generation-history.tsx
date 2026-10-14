@@ -186,27 +186,30 @@ export function GenerationHistory({ jobs, projectId, onReuse }: { jobs: Job[]; p
 
   const comparable = (job: Job) => job.status === 'done' && job.outputs.length > 0
   const pickedJobs = jobs.filter((job) => picked.includes(job.id))
-  const select = "h-7 min-w-0 rounded-md border border-border bg-background px-1.5 text-[11px]"
+  const select = "h-8 min-w-0 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-2 text-[12px] text-[var(--color-text)] focus:border-[var(--color-accent)] focus:outline-none"
+  const icon = "h-7 w-7 p-0 text-[var(--color-muted)] hover:text-[var(--color-text)]"
 
   return (
     <div className="max-h-[45%] min-h-0 space-y-2 overflow-y-auto border-t border-border p-3" data-testid="generate-history">
       <div className="flex items-center gap-1.5">
-        <h3 className="mr-auto text-[11px] font-medium text-muted-foreground">{t('generate.history', { count: jobs.length })}</h3>
+        <h3 className="mr-auto flex items-baseline gap-1.5 whitespace-nowrap text-[11px] uppercase tracking-[0.14em] text-[var(--color-muted)]">
+          {t('generate.historyTitle')}
+          <span className="tabnum tracking-normal">{jobs.length}</span>
+        </h3>
         {picked.length >= 2 && (
-          <Button size="sm" variant="outline" className="h-6 gap-1 px-1.5 text-[10px]" onClick={() => setCompare(true)} data-testid="generate-compare">
+          <Button size="sm" variant="outline" className="h-7 gap-1 px-2 text-[11px]" onClick={() => setCompare(true)} data-testid="generate-compare">
             <Columns2 className="h-3 w-3" />
             {t('generate.compare.button', { count: picked.length })}
           </Button>
         )}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button size="sm" variant="ghost" className="h-6 gap-1 px-1.5 text-[10px]" aria-label={t('generate.sort.label', { order: t(`generate.sort.${order}`) })} title={t('generate.sort.label', { order: t(`generate.sort.${order}`) })}>
-              <ArrowUpDown className="h-3 w-3" />
-              {t(`generate.sort.${order}`)}
+            <Button size="sm" variant="ghost" className={icon} aria-label={t('generate.sort.label', { order: t(`generate.sort.${order}`) })} title={t('generate.sort.label', { order: t(`generate.sort.${order}`) })}>
+              <ArrowUpDown className="h-3.5 w-3.5" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel className="text-[10px] uppercase tracking-wide text-muted-foreground">{t('generate.sort.title')}</DropdownMenuLabel>
+            <DropdownMenuLabel className="text-[11px] uppercase tracking-wide text-muted-foreground">{t('generate.sort.title')}</DropdownMenuLabel>
             {ORDERS.map((each) => (
               <DropdownMenuCheckboxItem key={each} checked={each === order} onCheckedChange={() => choose(each)} className="text-xs">
                 {t(`generate.sort.${each}`)}
@@ -215,17 +218,16 @@ export function GenerationHistory({ jobs, projectId, onReuse }: { jobs: Job[]; p
           </DropdownMenuContent>
         </DropdownMenu>
         {projectId && (
-          <Button size="sm" variant="ghost" className="h-6 gap-1 px-1.5 text-[10px]" onClick={() => setStats(true)} data-testid="generate-stats">
-            <BarChart3 className="h-3 w-3" />
-            {t('generate.stats.button')}
+          <Button size="sm" variant="ghost" className={icon} onClick={() => setStats(true)} aria-label={t('generate.stats.button')} title={t('generate.stats.button')} data-testid="generate-stats">
+            <BarChart3 className="h-3.5 w-3.5" />
           </Button>
         )}
       </div>
       <div className="relative">
-        <Search className="pointer-events-none absolute left-2 top-1/2 h-3 w-3 -translate-y-1/2 text-muted-foreground" />
-        <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t('generate.filter.search')} className="h-7 pl-6 text-[11px]" />
+        <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--color-muted)]" />
+        <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t('generate.filter.search')} aria-label={t('generate.filter.search')} className="h-8 pl-8 text-[12px]" />
       </div>
-      <div className="grid grid-cols-2 gap-1">
+      <div className="grid grid-cols-2 gap-1.5">
         <select value={task} onChange={(event) => setTask(event.target.value as Task | 'all')} className={select} aria-label={t('generate.filter.task')}>
           <option value="all">{t('generate.filter.allTasks')}</option>
           {TASKS.map((each) => (

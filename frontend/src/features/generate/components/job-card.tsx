@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ArrowDownToLine, Ban, CircleAlert, Copy, Forward, Loader2, RotateCcw, SquarePen, Trash2 } from 'lucide-react'
+import { ArrowDownToLine, Ban, Check, CircleAlert, Copy, Forward, Loader2, RotateCcw, SquarePen, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { cn } from '@/shared/ui/cn'
@@ -116,7 +116,7 @@ function UseAs({ job, output }: { job: Job; output: OutputFile }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button size="sm" variant="ghost" className="h-6 px-1.5 text-[10px]" data-testid="generate-use-as">
+        <Button size="sm" variant="ghost" className="h-6 px-1.5 text-[11px]" data-testid="generate-use-as">
           <Forward className="mr-1 h-3 w-3" />
           {t('generate.use.button')}
         </Button>
@@ -150,14 +150,17 @@ export function JobCard({ job, onReuse, selected, onSelect }: JobCardProps) {
     <div className="space-y-1.5 rounded-lg border border-border bg-secondary/20 p-2" data-testid="generate-job">
       <div className="flex items-center gap-1.5">
         {onSelect && (
-          <input
-            type="checkbox"
-            checked={selected === true}
-            onChange={(event) => onSelect(event.target.checked)}
-            aria-label={t('generate.compare.pick')}
-            title={t('generate.compare.pick')}
-            className="h-3.5 w-3.5 accent-[var(--color-accent)]"
-          />
+          <label className="relative grid h-3.5 w-3.5 shrink-0 cursor-pointer place-items-center">
+            <input
+              type="checkbox"
+              checked={selected === true}
+              onChange={(event) => onSelect(event.target.checked)}
+              aria-label={t('generate.compare.pick')}
+              title={t('generate.compare.pick')}
+              className="peer h-3.5 w-3.5 cursor-pointer appearance-none rounded-[3px] border border-[var(--color-border)] bg-[var(--color-surface)] checked:border-[var(--color-accent)] checked:bg-[var(--color-accent)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--color-accent)]"
+            />
+            <Check className="pointer-events-none absolute h-2.5 w-2.5 text-[var(--color-on-accent)] opacity-0 peer-checked:opacity-100" strokeWidth={3} />
+          </label>
         )}
         <ProviderBadge provider={job.provider} />
         <span className="min-w-0 flex-1 truncate text-[11px] font-medium" title={job.model}>
@@ -165,10 +168,10 @@ export function JobCard({ job, onReuse, selected, onSelect }: JobCardProps) {
         </span>
         <span
           className={cn(
-            'shrink-0 text-[10px]',
-            job.status === 'done' && 'text-emerald-400',
+            'shrink-0 text-[11px]',
+            job.status === 'done' && 'text-[var(--color-accent)]',
             job.status === 'failed' && 'text-destructive',
-            running && 'text-amber-300',
+            running && 'text-[var(--color-warn)]',
             job.status === 'cancelled' && 'text-muted-foreground',
           )}
         >
@@ -177,21 +180,21 @@ export function JobCard({ job, onReuse, selected, onSelect }: JobCardProps) {
           {running && job.progress !== null && ` ${Math.round(job.progress * 100)}%`}
         </span>
       </div>
-      {typeof prompt === 'string' && <p className="line-clamp-2 text-[10px] text-muted-foreground">{prompt}</p>}
-      <time dateTime={new Date(job.created).toISOString()} title={exactMoment(new Date(job.created), i18n.language)} className="block text-[10px] text-muted-foreground">
+      {typeof prompt === 'string' && <p className="line-clamp-2 text-[11px] text-muted-foreground">{prompt}</p>}
+      <time dateTime={new Date(job.created).toISOString()} title={exactMoment(new Date(job.created), i18n.language)} className="block text-[11px] text-muted-foreground">
         {relativeMoment(new Date(job.created), i18n.language)}
       </time>
       {job.outputs.map((output) => (
         <Preview key={output.index} job={job} output={output} />
       ))}
       {job.error && (
-        <p className="flex gap-1 text-[10px] text-destructive">
+        <p className="flex gap-1 text-[11px] text-destructive">
           <CircleAlert className="mt-px h-3 w-3 shrink-0" />
           <span className="break-words">{job.error}</span>
         </p>
       )}
       <div className="flex flex-wrap items-center gap-1">
-        <span className="mr-auto text-[10px] text-muted-foreground" title={job.cost_source === 'estimate' ? t('generate.cost.estimated') : t('generate.cost.billed')}>
+        <span className="mr-auto text-[11px] text-muted-foreground" title={job.cost_source === 'estimate' ? t('generate.cost.estimated') : t('generate.cost.billed')}>
           {job.cost !== null
             ? `${job.cost_source === 'estimate' ? '≈' : ''}${formatUsd(job.cost)}`
             : job.estimate !== null
@@ -199,7 +202,7 @@ export function JobCard({ job, onReuse, selected, onSelect }: JobCardProps) {
               : ''}
         </span>
         {running && (
-          <Button size="sm" variant="ghost" className="h-6 px-1.5 text-[10px]" onClick={() => attempt(() => generateApi.cancel(job.id))}>
+          <Button size="sm" variant="ghost" className="h-6 px-1.5 text-[11px]" onClick={() => attempt(() => generateApi.cancel(job.id))}>
             <Ban className="mr-1 h-3 w-3" />
             {t('generate.actions.cancel')}
           </Button>
@@ -208,7 +211,7 @@ export function JobCard({ job, onReuse, selected, onSelect }: JobCardProps) {
           <Button
             size="sm"
             variant="ghost"
-            className="h-6 px-1.5 text-[10px]"
+            className="h-6 px-1.5 text-[11px]"
             title={t('generate.actions.placeHint')}
             onClick={() => attempt(() => job.imported.forEach((mediaId) => placeMediaAtPlayhead(mediaId)))}
           >
@@ -218,11 +221,11 @@ export function JobCard({ job, onReuse, selected, onSelect }: JobCardProps) {
         )}
         {text && (
           <>
-            <Button size="sm" variant="ghost" className="h-6 px-1.5 text-[10px]" onClick={() => attempt(() => navigator.clipboard.writeText(text))}>
+            <Button size="sm" variant="ghost" className="h-6 px-1.5 text-[11px]" onClick={() => attempt(() => navigator.clipboard.writeText(text))}>
               <Copy className="mr-1 h-3 w-3" />
               {t('generate.actions.copy')}
             </Button>
-            <Button size="sm" variant="ghost" className="h-6 px-1.5 text-[10px]" onClick={() => attempt(() => placeTextAtPlayhead(text))}>
+            <Button size="sm" variant="ghost" className="h-6 px-1.5 text-[11px]" onClick={() => attempt(() => placeTextAtPlayhead(text))}>
               <ArrowDownToLine className="mr-1 h-3 w-3" />
               {t('generate.actions.placeText')}
             </Button>
@@ -231,18 +234,18 @@ export function JobCard({ job, onReuse, selected, onSelect }: JobCardProps) {
         {job.status === 'done' && job.outputs[0] && <UseAs job={job} output={job.outputs[0]} />}
         {!running && (
           <>
-            <Button size="sm" variant="ghost" className="h-6 px-1.5 text-[10px]" title={t('generate.actions.reuseHint')} onClick={() => onReuse(job)}>
+            <Button size="sm" variant="ghost" className="h-6 px-1.5 text-[11px]" title={t('generate.actions.reuseHint')} onClick={() => onReuse(job)}>
               <SquarePen className="mr-1 h-3 w-3" />
               {t('generate.actions.reuse')}
             </Button>
-            <Button size="sm" variant="ghost" className="h-6 px-1.5 text-[10px]" onClick={() => attempt(() => generateApi.retry(job.id))}>
+            <Button size="sm" variant="ghost" className="h-6 px-1.5 text-[11px]" onClick={() => attempt(() => generateApi.retry(job.id))}>
               <RotateCcw className="mr-1 h-3 w-3" />
               {t('generate.actions.again')}
             </Button>
             <Button
               size="sm"
               variant="ghost"
-              className="h-6 px-1.5 text-[10px] text-muted-foreground"
+              className="h-6 px-1.5 text-[11px] text-muted-foreground"
               title={t('generate.actions.forgetHint')}
               onClick={() => attempt(() => generateApi.remove(job.id))}
             >

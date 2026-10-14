@@ -101,7 +101,7 @@ export function ModelPicker({ task, value, onChange, keys }: ModelPickerProps) {
                 {selected?.name ?? value?.id ?? (loading ? t('generate.model.loading') : t('generate.model.choose'))}
               </span>
             </div>
-            {selected?.price && <div className="truncate text-[10px] text-muted-foreground">{selected.price}</div>}
+            {selected?.price && <div className="truncate text-[11px] text-muted-foreground">{selected.price}</div>}
           </div>
           <ChevronDown className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
         </button>
@@ -147,11 +147,11 @@ export function ModelPicker({ task, value, onChange, keys }: ModelPickerProps) {
           </div>
           {answer &&
             PROVIDERS.filter((each) => answer.providers[each]?.error).map((each) => (
-              <p key={each} className="text-[10px] text-destructive">
+              <p key={each} className="text-[11px] text-destructive">
                 {PROVIDER_LABELS[each]}: {answer.providers[each]?.error}
               </p>
             ))}
-          {error && <p className="text-[10px] text-destructive">{error}</p>}
+          {error && <p className="text-[11px] text-destructive">{error}</p>}
         </div>
         <div className="max-h-[420px] overflow-y-auto py-1">
           {loading && !answer && (
@@ -191,7 +191,7 @@ export function ModelPicker({ task, value, onChange, keys }: ModelPickerProps) {
                     <KeyRound className="ml-auto h-3 w-3 shrink-0 text-amber-400" aria-label={t('generate.keys.missing')} />
                   )}
                 </div>
-                <div className="flex gap-2 text-[10px] text-muted-foreground">
+                <div className="flex gap-2 text-[11px] text-muted-foreground">
                   <span className="truncate">{entry.id}</span>
                   {entry.price && <span className="ml-auto shrink-0">{entry.price}</span>}
                 </div>

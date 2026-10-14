@@ -44,6 +44,7 @@ import { FieldControl } from './field-control'
 import { improvePrompt } from '../services/prompt-assist'
 import { GenerationHistory } from './generation-history'
 import { ModelPicker } from './model-picker'
+import { fieldLabel } from '../services/field-label'
 
 const NO_VALUES: Record<string, unknown> = {}
 
@@ -117,13 +118,13 @@ function KeyPrompt({ provider }: { provider: Provider }) {
         href={KEY_PAGES[provider]}
         target="_blank"
         rel="noreferrer"
-        className="inline-flex items-center gap-1 text-[10px] text-amber-200 underline"
+        className="inline-flex items-center gap-1 text-[11px] text-amber-200 underline"
       >
         {t('generate.keys.getOne', { provider: PROVIDER_LABELS[provider] })}
         <ExternalLink className="h-3 w-3" />
       </a>
       {state.message && (
-        <p className={cn('text-[10px]', state.ok ? 'text-emerald-300' : 'text-destructive')}>{state.message}</p>
+        <p className={cn('text-[11px]', state.ok ? 'text-emerald-300' : 'text-destructive')}>{state.message}</p>
       )}
     </div>
   )
@@ -273,7 +274,7 @@ export function GeneratePanel() {
             {t('generate.serverError', { reason: serverError })}
           </p>
         )}
-        <div className="grid grid-cols-4 gap-1">
+        <div className="grid grid-cols-4 gap-1.5">
           {TASKS.map((each) => {
             const Icon = TASK_ICONS[each]
             return (
@@ -282,15 +283,16 @@ export function GeneratePanel() {
                 type="button"
                 onClick={() => useGenerateStore.getState().setTask(each)}
                 data-testid={`generate-task-${each}`}
+                aria-pressed={task === each}
                 className={cn(
-                  'flex flex-col items-center gap-0.5 rounded-md border px-1 py-1.5 text-[10px] leading-tight transition-colors',
+                  'flex h-[52px] flex-col items-center justify-center gap-1 rounded-md border px-1 text-[11px] leading-[1.15] transition-colors',
                   task === each
-                    ? 'border-primary bg-primary/15 text-foreground'
-                    : 'border-border text-muted-foreground hover:bg-secondary/50',
+                    ? 'border-[var(--color-accent)] bg-[var(--color-accent)]/10 text-[var(--color-text)]'
+                    : 'border-[var(--color-border)] text-[var(--color-muted)] hover:border-[var(--color-overlay)] hover:text-[var(--color-text)]',
                 )}
               >
-                <Icon className="h-3.5 w-3.5" />
-                <span className="text-center">{t(`generate.tasks.${each}`)}</span>
+                <Icon className={cn('h-4 w-4 shrink-0', task === each && 'text-[var(--color-accent)]')} />
+                <span className="line-clamp-2 text-center">{t(`generate.tasks.${each}`)}</span>
               </button>
             )
           })}
@@ -334,7 +336,7 @@ export function GeneratePanel() {
                           .catch((error: unknown) => setImproveError(error instanceof Error ? error.message : String(error)))
                           .finally(() => setImproving(false))
                       }}
-                      className="inline-flex items-center gap-1 text-[10px] text-muted-foreground hover:text-foreground disabled:opacity-40"
+                      className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground disabled:opacity-40"
                     >
                       {improving ? <Loader2 className="h-3 w-3 animate-spin" /> : <WandSparkles className="h-3 w-3" />}
                       {t('generate.improve.button')}
@@ -346,7 +348,7 @@ export function GeneratePanel() {
                           useGenerateStore.getState().setValue(model, field.key, previousPrompt.text)
                           setPreviousPrompt(null)
                         }}
-                        className="inline-flex items-center gap-1 text-[10px] text-muted-foreground hover:text-foreground"
+                        className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground"
                       >
                         <Undo2 className="h-3 w-3" />
                         {t('generate.improve.undo')}
@@ -354,7 +356,7 @@ export function GeneratePanel() {
                     )}
                   </div>
                 )}
-                {field.role === 'prompt' && improveError && <p className="text-[10px] text-destructive">{improveError}</p>}
+                {field.role === 'prompt' && improveError && <p className="text-[11px] text-destructive">{improveError}</p>}
               </div>
             ))}
             {more.length > 0 && (
@@ -375,7 +377,7 @@ export function GeneratePanel() {
                 </CollapsibleContent>
               </Collapsible>
             )}
-            {form.price.note && <p className="text-[10px] text-muted-foreground">{form.price.note}</p>}
+            {form.price.note && <p className="text-[11px] text-muted-foreground">{form.price.note}</p>}
           </div>
         )}
       </div>
@@ -417,13 +419,13 @@ export function GeneratePanel() {
           </span>
         </Button>
         {missing.length > 0 && (
-          <p className="text-[10px] text-muted-foreground">
-            {t('generate.form.missing', { fields: missing.map((field) => field.label).join(', ') })}
+          <p className="text-[11px] text-muted-foreground">
+            {t('generate.form.missing', { fields: missing.map((field) => fieldLabel(t, field)).join(', ') })}
           </p>
         )}
         {submitError && <p className="text-[11px] text-destructive">{submitError}</p>}
         {estimateError && (
-          <p className="text-[10px] text-destructive">{t('generate.cost.failed', { reason: estimateError })}</p>
+          <p className="text-[11px] text-destructive">{t('generate.cost.failed', { reason: estimateError })}</p>
         )}
       </div>
 

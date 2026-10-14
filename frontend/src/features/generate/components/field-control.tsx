@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { cn } from '@/shared/ui/cn'
 import { generateApi, type Field, type MediaKind, type MediaRef } from '../services/generate-api'
 import { getMediaDragData, mediaLibraryService, useMediaLibraryStore } from '../deps/editor'
+import { fieldLabel } from '../services/field-label'
 
 /** Drag payload of a finished generation's file. */
 export const OUTPUT_DRAG_TYPE = 'application/x-videosos-output'
@@ -185,12 +186,12 @@ function MediaSlot({
           </Popover>
         )}
         {value.length === 0 && (
-          <span className="text-[10px] text-muted-foreground">
+          <span className="text-[11px] text-muted-foreground">
             {t('generate.form.dropHere', { kind: t(`generate.media.${field.media}`) })}
           </span>
         )}
       </div>
-      {error && <p className="text-[10px] text-destructive">{error}</p>}
+      {error && <p className="text-[11px] text-destructive">{error}</p>}
     </div>
   )
 }
@@ -211,7 +212,7 @@ export function FieldControl({ field, value, onChange }: FieldControlProps) {
   const effective = value ?? field.default
   const label = (
     <Label className="flex items-baseline gap-1 text-[11px] text-muted-foreground" title={field.description}>
-      <span>{field.label}</span>
+      <span>{fieldLabel(t, field)}</span>
       {field.required && <span className="text-destructive">*</span>}
     </Label>
   )
@@ -268,7 +269,7 @@ export function FieldControl({ field, value, onChange }: FieldControlProps) {
       return (
         <div className="flex items-center justify-between gap-2 py-0.5">
           {label}
-          <Switch checked={effective === true} onCheckedChange={(checked) => onChange(checked)} aria-label={field.label} />
+          <Switch checked={effective === true} onCheckedChange={(checked) => onChange(checked)} aria-label={fieldLabel(t, field)} />
         </div>
       )
     case 'select':
