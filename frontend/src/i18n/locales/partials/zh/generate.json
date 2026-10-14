@@ -207,6 +207,22 @@
       "how_the_model_should_answer": "模型应如何回答",
       "iso_code_for_example_ru_or_en_empty_to_detect": "ISO 代码，例如 ru 或 en；留空则自动检测",
       "tone_pace_and_emotion_in_words": "用文字描述语气、节奏和情绪。"
+    },
+    "jobError": {
+      "no_key": "没有 {{provider}} 密钥",
+      "catalog": "无法读取提供商的模型",
+      "invalid": "表单中的值与模型不匹配",
+      "refused": "提供商拒绝了请求",
+      "busy": "提供商繁忙——任务未发送，请重新发送",
+      "network": "无法连接到提供商",
+      "provider_failed": "提供商未能完成任务",
+      "lost_contact": "与提供商的连接已中断",
+      "too_long": "任务运行时间过长",
+      "download_failed": "结果下载失败",
+      "storage": "结果未能写入磁盘",
+      "interrupted": "任务发送过程中 VideoSOS 已关闭",
+      "details": "错误信息",
+      "openKeys": "打开密钥"
     }
   }
 }

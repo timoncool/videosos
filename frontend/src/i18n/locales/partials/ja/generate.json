@@ -207,6 +207,22 @@
       "how_the_model_should_answer": "モデルの応答のしかた",
       "iso_code_for_example_ru_or_en_empty_to_detect": "ISOコード(例: ruまたはen)。空欄の場合は自動検出",
       "tone_pace_and_emotion_in_words": "トーン、テンポ、感情を言葉で指定します。"
+    },
+    "jobError": {
+      "no_key": "{{provider}}のキーがありません",
+      "catalog": "プロバイダーのモデルを読み込めませんでした",
+      "invalid": "フォームの値がモデルに適合しません",
+      "refused": "プロバイダーがリクエストを拒否しました",
+      "busy": "プロバイダーがビジー状態です。ジョブは送信されていません。もう一度送信してください",
+      "network": "プロバイダーに接続できません",
+      "provider_failed": "プロバイダーがジョブを実行できませんでした",
+      "lost_contact": "プロバイダーとの接続が失われました",
+      "too_long": "ジョブの実行時間が長すぎました",
+      "download_failed": "結果をダウンロードできませんでした",
+      "storage": "結果をディスクに書き込めませんでした",
+      "interrupted": "ジョブの送信中にVideoSOSが終了しました",
+      "details": "エラーの内容",
+      "openKeys": "キーを開く"
     }
   }
 }

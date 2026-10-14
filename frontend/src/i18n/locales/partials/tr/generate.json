@@ -207,6 +207,22 @@
       "how_the_model_should_answer": "Modelin nasıl yanıt vermesi gerektiği",
       "iso_code_for_example_ru_or_en_empty_to_detect": "ISO kodu, örneğin ru veya en; algılamak için boş bırakın",
       "tone_pace_and_emotion_in_words": "Ton, tempo ve duygu, sözcüklerle."
+    },
+    "jobError": {
+      "no_key": "{{provider}} anahtarı yok",
+      "catalog": "Sağlayıcının modeli okunamadı",
+      "invalid": "Formdaki değerler modele uymuyor",
+      "refused": "Sağlayıcı isteği reddetti",
+      "busy": "Sağlayıcı meşgul - iş gönderilmedi, yeniden gönderin",
+      "network": "Sağlayıcıyla bağlantı yok",
+      "provider_failed": "Sağlayıcı işi yapamadı",
+      "lost_contact": "Sağlayıcıyla bağlantı kesildi",
+      "too_long": "İş çok uzun sürdü",
+      "download_failed": "Sonuç indirilemedi",
+      "storage": "Sonuç diske yazılamadı",
+      "interrupted": "İş gönderilirken VideoSOS kapandı",
+      "details": "Hata metni",
+      "openKeys": "Anahtarları aç"
     }
   }
 }

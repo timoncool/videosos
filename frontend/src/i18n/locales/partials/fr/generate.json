@@ -207,6 +207,22 @@
       "how_the_model_should_answer": "Comment le modèle doit répondre",
       "iso_code_for_example_ru_or_en_empty_to_detect": "Code ISO, par exemple ru ou en ; vide pour détecter",
       "tone_pace_and_emotion_in_words": "Ton, rythme et émotion, en mots."
+    },
+    "jobError": {
+      "no_key": "Aucune clé {{provider}}",
+      "catalog": "Le modèle du fournisseur n’a pas pu être lu",
+      "invalid": "Les valeurs du formulaire ne conviennent pas au modèle",
+      "refused": "Le fournisseur a refusé la requête",
+      "busy": "Le fournisseur est occupé - la tâche n’a pas été envoyée, renvoyez-la",
+      "network": "Pas de connexion au fournisseur",
+      "provider_failed": "Le fournisseur n’a pas pu exécuter la tâche",
+      "lost_contact": "La connexion avec le fournisseur a été perdue",
+      "too_long": "La tâche a duré trop longtemps",
+      "download_failed": "Le résultat n’a pas pu être téléchargé",
+      "storage": "Le résultat n’a pas été écrit sur le disque",
+      "interrupted": "VideoSOS s’est fermé pendant l’envoi de la tâche",
+      "details": "Texte de l’erreur",
+      "openKeys": "Ouvrir les clés"
     }
   }
 }

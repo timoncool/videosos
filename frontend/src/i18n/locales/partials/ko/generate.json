@@ -207,6 +207,22 @@
       "how_the_model_should_answer": "모델이 응답하는 방식",
       "iso_code_for_example_ru_or_en_empty_to_detect": "ISO 코드(예: ru 또는 en). 비워 두면 자동 감지합니다",
       "tone_pace_and_emotion_in_words": "말투, 속도, 감정을 말로 설명하세요."
+    },
+    "jobError": {
+      "no_key": "{{provider}} 키가 없습니다",
+      "catalog": "공급자의 모델을 읽을 수 없습니다",
+      "invalid": "양식의 값이 모델과 맞지 않습니다",
+      "refused": "공급자가 요청을 거부했습니다",
+      "busy": "공급자가 바쁩니다. 작업이 전송되지 않았으니 다시 전송하세요",
+      "network": "공급자에 연결할 수 없습니다",
+      "provider_failed": "공급자가 작업을 수행하지 못했습니다",
+      "lost_contact": "공급자와의 연결이 끊어졌습니다",
+      "too_long": "작업이 너무 오래 걸렸습니다",
+      "download_failed": "결과를 다운로드하지 못했습니다",
+      "storage": "결과를 디스크에 쓰지 못했습니다",
+      "interrupted": "작업을 전송하는 중에 VideoSOS가 종료되었습니다",
+      "details": "오류 내용",
+      "openKeys": "키 열기"
     }
   }
 }

@@ -207,6 +207,22 @@
       "how_the_model_should_answer": "Cómo debe responder el modelo",
       "iso_code_for_example_ru_or_en_empty_to_detect": "Código ISO, por ejemplo ru o en; vacío para detectar",
       "tone_pace_and_emotion_in_words": "Tono, ritmo y emoción, con palabras."
+    },
+    "jobError": {
+      "no_key": "Falta la clave de {{provider}}",
+      "catalog": "No se pudo leer el modelo del proveedor",
+      "invalid": "Los valores del formulario no son válidos para el modelo",
+      "refused": "El proveedor rechazó la solicitud",
+      "busy": "El proveedor está ocupado: la tarea no se envió, vuelve a enviarla",
+      "network": "Sin conexión con el proveedor",
+      "provider_failed": "El proveedor no pudo realizar la tarea",
+      "lost_contact": "Se perdió la conexión con el proveedor",
+      "too_long": "La tarea tardó demasiado",
+      "download_failed": "No se pudo descargar el resultado",
+      "storage": "El resultado no se escribió en el disco",
+      "interrupted": "VideoSOS se cerró mientras se enviaba la tarea",
+      "details": "Texto del error",
+      "openKeys": "Abrir claves"
     }
   }
 }

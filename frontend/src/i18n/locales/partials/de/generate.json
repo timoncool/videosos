@@ -207,6 +207,22 @@
       "how_the_model_should_answer": "Wie das Modell antworten soll",
       "iso_code_for_example_ru_or_en_empty_to_detect": "ISO-Code, z. B. ru oder en; leer lassen für automatische Erkennung",
       "tone_pace_and_emotion_in_words": "Ton, Tempo und Emotion in Worten."
+    },
+    "jobError": {
+      "no_key": "Kein {{provider}}-Schlüssel",
+      "catalog": "Das Modell des Anbieters konnte nicht gelesen werden",
+      "invalid": "Die Werte des Formulars passen nicht zum Modell",
+      "refused": "Der Anbieter hat die Anfrage abgelehnt",
+      "busy": "Der Anbieter ist ausgelastet – der Auftrag wurde nicht gesendet, bitte erneut senden",
+      "network": "Keine Verbindung zum Anbieter",
+      "provider_failed": "Der Anbieter konnte den Auftrag nicht ausführen",
+      "lost_contact": "Die Verbindung zum Anbieter ist abgebrochen",
+      "too_long": "Der Auftrag hat zu lange gedauert",
+      "download_failed": "Das Ergebnis konnte nicht heruntergeladen werden",
+      "storage": "Das Ergebnis wurde nicht auf die Festplatte geschrieben",
+      "interrupted": "VideoSOS wurde beendet, während der Auftrag gesendet wurde",
+      "details": "Fehlertext",
+      "openKeys": "Schlüssel öffnen"
     }
   }
 }

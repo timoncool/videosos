@@ -207,6 +207,22 @@
       "how_the_model_should_answer": "Como o modelo deve responder",
       "iso_code_for_example_ru_or_en_empty_to_detect": "Código ISO, por exemplo ru ou en; vazio para detectar",
       "tone_pace_and_emotion_in_words": "Tom, ritmo e emoção, em palavras."
+    },
+    "jobError": {
+      "no_key": "Sem chave da {{provider}}",
+      "catalog": "Não foi possível ler o modelo do provedor",
+      "invalid": "Os valores do formulário não se adequam ao modelo",
+      "refused": "O provedor recusou a solicitação",
+      "busy": "O provedor está ocupado - a tarefa não foi enviada, envie novamente",
+      "network": "Sem conexão com o provedor",
+      "provider_failed": "O provedor não conseguiu executar a tarefa",
+      "lost_contact": "A conexão com o provedor foi perdida",
+      "too_long": "A tarefa demorou demais",
+      "download_failed": "O resultado não foi baixado",
+      "storage": "O resultado não foi gravado no disco",
+      "interrupted": "O VideoSOS foi fechado enquanto a tarefa era enviada",
+      "details": "Texto do erro",
+      "openKeys": "Abrir chaves"
     }
   }
 }
