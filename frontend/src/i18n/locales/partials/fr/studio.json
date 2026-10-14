@@ -160,5 +160,41 @@
     "ace": "Studio de musique IA : chansons, voix, reprises, clips",
     "bulka": "Musique en live coding avec un agent IA",
     "dungeon": "Un jeu de rôle IA local"
+  },
+  "topbar": {
+    "projects": "Projets",
+    "new": "Nouveau",
+    "newSub": "projet",
+    "newTitle": "Commencer un nouveau projet",
+    "help": "Aide"
+  },
+  "status": {
+    "idle": "Prêt"
+  },
+  "start": {
+    "eyebrow": "OpenRouter · fal · Runware · MCP",
+    "title": "Générez et montez la vidéo dans une seule fenêtre.",
+    "lead": "Créez images, vidéo, musique, voix et sons avec les meilleurs modèles sur vos propres clés, puis montez-les en une vidéo finie sur une timeline multipiste.",
+    "cardTitle": "Commencer un projet",
+    "cardText": "Un projet garde ses médias, ses générations et sa timeline ensemble sur cet ordinateur.",
+    "projects": "Projets",
+    "features": {
+      "generate": {
+        "title": "Toutes les modalités",
+        "text": "Images, vidéo, lip-sync, musique, voix, sons et texte"
+      },
+      "edit": {
+        "title": "Éditeur multipiste",
+        "text": "Timeline, images clés, effets, sous-titres, export MP4"
+      },
+      "agent": {
+        "title": "Agent IA via MCP",
+        "text": "Claude et d'autres appuient sur les mêmes boutons que vous"
+      },
+      "yours": {
+        "title": "Vos clés, vos fichiers",
+        "text": "Vous payez les fournisseurs directement ; rien ne passe par nous"
+      }
+    }
   }
 }

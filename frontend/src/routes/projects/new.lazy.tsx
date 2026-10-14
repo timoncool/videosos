@@ -1,14 +1,10 @@
-import { createLazyFileRoute, Link, useNavigate } from '@tanstack/react-router'
+import { createLazyFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { createLogger } from '@/shared/logging/logger'
 import { InlineCreateProjectForm } from '@/features/projects/components/project-form'
 import { useCreateProject } from '@/features/projects/hooks/use-project-actions'
-import { FreeCutLogo } from '@/components/brand/freecut-logo'
-import { Button } from '@/components/ui/button'
-import { Github, Send } from 'lucide-react'
-import { DISCORD_INVITE_URL, REPOSITORY_URL } from '@/config/community'
 import type { ProjectFormData } from '@/features/projects/utils/validation'
 
 const logger = createLogger('NewProject')
@@ -48,36 +44,8 @@ function NewProject() {
 
   return (
     <div className="min-h-full bg-background">
-      {/* Header */}
-      <div className="panel-header border-b border-border">
-        <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
-          <Link to="/">
-            <FreeCutLogo variant="full" size="md" className="hover:opacity-80 transition-opacity" />
-          </Link>
-          <div className="flex items-center gap-3">
-            <Button variant="outline" size="lg" className="gap-2" asChild>
-              <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer">
-                <Send className="w-4 h-4" />
-                Telegram
-              </a>
-            </Button>
-            <Button variant="outline" size="icon" className="h-10 w-10" asChild>
-              <a
-                href={REPOSITORY_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                data-tooltip={t('projects.viewOnGitHub')}
-                data-tooltip-side="left"
-              >
-                <Github className="w-5 h-5" />
-              </a>
-            </Button>
-          </div>
-        </div>
-      </div>
-
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="mx-auto max-w-[1200px] px-8 py-8">
         <InlineCreateProjectForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
       </div>
     </div>

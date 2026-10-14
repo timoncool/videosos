@@ -160,5 +160,41 @@
     "ace": "AI 音乐工作室：歌曲、人声、翻唱、短片",
     "bulka": "与 AI 助手实时编码音乐",
     "dungeon": "本地 AI 角色扮演游戏"
+  },
+  "topbar": {
+    "projects": "项目",
+    "new": "新建",
+    "newSub": "项目",
+    "newTitle": "开始新项目",
+    "help": "帮助"
+  },
+  "status": {
+    "idle": "就绪"
+  },
+  "start": {
+    "eyebrow": "OpenRouter · fal · Runware · MCP",
+    "title": "在一个窗口中生成并剪辑视频。",
+    "lead": "用你自己的密钥调用最好的模型生成图片、视频、音乐、人声和音效，再在多轨时间线上剪成成片。",
+    "cardTitle": "开始一个项目",
+    "cardText": "项目把媒体、生成结果和时间线一起保存在这台电脑上。",
+    "projects": "项目",
+    "features": {
+      "generate": {
+        "title": "全部模态",
+        "text": "图片、视频、口型同步、音乐、人声、音效和文本"
+      },
+      "edit": {
+        "title": "多轨编辑器",
+        "text": "时间线、关键帧、特效、字幕、导出 MP4"
+      },
+      "agent": {
+        "title": "通过 MCP 的 AI 代理",
+        "text": "Claude 等代理按的就是你按的那些按钮"
+      },
+      "yours": {
+        "title": "你的密钥，你的文件",
+        "text": "直接付费给服务商，不经过我们"
+      }
+    }
   }
 }

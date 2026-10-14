@@ -160,5 +160,41 @@
     "ace": "KI-Musikstudio: Songs, Gesang, Cover, Clips",
     "bulka": "Live-Coding-Musik mit KI-Agent",
     "dungeon": "Ein lokales KI-Rollenspiel"
+  },
+  "topbar": {
+    "projects": "Projekte",
+    "new": "Neu",
+    "newSub": "Projekt",
+    "newTitle": "Ein neues Projekt beginnen",
+    "help": "Hilfe"
+  },
+  "status": {
+    "idle": "Bereit"
+  },
+  "start": {
+    "eyebrow": "OpenRouter · fal · Runware · MCP",
+    "title": "Video in einem Fenster generieren und schneiden.",
+    "lead": "Erstelle Bilder, Videos, Musik, Stimmen und Klänge mit den besten Modellen auf deinen eigenen Schlüsseln und schneide sie auf einer Mehrspur-Zeitleiste zu einem fertigen Video.",
+    "cardTitle": "Ein Projekt beginnen",
+    "cardText": "Ein Projekt hält Medien, Generierungen und Zeitleiste zusammen auf diesem Computer.",
+    "projects": "Projekte",
+    "features": {
+      "generate": {
+        "title": "Alle Modalitäten",
+        "text": "Bilder, Video, Lip-Sync, Musik, Stimmen, Klänge und Text"
+      },
+      "edit": {
+        "title": "Mehrspur-Editor",
+        "text": "Zeitleiste, Keyframes, Effekte, Untertitel, Export als MP4"
+      },
+      "agent": {
+        "title": "KI-Agent über MCP",
+        "text": "Claude und andere drücken dieselben Knöpfe wie du"
+      },
+      "yours": {
+        "title": "Deine Schlüssel, deine Dateien",
+        "text": "Du zahlst Anbieter direkt, nichts läuft über uns"
+      }
+    }
   }
 }

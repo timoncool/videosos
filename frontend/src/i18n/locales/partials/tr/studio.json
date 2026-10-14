@@ -160,5 +160,41 @@
     "ace": "Yapay zekâ müzik stüdyosu: şarkı, vokal, cover, klip",
     "bulka": "Yapay zekâ ajanıyla canlı kodlama müzik",
     "dungeon": "Yerel bir yapay zekâ rol yapma oyunu"
+  },
+  "topbar": {
+    "projects": "Projeler",
+    "new": "Yeni",
+    "newSub": "proje",
+    "newTitle": "Yeni bir proje başlat",
+    "help": "Yardım"
+  },
+  "status": {
+    "idle": "Hazır"
+  },
+  "start": {
+    "eyebrow": "OpenRouter · fal · Runware · MCP",
+    "title": "Videoyu tek pencerede üret ve kurgula.",
+    "lead": "Kendi anahtarlarınla en iyi modelleri kullanarak görsel, video, müzik, ses ve efekt üret, sonra bunları çok kanallı zaman çizelgesinde bitmiş bir videoya dönüştür.",
+    "cardTitle": "Bir proje başlat",
+    "cardText": "Proje; medyayı, üretimleri ve zaman çizelgesini bu bilgisayarda bir arada tutar.",
+    "projects": "Projeler",
+    "features": {
+      "generate": {
+        "title": "Tüm modaliteler",
+        "text": "Görsel, video, dudak senkronu, müzik, ses ve metin"
+      },
+      "edit": {
+        "title": "Çok kanallı editör",
+        "text": "Zaman çizelgesi, anahtar kareler, efektler, altyazı, MP4 dışa aktarım"
+      },
+      "agent": {
+        "title": "MCP üzerinden yapay zekâ ajanı",
+        "text": "Claude ve diğerleri senin bastığın düğmelere basar"
+      },
+      "yours": {
+        "title": "Senin anahtarların, senin dosyaların",
+        "text": "Sağlayıcılara doğrudan ödersin; hiçbir şey bizden geçmez"
+      }
+    }
   }
 }

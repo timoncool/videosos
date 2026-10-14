@@ -160,5 +160,41 @@
     "ace": "Estudio de música con IA: canciones, voces, versiones, clips",
     "bulka": "Música en código en vivo con un agente de IA",
     "dungeon": "Un juego de rol local con IA"
+  },
+  "topbar": {
+    "projects": "Proyectos",
+    "new": "Nuevo",
+    "newSub": "proyecto",
+    "newTitle": "Empezar un proyecto nuevo",
+    "help": "Ayuda"
+  },
+  "status": {
+    "idle": "Listo"
+  },
+  "start": {
+    "eyebrow": "OpenRouter · fal · Runware · MCP",
+    "title": "Genera y edita vídeo en una sola ventana.",
+    "lead": "Crea imágenes, vídeo, música, voces y sonidos con los mejores modelos con tus propias claves y móntalos en un vídeo terminado en una línea de tiempo multipista.",
+    "cardTitle": "Empieza un proyecto",
+    "cardText": "Un proyecto guarda juntos sus medios, generaciones y línea de tiempo en este equipo.",
+    "projects": "Proyectos",
+    "features": {
+      "generate": {
+        "title": "Todas las modalidades",
+        "text": "Imágenes, vídeo, lip-sync, música, voces, sonidos y texto"
+      },
+      "edit": {
+        "title": "Editor multipista",
+        "text": "Línea de tiempo, fotogramas clave, efectos, subtítulos, exportación a MP4"
+      },
+      "agent": {
+        "title": "Agente de IA por MCP",
+        "text": "Claude y otros pulsan los mismos botones que tú"
+      },
+      "yours": {
+        "title": "Tus claves, tus archivos",
+        "text": "Pagas a los proveedores directamente; nada pasa por nosotros"
+      }
+    }
   }
 }

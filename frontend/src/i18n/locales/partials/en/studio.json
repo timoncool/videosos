@@ -160,5 +160,41 @@
     "ace": "AI music studio: songs, vocals, covers, clips",
     "bulka": "Live-coding music with an AI agent",
     "dungeon": "A local AI role-playing game"
+  },
+  "topbar": {
+    "projects": "Projects",
+    "new": "New",
+    "newSub": "project",
+    "newTitle": "Start a new project",
+    "help": "Help"
+  },
+  "status": {
+    "idle": "Ready"
+  },
+  "start": {
+    "eyebrow": "OpenRouter · fal · Runware · MCP",
+    "title": "Generate and edit video in one window.",
+    "lead": "Make pictures, video, music, voices and sound with the best models on your own keys, then cut them into a finished video on a multitrack timeline.",
+    "cardTitle": "Start a project",
+    "cardText": "A project keeps its media, generations and timeline together on this computer.",
+    "projects": "Projects",
+    "features": {
+      "generate": {
+        "title": "Every modality",
+        "text": "Images, video, lip-sync, music, voices, sounds and text"
+      },
+      "edit": {
+        "title": "Multitrack editor",
+        "text": "Timeline, keyframes, effects, captions, export to MP4"
+      },
+      "agent": {
+        "title": "AI agent through MCP",
+        "text": "Claude and others drive the same buttons you do"
+      },
+      "yours": {
+        "title": "Your keys, your files",
+        "text": "You pay providers directly; nothing goes through us"
+      }
+    }
   }
 }

@@ -75,7 +75,7 @@ export function App() {
   return (
     <ErrorBoundary level="app">
       <TooltipProvider delayDuration={300}>
-        <StudioHost>
+        <StudioHost go={(place) => void router.navigate({ to: place })}>
           <WorkspaceGate>
             <RouterProvider router={router} />
           </WorkspaceGate>

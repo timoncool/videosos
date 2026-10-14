@@ -1,5 +1,6 @@
 // The journal as the service keeps it: what agents changed and what the window told the person, newest first.
 import { useEffect, useState } from "react";
+import type { TFunction } from "i18next";
 import { onServerEvent } from "@/infrastructure/desktop/server-events";
 
 export interface JournalLine {
@@ -63,4 +64,14 @@ export async function clearJournal(): Promise<void> {
 
 export async function removeJournalLine(id: number): Promise<void> {
   await send(`/api/journal/${id}`, { method: "DELETE" });
+}
+
+/** A line in the window's words: an agent's change from its facts, never a tool's name; a message as it was shown. */
+export function journalSentence(t: TFunction, line: JournalLine): string {
+  if (line.source !== "agent") return line.text;
+  const verb = t(`journal.verb.${line.verb}`, { defaultValue: line.verb });
+  const kind = t(`journal.kind.${line.kind}`, { defaultValue: line.kind });
+  return line.target
+    ? t("journal.line", { verb, kind, name: line.target, interpolation: { escapeValue: false } })
+    : t("journal.lineNoName", { verb, kind, interpolation: { escapeValue: false } });
 }

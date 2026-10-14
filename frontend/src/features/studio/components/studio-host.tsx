@@ -4,6 +4,8 @@ import { useSonner } from 'sonner'
 import { HubBars } from './hub-bars'
 import { HubPopup } from './hub-popup'
 import FilesPanel from './files-panel'
+import ResourceMonitor from './resource-monitor'
+import { TopBar, type TopBarPlace } from './top-bar'
 import ServerOffline from './server-offline'
 import { hubChanged, showsNow, useHubState, type HubButton } from '../services/studio-hub'
 import { openNews, openSettings } from '../services/settings-nav'
@@ -16,7 +18,7 @@ const HEALTH_MS = 5000
  * What every studio of the family shows over its window: the hub's strips at the top, and the "service is not
  * answering" screen when the program's service stops answering (a network failure, never a slow answer).
  */
-export function StudioHost({ children }: { children: ReactNode }) {
+export function StudioHost({ children, go }: { children: ReactNode; go: (place: TopBarPlace) => void }) {
   const { i18n } = useTranslation()
   const hub = useHubState(i18n.language.split('-')[0] ?? 'en')
   const [offline, setOffline] = useState(false)
@@ -85,7 +87,9 @@ export function StudioHost({ children }: { children: ReactNode }) {
   return (
     <div className="flex h-dvh min-h-0 flex-col">
       {hub && ready && <HubBars items={hub.items} />}
+      <TopBar go={go} />
       <div className="relative min-h-0 flex-1 overflow-auto">{children}</div>
+      <ResourceMonitor />
       <FilesPanel />
       {popup && <HubPopup item={popup} onClose={() => close(popup.id)} onOpen={openTarget} />}
       {offline && (

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Bot, Clapperboard, X } from "lucide-react";
 import { exactMoment, relativeMoment } from "../services/dates";
-import { clearJournal, removeJournalLine, useJournal, type JournalLine } from "../services/journal";
+import { clearJournal, journalSentence, removeJournalLine, useJournal, type JournalLine } from "../services/journal";
 
 const TONE: Record<string, string> = {
   error: "text-[var(--color-danger)]",
@@ -23,15 +23,7 @@ export function JournalPanel({ onClose }: { onClose: () => void }) {
     return () => document.removeEventListener("keydown", escape);
   }, [onClose]);
 
-  // an agent's change in the window's words, never in a tool's name; the words go in as they are
-  const sentence = (line: JournalLine) => {
-    if (line.source !== "agent") return line.text;
-    const verb = t(`journal.verb.${line.verb}`, { defaultValue: line.verb });
-    const kind = t(`journal.kind.${line.kind}`, { defaultValue: line.kind });
-    return line.target
-      ? t("journal.line", { verb, kind, name: line.target, interpolation: { escapeValue: false } })
-      : t("journal.lineNoName", { verb, kind, interpolation: { escapeValue: false } });
-  };
+  const sentence = (line: JournalLine) => journalSentence(t, line);
 
   const report = (problem: unknown) => console.error("[ERROR] the journal:", problem);
 
