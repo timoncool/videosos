@@ -17,7 +17,9 @@
       "project_open": "opens a project",
       "export_video": "exports the video",
       "checkpoint_create": "keeps a checkpoint",
-      "checkpoint_restore": "goes back to a checkpoint"
+      "checkpoint_restore": "goes back to a checkpoint",
+      "motion_render": "makes HTML graphics into a clip",
+      "previs_render": "blocks a shot in 3D"
     },
     "proposal": {
       "title": "The agent proposes an edit",

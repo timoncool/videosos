@@ -17,7 +17,9 @@
       "project_open": "открывает проект",
       "export_video": "экспортирует видео",
       "checkpoint_create": "сохраняет точку отката",
-      "checkpoint_restore": "возвращает таймлайн к точке отката"
+      "checkpoint_restore": "возвращает таймлайн к точке отката",
+      "motion_render": "делает клип из HTML-графики",
+      "previs_render": "разводит шот в 3D"
     },
     "proposal": {
       "title": "Агент предлагает правку",
