@@ -242,7 +242,7 @@ async function initPipeline(): Promise<void> {
     // the UI renders `preparing` as an indeterminate bar rather than a stalled one.
     postMain({ type: 'progress', event: { stage: 'preparing', progress: 0 } })
 
-    // int8 on ORT-web's WebGPU decodes to <unk> and empty text, so all three graphs run on WASM
+    // int8 graphs stay on WASM: ORT-web's WebGPU computes them wrong
     preproc = await ort.InferenceSession.create(preprocBytes, sessionOptions())
     encoder = await ort.InferenceSession.create(encoderBytes, sessionOptions())
     decoder = await ort.InferenceSession.create(decoderBytes, sessionOptions())

@@ -18,6 +18,12 @@ export async function captionVideo(
   return getDefaultMediaCaptioningProvider().captionVideo(video, options)
 }
 
+/** Who writes the captions now: the provider's id and its model, recorded with each caption set. */
+export function captioningSource(): { service: string; model: string } {
+  const provider = getDefaultMediaCaptioningProvider()
+  return { service: provider.id, model: provider.model }
+}
+
 export async function captionImage(
   imageBlob: Blob,
   options?: CaptioningOptions,

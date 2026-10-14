@@ -57,6 +57,7 @@ import {
   DEFAULT_WHISPER_MODEL,
   DEFAULT_WHISPER_QUANTIZATION,
   normalizeWhisperQuantization,
+  normalizeSelectableWhisperModel,
   normalizeWhisperLanguage,
 } from '@/shared/utils/whisper-settings'
 import { TRANSCRIPTION_CANCELLED_MESSAGE } from '@/shared/utils/transcription-cancellation'
@@ -400,7 +401,9 @@ class MediaTranscriptionService {
     options: TranscriptionRequestOptions = {},
   ): Promise<MediaTranscript> {
     const settings = useSettingsStore.getState()
-    const model = options.model ?? settings.defaultWhisperModel ?? DEFAULT_MODEL
+    const model = normalizeSelectableWhisperModel(
+      options.model ?? settings.defaultWhisperModel ?? DEFAULT_MODEL,
+    )
     const quantization = normalizeWhisperQuantization(
       options.quantization ?? settings.defaultWhisperQuantization ?? DEFAULT_QUANTIZATION,
     )

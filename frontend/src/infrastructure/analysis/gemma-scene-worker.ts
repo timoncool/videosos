@@ -28,6 +28,13 @@ import { SCENE_CAPTION_PROMPT, parseSceneCaptionResponse } from './captioning/sc
 const MODEL_ID = 'onnx-community/gemma-4-E4B-it-ONNX'
 const DESCRIBE_MAX_NEW_TOKENS = 160
 const COMPILE_HEARTBEAT_MS = 10_000
+// The model card recommends 70–140 image tokens for classification and 280 for describing a picture.
+const VERIFY_IMAGE_TOKENS = 140
+const DESCRIBE_IMAGE_TOKENS = 280
+
+function setImageTokens(count: number): void {
+  if (processor?.image_processor) processor.image_processor.max_soft_tokens = count
+}
 
 // Configure transformers.js for browser worker context
 env.useBrowserCache = true
@@ -63,15 +70,7 @@ async function loadModel(): Promise<void> {
 
     if (disposed || thisGen !== loadGeneration) return
 
-    // Model card recommends 70–140 tokens for classification/video understanding.
-    // Default 280 is more than needed; 140 halves the image tokens while keeping
-    // enough visual detail to distinguish different scenes.
-    if (loadedProcessor.image_processor) {
-      ;(loadedProcessor.image_processor as { max_soft_tokens?: number }).max_soft_tokens = 140
-    }
-
-    // building the WebGPU sessions of a 5 GB model takes minutes with no download to report, and the
-    // callers give up after 30 s of silence
+    // building the sessions reports nothing, and the callers give up on a silent worker
     let percent = 5
     const report = (message: Record<string, unknown>) => {
       if (typeof message.percent === 'number') percent = message.percent
@@ -154,6 +153,7 @@ async function verifyCandidate(id: number, beforeBlob: Blob, afterBlob: Blob): P
       prompt: typeof prompt === 'string' ? prompt.slice(0, 500) : 'non-string prompt',
     })
 
+    setImageTokens(VERIFY_IMAGE_TOKENS)
     const inputs = await processor(prompt, [beforeImg, afterImg], null, {
       add_special_tokens: false,
     })
@@ -207,6 +207,7 @@ async function describeImage(id: number, imageBlob: Blob): Promise<void> {
       enable_thinking: false,
       add_generation_prompt: true,
     })
+    setImageTokens(DESCRIBE_IMAGE_TOKENS)
     const inputs = await processor(prompt, [image], null, { add_special_tokens: false })
     const outputs = await model.generate({
       ...inputs,

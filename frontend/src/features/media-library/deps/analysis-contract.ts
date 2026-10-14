@@ -5,7 +5,7 @@
  * future providers) stay in one auditable place for the boundary checker.
  */
 
-export { captionVideo, captionImage } from '@/infrastructure/analysis/media-tagger'
+export { captionVideo, captionImage, captioningSource } from '@/infrastructure/analysis/media-tagger'
 export type { MediaCaption } from '@/infrastructure/analysis/media-tagger'
 export {
   embeddingsProvider,

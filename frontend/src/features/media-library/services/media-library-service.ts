@@ -73,6 +73,7 @@ import {
   importGifFrameCache,
   importWaveformCache,
 } from '@/features/media-library/deps/timeline-services'
+import { captioningSource } from '../deps/analysis'
 import { opfsService } from './opfs-service'
 import { proxyService } from './proxy-service'
 import { ensureFileHandlePermission, FileAccessError } from './file-access'
@@ -1953,8 +1954,8 @@ class MediaLibraryService {
     })()
 
     const resolvedOptions = {
-      service: options?.service ?? existingEnvelope?.service ?? 'gemma-captioning',
-      model: options?.model ?? existingEnvelope?.model ?? 'gemma-4-e4b',
+      service: options?.service ?? existingEnvelope?.service ?? captioningSource().service,
+      model: options?.model ?? existingEnvelope?.model ?? captioningSource().model,
       sampleIntervalSec: options?.sampleIntervalSec ?? existingSampleInterval,
       embeddingModel: options?.embeddingModel ?? existingEnvelope?.data.embeddingModel,
       embeddingDim: options?.embeddingDim ?? existingEnvelope?.data.embeddingDim,

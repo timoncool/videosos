@@ -14,11 +14,8 @@ const WHISPER_MODEL_BASE_ESTIMATES_MIB: Record<MediaTranscriptModel, number> = {
 }
 
 // Parakeet ONNX footprint: the int8 encoder (~650 MB) + int8 decoder_joint (~18 MB) + nemo128
-// preprocessor, on WebGPU or WASM alike.
-const PARAKEET_RUNTIME_MIB: Record<'webgpu' | 'wasm', number> = {
-  webgpu: 670,
-  wasm: 670,
-}
+// preprocessor.
+const PARAKEET_RUNTIME_MIB = 670
 
 const QUANTIZATION_MULTIPLIER: Record<MediaTranscriptQuantization, number> = {
   hybrid: 0.65,
@@ -52,10 +49,10 @@ export function formatWhisperRuntimeModelLabel(
   return `${BROWSER_WHISPER_MODEL_LABELS[model]} · ${QUANTIZATION_LABELS[quantization]}`
 }
 
-export function estimateParakeetRuntimeBytes(backend: 'webgpu' | 'wasm'): number {
-  return Math.round(PARAKEET_RUNTIME_MIB[backend] * MIB)
+export function estimateParakeetRuntimeBytes(): number {
+  return Math.round(PARAKEET_RUNTIME_MIB * MIB)
 }
 
-export function formatParakeetRuntimeModelLabel(backend: 'webgpu' | 'wasm'): string {
-  return `${BROWSER_WHISPER_MODEL_LABELS['parakeet-tdt-v3']} · ${backend === 'webgpu' ? 'WebGPU' : 'WASM'}`
+export function formatParakeetRuntimeModelLabel(): string {
+  return `${BROWSER_WHISPER_MODEL_LABELS['parakeet-tdt-v3']} · WASM`
 }

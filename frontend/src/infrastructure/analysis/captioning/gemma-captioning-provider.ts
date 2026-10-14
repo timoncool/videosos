@@ -1,5 +1,5 @@
 import { createLogger } from '@/shared/logging/logger'
-import { createGemmaSceneWorker } from '../create-gemma-worker'
+import { gemmaSceneVerificationProvider } from '../verification/gemma-scene-verification-provider'
 import { seekVideo } from '../scene-detection-utils'
 import type { CaptioningOptions, MediaCaption, MediaCaptioningProvider } from './types'
 
@@ -142,6 +142,7 @@ function captionSingle(
 export const gemmaCaptioningProvider: MediaCaptioningProvider = {
   id: 'gemma-captioning',
   label: 'Gemma 4 E4B',
+  model: 'gemma-4-e4b',
   async captionVideo(video, options = {}) {
     const {
       onProgress,
@@ -154,7 +155,7 @@ export const gemmaCaptioningProvider: MediaCaptioningProvider = {
         ? rawSampleInterval
         : DEFAULT_SAMPLE_INTERVAL_SEC
 
-    const worker = createGemmaSceneWorker()
+    const worker = gemmaSceneVerificationProvider.getWorker()
     try {
       await waitForReady(worker, onProgress, signal)
       if (signal?.aborted) {
@@ -222,14 +223,13 @@ export const gemmaCaptioningProvider: MediaCaptioningProvider = {
 
       return captions
     } finally {
-      worker.postMessage({ type: 'dispose' })
-      setTimeout(() => worker.terminate(), 500)
+      gemmaSceneVerificationProvider.disposeWorker()
     }
   },
   async captionImage(imageBlob, options = {}) {
     const { onProgress, signal } = options
 
-    const worker = createGemmaSceneWorker()
+    const worker = gemmaSceneVerificationProvider.getWorker()
     try {
       await waitForReady(worker, onProgress, signal)
       if (signal?.aborted) {
@@ -263,8 +263,7 @@ export const gemmaCaptioningProvider: MediaCaptioningProvider = {
           ]
         : []
     } finally {
-      worker.postMessage({ type: 'dispose' })
-      setTimeout(() => worker.terminate(), 500)
+      gemmaSceneVerificationProvider.disposeWorker()
     }
   },
 }

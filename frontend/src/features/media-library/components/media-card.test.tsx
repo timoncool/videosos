@@ -92,6 +92,7 @@ const mediaStoreState = vi.hoisted(() => ({
 const analysisMocks = vi.hoisted(() => ({
   captionVideo: vi.fn(),
   captionImage: vi.fn(),
+  captioningSource: () => ({ service: 'gemma-captioning', model: 'gemma-4-e4b' }),
 }))
 
 const editorStoreState = vi.hoisted(() => ({

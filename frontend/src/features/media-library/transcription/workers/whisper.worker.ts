@@ -181,7 +181,7 @@ async function initPipeline(modelId: string): Promise<void> {
         })
       }
 
-      // int8 on ORT-web's WebGPU decodes to garbage; q8 on multi-threaded WASM is exact
+      // int8 graphs stay on WASM: ORT-web's WebGPU computes them wrong
       asrPipeline = await pipeline('automatic-speech-recognition', modelId, {
         device: 'wasm',
         dtype: 'q8',
