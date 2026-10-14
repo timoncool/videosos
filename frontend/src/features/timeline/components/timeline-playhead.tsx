@@ -136,6 +136,10 @@ export function TimelinePlayhead({
   // RAF throttling refs for smooth scrubbing without excessive state updates
   const rafIdRef = useRef<number | null>(null)
   const scrubClientXRef = useRef<number | null>(null)
+  // The gesture's listeners go on at pointerdown: a quick drag can end before the drag effect has run.
+  const detachScrubListenersRef = useRef<(() => void) | null>(null)
+  const finishScrubRef = useRef<((resumePlayback: boolean) => void) | null>(null)
+  const pendingScrubEndRef = useRef<'release' | 'cancel' | null>(null)
   const scrubAnimationTimeRef = useRef<number | null>(null)
   const scrubScrollContainerRef = useRef<HTMLDivElement | null>(null)
   const scrubCoordinateSurfaceRef = useRef<HTMLDivElement | null>(null)
@@ -306,6 +310,31 @@ export function TimelinePlayhead({
       mainTimelineScrubActiveRef.current = true
       beginTimelineSkimmerScrub(skimmerScrubOwnerRef.current)
       setPreviewFrameRef.current(null)
+
+      pendingScrubEndRef.current = null
+      detachScrubListenersRef.current?.()
+      const handlePointerMove = (event: PointerEvent) => {
+        scrubClientXRef.current = event.clientX
+      }
+      const end = (how: 'release' | 'cancel') => {
+        const finish = finishScrubRef.current
+        if (finish) finish(how === 'release')
+        else pendingScrubEndRef.current = how
+      }
+      const handlePointerUp = () => end('release')
+      const handleCancel = () => end('cancel')
+      // Capture phase: elements under the pointer stop the bubbling of their own moves.
+      document.addEventListener('pointermove', handlePointerMove, true)
+      document.addEventListener('pointerup', handlePointerUp, true)
+      document.addEventListener('pointercancel', handleCancel, true)
+      window.addEventListener('blur', handleCancel)
+      detachScrubListenersRef.current = () => {
+        document.removeEventListener('pointermove', handlePointerMove, true)
+        document.removeEventListener('pointerup', handlePointerUp, true)
+        document.removeEventListener('pointercancel', handleCancel, true)
+        window.removeEventListener('blur', handleCancel)
+        detachScrubListenersRef.current = null
+      }
       setIsDragging(true)
     },
     [coordinateSurfaceRef, inRuler],
@@ -401,11 +430,9 @@ export function TimelinePlayhead({
       if (isDraggingRef.current) rafIdRef.current = requestAnimationFrame(runScrubLoop)
     }
 
-    const handlePointerMove = (e: PointerEvent) => {
-      scrubClientXRef.current = e.clientX
-    }
-
     const finishDrag = (resumePlayback: boolean) => {
+      detachScrubListenersRef.current?.()
+      finishScrubRef.current = null
       // Cancel any pending RAF before clearing preview to prevent resurrection
       if (rafIdRef.current !== null) {
         cancelAnimationFrame(rafIdRef.current)
@@ -450,22 +477,15 @@ export function TimelinePlayhead({
         usePlaybackStore.getState().cancelPlaybackScrubResume()
       }
     }
-    const handlePointerUp = () => finishDrag(true)
-    const handleCancel = () => finishDrag(false)
-
-    document.addEventListener('pointermove', handlePointerMove)
-    document.addEventListener('pointerup', handlePointerUp)
-    document.addEventListener('pointercancel', handlePointerUp)
-    document.addEventListener('pointercancel', handleCancel)
-    window.addEventListener('blur', handleCancel)
-    rafIdRef.current = requestAnimationFrame(runScrubLoop)
+    finishScrubRef.current = finishDrag
+    const pendingEnd = pendingScrubEndRef.current
+    pendingScrubEndRef.current = null
+    if (pendingEnd) finishDrag(pendingEnd === 'release')
+    else rafIdRef.current = requestAnimationFrame(runScrubLoop)
 
     return () => {
-      document.removeEventListener('pointermove', handlePointerMove)
-      document.removeEventListener('pointerup', handlePointerUp)
-      document.removeEventListener('pointercancel', handlePointerUp)
-      document.removeEventListener('pointercancel', handleCancel)
-      window.removeEventListener('blur', handleCancel)
+      finishScrubRef.current = null
+      detachScrubListenersRef.current?.()
       // Restore original cursor
       document.body.style.cursor = originalCursor
       // Cancel any pending RAF to prevent memory leaks
