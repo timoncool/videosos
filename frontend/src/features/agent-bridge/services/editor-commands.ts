@@ -27,6 +27,7 @@ import {
   useTransitionsStore,
 } from '../deps/editor'
 import { bridgeError, failed, numberArg, registerBridgeCommand, takeArgs, textArg } from './bridge'
+import { describeOps, useProposalStore } from './proposals'
 
 const TABS: EditorSidebarTab[] = ['generate', 'media', 'text', 'shapes', 'effects', 'transitions', 'lottie', 'transcript', 'ai', 'chat', 'storyboard']
 
@@ -49,6 +50,26 @@ async function save(projectId: string): Promise<void> {
   } catch (problem) {
     throw failed('save', problem)
   }
+}
+
+/** Runs the ops on the live stores and puts everything, history included, back in the same tick. */
+function rehearse(ops: EditOp[]) {
+  const before = captureSnapshot()
+  const { undoStack, redoStack } = useTimelineCommandStore.getState()
+  try {
+    const outcome = applyEditOpsLive(ops)
+    return { wouldApply: outcome.results.filter((result) => result.ok).length, error: outcome.error ?? null, results: outcome.results, timeline: timeline() }
+  } finally {
+    restoreSnapshot(before)
+    useTimelineCommandStore.setState({ undoStack, redoStack, canUndo: undoStack.length > 0, canRedo: redoStack.length > 0 })
+  }
+}
+
+/** Whether the person asked to accept agents' edits, read anew each time so the switch takes effect at once. */
+async function confirmsEdits(): Promise<boolean> {
+  const response = await fetch('/api/settings', { cache: 'no-store' })
+  if (!response.ok) throw failed('timeline_edit', `the settings did not come: ${response.status}`)
+  return ((await response.json()) as { agent_confirm_edits?: boolean }).agent_confirm_edits === true
 }
 
 function timeline() {
@@ -115,17 +136,17 @@ export function registerEditorCommands(showProject: ShowProject): void {
     const project = openProject()
     setEditCanvas({ width: project.metadata?.width ?? 1920, height: project.metadata?.height ?? 1080, fps: fpsOf(project) })
     if (args.dry_run === true) {
-      // a rehearsal: the ops run on the live stores and everything, history included, is put back in the same tick
-      const before = captureSnapshot()
-      const { undoStack, redoStack } = useTimelineCommandStore.getState()
-      let rehearsal
-      try {
-        rehearsal = applyEditOpsLive(args.ops as EditOp[])
-        return { dry_run: true, would_apply: rehearsal.results.filter((result) => result.ok).length, error: rehearsal.error ?? null, results: rehearsal.results, timeline: timeline() }
-      } finally {
-        restoreSnapshot(before)
-        useTimelineCommandStore.setState({ undoStack, redoStack, canUndo: undoStack.length > 0, canRedo: redoStack.length > 0 })
-      }
+      const rehearsal = rehearse(args.ops as EditOp[])
+      return { dry_run: true, would_apply: rehearsal.wouldApply, error: rehearsal.error, results: rehearsal.results, timeline: rehearsal.timeline }
+    }
+    if (await confirmsEdits()) {
+      const rehearsal = rehearse(args.ops as EditOp[])
+      const accepted = await useProposalStore.getState().ask({
+        lines: describeOps(args.ops as EditOp[], fpsOf(project)),
+        wouldApply: rehearsal.wouldApply,
+        problem: rehearsal.error,
+      })
+      if (!accepted) throw bridgeError('declined')
     }
     await keepCheckpoint(project.id, 'agent', { edits: args.ops.length })
     let outcome

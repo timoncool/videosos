@@ -39,6 +39,7 @@ const MESSAGES = {
   nothing_to_undo: () => "There is nothing to undo in the editor.",
   nothing_to_redo: () => "There is nothing to redo in the editor.",
   failed: (a: BridgeArgs) => `${a.command} failed: ${a.reason}`,
+  declined: () => "The person declined this edit, or did not answer in time; nothing was changed. Ask them what they want instead.",
 } as const;
 
 export type BridgeErrorCode = keyof typeof MESSAGES;

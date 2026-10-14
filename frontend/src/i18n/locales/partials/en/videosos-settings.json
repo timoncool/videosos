@@ -29,6 +29,8 @@
       "jobs_one": "{{count}} run",
       "jobs_other": "{{count}} runs",
       "agentHint": "Past it, VideoSOS refuses an agent's generations for the rest of the day. Empty means no limit.",
+      "confirmEdits": "Agents' timeline edits wait for me",
+      "confirmEditsHint": "An agent's edit shows what will change, and nothing changes until you accept it.",
       "budget": "Daily limit for agents, $",
       "noLimit": "no limit",
       "badBudget": "The limit is a number of dollars."

@@ -15,7 +15,29 @@
       "playback": "plays or pauses",
       "editor_tab": "opens a tab",
       "project_open": "opens a project",
-      "export_video": "exports the video"
+      "export_video": "exports the video",
+      "checkpoint_create": "keeps a checkpoint",
+      "checkpoint_restore": "goes back to a checkpoint"
+    },
+    "proposal": {
+      "title": "The agent proposes an edit",
+      "hint": "A checkpoint is kept before it is applied.",
+      "accept": "Accept",
+      "decline": "Decline",
+      "problem_one": "Only {{count}} edit goes through: {{reason}}",
+      "problem_other": "Only {{count}} edits go through: {{reason}}",
+      "op": {
+        "addClip": "Add {{name}} at {{at}} s",
+        "addText": "Add the text \"{{text}}\" at {{at}} s",
+        "moveItem": "Move {{name}} to {{at}} s",
+        "removeItems": "Remove {{names}}",
+        "split": "Split {{name}} at {{at}} s",
+        "trimStartCut": "Cut {{seconds}} s off the start of {{name}}",
+        "trimStartExtend": "Lengthen the start of {{name}} by {{seconds}} s",
+        "trimEndCut": "Cut {{seconds}} s off the end of {{name}}",
+        "trimEndExtend": "Lengthen the end of {{name}} by {{seconds}} s",
+        "other": "{{op}}: {{name}}"
+      }
     }
   }
 }

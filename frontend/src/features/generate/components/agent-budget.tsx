@@ -4,19 +4,27 @@ import { Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Switch } from '@/components/ui/switch'
 import { generateApi } from '../services/generate-api'
 
-/** What agents may spend per day through MCP; past it the server refuses their generations. */
+/**
+ * What agents may spend per day through MCP (past it the server refuses their generations), and whether their
+ * timeline edits wait for the person to accept them.
+ */
 export function AgentBudget() {
   const { t } = useTranslation()
   const [budget, setBudget] = useState('')
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [confirmEdits, setConfirmEdits] = useState(false)
 
   useEffect(() => {
     generateApi
       .settings()
-      .then((settings) => setBudget(settings.agent_daily_budget_usd === null ? '' : String(settings.agent_daily_budget_usd)))
+      .then((settings) => {
+        setBudget(settings.agent_daily_budget_usd === null ? '' : String(settings.agent_daily_budget_usd))
+        setConfirmEdits(settings.agent_confirm_edits)
+      })
       .catch((reason: unknown) => setError(reason instanceof Error ? reason.message : String(reason)))
   }, [])
 
@@ -44,6 +52,26 @@ export function AgentBudget() {
         </Button>
       </div>
       <p className="text-[11px] text-muted-foreground">{t('settings.providers.agentHint')}</p>
+      <div className="flex items-center justify-between gap-3 border-t border-border pt-2">
+        <Label htmlFor="agent-confirm-edits" className="text-xs">
+          {t('settings.providers.confirmEdits')}
+          <span className="block text-[11px] font-normal text-muted-foreground">{t('settings.providers.confirmEditsHint')}</span>
+        </Label>
+        <Switch
+          id="agent-confirm-edits"
+          checked={confirmEdits}
+          onCheckedChange={(checked) => {
+            setConfirmEdits(checked)
+            generateApi.storeSettings({ agent_confirm_edits: checked }).then(
+              (settings) => setConfirmEdits(settings.agent_confirm_edits),
+              (reason: unknown) => {
+                setConfirmEdits(!checked)
+                setError(reason instanceof Error ? reason.message : String(reason))
+              },
+            )
+          }}
+        />
+      </div>
       {error && <p className="text-xs text-destructive">{error}</p>}
     </div>
   )

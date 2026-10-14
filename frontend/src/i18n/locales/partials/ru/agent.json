@@ -15,7 +15,31 @@
       "playback": "запускает или ставит на паузу",
       "editor_tab": "открывает вкладку",
       "project_open": "открывает проект",
-      "export_video": "экспортирует видео"
+      "export_video": "экспортирует видео",
+      "checkpoint_create": "сохраняет точку отката",
+      "checkpoint_restore": "возвращает таймлайн к точке отката"
+    },
+    "proposal": {
+      "title": "Агент предлагает правку",
+      "hint": "Перед применением сохранится точка отката.",
+      "accept": "Принять",
+      "decline": "Отклонить",
+      "problem_one": "Пройдёт только {{count}} правка: {{reason}}",
+      "problem_few": "Пройдут только {{count}} правки: {{reason}}",
+      "problem_many": "Пройдут только {{count}} правок: {{reason}}",
+      "problem_other": "Пройдут только {{count}} правки: {{reason}}",
+      "op": {
+        "addClip": "Добавить {{name}} на {{at}} с",
+        "addText": "Добавить текст «{{text}}» на {{at}} с",
+        "moveItem": "Переместить {{name}} на {{at}} с",
+        "removeItems": "Убрать {{names}}",
+        "split": "Разрезать {{name}} на {{at}} с",
+        "trimStartCut": "Отрезать {{seconds}} с от начала {{name}}",
+        "trimStartExtend": "Удлинить начало {{name}} на {{seconds}} с",
+        "trimEndCut": "Отрезать {{seconds}} с от конца {{name}}",
+        "trimEndExtend": "Удлинить конец {{name}} на {{seconds}} с",
+        "other": "{{op}}: {{name}}"
+      }
     }
   }
 }

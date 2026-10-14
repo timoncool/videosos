@@ -16,6 +16,8 @@ use crate::AppState;
 pub struct Settings {
     /// What agents may spend per day through MCP, in USD; none means no limit.
     pub agent_daily_budget_usd: Option<f64>,
+    /// An agent's timeline edit waits for the person to accept it, as OpenChatCut proposes its edits.
+    pub agent_confirm_edits: bool,
     /// Access from another computer's browser, changed only through `/api/network`.
     pub network: Option<crate::remote::NetworkAccess>,
     /// Where requests to the providers go; changed only through `/api/network/proxy`.
@@ -69,7 +71,14 @@ async fn read(State(_): State<AppState>) -> Json<Settings> {
     Json(Settings { network: None, proxy: Default::default(), ..get() })
 }
 
-async fn write(State(_): State<AppState>, Json(mut settings): Json<Settings>) -> Result<Json<Settings>, (StatusCode, String)> {
+/// A window sends the settings it changes; the others stay as kept.
+async fn write(State(_): State<AppState>, Json(change): Json<serde_json::Value>) -> Result<Json<Settings>, (StatusCode, String)> {
+    let serde_json::Value::Object(change) = change else { return Err((StatusCode::BAD_REQUEST, "the settings are an object".to_string())) };
+    let mut merged = serde_json::to_value(get()).map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
+    for (key, value) in change {
+        merged[key] = value;
+    }
+    let mut settings: Settings = serde_json::from_value(merged).map_err(|e| (StatusCode::BAD_REQUEST, e.to_string()))?;
     if settings.agent_daily_budget_usd.is_some_and(|budget| !(0.0..=10_000.0).contains(&budget)) {
         return Err((StatusCode::BAD_REQUEST, t!("settings-bad-budget")));
     }

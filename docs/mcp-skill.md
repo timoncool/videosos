@@ -59,6 +59,8 @@ cannot cancel, the program only stops waiting.
 - `timeline_undo` / `timeline_redo`, `playhead_seek`, `playback`, `editor_tab`.
 - Rehearse a many-step edit first: `timeline_edit` with `"dry_run": true` answers with what the ops would make and
   leaves the timeline as it was.
+- When the person has asked to accept agents' edits, `timeline_edit` waits while they read what will change; a
+  declined edit answers with an error and changes nothing: ask them what they want instead.
 - Before every `timeline_edit` the window keeps a checkpoint of the timeline; `checkpoint_list {project_id}` lists
   them, `checkpoint_restore {id}` goes back to one (the person can undo it), `checkpoint_create {label}` keeps one on
   purpose before a risky series.

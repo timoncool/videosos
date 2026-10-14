@@ -192,6 +192,12 @@ export interface KeyState {
   variable: string
 }
 
+/** What the person allows agents: a daily spend and whether their timeline edits wait to be accepted. */
+export interface AgentSettings {
+  agent_daily_budget_usd: number | null
+  agent_confirm_edits: boolean
+}
+
 export interface Estimate {
   estimate: { usd: number; exact: boolean } | null
   note: string | null
@@ -272,9 +278,10 @@ export const generateApi = {
       method: 'POST',
     }),
   spend: (projectId: string | null) => request<Spend>(`/api/spend?${new URLSearchParams({ project: projectId ?? '' })}`),
-  settings: () => request<{ agent_daily_budget_usd: number | null }>('/api/settings'),
-  storeSettings: (settings: { agent_daily_budget_usd: number | null }) =>
-    request<{ agent_daily_budget_usd: number | null }>('/api/settings', {
+  settings: () => request<AgentSettings>('/api/settings'),
+  /** Only the settings given change; the others stay as kept. */
+  storeSettings: (settings: Partial<AgentSettings>) =>
+    request<AgentSettings>('/api/settings', {
       method: 'PUT',
       body: JSON.stringify(settings),
     }),
