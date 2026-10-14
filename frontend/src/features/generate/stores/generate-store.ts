@@ -132,6 +132,9 @@ interface GenerateState extends Persisted {
   /** Who answers the window's assistant questions: the agent connected over MCP, or a paid model of OpenRouter. */
   assistant: 'openrouter' | 'agent'
   setAssistant: (assistant: 'openrouter' | 'agent') => void
+  /** An agent called VideoSOS over MCP in the last minutes, so it can answer the window's assistant. */
+  agentConnected: boolean
+  setAgentConnected: (connected: boolean) => void
   forms: Record<string, ModelForm>
   /** Why the panel could not reach the server, shown above everything else. */
   serverError: string | null
@@ -189,6 +192,7 @@ export const useGenerateStore = create<GenerateState>()((set, get) => ({
   jobs: [],
   keys: {},
   assistant: 'openrouter',
+  agentConnected: false,
   forms: {},
   serverError: null,
   pendingUse: null,
@@ -324,5 +328,14 @@ export const useGenerateStore = create<GenerateState>()((set, get) => ({
   removeJob: (id) => set({ jobs: get().jobs.filter((job) => job.id !== id) }),
   setKeys: (keys) => set({ keys }),
   setAssistant: (assistant) => set({ assistant }),
+  setAgentConnected: (agentConnected) => set({ agentConnected }),
   setForm: (form) => set({ forms: { ...get().forms, [modelKey(form.provider, form.id)]: form } }),
 }))
+
+/** Whether the window's assistant can answer now, and why not: the agent is not connected, or no OpenRouter key. */
+export function assistantReadiness(
+  state: Pick<GenerateState, 'assistant' | 'agentConnected' | 'keys'>,
+): 'ready' | 'no_agent' | 'no_key' {
+  if (state.assistant === 'agent') return state.agentConnected ? 'ready' : 'no_agent'
+  return state.keys.openrouter === true ? 'ready' : 'no_key'
+}

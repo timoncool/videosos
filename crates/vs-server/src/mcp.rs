@@ -1214,24 +1214,28 @@ struct AgentQuestion {
 static QUESTIONS: Mutex<Vec<AgentQuestion>> = Mutex::new(Vec::new());
 static QUESTION_ID: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(1);
 /// The Chat tab waiting for the agent's answer: the agent's tool calls meanwhile are its steps, shown there.
-static CHAT_STEPS: Mutex<Option<tokio::sync::mpsc::Sender<Value>>> = Mutex::new(None);
+static CHAT_STEPS: Mutex<Vec<(u64, tokio::sync::mpsc::Sender<Value>)>> = Mutex::new(Vec::new());
 static STEP_ID: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(1);
 
 /// Shows the agent's tool calls in the Chat tab while `steps` is open; they stop showing when the guard drops.
+/// Each chat waiting for the agent follows them, and its guard takes away only its own.
 pub(crate) fn follow_agent_steps(steps: tokio::sync::mpsc::Sender<Value>) -> impl Drop {
-    struct Following;
+    struct Following(u64);
     impl Drop for Following {
         fn drop(&mut self) {
-            *CHAT_STEPS.lock().unwrap_or_else(|p| p.into_inner()) = None;
+            CHAT_STEPS.lock().unwrap_or_else(|p| p.into_inner()).retain(|(id, _)| *id != self.0);
         }
     }
-    *CHAT_STEPS.lock().unwrap_or_else(|p| p.into_inner()) = Some(steps);
-    Following
+    let id = STEP_ID.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+    CHAT_STEPS.lock().unwrap_or_else(|p| p.into_inner()).push((id, steps));
+    Following(id)
 }
 
 fn chat_step(event: Value) {
-    if let Some(steps) = CHAT_STEPS.lock().unwrap_or_else(|p| p.into_inner()).as_ref() {
-        let _ = steps.try_send(event);
+    for (_, steps) in CHAT_STEPS.lock().unwrap_or_else(|p| p.into_inner()).iter() {
+        if let Err(error) = steps.try_send(event.clone()) {
+            tracing::warn!("an agent's step did not reach the chat: {error}");
+        }
     }
 }
 
@@ -1284,6 +1288,12 @@ fn with_pictures(state: &AppState, mut waiting: Value) -> Answer {
     for question in waiting["requests"].as_array_mut().into_iter().flatten() {
         let mut files = Vec::new();
         for reference in question["images"].as_array().cloned().unwrap_or_default() {
+            // the window asks with media of the workspace and results of jobs; a question naming any other file is
+            // not the window's and its file is not opened
+            if reference.get("media").is_none() && reference.get("job").is_none() {
+                files.push(json!({ "error": "only media of the library and results of jobs are shown" }));
+                continue;
+            }
             match state.jobs.media_file(reference) {
                 Ok(path) => {
                     let mime = mime_guess::from_path(&path).first_or_octet_stream().essence_str().to_string();
@@ -1419,6 +1429,17 @@ async fn open_folder(state: &AppState, args: &Value) -> Result<Value, String> {
     if status.is_success() { Ok(json!({ "opened": path.display().to_string() })) } else { Err(text) }
 }
 
+/// The values a job of this request is kept with, as creating it writes them: the elements named in the prompt
+/// with their pictures, then the form's defaults.
+async fn stored_values(state: &AppState, provider: &str, model: &str, values: &Value) -> Result<Value, String> {
+    let provider = vs_providers::model::Provider::parse(provider).ok_or_else(|| format!("{provider} is not a provider: openrouter, fal or runware"))?;
+    let form = state.catalog.form(provider, model).await?;
+    let mut map = values.as_object().cloned().unwrap_or_default();
+    let elements = crate::elements::from_choices(&crate::choices::current()?);
+    crate::elements::apply(&form.fields, &mut map, &elements)?;
+    Ok(Value::Object(crate::jobs::with_defaults(&form, map)))
+}
+
 /// One call from a model and its settings to the files on this computer, as Dub Studio's file tools are: no
 /// project, the files where the job keeps them (and copied into out_dir). The same request made again is the
 /// same job, so a second call answers with what the first made instead of paying again; again: true runs it anew.
@@ -1428,10 +1449,11 @@ async fn generate_file(state: &AppState, args: &Value) -> Result<Value, String> 
     let values = args.get("values").cloned().unwrap_or_else(|| json!({}));
     let seconds = args.get("wait_seconds").and_then(Value::as_u64).unwrap_or(45).min(55);
     let again = args.get("again").and_then(Value::as_bool) == Some(true);
+    let stored = stored_values(state, &provider, &model, &values).await?;
     let known = (!again)
         .then(|| {
             state.jobs.list(None, 200).into_iter().find(|job| {
-                job.project_id.is_none() && job.provider.as_str() == provider && job.model == model && job.values == values && !matches!(job.status.as_str(), "failed" | "cancelled")
+                job.project_id.is_none() && job.provider.as_str() == provider && job.model == model && job.values == stored && !matches!(job.status.as_str(), "failed" | "cancelled")
             })
         })
         .flatten();
@@ -1899,7 +1921,7 @@ async fn run_tool(state: &AppState, tool: &Tool, args: &Value, before: &str) -> 
         Payload::Composite(other) => Err(format!("unknown composite {other}")),
         Payload::Window { command, args: sent, seconds } if seconds > WINDOW_CALL => {
             let id = format!("w{}", WORK_ID.fetch_add(1, Ordering::Relaxed));
-            WINDOW_WORK.lock().unwrap_or_else(|p| p.into_inner()).push(WindowWork { id: id.clone(), command, result: None, left: false });
+            WINDOW_WORK.lock().unwrap_or_else(|p| p.into_inner()).push(WindowWork { id: id.clone(), command, result: None, left: false, ended: None });
             let (worker, worker_id, name, before, asked) = (state.clone(), id.clone(), tool.name, before.to_string(), args.clone());
             tokio::spawn(async move {
                 let answer = match ask_window(command, sent, seconds).await {
@@ -1912,6 +1934,7 @@ async fn run_tool(state: &AppState, tool: &Tool, args: &Value, before: &str) -> 
                         journal_answer(&worker, name, &asked, &before, &answer);
                     }
                     work.result = Some(answer);
+                    work.ended = Some(std::time::Instant::now());
                 }
             });
             take_work(&id, WINDOW_CALL).await
@@ -1961,7 +1984,11 @@ struct WindowWork {
     result: Option<Result<Answer, String>>,
     /// The call that started it answered before it ended, so its end is journaled when it comes.
     left: bool,
+    ended: Option<std::time::Instant>,
 }
+
+/// How long an ended work's answer waits for studio_wait before it is let go.
+const WORK_KEPT: Duration = Duration::from_secs(3600);
 
 static WINDOW_WORK: Mutex<Vec<WindowWork>> = Mutex::new(Vec::new());
 static WORK_ID: AtomicU64 = AtomicU64::new(1);
@@ -1976,8 +2003,9 @@ async fn take_work(id: &str, seconds: u64) -> Result<Answer, String> {
     loop {
         {
             let mut works = WINDOW_WORK.lock().unwrap_or_else(|p| p.into_inner());
+            works.retain(|work| work.ended.is_none_or(|ended| ended.elapsed() < WORK_KEPT));
             let Some(index) = works.iter().position(|work| work.id == id) else {
-                return Err(format!("No window work {id}: it ended and its answer was given, or VideoSOS restarted; studio_status shows what runs."));
+                return Err(format!("No window work {id}: it ended and its answer was given, its answer waited longer than an hour, or VideoSOS restarted; studio_status shows what runs."));
             };
             if works[index].result.is_some() {
                 let work = works.remove(index);
@@ -2079,7 +2107,7 @@ mod tests {
 
     #[tokio::test]
     async fn long_window_work_answers_with_its_id_and_later_with_its_answer() {
-        WINDOW_WORK.lock().unwrap().push(WindowWork { id: "w-test".into(), command: "export_video", result: None, left: false });
+        WINDOW_WORK.lock().unwrap().push(WindowWork { id: "w-test".into(), command: "export_video", result: None, left: false, ended: None });
         let Ok(Answer::Json(running)) = take_work("w-test", 0).await else { panic!("a running work answers with JSON") };
         assert_eq!(running["done"], false);
         assert_eq!(running["work_id"], "w-test");

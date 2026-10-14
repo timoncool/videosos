@@ -180,6 +180,10 @@ async fn converse(state: &AppState, body: &ChatBody, key: &str, events: &mpsc::S
     }
     let mut cost = 0.0;
     for _ in 0..MAX_TURNS {
+        if let Some(limit) = crate::spend::chat_limit_left(cost) {
+            send(events, json!({ "type": "error", "message": limit, "cost": cost })).await;
+            return cost;
+        }
         let turn = match turn(&state.http.client, key, &body.model, &messages, events).await {
             Ok(turn) => turn,
             Err(error) => {
@@ -199,11 +203,19 @@ async fn converse(state: &AppState, body: &ChatBody, key: &str, events: &mpsc::S
         messages.push(json!({ "role": "assistant", "content": turn.text, "tool_calls": calls }));
         let mut pictures = Vec::new();
         for (id, name, arguments) in &turn.calls {
-            let args: Value = if arguments.trim().is_empty() { Value::Object(Map::new()) } else { serde_json::from_str(arguments).unwrap_or(Value::Object(Map::new())) };
+            let parsed: Result<Value, String> = if arguments.trim().is_empty() {
+                Ok(Value::Object(Map::new()))
+            } else {
+                serde_json::from_str(arguments).map_err(|error| format!("the arguments of {name} are not JSON ({error}): call it again with a JSON object"))
+            };
+            let args = parsed.clone().unwrap_or(Value::Null);
             if !send(events, json!({ "type": "tool", "id": id, "name": name, "args": args })).await {
                 return cost;
             }
-            let answer = crate::mcp::chat_call(state, name, &args).await;
+            let answer = match parsed {
+                Ok(args) => crate::mcp::chat_call(state, name, &args).await,
+                Err(problem) => Err(problem),
+            };
             let (ok, text) = match &answer {
                 Ok(answer) => (true, answer.text.clone()),
                 Err(problem) => (false, problem.clone()),

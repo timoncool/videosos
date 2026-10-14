@@ -97,7 +97,8 @@
         "agent": "Den Prompt für dieses Modell umschreiben: der verbundene Agent schreibt ihn, kostenlos"
       },
       "needsKey": "Benötigt einen OpenRouter-Schlüssel",
-      "undo": "Zurück zu meinem"
+      "undo": "Zurück zu meinem",
+      "noAgent": "Der Agent ist nicht verbunden: starten Sie ihn mit dem MCP von VideoSOS (Einstellungen, Agenten) oder wählen Sie dort OpenRouter"
     },
     "use": {
       "button": "Verwenden als …",

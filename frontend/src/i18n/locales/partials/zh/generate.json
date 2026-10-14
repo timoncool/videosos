@@ -97,7 +97,8 @@
         "agent": "为此模型改写提示词：由已连接的智能体撰写，免费"
       },
       "needsKey": "需要 OpenRouter 密钥",
-      "undo": "恢复我的原文"
+      "undo": "恢复我的原文",
+      "noAgent": "智能体未连接：请通过 VideoSOS 的 MCP 启动它（设置 > 智能体），或在那里选择 OpenRouter"
     },
     "use": {
       "button": "用作…",

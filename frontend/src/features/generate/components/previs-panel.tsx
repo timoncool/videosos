@@ -16,7 +16,7 @@ import {
 } from '../services/previs-scene'
 import { importPrevisFrame, importPrevisVideo, PREVIS_PATH_COLOR } from '../services/previs-shot'
 import { aspectOf } from '../services/storyboard'
-import { useGenerateStore, type PendingUse } from '../stores/generate-store'
+import { assistantReadiness, useGenerateStore, type PendingUse } from '../stores/generate-store'
 
 const VIEWS: PrevisView[] = ['camera', 'top', 'orbit']
 
@@ -31,9 +31,8 @@ export function PrevisPanel() {
   const metadata = useProjectStore((state) => state.currentProject?.metadata)
   const blocking = useGenerateStore((state) => (projectId ? state.blockings[projectId] : undefined))
   const assistant = useGenerateStore((state) => state.assistant)
-  const canAssist = useGenerateStore(
-    (state) => state.assistant === 'agent' || state.keys.openrouter === true,
-  )
+  const readiness = useGenerateStore(assistantReadiness)
+  const canAssist = readiness === 'ready'
   const [description, setDescription] = useState(blocking?.description ?? '')
   const [json, setJson] = useState('')
   const [view, setView] = useState<PrevisView>('camera')
@@ -174,7 +173,15 @@ export function PrevisPanel() {
         <Button
           className="bg-brand h-9 w-full gap-2"
           disabled={busy !== null || !description.trim() || !canAssist}
-          title={canAssist ? undefined : t('generate.improve.needsKey')}
+          title={
+            canAssist
+              ? undefined
+              : t(
+                  readiness === 'no_agent'
+                    ? 'generate.improve.noAgent'
+                    : 'generate.improve.needsKey',
+                )
+          }
           onClick={() => void build(false)}
         >
           {busy === 'build' ? (

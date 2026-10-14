@@ -59,6 +59,15 @@ export function useGenerateSync(projectId: string | null): void {
       })
       .catch(report)
     void loadKeys().catch(report)
+    const readAgent = () =>
+      generateApi
+        .agentStatus()
+        .then(
+          (status) => useGenerateStore.getState().setAgentConnected(status.agent_connected),
+          report,
+        )
+    void readAgent()
+    const agentTimer = window.setInterval(() => void readAgent(), 10_000)
     const unsubscribe = onGenerateEvent((event) => {
       if (event.kind === 'job') {
         if (event.data.project_id === projectId) {
@@ -91,6 +100,7 @@ export function useGenerateSync(projectId: string | null): void {
     })
     return () => {
       cancelled = true
+      window.clearInterval(agentTimer)
       unsubscribe()
     }
   }, [projectId])

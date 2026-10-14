@@ -17,7 +17,12 @@ import {
   type Storyboard,
 } from '../services/storyboard'
 import { playheadSeconds } from '../services/timeline-actions'
-import { modelKey, useGenerateStore, type ModelRef } from '../stores/generate-store'
+import {
+  assistantReadiness,
+  modelKey,
+  useGenerateStore,
+  type ModelRef,
+} from '../stores/generate-store'
 import { MediaThumb } from './field-control'
 import { ModelPicker } from './model-picker'
 
@@ -85,7 +90,8 @@ export function StoryboardPanel() {
   const models = useGenerateStore((state) => state.storyboardModels)
   const keys = useGenerateStore((state) => state.keys)
   const assistant = useGenerateStore((state) => state.assistant)
-  const canAssist = assistant === 'agent' || keys.openrouter === true
+  const readiness = useGenerateStore(assistantReadiness)
+  const canAssist = readiness === 'ready'
   const jobs = useGenerateStore((state) => state.jobs)
   const elements = useGenerateStore((state) => state.elements)
   const { form: imageForm, error: imageFormError } = useForm(models.image)
@@ -281,7 +287,11 @@ export function StoryboardPanel() {
               title={
                 canAssist
                   ? t(`generate.storyboard.splitHint.${assistant}`)
-                  : t('generate.improve.needsKey')
+                  : t(
+                      readiness === 'no_agent'
+                        ? 'generate.improve.noAgent'
+                        : 'generate.improve.needsKey',
+                    )
               }
             >
               {splitting ? (

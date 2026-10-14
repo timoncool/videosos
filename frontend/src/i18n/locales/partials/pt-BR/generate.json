@@ -97,7 +97,8 @@
         "agent": "Reescrever o prompt para este modelo: o agente conectado escreve, sem custo"
       },
       "needsKey": "Requer uma chave da OpenRouter",
-      "undo": "Voltar ao meu"
+      "undo": "Voltar ao meu",
+      "noAgent": "O agente não está conectado: inicie-o com o MCP do VideoSOS (Configurações, Agentes) ou escolha o OpenRouter lá"
     },
     "use": {
       "button": "Usar como…",

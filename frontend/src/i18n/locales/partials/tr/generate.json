@@ -97,7 +97,8 @@
         "agent": "İstemi bu model için yeniden yaz: bağlı ajan yazar, ücretsiz"
       },
       "needsKey": "OpenRouter anahtarı gerekli",
-      "undo": "Kendi istemime dön"
+      "undo": "Kendi istemime dön",
+      "noAgent": "Ajan bağlı değil: VideoSOS'un MCP'siyle başlatın (Ayarlar, Ajanlar) ya da orada OpenRouter'ı seçin"
     },
     "use": {
       "button": "Şu olarak kullan…",

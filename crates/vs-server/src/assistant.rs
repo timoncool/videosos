@@ -30,7 +30,7 @@ struct Ask {
 
 async fn ask(Json(ask): Json<Ask>) -> Response {
     if ask.request.trim().is_empty() {
-        return (StatusCode::BAD_REQUEST, Json(json!({ "error": "the question is empty" }))).into_response();
+        return (StatusCode::BAD_REQUEST, Json(json!({ "error": crate::t!("assistant-empty") }))).into_response();
     }
     let question = json!({
         "target": ask.target,

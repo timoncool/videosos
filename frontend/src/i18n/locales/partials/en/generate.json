@@ -98,7 +98,8 @@
         "agent": "Rewrite the prompt for this model: the connected agent writes it, nothing is paid"
       },
       "needsKey": "Needs an OpenRouter key",
-      "undo": "Back to mine"
+      "undo": "Back to mine",
+      "noAgent": "The agent is not connected: start it with VideoSOS's MCP (Settings, Agents), or choose OpenRouter there"
     },
     "use": {
       "button": "Use as…",

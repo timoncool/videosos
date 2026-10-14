@@ -35,6 +35,7 @@ jobs-cancelled = Cancelled.
 jobs-cancelled-not-waiting = Stopped waiting. The provider did not stop the job, so it may still finish and be charged.
 jobs-cancelled-sending = Cancelling: fal is asked to stop the job as soon as it has taken it.
 jobs-field-required = Fill in: { $field }
+jobs-field-unknown = This model has no field { $field }; its fields are: { $fields }.
 jobs-field-too-long = { $field } is { $count } characters long; the model takes at most { $max }.
 jobs-no-key = No { $provider } key: add it in Settings, Providers.
 jobs-place-needs-project = Placing on the timeline needs project_id: the project open in the window (editor_state names it).
@@ -56,6 +57,8 @@ keys-one-line = A key is one line.
 settings-bad-budget = The daily limit is a number from 0 to 10000.
 spend-agent-limit = Agents have spent ${ $spent } today; this job would cost about ${ $cost } and pass the daily limit of ${ $budget }. Raise the limit in Settings, Agents.
 spend-agent-limit-unknown-price = This model's price is known only after the run, so an agent cannot start it while the daily limit of ${ $budget } is set. Pick a model with a price, or clear the limit in Settings, Agents.
+spend-agent-limit-chat = Agents have spent ${ $spent } today with this conversation, which reaches the daily limit of ${ $budget }: the chat stops here. Raise the limit in Settings, Agents.
+assistant-empty = The question is empty.
 catalog-partial = Part of the catalogue was not read: { $failures }. The models read are listed; refresh to try again.
 
 ## the desktop shell

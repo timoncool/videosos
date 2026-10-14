@@ -386,7 +386,7 @@ const settle = () =>
   new Promise<void>((resolve) => {
     // a panel opened by the action may arrive as a lazy chunk: the page is read once its structure stops changing
     let quiet = window.setTimeout(() => done(), 250)
-    const longest = window.setTimeout(() => done(), 3000)
+    const longest = window.setTimeout(() => done(), 1500)
     const watcher = new MutationObserver(() => {
       window.clearTimeout(quiet)
       quiet = window.setTimeout(() => done(), 200)

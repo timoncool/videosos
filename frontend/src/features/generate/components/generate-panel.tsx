@@ -40,7 +40,7 @@ import {
   type Provider,
   type Task,
 } from '../services/generate-api'
-import { modelKey, useGenerateStore } from '../stores/generate-store'
+import { assistantReadiness, modelKey, useGenerateStore } from '../stores/generate-store'
 import { useProjectStore } from '../deps/editor'
 import { FieldControl } from './field-control'
 import { describeImage, improvePrompt } from '../services/prompt-assist'
@@ -161,7 +161,11 @@ export function GeneratePanel() {
   const model = useGenerateStore((state) => state.modelByTask[state.task])
   const keys = useGenerateStore((state) => state.keys)
   const assistant = useGenerateStore((state) => state.assistant)
-  const canAssist = assistant === 'agent' || keys.openrouter === true
+  const readiness = useGenerateStore(assistantReadiness)
+  const canAssist = readiness === 'ready'
+  const notReady = t(
+    readiness === 'no_agent' ? 'generate.improve.noAgent' : 'generate.improve.needsKey',
+  )
   const jobs = useGenerateStore((state) => state.jobs)
   const repeat = useGenerateStore((state) => state.repeat)
   const placeOnTimeline = useGenerateStore((state) => state.placeOnTimeline)
@@ -420,11 +424,7 @@ export function GeneratePanel() {
                         !(values[field.key] as string).trim() ||
                         !canAssist
                       }
-                      title={
-                        canAssist
-                          ? t(`generate.improve.hint.${assistant}`)
-                          : t('generate.improve.needsKey')
-                      }
+                      title={canAssist ? t(`generate.improve.hint.${assistant}`) : notReady}
                       onClick={() => {
                         const original = values[field.key] as string
                         setImproving(true)
@@ -473,11 +473,7 @@ export function GeneratePanel() {
                       <button
                         type="button"
                         disabled={improving || !canAssist}
-                        title={
-                          canAssist
-                            ? t(`generate.describe.hint.${assistant}`)
-                            : t('generate.improve.needsKey')
-                        }
+                        title={canAssist ? t(`generate.describe.hint.${assistant}`) : notReady}
                         onClick={() => {
                           const original =
                             typeof values[field.key] === 'string'

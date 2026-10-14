@@ -865,6 +865,13 @@ async fn create(State(state): State<AppState>, Json(mut request): Json<CreateReq
             several => return bad(t!("jobs-task-needed", tasks = several.iter().map(|task| task.as_str()).collect::<Vec<_>>().join(", "))),
         }
     }
+    // an agent's field the model does not have would be dropped unseen: it is refused, naming the model's own
+    if request.origin.as_deref() == Some("agent")
+        && let Some(unknown) = request.values.keys().find(|key| !form.fields.iter().any(|field| &field.key == *key))
+    {
+        let known: Vec<String> = form.fields.iter().map(|field| format!("{} ({})", field.key, field.label)).collect();
+        return bad(t!("jobs-field-unknown", field = unknown.clone(), fields = known.join(", ")));
+    }
     let elements = match crate::choices::current() {
         Ok(choices) => crate::elements::from_choices(&choices),
         Err(error) => return (StatusCode::INTERNAL_SERVER_ERROR, Json(json!({ "error": error }))).into_response(),
@@ -880,7 +887,9 @@ async fn create(State(state): State<AppState>, Json(mut request): Json<CreateReq
             _ => false,
         };
         if missing && field.default.is_none() {
-            return bad(t!("jobs-field-required", field = field.label.clone()));
+            // an agent fills fields by key, the person by the label the form shows
+            let named = if request.origin.as_deref() == Some("agent") { format!("{} ({})", field.label, field.key) } else { field.label.clone() };
+            return bad(t!("jobs-field-required", field = named));
         }
     }
     // OpenRouter reads a video only from an https link, never from the data the server could send it

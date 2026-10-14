@@ -31,3 +31,11 @@ pub fn agent_limit_left(request: &CreateRequest, form: &ModelForm) -> Option<Str
         None => Some(t!("spend-agent-limit-unknown-price", budget = format!("{budget:.2}"))),
     }
 }
+
+/// Why the chat may not take another paid step, if the limit stops it: what agents spent today with what this
+/// conversation has cost so far, which is recorded only when it ends.
+pub fn chat_limit_left(so_far: f64) -> Option<String> {
+    let budget = crate::settings::get().agent_daily_budget_usd?;
+    let spent = SPENT.get().map(|jobs| jobs.agent_spent_today()).unwrap_or(0.0) + so_far;
+    (spent >= budget).then(|| t!("spend-agent-limit-chat", spent = format!("{spent:.2}"), budget = format!("{budget:.2}")))
+}
