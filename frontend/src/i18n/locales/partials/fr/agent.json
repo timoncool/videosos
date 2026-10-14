@@ -19,7 +19,30 @@
       "checkpoint_create": "enregistre un point de restauration",
       "checkpoint_restore": "revient à un point de restauration",
       "motion_render": "transforme des graphiques HTML en clip",
-      "previs_render": "prévisualise un plan en 3D"
+      "previs_render": "prévisualise un plan en 3D",
+      "project_create": "crée un nouveau projet",
+      "project_update": "modifie le projet",
+      "project_delete": "met un projet à la corbeille",
+      "project_restore": "ramène un projet de la corbeille",
+      "project_duplicate": "duplique un projet",
+      "media_delete": "retire des médias de la médiathèque",
+      "frame_save": "enregistre une image de la timeline",
+      "media_last_frame": "prend la dernière image d’une vidéo",
+      "media_cut": "découpe un passage d’une vidéo",
+      "transcribe": "transcrit la parole",
+      "captions_add": "place des sous-titres sur la timeline",
+      "window_settings_set": "modifie les paramètres de la fenêtre",
+      "ui_open_settings": "ouvre les paramètres",
+      "ui_navigate": "ouvre une page",
+      "element_save": "conserve un élément",
+      "element_delete": "supprime un élément enregistré",
+      "preset_save": "enregistre un préréglage de prompt",
+      "preset_delete": "supprime un préréglage de prompt enregistré",
+      "variables_set": "définit les variables du prompt",
+      "storyboard_set": "écrit le storyboard",
+      "canvas_set": "écrit le canevas",
+      "canvas_template": "place un workflow sur le canevas",
+      "export_fcpxml": "exporte du FCPXML"
     },
     "proposal": {
       "title": "L’agent propose une modification",
@@ -38,7 +61,13 @@
         "trimStartExtend": "Allonger le début de {{name}} de {{seconds}} s",
         "trimEndCut": "Couper {{seconds}} s à la fin de {{name}}",
         "trimEndExtend": "Allonger la fin de {{name}} de {{seconds}} s",
-        "other": "{{op}} : {{name}}"
+        "other": "{{op}} : {{name}}",
+        "addShape": "Ajouter la forme {{shape}} à {{at}} s",
+        "updateTrack": "Modifier la piste {{name}}",
+        "removeTrack": "Retirer la piste vide {{name}}",
+        "addMarker": "Ajouter le marqueur « {{label}} » à {{at}} s",
+        "updateMarker": "Modifier un marqueur",
+        "removeMarker": "Retirer un marqueur"
       }
     }
   }

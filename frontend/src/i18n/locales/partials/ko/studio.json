@@ -152,7 +152,16 @@
       "checkpoint": "복원 지점",
       "blocking": "3D 블로킹",
       "key": "키",
-      "proxy": "프록시"
+      "proxy": "프록시",
+      "project": "프로젝트",
+      "transcript": "전사",
+      "captions": "자막",
+      "settings": "설정",
+      "element": "요소",
+      "preset": "프롬프트 프리셋",
+      "storyboard": "스토리보드",
+      "canvas": "캔버스",
+      "fcpxml": "FCPXML"
     }
   },
   "files": {

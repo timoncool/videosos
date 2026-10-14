@@ -22,7 +22,8 @@ export function formatTime(seconds: number, language: string): string {
 export function formatFileSize(bytes: number, language: string): string {
   if (bytes < 1024) return unit(language, 'byte', bytes)
   if (bytes < 1024 * 1024) return unit(language, 'kilobyte', bytes / 1024, 1)
-  if (bytes >= 1024 * 1024 * 1024) return unit(language, 'gigabyte', bytes / (1024 * 1024 * 1024), 2)
+  if (bytes >= 1024 * 1024 * 1024)
+    return unit(language, 'gigabyte', bytes / (1024 * 1024 * 1024), 2)
   return unit(language, 'megabyte', bytes / (1024 * 1024), 2)
 }
 
@@ -32,7 +33,11 @@ export function formatBitrate(bitsPerSecond: number, language: string): string {
 
 /** The bitrate unit alone, for a field that takes the number. */
 export function bitrateUnit(language: string): string {
-  return new Intl.NumberFormat(language, { style: 'unit', unit: 'megabit-per-second', unitDisplay: 'short' })
+  return new Intl.NumberFormat(language, {
+    style: 'unit',
+    unit: 'megabit-per-second',
+    unitDisplay: 'short',
+  })
     .formatToParts(1)
     .filter((part) => part.type === 'unit')
     .map((part) => part.value)

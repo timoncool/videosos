@@ -6,13 +6,14 @@
  * edit.ts so that module can dispatch ops through a handler table; every body
  * below is unchanged.
  */
-import type { TimelineItem, TimelineTrack, TextItem } from '@/types/timeline'
+import type { TimelineItem, TimelineTrack, TextItem, ShapeItem, ShapeType } from '@/types/timeline'
 import type { MediaMetadata } from '@/types/storage'
 import type { Transition } from '@/types/transition'
 
 import { useItemsStore } from '@/features/timeline/stores/items-store'
 import { useTransitionsStore } from '@/features/timeline/stores/transitions-store'
 import { createClassicTrack } from '@/features/timeline/utils/classic-tracks'
+import { createDefaultShapeItem } from '@/features/timeline/utils/generated-layer-items'
 import { setTracks, updateTransition } from '@/features/timeline/stores/timeline-actions'
 
 export type EditOperationName =
@@ -35,6 +36,12 @@ export type EditOperationName =
   | 'addEffect'
   | 'removeEffect'
   | 'setTransform'
+  | 'addShape'
+  | 'updateTrack'
+  | 'removeTrack'
+  | 'addMarker'
+  | 'updateMarker'
+  | 'removeMarker'
 
 /** A wire operation. Runtime dispatch validates its discriminator before invoking a handler. */
 export type EditOp = Record<string, unknown> & { op: EditOperationName }
@@ -149,12 +156,23 @@ function resolveOrCreateTrack(preferred: unknown, kind: 'video' | 'audio'): stri
  * there, the track a clip goes to by default; otherwise a free track above everything there (a lower order
  * draws on top), the nearest one, or a new track at the top. Sound mixes, so a free audio track is enough.
  */
-export function freeTrackAt(kind: 'video' | 'audio', from: number, durationInFrames: number): string {
+export function freeTrackAt(
+  kind: 'video' | 'audio',
+  from: number,
+  durationInFrames: number,
+): string {
   const items = useItemsStore.getState().items
   const busy = (trackId: string) =>
-    items.some((item) => item.trackId === trackId && item.from < from + durationInFrames && from < item.from + item.durationInFrames)
+    items.some(
+      (item) =>
+        item.trackId === trackId &&
+        item.from < from + durationInFrames &&
+        from < item.from + item.durationInFrames,
+    )
   const all = tracks()
-  const ofKind = all.filter((t) => !t.isGroup && (t.kind ?? 'video') === kind).sort((a, b) => a.order - b.order)
+  const ofKind = all
+    .filter((t) => !t.isGroup && (t.kind ?? 'video') === kind)
+    .sort((a, b) => a.order - b.order)
   const taken = ofKind.filter((t) => busy(t.id))
   if (taken.length === 0) return getOrCreateTrack(kind)
   const free = ofKind.filter((t) => !t.locked && !busy(t.id))
@@ -169,8 +187,14 @@ export function freeTrackAt(kind: 'video' | 'audio', from: number, durationInFra
 }
 
 /** The track a clip op asked for; with `keepFrom` and no track named, one that is free where the clip lands. */
-export function placementTrack(op: EditOp, kind: 'video' | 'audio', from: number, durationInFrames: number): string {
-  if (op.keepFrom === true && !asString(op.trackId)) return freeTrackAt(kind, from, durationInFrames)
+export function placementTrack(
+  op: EditOp,
+  kind: 'video' | 'audio',
+  from: number,
+  durationInFrames: number,
+): string {
+  if (op.keepFrom === true && !asString(op.trackId))
+    return freeTrackAt(kind, from, durationInFrames)
   return resolveOrCreateTrack(op.trackId, kind)
 }
 
@@ -204,6 +228,33 @@ export function buildTextItem(op: EditOp): TextItem {
       ? { verticalAlign: op.verticalAlign }
       : {}),
   }
+}
+
+const SHAPES: readonly ShapeType[] = [
+  'rectangle',
+  'circle',
+  'triangle',
+  'ellipse',
+  'star',
+  'polygon',
+  'heart',
+]
+
+/** A shape as the Shapes tab makes one, at the size the window gives it, on the track asked or the first video track. */
+export function buildShapeItem(op: EditOp): ShapeItem {
+  const shapeType = asString(op.shape) ?? 'rectangle'
+  if (!SHAPES.includes(shapeType as ShapeType))
+    throw new Error(`shape: one of ${SHAPES.join(', ')}`)
+  const item = createDefaultShapeItem({
+    trackId: resolveTrackId(op.trackId, 'video'),
+    from: asNumber(op.from, 0)!,
+    durationInFrames: asNumber(op.durationInFrames, 90)!,
+    canvasWidth: editCanvas.width,
+    canvasHeight: editCanvas.height,
+    shapeType: shapeType as ShapeType,
+  })
+  const color = asString(op.color)
+  return color ? { ...item, fillColor: color } : item
 }
 
 /** Canvas of the project currently being edited (see editProject). */

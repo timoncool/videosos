@@ -152,7 +152,16 @@
       "checkpoint": "復元ポイント",
       "blocking": "3Dブロッキング",
       "key": "キー",
-      "proxy": "プロキシ"
+      "proxy": "プロキシ",
+      "project": "プロジェクト",
+      "transcript": "文字起こし",
+      "captions": "キャプション",
+      "settings": "設定",
+      "element": "エレメント",
+      "preset": "プロンプトのプリセット",
+      "storyboard": "ストーリーボード",
+      "canvas": "キャンバス",
+      "fcpxml": "FCPXML"
     }
   },
   "files": {

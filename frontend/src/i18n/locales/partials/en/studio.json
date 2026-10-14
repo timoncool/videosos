@@ -152,7 +152,16 @@
       "checkpoint": "checkpoint",
       "blocking": "3D blocking",
       "key": "key",
-      "proxy": "proxy"
+      "proxy": "proxy",
+      "project": "project",
+      "transcript": "transcript",
+      "captions": "captions",
+      "settings": "settings",
+      "element": "element",
+      "preset": "prompt preset",
+      "storyboard": "storyboard",
+      "canvas": "canvas",
+      "fcpxml": "FCPXML"
     }
   },
   "files": {

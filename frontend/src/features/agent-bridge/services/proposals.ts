@@ -60,6 +60,8 @@ export function describeOps(ops: EditOp[], fps: number): ProposalLine[] {
   const at = (frames: unknown) =>
     typeof frames === 'number' ? Math.round((frames / fps) * 10) / 10 : 0
   const itemName = (id: unknown) => (typeof id === 'string' ? (itemById[id]?.label ?? id) : '?')
+  const { tracks } = useItemsStore.getState()
+  const trackName = (id: unknown) => tracks.find((track) => track.id === id)?.name ?? String(id)
   return ops.map((op): ProposalLine => {
     switch (op.op) {
       case 'addClip':
@@ -91,6 +93,19 @@ export function describeOps(ops: EditOp[], fps: number): ProposalLine[] {
           values: { name: itemName(op.id), seconds: at(Math.abs(amount)) },
         }
       }
+      case 'addShape':
+        return {
+          key: 'addShape',
+          values: { shape: String(op.shape ?? 'rectangle'), at: at(op.from) },
+        }
+      case 'updateTrack':
+      case 'removeTrack':
+        return { key: op.op, values: { name: trackName(op.id) } }
+      case 'addMarker':
+        return { key: 'addMarker', values: { label: String(op.label ?? ''), at: at(op.frame) } }
+      case 'updateMarker':
+      case 'removeMarker':
+        return { key: op.op, values: {} }
       default:
         return { key: 'other', values: { op: op.op, name: itemName(op.id ?? op.itemId) } }
     }

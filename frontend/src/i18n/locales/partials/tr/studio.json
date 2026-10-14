@@ -152,7 +152,16 @@
       "checkpoint": "geri yükleme noktası",
       "blocking": "3D blocking",
       "key": "anahtar",
-      "proxy": "proxy"
+      "proxy": "proxy",
+      "project": "proje",
+      "transcript": "döküm",
+      "captions": "altyazılar",
+      "settings": "ayarlar",
+      "element": "öğe",
+      "preset": "istem ön ayarı",
+      "storyboard": "storyboard",
+      "canvas": "tuval",
+      "fcpxml": "FCPXML"
     }
   },
   "files": {

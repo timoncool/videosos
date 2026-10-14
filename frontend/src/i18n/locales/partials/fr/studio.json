@@ -152,7 +152,16 @@
       "checkpoint": "point de restauration",
       "blocking": "blocking 3D",
       "key": "clé",
-      "proxy": "proxy"
+      "proxy": "proxy",
+      "project": "projet",
+      "transcript": "transcription",
+      "captions": "sous-titres",
+      "settings": "paramètres",
+      "element": "élément",
+      "preset": "préréglage de prompt",
+      "storyboard": "storyboard",
+      "canvas": "canevas",
+      "fcpxml": "FCPXML"
     }
   },
   "files": {

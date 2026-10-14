@@ -19,7 +19,30 @@
       "checkpoint_create": "復元ポイントを保存する",
       "checkpoint_restore": "復元ポイントに戻す",
       "motion_render": "HTMLグラフィックスをクリップにします",
-      "previs_render": "ショットを3Dでブロッキングします"
+      "previs_render": "ショットを3Dでブロッキングします",
+      "project_create": "新しいプロジェクトを作成する",
+      "project_update": "プロジェクトを変更する",
+      "project_delete": "プロジェクトをゴミ箱に移動する",
+      "project_restore": "プロジェクトをゴミ箱から戻す",
+      "project_duplicate": "プロジェクトを複製する",
+      "media_delete": "メディアをメディアライブラリから削除する",
+      "frame_save": "タイムラインのフレームを保存する",
+      "media_last_frame": "動画の最後のフレームを取り出す",
+      "media_cut": "動画の一部を切り出す",
+      "transcribe": "音声を文字起こしする",
+      "captions_add": "キャプションをタイムラインに配置する",
+      "window_settings_set": "ウィンドウの設定を変更する",
+      "ui_open_settings": "設定を開く",
+      "ui_navigate": "ページを開く",
+      "element_save": "エレメントを保存する",
+      "element_delete": "保存したエレメントを削除する",
+      "preset_save": "プロンプトのプリセットを保存する",
+      "preset_delete": "保存したプロンプトのプリセットを削除する",
+      "variables_set": "プロンプト変数を設定する",
+      "storyboard_set": "ストーリーボードを書き込む",
+      "canvas_set": "キャンバスを書き込む",
+      "canvas_template": "ワークフローをキャンバスに配置する",
+      "export_fcpxml": "FCPXMLを書き出す"
     },
     "proposal": {
       "title": "エージェントが編集を提案しています",
@@ -38,7 +61,13 @@
         "trimStartExtend": "{{name}}の先頭を{{seconds}}秒延長",
         "trimEndCut": "{{name}}の末尾から{{seconds}}秒をカット",
         "trimEndExtend": "{{name}}の末尾を{{seconds}}秒延長",
-        "other": "{{op}}: {{name}}"
+        "other": "{{op}}: {{name}}",
+        "addShape": "{{at}} 秒に図形 {{shape}} を追加",
+        "updateTrack": "トラック {{name}} を変更",
+        "removeTrack": "空のトラック {{name}} を削除",
+        "addMarker": "{{at}} 秒にマーカー「{{label}}」を追加",
+        "updateMarker": "マーカーを変更",
+        "removeMarker": "マーカーを削除"
       }
     }
   }

@@ -39,7 +39,12 @@ import {
   addEffect,
   removeEffect,
   updateItemTransform,
+  addMarker,
+  updateMarker,
+  removeMarker,
 } from '@/features/timeline/stores/timeline-actions'
+import { useMarkersStore } from '@/features/timeline/stores/markers-store'
+import { useItemsStore } from '@/features/timeline/stores/items-store'
 import {
   type EditOp,
   type EditOperationName,
@@ -47,6 +52,7 @@ import {
   asString,
   assertTransitionUpdateApplied,
   buildTextItem,
+  buildShapeItem,
   getEditCanvas,
   freeTrackAt,
   getOrCreateTrack,
@@ -206,6 +212,85 @@ function applyRemoveTransition(op: EditOp): unknown {
   return { id }
 }
 
+function applyAddShape(op: EditOp): unknown {
+  const item = buildShapeItem(op)
+  addItem(item)
+  return { id: item.id }
+}
+
+/** A track's name and switches, as its header in the timeline changes them. */
+function applyUpdateTrack(op: EditOp): unknown {
+  const id = asString(op.id)
+  if (!id) throw new Error('updateTrack: id is required')
+  const all = tracks()
+  const track = all.find((each) => each.id === id)
+  if (!track) throw new Error(`updateTrack: no track "${id}"`)
+  const changes: Partial<typeof track> = {}
+  const name = asString(op.name)
+  if (name !== undefined) changes.name = name
+  for (const key of ['muted', 'solo', 'locked', 'visible'] as const) {
+    if (op[key] === undefined) continue
+    if (typeof op[key] !== 'boolean') throw new Error(`updateTrack: ${key} is true or false`)
+    changes[key] = op[key]
+  }
+  const volume = asNumber(op.volume)
+  if (volume !== undefined) {
+    if (volume < -60 || volume > 12)
+      throw new Error('updateTrack: volume is in decibels, from -60 to 12')
+    changes.volume = volume
+  }
+  if (Object.keys(changes).length === 0)
+    throw new Error('updateTrack: nothing to change (name, muted, solo, locked, visible, volume)')
+  setTracks(all.map((each) => (each.id === id ? { ...each, ...changes } : each)))
+  return { trackId: id, ...changes }
+}
+
+/** Removes an empty track; its clips are removed first with removeItems, so nothing goes unseen. */
+function applyRemoveTrack(op: EditOp): unknown {
+  const id = asString(op.id)
+  if (!id) throw new Error('removeTrack: id is required')
+  const all = tracks()
+  if (!all.some((each) => each.id === id)) throw new Error(`removeTrack: no track "${id}"`)
+  const left = useItemsStore.getState().items.filter((item) => item.trackId === id)
+  if (left.length > 0)
+    throw new Error(
+      `removeTrack: the track still holds ${left.length} clip(s); remove them with removeItems first`,
+    )
+  setTracks(all.filter((each) => each.id !== id))
+  return { removed: id }
+}
+
+function applyAddMarker(op: EditOp): unknown {
+  const frame = asNumber(op.frame)
+  if (frame === undefined || frame < 0) throw new Error('addMarker: frame is required, 0 or more')
+  const before = new Set(useMarkersStore.getState().markers.map((marker) => marker.id))
+  addMarker(Math.round(frame), asString(op.color), asString(op.label))
+  const made = useMarkersStore.getState().markers.find((marker) => !before.has(marker.id))
+  if (!made) throw new Error('addMarker: the marker was not made')
+  return { id: made.id, frame: made.frame }
+}
+
+function applyUpdateMarker(op: EditOp): unknown {
+  const id = asString(op.id)
+  if (!id || !useMarkersStore.getState().markers.some((marker) => marker.id === id))
+    throw new Error(`updateMarker: no marker "${id ?? ''}"`)
+  const frame = asNumber(op.frame)
+  updateMarker(id, {
+    ...(frame !== undefined && { frame: Math.max(0, Math.round(frame)) }),
+    ...(asString(op.label) !== undefined && { label: asString(op.label) }),
+    ...(asString(op.color) !== undefined && { color: asString(op.color) }),
+  })
+  return { id }
+}
+
+function applyRemoveMarker(op: EditOp): unknown {
+  const id = asString(op.id)
+  if (!id || !useMarkersStore.getState().markers.some((marker) => marker.id === id))
+    throw new Error(`removeMarker: no marker "${id ?? ''}"`)
+  removeMarker(id)
+  return { removed: id }
+}
+
 function applyAddTrack(op: EditOp): unknown {
   const kind = op.kind === 'audio' ? 'audio' : 'video'
   const all = tracks()
@@ -306,7 +391,10 @@ function placeVideoClip(
   const audio: AudioItem = {
     id: newId(),
     type: 'audio',
-    trackId: op.keepFrom === true ? freeTrackAt('audio', from, durationInFrames) : getOrCreateTrack('audio'),
+    trackId:
+      op.keepFrom === true
+        ? freeTrackAt('audio', from, durationInFrames)
+        : getOrCreateTrack('audio'),
     from,
     durationInFrames,
     label: `${label} audio`,
@@ -473,6 +561,12 @@ const OP_HANDLERS: Record<EditOperationName, (op: EditOp) => unknown> = {
   addEffect: applyAddEffect,
   removeEffect: applyRemoveEffect,
   setTransform: applySetTransform,
+  addShape: applyAddShape,
+  updateTrack: applyUpdateTrack,
+  removeTrack: applyRemoveTrack,
+  addMarker: applyAddMarker,
+  updateMarker: applyUpdateMarker,
+  removeMarker: applyRemoveMarker,
 }
 
 /** Apply a single op by driving the real timeline action modules. Throws on bad input. */

@@ -152,7 +152,16 @@
       "checkpoint": "Wiederherstellungspunkt",
       "blocking": "3D-Blocking",
       "key": "Schlüssel",
-      "proxy": "Proxy"
+      "proxy": "Proxy",
+      "project": "Projekt",
+      "transcript": "Transkript",
+      "captions": "Untertitel",
+      "settings": "Einstellungen",
+      "element": "Element",
+      "preset": "Prompt-Vorgabe",
+      "storyboard": "Storyboard",
+      "canvas": "Leinwand",
+      "fcpxml": "FCPXML"
     }
   },
   "files": {

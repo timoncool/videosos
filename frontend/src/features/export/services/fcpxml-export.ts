@@ -13,13 +13,20 @@ import { useItemsStore } from '../deps/timeline'
 import { studioApi } from '../deps/studio'
 import { buildFcpxml, type FcpxmlMedia } from './fcpxml'
 
-export async function exportFcpxml(): Promise<void> {
+/** The open project's timeline as an FCPXML file, with the items it does not carry. */
+export async function fcpxmlFile(): Promise<{
+  blob: Blob
+  name: string
+  left: ReturnType<typeof buildFcpxml>['left']
+}> {
   const project = useProjectStore.getState().currentProject
   if (!project) throw new Error(i18n.t('export.fcpxml.noProject'))
   const { tracks, items } = useItemsStore.getState()
   const { projects_dir: workspace } = await studioApi.appPaths()
   const media: Record<string, FcpxmlMedia> = {}
-  for (const mediaId of new Set(items.flatMap((item) => ('mediaId' in item && item.mediaId ? [item.mediaId] : [])))) {
+  for (const mediaId of new Set(
+    items.flatMap((item) => ('mediaId' in item && item.mediaId ? [item.mediaId] : [])),
+  )) {
     const metadata = getMediaMetadataById(mediaId)
     if (!metadata) continue
     const segments = await mediaSourcePath(mediaId)
@@ -42,11 +49,19 @@ export async function exportFcpxml(): Promise<void> {
   })
   const blob = new Blob([xml], { type: 'application/xml' })
   const name = `${project.name.replace(/[<>:"/\\|?*]+/g, '_').trim() || 'videosos'}.fcpxml`
+  return { blob, name, left }
+}
+
+/** Saves the FCPXML where the person chooses in the program, or downloads it in a browser. */
+export async function exportFcpxml(): Promise<void> {
+  const { blob, name, left } = await fcpxmlFile()
   if (await isDesktop()) {
     const saved = await saveToDisk(blob, name, { dialog: true })
     if (saved.cancelled || !saved.path) return
     const path = saved.path
-    toast.success(i18n.t('desktop.saved', { path }), { action: { label: i18n.t('desktop.reveal'), onClick: () => void revealOnDisk(path) } })
+    toast.success(i18n.t('desktop.saved', { path }), {
+      action: { label: i18n.t('desktop.reveal'), onClick: () => void revealOnDisk(path) },
+    })
   } else {
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
@@ -57,9 +72,14 @@ export async function exportFcpxml(): Promise<void> {
   }
   if (left.length > 0) {
     const reasons = (['kind', 'file', 'speed'] as const)
-      .map((reason) => ({ reason, labels: left.filter((each) => each.reason === reason).map((each) => each.label) }))
+      .map((reason) => ({
+        reason,
+        labels: left.filter((each) => each.reason === reason).map((each) => each.label),
+      }))
       .filter((group) => group.labels.length > 0)
-      .map((group) => i18n.t(`export.fcpxml.left.${group.reason}`, { items: group.labels.join(', ') }))
+      .map((group) =>
+        i18n.t(`export.fcpxml.left.${group.reason}`, { items: group.labels.join(', ') }),
+      )
     toast.warning(reasons.join('\n'))
   }
 }

@@ -18,3 +18,27 @@ export { useProjectStore } from '@/features/projects/stores/project-store'
 export { saveTimeline } from '@/features/timeline/stores/timeline-persistence'
 export { buildRenderJob } from '@/features/export/utils/build-render-job'
 export { useRenderQueueStore } from '@/features/export/stores/render-queue-store'
+export { useMarkersStore } from '@/features/timeline/stores/markers-store'
+export {
+  createProjectFormSchema,
+  DEFAULT_PROJECT_VALUES,
+} from '@/features/projects/utils/validation'
+export { commitProjectMetadataChange } from '@/features/editor/utils/project-metadata-history'
+export { markDirty } from '@/features/timeline/stores/actions/settings-actions'
+export { listTrashedProjects } from '@/infrastructure/storage'
+export { cutSegment } from '@/features/generate/services/clip-segment'
+export { importLastFrame } from '@/features/generate/services/last-frame'
+export { useGenerateStore } from '@/features/generate/stores/generate-store'
+export {
+  besideGraph,
+  instantiate,
+  readWorkflowFile,
+  workflowFile,
+  WORKFLOW_TEMPLATES,
+  type ModelsFor,
+} from '@/features/generate/services/canvas-templates'
+export { fcpxmlFile } from '@/features/export/services/fcpxml-export'
+export { runMediaTranscriptionJob } from '@/features/media-library/services/media-transcription-runner'
+export { mediaTranscriptionService } from '@/features/media-library/services/media-transcription-service'
+export { useSettingsStore } from '@/features/settings/stores/settings-store'
+export { openSettings } from '@/features/studio/services/settings-nav'

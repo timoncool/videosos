@@ -3,6 +3,7 @@ import type { Project, ProjectTimeline } from '@/types/project'
 import type { MediaMetadata } from '@/types/storage'
 import { editProject } from './edit'
 import type { EditOp } from './edit-op-support'
+import { useMarkersStore } from '@/features/timeline/stores/markers-store'
 
 /**
  * Integration tests through the REAL timeline stores/actions (the module
@@ -101,6 +102,52 @@ describe('editProject', () => {
     // New video track goes above the existing one (order 0 → min-1 = -1).
     expect(Math.min(...video)).toBe(-1)
     expect(orders['audio']).toBe(1)
+  })
+
+  it('addShape, updateTrack, removeTrack and markers work as the timeline does', async () => {
+    const result = await editProject({
+      project: baseProject(),
+      ops: [
+        {
+          op: 'addShape',
+          shape: 'circle',
+          from: 10,
+          durationInFrames: 50,
+          color: '#ff0000',
+          callerId: 'shape',
+        } as EditOp,
+        { op: 'addTrack', kind: 'audio', callerId: 'music' } as EditOp,
+        { op: 'updateTrack', id: 't_v', name: 'Titles', locked: true, volume: -6 } as EditOp,
+        { op: 'removeTrack', id: { $ref: 'music#/detail/trackId' } } as EditOp,
+        { op: 'addMarker', frame: 25, label: 'Beat', callerId: 'mark' } as EditOp,
+        { op: 'updateMarker', id: { $ref: 'mark#/detail/id' }, label: 'Drop' } as EditOp,
+      ],
+    })
+    const shape = result.project.timeline!.items[0]!
+    expect(shape).toMatchObject({
+      type: 'shape',
+      shapeType: 'circle',
+      from: 10,
+      durationInFrames: 50,
+      fillColor: '#ff0000',
+      trackId: 't_v',
+    })
+    const tracks = result.project.timeline!.tracks
+    expect(tracks).toHaveLength(1)
+    expect(tracks[0]).toMatchObject({ name: 'Titles', locked: true, volume: -6 })
+    const markerId = (result.results[4]!.detail as { id: string }).id
+    expect(
+      useMarkersStore.getState().markers.find((marker) => marker.id === markerId),
+    ).toMatchObject({ frame: 25, label: 'Drop' })
+    await expect(
+      editProject({ project: baseProject(), ops: [{ op: 'addShape', shape: 'blob' } as EditOp] }),
+    ).rejects.toThrow('shape: one of')
+    await expect(
+      editProject({
+        project: baseProject(),
+        ops: [{ op: 'addText', text: 'x' } as EditOp, { op: 'removeTrack', id: 't_v' } as EditOp],
+      }),
+    ).rejects.toThrow('still holds 1 clip')
   })
 
   it('resolves $ref chains between operations (track from a prior op)', async () => {
@@ -224,7 +271,12 @@ describe('editProject', () => {
       media: [
         {
           mediaId: 'm-img',
-          metadata: { ...videoMedia, id: 'm-img', mimeType: 'image/png', audioCodec: undefined } as MediaMetadata,
+          metadata: {
+            ...videoMedia,
+            id: 'm-img',
+            mimeType: 'image/png',
+            audioCodec: undefined,
+          } as MediaMetadata,
         },
         { mediaId: 'm-vid', metadata: videoMedia },
       ],
@@ -246,7 +298,12 @@ describe('editProject', () => {
       media: [
         {
           mediaId: 'm-img',
-          metadata: { ...videoMedia, id: 'm-img', mimeType: 'image/png', audioCodec: undefined } as MediaMetadata,
+          metadata: {
+            ...videoMedia,
+            id: 'm-img',
+            mimeType: 'image/png',
+            audioCodec: undefined,
+          } as MediaMetadata,
         },
         { mediaId: 'm-vid', metadata: videoMedia },
       ],
@@ -259,12 +316,29 @@ describe('editProject', () => {
     expect(audio.from).toBe(30)
     expect(video.trackId).not.toBe(still.trackId)
     const tracks = result.project.timeline!.tracks
-    expect(tracks.find((t) => t.id === video.trackId)!.order).toBeLessThan(tracks.find((t) => t.id === still.trackId)!.order)
+    expect(tracks.find((t) => t.id === video.trackId)!.order).toBeLessThan(
+      tracks.find((t) => t.id === still.trackId)!.order,
+    )
   })
 
   it('addClip with keepFrom goes above what is there, not onto a free track under it', async () => {
-    const track = (id: string, order: number) => ({ id, name: id, kind: 'video' as const, height: 80, locked: false, visible: true, muted: false, solo: false, order })
-    const still = { ...videoMedia, id: 'm-img', mimeType: 'image/png', audioCodec: undefined } as MediaMetadata
+    const track = (id: string, order: number) => ({
+      id,
+      name: id,
+      kind: 'video' as const,
+      height: 80,
+      locked: false,
+      visible: true,
+      muted: false,
+      solo: false,
+      order,
+    })
+    const still = {
+      ...videoMedia,
+      id: 'm-img',
+      mimeType: 'image/png',
+      audioCodec: undefined,
+    } as MediaMetadata
     const result = await editProject({
       project: baseProject({ tracks: [track('t_top', -1), track('t_low', 0)] }),
       ops: [

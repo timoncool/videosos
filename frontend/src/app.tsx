@@ -22,6 +22,16 @@ async function showProject(projectId: string | null): Promise<void> {
   else await router.navigate({ to: '/projects' })
 }
 
+async function showPage(page: 'projects' | 'new_project' | 'docs' | 'changelog'): Promise<void> {
+  const to = {
+    projects: '/projects',
+    new_project: '/projects/new',
+    docs: '/docs',
+    changelog: '/changelog',
+  } as const
+  await router.navigate({ to: to[page] })
+}
+
 export function App() {
   const [showToaster, setShowToaster] = useState(false)
 
@@ -81,7 +91,7 @@ export function App() {
             <RouterProvider router={router} />
           </WorkspaceGate>
         </StudioHost>
-        <AgentBridgeHost showProject={showProject} />
+        <AgentBridgeHost showProject={showProject} showPage={showPage} />
         <SettingsHost />
         <FirstRunDialog />
         <GenerateSyncHost />

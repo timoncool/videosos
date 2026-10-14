@@ -70,7 +70,9 @@ export function ExportCompleteView({
         <Button variant="outline" onClick={onClose}>
           {t('common.close')}
         </Button>
-        {shared && <ShareMenu title={shared.name} className="h-9 px-3 text-sm" file={async () => shared} />}
+        {shared && (
+          <ShareMenu title={shared.name} className="h-9 px-3 text-sm" file={async () => shared} />
+        )}
         <Button onClick={onDownload}>
           <Download className="mr-2 h-4 w-4" />
           {t('export.complete.download')}

@@ -19,7 +19,30 @@
       "checkpoint_create": "salva um ponto de restauração",
       "checkpoint_restore": "volta a um ponto de restauração",
       "motion_render": "transforma gráficos HTML em um clipe",
-      "previs_render": "faz o blocking de um plano em 3D"
+      "previs_render": "faz o blocking de um plano em 3D",
+      "project_create": "cria um novo projeto",
+      "project_update": "altera o projeto",
+      "project_delete": "move um projeto para a lixeira",
+      "project_restore": "traz um projeto de volta da lixeira",
+      "project_duplicate": "duplica um projeto",
+      "media_delete": "remove mídia da biblioteca de mídia",
+      "frame_save": "salva um quadro da linha do tempo",
+      "media_last_frame": "pega o último quadro de um vídeo",
+      "media_cut": "recorta um trecho de um vídeo",
+      "transcribe": "transcreve a fala",
+      "captions_add": "coloca legendas na linha do tempo",
+      "window_settings_set": "altera as configurações da janela",
+      "ui_open_settings": "abre as configurações",
+      "ui_navigate": "abre uma página",
+      "element_save": "salva um elemento",
+      "element_delete": "remove um elemento salvo",
+      "preset_save": "salva uma predefinição de prompt",
+      "preset_delete": "remove uma predefinição de prompt salva",
+      "variables_set": "define as variáveis do prompt",
+      "storyboard_set": "escreve o storyboard",
+      "canvas_set": "escreve a tela",
+      "canvas_template": "coloca um workflow na tela",
+      "export_fcpxml": "exporta FCPXML"
     },
     "proposal": {
       "title": "O agente propõe uma edição",
@@ -38,7 +61,13 @@
         "trimStartExtend": "Alongar o início de {{name}} em {{seconds}} s",
         "trimEndCut": "Cortar {{seconds}} s do fim de {{name}}",
         "trimEndExtend": "Alongar o fim de {{name}} em {{seconds}} s",
-        "other": "{{op}}: {{name}}"
+        "other": "{{op}}: {{name}}",
+        "addShape": "Adicionar a forma {{shape}} em {{at}} s",
+        "updateTrack": "Alterar a faixa {{name}}",
+        "removeTrack": "Remover a faixa vazia {{name}}",
+        "addMarker": "Adicionar o marcador \"{{label}}\" em {{at}} s",
+        "updateMarker": "Alterar um marcador",
+        "removeMarker": "Remover um marcador"
       }
     }
   }

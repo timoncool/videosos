@@ -65,7 +65,9 @@ export function ExportSmartCopyBlock({
               }`}
         </span>
         <span className="text-muted-foreground">
-          {t('export.settings.estimatedSize', { size: formatFileSize(estimatedFileSizeBytes, i18n.language) })}
+          {t('export.settings.estimatedSize', {
+            size: formatFileSize(estimatedFileSizeBytes, i18n.language),
+          })}
         </span>
         {sourceVideo && (
           <span className="text-muted-foreground">

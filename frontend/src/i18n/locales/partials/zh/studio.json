@@ -152,7 +152,16 @@
       "checkpoint": "还原点",
       "blocking": "3D 走位预演",
       "key": "密钥",
-      "proxy": "代理"
+      "proxy": "代理",
+      "project": "项目",
+      "transcript": "转录",
+      "captions": "字幕",
+      "settings": "设置",
+      "element": "元素",
+      "preset": "提示词预设",
+      "storyboard": "故事板",
+      "canvas": "画布",
+      "fcpxml": "FCPXML"
     }
   },
   "files": {

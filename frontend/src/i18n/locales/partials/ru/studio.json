@@ -152,7 +152,16 @@
       "checkpoint": "точка отката",
       "blocking": "3D-блокинг",
       "key": "ключ",
-      "proxy": "прокси"
+      "proxy": "прокси",
+      "project": "проект",
+      "transcript": "расшифровка",
+      "captions": "субтитры",
+      "settings": "настройки",
+      "element": "элемент",
+      "preset": "пресет промпта",
+      "storyboard": "раскадровка",
+      "canvas": "холст",
+      "fcpxml": "FCPXML"
     }
   },
   "files": {

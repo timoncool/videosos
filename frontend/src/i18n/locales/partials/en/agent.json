@@ -19,7 +19,30 @@
       "checkpoint_create": "keeps a checkpoint",
       "checkpoint_restore": "goes back to a checkpoint",
       "motion_render": "makes HTML graphics into a clip",
-      "previs_render": "blocks a shot in 3D"
+      "previs_render": "blocks a shot in 3D",
+      "project_create": "makes a new project",
+      "project_update": "changes the project",
+      "project_delete": "moves a project to the trash",
+      "project_restore": "brings a project back from the trash",
+      "project_duplicate": "copies a project",
+      "media_delete": "removes media from the library",
+      "frame_save": "saves a frame of the timeline",
+      "media_last_frame": "takes a video's last frame",
+      "media_cut": "cuts a part of a video",
+      "transcribe": "transcribes speech",
+      "captions_add": "puts captions on the timeline",
+      "window_settings_set": "changes the window's settings",
+      "ui_open_settings": "opens the settings",
+      "ui_navigate": "opens a page",
+      "element_save": "keeps an element",
+      "element_delete": "forgets an element",
+      "preset_save": "keeps a prompt preset",
+      "preset_delete": "forgets a prompt preset",
+      "variables_set": "sets prompt variables",
+      "storyboard_set": "writes the storyboard",
+      "canvas_set": "writes the canvas",
+      "canvas_template": "puts a workflow on the canvas",
+      "export_fcpxml": "exports FCPXML"
     },
     "proposal": {
       "title": "The agent proposes an edit",
@@ -38,7 +61,13 @@
         "trimStartExtend": "Lengthen the start of {{name}} by {{seconds}} s",
         "trimEndCut": "Cut {{seconds}} s off the end of {{name}}",
         "trimEndExtend": "Lengthen the end of {{name}} by {{seconds}} s",
-        "other": "{{op}}: {{name}}"
+        "other": "{{op}}: {{name}}",
+        "addShape": "Add a {{shape}} at {{at}} s",
+        "updateTrack": "Change the track {{name}}",
+        "removeTrack": "Remove the empty track {{name}}",
+        "addMarker": "Add the marker \"{{label}}\" at {{at}} s",
+        "updateMarker": "Change a marker",
+        "removeMarker": "Remove a marker"
       }
     }
   }

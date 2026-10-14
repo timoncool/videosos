@@ -87,7 +87,9 @@ describe('detectTranscriptSubtitles', () => {
   })
 
   it('detects clips whose own enabled transcript captions will be exported', () => {
-    expect(detectTranscriptSubtitles([videoItem({ transcriptCaptions: ENABLED_CAPTIONS })])).toBe(true)
+    expect(detectTranscriptSubtitles([videoItem({ transcriptCaptions: ENABLED_CAPTIONS })])).toBe(
+      true,
+    )
   })
 
   it('ignores captions that are disabled or on a reversed clip', () => {
@@ -105,8 +107,8 @@ describe('detectTranscriptSubtitles', () => {
 
   it('reports nothing to export for an empty timeline or caption-free items', () => {
     expect(detectTranscriptSubtitles([])).toBe(false)
-    expect(detectTranscriptSubtitles([imageItem(), videoItem({ transcriptCaptions: undefined })])).toBe(
-      false,
-    )
+    expect(
+      detectTranscriptSubtitles([imageItem(), videoItem({ transcriptCaptions: undefined })]),
+    ).toBe(false)
   })
 })

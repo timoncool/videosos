@@ -550,6 +550,16 @@ const LOOKING = new Set([
   'media_list',
   'screenshot',
   'notify',
+  'projects_trash',
+  'media_frame',
+  'frame_get',
+  'transcript_get',
+  'window_settings_get',
+  'elements_list',
+  'presets_list',
+  'storyboard_get',
+  'canvas_get',
+  'blocking_get',
 ])
 
 // ---------------------------------------------------------------- the connection

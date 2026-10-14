@@ -30,6 +30,7 @@ import {
   useProjectStore,
   useTimelineCommandStore,
   useTransitionsStore,
+  useMarkersStore,
   withPrevisRenderer,
 } from '../deps/editor'
 import { bridgeError, failed, numberArg, registerBridgeCommand, takeArgs, textArg } from './bridge'
@@ -117,6 +118,8 @@ function timeline() {
       muted: track.muted,
       visible: track.visible,
       locked: track.locked,
+      solo: track.solo,
+      volume: track.volume,
     })),
     items: items.map((item) => ({
       id: item.id,
@@ -129,9 +132,13 @@ function timeline() {
       mediaId: 'mediaId' in item ? item.mediaId : undefined,
       media: 'mediaId' in item && item.mediaId ? media[item.mediaId]?.fileName : undefined,
       text: 'text' in item ? item.text : undefined,
+      shape: item.type === 'shape' ? item.shapeType : undefined,
       label: item.label,
     })),
     transitions: useTransitionsStore.getState().transitions,
+    markers: useMarkersStore
+      .getState()
+      .markers.map((marker) => ({ ...marker, at_s: round(marker.frame / fps) })),
   }
 }
 

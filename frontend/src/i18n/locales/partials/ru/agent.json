@@ -19,7 +19,30 @@
       "checkpoint_create": "сохраняет точку отката",
       "checkpoint_restore": "возвращает таймлайн к точке отката",
       "motion_render": "делает клип из HTML-графики",
-      "previs_render": "разводит шот в 3D"
+      "previs_render": "разводит шот в 3D",
+      "project_create": "создаёт новый проект",
+      "project_update": "меняет проект",
+      "project_delete": "убирает проект в корзину",
+      "project_restore": "возвращает проект из корзины",
+      "project_duplicate": "копирует проект",
+      "media_delete": "убирает медиа из медиатеки",
+      "frame_save": "сохраняет кадр таймлайна",
+      "media_last_frame": "берёт последний кадр видео",
+      "media_cut": "вырезает отрезок видео",
+      "transcribe": "расшифровывает речь",
+      "captions_add": "ставит субтитры на таймлайн",
+      "window_settings_set": "меняет настройки окна",
+      "ui_open_settings": "открывает настройки",
+      "ui_navigate": "открывает страницу",
+      "element_save": "сохраняет элемент",
+      "element_delete": "забывает элемент",
+      "preset_save": "сохраняет пресет промпта",
+      "preset_delete": "забывает пресет промпта",
+      "variables_set": "задаёт переменные промптов",
+      "storyboard_set": "записывает раскадровку",
+      "canvas_set": "записывает холст",
+      "canvas_template": "ставит workflow на холст",
+      "export_fcpxml": "экспортирует FCPXML"
     },
     "proposal": {
       "title": "Агент предлагает правку",
@@ -40,7 +63,13 @@
         "trimStartExtend": "Удлинить начало {{name}} на {{seconds}} с",
         "trimEndCut": "Отрезать {{seconds}} с от конца {{name}}",
         "trimEndExtend": "Удлинить конец {{name}} на {{seconds}} с",
-        "other": "{{op}}: {{name}}"
+        "other": "{{op}}: {{name}}",
+        "addShape": "Добавить фигуру {{shape}} на {{at}} с",
+        "updateTrack": "Изменить дорожку {{name}}",
+        "removeTrack": "Убрать пустую дорожку {{name}}",
+        "addMarker": "Поставить маркер «{{label}}» на {{at}} с",
+        "updateMarker": "Изменить маркер",
+        "removeMarker": "Убрать маркер"
       }
     }
   }

@@ -15,6 +15,7 @@ import {
   textArg,
 } from '../services/bridge'
 import { registerEditorCommands, type ShowProject } from '../services/editor-commands'
+import { registerStudioCommands, type ShowPage } from '../services/studio-commands'
 import { ProposalCard } from './proposal-card'
 
 let registered = false
@@ -59,7 +60,13 @@ function notify(args: Record<string, unknown>) {
  * top bar ("Agent: edits the timeline"), as Dub Studio does. The caption is not a message: the change itself
  * reaches the journal from the server.
  */
-export function AgentBridgeHost({ showProject }: { showProject: ShowProject }) {
+export function AgentBridgeHost({
+  showProject,
+  showPage,
+}: {
+  showProject: ShowProject
+  showPage: ShowPage
+}) {
   const { t } = useTranslation()
   const [caption, setCaption] = useState<{ key: number; text: string } | null>(null)
 
@@ -67,6 +74,7 @@ export function AgentBridgeHost({ showProject }: { showProject: ShowProject }) {
     if (!registered) {
       registered = true
       registerEditorCommands(showProject)
+      registerStudioCommands(showProject, showPage)
       registerBridgeCommand('notify', notify)
       reportLanguage(i18n.language)
       i18n.on('languageChanged', reportLanguage)
@@ -81,7 +89,7 @@ export function AgentBridgeHost({ showProject }: { showProject: ShowProject }) {
     }
     window.addEventListener(AGENT_ACTION, show)
     return () => window.removeEventListener(AGENT_ACTION, show)
-  }, [t, showProject])
+  }, [t, showProject, showPage])
 
   useEffect(() => {
     if (!caption) return

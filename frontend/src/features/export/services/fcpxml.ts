@@ -40,10 +40,15 @@ export interface FcpxmlResult {
   left: Array<{ label: string; reason: 'kind' | 'file' | 'speed' }>
 }
 
-const TITLE_EFFECT = '.../Titles.localized/Bumper:Opener.localized/Basic Title.localized/Basic Title.moti'
+const TITLE_EFFECT =
+  '.../Titles.localized/Bumper:Opener.localized/Basic Title.localized/Basic Title.moti'
 
 function escape(text: string): string {
-  return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
 }
 
 /** The frame's length as FCPXML writes it: 1/30s, or 1001/30000s for 29.97. */
@@ -56,18 +61,26 @@ function frameDuration(fps: number): { numerator: number; denominator: number } 
 function fileUrl(path: string): string {
   const slashed = path.replace(/\\/g, '/')
   const absolute = slashed.startsWith('/') ? slashed : `/${slashed}`
-  return `file://${absolute.split('/').map((part, index) => (index === 1 && /^[A-Za-z]:$/.test(part) ? part : encodeURIComponent(part))).join('/')}`
+  return `file://${absolute
+    .split('/')
+    .map((part, index) =>
+      index === 1 && /^[A-Za-z]:$/.test(part) ? part : encodeURIComponent(part),
+    )
+    .join('/')}`
 }
 
 export function buildFcpxml(input: FcpxmlInput): FcpxmlResult {
   const frame = frameDuration(input.fps)
-  const time = (frames: number) => (frames === 0 ? '0s' : `${Math.round(frames) * frame.numerator}/${frame.denominator}s`)
+  const time = (frames: number) =>
+    frames === 0 ? '0s' : `${Math.round(frames) * frame.numerator}/${frame.denominator}s`
   const framesOf = (seconds: number) => Math.round((seconds * frame.denominator) / frame.numerator)
 
   // lanes count only the tracks that hold something, so empty tracks leave no empty lanes
   const used = new Set(input.items.map((item) => item.trackId))
   const lanes = new Map<string, number>()
-  const tracks = input.tracks.filter((track) => !track.isGroup && used.has(track.id)).sort((a, b) => a.order - b.order)
+  const tracks = input.tracks
+    .filter((track) => !track.isGroup && used.has(track.id))
+    .sort((a, b) => a.order - b.order)
   const video = tracks.filter((track) => (track.kind ?? 'video') === 'video')
   const audio = tracks.filter((track) => track.kind === 'audio')
   video.forEach((track, index) => lanes.set(track.id, video.length - index))
@@ -84,7 +97,9 @@ export function buildFcpxml(input: FcpxmlInput): FcpxmlResult {
     const id = `r${resources.length + 1}`
     const still = media.mimeType.startsWith('image/')
     const hasVideo = still || media.mimeType.startsWith('video/')
-    const hasAudio = media.mimeType.startsWith('audio/') || (media.mimeType.startsWith('video/') && !!media.audioCodec)
+    const hasAudio =
+      media.mimeType.startsWith('audio/') ||
+      (media.mimeType.startsWith('video/') && !!media.audioCodec)
     resources.push(
       `<asset id="${id}" name="${escape(media.fileName)}" start="0s" duration="${still ? '0s' : time(framesOf(media.duration))}"${hasVideo ? ` hasVideo="1" format="r1"` : ''}${hasAudio ? ' hasAudio="1" audioSources="1"' : ''}>` +
         `<media-rep kind="original-media" src="${escape(fileUrl(media.path!))}"/></asset>`,
@@ -96,11 +111,27 @@ export function buildFcpxml(input: FcpxmlInput): FcpxmlResult {
   // a video's sound comes with its clip; the linked audio item the editor splits off is not a clip of its own
   const linkedAudio = new Set(
     input.items
-      .filter((item) => item.type === 'audio' && item.linkedGroupId && input.items.some((other) => other.type === 'video' && other.linkedGroupId === item.linkedGroupId))
+      .filter(
+        (item) =>
+          item.type === 'audio' &&
+          item.linkedGroupId &&
+          input.items.some(
+            (other) => other.type === 'video' && other.linkedGroupId === item.linkedGroupId,
+          ),
+      )
       .map((item) => item.id),
   )
   const videoWithSound = new Set(
-    input.items.filter((item) => item.type === 'video' && item.linkedGroupId && input.items.some((other) => linkedAudio.has(other.id) && other.linkedGroupId === item.linkedGroupId)).map((item) => item.id),
+    input.items
+      .filter(
+        (item) =>
+          item.type === 'video' &&
+          item.linkedGroupId &&
+          input.items.some(
+            (other) => linkedAudio.has(other.id) && other.linkedGroupId === item.linkedGroupId,
+          ),
+      )
+      .map((item) => item.id),
   )
 
   let titleEffect: string | null = null
@@ -128,7 +159,10 @@ export function buildFcpxml(input: FcpxmlInput): FcpxmlResult {
       } else {
         const sourceFps = item.sourceFps && item.sourceFps > 0 ? item.sourceFps : input.fps
         const start = time(framesOf((item.sourceStart ?? 0) / sourceFps))
-        const silent = item.type === 'video' && media.audioCodec && !videoWithSound.has(item.id) ? '<adjust-volume amount="-96dB"/>' : ''
+        const silent =
+          item.type === 'video' && media.audioCodec && !videoWithSound.has(item.id)
+            ? '<adjust-volume amount="-96dB"/>'
+            : ''
         clips.push(`<asset-clip ref="${ref}" ${common} start="${start}">${silent}</asset-clip>`)
       }
     } else if (item.type === 'text') {
