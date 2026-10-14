@@ -738,9 +738,9 @@ fn tools() -> &'static [Tool] {
             },
             Tool {
                 name: "captions_add",
-                description: "Puts the captions of a media item's speech on the timeline over its clips, as the clip menu's captions do (it transcribes first when needed); clip_ids limits them, replace (default true) replaces earlier ones.",
+                description: "Puts the captions of a media item's speech on the timeline over its clips, as the clip menu's captions do (it transcribes first when needed); clip_ids limits them, replace (default true) replaces earlier ones. reveal sets how they show: whole lines, words as they are spoken, or karaoke with the spoken word lit in highlight (a CSS colour).",
                 looks: false,
-                schema: || object(json!({ "media_id": { "type": "string" }, "clip_ids": { "type": "array", "items": { "type": "string" } }, "replace": { "type": "boolean" } }), &["media_id"]),
+                schema: || object(json!({ "media_id": { "type": "string" }, "clip_ids": { "type": "array", "items": { "type": "string" } }, "replace": { "type": "boolean" }, "reveal": { "type": "string", "enum": ["whole", "words", "karaoke"] }, "highlight": { "type": "string" } }), &["media_id"]),
                 call: |args| window("captions_add", args, 600),
             },
             Tool {

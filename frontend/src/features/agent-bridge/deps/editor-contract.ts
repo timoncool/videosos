@@ -1,6 +1,7 @@
 /** What the agent bridge reaches of the editor: its stores, the media library and the open project. */
 
 export { useItemsStore } from '@/features/timeline/stores/items-store'
+export { updateItem } from '@/features/timeline/stores/actions/item-actions'
 export { useTransitionsStore } from '@/features/timeline/stores/transitions-store'
 export { useTimelineCommandStore } from '@/features/timeline/stores/timeline-command-store'
 export { captureSnapshot, restoreSnapshot } from '@/features/timeline/stores/commands/snapshot'

@@ -6,6 +6,8 @@
  */
 
 import { i18n } from '@/i18n'
+import type { TimelineItem } from '@/types/timeline'
+import type { CaptionReveal } from '@/types/text'
 import { usePlaybackStore } from '@/shared/state/playback'
 import { usePreviewBridgeStore } from '@/shared/state/preview-bridge'
 import { useUiSoundStore } from '@/shared/state/ui-sound-store'
@@ -29,7 +31,9 @@ import {
   readWorkflowFile,
   runMediaTranscriptionJob,
   saveTimeline,
+  updateItem,
   useGenerateStore,
+  useItemsStore,
   useMediaLibraryStore,
   useProjectStore,
   useSettingsStore,
@@ -526,9 +530,18 @@ export function registerStudioCommands(showProject: ShowProject, showPage: ShowP
   })
 
   registerBridgeCommand('captions_add', async (args) => {
-    takeArgs('captions_add', args, ['media_id', 'clip_ids', 'replace'])
+    takeArgs('captions_add', args, ['media_id', 'clip_ids', 'replace', 'reveal', 'highlight'])
     const project = openProject()
     const id = required('captions_add', 'media_id', textArg('captions_add', args, 'media_id'))
+    const reveal = textArg('captions_add', args, 'reveal')
+    if (reveal !== undefined && !['whole', 'words', 'karaoke'].includes(reveal)) {
+      throw bridgeError('bad_value', {
+        command: 'captions_add',
+        field: 'reveal',
+        expected: 'whole, words or karaoke',
+      })
+    }
+    const highlight = textArg('captions_add', args, 'highlight')
     const clipIds =
       args.clip_ids === undefined ? undefined : listArg('captions_add', args, 'clip_ids')
     try {
@@ -537,6 +550,23 @@ export function registerStudioCommands(showProject: ShowProject, showPage: ShowP
         ...(clipIds && { clipIds }),
         replaceExisting: boolArg('captions_add', args, 'replace') ?? true,
       })
+      if (reveal !== undefined || highlight !== undefined) {
+        for (const item of useItemsStore.getState().items) {
+          const captions = 'transcriptCaptions' in item ? item.transcriptCaptions : undefined
+          if (captions?.mediaId !== id || (clipIds && !clipIds.includes(item.id))) continue
+          updateItem(item.id, {
+            transcriptCaptions: {
+              ...captions,
+              style: {
+                ...captions.style,
+                ...(reveal !== undefined && { captionReveal: reveal as CaptionReveal }),
+                ...(highlight !== undefined && { captionHighlight: highlight }),
+              },
+              updatedAt: Date.now(),
+            },
+          } as Partial<TimelineItem>)
+        }
+      }
       await saveTimeline(project.id)
       return { media_id: id, result }
     } catch (problem) {
