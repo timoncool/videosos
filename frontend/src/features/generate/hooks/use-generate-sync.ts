@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { generateApi, onGenerateEvent, type Provider } from '../services/generate-api'
 import { importFinished } from '../services/result-importer'
 import { useGenerateStore } from '../stores/generate-store'
+import { emitUiSound } from '@/shared/ui/ui-sound'
 
 function report(error: unknown): void {
   useGenerateStore.getState().setServerError(error instanceof Error ? error.message : String(error))
@@ -37,6 +38,12 @@ export function useGenerateSync(projectId: string | null): void {
     const unsubscribe = onGenerateEvent((event) => {
       if (event.kind === 'job') {
         if (event.data.project_id === projectId) {
+          // a generation that ends while the window follows it sounds, as a finished job does in Dub Studio
+          const before = useGenerateStore.getState().jobs.find((job) => job.id === event.data.id)?.status
+          if (before && before !== event.data.status) {
+            if (event.data.status === 'done') emitUiSound('confirm')
+            if (event.data.status === 'failed') emitUiSound('error')
+          }
           useGenerateStore.getState().upsertJob(event.data)
           importFinished([event.data])
         }
