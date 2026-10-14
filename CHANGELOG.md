@@ -76,6 +76,10 @@ makes it, and the release notes on GitHub are taken from the release's section.
   call, `studio_wait` for long work, `providers_log`, and the writing guides as MCP resources.
 - **Tablets, phones and Safari**: below 1024 px the library and properties open over the preview, the top bar
   takes two rows, clips and the playhead are dragged by finger and pen, and the editor opens in Safari.
+- **Dub Studio's 26 caption looks** among the caption presets: clean, viral (the spoken word lit in colour), karaoke,
+  playful, neon and fresh ones, each with its reveal, plate, font and colours.
+- **A voice-over put on the timeline starts and ends with its speech**: the silence before and after it is trimmed
+  off the clip, as Dub Studio does, while the file keeps it.
 - **Report a problem** opens GitHub's bug, idea and question forms with the version, the graphics card and the
   system filled in.
 - **Linux (.deb, AppImage) and macOS (.dmg) builds.**
@@ -126,6 +130,8 @@ makes it, and the release notes on GitHub are taken from the release's section.
   open list.
 - **A playhead dragged quickly or along the ruler** follows the pointer.
 - **A studio's song keeps its own title and tags.**
+- **Shapes render on the graphics card again**: their shader did not compile.
+- **Running out of memory while transcribing** says so in your language.
 
 ## 2026-10-12 — 2.0.0
 
