@@ -254,6 +254,10 @@ export const generateApi = {
     request<Job>(`/api/jobs/${id}/imported`, { method: 'POST', body: JSON.stringify({ media_ids: mediaIds }) }),
   fileUrl: (id: string, index: number) => `/api/jobs/${id}/files/${index}`,
   keys: () => request<{ keys: KeyState[] }>('/api/keys'),
+  /** What the panel was left at, kept by the server for every window. */
+  choices: () => request<Record<string, unknown>>('/api/generate/choices'),
+  saveChoices: (choices: Record<string, unknown>) =>
+    request<null>('/api/generate/choices', { method: 'PUT', body: JSON.stringify(choices) }),
   storeKey: (provider: Provider, key: string | null) =>
     request<{ keys: KeyState[] }>(`/api/keys/${provider}`, { method: 'PUT', body: JSON.stringify({ key }) }),
   checkKey: (provider: Provider) =>

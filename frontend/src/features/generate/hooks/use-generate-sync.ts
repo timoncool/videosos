@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { generateApi, onGenerateEvent, type Provider } from '../services/generate-api'
 import { importFinished } from '../services/result-importer'
-import { useGenerateStore } from '../stores/generate-store'
+import { useGenerateStore, type Persisted } from '../stores/generate-store'
 import { emitUiSound } from '@/shared/ui/ui-sound'
 
 function report(error: unknown): void {
@@ -13,6 +13,29 @@ async function loadKeys(): Promise<void> {
   const set: Partial<Record<Provider, boolean>> = {}
   for (const key of keys) set[key.provider] = key.set
   useGenerateStore.getState().setKeys(set)
+}
+
+const LEGACY_KEY = 'videosos-generate'
+
+/**
+ * Reads what the panel was left at. VideoSOS 2.0.0 kept it in the window's storage: found there while the
+ * server has nothing, it moves to the server once and leaves the window.
+ */
+export function useGenerateChoices(): void {
+  useEffect(() => {
+    void (async () => {
+      const kept = await generateApi.choices()
+      const legacy = Object.keys(kept).length === 0 ? localStorage.getItem(LEGACY_KEY) : null
+      if (legacy) {
+        const moved = JSON.parse(legacy) as Partial<Persisted>
+        useGenerateStore.getState().readChoices(moved)
+        await generateApi.saveChoices({ ...moved })
+        localStorage.removeItem(LEGACY_KEY)
+        return
+      }
+      useGenerateStore.getState().readChoices(kept as Partial<Persisted>)
+    })().catch(report)
+  }, [])
 }
 
 /**

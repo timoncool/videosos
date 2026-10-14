@@ -1,21 +1,20 @@
 /**
  * State of the generation panel: the chosen task, the model chosen for each
  * task, what was typed into each model's form, the jobs of the open project
- * and which providers have keys. Choices survive a restart in localStorage;
- * jobs and keys are the server's and are read from it.
+ * and which providers have keys. The choices are kept by the server, as Dub
+ * Studio keeps its launch form, so every window finds them; jobs and keys are
+ * the server's too and are read from it.
  */
 
 import { create } from 'zustand'
-import type { Job, MediaKind, MediaRef, ModelForm, Provider, Role, Task } from '../services/generate-api'
-
-const STORAGE_KEY = 'videosos-generate'
+import { generateApi, type Job, type MediaKind, type MediaRef, type ModelForm, type Provider, type Role, type Task } from '../services/generate-api'
 
 interface ModelRef {
   provider: Provider
   id: string
 }
 
-interface Persisted {
+export interface Persisted {
   task: Task
   modelByTask: Partial<Record<Task, ModelRef>>
   valuesByModel: Record<string, Record<string, unknown>>
@@ -25,23 +24,20 @@ interface Persisted {
   favorites: string[]
 }
 
-function load(): Persisted {
-  const fallback: Persisted = { task: 'image', modelByTask: {}, valuesByModel: {}, repeat: 1, placeOnTimeline: false, favorites: [] }
-  try {
-    const text = localStorage.getItem(STORAGE_KEY)
-    if (!text) return fallback
-    return { ...fallback, ...(JSON.parse(text) as Partial<Persisted>) }
-  } catch {
-    return fallback
-  }
-}
+const DEFAULTS: Persisted = { task: 'image', modelByTask: {}, valuesByModel: {}, repeat: 1, placeOnTimeline: false, favorites: [] }
 
-function save(state: Persisted): void {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
-  } catch {
-    // a page without storage keeps its choices for this session only
-  }
+let saving: ReturnType<typeof setTimeout> | null = null
+
+/** The choices go to the server a moment after the last change, once they were read from it. */
+function save(state: GenerateState): void {
+  if (!state.choicesRead) return
+  if (saving) clearTimeout(saving)
+  saving = setTimeout(() => {
+    saving = null
+    generateApi
+      .saveChoices({ ...persisted(useGenerateStore.getState()) })
+      .catch((error: unknown) => useGenerateStore.getState().setServerError(error instanceof Error ? error.message : String(error)))
+  }, 400)
 }
 
 export function modelKey(provider: Provider, id: string): string {
@@ -58,6 +54,9 @@ export interface PendingUse {
 }
 
 interface GenerateState extends Persisted {
+  /** The choices were read from the server; until then nothing is written back over them. */
+  choicesRead: boolean
+  readChoices: (choices: Partial<Persisted>) => void
   pendingUse: PendingUse | null
   useAs: (use: PendingUse | null) => void
   jobs: Job[]
@@ -92,7 +91,9 @@ function persisted(state: GenerateState): Persisted {
 }
 
 export const useGenerateStore = create<GenerateState>()((set, get) => ({
-  ...load(),
+  ...DEFAULTS,
+  choicesRead: false,
+  readChoices: (choices) => set({ ...DEFAULTS, ...choices, choicesRead: true }),
   jobs: [],
   keys: {},
   forms: {},
@@ -102,17 +103,17 @@ export const useGenerateStore = create<GenerateState>()((set, get) => ({
     set({ pendingUse })
     if (pendingUse) {
       set({ task: pendingUse.task })
-      save(persisted(get()))
+      save(get())
     }
   },
   setServerError: (serverError) => set({ serverError }),
   setTask: (task) => {
     set({ task })
-    save(persisted(get()))
+    save(get())
   },
   setModel: (task, model) => {
     set({ modelByTask: { ...get().modelByTask, [task]: model } })
-    save(persisted(get()))
+    save(get())
   },
   setValue: (model, key, value) => {
     const id = modelKey(model.provider, model.id)
@@ -124,24 +125,24 @@ export const useGenerateStore = create<GenerateState>()((set, get) => ({
       next[key] = value
     }
     set({ valuesByModel: { ...get().valuesByModel, [id]: next } })
-    save(persisted(get()))
+    save(get())
   },
   replaceValues: (model, values) => {
     set({ valuesByModel: { ...get().valuesByModel, [modelKey(model.provider, model.id)]: values } })
-    save(persisted(get()))
+    save(get())
   },
   toggleFavorite: (key) => {
     const favorites = get().favorites
     set({ favorites: favorites.includes(key) ? favorites.filter((each) => each !== key) : [...favorites, key] })
-    save(persisted(get()))
+    save(get())
   },
   setRepeat: (repeat) => {
     set({ repeat: Math.min(8, Math.max(1, Math.round(repeat))) })
-    save(persisted(get()))
+    save(get())
   },
   setPlaceOnTimeline: (placeOnTimeline) => {
     set({ placeOnTimeline })
-    save(persisted(get()))
+    save(get())
   },
   setJobs: (jobs) => set({ jobs }),
   upsertJob: (job) => {

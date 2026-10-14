@@ -8,6 +8,7 @@
 #[macro_use]
 pub mod i18n;
 pub mod catalog;
+mod choices;
 pub use vs_providers;
 pub mod credentials;
 pub mod events;
@@ -83,6 +84,7 @@ impl AppState {
         credentials::init(repo_root);
         request_log::init(&data);
         settings::init(&data);
+        choices::init(&data);
         let http = vs_providers::http::Http::new(reqwest::Client::builder()).map_err(|e| anyhow::anyhow!(e.to_string()))?;
         let catalog = catalog::Catalog::open(&data, http.clone());
         let jobs = jobs::Jobs::open(&data, &workspace, http.clone(), catalog.clone())?;
@@ -167,6 +169,7 @@ pub fn app(state: AppState) -> Router {
         .merge(jobs::router())
         .merge(keys::router())
         .merge(settings::router())
+        .merge(choices::router())
         .merge(exports::router())
         .merge(hw::router())
         .merge(journal::router())
