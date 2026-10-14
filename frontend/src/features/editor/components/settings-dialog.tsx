@@ -52,6 +52,7 @@ import {
   Images,
   Eraser,
   Link2,
+  Speaker,
 } from 'lucide-react'
 import {
   LocalInferenceUnloadControl,
@@ -86,6 +87,7 @@ import { createLogger } from '@/shared/logging/logger'
 import { cn } from '@/shared/ui/cn'
 import { LanguageSwitcher } from '@/shared/ui/language-switcher'
 import { SettingRow, SettingsTable } from '../deps/studio'
+import { AudioOutputSetting } from './audio-output-setting'
 
 const log = createLogger('SettingsDialog')
 
@@ -708,6 +710,9 @@ export function SettingsDialog({ open, onOpenChange, target }: SettingsDialogPro
                       <SettingsTable>
                         <SettingRow icon={Languages} label={t('settings.general.language')} hint={t('settings.general.languageHint')}>
                           <LanguageSwitcher size="sm" align="end" side="left" />
+                        </SettingRow>
+                        <SettingRow icon={Speaker} label={t('settings.general.audioOutput')} hint={t('settings.general.audioOutputHint')}>
+                          <AudioOutputSetting />
                         </SettingRow>
                         <SettingRow icon={Save} label={t('settings.general.autoSave')} hint={t('settings.general.autoSaveHint')}>
                           <Switch

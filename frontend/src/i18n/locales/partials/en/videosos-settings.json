@@ -38,7 +38,10 @@
       "languageHint": "The window and the messages of the program.",
       "autoSaveHint": "Saves the open project on its own every few minutes",
       "undoHistoryDepthHint": "How many steps Undo can go back",
-      "uiSoundsHint": "Short sounds for clicks, results and errors"
+      "uiSoundsHint": "Short sounds for clicks, results and errors",
+      "audioOutput": "Sound output",
+      "audioOutputHint": "Where the preview plays: the system device or a chosen one. The list appears after the microphone is allowed - that is when the browser names devices.",
+      "audioOutputDefault": "System default"
     },
     "done": "Done",
     "timeline": {
