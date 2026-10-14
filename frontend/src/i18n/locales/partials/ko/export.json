@@ -219,7 +219,8 @@
       "left": {
         "kind": "FCPXML에 없음(대응하는 항목 없음): {{items}}",
         "file": "FCPXML에 없음(작업 공간에 파일 없음): {{items}}",
-        "speed": "FCPXML에 없음(속도 변경됨): {{items}}"
+        "speed": "FCPXML에 없음(속도 변경됨): {{items}}",
+        "transition": "FCPXML에 없음(연결된 클립 사이의 전환은 대응 요소가 없습니다. 편집 프로그램에서 추가하세요): {{items}}"
       }
     }
   }

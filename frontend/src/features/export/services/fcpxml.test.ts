@@ -93,7 +93,7 @@ describe('FCPXML of a timeline', () => {
       '<asset-clip ref="r3" lane="1" offset="30/30s" duration="90/30s" name="shot.mp4" start="60/30s"></asset-clip>',
     )
     expect(xml).toContain(
-      '<video ref="r2" lane="2" offset="0s" duration="60/30s" name="still.png" start="0s"/>',
+      '<video ref="r2" lane="2" offset="0s" duration="60/30s" name="still.png" start="0s"></video>',
     )
     expect(xml).toContain('<gap name="Trip &amp; co" offset="0s" start="0s" duration="120/30s">')
   })
@@ -115,5 +115,104 @@ describe('FCPXML of a timeline', () => {
       { label: 'Box', reason: 'kind' },
       { label: 'fast.mp4', reason: 'speed' },
     ])
+  })
+})
+
+describe('FCPXML of a mixed edit', () => {
+  const { xml, left } = buildFcpxml({
+    ...input,
+    tracks: [
+      { id: 'v1', kind: 'video', order: 0 },
+      { id: 'v2', kind: 'video', order: -1, visible: false },
+      { id: 'a1', kind: 'audio', order: 1, volume: -6 },
+      { id: 'a2', kind: 'audio', order: 2, volume: -14 },
+    ],
+    items: [
+      item({
+        id: 'v',
+        type: 'video',
+        trackId: 'v1',
+        from: 0,
+        durationInFrames: 90,
+        mediaId: 'm1',
+        linkedGroupId: 'g',
+        label: 'a.mp4',
+        fadeOut: 1,
+      }),
+      item({
+        id: 'va',
+        type: 'audio',
+        trackId: 'a1',
+        from: 0,
+        durationInFrames: 90,
+        mediaId: 'm1',
+        linkedGroupId: 'g',
+        volume: 2,
+        audioFadeOut: 0.5,
+      }),
+      item({
+        id: 'w',
+        type: 'video',
+        trackId: 'v1',
+        from: 90,
+        durationInFrames: 60,
+        mediaId: 'm1',
+        label: 'b.mp4',
+      }),
+      item({
+        id: 'm',
+        type: 'audio',
+        trackId: 'a2',
+        from: 0,
+        durationInFrames: 150,
+        mediaId: 'm3',
+        label: 'music.mp3',
+        audioFadeIn: 1,
+      }),
+      item({
+        id: 'h',
+        type: 'image',
+        trackId: 'v2',
+        from: 0,
+        durationInFrames: 30,
+        mediaId: 'm2',
+        label: 'hidden.png',
+      }),
+    ],
+    media: {
+      ...input.media,
+      m3: { fileName: 'music.mp3', mimeType: 'audio/mpeg', duration: 20, path: 'D:\\m\\music.mp3' },
+    },
+    markers: [
+      { frame: 60, name: 'Boat <sails>' },
+      { frame: 400, name: 'Past the end' },
+    ],
+    transitions: [{ leftClipId: 'v', rightClipId: 'w' }],
+  })
+
+  it("gives a video the gain and fades of its linked sound on that sound's track, and its picture fades", () => {
+    expect(xml).toContain(
+      '<adjust-blend amount="1"><param name="amount"><fadeOut type="linear" duration="30/30s"/></param></adjust-blend>' +
+        '<adjust-volume amount="-4dB"><param name="amount"><fadeOut type="linear" duration="15/30s"/></param></adjust-volume>',
+    )
+  })
+
+  it('carries a music clip with its track gain and fade in, and a video without its sound silent', () => {
+    expect(xml).toContain(
+      '<adjust-volume amount="-14dB"><param name="amount"><fadeIn type="linear" duration="30/30s"/></param></adjust-volume>',
+    )
+    expect(xml).toContain('name="b.mp4" start="0s"><adjust-volume amount="-96dB"/></asset-clip>')
+  })
+
+  it('switches off a clip of a hidden track and writes the markers within the edit', () => {
+    expect(xml).toContain('name="hidden.png" enabled="0"')
+    expect(xml).toContain(
+      '<marker start="60/30s" duration="1/30s" value="Boat &lt;sails&gt;"/></gap>',
+    )
+    expect(xml).not.toContain('Past the end')
+  })
+
+  it('names the transitions it cannot carry', () => {
+    expect(left).toEqual([{ label: 'a.mp4 → b.mp4', reason: 'transition' }])
   })
 })

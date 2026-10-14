@@ -219,7 +219,8 @@
       "left": {
         "kind": "Absent du FCPXML (sans équivalent) : {{items}}",
         "file": "Absent du FCPXML (aucun fichier dans l’espace de travail) : {{items}}",
-        "speed": "Absent du FCPXML (vitesse modifiée) : {{items}}"
+        "speed": "Absent du FCPXML (vitesse modifiée) : {{items}}",
+        "transition": "Absent du FCPXML (une transition entre clips connectés n'y a pas d'équivalent ; ajoutez-la dans le logiciel de montage) : {{items}}"
       }
     }
   }

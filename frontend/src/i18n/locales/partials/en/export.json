@@ -219,7 +219,8 @@
       "left": {
         "kind": "Not in FCPXML (no counterpart there): {{items}}",
         "file": "Not in FCPXML (no file in the workspace): {{items}}",
-        "speed": "Not in FCPXML (speed changed): {{items}}"
+        "speed": "Not in FCPXML (speed changed): {{items}}",
+        "transition": "Not in FCPXML (a transition between connected clips has no counterpart there; add it in the editor): {{items}}"
       }
     }
   }

@@ -9,7 +9,8 @@ import { mediaSourcePath } from '@/infrastructure/storage'
 import { isDesktop, revealOnDisk, saveToDisk } from '@/infrastructure/desktop'
 import { useProjectStore } from '../deps/projects'
 import { getMediaMetadataById } from '../deps/media-library'
-import { useItemsStore } from '../deps/timeline'
+import { useItemsStore, useMarkersStore, useTransitionsStore } from '../deps/timeline'
+import { resolveMarkerNames } from '@/shared/timeline/marker-names'
 import { studioApi } from '../deps/studio'
 import { buildFcpxml, type FcpxmlMedia } from './fcpxml'
 
@@ -38,6 +39,8 @@ export async function fcpxmlFile(): Promise<{
       path: segments ? [workspace, ...segments].join(workspace.includes('\\') ? '\\' : '/') : null,
     }
   }
+  const markers = useMarkersStore.getState().markers
+  const names = resolveMarkerNames(markers, (index) => i18n.t('timeline.markerName', { index }))
   const { xml, left } = buildFcpxml({
     name: project.name,
     width: project.metadata.width,
@@ -46,6 +49,8 @@ export async function fcpxmlFile(): Promise<{
     tracks,
     items,
     media,
+    markers: markers.map((marker) => ({ frame: marker.frame, name: names.get(marker.id) ?? '' })),
+    transitions: useTransitionsStore.getState().transitions,
   })
   const blob = new Blob([xml], { type: 'application/xml' })
   const name = `${project.name.replace(/[<>:"/\\|?*]+/g, '_').trim() || 'videosos'}.fcpxml`
@@ -71,7 +76,7 @@ export async function exportFcpxml(): Promise<void> {
     setTimeout(() => URL.revokeObjectURL(url), 1000)
   }
   if (left.length > 0) {
-    const reasons = (['kind', 'file', 'speed'] as const)
+    const reasons = (['kind', 'file', 'speed', 'transition'] as const)
       .map((reason) => ({
         reason,
         labels: left.filter((each) => each.reason === reason).map((each) => each.label),

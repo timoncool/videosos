@@ -219,7 +219,8 @@
       "left": {
         "kind": "Nicht in FCPXML (keine Entsprechung dort): {{items}}",
         "file": "Nicht in FCPXML (keine Datei im Arbeitsbereich): {{items}}",
-        "speed": "Nicht in FCPXML (Geschwindigkeit geändert): {{items}}"
+        "speed": "Nicht in FCPXML (Geschwindigkeit geändert): {{items}}",
+        "transition": "Nicht in FCPXML (ein Übergang zwischen verbundenen Clips hat dort kein Gegenstück; im Schnittprogramm hinzufügen): {{items}}"
       }
     }
   }

@@ -12,6 +12,10 @@ export interface FcpxmlTrack {
   kind?: 'video' | 'audio'
   order: number
   isGroup?: boolean
+  visible?: boolean
+  muted?: boolean
+  /** Gain in dB. */
+  volume?: number
 }
 
 export interface FcpxmlMedia {
@@ -32,12 +36,15 @@ export interface FcpxmlInput {
   tracks: FcpxmlTrack[]
   items: TimelineItem[]
   media: Record<string, FcpxmlMedia>
+  /** The timeline's markers with the names the window shows. */
+  markers?: Array<{ frame: number; name: string }>
+  transitions?: Array<{ leftClipId: string; rightClipId: string }>
 }
 
 export interface FcpxmlResult {
   xml: string
-  /** Items the file does not carry, by label, with why. */
-  left: Array<{ label: string; reason: 'kind' | 'file' | 'speed' }>
+  /** What the file does not carry, by label, with why. */
+  left: Array<{ label: string; reason: 'kind' | 'file' | 'speed' | 'transition' }>
 }
 
 const TITLE_EFFECT =
@@ -134,6 +141,31 @@ export function buildFcpxml(input: FcpxmlInput): FcpxmlResult {
       .map((item) => item.id),
   )
 
+  const trackById = new Map(input.tracks.map((track) => [track.id, track]))
+  // a video sounds as its linked audio item: that item's gain and fades, on that item's track
+  const soundOf = (item: TimelineItem): TimelineItem =>
+    item.type === 'video'
+      ? (input.items.find(
+          (other) => linkedAudio.has(other.id) && other.linkedGroupId === item.linkedGroupId,
+        ) ?? item)
+      : item
+  const fades = (fadeIn = 0, fadeOut = 0) =>
+    fadeIn > 0 || fadeOut > 0
+      ? `<param name="amount">${fadeIn > 0 ? `<fadeIn type="linear" duration="${time(framesOf(fadeIn))}"/>` : ''}${fadeOut > 0 ? `<fadeOut type="linear" duration="${time(framesOf(fadeOut))}"/>` : ''}</param>`
+      : ''
+  const blend = (item: TimelineItem) => {
+    const ramp = fades(item.fadeIn, item.fadeOut)
+    return ramp ? `<adjust-blend amount="1">${ramp}</adjust-blend>` : ''
+  }
+  const volume = (item: TimelineItem) => {
+    const sound = soundOf(item)
+    const track = trackById.get(sound.trackId)
+    if (track?.muted) return '<adjust-volume amount="-96dB"/>'
+    const gain = Math.round(((sound.volume ?? 0) + (track?.volume ?? 0)) * 100) / 100
+    const ramp = fades(sound.audioFadeIn, sound.audioFadeOut)
+    return gain !== 0 || ramp ? `<adjust-volume amount="${gain}dB">${ramp}</adjust-volume>` : ''
+  }
+
   let titleEffect: string | null = null
   const clips: string[] = []
   let end = 0
@@ -142,7 +174,8 @@ export function buildFcpxml(input: FcpxmlInput): FcpxmlResult {
     const lane = lanes.get(item.trackId)
     if (lane === undefined) continue
     const label = item.label || item.type
-    const common = `lane="${lane}" offset="${time(item.from)}" duration="${time(item.durationInFrames)}" name="${escape(label)}"`
+    const hidden = item.type !== 'audio' && trackById.get(item.trackId)?.visible === false
+    const common = `lane="${lane}" offset="${time(item.from)}" duration="${time(item.durationInFrames)}" name="${escape(label)}"${hidden ? ' enabled="0"' : ''}`
     if (item.type === 'video' || item.type === 'audio' || item.type === 'image') {
       const media = item.mediaId ? input.media[item.mediaId] : undefined
       if (!media?.path) {
@@ -155,15 +188,18 @@ export function buildFcpxml(input: FcpxmlInput): FcpxmlResult {
       }
       const ref = assetId(item.mediaId!, media)
       if (item.type === 'image') {
-        clips.push(`<video ref="${ref}" ${common} start="0s"/>`)
+        clips.push(`<video ref="${ref}" ${common} start="0s">${blend(item)}</video>`)
       } else {
         const sourceFps = item.sourceFps && item.sourceFps > 0 ? item.sourceFps : input.fps
         const start = time(framesOf((item.sourceStart ?? 0) / sourceFps))
-        const silent =
+        const sound =
           item.type === 'video' && media.audioCodec && !videoWithSound.has(item.id)
             ? '<adjust-volume amount="-96dB"/>'
-            : ''
-        clips.push(`<asset-clip ref="${ref}" ${common} start="${start}">${silent}</asset-clip>`)
+            : volume(item)
+        const picture = item.type === 'video' ? blend(item) : ''
+        clips.push(
+          `<asset-clip ref="${ref}" ${common} start="${start}">${picture}${sound}</asset-clip>`,
+        )
       }
     } else if (item.type === 'text') {
       if (!titleEffect) {
@@ -182,6 +218,24 @@ export function buildFcpxml(input: FcpxmlInput): FcpxmlResult {
     end = Math.max(end, item.from + item.durationInFrames)
   }
 
+  // a transition joins clips of a storyline; the clips here are connected ones, which FCPXML gives none
+  const labelOf = (id: string) => {
+    const found = input.items.find((item) => item.id === id)
+    return found?.label || found?.type || id
+  }
+  for (const transition of input.transitions ?? []) {
+    left.push({
+      label: `${labelOf(transition.leftClipId)} → ${labelOf(transition.rightClipId)}`,
+      reason: 'transition',
+    })
+  }
+  const markers = (input.markers ?? [])
+    .filter((marker) => marker.frame <= end)
+    .map(
+      (marker) =>
+        `<marker start="${time(marker.frame)}" duration="${time(1)}" value="${escape(marker.name)}"/>`,
+    )
+
   const duration = time(end)
   const xml = [
     '<?xml version="1.0" encoding="UTF-8"?>',
@@ -190,7 +244,7 @@ export function buildFcpxml(input: FcpxmlInput): FcpxmlResult {
     `<resources>${resources.join('')}</resources>`,
     `<library><event name="VideoSOS"><project name="${escape(input.name)}">`,
     `<sequence format="r1" duration="${duration}" tcStart="0s" tcFormat="NDF" audioLayout="stereo" audioRate="48k">`,
-    `<spine><gap name="${escape(input.name)}" offset="0s" start="0s" duration="${duration}">${clips.join('')}</gap></spine>`,
+    `<spine><gap name="${escape(input.name)}" offset="0s" start="0s" duration="${duration}">${clips.join('')}${markers.join('')}</gap></spine>`,
     '</sequence></project></event></library>',
     '</fcpxml>',
     '',

@@ -60,6 +60,11 @@ the exported file, and they watch it happen.
 5. `job_wait` until `status` is `done` (or `failed` with `error`). A finished job lists `outputs`; with a
    project open the results are already in its library (`media_list`, tagged `generated`).
 
+**Long work answers before a minute.** A command of the window that is still running then (an export, captions,
+a cut, a render) answers `{"done": false, "work_id": ...}`: call `studio_wait` with that `work_id` until it gives
+the command's own answer. `studio_wait` with `job_id` waits for a generation, and with neither for everything;
+`studio_status` lists `window_work` still running.
+
 Text and transcription jobs end in text (`outputs[].text`). A job that was sent is never sent twice: after a
 restart of the program it is followed, not repeated. `job_cancel` stops fal jobs; OpenRouter and Runware
 cannot cancel, the program only stops waiting.

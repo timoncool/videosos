@@ -219,7 +219,8 @@
       "left": {
         "kind": "Fora do FCPXML (sem equivalente): {{items}}",
         "file": "Fora do FCPXML (sem arquivo no espaço de trabalho): {{items}}",
-        "speed": "Fora do FCPXML (velocidade alterada): {{items}}"
+        "speed": "Fora do FCPXML (velocidade alterada): {{items}}",
+        "transition": "Fora do FCPXML (uma transição entre clipes conectados não tem equivalente lá; adicione-a no editor): {{items}}"
       }
     }
   }

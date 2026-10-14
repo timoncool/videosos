@@ -219,7 +219,8 @@
       "left": {
         "kind": "FCPXML’de yok (karşılığı yok): {{items}}",
         "file": "FCPXML’de yok (çalışma alanında dosya yok): {{items}}",
-        "speed": "FCPXML’de yok (hız değişti): {{items}}"
+        "speed": "FCPXML’de yok (hız değişti): {{items}}",
+        "transition": "FCPXML'de yok (bağlı klipler arasındaki geçişin orada karşılığı yok; kurgu programında ekleyin): {{items}}"
       }
     }
   }

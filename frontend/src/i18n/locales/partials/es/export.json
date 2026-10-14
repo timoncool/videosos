@@ -219,7 +219,8 @@
       "left": {
         "kind": "No está en el FCPXML (no tiene equivalente): {{items}}",
         "file": "No está en el FCPXML (no hay archivo en el espacio de trabajo): {{items}}",
-        "speed": "No está en el FCPXML (velocidad modificada): {{items}}"
+        "speed": "No está en el FCPXML (velocidad modificada): {{items}}",
+        "transition": "No está en FCPXML (una transición entre clips conectados no tiene equivalente allí; añádela en el editor): {{items}}"
       }
     }
   }

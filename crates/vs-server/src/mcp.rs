@@ -112,10 +112,17 @@ fn tools() -> &'static [Tool] {
         vec![
             Tool {
                 name: "studio_status",
-                description: "What VideoSOS is doing now: its version, which provider keys are set, the model catalogues, jobs running, money spent today, whether the window is open and which project it shows. Start here.",
+                description: "What VideoSOS is doing now: its version, which provider keys are set, the model catalogues, jobs running, the window's work still running (exports, captions, renders), money spent today, whether the window is open and which project it shows. Start here, and wait with studio_wait.",
                 looks: true,
                 schema: nothing,
                 call: |_| composite("status"),
+            },
+            Tool {
+                name: "studio_wait",
+                description: "Wait for work to end instead of polling: a command of the window that answered with a work_id (export_video, captions_add, media_cut, motion_render, previs_render, export_fcpxml and the other long ones), a generation (job_id), or everything - jobs and the window's work - when neither is given. Returns when it is done, with the command's own answer for a work_id, or after seconds (30 by default, at most 55, under the minute clients allow a call) with how far it got; call it again to keep waiting.",
+                looks: true,
+                schema: || object(json!({ "work_id": { "type": "string" }, "job_id": { "type": "string" }, "seconds": { "type": "integer", "minimum": 2, "maximum": 55 } }), &[]),
+                call: |_| composite("studio_wait"),
             },
             Tool {
                 name: "models_list",
@@ -805,7 +812,7 @@ fn tools() -> &'static [Tool] {
             },
             Tool {
                 name: "export_video",
-                description: "Renders the open project to a video file in the exports folder (data/exports) with the editor's export: format mp4|webm|mov|mkv, quality low|medium|high|ultra, optional width and height. Waits until it is written and answers with the file's path.",
+                description: "Renders the open project to a video file in the project's exports folder (a new name beside earlier exports, never over them) with the editor's export: format mp4|webm|mov|mkv, quality low|medium|high|ultra, optional width and height. Answers with the file's path once it is written; a render longer than the call answers with a work_id, and studio_wait with it gives the path when it ends.",
                 looks: false,
                 schema: || object(json!({
                     "format": { "type": "string", "enum": ["mp4", "webm", "mov", "mkv"] },
@@ -1244,6 +1251,7 @@ async fn status_summary(state: &AppState) -> Value {
         "keys": catalog["keys"],
         "catalogues": catalog["providers"],
         "jobs_running": jobs,
+        "window_work": window_work_running(),
         "spend": state.jobs.spend(None),
         "agent_daily_budget_usd": crate::settings::get().agent_daily_budget_usd,
         "assistant": crate::settings::get().assistant,
@@ -1496,12 +1504,8 @@ async fn handle(State(state): State<AppState>, body: axum::body::Bytes) -> Respo
             if let Some(step) = &step {
                 chat_step(json!({ "type": "tool", "id": step, "name": name, "args": args }));
             }
-            let answer = run_tool(&state, tool, &args).await;
-            match &answer {
-                Ok(Answer::Json(value)) => journal_change(&state, name, &args, &before, value),
-                Ok(Answer::Text(text)) => journal_change(&state, name, &args, &before, &serde_json::from_str(text).unwrap_or(Value::Null)),
-                Ok(Answer::Image { .. }) | Ok(Answer::Pictures { .. }) | Err(_) => {}
-            }
+            let answer = run_tool(&state, tool, &args, &before).await;
+            journal_answer(&state, name, &args, &before, &answer);
             if let Some(step) = step {
                 let (ok, summary) = match &answer {
                     Ok(Answer::Json(value)) | Ok(Answer::Pictures { json: value, .. }) => (true, serde_json::to_string(value).unwrap_or_default()),
@@ -1541,13 +1545,9 @@ pub(crate) struct ChatAnswer {
 pub(crate) async fn chat_call(state: &AppState, name: &str, args: &Value) -> Result<ChatAnswer, String> {
     let tool = tools().iter().find(|tool| tool.name == name).ok_or_else(|| format!("Unknown tool: {name}"))?;
     let before = job_name_before(state, name, args);
-    let answer = run_tool(state, tool, args).await?;
-    match &answer {
-        Answer::Json(value) => journal_change(state, name, args, &before, value),
-        Answer::Text(text) => journal_change(state, name, args, &before, &serde_json::from_str(text).unwrap_or(Value::Null)),
-        Answer::Image { .. } | Answer::Pictures { .. } => {}
-    }
-    Ok(match answer {
+    let answer = run_tool(state, tool, args, &before).await;
+    journal_answer(state, name, args, &before, &answer);
+    Ok(match answer? {
         Answer::Json(value) => ChatAnswer { text: cut(serde_json::to_string(&value).unwrap_or_default()), image: None },
         Answer::Pictures { json, pictures } => ChatAnswer {
             text: cut(serde_json::to_string(&json).unwrap_or_default()),
@@ -1566,11 +1566,12 @@ enum Answer {
     Pictures { json: Value, pictures: Vec<(String, String)> },
 }
 
-async fn run_tool(state: &AppState, tool: &Tool, args: &Value) -> Result<Answer, String> {
+async fn run_tool(state: &AppState, tool: &Tool, args: &Value, before: &str) -> Result<Answer, String> {
     let call = (tool.call)(args)?;
     match call.payload {
         Payload::Composite("status") => Ok(Answer::Json(status_summary(state).await)),
         Payload::Composite("wait") => wait_for(state, args).await.map(Answer::Json),
+        Payload::Composite("studio_wait") => studio_wait(state, args).await,
         Payload::Composite("questions") => Ok(with_pictures(state, wait_for_questions(args).await)),
         Payload::Composite("answer") => answer_question(args).map(Answer::Json),
         Payload::Composite("projects") => Ok(Answer::Json(projects(state))),
@@ -1579,25 +1580,26 @@ async fn run_tool(state: &AppState, tool: &Tool, args: &Value) -> Result<Answer,
         Payload::Composite("activity") => state.journal.read(crate::journal::KEPT).map(|lines| Answer::Json(json!({ "lines": lines }))).map_err(|error| error.to_string()),
         Payload::Composite("import") => import_media(state, args).await.map(Answer::Json),
         Payload::Composite(other) => Err(format!("unknown composite {other}")),
-        Payload::Window { command, args, seconds } => {
-            let mut result = ask_window(command, args, seconds).await?;
-            if command == "export_video"
-                && let Some(saved) = result.get("saved").and_then(Value::as_str) {
-                    let path = crate::fs_api::resolve(&state.workspace, saved).map_err(|_| format!("the window named an odd file: {saved}"))?;
-                    result["path"] = json!(path.display().to_string());
+        Payload::Window { command, args: sent, seconds } if seconds > WINDOW_CALL => {
+            let id = format!("w{}", WORK_ID.fetch_add(1, Ordering::Relaxed));
+            WINDOW_WORK.lock().unwrap_or_else(|p| p.into_inner()).push(WindowWork { id: id.clone(), command, result: None, left: false });
+            let (worker, worker_id, name, before, asked) = (state.clone(), id.clone(), tool.name, before.to_string(), args.clone());
+            tokio::spawn(async move {
+                let answer = match ask_window(command, sent, seconds).await {
+                    Ok(result) => window_answer(&worker, command, result),
+                    Err(problem) => Err(problem),
+                };
+                let mut works = WINDOW_WORK.lock().unwrap_or_else(|p| p.into_inner());
+                if let Some(work) = works.iter_mut().find(|work| work.id == worker_id) {
+                    if work.left {
+                        journal_answer(&worker, name, &asked, &before, &answer);
+                    }
+                    work.result = Some(answer);
                 }
-            if let Some(image) = result.get("image").and_then(Value::as_str) {
-                return Ok(Answer::Image {
-                    data: image.to_string(),
-                    mime: result.get("mime").and_then(Value::as_str).unwrap_or("image/jpeg").to_string(),
-                    text: result.get("text").and_then(Value::as_str).unwrap_or("The window.").to_string(),
-                });
-            }
-            if let Some(text) = result.get("text").and_then(Value::as_str) {
-                return Ok(Answer::Text(text.to_string()));
-            }
-            Ok(Answer::Json(result))
+            });
+            take_work(&id, WINDOW_CALL).await
         }
+        Payload::Window { command, args, seconds } => window_answer(state, command, ask_window(command, args, seconds).await?),
         Payload::None | Payload::Json(_) => {
             let (status, text) = call_route(call).await?;
             let value = serde_json::from_str::<Value>(&text).ok();
@@ -1607,6 +1609,104 @@ async fn run_tool(state: &AppState, tool: &Tool, args: &Value) -> Result<Answer,
                 Err(value.and_then(|value| value.get("error").and_then(Value::as_str).map(str::to_string)).unwrap_or(text))
             }
         }
+    }
+}
+
+/// What a command of the window answered, as the agent reads it: a file it wrote named by its path on this
+/// computer, a picture as a picture, words as words.
+fn window_answer(state: &AppState, command: &str, mut result: Value) -> Result<Answer, String> {
+    if command == "export_video"
+        && let Some(saved) = result.get("saved").and_then(Value::as_str) {
+            let path = crate::fs_api::resolve(&state.workspace, saved).map_err(|_| format!("the window named an odd file: {saved}"))?;
+            result["path"] = json!(path.display().to_string());
+        }
+    if let Some(image) = result.get("image").and_then(Value::as_str) {
+        return Ok(Answer::Image {
+            data: image.to_string(),
+            mime: result.get("mime").and_then(Value::as_str).unwrap_or("image/jpeg").to_string(),
+            text: result.get("text").and_then(Value::as_str).unwrap_or("The window.").to_string(),
+        });
+    }
+    if let Some(text) = result.get("text").and_then(Value::as_str) {
+        return Ok(Answer::Text(text.to_string()));
+    }
+    Ok(Answer::Json(result))
+}
+
+/// How long one call holds a command of the window: clients give up on a tool call after about a minute, so
+/// longer work answers before that with its work_id and the agent waits on with studio_wait.
+const WINDOW_CALL: u64 = 50;
+
+/// A command of the window that runs longer than one call.
+struct WindowWork {
+    id: String,
+    command: &'static str,
+    result: Option<Result<Answer, String>>,
+    /// The call that started it answered before it ended, so its end is journaled when it comes.
+    left: bool,
+}
+
+static WINDOW_WORK: Mutex<Vec<WindowWork>> = Mutex::new(Vec::new());
+static WORK_ID: AtomicU64 = AtomicU64::new(1);
+
+fn window_work_running() -> Vec<Value> {
+    WINDOW_WORK.lock().unwrap_or_else(|p| p.into_inner()).iter().filter(|work| work.result.is_none()).map(|work| json!({ "work_id": work.id, "command": work.command })).collect()
+}
+
+/// The answer of a command of the window once it ends, or after `seconds` where it is.
+async fn take_work(id: &str, seconds: u64) -> Result<Answer, String> {
+    let deadline = tokio::time::Instant::now() + Duration::from_secs(seconds);
+    loop {
+        {
+            let mut works = WINDOW_WORK.lock().unwrap_or_else(|p| p.into_inner());
+            let Some(index) = works.iter().position(|work| work.id == id) else {
+                return Err(format!("No window work {id}: it ended and its answer was given, or VideoSOS restarted; studio_status shows what runs."));
+            };
+            if works[index].result.is_some() {
+                let work = works.remove(index);
+                return work.result.unwrap_or_else(|| Err(format!("window work {id} ended without an answer")));
+            }
+            if tokio::time::Instant::now() >= deadline {
+                works[index].left = true;
+                return Ok(Answer::Json(json!({ "done": false, "work_id": id, "command": works[index].command, "note": "still running in the window; call studio_wait with this work_id to keep waiting" })));
+            }
+        }
+        tokio::time::sleep(Duration::from_millis(500)).await;
+    }
+}
+
+/// Waits for a command of the window (work_id), a job (job_id) or everything, under a minute at a time.
+async fn studio_wait(state: &AppState, args: &Value) -> Result<Answer, String> {
+    let seconds = args.get("seconds").and_then(Value::as_u64).unwrap_or(30).clamp(2, 55);
+    if let Some(id) = args.get("work_id").and_then(Value::as_str) {
+        return take_work(id, seconds).await;
+    }
+    if args.get("job_id").is_some() {
+        return wait_for(state, &json!({ "job_id": args["job_id"], "seconds": seconds })).await.map(Answer::Json);
+    }
+    let deadline = tokio::time::Instant::now() + Duration::from_secs(seconds);
+    loop {
+        let jobs: Vec<Value> = state.jobs.list(None, 50).into_iter().filter(|job| matches!(job.status.as_str(), "queued" | "sending" | "running")).map(|job| json!({ "id": job.id, "model": job.model, "status": job.status, "progress": job.progress })).collect();
+        let window = window_work_running();
+        let idle = jobs.is_empty() && window.is_empty();
+        if idle || tokio::time::Instant::now() >= deadline {
+            let mut answer = json!({ "done": idle, "jobs": jobs, "window_work": window });
+            if !idle {
+                answer["note"] = json!("still running; call studio_wait again to keep waiting");
+            }
+            return Ok(Answer::Json(answer));
+        }
+        tokio::time::sleep(Duration::from_secs(1)).await;
+    }
+}
+
+/// Journals what a tool changed, from its answer; work still running is journaled when it ends.
+fn journal_answer(state: &AppState, name: &str, args: &Value, before: &str, answer: &Result<Answer, String>) {
+    match answer {
+        Ok(Answer::Json(value)) if value.get("work_id").is_some() && value["done"] == false => {}
+        Ok(Answer::Json(value)) => journal_change(state, name, args, before, value),
+        Ok(Answer::Text(text)) => journal_change(state, name, args, before, &serde_json::from_str(text).unwrap_or(Value::Null)),
+        Ok(Answer::Image { .. }) | Ok(Answer::Pictures { .. }) | Err(_) => {}
     }
 }
 
@@ -1656,6 +1756,19 @@ mod tests {
         drop(listening);
         let answer = tokio::time::timeout(Duration::from_secs(5), asked).await.expect("an answer before the timeout").unwrap();
         assert!(answer.unwrap_err().contains("closed"));
+    }
+
+    #[tokio::test]
+    async fn long_window_work_answers_with_its_id_and_later_with_its_answer() {
+        WINDOW_WORK.lock().unwrap().push(WindowWork { id: "w-test".into(), command: "export_video", result: None, left: false });
+        let Ok(Answer::Json(running)) = take_work("w-test", 0).await else { panic!("a running work answers with JSON") };
+        assert_eq!(running["done"], false);
+        assert_eq!(running["work_id"], "w-test");
+        assert!(WINDOW_WORK.lock().unwrap().iter().any(|work| work.id == "w-test" && work.left), "the work is marked left, so its end is journaled");
+        WINDOW_WORK.lock().unwrap().iter_mut().find(|work| work.id == "w-test").unwrap().result = Some(Ok(Answer::Json(json!({ "saved": "a.mp4" }))));
+        let Ok(Answer::Json(ended)) = take_work("w-test", 5).await else { panic!("an ended work answers with its command's answer") };
+        assert_eq!(ended["saved"], "a.mp4");
+        assert!(take_work("w-test", 0).await.is_err(), "an answer is given once");
     }
 
     #[test]
