@@ -205,7 +205,7 @@ export const Toolbar = memo(function Toolbar({
         <Button
           variant="ghost"
           size="icon"
-          className="hidden h-8 w-8 text-[var(--color-muted)] hover:text-[var(--color-text)] lg:inline-flex"
+          className="h-8 w-8 text-[var(--color-muted)] hover:text-[var(--color-text)] [@media(pointer:coarse)]:hidden"
           onClick={() => setShowShortcutsDialog(true)}
           data-tooltip={t('toolbar.keyboardShortcuts')}
           data-tooltip-side="bottom"

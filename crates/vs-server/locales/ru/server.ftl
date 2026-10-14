@@ -170,6 +170,7 @@ local-preset = { $name }, { $steps ->
    *[many] { $steps } шагов
 }
 local-preset-full = Без ускорения, полное качество
+local-unknown-preset = у { $model } нет пресета { $preset }; его пресеты: { $presets }
 local-engine-missing = движок генерации для { $device } не установлен: установите его в Настройках, «Локальные модели»
 local-unsupported = локальная генерация пока недоступна на этой системе
 local-unknown = нет локальной модели или движка { $what }

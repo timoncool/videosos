@@ -235,6 +235,13 @@
         "speed": "Not in FCPXML (speed changed): {{items}}",
         "transition": "Not in FCPXML (a transition between connected clips has no counterpart there; add it in the editor): {{items}}"
       }
+    },
+    "validation": {
+      "resolution": "The export size is not valid.",
+      "frameRate": "The frame rate must be from 1 to 120.",
+      "audioContainer": "Audio export needs an audio-only format.",
+      "videoContainer": "Video export needs a video format.",
+      "codecContainer": "The {{codec}} codec is not supported in {{container}}."
     }
   }
 }

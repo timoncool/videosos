@@ -235,6 +235,13 @@
         "speed": "Nicht in FCPXML (Geschwindigkeit geändert): {{items}}",
         "transition": "Nicht in FCPXML (ein Übergang zwischen verbundenen Clips hat dort kein Gegenstück; im Schnittprogramm hinzufügen): {{items}}"
       }
+    },
+    "validation": {
+      "resolution": "Die Exportgröße ist ungültig.",
+      "frameRate": "Die Bildrate muss zwischen 1 und 120 liegen.",
+      "audioContainer": "Der Audioexport braucht ein reines Audioformat.",
+      "videoContainer": "Der Videoexport braucht ein Videoformat.",
+      "codecContainer": "Der Codec {{codec}} wird in {{container}} nicht unterstützt."
     }
   }
 }

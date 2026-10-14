@@ -235,6 +235,13 @@
         "speed": "不在 FCPXML 中（速度已更改）：{{items}}",
         "transition": "未包含在 FCPXML 中（连接片段之间的转场在那里没有对应元素；请在剪辑软件中添加）：{{items}}"
       }
+    },
+    "validation": {
+      "resolution": "导出尺寸无效。",
+      "frameRate": "帧率必须在 1 到 120 之间。",
+      "audioContainer": "音频导出需要纯音频格式。",
+      "videoContainer": "视频导出需要视频格式。",
+      "codecContainer": "{{container}} 不支持 {{codec}} 编解码器。"
     }
   }
 }

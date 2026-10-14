@@ -235,6 +235,13 @@
         "speed": "FCPXML에 없음(속도 변경됨): {{items}}",
         "transition": "FCPXML에 없음(연결된 클립 사이의 전환은 대응 요소가 없습니다. 편집 프로그램에서 추가하세요): {{items}}"
       }
+    },
+    "validation": {
+      "resolution": "내보내기 크기가 올바르지 않습니다.",
+      "frameRate": "프레임 레이트는 1~120이어야 합니다.",
+      "audioContainer": "오디오 내보내기에는 오디오 전용 형식이 필요합니다.",
+      "videoContainer": "비디오 내보내기에는 비디오 형식이 필요합니다.",
+      "codecContainer": "{{codec}} 코덱은 {{container}}에서 지원되지 않습니다."
     }
   }
 }

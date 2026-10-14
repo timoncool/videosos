@@ -346,28 +346,45 @@ export function getMimeType(container: ClientContainer, codec?: ClientCodec): st
 export function validateSettings(settings: ClientExportSettings): {
   valid: boolean
   error?: string
+  /** The same reason as a translation key under `export.validation`, for the window to show. */
+  errorKey?: string
+  errorParams?: Record<string, string>
 } {
   if (settings.resolution.width <= 0 || settings.resolution.height <= 0) {
-    return { valid: false, error: 'Invalid resolution' }
+    return { valid: false, error: 'Invalid resolution', errorKey: 'export.validation.resolution' }
   }
 
   if (settings.fps <= 0 || settings.fps > 120) {
-    return { valid: false, error: 'Invalid frame rate (must be 1-120)' }
+    return {
+      valid: false,
+      error: 'Invalid frame rate (must be 1-120)',
+      errorKey: 'export.validation.frameRate',
+    }
   }
 
   if (settings.mode === 'audio') {
     if (!isAudioOnlyContainer(settings.container)) {
-      return { valid: false, error: 'Audio export must use an audio-only container' }
+      return {
+        valid: false,
+        error: 'Audio export must use an audio-only container',
+        errorKey: 'export.validation.audioContainer',
+      }
     }
   } else {
     if (isAudioOnlyContainer(settings.container)) {
-      return { valid: false, error: 'Video export must use a video container' }
+      return {
+        valid: false,
+        error: 'Video export must use a video container',
+        errorKey: 'export.validation.videoContainer',
+      }
     }
 
     if (!isVideoCodecCompatibleWithContainer(settings.codec, settings.container)) {
       return {
         valid: false,
         error: `Codec ${settings.codec} is not supported in ${settings.container.toUpperCase()}`,
+        errorKey: 'export.validation.codecContainer',
+        errorParams: { codec: settings.codec, container: settings.container.toUpperCase() },
       }
     }
   }

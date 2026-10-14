@@ -150,7 +150,9 @@ async function resolveSettingsForPreflight(
   if (exportMode === 'audio') {
     resolveAudioSettings(clientSettings, settings)
     const validation = validateSettings(clientSettings)
-    return validation.valid ? { clientSettings } : { error: validation.error }
+    return validation.valid
+      ? { clientSettings }
+      : { error: validation.error, errorKey: validation.errorKey, errorParams: validation.errorParams }
   }
 
   if (settings.videoContainer) {
@@ -158,7 +160,8 @@ async function resolveSettingsForPreflight(
   }
 
   const validation = validateSettings(clientSettings)
-  if (!validation.valid) return { error: validation.error }
+  if (!validation.valid)
+    return { error: validation.error, errorKey: validation.errorKey, errorParams: validation.errorParams }
 
   const codecs =
     supportedVideoCodecs ??
@@ -182,7 +185,12 @@ async function resolveSettingsForPreflight(
     const postFallbackValidation = validateSettings(clientSettings)
     return postFallbackValidation.valid
       ? { clientSettings, codecFallback: containerFallback, supportedVideoCodecs: codecs }
-      : { error: postFallbackValidation.error, supportedVideoCodecs: codecs }
+      : {
+          error: postFallbackValidation.error,
+          errorKey: postFallbackValidation.errorKey,
+          errorParams: postFallbackValidation.errorParams,
+          supportedVideoCodecs: codecs,
+        }
   }
 
   if (settings.videoContainer) {
@@ -206,7 +214,12 @@ async function resolveSettingsForPreflight(
   const postFallbackValidation = validateSettings(clientSettings)
   return postFallbackValidation.valid
     ? { clientSettings, codecFallback: browserFallback, supportedVideoCodecs: codecs }
-    : { error: postFallbackValidation.error, supportedVideoCodecs: codecs }
+    : {
+          error: postFallbackValidation.error,
+          errorKey: postFallbackValidation.errorKey,
+          errorParams: postFallbackValidation.errorParams,
+          supportedVideoCodecs: codecs,
+        }
 }
 
 async function assessVideoAudioCodec(

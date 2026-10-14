@@ -140,6 +140,7 @@ export function TimelinePlayhead({
   const detachScrubListenersRef = useRef<(() => void) | null>(null)
   const finishScrubRef = useRef<((resumePlayback: boolean) => void) | null>(null)
   const pendingScrubEndRef = useRef<'release' | 'cancel' | null>(null)
+  useEffect(() => () => detachScrubListenersRef.current?.(), [])
   const scrubAnimationTimeRef = useRef<number | null>(null)
   const scrubScrollContainerRef = useRef<HTMLDivElement | null>(null)
   const scrubCoordinateSurfaceRef = useRef<HTMLDivElement | null>(null)

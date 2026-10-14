@@ -235,6 +235,13 @@
         "speed": "FCPXML’de yok (hız değişti): {{items}}",
         "transition": "FCPXML'de yok (bağlı klipler arasındaki geçişin orada karşılığı yok; kurgu programında ekleyin): {{items}}"
       }
+    },
+    "validation": {
+      "resolution": "Dışa aktarım boyutu geçersiz.",
+      "frameRate": "Kare hızı 1 ile 120 arasında olmalı.",
+      "audioContainer": "Ses dışa aktarımı yalnızca ses biçimi gerektirir.",
+      "videoContainer": "Video dışa aktarımı bir video biçimi gerektirir.",
+      "codecContainer": "{{codec}} kodeki {{container}} içinde desteklenmiyor."
     }
   }
 }

@@ -323,8 +323,13 @@ fn all_files(model: &'static LocalModel) -> Vec<&'static ModelFile> {
     files
 }
 
-fn preset(model: &'static LocalModel, id: Option<&str>) -> &'static Preset {
-    id.and_then(|id| model.presets.iter().find(|preset| preset.id == id)).unwrap_or(&model.presets[0])
+fn preset(model: &'static LocalModel, id: Option<&str>) -> Result<&'static Preset, String> {
+    match id.filter(|id| !id.is_empty()) {
+        None => Ok(&model.presets[0]),
+        Some(id) => model.presets.iter().find(|preset| preset.id == id).ok_or_else(|| {
+            t!("local-unknown-preset", preset = id.to_string(), model = model.name, presets = model.presets.iter().map(|preset| preset.id).collect::<Vec<_>>().join(", "))
+        }),
+    }
 }
 
 fn file_there(data: &Path, download: &Download) -> bool {
@@ -795,7 +800,7 @@ pub fn run(data: &Path, id: &str, values: &Map<String, Value>, out_dir: &Path, p
         .filter(|size| model.sizes.contains(size))
         .or_else(|| model.sizes.first().copied())
         .ok_or_else(|| t!("local-bad-size"))?;
-    let preset = preset(model, values.get("preset").and_then(Value::as_str));
+    let preset = preset(model, values.get("preset").and_then(Value::as_str))?;
     let steps = number(values, "steps").map(|n| n.round() as i32).unwrap_or(preset.steps).clamp(0, 80);
     let cfg = number(values, "cfg").map(|n| n as f32).unwrap_or(preset.cfg);
     // a preset's schedule is the one its step count was distilled to; another count takes the engine's

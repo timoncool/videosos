@@ -29,6 +29,7 @@ import {
 import { motion, useReducedMotion } from 'motion/react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/shared/ui/cn'
+import { useHtmlDragActive } from '@/shared/hooks/use-html-drag-active'
 import { useEditorStore } from '@/shared/state/editor'
 import {
   addEffect,
@@ -312,6 +313,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
   const editorLayout = getEditorLayout(editorDensity)
   // Use granular selectors - Zustand v5 best practice
   const leftSidebarOpen = useEditorStore((s) => s.leftSidebarOpen)
+  const htmlDragActive = useHtmlDragActive()
   const toggleLeftSidebar = useEditorStore((s) => s.toggleLeftSidebar)
   const mediaFullColumn = useEditorStore((s) => s.mediaFullColumn)
   const toggleMediaFullColumn = useEditorStore((s) => s.toggleMediaFullColumn)
@@ -629,7 +631,10 @@ export const MediaSidebar = memo(function MediaSidebar() {
           tabIndex={-1}
           aria-label={t('editor.mediaSidebar.collapsePanel')}
           onClick={toggleLeftSidebar}
-          className="fixed inset-0 z-20 bg-black/40 lg:hidden"
+          className={cn(
+            'fixed inset-0 z-20 bg-black/40 lg:hidden',
+            htmlDragActive && 'pointer-events-none',
+          )}
         />
       )}
       {/* Vertical Category Bar */}

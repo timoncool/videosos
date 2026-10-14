@@ -235,6 +235,13 @@
         "speed": "FCPXMLに含まれません（速度が変更されています）：{{items}}",
         "transition": "FCPXML に含まれません（接続クリップ間のトランジションには対応する要素がありません。編集ソフトで追加してください）：{{items}}"
       }
+    },
+    "validation": {
+      "resolution": "書き出しサイズが正しくありません。",
+      "frameRate": "フレームレートは 1〜120 にしてください。",
+      "audioContainer": "音声の書き出しには音声専用の形式が必要です。",
+      "videoContainer": "動画の書き出しには動画形式が必要です。",
+      "codecContainer": "{{codec}} コーデックは {{container}} では使えません。"
     }
   }
 }

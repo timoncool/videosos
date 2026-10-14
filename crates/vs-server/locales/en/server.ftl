@@ -167,6 +167,7 @@ local-preset = { $name }, { $steps ->
    *[other] { $steps } steps
 }
 local-preset-full = No accelerator, full quality
+local-unknown-preset = { $model } has no preset { $preset }; its presets: { $presets }
 local-engine-missing = the generation engine for { $device } is not installed: install it in Settings, Local models
 local-unsupported = local generation is not available on this system yet
 local-unknown = no local model or engine { $what }

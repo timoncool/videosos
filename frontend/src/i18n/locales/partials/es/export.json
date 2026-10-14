@@ -235,6 +235,13 @@
         "speed": "No está en el FCPXML (velocidad modificada): {{items}}",
         "transition": "No está en FCPXML (una transición entre clips conectados no tiene equivalente allí; añádela en el editor): {{items}}"
       }
+    },
+    "validation": {
+      "resolution": "El tamaño de exportación no es válido.",
+      "frameRate": "La velocidad de fotogramas debe estar entre 1 y 120.",
+      "audioContainer": "La exportación de audio necesita un formato solo de audio.",
+      "videoContainer": "La exportación de vídeo necesita un formato de vídeo.",
+      "codecContainer": "El códec {{codec}} no es compatible con {{container}}."
     }
   }
 }
