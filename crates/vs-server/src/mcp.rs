@@ -1472,17 +1472,82 @@ fn server_info() -> Value {
     json!({ "name": "videosos", "title": STUDIO, "version": crate::service::app_version() })
 }
 
-fn rpc(id: Value, result: Value) -> Response {
+const META_VERSION: &str = "io.modelcontextprotocol/protocolVersion";
+const HEADER_MISMATCH: i64 = -32020;
+const UNSUPPORTED_VERSION: i64 = -32022;
+
+fn supported_versions() -> Vec<&'static str> {
+    MODERN.iter().chain(LEGACY).copied().collect()
+}
+
+/// A complete result, signed with the server's identity.
+fn rpc(id: Value, mut result: Value) -> Response {
+    if let Some(fields) = result.as_object_mut() {
+        fields.entry("resultType").or_insert_with(|| "complete".into());
+        let meta = fields.entry("_meta").or_insert_with(|| json!({}));
+        meta["io.modelcontextprotocol/serverInfo"] = server_info();
+    }
     Json(json!({ "jsonrpc": "2.0", "id": id, "result": result })).into_response()
 }
 
 fn rpc_error(status: StatusCode, id: Value, code: i64, message: String) -> Response {
-    (status, Json(json!({ "jsonrpc": "2.0", "id": id, "error": { "code": code, "message": message } }))).into_response()
+    rpc_failure(status, id, code, message, None)
 }
 
+fn rpc_failure(status: StatusCode, id: Value, code: i64, message: String, data: Option<Value>) -> Response {
+    let mut error = json!({ "code": code, "message": message });
+    if let Some(data) = data {
+        error["data"] = data;
+    }
+    (status, Json(json!({ "jsonrpc": "2.0", "id": id, "error": error }))).into_response()
+}
+
+/// A list or a read a client may cache: the same for everyone, fresh for five minutes.
 fn cacheable(mut result: Value) -> Value {
     result["ttlMs"] = LIST_TTL_MS.into();
+    result["cacheScope"] = "public".into();
     result
+}
+
+/// A header value, with the Base64 sentinel form decoded.
+fn header_value(headers: &HeaderMap, name: &str) -> Option<String> {
+    use base64::Engine;
+    let raw = headers.get(name)?.to_str().ok()?;
+    match raw.strip_prefix("=?base64?").and_then(|inner| inner.strip_suffix("?=")) {
+        Some(encoded) => base64::engine::general_purpose::STANDARD.decode(encoded).ok().and_then(|bytes| String::from_utf8(bytes).ok()),
+        None => Some(raw.to_string()),
+    }
+}
+
+/// Why a stateless request is refused, if it is: a version VideoSOS does not speak, or headers that do not say
+/// what its body says.
+fn refused(headers: &HeaderMap, method: &str, params: &Value, version: &str) -> Option<(i64, String, Option<Value>)> {
+    if !MODERN.contains(&version) {
+        return Some((UNSUPPORTED_VERSION, "Unsupported protocol version".into(), Some(json!({ "supported": supported_versions(), "requested": version }))));
+    }
+    let mismatch = |what: String| Some((HEADER_MISMATCH, format!("Header mismatch: {what}"), None));
+    match header_value(headers, "mcp-protocol-version") {
+        Some(value) if value == version => {}
+        Some(value) => return mismatch(format!("MCP-Protocol-Version header value '{value}' does not match body value '{version}'")),
+        None => return mismatch("the MCP-Protocol-Version header is missing".into()),
+    }
+    match header_value(headers, "mcp-method") {
+        Some(value) if value == method => {}
+        Some(value) => return mismatch(format!("Mcp-Method header value '{value}' does not match body value '{method}'")),
+        None => return mismatch("the Mcp-Method header is missing".into()),
+    }
+    let named = match method {
+        "tools/call" | "prompts/get" => params.get("name"),
+        "resources/read" => params.get("uri"),
+        _ => return None,
+    }
+    .and_then(Value::as_str)
+    .unwrap_or_default();
+    match header_value(headers, "mcp-name") {
+        Some(value) if value == named => None,
+        Some(value) => mismatch(format!("Mcp-Name header value '{value}' does not match body value '{named}'")),
+        None => mismatch("the Mcp-Name header is missing".into()),
+    }
 }
 
 fn tool_result(id: Value, text: String, structured: Option<Value>, error: bool) -> Response {
@@ -1517,10 +1582,17 @@ fn title(name: &str) -> String {
 }
 
 fn annotations(tool: &Tool) -> Value {
-    json!({ "readOnlyHint": tool.looks, "destructiveHint": matches!(tool.name, "job_delete" | "timeline_edit"), "openWorldHint": tool.name == "generate" })
+    let name = tool.name;
+    // removes or writes over what was there, so the earlier content is gone or must be brought back: a client asks
+    const OVERWRITES: &[&str] = &["timeline_edit", "checkpoint_restore", "storyboard_set", "canvas_set", "captions_add", "key_set", "proxy_set", "variables_set", "url_fetch_cancel"];
+    let destructive = name.ends_with("_delete") || OVERWRITES.contains(&name);
+    // what reaches the internet: the providers, the catalogues, downloads by link and the proxy check
+    const OPEN_WORLD: &[&str] = &["generate", "job_retry", "catalog_refresh", "key_check", "proxy_test", "url_fetch", "url_fetch_resume", "url_tool_install", "url_tool_update", "media_import"];
+    let idempotent = tool.looks || name.ends_with("_set") || name.ends_with("_get") || matches!(name, "project_open" | "editor_tab" | "playhead_seek" | "ui_navigate" | "ui_open_settings" | "ui_select");
+    json!({ "readOnlyHint": tool.looks, "destructiveHint": !tool.looks && destructive, "idempotentHint": idempotent, "openWorldHint": OPEN_WORLD.contains(&name) })
 }
 
-async fn handle(State(state): State<AppState>, body: axum::body::Bytes) -> Response {
+async fn handle(State(state): State<AppState>, headers: HeaderMap, body: axum::body::Bytes) -> Response {
     let Ok(message) = serde_json::from_slice::<Value>(&body) else {
         return rpc_error(StatusCode::BAD_REQUEST, Value::Null, -32700, "Parse error".into());
     };
@@ -1532,11 +1604,17 @@ async fn handle(State(state): State<AppState>, body: axum::body::Bytes) -> Respo
     if message.get("id").is_none() {
         return StatusCode::ACCEPTED.into_response();
     }
+    // a request of the stateless revision says its version in _meta and is checked against its headers; one
+    // without it is of the handshake era
+    if let Some(version) = params.get("_meta").and_then(|meta| meta.get(META_VERSION)).and_then(Value::as_str)
+        && let Some((code, text, data)) = refused(&headers, method, &params, version) {
+            return rpc_failure(StatusCode::BAD_REQUEST, id, code, text, data);
+        }
     seen(method);
     match method {
         "initialize" => {
             let asked = params.get("protocolVersion").and_then(Value::as_str).unwrap_or_default();
-            let protocol = MODERN.iter().chain(LEGACY).find(|version| **version == asked).copied().unwrap_or(LEGACY[0]);
+            let protocol = LEGACY.iter().find(|version| **version == asked).copied().unwrap_or(LEGACY[0]);
             rpc(id, json!({
                 "protocolVersion": protocol,
                 "capabilities": { "tools": {}, "resources": {}, "prompts": {} },
@@ -1545,7 +1623,7 @@ async fn handle(State(state): State<AppState>, body: axum::body::Bytes) -> Respo
             }))
         }
         "server/discover" => rpc(id, cacheable(json!({
-            "supportedVersions": MODERN.iter().chain(LEGACY).collect::<Vec<_>>(),
+            "supportedVersions": supported_versions(),
             "capabilities": { "tools": {}, "resources": {}, "prompts": {} },
             "serverInfo": server_info(),
             "instructions": INSTRUCTIONS,
@@ -1561,9 +1639,17 @@ async fn handle(State(state): State<AppState>, body: axum::body::Bytes) -> Respo
                 rpc_error(StatusCode::OK, id, -32002, format!("Resource not found: {uri}"))
             }
         }
-        "prompts/list" => rpc(id, cacheable(json!({ "prompts": [{ "name": "videosos", "title": "VideoSOS skill", "description": "Load the guide to VideoSOS: the tools and recipes." }] }))),
+        "prompts/list" => rpc(id, cacheable(json!({ "prompts": [
+            { "name": "videosos", "title": "VideoSOS skill", "description": "Load the guide to VideoSOS: the tools and recipes." },
+            { "name": "make_video", "title": "Make a video", "description": "Make a short video from an idea, from the plan to the exported file.", "arguments": [{ "name": "idea", "description": "what the video is about, its length, style and sound", "required": true }] },
+        ] }))),
         "prompts/get" => match params.get("name").and_then(Value::as_str) {
             Some("videosos") => rpc(id, json!({ "messages": [{ "role": "user", "content": { "type": "text", "text": SKILL } }] })),
+            Some("make_video") => {
+                let idea = params.get("arguments").and_then(|arguments| arguments.get("idea")).and_then(Value::as_str).unwrap_or_default();
+                let text = format!("{SKILL}\n\nMake a video: {idea}\nFollow the recipe \"A short film from a brief\" above: write the shots yourself into the storyboard, say the price before the paid generations, wait with studio_wait, look at what you made, cut it on the timeline, and finish with export_video.");
+                rpc(id, json!({ "messages": [{ "role": "user", "content": { "type": "text", "text": text } }] }))
+            }
             other => rpc_error(StatusCode::OK, id, -32602, format!("Unknown prompt: {}", other.unwrap_or_default())),
         },
         "tools/list" => {
@@ -1859,6 +1945,52 @@ mod tests {
             assert_eq!((tool.schema)()["type"], "object", "{}", tool.name);
             assert!(!tool.description.is_empty());
         }
+    }
+
+    #[test]
+    fn a_tool_that_removes_or_writes_over_is_destructive() {
+        let hint = |name: &str, key: &str| annotations(tools().iter().find(|tool| tool.name == name).unwrap_or_else(|| panic!("{name} is a tool")))[key].clone();
+        for name in ["media_delete", "project_delete", "job_delete", "key_delete", "element_delete", "timeline_edit", "checkpoint_restore", "storyboard_set", "canvas_set"] {
+            assert_eq!(hint(name, "destructiveHint"), true, "{name}");
+        }
+        for name in ["generate", "project_create", "element_save", "frame_save", "export_video", "timeline_get", "assistant_set"] {
+            assert_eq!(hint(name, "destructiveHint"), false, "{name}");
+        }
+        for name in ["generate", "job_retry", "url_fetch", "catalog_refresh"] {
+            assert_eq!(hint(name, "openWorldHint"), true, "{name}");
+        }
+        for name in ["timeline_edit", "export_video", "transcribe"] {
+            assert_eq!(hint(name, "openWorldHint"), false, "{name}");
+        }
+        for name in ["studio_status", "timeline_get", "media_list", "studio_wait"] {
+            assert_eq!(hint(name, "readOnlyHint"), true, "{name}");
+        }
+    }
+
+    #[tokio::test]
+    async fn a_stateless_request_is_checked_against_its_headers() {
+        let headers = |pairs: &[(&str, &str)]| {
+            let mut map = HeaderMap::new();
+            for (name, value) in pairs {
+                map.insert(axum::http::HeaderName::from_bytes(name.as_bytes()).unwrap(), value.parse().unwrap());
+            }
+            map
+        };
+        let call = json!({ "name": "studio_status" });
+        assert!(refused(&headers(&[("mcp-protocol-version", "2026-07-28"), ("mcp-method", "tools/call"), ("mcp-name", "studio_status")]), "tools/call", &call, "2026-07-28").is_none());
+        let other = refused(&headers(&[("mcp-protocol-version", "2026-07-28"), ("mcp-method", "tools/call"), ("mcp-name", "studio_system")]), "tools/call", &call, "2026-07-28");
+        assert_eq!(other.map(|(code, _, _)| code), Some(HEADER_MISMATCH), "a name that differs from the body is refused");
+        let missing = refused(&headers(&[("mcp-protocol-version", "2026-07-28")]), "tools/list", &json!({}), "2026-07-28");
+        assert_eq!(missing.map(|(code, _, _)| code), Some(HEADER_MISMATCH), "a missing Mcp-Method is refused");
+        let old = refused(&headers(&[]), "tools/list", &json!({}), "1900-01-01").unwrap();
+        assert_eq!((old.0, old.2.unwrap()["requested"].clone()), (UNSUPPORTED_VERSION, json!("1900-01-01")));
+        let encoded = format!("=?base64?{}?=", { use base64::Engine; base64::engine::general_purpose::STANDARD.encode(SKILL_URI) });
+        assert!(refused(&headers(&[("mcp-protocol-version", "2026-07-28"), ("mcp-method", "resources/read"), ("mcp-name", encoded.as_str())]), "resources/read", &json!({ "uri": SKILL_URI }), "2026-07-28").is_none(), "a Base64 name is decoded before it is compared");
+        let answer = rpc(json!(1), cacheable(json!({ "tools": [] })));
+        let body: Value = serde_json::from_slice(&axum::body::to_bytes(answer.into_body(), 1 << 20).await.unwrap()).unwrap();
+        assert_eq!(body["result"]["resultType"], "complete");
+        assert_eq!(body["result"]["cacheScope"], "public");
+        assert_eq!(body["result"]["_meta"]["io.modelcontextprotocol/serverInfo"]["name"], "videosos");
     }
 
     #[test]
