@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Plus, X } from 'lucide-react'
 import { Input } from '@/components/ui/input'
@@ -224,8 +224,9 @@ function LengthCount({ field, value }: { field: Field; value: unknown }) {
 export function FieldControl({ field, value, onChange }: FieldControlProps) {
   const { t } = useTranslation()
   const effective = value ?? field.default
+  const id = useId()
   const label = (
-    <Label className="flex items-baseline gap-1 text-[11px] text-muted-foreground" title={field.description && providerWords(t, field.description)}>
+    <Label htmlFor={field.type === 'media' ? undefined : id} className="flex items-baseline gap-1 text-[11px] text-muted-foreground" title={field.description && providerWords(t, field.description)}>
       <span>{fieldLabel(t, field)}</span>
       {field.required && <span className="text-destructive">*</span>}
     </Label>
@@ -237,6 +238,7 @@ export function FieldControl({ field, value, onChange }: FieldControlProps) {
         <div className="space-y-1">
           {label}
           <Textarea
+            id={id}
             value={typeof value === 'string' ? value : ''}
             onChange={(event) => onChange(event.target.value)}
             placeholder={field.description ? providerWords(t, field.description) : ''}
@@ -252,6 +254,7 @@ export function FieldControl({ field, value, onChange }: FieldControlProps) {
         <div className="space-y-1">
           {label}
           <Input
+            id={id}
             value={typeof value === 'string' ? value : ''}
             onChange={(event) => onChange(event.target.value)}
             placeholder={typeof field.default === 'string' ? field.default : ''}
@@ -267,6 +270,7 @@ export function FieldControl({ field, value, onChange }: FieldControlProps) {
         <div className="space-y-1">
           {label}
           <Input
+            id={id}
             type="number"
             value={typeof value === 'number' ? value : ''}
             min={field.min ?? undefined}
@@ -287,7 +291,7 @@ export function FieldControl({ field, value, onChange }: FieldControlProps) {
       return (
         <div className="flex items-center justify-between gap-2 py-0.5">
           {label}
-          <Switch checked={effective === true} onCheckedChange={(checked) => onChange(checked)} aria-label={fieldLabel(t, field)} />
+          <Switch id={id} checked={effective === true} onCheckedChange={(checked) => onChange(checked)} aria-label={fieldLabel(t, field)} />
         </div>
       )
     case 'select':
@@ -299,7 +303,7 @@ export function FieldControl({ field, value, onChange }: FieldControlProps) {
             value={optionIndex(field.options, effective)}
             onValueChange={(index) => onChange(field.options[Number(index)]?.value)}
           >
-            <SelectTrigger className="h-7 text-xs" data-testid={`generate-field-${field.key}`}>
+            <SelectTrigger id={id} className="h-7 text-xs" data-testid={`generate-field-${field.key}`}>
               <SelectValue placeholder={t('generate.form.default')} />
             </SelectTrigger>
             <SelectContent className="max-h-72">
@@ -314,7 +318,7 @@ export function FieldControl({ field, value, onChange }: FieldControlProps) {
       )
     case 'media':
       return (
-        <div className="space-y-1">
+        <div className="space-y-1" role="group" aria-label={fieldLabel(t, field)}>
           {label}
           <MediaSlot
             field={field}

@@ -57,6 +57,7 @@ makes it, and the release notes on GitHub are taken from the release's section.
 
 ### Fixed
 
+- **Generation form labels name their fields**: a screen reader, a click on the label and an agent reading the page reach the prompt, the selects and the switches by their names.
 - **An agent's import of a file on this computer** works again.
 - **A command an agent sends to a window that closes** fails at once instead of waiting five minutes.
 - **Every icon-only button has a name** that screen readers and agents read.
