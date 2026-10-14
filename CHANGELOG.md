@@ -50,6 +50,34 @@ makes it, and the release notes on GitHub are taken from the release's section.
 - **History sorting** by newest, oldest, most or least expensive, and sounds when a generation or an export ends.
 - **About**: the author's other programs, crypto addresses with copy buttons and the support tiers.
 - **Closing while a generation is unfinished asks first.**
+- **Generation on this computer, free**: a Local provider beside OpenRouter, fal and Runware runs Qwen-Image 2.1
+  (pictures), MiniMax-H3 and LTX-2.5 (video with sound) through stable-diffusion.cpp on CUDA, Vulkan or the
+  processor. Settings, Local models downloads each model and its engine once, pinned and checked by SHA-256, with
+  resume; each model has its accelerators as presets (4, 6 and 8 steps); a failed run is named by the engine's own
+  first error. Agents have the same through `local_*` tools and the `local` provider.
+- **The author's music studios on this computer** (YuE2, MiniMax Music3, ACE-Step) appear in Music while they are
+  open: the form is the studio's own, the song is made by the studio and its file lands in the library with its
+  tags.
+- **Model files taken from the author's other programs**: a weight file another program already has is linked in
+  (on the same drive) or copied instead of downloaded, after its SHA-256 matches, and the model's row says where it
+  came from.
+- **Generate without end**, as YuE2 Studio's songs: the runs go again with new seeds until stopped or a run fails.
+- **Export loudness**: the mix can be brought to -14, -16 or -23 LUFS under a -1 dBTP true-peak limiter; off unless
+  picked.
+- **Captions word by word**: a caption is shown whole, word by word as spoken, or as karaoke with the spoken word
+  lit.
+- **What a key has spent**: the key check shows OpenRouter's spend and limit, Runware's balance, and says when fal
+  does not tell it.
+- **The window's assistant can be the connected agent**, as in YuE2 Studio: improving a prompt, a prompt from a
+  picture, a storyboard, a blocking and the chat go to the agent connected over MCP, with no OpenRouter key and no
+  charge.
+- **Agents run the whole work**: projects, the library, frames as pictures, captions and subtitles
+  (`subtitles_export`), tracks and markers, settings, keys and proxy, `generate_file` from a model to a file in one
+  call, `studio_wait` for long work, `providers_log`, and the writing guides as MCP resources.
+- **Tablets, phones and Safari**: below 1024 px the library and properties open over the preview, the top bar
+  takes two rows, clips and the playhead are dragged by finger and pen, and the editor opens in Safari.
+- **Report a problem** opens GitHub's bug, idea and question forms with the version, the graphics card and the
+  system filled in.
 - **Linux (.deb, AppImage) and macOS (.dmg) builds.**
 - **The window in ten languages**: German, Spanish, French, Japanese, Korean, Brazilian Portuguese, Turkish and
   Chinese join English and Russian, effects, transitions and their parameters included.
@@ -66,6 +94,13 @@ makes it, and the release notes on GitHub are taken from the release's section.
 - **A failed generation says what kind of failure it was** in your language, with the provider's own text under
   Error text and a button to the keys when one is missing.
 - **Prices, sizes and times in your language**, in the model picker, the generation form and the export dialog.
+- **The window's own models as in the studios, only quantized**: speech is recognised by Parakeet Ultra (int8) with
+  Whisper Large v3 Turbo (Q8) for other languages, scene captions and cut checks use Gemma 4 E4B; Kokoro, MusicGen,
+  LFM, MOSS Nano, Supertonic and the small Whisper models are gone with the AI tab, and speech is made in Generate,
+  Speech (a text clip's menu opens it with its text). Settings, Storage clears their leftover files.
+- **Anonymous statistics as the author's programs count them**: the features used by name, model downloads ready
+  or failed, the seconds of video made on this computer's card and the card's class; Privacy lists all of it.
+- **No web version on Vercel**: VideoSOS 2 is a desktop program; the old web version stays in the legacy-v1 branch.
 
 ### Fixed
 
@@ -82,6 +117,15 @@ makes it, and the release notes on GitHub are taken from the release's section.
 - **A command an agent sends to a window that closes** fails at once instead of waiting five minutes.
 - **Every icon-only button has a name** that screen readers and agents read.
 - **Narrow windows** keep the top bar, the canvas buttons and the meters in view.
+- **Transcription in the window reads speech**: Parakeet gave empty text and Whisper garbage on the graphics card;
+  both run on the processor with up to eight threads.
+- **Scene captions wait for Gemma to load** instead of giving up after 30 seconds while the model is prepared.
+- **The sound outputs are listed in the program**: the list waited for a microphone permission the window never
+  asked for, so it stayed empty.
+- **Agents open the window's menus and lists** (Export, a select's options) with a click, and read the options of an
+  open list.
+- **A playhead dragged quickly or along the ruler** follows the pointer.
+- **A studio's song keeps its own title and tags.**
 
 ## 2026-10-12 — 2.0.0
 
