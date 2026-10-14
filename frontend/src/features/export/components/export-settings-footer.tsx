@@ -73,7 +73,7 @@ export function ExportSettingsFooter({
           ))}
         </DropdownMenuContent>
       </DropdownMenu>
-      <Button onClick={onExport} disabled={actionsDisabled}>
+      <Button className="bg-brand" onClick={onExport} disabled={actionsDisabled}>
         {mode === 'audio' ? t('export.settings.exportAudio') : t('export.settings.exportVideo')}
       </Button>
     </div>
