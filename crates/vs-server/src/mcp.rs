@@ -35,6 +35,29 @@ pub fn install(api: Router) {
 const STUDIO: &str = "VideoSOS";
 pub(crate) const SKILL: &str = include_str!("../../../docs/mcp-skill.md");
 const SKILL_URI: &str = "videosos://skill";
+const GUIDE_URI: &str = "videosos://guide/";
+
+/// The rules the window's assistant is prompted with, read by the window too: an agent writes the way they ask.
+const PROMPT_GUIDES: &str = include_str!("prompt-guides.json");
+
+/// The topics `prompt_guide` answers, each with what it covers.
+const GUIDE_TOPICS: &[(&str, &str)] = &[
+    ("prompt", "writing or improving a prompt for a task's model: what each task's prompt describes"),
+    ("picture", "writing the prompt that would make a given picture (the reverse prompt)"),
+    ("storyboard", "splitting a script into the shots of a short video, one prompt and length each"),
+];
+
+fn prompt_guide(topic: &str) -> Option<String> {
+    let guides: Value = serde_json::from_str(PROMPT_GUIDES).ok()?;
+    let rule = |key: &str| guides[key].as_str().unwrap_or_default().to_string();
+    let goals: String = guides["goals"].as_object()?.iter().map(|(task, goal)| format!("- {task}: {}\n", goal.as_str().unwrap_or_default())).collect();
+    Some(match topic {
+        "prompt" => format!("What a prompt describes, by task:\n{goals}\nThe window's assistant improves a prompt by this rule ({{model}} is the chosen model, {{goal}} the task's line above):\n{}", rule("improve")),
+        "picture" => format!("The window's assistant writes the prompt of a picture by this rule ({{goal}} is the image line, or the video line for video and lip_sync; {{language}} the language code):\n{}\n\nWhat a prompt describes, by task:\n{goals}", rule("describe")),
+        "storyboard" => format!("The window's assistant splits a script into shots by this rule ({{count}} shots, {{goal}} the video line, {{language}} the language code); put the shots into a storyboard with storyboard_set:\n{}\n\nThe video line: {}", rule("storyboard"), guides["goals"]["video"].as_str().unwrap_or_default()),
+        _ => return None,
+    })
+}
 const LIMIT: usize = 60_000;
 
 enum Payload {
@@ -1846,12 +1869,20 @@ async fn handle(State(state): State<AppState>, headers: HeaderMap, body: axum::b
             "instructions": INSTRUCTIONS,
         }))),
         "ping" => rpc(id, json!({})),
-        "resources/list" => rpc(id, cacheable(json!({ "resources": [{ "uri": SKILL_URI, "name": "videosos skill", "title": "How to drive VideoSOS", "mimeType": "text/markdown" }] }))),
+        "resources/list" => {
+            let mut list = vec![json!({ "uri": SKILL_URI, "name": "videosos skill", "title": "How to drive VideoSOS", "description": "How to drive VideoSOS: every tool, step-by-step recipes.", "mimeType": "text/markdown" })];
+            for (topic, about) in GUIDE_TOPICS {
+                list.push(json!({ "uri": format!("{GUIDE_URI}{topic}"), "name": format!("writing guide: {topic}"), "title": format!("Writing guide: {topic}"), "description": about, "mimeType": "text/plain" }));
+            }
+            rpc(id, cacheable(json!({ "resources": list })))
+        }
         "resources/templates/list" => rpc(id, cacheable(json!({ "resourceTemplates": [] }))),
         "resources/read" => {
             let uri = params.get("uri").and_then(Value::as_str).unwrap_or_default();
             if uri == SKILL_URI {
                 rpc(id, json!({ "contents": [{ "uri": uri, "mimeType": "text/markdown", "text": SKILL }] }))
+            } else if let Some(text) = uri.strip_prefix(GUIDE_URI).and_then(prompt_guide) {
+                rpc(id, cacheable(json!({ "contents": [{ "uri": uri, "mimeType": "text/plain", "text": text }] })))
             } else {
                 rpc_error(StatusCode::OK, id, -32002, format!("Resource not found: {uri}"))
             }
@@ -1859,12 +1890,23 @@ async fn handle(State(state): State<AppState>, headers: HeaderMap, body: axum::b
         "prompts/list" => rpc(id, cacheable(json!({ "prompts": [
             { "name": "videosos", "title": "VideoSOS skill", "description": "Load the guide to VideoSOS: the tools and recipes." },
             { "name": "make_video", "title": "Make a video", "description": "Make a short video from an idea, from the plan to the exported file.", "arguments": [{ "name": "idea", "description": "what the video is about, its length, style and sound", "required": true }] },
+            { "name": "write_prompt", "title": "Write a prompt", "description": "Write a prompt for a task's model and make it.", "arguments": [
+                { "name": "task", "description": format!("the task: {TASKS}"), "required": true },
+                { "name": "idea", "description": "what to make", "required": true },
+            ] },
         ] }))),
         "prompts/get" => match params.get("name").and_then(Value::as_str) {
             Some("videosos") => rpc(id, json!({ "messages": [{ "role": "user", "content": { "type": "text", "text": SKILL } }] })),
             Some("make_video") => {
                 let idea = params.get("arguments").and_then(|arguments| arguments.get("idea")).and_then(Value::as_str).unwrap_or_default();
                 let text = format!("{SKILL}\n\nMake a video: {idea}\nFollow the recipe \"A short film from a brief\" above: write the shots yourself into the storyboard, say the price before the paid generations, wait with studio_wait, look at what you made, cut it on the timeline, and finish with export_video.");
+                rpc(id, json!({ "messages": [{ "role": "user", "content": { "type": "text", "text": text } }] }))
+            }
+            Some("write_prompt") => {
+                let argument = |name: &str| params.get("arguments").and_then(|arguments| arguments.get(name)).and_then(Value::as_str).unwrap_or_default().to_string();
+                let (task, idea) = (argument("task"), argument("idea"));
+                let guide = prompt_guide("prompt").unwrap_or_default();
+                let text = format!("{guide}\n\nWrite a prompt for the task {task}: {idea}\nChoose the model with models_list, write the prompt for it by the rules above, say the price before a paid generation, then generate and studio_wait.");
                 rpc(id, json!({ "messages": [{ "role": "user", "content": { "type": "text", "text": text } }] }))
             }
             other => rpc_error(StatusCode::OK, id, -32602, format!("Unknown prompt: {}", other.unwrap_or_default())),
@@ -2133,6 +2175,16 @@ pub fn router() -> Router<AppState> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn every_guide_topic_reads_and_carries_the_window_rules() {
+        for (topic, _) in GUIDE_TOPICS {
+            let text = prompt_guide(topic).unwrap_or_else(|| panic!("guide {topic} reads"));
+            assert!(text.contains("a short video shot"), "guide {topic} carries the task goals");
+        }
+        assert!(prompt_guide("prompt").unwrap().contains("You improve prompts"));
+        assert!(prompt_guide("unknown").is_none());
+    }
 
     #[test]
     fn a_proxy_is_read_without_its_login() {
