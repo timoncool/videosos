@@ -40,7 +40,15 @@ import {
   type Provider,
   type Task,
 } from '../services/generate-api'
-import { assistantReadiness, modelKey, useGenerateStore } from '../stores/generate-store'
+import {
+  assistantReadiness,
+  modelKey,
+  useGenerateStore,
+  type ModelRef,
+} from '../stores/generate-store'
+import { SlideToEnable } from './slide-to-enable'
+
+type CreateRequest = Parameters<typeof generateApi.createJobs>[0]
 import { useProjectStore } from '../deps/editor'
 import { FieldControl } from './field-control'
 import { describeImage, improvePrompt } from '../services/prompt-assist'
@@ -293,36 +301,54 @@ export function GeneratePanel() {
     [fields, values],
   )
   const hasKey = model ? keys[model.provider] === true : false
+  const blocked =
+    !form ||
+    !hasKey ||
+    missing.length > 0 ||
+    tooLong.length > 0 ||
+    unfilled.length > 0 ||
+    batchBlocked ||
+    !projectId
+
+  /** The runs Create sends now: the chosen model and every model of the batch. */
+  const runsNow = (): CreateRequest[] => {
+    if (!model) return []
+    const placeAt = placeOnTimeline ? playheadSeconds() : null
+    const run = (ref: ModelRef, runValues: Record<string, unknown>): CreateRequest => ({
+      provider: ref.provider,
+      model: ref.id,
+      task,
+      values: runValues,
+      project_id: projectId,
+      repeat,
+      place: placeOnTimeline,
+      place_at: placeAt,
+    })
+    return [run(model, sent.values), ...batchRuns.map((each) => run(each.ref, each.values))]
+  }
+
+  const send = async (runs: CreateRequest[]): Promise<string[]> => {
+    const ids: string[] = []
+    for (const request of runs) {
+      const { jobs: created } = await generateApi.createJobs(request)
+      for (const job of created) {
+        useGenerateStore.getState().upsertJob(job)
+        ids.push(job.id)
+      }
+    }
+    return ids
+  }
 
   const generate = async () => {
     if (!model) return
     setSubmitting(true)
     setSubmitError(null)
-    const placeAt = placeOnTimeline ? playheadSeconds() : null
     try {
-      const { jobs: created } = await generateApi.createJobs({
-        provider: model.provider,
-        model: model.id,
-        task,
-        values: sent.values,
-        project_id: projectId,
-        repeat,
-        place: placeOnTimeline,
-        place_at: placeAt,
-      })
-      for (const job of created) useGenerateStore.getState().upsertJob(job)
-      for (const run of batchRuns) {
-        const { jobs: more } = await generateApi.createJobs({
-          provider: run.ref.provider,
-          model: run.ref.id,
-          task,
-          values: run.values,
-          project_id: projectId,
-          repeat,
-          place: placeOnTimeline,
-          place_at: placeAt,
-        })
-        for (const job of more) useGenerateStore.getState().upsertJob(job)
+      const runs = runsNow()
+      const ids = await send(runs)
+      if (forever) {
+        endless.current = runs
+        setEndlessJobs((before) => [...before, ...ids])
       }
     } catch (error) {
       setSubmitError(error instanceof Error ? error.message : String(error))
@@ -330,6 +356,63 @@ export function GeneratePanel() {
       setSubmitting(false)
     }
   }
+
+  // Without end, as YuE2 Studio's songs: the runs as they were when it started go again, each with a new seed and
+  // into the library rather than onto the timeline, whenever fewer than two generations are at work; a failed one
+  // stops it. A snapshot, so editing the form meanwhile does not change the next runs.
+  const [forever, setForever] = useState(false)
+  const endless = useRef<CreateRequest[] | null>(null)
+  const [endlessJobs, setEndlessJobs] = useState<string[]>([])
+  const seedKeys = useMemo(
+    () => new Set(fields.filter((field) => field.role === 'seed').map((field) => field.key)),
+    [fields],
+  )
+  const working = jobs.filter((job) => ['queued', 'sending', 'running'].includes(job.status)).length
+  const endlessRuns = jobs.filter((job) => endlessJobs.includes(job.id))
+  const endlessSpent = endlessRuns.reduce((sum, job) => sum + (job.cost ?? job.estimate ?? 0), 0)
+  const endlessFailure = endlessRuns.find((job) => job.status === 'failed')
+
+  const switchForever = (on: boolean) => {
+    setForever(on)
+    if (!on) {
+      endless.current = null
+      return
+    }
+    setEndlessJobs([])
+    endless.current = runsNow()
+  }
+
+  useEffect(() => {
+    if (!endlessFailure) return
+    setForever(false)
+    endless.current = null
+    setSubmitError(endlessFailure.error ?? endlessFailure.status)
+  }, [endlessFailure])
+
+  useEffect(() => {
+    const snapshot = endless.current
+    if (!forever || !snapshot || submitting || working >= 2) return
+    const again = snapshot.map((request) => ({
+      ...request,
+      place: false,
+      place_at: null,
+      values: Object.fromEntries(
+        Object.entries(request.values).map(([key, value]) =>
+          seedKeys.has(key) ? [key, Math.floor(Math.random() * 2_147_483_647)] : [key, value],
+        ),
+      ),
+    }))
+    setSubmitting(true)
+    send(again)
+      .then((ids) => setEndlessJobs((before) => [...before, ...ids]))
+      .catch((error: unknown) => {
+        setForever(false)
+        endless.current = null
+        setSubmitError(error instanceof Error ? error.message : String(error))
+      })
+      .finally(() => setSubmitting(false))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [forever, working, submitting])
 
   const reuse = (job: Job) => {
     const store = useGenerateStore.getState()
@@ -610,16 +693,7 @@ export function GeneratePanel() {
         </div>
         <Button
           className="bg-brand h-9 w-full gap-2"
-          disabled={
-            !form ||
-            !hasKey ||
-            submitting ||
-            missing.length > 0 ||
-            tooLong.length > 0 ||
-            unfilled.length > 0 ||
-            batchBlocked ||
-            !projectId
-          }
+          disabled={blocked || submitting}
           onClick={() => void generate()}
           data-testid="generate-submit"
         >
@@ -635,6 +709,25 @@ export function GeneratePanel() {
               : t('generate.cost.unknown')}
           </span>
         </Button>
+        {(!blocked || forever) && (
+          <SlideToEnable
+            on={forever}
+            onChange={switchForever}
+            offLabel={t('generate.forever.slide')}
+            title={t('generate.forever.hint')}
+            stop={
+              <>
+                {t('generate.forever.stop')}
+                <span className="font-normal opacity-90">
+                  {t('generate.forever.counter', {
+                    count: endlessJobs.length,
+                    spent: formatUsd(endlessSpent),
+                  })}
+                </span>
+              </>
+            }
+          />
+        )}
         {missing.length > 0 && (
           <p className="text-[11px] text-muted-foreground">
             {t('generate.form.missing', {

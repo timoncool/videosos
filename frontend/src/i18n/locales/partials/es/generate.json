@@ -443,6 +443,13 @@
       "apply": "Aplicar",
       "badJson": "El texto no es JSON: {{reason}}",
       "noView": "La vista 3D no se inició: esta ventana no obtuvo WebGL de la tarjeta gráfica."
+    },
+    "forever": {
+      "slide": "Desliza para generar sin fin",
+      "hint": "Vuelve a enviar las mismas ejecuciones con nuevas semillas mientras haya menos de dos en curso, hasta que pares o una falle. Cada ejecución se paga.",
+      "stop": "Detener",
+      "counter_one": " · {{count}} ejecución · {{spent}}",
+      "counter_other": " · {{count}} ejecuciones · {{spent}}"
     }
   }
 }

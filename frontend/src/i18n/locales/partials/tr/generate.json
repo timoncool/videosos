@@ -443,6 +443,12 @@
       "apply": "Uygula",
       "badJson": "Metin JSON değil: {{reason}}",
       "noView": "3D görünüm başlamadı: bu pencere ekran kartından WebGL alamadı."
+    },
+    "forever": {
+      "slide": "Durmadan üretmek için kaydırın",
+      "hint": "Çalışan ikiden az olduğu sürece aynı çalıştırmaları yeni tohumlarla yeniden gönderir; siz durdurana ya da biri başarısız olana kadar. Her çalıştırma ücretlidir.",
+      "stop": "Durdur",
+      "counter_other": " · {{count}} çalıştırma · {{spent}}"
     }
   }
 }

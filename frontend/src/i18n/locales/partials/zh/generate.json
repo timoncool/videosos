@@ -443,6 +443,12 @@
       "apply": "应用",
       "badJson": "文本不是 JSON：{{reason}}",
       "noView": "3D 视图未能启动：此窗口未能从显卡获得 WebGL。"
+    },
+    "forever": {
+      "slide": "滑动以无限生成",
+      "hint": "当进行中的任务少于两个时，用新的种子重复发送同样的运行，直到你停止或某次失败。每次运行都会计费。",
+      "stop": "停止",
+      "counter_other": " · {{count}} 次 · {{spent}}"
     }
   }
 }

@@ -443,6 +443,13 @@
       "apply": "Anwenden",
       "badJson": "Der Text ist kein JSON: {{reason}}",
       "noView": "Die 3D-Ansicht ist nicht gestartet: Dieses Fenster hat von der Grafikkarte kein WebGL erhalten."
+    },
+    "forever": {
+      "slide": "Schieben – ohne Ende generieren",
+      "hint": "Sendet dieselben Läufe mit neuen Seeds erneut, solange weniger als zwei laufen, bis Sie stoppen oder einer fehlschlägt. Jeder Lauf kostet.",
+      "stop": "Stoppen",
+      "counter_one": " · {{count}} Lauf · {{spent}}",
+      "counter_other": " · {{count}} Läufe · {{spent}}"
     }
   }
 }

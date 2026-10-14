@@ -443,6 +443,13 @@
       "apply": "Aplicar",
       "badJson": "O texto não é JSON: {{reason}}",
       "noView": "A visualização 3D não iniciou: esta janela não obteve WebGL da placa de vídeo."
+    },
+    "forever": {
+      "slide": "Deslize para gerar sem parar",
+      "hint": "Reenvia as mesmas execuções com novas seeds enquanto houver menos de duas em andamento, até você parar ou uma falhar. Cada execução é paga.",
+      "stop": "Parar",
+      "counter_one": " · {{count}} execução · {{spent}}",
+      "counter_other": " · {{count}} execuções · {{spent}}"
     }
   }
 }

@@ -443,6 +443,13 @@
       "apply": "Apply",
       "badJson": "The text is not JSON: {{reason}}",
       "noView": "The 3D view did not start: this window got no WebGL from the graphics card."
+    },
+    "forever": {
+      "slide": "Slide to generate without end",
+      "hint": "Sends the same runs again with new seeds while fewer than two are at work, until you stop it or one fails. Every run is paid.",
+      "stop": "Stop",
+      "counter_one": " · {{count}} run · {{spent}}",
+      "counter_other": " · {{count}} runs · {{spent}}"
     }
   }
 }
