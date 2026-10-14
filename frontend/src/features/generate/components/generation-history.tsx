@@ -190,7 +190,7 @@ export function GenerationHistory({ jobs, projectId, onReuse }: { jobs: Job[]; p
   const icon = "h-7 w-7 p-0 text-[var(--color-muted)] hover:text-[var(--color-text)]"
 
   return (
-    <div className="max-h-[45%] min-h-0 space-y-2 overflow-y-auto border-t border-border p-3" data-testid="generate-history">
+    <div className="space-y-2 p-3" data-testid="generate-history">
       <div className="flex items-center gap-1.5">
         <h3 className="mr-auto flex items-baseline gap-1.5 whitespace-nowrap text-[11px] uppercase tracking-[0.14em] text-[var(--color-muted)]">
           {t('generate.historyTitle')}

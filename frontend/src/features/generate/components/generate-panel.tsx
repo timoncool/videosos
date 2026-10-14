@@ -267,8 +267,11 @@ export function GeneratePanel() {
   }
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col" data-testid="generate-panel">
-      <div className="min-h-0 flex-1 space-y-3 overflow-y-auto p-3">
+    // one column that scrolls as a whole: the form never shrinks to a slit, Create sticks to the bottom while the
+    // form is in view and scrolls away once the history is read (screensdesign's review of AI video apps: every
+    // decision visible before spending)
+    <div className="min-h-0 flex-1 overflow-y-auto" data-testid="generate-panel">
+      <div className="space-y-3 p-3">
         {serverError && (
           <p className="rounded border border-destructive/40 bg-destructive/10 p-2 text-[11px] text-destructive">
             {t('generate.serverError', { reason: serverError })}
@@ -382,7 +385,7 @@ export function GeneratePanel() {
         )}
       </div>
 
-      <div className="space-y-2 border-t border-border p-3">
+      <div className="sticky bottom-0 z-10 space-y-2 border-y border-[var(--color-border)] bg-[var(--color-surface)] p-3">
         <div className="flex items-center justify-between gap-2">
           <label className="flex items-center gap-2 text-[11px] text-muted-foreground">
             <Switch
@@ -400,7 +403,7 @@ export function GeneratePanel() {
               max={8}
               value={repeat}
               onChange={(event) => useGenerateStore.getState().setRepeat(Number(event.target.value) || 1)}
-              className="h-6 w-12 px-1 text-center text-xs"
+              className="h-7 w-12 px-1 text-center text-xs"
             />
           </label>
         </div>
