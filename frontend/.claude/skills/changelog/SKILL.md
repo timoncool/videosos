@@ -28,8 +28,6 @@ Two tiers:
 - Mid-week hotfix needing its own release: add `.N` suffix (`2026.04.13.2`). Rare.
 - `package.json` `version` is pinned to `0.0.0` and ignored — the package is private, nothing reads it. The week version lives only in `changelog.json` and `CHANGELOG.md`.
 
-**No git tags.** The web app ships continuously via Vercel.
-
 Separate packages (future CLI/API) get their own semver and their own changelog under their package directory. This file is for the web app only.
 
 ## Preconditions (run before any mode)
