@@ -322,14 +322,19 @@ export function createPrevisRenderer(
         const source = new CanvasSource(surface, { codec: 'avc', quality: QUALITY_HIGH })
         output.addVideoTrack(source, { frameRate: fps })
         await output.start()
-        const total = Math.max(1, Math.round(scene.seconds * fps))
-        for (let index = 0; index < total; index++) {
-          render(index / fps, 'camera')
-          context.drawImage(renderer.domElement, 0, 0, evenWidth, evenHeight)
-          await source.add(index / fps, 1 / fps)
-          progress?.((index + 1) / total)
+        try {
+          const total = Math.max(1, Math.round(scene.seconds * fps))
+          for (let index = 0; index < total; index++) {
+            render(index / fps, 'camera')
+            context.drawImage(renderer.domElement, 0, 0, evenWidth, evenHeight)
+            await source.add(index / fps, 1 / fps)
+            progress?.((index + 1) / total)
+          }
+          await output.finalize()
+        } catch (failure) {
+          await output.cancel()
+          throw failure
         }
-        await output.finalize()
         if (!target.buffer) throw new Error('the video came out empty')
         return new Blob([target.buffer], { type: 'video/mp4' })
       })

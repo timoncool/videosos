@@ -109,6 +109,11 @@ describe('workflow files', () => {
     const broken = JSON.parse(workflowFile(graph, 'x'))
     broken.graph.edges[0].target = 'nowhere'
     expect(() => readWorkflowFile(JSON.stringify(broken), counter())).toThrow('edge 1 joins nodes')
+    const crossed = JSON.parse(workflowFile(graph, 'x'))
+    crossed.graph.edges[0].source = 'p'
+    expect(() => readWorkflowFile(JSON.stringify(crossed), counter())).toThrow(
+      'passes a prompt node',
+    )
     broken.graph.nodes[2].data.task = 'teleport'
     expect(() => readWorkflowFile(JSON.stringify(broken), counter())).toThrow(
       'unknown task teleport',

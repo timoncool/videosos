@@ -438,7 +438,8 @@
       "videoName": "{{title}}, блокинг",
       "json": "Сцена в JSON",
       "apply": "Применить",
-      "badJson": "Это не JSON: {{reason}}"
+      "badJson": "Это не JSON: {{reason}}",
+      "noView": "3D-вид не запустился: окно не получило WebGL от видеокарты."
     }
   }
 }

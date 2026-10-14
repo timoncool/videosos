@@ -269,9 +269,15 @@ export function registerEditorCommands(showProject: ShowProject): void {
       })
     const time = numberArg('previs_render', args, 'time_seconds') ?? 0
     try {
-      const scene = await agentBlocking({ scene: given, description, fresh: args.fresh === true })
-      if (time < 0 || time > scene.seconds)
-        throw new Error(`time_seconds must be from 0 to ${scene.seconds}`)
+      const scene = await agentBlocking({
+        scene: given,
+        description,
+        fresh: args.fresh === true,
+        accept: (built) => {
+          if (time < 0 || time > built.seconds)
+            throw new Error(`time_seconds must be from 0 to ${built.seconds}`)
+        },
+      })
       useEditorStore.getState().setActiveTab('blocking')
       if (output === 'scene') return { scene }
       const name =

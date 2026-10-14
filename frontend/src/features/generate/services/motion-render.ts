@@ -56,21 +56,26 @@ export async function renderMotion(
     const source = new CanvasSource(canvas, { codec: 'vp9', quality: QUALITY_HIGH, alpha: 'keep' })
     output.addVideoTrack(source, { frameRate: fps })
     await output.start()
-    const total = Math.max(1, Math.round(seconds * fps))
-    for (let index = 0; index < total; index++) {
-      const time = index / fps
-      for (const animation of animations) animation.currentTime = time * 1000
-      const shot = await domToCanvas(document.documentElement, {
-        width,
-        height,
-        backgroundColor: null,
-      })
-      context.clearRect(0, 0, width, height)
-      context.drawImage(shot, 0, 0, width, height)
-      await source.add(time, 1 / fps)
-      progress?.((index + 1) / total)
+    try {
+      const total = Math.max(1, Math.round(seconds * fps))
+      for (let index = 0; index < total; index++) {
+        const time = index / fps
+        for (const animation of animations) animation.currentTime = time * 1000
+        const shot = await domToCanvas(document.documentElement, {
+          width,
+          height,
+          backgroundColor: null,
+        })
+        context.clearRect(0, 0, width, height)
+        context.drawImage(shot, 0, 0, width, height)
+        await source.add(time, 1 / fps)
+        progress?.((index + 1) / total)
+      }
+      await output.finalize()
+    } catch (failure) {
+      await output.cancel()
+      throw failure
     }
-    await output.finalize()
     if (!target.buffer) throw new Error('the clip came out empty')
     return new Blob([target.buffer], { type: 'video/webm' })
   } finally {

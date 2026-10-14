@@ -133,7 +133,7 @@ export function PrevisPanel() {
 
   const takeFrame = (use: Omit<PendingUse, 'ref' | 'kind'>) =>
     run('frame', async () => {
-      if (!renderer.current) return
+      if (!renderer.current) throw new Error(t('generate.previs.noView'))
       setPlaying(false)
       const media = await importPrevisFrame(renderer.current, time, name('frame'))
       useEditorStore.getState().setActiveTab('generate')
@@ -142,7 +142,7 @@ export function PrevisPanel() {
 
   const makeVideo = () =>
     run('video', async () => {
-      if (!renderer.current) return
+      if (!renderer.current) throw new Error(t('generate.previs.noView'))
       setPlaying(false)
       setShare(0)
       await importPrevisVideo(renderer.current, name('video'), setShare)

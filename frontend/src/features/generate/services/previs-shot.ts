@@ -101,6 +101,8 @@ export async function agentBlocking(input: {
   description?: string
   /** Builds a new scene from the words instead of changing the current one. */
   fresh?: boolean
+  /** Refuses a scene before it replaces the project's blocking. */
+  accept?: (scene: PrevisScene) => void
 }): Promise<PrevisScene> {
   const project = openProject()
   const current = useGenerateStore.getState().blockings[project.id]
@@ -112,6 +114,7 @@ export async function agentBlocking(input: {
           aspectOf(project.metadata.width, project.metadata.height),
           input.fresh ? null : (current?.scene ?? null),
         )
+  input.accept?.(scene)
   useGenerateStore.getState().setBlocking(project.id, {
     description: input.description ?? current?.description ?? '',
     scene,

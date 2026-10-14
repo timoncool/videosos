@@ -7,7 +7,13 @@
  */
 
 import type { MediaKind, Task } from './generate-api'
-import type { CanvasEdge, CanvasGraph, CanvasNode, Position } from './canvas-graph'
+import {
+  connects,
+  type CanvasEdge,
+  type CanvasGraph,
+  type CanvasNode,
+  type Position,
+} from './canvas-graph'
 import type { ModelRef } from '../stores/generate-store'
 
 type TemplateNode =
@@ -323,6 +329,9 @@ export function readWorkflowFile(
       if (!source || !target) bad(`edge ${index + 1} joins nodes the file does not have`)
       if (raw.targetHandle !== 'prompt' && raw.targetHandle !== 'media')
         bad(`edge ${index + 1} goes into an unknown slot`)
+      const from = nodes.find((node) => node.id === source)!
+      if (!connects(from, raw.targetHandle))
+        bad(`edge ${index + 1} passes a ${from.type} node into a slot that does not take it`)
       return { id: newId(), source, target, targetHandle: raw.targetHandle }
     },
   )

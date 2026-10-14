@@ -428,7 +428,8 @@
       "videoName": "{{title}}，走位预演",
       "json": "JSON 场景",
       "apply": "应用",
-      "badJson": "文本不是 JSON：{{reason}}"
+      "badJson": "文本不是 JSON：{{reason}}",
+      "noView": "3D 视图未能启动：此窗口未能从显卡获得 WebGL。"
     }
   }
 }

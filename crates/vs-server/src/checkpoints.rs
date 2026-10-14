@@ -73,8 +73,7 @@ fn summaries(project: &str) -> Result<Vec<Summary>, Failure> {
         .filter_map(Result::ok)
         .filter(|entry| entry.path().extension().is_some_and(|extension| extension == "json"))
         .filter_map(|entry| std::fs::read_to_string(entry.path()).ok())
-        .filter_map(|text| serde_json::from_str::<Checkpoint>(&text).ok())
-        .map(|checkpoint| checkpoint.summary)
+        .filter_map(|text| serde_json::from_str::<Summary>(&text).ok())
         .collect();
     list.sort_by(|a, b| b.created.cmp(&a.created).then_with(|| b.id.cmp(&a.id)));
     Ok(list)

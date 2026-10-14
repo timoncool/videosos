@@ -428,7 +428,8 @@
       "videoName": "{{title}}, blocking",
       "json": "JSON olarak sahne",
       "apply": "Uygula",
-      "badJson": "Metin JSON değil: {{reason}}"
+      "badJson": "Metin JSON değil: {{reason}}",
+      "noView": "3D görünüm başlamadı: bu pencere ekran kartından WebGL alamadı."
     }
   }
 }

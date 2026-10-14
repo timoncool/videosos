@@ -428,7 +428,8 @@
       "videoName": "{{title}}, blocking",
       "json": "Escena como JSON",
       "apply": "Aplicar",
-      "badJson": "El texto no es JSON: {{reason}}"
+      "badJson": "El texto no es JSON: {{reason}}",
+      "noView": "La vista 3D no se inició: esta ventana no obtuvo WebGL de la tarjeta gráfica."
     }
   }
 }

@@ -428,7 +428,8 @@
       "videoName": "{{title}}, 블로킹",
       "json": "JSON으로 보는 장면",
       "apply": "적용",
-      "badJson": "텍스트가 JSON이 아닙니다: {{reason}}"
+      "badJson": "텍스트가 JSON이 아닙니다: {{reason}}",
+      "noView": "3D 보기를 시작하지 못했습니다. 이 창이 그래픽 카드에서 WebGL을 얻지 못했습니다."
     }
   }
 }

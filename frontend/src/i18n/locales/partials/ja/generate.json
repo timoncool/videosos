@@ -428,7 +428,8 @@
       "videoName": "{{title}}、ブロッキング",
       "json": "シーンをJSONで表示",
       "apply": "適用",
-      "badJson": "テキストはJSONではありません: {{reason}}"
+      "badJson": "テキストはJSONではありません: {{reason}}",
+      "noView": "3D ビューを開始できませんでした。このウィンドウはグラフィックカードから WebGL を取得できませんでした。"
     }
   }
 }
