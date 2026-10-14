@@ -67,14 +67,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { MarqueeOverlay } from '@/shared/marquee/marquee-overlay'
@@ -83,6 +75,7 @@ import { GridMediaGrid, ListMediaGrid } from './media-grid'
 import { CompositionsSection } from './compositions-section'
 import { BackgroundTaskProgress } from './background-task-progress'
 import { MissingMediaDialog } from './missing-media-dialog'
+import { UrlImportDialog } from './url-import-dialog'
 import { OrphanedClipsDialog } from './orphaned-clips-dialog'
 import { UnsupportedAudioCodecDialog } from './unsupported-audio-codec-dialog'
 import { useFilteredMediaItems, useMediaLibraryStore } from '../stores/media-library-store'
@@ -243,8 +236,6 @@ export const MediaLibrary = memo(function MediaLibrary({ onMediaSelect }: MediaL
     () => new Set(['video', 'audio', 'image', 'gif', 'lottie']),
   )
   const [showImportUrlDialog, setShowImportUrlDialog] = useState(false)
-  const [importUrlValue, setImportUrlValue] = useState('')
-  const [isImportUrlSubmitting, setIsImportUrlSubmitting] = useState(false)
   // Store selectors
   const currentProjectId = useMediaLibraryStore((s) => s.currentProjectId)
   const setCurrentProject = useMediaLibraryStore((s) => s.setCurrentProject)
@@ -411,29 +402,6 @@ export const MediaLibrary = memo(function MediaLibrary({ onMediaSelect }: MediaL
       logger.error('Link import failed:', error)
     }
   }
-
-  const handleImportUrl = useCallback(
-    async (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault()
-      if (isImportUrlSubmitting) {
-        return
-      }
-
-      setIsImportUrlSubmitting(true)
-      try {
-        await importMediaFromUrl(importUrlValue)
-        if (!useMediaLibraryStore.getState().error) {
-          setShowImportUrlDialog(false)
-          setImportUrlValue('')
-        }
-      } catch (error) {
-        logger.error('Import from URL failed:', error)
-      } finally {
-        setIsImportUrlSubmitting(false)
-      }
-    },
-    [importMediaFromUrl, importUrlValue, isImportUrlSubmitting],
-  )
 
   // Import files from drag-drop handles - memoized to prevent MediaGrid re-renders
   const handleImportHandles = useCallback(
@@ -684,6 +652,7 @@ export const MediaLibrary = memo(function MediaLibrary({ onMediaSelect }: MediaL
             <HeaderActionTooltip label={t('media.library.importMediaFromUrl')}>
               <button
                 onClick={() => setShowImportUrlDialog(true)}
+                aria-label={t('media.library.importMediaFromUrl')}
                 disabled={!currentProjectId}
                 className="flex items-center gap-1.5 h-7 px-2.5 rounded-md shrink-0 border
                   bg-secondary border-border text-muted-foreground
@@ -817,64 +786,16 @@ export const MediaLibrary = memo(function MediaLibrary({ onMediaSelect }: MediaL
         </TooltipProvider>
       </div>
 
-      <Dialog
+      <UrlImportDialog
         open={showImportUrlDialog}
-        onOpenChange={(open) => {
-          setShowImportUrlDialog(open)
-          if (!open && !isImportUrlSubmitting) {
-            setImportUrlValue('')
-          }
+        onOpenChange={setShowImportUrlDialog}
+        projectId={currentProjectId}
+        onDirect={async (url) => {
+          await importMediaFromUrl(url)
+          const failed = useMediaLibraryStore.getState().error
+          if (failed) throw new Error(failed)
         }}
-      >
-        <DialogContent className="sm:max-w-[560px]">
-          <DialogHeader>
-            <DialogTitle>{t('media.library.importFromUrlTitle')}</DialogTitle>
-            <DialogDescription>{t('media.library.importFromUrlDescription')}</DialogDescription>
-          </DialogHeader>
-
-          <form onSubmit={handleImportUrl} className="space-y-4">
-            <div className="space-y-2">
-              <Input
-                autoFocus
-                type="url"
-                inputMode="url"
-                placeholder="https://example.com/video.mp4"
-                value={importUrlValue}
-                onChange={(event) => setImportUrlValue(event.target.value)}
-                disabled={isImportUrlSubmitting}
-              />
-              <p className="text-xs text-muted-foreground">
-                {t('media.library.importFromUrlHint')}
-              </p>
-            </div>
-
-            <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => {
-                  if (!isImportUrlSubmitting) {
-                    setShowImportUrlDialog(false)
-                    setImportUrlValue('')
-                  }
-                }}
-                disabled={isImportUrlSubmitting}
-              >
-                {t('common.cancel')}
-              </Button>
-              <Button
-                type="submit"
-                disabled={
-                  !currentProjectId || importUrlValue.trim().length === 0 || isImportUrlSubmitting
-                }
-              >
-                {isImportUrlSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
-                {t('media.library.import')}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+      />
 
       {/* Error message */}
       {error && (

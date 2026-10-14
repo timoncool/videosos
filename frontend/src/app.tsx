@@ -5,6 +5,7 @@ import { TooltipProvider } from '@/components/ui/tooltip'
 import { ErrorBoundary } from '@/components/error-boundary'
 import { WorkspaceGate } from '@/features/workspace-gate/workspace-gate'
 import { router } from '@/app/router'
+import { UrlFetchSyncHost } from '@/features/media-library/components/url-fetch-sync-host'
 import { AgentBridgeHost } from '@/features/agent-bridge/components/agent-bridge-host'
 import { StudioHost } from '@/features/studio/components/studio-host'
 import { SettingsHost } from '@/features/editor/components/settings-host'
@@ -84,6 +85,7 @@ export function App() {
         <SettingsHost />
         <FirstRunDialog />
         <GenerateSyncHost />
+        <UrlFetchSyncHost />
         <GlobalTooltip />
         {showToaster && (
           <Suspense fallback={null}>
