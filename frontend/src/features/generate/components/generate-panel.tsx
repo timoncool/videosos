@@ -37,7 +37,7 @@ import {
   type MediaRef,
   type Field,
   type ModelEntry,
-  type Provider,
+  type KeyedProvider,
   type Task,
 } from '../services/generate-api'
 import { keyCheckText } from '../services/key-check-text'
@@ -48,6 +48,8 @@ import {
   type ModelRef,
 } from '../stores/generate-store'
 import { SlideToEnable } from './slide-to-enable'
+import { LocalModelPrompt } from './local-models-settings'
+import { useLocalStatus } from '../hooks/use-local-status'
 
 type CreateRequest = Parameters<typeof generateApi.createJobs>[0]
 import { useProjectStore } from '../deps/editor'
@@ -82,13 +84,13 @@ const TASK_ICONS: Record<Task, typeof Image> = {
   text: FileText,
 }
 
-const KEY_PAGES: Record<Provider, string> = {
+const KEY_PAGES: Record<KeyedProvider, string> = {
   openrouter: 'https://openrouter.ai/settings/keys',
   fal: 'https://fal.ai/dashboard/keys',
   runware: 'https://my.runware.ai/keys',
 }
 
-function KeyPrompt({ provider }: { provider: Provider }) {
+function KeyPrompt({ provider }: { provider: KeyedProvider }) {
   const { t } = useTranslation()
   const [value, setValue] = useState('')
   const [state, setState] = useState<{ busy: boolean; message: string | null; ok: boolean }>({
@@ -298,9 +300,13 @@ export function GeneratePanel() {
     [fields, values],
   )
   const hasKey = model ? keys[model.provider] === true : false
+  const local = useLocalStatus().status
+  const localMissing =
+    model?.provider === 'local' && !local?.models.find((each) => each.id === model.id)?.installed
   const blocked =
     !form ||
     !hasKey ||
+    localMissing ||
     missing.length > 0 ||
     tooLong.length > 0 ||
     unfilled.length > 0 ||
@@ -474,7 +480,8 @@ export function GeneratePanel() {
           onRuns={setBatchRuns}
         />
 
-        {model && !hasKey && <KeyPrompt provider={model.provider} />}
+        {model && !hasKey && model.provider !== 'local' && <KeyPrompt provider={model.provider} />}
+        {model?.provider === 'local' && localMissing && <LocalModelPrompt modelId={model.id} />}
 
         {formLoading && !form && (
           <div className="flex items-center gap-2 text-xs text-muted-foreground">

@@ -451,6 +451,32 @@
       "hint": "Çalışan ikiden az olduğu sürece aynı çalıştırmaları yeni tohumlarla yeniden gönderir; siz durdurana ya da biri başarısız olana kadar. Her çalıştırma ücretlidir.",
       "stop": "Durdur",
       "counter_other": " · {{count}} çalıştırma · {{spent}}"
+    },
+    "local": {
+      "intro": "Bu modeller stable-diffusion.cpp ile bu bilgisayarda çalışır: anahtar ve ücret yok. Her model bir kez indirilir; dosyaları bir sürüme sabitlenir ve SHA-256 ile denetlenir.",
+      "device": "Aygıt",
+      "devices": {
+        "auto": "Otomatik",
+        "cuda": "CUDA (NVIDIA)",
+        "vulkan": "Vulkan",
+        "cpu": "İşlemci"
+      },
+      "inUse": "Kullanımda: {{device}} · {{gpu}}",
+      "noEngine": "Motor indirilmedi — {{device}} gerekli",
+      "engine": "{{device}} motoru · {{size}}",
+      "unload": "{{model}} modelini bellekten boşalt",
+      "task": {
+        "image": "görseller",
+        "video": "sesli video"
+      },
+      "installed": "indirildi",
+      "notInstalled": "indirilmedi",
+      "download": "İndir · {{size}}",
+      "remove": "Kaldır",
+      "downloading": "{{done}} / {{total}} · {{file}}",
+      "notDownloaded": "{{model}} henüz indirilmedi: {{size}}.",
+      "engineToo": "Ekran kartınız için motor da birlikte iner.",
+      "unsupported": "Yerel üretim şimdilik yalnızca Windows'ta kullanılabilir."
     }
   }
 }

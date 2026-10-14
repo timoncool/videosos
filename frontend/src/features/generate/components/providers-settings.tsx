@@ -9,13 +9,14 @@ import {
   formatUsd,
   generateApi,
   PROVIDER_LABELS,
-  PROVIDERS,
+  KEYED_PROVIDERS,
   type KeyState,
+  type KeyedProvider,
   type Provider,
 } from '../services/generate-api'
 import { keyCheckText } from '../services/key-check-text'
 
-const KEY_PAGES: Record<Provider, string> = {
+const KEY_PAGES: Record<KeyedProvider, string> = {
   openrouter: 'https://openrouter.ai/settings/keys',
   fal: 'https://fal.ai/dashboard/keys',
   runware: 'https://my.runware.ai/keys',
@@ -160,7 +161,7 @@ export function ProvidersSettings() {
       <p className="text-xs text-muted-foreground">{t('settings.providers.intro')}</p>
       {error && <p className="text-xs text-destructive">{error}</p>}
       <div className="space-y-2">
-        {PROVIDERS.map((provider) => {
+        {KEYED_PROVIDERS.map((provider) => {
           const state = keys.find((each) => each.provider === provider)
           return state ? <ProviderRow key={provider} state={state} onChanged={load} /> : null
         })}

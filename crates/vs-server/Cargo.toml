@@ -14,6 +14,7 @@ path = "src/main.rs"
 
 [dependencies]
 vs-providers = { path = "../vs-providers" }
+vs-diffusion = { path = "../vs-diffusion" }
 anyhow = { workspace = true }
 thiserror = { workspace = true }
 serde = { workspace = true }
@@ -48,6 +49,7 @@ rfd = "0.17"
 dirs = "7"
 dunce = "1"
 lofty = "0.25.4"
+png = "0.18"
 little_exif = "0.6.23"
 studio-hub-client = { git = "https://github.com/timoncool/studio-hub-client", rev = "531327a64882580bd44f8e173908be0a046c7adc" }
 

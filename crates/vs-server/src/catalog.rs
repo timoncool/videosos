@@ -41,6 +41,7 @@ fn shipped(provider: Provider) -> &'static str {
         Provider::Openrouter => include_str!("../catalog/openrouter.json"),
         Provider::Fal => include_str!("../catalog/fal.json"),
         Provider::Runware => include_str!("../catalog/runware.json"),
+        Provider::Local => "{}",
     }
 }
 
@@ -67,25 +68,28 @@ impl Catalog {
 
     pub fn entries(&self) -> Vec<ModelEntry> {
         let providers = self.providers.read().unwrap_or_else(|p| p.into_inner());
-        Provider::ALL.iter().flat_map(|provider| providers.get(provider).map(|c| c.entries.clone()).unwrap_or_default()).collect()
+        Provider::ALL.iter().flat_map(|provider| providers.get(provider).map(|c| c.entries.clone()).unwrap_or_default()).chain(crate::local::entries()).collect()
     }
 
     pub fn find(&self, provider: Provider, id: &str) -> Option<ModelEntry> {
+        if provider == Provider::Local {
+            return crate::local::entry(id);
+        }
         let providers = self.providers.read().unwrap_or_else(|p| p.into_inner());
         providers.get(&provider)?.entries.iter().find(|entry| entry.id == id).cloned()
     }
 
     fn status(&self) -> Value {
         let providers = self.providers.read().unwrap_or_else(|p| p.into_inner());
-        Value::Object(
-            Provider::ALL
-                .iter()
-                .map(|provider| {
-                    let catalog = providers.get(provider).cloned().unwrap_or_default();
-                    (provider.as_str().to_string(), json!({ "models": catalog.entries.len(), "updated": catalog.updated, "refreshing": catalog.refreshing, "error": catalog.error }))
-                })
-                .collect(),
-        )
+        let mut status: Map<String, Value> = Provider::ALL
+            .iter()
+            .map(|provider| {
+                let catalog = providers.get(provider).cloned().unwrap_or_default();
+                (provider.as_str().to_string(), json!({ "models": catalog.entries.len(), "updated": catalog.updated, "refreshing": catalog.refreshing, "error": catalog.error }))
+            })
+            .collect();
+        status.insert(Provider::Local.as_str().into(), json!({ "models": crate::local::entries().len(), "updated": null, "refreshing": false, "error": null }));
+        Value::Object(status)
     }
 
     fn set(&self, provider: Provider, change: impl FnOnce(&mut ProviderCatalog)) {
@@ -100,6 +104,7 @@ impl Catalog {
             catalog.error = None;
         });
         let (read, partial) = match provider {
+            Provider::Local => return,
             Provider::Openrouter => (openrouter::catalog(&self.http).await, None),
             Provider::Runware => (runware::catalog(&self.http).await.map(|fresh| self.keep_runware_details(fresh)), None),
             Provider::Fal => {
@@ -169,6 +174,9 @@ impl Catalog {
 
     /// The form of a model: from disk when read before today, otherwise from the provider.
     pub async fn form(&self, provider: Provider, id: &str) -> Result<ModelForm, String> {
+        if provider == Provider::Local {
+            return crate::local::form(id);
+        }
         let path = self.form_path(provider, id);
         if let Ok(meta) = std::fs::metadata(&path) {
             let fresh = meta.modified().ok().and_then(|time| time.elapsed().ok()).is_some_and(|age| age.as_secs() < 24 * 3600);
@@ -198,6 +206,7 @@ impl Catalog {
         let path = self.form_path(provider, id);
         let entry = self.find(provider, id).ok_or_else(|| t!("catalog-unknown-model", provider = provider.as_str(), model = id.to_string()))?;
         let (form, schema) = match provider {
+            Provider::Local => (crate::local::form(id)?, Value::Null),
             Provider::Openrouter => {
                 let mut form = openrouter::form(&entry).map_err(|e| e.to_string())?;
                 if entry.source["kind"] == "image"
@@ -333,7 +342,9 @@ async fn list(State(state): State<AppState>, Query(query): Query<ListQuery>) -> 
         })
         .collect();
     models.sort_by(|a, b| (a.status != "live").cmp(&(b.status != "live")).then(b.created.unwrap_or(0).cmp(&a.created.unwrap_or(0))).then(a.name.cmp(&b.name)));
-    let keys: Map<String, Value> = credentials::states().into_iter().map(|state| (state.provider.as_str().to_string(), Value::Bool(state.set))).collect();
+    let mut keys: Map<String, Value> = credentials::states().into_iter().map(|state| (state.provider.as_str().to_string(), Value::Bool(state.set))).collect();
+    // this computer needs no key; whether a model is downloaded is told by /api/local
+    keys.insert(Provider::Local.as_str().into(), Value::Bool(true));
     Json(json!({ "models": models, "providers": state.catalog.status(), "keys": keys }))
 }
 

@@ -21,6 +21,7 @@ pub mod hw;
 pub mod fs_api;
 pub mod hub;
 pub mod jobs;
+pub mod local;
 pub mod journal;
 mod keys;
 pub mod mcp;
@@ -178,6 +179,7 @@ pub fn app(state: AppState) -> Router {
         .merge(fs_api::router())
         .merge(catalog::router())
         .merge(jobs::router())
+        .merge(local::router())
         .merge(keys::router())
         .merge(settings::router())
         .merge(assistant::router())

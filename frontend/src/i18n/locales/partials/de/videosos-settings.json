@@ -14,7 +14,9 @@
       "storageHint": "Proxys und zwischengespeicherte Dateien",
       "networkHint": "Proxy und Zugriff von anderen Computern",
       "privacyHint": "Anonyme Statistik und Neuigkeiten",
-      "aboutHint": "Version, Links, Ordner, Unterstützung"
+      "aboutHint": "Version, Links, Ordner, Unterstützung",
+      "local": "Lokale Modelle",
+      "localHint": "Generierung auf diesem Computer, kostenlos"
     },
     "providers": {
       "intro": "VideoSOS generiert über Ihre eigenen Konten: Fügen Sie einen Schlüssel von OpenRouter, fal oder Runware hinzu. Schlüssel bleiben auf diesem Computer und werden Agenten nie angezeigt.",

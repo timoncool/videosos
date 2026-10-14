@@ -37,6 +37,9 @@ async fn store(Path(provider): Path<String>, Json(body): Json<KeyBody>) -> Respo
 
 async fn check(State(state): State<AppState>, Path(provider): Path<String>) -> Response {
     let Some(provider) = Provider::parse(&provider) else { return (StatusCode::NOT_FOUND, Json(json!({ "error": t!("catalog-unknown-provider", provider = provider) }))).into_response() };
+    if provider == Provider::Local {
+        return Json(json!({ "ok": true, "balance": null })).into_response();
+    }
     let Some((key, _)) = credentials::key(provider) else {
         return Json(json!({ "ok": false, "error": vs_providers::ProviderError::NoKey(provider.as_str()).to_string() })).into_response();
     };
@@ -47,6 +50,7 @@ async fn check(State(state): State<AppState>, Path(provider): Path<String>) -> R
             Ok(_) => fal::balance(&state.http, &key).await.map(|balance| json!({ "ok": true, "balance": balance, "balance_admin_only": balance.is_none() })),
             Err(error) => Err(error),
         },
+        Provider::Local => Ok(json!({ "ok": true, "balance": null })),
     };
     match checked {
         Ok(answer) => Json(answer).into_response(),

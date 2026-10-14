@@ -451,6 +451,32 @@
       "hint": "実行中が2件未満の間、同じ実行を新しいシードで送り続けます。停止するか失敗するまで続きます。実行ごとに料金がかかります。",
       "stop": "停止",
       "counter_other": " · {{count}} 回 · {{spent}}"
+    },
+    "local": {
+      "intro": "これらのモデルは stable-diffusion.cpp でこのコンピューター上で動作します。キーも料金も不要です。各モデルは一度だけダウンロードし、ファイルはリビジョンに固定され SHA-256 で検証されます。",
+      "device": "デバイス",
+      "devices": {
+        "auto": "自動",
+        "cuda": "CUDA（NVIDIA）",
+        "vulkan": "Vulkan",
+        "cpu": "プロセッサー"
+      },
+      "inUse": "使用中: {{device}} · {{gpu}}",
+      "noEngine": "エンジン未ダウンロード — {{device}} が必要です",
+      "engine": "{{device}} エンジン · {{size}}",
+      "unload": "{{model}} をメモリから解放",
+      "task": {
+        "image": "画像",
+        "video": "音声付き動画"
+      },
+      "installed": "ダウンロード済み",
+      "notInstalled": "未ダウンロード",
+      "download": "ダウンロード · {{size}}",
+      "remove": "削除",
+      "downloading": "{{done}} / {{total}} · {{file}}",
+      "notDownloaded": "{{model}} はまだダウンロードされていません: {{size}}。",
+      "engineToo": "お使いのグラフィックカード用エンジンも一緒にダウンロードされます。",
+      "unsupported": "ローカル生成は現在 Windows でのみ利用できます。"
     }
   }
 }

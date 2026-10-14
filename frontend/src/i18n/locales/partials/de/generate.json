@@ -452,6 +452,32 @@
       "stop": "Stoppen",
       "counter_one": " · {{count}} Lauf · {{spent}}",
       "counter_other": " · {{count}} Läufe · {{spent}}"
+    },
+    "local": {
+      "intro": "Diese Modelle laufen über stable-diffusion.cpp auf diesem Computer: ohne Schlüssel und ohne Kosten. Jedes Modell wird einmal heruntergeladen; seine Dateien sind auf eine Revision festgelegt und per SHA-256 geprüft.",
+      "device": "Gerät",
+      "devices": {
+        "auto": "Automatisch",
+        "cuda": "CUDA (NVIDIA)",
+        "vulkan": "Vulkan",
+        "cpu": "Prozessor"
+      },
+      "inUse": "In Verwendung: {{device}} · {{gpu}}",
+      "noEngine": "Keine Engine geladen — {{device}} wird benötigt",
+      "engine": "{{device}}-Engine · {{size}}",
+      "unload": "{{model}} aus dem Speicher entfernen",
+      "task": {
+        "image": "Bilder",
+        "video": "Video mit Ton"
+      },
+      "installed": "heruntergeladen",
+      "notInstalled": "nicht heruntergeladen",
+      "download": "Herunterladen · {{size}}",
+      "remove": "Entfernen",
+      "downloading": "{{done}} von {{total}} · {{file}}",
+      "notDownloaded": "{{model}} ist noch nicht heruntergeladen: {{size}}.",
+      "engineToo": "Die Engine für deine Grafikkarte kommt mit.",
+      "unsupported": "Lokale Generierung gibt es vorerst nur unter Windows."
     }
   }
 }

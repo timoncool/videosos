@@ -452,6 +452,32 @@
       "stop": "Parar",
       "counter_one": " · {{count}} execução · {{spent}}",
       "counter_other": " · {{count}} execuções · {{spent}}"
+    },
+    "local": {
+      "intro": "Estes modelos rodam neste computador com o stable-diffusion.cpp: sem chaves e sem custo. Cada modelo é baixado uma vez; os arquivos ficam fixados numa revisão e são conferidos por SHA-256.",
+      "device": "Dispositivo",
+      "devices": {
+        "auto": "Automático",
+        "cuda": "CUDA (NVIDIA)",
+        "vulkan": "Vulkan",
+        "cpu": "Processador"
+      },
+      "inUse": "Em uso: {{device}} · {{gpu}}",
+      "noEngine": "Nenhum motor baixado — é preciso {{device}}",
+      "engine": "Motor {{device}} · {{size}}",
+      "unload": "Liberar {{model}} da memória",
+      "task": {
+        "image": "imagens",
+        "video": "vídeo com som"
+      },
+      "installed": "baixado",
+      "notInstalled": "não baixado",
+      "download": "Baixar · {{size}}",
+      "remove": "Remover",
+      "downloading": "{{done}} de {{total}} · {{file}}",
+      "notDownloaded": "{{model}} ainda não foi baixado: {{size}}.",
+      "engineToo": "O motor para sua placa vem junto.",
+      "unsupported": "Por enquanto, a geração local só está disponível no Windows."
     }
   }
 }

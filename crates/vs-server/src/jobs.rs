@@ -164,6 +164,8 @@ impl Jobs {
             (Provider::Fal, Arc::new(Semaphore::new(2))),
             (Provider::Runware, Arc::new(Semaphore::new(3))),
             (Provider::Openrouter, Arc::new(Semaphore::new(4))),
+            // one model on this computer's card at a time
+            (Provider::Local, Arc::new(Semaphore::new(1))),
         ]);
         Ok(Arc::new(Self { db: Mutex::new(db), dir, workspace: workspace.to_path_buf(), http, catalog, limits, cancelled: Mutex::new(HashSet::new()) }))
     }
@@ -366,6 +368,10 @@ impl Jobs {
         if self.is_cancelled(&id) {
             return;
         }
+        if job.provider == Provider::Local {
+            drop(permit);
+            return self.run_local(id, job).await;
+        }
         let Some((key, _)) = credentials::key(job.provider) else {
             return self.fail(&id, "no_key", t!("jobs-no-key", provider = job.provider.as_str()));
         };
@@ -408,6 +414,7 @@ impl Jobs {
                 self.sending(&id, None);
                 openrouter::submit(&self.http, &key, &form, &values).await
             }
+            Provider::Local => return,
         };
         drop(permit);
         match &submitted {
@@ -454,6 +461,68 @@ impl Jobs {
     }
 
     /// The job is on its way to the provider; a cancel that came first stays.
+    /// A run on this computer: the model is loaded (once) and run off the runtime, its steps are the job's
+    /// progress, and the made file is moved into the job's folder.
+    async fn run_local(self: Arc<Self>, id: String, job: Job) {
+        let permit = self.limits[&Provider::Local].clone().acquire_owned().await;
+        if self.is_cancelled(&id) {
+            return;
+        }
+        let form = match crate::local::form(&job.model) {
+            Ok(form) => form,
+            Err(error) => return self.fail(&id, "catalog", error),
+        };
+        let values = match self.prepare("", &form, job.values.as_object().cloned().unwrap_or_default()).await {
+            Ok(values) => values,
+            Err(error) => return self.fail(&id, "invalid", error),
+        };
+        let data = self.dir.parent().map(Path::to_path_buf).unwrap_or_else(|| self.dir.clone());
+        if let Err(reason) = crate::local::ready(&data, &job.model) {
+            return self.fail(&id, "local_missing", reason);
+        }
+        self.update(&id, |job| {
+            if job.status != "cancelled" {
+                job.status = "running".into();
+                job.progress = Some(0.0);
+            }
+        });
+        let what = if job.task.is_empty() { "generation".to_string() } else { job.task.clone() };
+        crate::request_log::asked(&what, &job.model, 0);
+        let started = std::time::Instant::now();
+        let out_dir = self.dir.join(&id).join("_local");
+        let jobs = self.clone();
+        let (model, job_id) = (job.model.clone(), id.clone());
+        let made = tokio::task::spawn_blocking(move || {
+            let last = Mutex::new(std::time::Instant::now());
+            let progress = |fraction: f64| {
+                let mut last = last.lock().unwrap_or_else(|p| p.into_inner());
+                if last.elapsed() > Duration::from_millis(400) || fraction >= 0.95 {
+                    *last = std::time::Instant::now();
+                    jobs.update(&job_id, |job| job.progress = Some(fraction));
+                }
+            };
+            crate::local::run(&data, &model, &values, &out_dir, &progress)
+        })
+        .await
+        .unwrap_or_else(|panic| Err(panic.to_string()));
+        drop(permit);
+        if self.is_cancelled(&id) {
+            self.forget_cancel(&id);
+            return;
+        }
+        match made {
+            Ok(outputs) => {
+                crate::request_log::answered(&what, &job.model, 200, started.elapsed().as_secs_f64(), 0);
+                self.finish(&id, outputs, Some(0.0)).await;
+                let _ = std::fs::remove_dir_all(self.dir.join(&id).join("_local"));
+            }
+            Err(error) => {
+                crate::request_log::failed(&what, &job.model, &error);
+                self.fail(&id, "local_failed", error);
+            }
+        }
+    }
+
     fn sending(&self, id: &str, handle: Option<Value>) {
         self.update(id, |job| {
             if job.status != "cancelled" {
@@ -488,7 +557,7 @@ impl Jobs {
                         match form.provider {
                             Provider::Runware => runware::upload(&self.http, key, &payload).await.map_err(|e| e.to_string())?,
                             Provider::Fal => fal::upload(&self.http, key, &payload).await.map_err(|e| e.to_string())?,
-                            Provider::Openrouter => openrouter::upload(&payload),
+                            Provider::Openrouter | Provider::Local => openrouter::upload(&payload),
                         }
                     }
                 };
@@ -553,6 +622,7 @@ impl Jobs {
                 Provider::Runware => runware::poll(&self.http, &key, &handle).await,
                 Provider::Fal => fal::poll(&self.http, &key, &handle).await,
                 Provider::Openrouter => openrouter::poll(&self.http, &key, &handle).await,
+                Provider::Local => return self.fail(&id, "lost_contact", t!("jobs-lost-contact", reason = "local".to_string())),
             };
             match polled {
                 Ok(Polled::Done { outputs, cost }) => return self.finish(&id, outputs, cost).await,
@@ -619,6 +689,7 @@ impl Jobs {
     async fn save(&self, dir: &Path, index: usize, output: Output, key: Option<&str>, tags: &crate::tagging::ResultTags<'_>) -> Result<OutputFile, String> {
         use base64::Engine;
         let (bytes, mime, text) = match output {
+            Output::File { path, mime } => (tokio::fs::read(&path).await.map_err(|e| format!("{}: {e}", path.display()))?, mime, None),
             Output::Text { text } => (text.clone().into_bytes(), "text/plain".to_string(), Some(text)),
             Output::Data { data_base64, mime } => (base64::engine::general_purpose::STANDARD.decode(data_base64).map_err(|e| e.to_string())?, mime, None),
             Output::Url { url, mime } => {
@@ -684,6 +755,9 @@ impl Jobs {
             return Some(job);
         }
         self.cancelled.lock().unwrap_or_else(|p| p.into_inner()).insert(id.to_string());
+        if job.provider == Provider::Local && job.status == "running" {
+            crate::local::cancel();
+        }
         // fal stops a job only while it waits in its queue; one that runs already is billed whatever is asked
         let stopped = match (job.provider, &job.handle, credentials::key(Provider::Fal)) {
             (Provider::Fal, Some(handle), Some((key, _))) => match fal::cancel(&self.http, &key, handle).await {

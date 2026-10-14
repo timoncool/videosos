@@ -1,6 +1,7 @@
 [workspace]
 resolver = "2"
 members = [
+    "crates/vs-diffusion",
     "crates/vs-providers",
     "crates/vs-server",
 ]

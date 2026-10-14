@@ -7,7 +7,7 @@
 import type { TFunction } from 'i18next'
 import { onServerEvent } from '@/infrastructure/desktop/server-events'
 
-export type Provider = 'openrouter' | 'fal' | 'runware'
+export type Provider = 'openrouter' | 'fal' | 'runware' | 'local'
 
 export type Task =
   | 'image'
@@ -38,12 +38,48 @@ export const TASKS: Task[] = [
   'text',
 ]
 
-export const PROVIDERS: Provider[] = ['openrouter', 'fal', 'runware']
+export const PROVIDERS: Provider[] = ['openrouter', 'fal', 'runware', 'local']
+
+/** The cloud providers, each with its key; `local` is this computer and needs none. */
+export type KeyedProvider = Exclude<Provider, 'local'>
+export const KEYED_PROVIDERS: KeyedProvider[] = ['openrouter', 'fal', 'runware']
 
 export const PROVIDER_LABELS: Record<Provider, string> = {
   openrouter: 'OpenRouter',
   fal: 'fal',
   runware: 'Runware',
+  local: 'Local',
+}
+
+export interface LocalModelState {
+  id: string
+  name: string
+  task: 'image' | 'video'
+  installed: boolean
+  /** What is left to download. */
+  download_bytes: number
+  size_bytes: number
+}
+
+/** Generation on this computer: engine builds, models, the device and a download running. */
+export interface LocalStatus {
+  supported: boolean
+  device: 'auto' | 'cuda' | 'vulkan' | 'cpu'
+  device_in_use: 'cuda' | 'vulkan' | 'cpu' | null
+  recommended: 'cuda' | 'vulkan' | 'cpu'
+  gpu: string
+  engines: { device: 'cuda' | 'vulkan' | 'cpu'; installed: boolean; download_bytes: number }[]
+  ffmpeg: boolean
+  models: LocalModelState[]
+  loaded: { model: string; device: string } | null
+  install: {
+    what: string
+    current: string | null
+    downloaded: number
+    total: number
+    error: string | null
+    installing: boolean
+  }
 }
 
 export interface ModelEntry {
@@ -196,7 +232,7 @@ export interface Job {
 }
 
 export interface KeyState {
-  provider: Provider
+  provider: KeyedProvider
   set: boolean
   source: 'environment' | 'stored' | null
   variable: string
@@ -291,6 +327,18 @@ export const generateApi = {
       method: 'PUT',
       body: JSON.stringify({ key }),
     }),
+  localStatus: () => request<LocalStatus>('/api/local'),
+  localInstall: (what: string) =>
+    request<{ started: boolean; status: LocalStatus }>('/api/local/install', {
+      method: 'POST',
+      body: JSON.stringify({ what }),
+    }),
+  localRemove: (model: string) =>
+    request<LocalStatus>(`/api/local/models/${encodeURIComponent(model)}`, { method: 'DELETE' }),
+  localDevice: (device: LocalStatus['device']) =>
+    request<LocalStatus>('/api/local/device', { method: 'PUT', body: JSON.stringify({ device }) }),
+  localUnload: () =>
+    request<{ freed: boolean; status: LocalStatus }>('/api/local/unload', { method: 'POST' }),
   checkKey: (provider: Provider) =>
     request<KeyCheck>(`/api/keys/${provider}/check`, {
       method: 'POST',
@@ -329,7 +377,7 @@ export type ServerEvent =
   | { kind: 'hello' | 'resync' | 'catalog' }
   | { kind: 'job'; data: Job }
   | { kind: 'job_removed'; data: { id: string } }
-  | { kind: 'keys' | 'settings'; data: unknown }
+  | { kind: 'keys' | 'settings' | 'local'; data: unknown }
   | { kind: 'changed'; data: { what: string } }
 
 /** The server's events as the generation panel reads them. */

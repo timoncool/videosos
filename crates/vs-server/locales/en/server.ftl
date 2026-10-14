@@ -147,3 +147,27 @@ chat-too-many-turns = the assistant took { $turns } steps without finishing; ask
 chat-empty = choose a model and write a message
 assistant-no-agent = No agent is connected to VideoSOS. Connect one to its MCP server (Settings, Agents) or choose OpenRouter as the assistant.
 assistant-no-answer = The agent did not answer within { $minutes } minutes.
+
+# Local generation (stable-diffusion.cpp on this computer)
+local-price = free, on this computer
+local-field-prompt = Prompt
+local-field-size = Size
+local-field-duration = Duration
+local-field-first-frame = First frame
+local-field-negative = Negative prompt
+local-field-steps = Steps
+local-field-cfg = Guidance (CFG)
+local-field-seed = Seed
+local-engine-missing = the generation engine for { $device } is not installed: install it in Settings, Local models
+local-unsupported = local generation is not available on this system yet
+local-unknown = no local model or engine { $what }
+local-install-busy = another local download is running; wait for it to end
+local-model-missing = { $model } is not downloaded: download it in Settings, Local models
+local-ffmpeg-missing = local video needs ffmpeg: download the model again to get it
+local-no-prompt = the prompt is empty
+local-bad-size = the size is not one this model makes
+local-not-loaded = the model did not stay loaded
+local-no-frames = the model returned no frames
+local-bad-frame = the first frame is not a picture VideoSOS can read
+local-too-large = { $url }: more than the { $size } bytes expected
+local-sha-mismatch = { $url }: SHA-256 { $got } does not match the pinned { $want }

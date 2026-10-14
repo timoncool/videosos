@@ -14,7 +14,9 @@
       "storageHint": "代理文件和缓存",
       "networkHint": "代理和其他电脑访问",
       "privacyHint": "匿名统计和新闻",
-      "aboutHint": "版本、链接、文件夹、支持"
+      "aboutHint": "版本、链接、文件夹、支持",
+      "local": "本地模型",
+      "localHint": "在本机免费生成"
     },
     "providers": {
       "intro": "VideoSOS 通过您自己的账户生成：请添加 OpenRouter、fal 或 Runware 的密钥。密钥保存在本机，绝不会向智能体显示。",

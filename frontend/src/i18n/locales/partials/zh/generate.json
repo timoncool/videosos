@@ -451,6 +451,32 @@
       "hint": "当进行中的任务少于两个时，用新的种子重复发送同样的运行，直到你停止或某次失败。每次运行都会计费。",
       "stop": "停止",
       "counter_other": " · {{count}} 次 · {{spent}}"
+    },
+    "local": {
+      "intro": "这些模型通过 stable-diffusion.cpp 在本机运行：无需密钥，也不收费。每个模型只需下载一次；文件固定到某个版本并用 SHA-256 校验。",
+      "device": "设备",
+      "devices": {
+        "auto": "自动",
+        "cuda": "CUDA（NVIDIA）",
+        "vulkan": "Vulkan",
+        "cpu": "处理器"
+      },
+      "inUse": "正在使用：{{device}} · {{gpu}}",
+      "noEngine": "未下载引擎 — 需要 {{device}}",
+      "engine": "{{device}} 引擎 · {{size}}",
+      "unload": "从内存中释放 {{model}}",
+      "task": {
+        "image": "图片",
+        "video": "有声视频"
+      },
+      "installed": "已下载",
+      "notInstalled": "未下载",
+      "download": "下载 · {{size}}",
+      "remove": "删除",
+      "downloading": "{{done}} / {{total}} · {{file}}",
+      "notDownloaded": "{{model}} 尚未下载：{{size}}。",
+      "engineToo": "会同时下载适用于你的显卡的引擎。",
+      "unsupported": "本地生成目前仅支持 Windows。"
     }
   }
 }

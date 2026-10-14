@@ -183,11 +183,11 @@ fn tools() -> &'static [Tool] {
             },
             Tool {
                 name: "models_list",
-                description: "Models of OpenRouter, fal and Runware for a task, newest first, with the provider's price line. Filter by task, provider and words. Tasks: image, image_edit, video, video_edit, lip_sync, upscale, remove_background, music, speech, sound, transcribe, text.",
+                description: "Models of OpenRouter, fal, Runware and this computer (local: free, see local_status) for a task, newest first, with the provider's price line. Filter by task, provider and words. Tasks: image, image_edit, video, video_edit, lip_sync, upscale, remove_background, music, speech, sound, transcribe, text.",
                 looks: true,
                 schema: || object(json!({
                     "task": { "type": "string", "description": TASKS },
-                    "provider": { "type": "string", "enum": ["openrouter", "fal", "runware"] },
+                    "provider": { "type": "string", "enum": ["openrouter", "fal", "runware", "local"] },
                     "query": { "type": "string", "description": "words to find in the name, id or description" },
                 }), &[]),
                 call: |args| get_call(format!("/api/catalog{}", query(&[("task", opt(args, "task")), ("provider", opt(args, "provider")), ("q", opt(args, "query"))]))),
@@ -196,7 +196,7 @@ fn tools() -> &'static [Tool] {
                 name: "model_form",
                 description: "The settings a model takes, as fields: key, type, choices, default, what it means (role) and whether it takes files (type media). Read it before generate: values are given by these keys.",
                 looks: true,
-                schema: || object(json!({ "provider": { "type": "string", "enum": ["openrouter", "fal", "runware"] }, "model": { "type": "string" } }), &["provider", "model"]),
+                schema: || object(json!({ "provider": { "type": "string", "enum": ["openrouter", "fal", "runware", "local"] }, "model": { "type": "string" } }), &["provider", "model"]),
                 call: |args| get_call(format!("/api/catalog/form?provider={}&id={}", segment(&text(args, "provider")?), segment(&text(args, "model")?))),
             },
             Tool {
@@ -204,7 +204,7 @@ fn tools() -> &'static [Tool] {
                 description: "The price of a run before it runs, in USD, from the model's rates and these values; null when the provider only bills after.",
                 looks: true,
                 schema: || object(json!({
-                    "provider": { "type": "string", "enum": ["openrouter", "fal", "runware"] },
+                    "provider": { "type": "string", "enum": ["openrouter", "fal", "runware", "local"] },
                     "model": { "type": "string" },
                     "values": { "type": "object" },
                     "repeat": { "type": "integer", "minimum": 1, "maximum": 8 },
@@ -216,7 +216,7 @@ fn tools() -> &'static [Tool] {
                 description: "Starts a generation (paid by the person's key). values are the model_form keys; a field of type media takes a list of files: {\"media\": \"<media id of the library>\"}, {\"job\": \"<job id>\", \"index\": 0} for an earlier result, {\"file\": \"<absolute path on this computer>\"} or an https URL. With project_id the result goes into that project's library when its window is open, and with place_on_timeline onto its timeline: at place_at_seconds, or at the playhead when it is imported; the window shows where it will land while it runs. Returns the jobs; follow them with job_wait. Refused when it would pass the daily limit the person set for agents.",
                 looks: false,
                 schema: || object(json!({
-                    "provider": { "type": "string", "enum": ["openrouter", "fal", "runware"] },
+                    "provider": { "type": "string", "enum": ["openrouter", "fal", "runware", "local"] },
                     "model": { "type": "string" },
                     "task": { "type": "string", "description": TASKS },
                     "values": { "type": "object" },
@@ -242,7 +242,7 @@ fn tools() -> &'static [Tool] {
                 description: "One call from a model to its files on this computer, without a project, for when you need the picture, clip, music or voice itself (paid by the person's key, as generate). Waits up to wait_seconds (45 by default, at most 55); a longer job answers with its job_id - studio_wait with it, then call generate_file again with the same arguments: the same request is the same job and is not paid twice (again: true runs it anew). out_dir copies the files into a folder. values and media inputs as in generate.",
                 looks: false,
                 schema: || object(json!({
-                    "provider": { "type": "string", "enum": ["openrouter", "fal", "runware"] },
+                    "provider": { "type": "string", "enum": ["openrouter", "fal", "runware", "local"] },
                     "model": { "type": "string" },
                     "task": { "type": "string", "description": TASKS },
                     "values": { "type": "object" },
@@ -489,6 +489,41 @@ fn tools() -> &'static [Tool] {
                 looks: true,
                 schema: nothing,
                 call: |args| window("console", args, 15),
+            },
+            Tool {
+                name: "local_status",
+                description: "Generation on this computer (stable-diffusion.cpp, no cost): the local models (Qwen-Image 2.1 Turbo pictures, MiniMax-H3 and LTX-2.5 videos with sound) - downloaded or not and how many bytes they take, the engine builds (cuda, vulkan, cpu) installed, the device chosen and in use, the model in memory, and a download running. A downloaded model is used through generate with provider local.",
+                looks: true,
+                schema: nothing,
+                call: |_| get_call("/api/local".into()),
+            },
+            Tool {
+                name: "local_install",
+                description: "Downloads a local model (what: its id) with the engine build for the chosen device when that is missing, or an engine build alone (what: engine-cuda, engine-vulkan, engine-cpu); every file is pinned by revision, size and SHA-256 and a cut download resumes. Runs in the background; local_status follows it. Models are large: say the size to the person first.",
+                looks: false,
+                schema: || object(json!({ "what": { "type": "string" } }), &["what"]),
+                call: |args| send(Method::POST, "/api/local/install".into(), json!({ "what": text(args, "what")? })),
+            },
+            Tool {
+                name: "local_remove",
+                description: "Removes a downloaded local model's files from this computer; the engine stays.",
+                looks: false,
+                schema: || object(json!({ "model": { "type": "string" } }), &["model"]),
+                call: |args| send(Method::DELETE, format!("/api/local/models/{}", segment(&text(args, "model")?)), json!({})),
+            },
+            Tool {
+                name: "local_device",
+                description: "Sets the device local generation runs on: auto (CUDA on an NVIDIA card, else Vulkan, else the processor), cuda, vulkan or cpu. The model in memory is freed.",
+                looks: false,
+                schema: || object(json!({ "device": { "type": "string", "enum": ["auto", "cuda", "vulkan", "cpu"] } }), &["device"]),
+                call: |args| send(Method::PUT, "/api/local/device".into(), json!({ "device": text(args, "device")? })),
+            },
+            Tool {
+                name: "local_unload",
+                description: "Frees the memory of the local model loaded for the last run.",
+                looks: false,
+                schema: nothing,
+                call: |_| send(Method::POST, "/api/local/unload".into(), json!({})),
             },
             Tool {
                 name: "url_tool_status",
@@ -1125,6 +1160,8 @@ const JOURNAL: &[(&str, &str, &str)] = &[
     ("canvas_template", "created", "canvas"),
     ("export_fcpxml", "exported", "fcpxml"),
     ("subtitles_export", "exported", "subtitles"),
+    ("local_remove", "deleted", "local model"),
+    ("local_device", "updated", "local device"),
     ("key_set", "updated", "key"),
     ("key_delete", "deleted", "key"),
     ("proxy_set", "updated", "proxy"),
@@ -1140,7 +1177,7 @@ const JOURNAL: &[(&str, &str, &str)] = &[
 
 /// Tools that change something yet leave no line: the window's own controls and the service's upkeep.
 #[cfg(test)]
-const UNJOURNALED: &[&str] = &["catalog_refresh", "assistant_request_answer", "ui_open_settings", "ui_navigate", "ui_click", "ui_type", "ui_press_key", "ui_scroll", "ui_notify", "ui_select", "studio_open_data_folder", "url_tool_install", "url_tool_update", "project_open", "playhead_seek", "playback", "editor_tab"];
+const UNJOURNALED: &[&str] = &["local_install", "local_unload", "catalog_refresh", "assistant_request_answer", "ui_open_settings", "ui_navigate", "ui_click", "ui_type", "ui_press_key", "ui_scroll", "ui_notify", "ui_select", "studio_open_data_folder", "url_tool_install", "url_tool_update", "project_open", "playhead_seek", "playback", "editor_tab"];
 
 fn journal_facts(name: &str) -> Option<(&'static str, &'static str)> {
     JOURNAL.iter().find(|(tool, _, _)| *tool == name).map(|(_, verb, kind)| (*verb, *kind))
@@ -1767,7 +1804,7 @@ fn annotations(tool: &Tool) -> Value {
     const OVERWRITES: &[&str] = &["timeline_edit", "checkpoint_restore", "storyboard_set", "canvas_set", "captions_add", "key_set", "proxy_set", "variables_set", "url_fetch_cancel"];
     let destructive = name.ends_with("_delete") || OVERWRITES.contains(&name);
     // what reaches the internet: the providers, the catalogues, downloads by link and the proxy check
-    const OPEN_WORLD: &[&str] = &["generate", "generate_file", "job_retry", "catalog_refresh", "key_check", "proxy_test", "url_fetch", "url_fetch_resume", "url_tool_install", "url_tool_update", "media_import"];
+    const OPEN_WORLD: &[&str] = &["local_install", "generate", "generate_file", "job_retry", "catalog_refresh", "key_check", "proxy_test", "url_fetch", "url_fetch_resume", "url_tool_install", "url_tool_update", "media_import"];
     let idempotent = tool.looks || name.ends_with("_set") || name.ends_with("_get") || matches!(name, "project_open" | "editor_tab" | "playhead_seek" | "ui_navigate" | "ui_open_settings" | "ui_select");
     json!({ "readOnlyHint": tool.looks, "destructiveHint": !tool.looks && destructive, "idempotentHint": idempotent, "openWorldHint": OPEN_WORLD.contains(&name) })
 }

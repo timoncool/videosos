@@ -26,6 +26,8 @@ pub struct Settings {
     pub network: Option<crate::remote::NetworkAccess>,
     /// Where requests to the providers go; changed only through `/api/network/proxy`.
     pub proxy: vs_providers::net::ProxySettings,
+    /// The device local generation runs on: `cuda`, `vulkan`, `cpu`, or empty for Auto.
+    pub local_device: String,
 }
 
 /// The network setting as kept on disk, read before the service binds its address.

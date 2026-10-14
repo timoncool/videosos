@@ -238,7 +238,7 @@ pub fn start_install(data: &Path) -> bool {
     }
     let data = data.to_path_buf();
     tokio::spawn(async move {
-        let result = install(&data).await;
+        let result = install(&data, None).await;
         {
             let mut progress = progress().lock().unwrap_or_else(|p| p.into_inner());
             progress.installing = false;
@@ -254,8 +254,24 @@ pub fn start_install(data: &Path) -> bool {
     true
 }
 
-async fn install(data: &Path) -> Result<(), UrlError> {
-    let missing: Vec<&ToolSpec> = TOOLS.iter().filter(|tool| !installed(data, tool.id) && !(tool.id == "ffmpeg" && ffmpeg_on_path().is_some())).collect();
+/// ffmpeg alone, for local video, which encodes its frames with it; waits for the link tool's install when one runs.
+pub(crate) async fn install_ffmpeg(data: &Path) -> Result<(), UrlError> {
+    while running().swap(true, Ordering::SeqCst) {
+        tokio::time::sleep(Duration::from_millis(500)).await;
+    }
+    let result = install(data, Some("ffmpeg")).await;
+    progress().lock().unwrap_or_else(|p| p.into_inner()).installing = false;
+    running().store(false, Ordering::SeqCst);
+    changed();
+    result
+}
+
+async fn install(data: &Path, only: Option<&str>) -> Result<(), UrlError> {
+    let missing: Vec<&ToolSpec> = TOOLS
+        .iter()
+        .filter(|tool| only.is_none_or(|id| tool.id == id))
+        .filter(|tool| !installed(data, tool.id) && !(tool.id == "ffmpeg" && ffmpeg_on_path().is_some()))
+        .collect();
     let total: u64 = missing.iter().flat_map(|tool| tool.files.iter()).map(|file| file.size).sum();
     if let Some(free) = free_bytes(data)
         && free < total.saturating_mul(3)
@@ -315,7 +331,7 @@ fn file_is_zip(path: &Path) -> bool {
 }
 
 /// The files of a zip flat into `folder`: all of them, or only those named in `only`.
-fn unzip(archive: &Path, folder: &Path, only: Option<&[&str]>) -> Result<(), String> {
+pub(crate) fn unzip(archive: &Path, folder: &Path, only: Option<&[&str]>) -> Result<(), String> {
     let file = std::fs::File::open(archive).map_err(|e| format!("{}: {e}", archive.display()))?;
     let mut zip = zip::ZipArchive::new(file).map_err(|e| format!("{}: {e}", archive.display()))?;
     for index in 0..zip.len() {

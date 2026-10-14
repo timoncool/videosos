@@ -10,9 +10,12 @@ pub enum Provider {
     Openrouter,
     Fal,
     Runware,
+    /// This computer: models VideoSOS runs itself, no key and no cost.
+    Local,
 }
 
 impl Provider {
+    /// The cloud providers, each with its key and catalogue.
     pub const ALL: [Provider; 3] = [Provider::Openrouter, Provider::Fal, Provider::Runware];
 
     pub fn as_str(self) -> &'static str {
@@ -20,11 +23,12 @@ impl Provider {
             Provider::Openrouter => "openrouter",
             Provider::Fal => "fal",
             Provider::Runware => "runware",
+            Provider::Local => "local",
         }
     }
 
     pub fn parse(value: &str) -> Option<Self> {
-        Self::ALL.into_iter().find(|provider| provider.as_str() == value)
+        Self::ALL.into_iter().chain([Provider::Local]).find(|provider| provider.as_str() == value)
     }
 }
 
@@ -248,6 +252,8 @@ pub enum Output {
     /// Bytes the provider answered with, base64 in the job record until saved.
     Data { data_base64: String, mime: String },
     Text { text: String },
+    /// A file made on this computer, moved into the job's folder when saved.
+    File { path: std::path::PathBuf, mime: String },
 }
 
 /// What submitting a job gave back.

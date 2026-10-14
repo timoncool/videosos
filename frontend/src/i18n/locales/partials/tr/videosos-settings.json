@@ -14,7 +14,9 @@
       "storageHint": "Proxy ve önbellek dosyaları",
       "networkHint": "Proxy ve diğer bilgisayarlardan erişim",
       "privacyHint": "Anonim istatistikler ve haberler",
-      "aboutHint": "Sürüm, bağlantılar, klasörler, destek"
+      "aboutHint": "Sürüm, bağlantılar, klasörler, destek",
+      "local": "Yerel modeller",
+      "localHint": "Bu bilgisayarda ücretsiz üretim"
     },
     "providers": {
       "intro": "VideoSOS kendi hesaplarınızla üretim yapar: OpenRouter, fal veya Runware anahtarı ekleyin. Anahtarlar bu bilgisayarda kalır ve ajanlara asla gösterilmez.",

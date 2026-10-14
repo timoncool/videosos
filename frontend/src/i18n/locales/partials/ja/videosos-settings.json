@@ -14,7 +14,9 @@
       "storageHint": "プロキシとキャッシュ",
       "networkHint": "プロキシとほかのコンピューターからのアクセス",
       "privacyHint": "匿名の統計とニュース",
-      "aboutHint": "バージョン、リンク、フォルダー、サポート"
+      "aboutHint": "バージョン、リンク、フォルダー、サポート",
+      "local": "ローカルモデル",
+      "localHint": "このコンピューターで無料生成"
     },
     "providers": {
       "intro": "VideoSOSはご自身のアカウントで生成します。OpenRouter、fal、Runwareのキーを追加してください。キーはこのコンピューター上にのみ保存され、エージェントには表示されません。",

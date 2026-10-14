@@ -149,3 +149,27 @@ chat-too-many-turns = помощник сделал { $turns } { $turns ->
 chat-empty = выберите модель и напишите сообщение
 assistant-no-agent = К VideoSOS не подключён агент. Подключите его к MCP-серверу (Настройки, «Агенты») или выберите ассистентом OpenRouter.
 assistant-no-answer = Агент не ответил за { $minutes } мин.
+
+# Локальная генерация (stable-diffusion.cpp на этом компьютере)
+local-price = бесплатно, на этом компьютере
+local-field-prompt = Промпт
+local-field-size = Размер
+local-field-duration = Длительность
+local-field-first-frame = Первый кадр
+local-field-negative = Негативный промпт
+local-field-steps = Шаги
+local-field-cfg = Следование промпту (CFG)
+local-field-seed = Сид
+local-engine-missing = движок генерации для { $device } не установлен: установите его в Настройках, «Локальные модели»
+local-unsupported = локальная генерация пока недоступна на этой системе
+local-unknown = нет локальной модели или движка { $what }
+local-install-busy = уже идёт другая загрузка локальной модели; дождитесь её окончания
+local-model-missing = { $model } не скачана: скачайте её в Настройках, «Локальные модели»
+local-ffmpeg-missing = для локального видео нужен ffmpeg: скачайте модель ещё раз, он придёт вместе с ней
+local-no-prompt = пустой промпт
+local-bad-size = такой размер эта модель не делает
+local-not-loaded = модель не удержалась в памяти
+local-no-frames = модель не вернула кадров
+local-bad-frame = первый кадр не похож на картинку, которую VideoSOS может прочитать
+local-too-large = { $url }: больше ожидаемых { $size } байт
+local-sha-mismatch = { $url }: SHA-256 { $got } не совпал с закреплённым { $want }

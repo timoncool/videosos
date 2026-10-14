@@ -451,6 +451,32 @@
       "hint": "진행 중인 작업이 2개 미만이면 같은 실행을 새 시드로 다시 보냅니다. 멈추거나 실패할 때까지 계속됩니다. 실행마다 비용이 듭니다.",
       "stop": "중지",
       "counter_other": " · {{count}}회 · {{spent}}"
+    },
+    "local": {
+      "intro": "이 모델들은 stable-diffusion.cpp로 이 컴퓨터에서 실행됩니다. 키도 비용도 없습니다. 각 모델은 한 번만 다운로드하며 파일은 리비전에 고정되고 SHA-256으로 확인합니다.",
+      "device": "장치",
+      "devices": {
+        "auto": "자동",
+        "cuda": "CUDA (NVIDIA)",
+        "vulkan": "Vulkan",
+        "cpu": "프로세서"
+      },
+      "inUse": "사용 중: {{device}} · {{gpu}}",
+      "noEngine": "엔진이 없습니다 — {{device}}이(가) 필요합니다",
+      "engine": "{{device}} 엔진 · {{size}}",
+      "unload": "{{model}}을(를) 메모리에서 해제",
+      "task": {
+        "image": "이미지",
+        "video": "소리 있는 영상"
+      },
+      "installed": "다운로드됨",
+      "notInstalled": "다운로드 안 됨",
+      "download": "다운로드 · {{size}}",
+      "remove": "삭제",
+      "downloading": "{{done}} / {{total}} · {{file}}",
+      "notDownloaded": "{{model}}이(가) 아직 다운로드되지 않았습니다: {{size}}.",
+      "engineToo": "그래픽카드용 엔진도 함께 다운로드됩니다.",
+      "unsupported": "로컬 생성은 현재 Windows에서만 사용할 수 있습니다."
     }
   }
 }

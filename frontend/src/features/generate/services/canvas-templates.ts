@@ -235,7 +235,7 @@ const TASK_SET = new Set<string>([
   'text',
 ])
 const KIND_SET = new Set<string>(['image', 'video', 'audio'])
-const PROVIDERS = new Set<string>(['openrouter', 'fal', 'runware'])
+const PROVIDERS = new Set<string>(['openrouter', 'fal', 'runware', 'local'])
 
 function bad(what: string): never {
   throw new Error(`the workflow file is not valid: ${what}`)

@@ -14,7 +14,9 @@
       "storageHint": "Proxys et fichiers en cache",
       "networkHint": "Proxy et accès depuis d'autres ordinateurs",
       "privacyHint": "Statistiques anonymes et actualités",
-      "aboutHint": "Version, liens, dossiers, soutien"
+      "aboutHint": "Version, liens, dossiers, soutien",
+      "local": "Modèles locaux",
+      "localHint": "Génération sur cet ordinateur, gratuite"
     },
     "providers": {
       "intro": "VideoSOS génère via vos propres comptes : ajoutez une clé OpenRouter, fal ou Runware. Les clés restent sur cet ordinateur et ne sont jamais montrées aux agents.",
