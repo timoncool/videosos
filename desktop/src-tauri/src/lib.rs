@@ -327,6 +327,16 @@ pub fn run() {
                     open_in_browser(&for_tabs, &target);
                     tauri::webview::NewWindowResponse::Deny
                 })
+                // the window shows only VideoSOS's own page: its microphone requests (the sound outputs' names,
+                // the voice-over) are the person's own clicks
+                .on_permission_request(|webview, kind| match kind {
+                    tauri::webview::PermissionKind::Microphone
+                        if webview.url().is_ok_and(|url| matches!(url.host_str(), Some("127.0.0.1" | "localhost"))) =>
+                    {
+                        tauri::webview::PermissionResponse::Allow
+                    }
+                    _ => tauri::webview::PermissionResponse::Default,
+                })
                 .on_navigation(move |target| {
                     let own = target.host_str() == Some("127.0.0.1") && target.port() == Some(port);
                     if own || !matches!(target.scheme(), "http" | "https") {

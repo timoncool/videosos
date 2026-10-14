@@ -109,7 +109,7 @@ function flash(element: Element | null | undefined): void {
 // ---------------------------------------------------------------- what is on screen
 
 const INTERACTIVE =
-  'button, a[href], input, textarea, select, [role="button"], [role="tab"], [role="menuitem"], [role="checkbox"], [role="switch"], [role="slider"], [contenteditable="true"], [data-mcp-context]'
+  'button, a[href], input, textarea, select, [role="button"], [role="tab"], [role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"], [role="option"], [role="checkbox"], [role="switch"], [role="slider"], [contenteditable="true"], [data-mcp-context]'
 
 function visible(element: Element): boolean {
   const box = element.getBoundingClientRect()
@@ -364,6 +364,27 @@ function find(args: BridgeArgs): HTMLElement {
   return element as HTMLElement
 }
 
+/** A press as the mouse makes it: menus and lists open on the pointer going down, buttons act on the click. */
+function press(element: HTMLElement): void {
+  const box = element.getBoundingClientRect()
+  const at = {
+    bubbles: true,
+    cancelable: true,
+    composed: true,
+    button: 0,
+    clientX: box.left + box.width / 2,
+    clientY: box.top + box.height / 2,
+  }
+  const pointer = { ...at, pointerId: 1, pointerType: 'mouse', isPrimary: true }
+  // the pointer comes to the element first: a list takes a release where the press was as no choice
+  element.dispatchEvent(new PointerEvent('pointermove', pointer))
+  element.dispatchEvent(new PointerEvent('pointerdown', { ...pointer, buttons: 1 }))
+  element.dispatchEvent(new MouseEvent('mousedown', { ...at, buttons: 1 }))
+  element.dispatchEvent(new PointerEvent('pointerup', pointer))
+  element.dispatchEvent(new MouseEvent('mouseup', at))
+  element.click()
+}
+
 /** Sets a value the way typing does, so React sees it. */
 function setValue(element: HTMLElement, value: string): void {
   if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
@@ -479,7 +500,7 @@ const builtIn: Record<string, Handler> = {
     // an input opens its list on focus (the language pickers), as the user's click does
     if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement)
       element.focus()
-    element.click()
+    press(element)
     await settle()
     return { text: `Clicked ${label(element) || element.tagName.toLowerCase()}.` }
   },
