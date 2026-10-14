@@ -31,7 +31,7 @@ import { ProjectDebugPanel } from './project-debug-panel'
 import { ShortcutsDialog } from './shortcuts-dialog'
 import { UnsavedChangesDialog } from './unsaved-changes-dialog'
 import { WorkspaceSwitcher } from './workspace-switcher'
-import { openSettings, ResourceMonitor, WhatsNew } from '../deps/studio'
+import { JournalButton, openSettings, ResourceMonitor, WhatsNew } from '../deps/studio'
 import { EDITOR_LAYOUT_CSS_VALUES } from '@/config/editor-layout'
 import { cn } from '@/shared/ui/cn'
 import { LanguageSwitcher } from '@/shared/ui/language-switcher'
@@ -255,6 +255,7 @@ export const Toolbar = memo(function Toolbar({
         </Button>
         <div id="dock-slot" className="flex items-center" />
         <ResourceMonitor />
+        <JournalButton />
         <WhatsNew />
         <Button
           variant="outline"

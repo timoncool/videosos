@@ -113,5 +113,32 @@
     "accessKey": "Key",
     "accessNewKey": "New key",
     "accessInternet": "From the internet: forward this port to this computer on your router and open http://<your address>:<port>/?key=<key>. Anyone with the key controls VideoSOS and spends on your keys."
+  },
+  "journal": {
+    "title": "Actividad",
+    "empty": "Aquí aparecen los cambios que hace un agente y los mensajes de VideoSOS.",
+    "unreadable": "No se pudo leer la actividad: {{error}}",
+    "clear": "Borrar",
+    "remove": "Quitar esta línea",
+    "agent": "Agente",
+    "app": "VideoSOS",
+    "line": "{{verb}}: {{kind}} «{{name}}»",
+    "lineNoName": "{{verb}}: {{kind}}",
+    "verb": {
+      "started": "Iniciado",
+      "cancelled": "Detenido",
+      "deleted": "Eliminado",
+      "updated": "Cambiado",
+      "imported": "Importado",
+      "exported": "Exportado",
+      "undone": "Deshecho",
+      "redone": "Rehecho"
+    },
+    "kind": {
+      "generation": "generación",
+      "timeline": "línea de tiempo",
+      "media": "medio",
+      "video": "vídeo"
+    }
   }
 }

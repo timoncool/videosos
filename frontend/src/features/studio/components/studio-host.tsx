@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSonner } from 'sonner'
 import { HubBars } from './hub-bars'
 import { HubPopup } from './hub-popup'
 import ServerOffline from './server-offline'
 import { hubChanged, showsNow, useHubState, type HubButton } from '../services/studio-hub'
 import { openNews, openSettings } from '../services/settings-nav'
 import { api } from '../services/studio-api'
+import { noteMessage } from '../services/journal'
 
 const HEALTH_MS = 5000
 
@@ -17,6 +19,16 @@ export function StudioHost({ children }: { children: ReactNode }) {
   const { i18n } = useTranslation()
   const hub = useHubState(i18n.language.split('-')[0] ?? 'en')
   const [offline, setOffline] = useState(false)
+  // a message shown for a moment stays readable in the journal
+  const { toasts } = useSonner()
+  const noted = useRef(new Set<string | number>())
+  useEffect(() => {
+    for (const toast of toasts) {
+      if (noted.current.has(toast.id) || toast.type === 'loading' || typeof toast.title !== 'string') continue
+      noted.current.add(toast.id)
+      noteMessage(typeof toast.description === 'string' ? `${toast.title} ${toast.description}` : toast.title, toast.type ?? '')
+    }
+  }, [toasts])
   const [closed, setClosed] = useState<Set<string>>(() => new Set())
   const started = useRef(Date.now())
   const [elapsed, setElapsed] = useState(0)

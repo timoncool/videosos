@@ -1,4 +1,5 @@
 /** The parts every studio of the family has: news, notices, the resource monitor, agents, network, privacy, about. */
+export { default as JournalButton } from '@/features/studio/components/journal-button'
 export { default as WhatsNew } from '@/features/studio/components/whats-new'
 export { default as ResourceMonitor } from '@/features/studio/components/resource-monitor'
 export { default as AgentPanel } from '@/features/studio/components/agent-panel'

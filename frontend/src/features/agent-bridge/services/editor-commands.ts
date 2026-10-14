@@ -170,7 +170,8 @@ export function registerEditorCommands(showProject: ShowProject): void {
     if (!url) throw bridgeError('missing', { command: 'media_import', field: 'url' })
     const project = openProject()
     try {
-      const media = await mediaLibraryService.importMediaFromUrl(url, project.id)
+      // a file of this computer arrives as the service's own address, relative to this page
+      const media = await mediaLibraryService.importMediaFromUrl(new URL(url, window.location.origin).href, project.id)
       await useMediaLibraryStore.getState().loadMediaItems()
       return { media_id: media.id, file_name: media.fileName, mime: media.mimeType, duration_s: round(media.duration) }
     } catch (problem) {

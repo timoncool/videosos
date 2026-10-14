@@ -113,5 +113,32 @@
     "accessKey": "Key",
     "accessNewKey": "New key",
     "accessInternet": "From the internet: forward this port to this computer on your router and open http://<your address>:<port>/?key=<key>. Anyone with the key controls VideoSOS and spends on your keys."
+  },
+  "journal": {
+    "title": "动态",
+    "empty": "代理所做的更改和 VideoSOS 的消息会显示在这里。",
+    "unreadable": "无法读取动态：{{error}}",
+    "clear": "清空",
+    "remove": "移除此条",
+    "agent": "代理",
+    "app": "VideoSOS",
+    "line": "{{verb}}：{{kind}}「{{name}}」",
+    "lineNoName": "{{verb}}：{{kind}}",
+    "verb": {
+      "started": "已开始",
+      "cancelled": "已停止",
+      "deleted": "已删除",
+      "updated": "已更改",
+      "imported": "已导入",
+      "exported": "已导出",
+      "undone": "已撤销",
+      "redone": "已重做"
+    },
+    "kind": {
+      "generation": "生成",
+      "timeline": "时间线",
+      "media": "媒体",
+      "video": "视频"
+    }
   }
 }

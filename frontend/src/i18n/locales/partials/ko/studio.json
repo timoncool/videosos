@@ -113,5 +113,32 @@
     "accessKey": "Key",
     "accessNewKey": "New key",
     "accessInternet": "From the internet: forward this port to this computer on your router and open http://<your address>:<port>/?key=<key>. Anyone with the key controls VideoSOS and spends on your keys."
+  },
+  "journal": {
+    "title": "활동",
+    "empty": "에이전트가 한 변경과 VideoSOS 메시지가 여기에 표시됩니다.",
+    "unreadable": "활동 기록을 읽지 못했습니다: {{error}}",
+    "clear": "지우기",
+    "remove": "이 줄 삭제",
+    "agent": "에이전트",
+    "app": "VideoSOS",
+    "line": "{{verb}}: {{kind}} ‘{{name}}’",
+    "lineNoName": "{{verb}}: {{kind}}",
+    "verb": {
+      "started": "시작됨",
+      "cancelled": "중지됨",
+      "deleted": "삭제됨",
+      "updated": "변경됨",
+      "imported": "가져옴",
+      "exported": "내보냄",
+      "undone": "실행 취소됨",
+      "redone": "다시 실행됨"
+    },
+    "kind": {
+      "generation": "생성",
+      "timeline": "타임라인",
+      "media": "미디어",
+      "video": "동영상"
+    }
   }
 }

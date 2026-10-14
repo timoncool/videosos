@@ -113,5 +113,32 @@
     "accessKey": "Key",
     "accessNewKey": "New key",
     "accessInternet": "From the internet: forward this port to this computer on your router and open http://<your address>:<port>/?key=<key>. Anyone with the key controls VideoSOS and spends on your keys."
+  },
+  "journal": {
+    "title": "Etkinlik",
+    "empty": "Bir ajanın yaptığı değişiklikler ve VideoSOS mesajları burada görünür.",
+    "unreadable": "Etkinlik okunamadı: {{error}}",
+    "clear": "Temizle",
+    "remove": "Bu satırı kaldır",
+    "agent": "Ajan",
+    "app": "VideoSOS",
+    "line": "{{verb}}: {{kind}} “{{name}}”",
+    "lineNoName": "{{verb}}: {{kind}}",
+    "verb": {
+      "started": "Başlatıldı",
+      "cancelled": "Durduruldu",
+      "deleted": "Silindi",
+      "updated": "Değiştirildi",
+      "imported": "İçe aktarıldı",
+      "exported": "Dışa aktarıldı",
+      "undone": "Geri alındı",
+      "redone": "Yinelendi"
+    },
+    "kind": {
+      "generation": "üretim",
+      "timeline": "zaman çizelgesi",
+      "media": "medya",
+      "video": "video"
+    }
   }
 }

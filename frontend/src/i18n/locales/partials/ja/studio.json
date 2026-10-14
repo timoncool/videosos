@@ -113,5 +113,32 @@
     "accessKey": "Key",
     "accessNewKey": "New key",
     "accessInternet": "From the internet: forward this port to this computer on your router and open http://<your address>:<port>/?key=<key>. Anyone with the key controls VideoSOS and spends on your keys."
+  },
+  "journal": {
+    "title": "アクティビティ",
+    "empty": "エージェントによる変更と VideoSOS のメッセージがここに表示されます。",
+    "unreadable": "アクティビティを読み込めませんでした：{{error}}",
+    "clear": "クリア",
+    "remove": "この行を削除",
+    "agent": "エージェント",
+    "app": "VideoSOS",
+    "line": "{{verb}}：{{kind}}「{{name}}」",
+    "lineNoName": "{{verb}}：{{kind}}",
+    "verb": {
+      "started": "開始",
+      "cancelled": "停止",
+      "deleted": "削除",
+      "updated": "変更",
+      "imported": "インポート",
+      "exported": "エクスポート",
+      "undone": "元に戻す",
+      "redone": "やり直し"
+    },
+    "kind": {
+      "generation": "生成",
+      "timeline": "タイムライン",
+      "media": "メディア",
+      "video": "動画"
+    }
   }
 }

@@ -37,6 +37,7 @@ import { TrashSection } from '@/features/projects/components/trash-section'
 import { WorkspaceIndicator } from '@/features/workspace-gate'
 import { LanguageSwitcher } from '@/shared/ui/language-switcher'
 import WhatsNew from '@/features/studio/components/whats-new'
+import JournalButton from '@/features/studio/components/journal-button'
 import { openSettings } from '@/features/studio/services/settings-nav'
 
 export const Route = createLazyFileRoute('/projects/')({
@@ -265,6 +266,7 @@ function ProjectsIndex() {
             </Link>
             <div className="flex items-center gap-3">
               <LanguageSwitcher size="md" align="end" side="bottom" />
+              <JournalButton />
               <WhatsNew />
               <Button
                 variant="outline"
