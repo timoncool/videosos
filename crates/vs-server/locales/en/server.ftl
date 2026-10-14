@@ -134,3 +134,5 @@ ytdlp-failed-silently = yt-dlp failed without a message
 url-needs-project = a link is downloaded into a project: give project_id, the project open in the window
 tools-unsupported-os = links are downloaded on Windows and Linux
 tools-incomplete = the { $tool } tool is not whole after its download: { $files }
+chat-too-many-turns = the assistant took { $turns } steps without finishing; ask it to go on
+chat-empty = choose a model and write a message

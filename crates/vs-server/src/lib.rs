@@ -8,6 +8,7 @@
 #[macro_use]
 pub mod i18n;
 pub mod catalog;
+mod chat;
 mod choices;
 pub use vs_providers;
 pub mod credentials;
@@ -177,6 +178,7 @@ pub fn app(state: AppState) -> Router {
         .merge(settings::router())
         .merge(choices::router())
         .merge(url_import::router())
+        .merge(chat::router())
         .merge(exports::router())
         .merge(hw::router())
         .merge(journal::router())

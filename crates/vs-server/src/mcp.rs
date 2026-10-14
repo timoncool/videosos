@@ -33,7 +33,7 @@ pub fn install(api: Router) {
 }
 
 const STUDIO: &str = "VideoSOS";
-const SKILL: &str = include_str!("../../../docs/mcp-skill.md");
+pub(crate) const SKILL: &str = include_str!("../../../docs/mcp-skill.md");
 const SKILL_URI: &str = "videosos://skill";
 const LIMIT: usize = 60_000;
 
@@ -967,6 +967,35 @@ async fn handle(State(state): State<AppState>, body: axum::body::Bytes) -> Respo
         }
         _ => rpc_error(StatusCode::NOT_FOUND, id, -32601, format!("Method not found: {method}")),
     }
+}
+
+/// The tools for the chat in the window, as OpenAI-style functions: the same ones an agent over MCP has.
+pub(crate) fn chat_tools() -> Vec<Value> {
+    tools().iter().map(|tool| json!({ "type": "function", "function": { "name": tool.name, "description": tool.description, "parameters": (tool.schema)() } })).collect()
+}
+
+/// What the chat's model reads back from a tool, and a picture when the tool answered with one.
+pub(crate) struct ChatAnswer {
+    pub text: String,
+    pub image: Option<String>,
+}
+
+/// Runs a tool for the chat in the window as `tools/call` runs one for an agent, journal line included.
+pub(crate) async fn chat_call(state: &AppState, name: &str, args: &Value) -> Result<ChatAnswer, String> {
+    let tool = tools().iter().find(|tool| tool.name == name).ok_or_else(|| format!("Unknown tool: {name}"))?;
+    seen(name);
+    let before = job_name_before(state, name, args);
+    let answer = run_tool(state, tool, args).await?;
+    match &answer {
+        Answer::Json(value) => journal_change(state, name, args, &before, value),
+        Answer::Text(text) => journal_change(state, name, args, &before, &serde_json::from_str(text).unwrap_or(Value::Null)),
+        Answer::Image { .. } => {}
+    }
+    Ok(match answer {
+        Answer::Json(value) => ChatAnswer { text: cut(serde_json::to_string(&value).unwrap_or_default()), image: None },
+        Answer::Text(text) => ChatAnswer { text: cut(text), image: None },
+        Answer::Image { data, mime, text } => ChatAnswer { text, image: Some(format!("data:{mime};base64,{data}")) },
+    })
 }
 
 enum Answer {

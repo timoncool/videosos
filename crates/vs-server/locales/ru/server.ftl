@@ -132,3 +132,5 @@ ytdlp-failed-silently = yt-dlp завершился с ошибкой без с�
 url-needs-project = видео по ссылке скачивается в проект: нужен project_id, проект, открытый в окне
 tools-unsupported-os = видео по ссылке скачиваются на Windows и Linux
 tools-incomplete = инструмент { $tool } после загрузки неполный: { $files }
+chat-too-many-turns = помощник сделал { $turns } шагов и не закончил: попросите его продолжить
+chat-empty = выберите модель и напишите сообщение
