@@ -19,7 +19,9 @@
     "resetToDefaults": "Reset To Defaults",
     "moveUp": "Move effect up",
     "moveDown": "Move effect down",
-    "editInColor": "Edit in Color"
+    "editInColor": "Edit in Color",
+    "modifiedFromDefaults": "Modified from defaults",
+    "resetParameterToDefault": "Reset {{parameter}} to default"
   },
   "section": {
     "addEffect": "Add Effect",
@@ -41,7 +43,9 @@
     "channelRed": "Red",
     "channelGreen": "Green",
     "channelBlue": "Blue",
-    "multiPointHint": "Click the {{channel}} curve to add a point. Double-click a point to remove it."
+    "multiPointHint": "Click the {{channel}} curve to add a point. Double-click a point to remove it.",
+    "editorAriaLabel": "{{channel}} curve editor",
+    "pointAriaLabel": "{{channel}} curve point {{index}}"
   },
   "wheels": {
     "adjustWheel": "Adjust {{name}} wheel",
@@ -185,7 +189,6 @@
     "grid": "Grid",
     "type": "Type",
     "grainSize": "Grain Size",
-    "shape": "Shape",
     "sizeX": "Width",
     "sizeY": "Height",
     "feather": "Feather",

@@ -19,7 +19,9 @@
     "resetToDefaults": "Сбросить по умолчанию",
     "moveUp": "Переместить эффект вверх",
     "moveDown": "Переместить эффект вниз",
-    "editInColor": "Редактировать в «Цвете»"
+    "editInColor": "Редактировать в «Цвете»",
+    "modifiedFromDefaults": "Изменено относительно стандартных",
+    "resetParameterToDefault": "Вернуть «{{parameter}}» к стандартному"
   },
   "section": {
     "addEffect": "Добавить эффект",
@@ -41,7 +43,9 @@
     "channelRed": "Красный",
     "channelGreen": "Зеленый",
     "channelBlue": "Синий",
-    "multiPointHint": "Нажмите на кривую ({{channel}}), чтобы добавить точку. Двойной клик удаляет точку."
+    "multiPointHint": "Нажмите на кривую ({{channel}}), чтобы добавить точку. Двойной клик удаляет точку.",
+    "editorAriaLabel": "Редактор кривой: {{channel}}",
+    "pointAriaLabel": "Точка {{index}} кривой {{channel}}"
   },
   "wheels": {
     "adjustWheel": "Настройка круга {{name}}",

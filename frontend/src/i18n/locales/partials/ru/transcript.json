@@ -25,6 +25,25 @@
     "toastRemoved": "Удалено клипов: {{count}}",
     "toastNothingRemoved": "Ничего не удалено",
     "toastRemoveFailed": "Не удалось удалить выбранные слова",
-    "toastTranscribeFailed": "Сбой расшифровки"
+    "toastTranscribeFailed": "Сбой расшифровки",
+    "boundaryClip": "Новый клип",
+    "jumpTo": "Перейти к {{time}}",
+    "toastCopied": "Скопировано слов: {{count}}",
+    "toastCut": "Вырезано слов: {{count}}",
+    "selectedClips": "Выбрано клипов: {{count}}",
+    "selectedClip": "Выбранный клип",
+    "approxMatches": "Похожие совпадения",
+    "emptyProject": "В проекте пока нет видео- и аудиоклипов.",
+    "pendingHidden": "К удалению: {{count}} · {{seconds}} с",
+    "restoreAll": "Вернуть всё",
+    "applyEdits": "Удалить отмеченное",
+    "ignoreHint": "Выделите слова и нажмите Backspace, чтобы отметить их к удалению",
+    "copy": "Копировать",
+    "copyHint": "Скопировать слова (вставка на таймлайн — Ctrl+V)",
+    "cut": "Вырезать",
+    "restoreSelection": "Вернуть",
+    "ignoreSelection": "Отметить к удалению",
+    "scopeSelection": "Выделенное",
+    "scopeProject": "Весь проект"
   }
 }

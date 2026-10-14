@@ -291,7 +291,6 @@ const TEXT_TEMPLATE_GROUPS: ReadonlyArray<{
 ]
 
 const DEFAULT_TEXT_TEMPLATE_LABEL = 'Text'
-const ADD_TEXT_TEMPLATE_LABEL = 'Add Text'
 
 export const MediaSidebar = memo(function MediaSidebar() {
   const { t } = useTranslation()
@@ -778,7 +777,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                             >
                               {renderTextTemplatePreview()}
                               <span className="text-[9px] text-muted-foreground group-hover:text-foreground text-center leading-tight w-full">
-                                {ADD_TEXT_TEMPLATE_LABEL}
+                                {t('names.addText')}
                               </span>
                             </button>
                           ) : null}
@@ -803,8 +802,8 @@ export const MediaSidebar = memo(function MediaSidebar() {
                               )}
                             >
                               {renderTextTemplatePreview(preset)}
-                              <span className="text-[9px] text-muted-foreground group-hover:text-foreground text-center leading-tight w-full">
-                                {preset.label}
+                              <span className="text-[11px] text-muted-foreground group-hover:text-foreground text-center leading-tight w-full">
+                                {t(`names.textPresets.${preset.id}`, { defaultValue: preset.label })}
                               </span>
                             </button>
                           ))}
@@ -1073,7 +1072,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                         draggable={true}
                         onDragStart={handleTemplateDragStart({
                           itemType: 'adjustment',
-                          label: preset.name,
+                          label: t(`names.presetNames.${preset.id}`, { defaultValue: preset.name }),
                           effects: preset.effects,
                         })}
                         onDragEnd={handleTemplateDragEnd}
@@ -1093,7 +1092,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                           className="w-full aspect-video rounded-sm"
                         />
                         <span className="text-[9px] text-muted-foreground group-hover:text-foreground text-center leading-tight">
-                          {preset.name}
+                          {t(`names.presetNames.${preset.id}`, { defaultValue: preset.name })}
                         </span>
                       </button>
                     ))}
@@ -1104,7 +1103,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                 {gpuCategories.map(({ category, effects: catEffects }) => (
                   <div key={category}>
                     <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5">
-                      {category}
+                      {t(`names.gpuCategories.${category}`, { defaultValue: category })}
                     </div>
                     <div className="grid grid-cols-3 gap-1.5">
                       {catEffects.map((def) => (
@@ -1113,7 +1112,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                           draggable={true}
                           onDragStart={handleTemplateDragStart({
                             itemType: 'adjustment',
-                            label: def.name,
+                            label: t(`names.gpuNames.${def.id}`, { defaultValue: def.name }),
                             effects: [
                               {
                                 type: 'gpu-effect',
@@ -1137,7 +1136,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                             className="w-full aspect-video rounded-sm"
                           />
                           <span className="text-[9px] text-muted-foreground group-hover:text-foreground text-center leading-tight truncate w-full">
-                            {def.name}
+                            {t(`names.gpuNames.${def.id}`, { defaultValue: def.name })}
                           </span>
                         </button>
                       ))}

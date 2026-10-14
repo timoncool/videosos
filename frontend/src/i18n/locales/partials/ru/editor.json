@@ -101,7 +101,14 @@
         "frameRate": "Частота кадров",
         "durationSeconds": "Длительность (секунды)",
         "create": "Создать"
-      }
+      },
+      "controllerLayer": "Нулевой объект",
+      "parentColumn": "Родитель",
+      "shiftToggleAllLayers": "Shift-клик — развернуть или свернуть все слои",
+      "parentPickWhipForLayer": "Привязка к родителю для «{{name}}»",
+      "parentPickWhipHelp": "Перетащите на родительский слой. Shift — привязать позицию, Alt — локальная поза, Ctrl/Cmd-клик — отвязать.",
+      "parentForLayer": "Родитель для «{{name}}»",
+      "nullObjectNonRendering": "Нулевой объект (не отображается)"
     },
     "miniTimeline": {
       "inPoint": "Точка входа",
@@ -376,7 +383,9 @@
       "dockToPreview": "Прикрепить к превью",
       "expandFullColumn": "Развернуть на всю колонку",
       "showPanel": "Показать панель свойств",
-      "clipsSelected": "Выбрано клипов: {{count}}"
+      "clipsSelected": "Выбрано клипов: {{count}}",
+      "layer": "Слой",
+      "composition": "Композиция"
     },
     "markerPanel": {
       "notFound": "Маркер не найден",
@@ -408,7 +417,10 @@
       "switchToFrames": "Переключить на кадры",
       "timecode": "Таймкод",
       "frameRate": "Частота кадров",
-      "totalFrames": "Всего кадров"
+      "totalFrames": "Всего кадров",
+      "composition": "Композиция",
+      "matchProject": "Как в проекте",
+      "matchProjectBackground": "Фон как в проекте"
     },
     "clipPanel": {
       "tabVideo": "Видео",
@@ -417,7 +429,10 @@
       "adjustmentLayerHint": "Эффекты на корректирующих слоях применяются ко всем элементам на дорожках выше.",
       "tabText": "Текст",
       "tabAnimation": "Анимация",
-      "tabShape": "Фигура"
+      "tabShape": "Фигура",
+      "tabProperties": "Свойства",
+      "tabController": "Нулевой объект",
+      "tabAnimate": "Анимация"
     },
     "gifSection": {
       "animation": "Анимация",
@@ -895,6 +910,26 @@
       "dockTitle": "Цвет",
       "emptyState": "Выберите клип для цветокоррекции",
       "adjustmentLayerLabel": "Цветокоррекция"
+    },
+    "transformHierarchy": {
+      "controllerOption": "Нулевой объект: {{name}}",
+      "none": "Нет"
+    },
+    "compositionControls": {
+      "authoringTitle": "Открытые параметры ({{v0}})",
+      "authoringHint": "Выберите текст и цвета, которые можно менять при повторном использовании композиции.",
+      "addAnother": "Открыть ещё параметр",
+      "add": "Открыть параметр",
+      "allExposed": "Все поддерживаемые параметры уже открыты.",
+      "noCandidates": "Добавьте текстовый слой или фигуру, чтобы открыть их параметры.",
+      "resetOverride": "Сбросить изменение «{{name}}»",
+      "overridden": "«{{name}}» изменён",
+      "instanceTitle": "Изменения шаблона",
+      "instanceHint": "Изменения действуют только в этом экземпляре. Синяя точка отмечает значения, отличающиеся от исходных.",
+      "resetAll": "Сбросить все изменения"
+    },
+    "textProperties": {
+      "scale": "Масштаб"
     }
   }
 }

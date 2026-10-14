@@ -101,7 +101,14 @@
         "frameRate": "Frame rate",
         "durationSeconds": "Duration (seconds)",
         "create": "Create"
-      }
+      },
+      "controllerLayer": "Null Object",
+      "parentColumn": "Parent",
+      "shiftToggleAllLayers": "Shift-click to expand or collapse all layers",
+      "parentPickWhipForLayer": "Parent pick whip for {{name}}",
+      "parentPickWhipHelp": "Drag to a parent layer. Shift: snap position. Alt: use local pose. Ctrl/Cmd-click: detach.",
+      "parentForLayer": "Parent for {{name}}",
+      "nullObjectNonRendering": "Null Object (does not render)"
     },
     "miniTimeline": {
       "inPoint": "In point",
@@ -366,7 +373,9 @@
       "dockToPreview": "Dock to preview",
       "expandFullColumn": "Expand full column",
       "showPanel": "Show Properties Panel",
-      "clipsSelected": "{{count}} clips selected"
+      "clipsSelected": "{{count}} clips selected",
+      "layer": "Layer",
+      "composition": "Composition"
     },
     "markerPanel": {
       "notFound": "Marker not found",
@@ -398,7 +407,10 @@
       "switchToFrames": "Switch to frames",
       "timecode": "Timecode",
       "frameRate": "Frame Rate",
-      "totalFrames": "Total Frames"
+      "totalFrames": "Total Frames",
+      "composition": "Composition",
+      "matchProject": "Match Project",
+      "matchProjectBackground": "Match project background"
     },
     "clipPanel": {
       "tabVideo": "Video",
@@ -407,7 +419,10 @@
       "adjustmentLayerHint": "Effects on adjustment layers apply to all items on tracks above.",
       "tabText": "Text",
       "tabAnimation": "Animation",
-      "tabShape": "Shape"
+      "tabShape": "Shape",
+      "tabProperties": "Properties",
+      "tabController": "Null Object",
+      "tabAnimate": "Animate"
     },
     "gifSection": {
       "animation": "Animation",
@@ -883,6 +898,26 @@
       "dockTitle": "Color",
       "emptyState": "Select a clip to grade",
       "adjustmentLayerLabel": "Grade"
+    },
+    "transformHierarchy": {
+      "controllerOption": "Null: {{name}}",
+      "none": "None"
+    },
+    "compositionControls": {
+      "authoringTitle": "Published controls ({{v0}})",
+      "authoringHint": "Choose the text and colors that stay editable when this composition is reused.",
+      "addAnother": "Expose another property",
+      "add": "Expose property",
+      "allExposed": "All supported properties are exposed.",
+      "noCandidates": "Add a text or shape layer to expose editable properties.",
+      "resetOverride": "Reset {{name}} override",
+      "overridden": "{{name}} is overridden",
+      "instanceTitle": "Template overrides",
+      "instanceHint": "Changes apply only to this instance. A blue dot marks values that differ from the source.",
+      "resetAll": "Reset all overrides"
+    },
+    "textProperties": {
+      "scale": "Scale"
     }
   }
 }

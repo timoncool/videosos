@@ -103,7 +103,7 @@ export function CompositionControlsAuthoringSection({
   return (
     <PropertySection
       title={t('editor.compositionControls.authoringTitle', {
-        defaultValue: `Published controls (${controls.length})`,
+        defaultValue: 'Published controls ({{v0}})', v0: controls.length,
       })}
       icon={SlidersHorizontal}
       defaultOpen={defaultOpen}
