@@ -34,6 +34,7 @@ jobs-too-long = Провайдер работает над задачей бол
 jobs-download-failed = Результат не скачался: { $reason }
 jobs-cancelled = Отменено.
 jobs-cancelled-not-waiting = Ожидание остановлено. Провайдер не остановил задачу, поэтому она может завершиться и быть оплачена.
+jobs-cancelled-sending = Отменяю: fal попросят остановить задачу, как только он её примет.
 jobs-field-required = Заполните: { $field }
 jobs-field-too-long = { $field }: { $count } символов, модель принимает не больше { $max }.
 jobs-no-key = Нет ключа { $provider }: добавьте его в Настройках, раздел «Провайдеры».

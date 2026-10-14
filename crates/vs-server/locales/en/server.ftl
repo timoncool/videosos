@@ -33,6 +33,7 @@ jobs-too-long = The provider has worked on this job for over three hours; it is 
 jobs-download-failed = The result could not be downloaded: { $reason }
 jobs-cancelled = Cancelled.
 jobs-cancelled-not-waiting = Stopped waiting. The provider did not stop the job, so it may still finish and be charged.
+jobs-cancelled-sending = Cancelling: fal is asked to stop the job as soon as it has taken it.
 jobs-field-required = Fill in: { $field }
 jobs-field-too-long = { $field } is { $count } characters long; the model takes at most { $max }.
 jobs-no-key = No { $provider } key: add it in Settings, Providers.

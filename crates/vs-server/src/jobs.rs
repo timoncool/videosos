@@ -426,10 +426,13 @@ impl Jobs {
                 });
                 if cancelled {
                     // cancelled while it was being sent: fal can still stop it now that it has an address
-                    if job.provider == Provider::Fal
-                        && let Err(error) = fal::cancel(&self.http, &key, &handle).await
-                    {
-                        tracing::warn!("job {id}: fal did not take the cancel: {error}");
+                    if job.provider == Provider::Fal {
+                        match fal::cancel(&self.http, &key, &handle).await {
+                            Ok(()) => {
+                                self.update(&id, |job| job.error = Some(t!("jobs-cancelled")));
+                            }
+                            Err(error) => tracing::warn!("job {id}: fal did not take the cancel: {error}"),
+                        }
                     }
                     return;
                 }
@@ -692,7 +695,13 @@ impl Jobs {
             },
             _ => false,
         };
-        let note = if stopped || job.status == "queued" { t!("jobs-cancelled") } else { t!("jobs-cancelled-not-waiting") };
+        let note = if stopped || job.status == "queued" {
+            t!("jobs-cancelled")
+        } else if job.provider == Provider::Fal && job.handle.is_none() {
+            t!("jobs-cancelled-sending")
+        } else {
+            t!("jobs-cancelled-not-waiting")
+        };
         self.update(id, |job| {
             job.status = "cancelled".into();
             job.error = Some(note);

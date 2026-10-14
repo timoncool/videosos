@@ -36,16 +36,35 @@ impl Http {
         }
     }
 
-    /// A small JSON answer: a catalogue page, a job's status. It has its own short deadline, so a stalled
-    /// connection is retried instead of holding the caller for the long download timeout.
+    /// A small JSON answer: a catalogue page, a model's form or price, a job's status. It has its own short
+    /// deadline, so a stalled connection fails fast instead of holding the caller for the long download timeout,
+    /// and a 429 or 5xx is asked again after 1, 2 and 4 seconds (or the Retry-After the provider gives), as fal
+    /// and the others advise for a request that changes nothing.
     pub async fn get_json<T: DeserializeOwned>(&self, url: &str, auth: Auth) -> Result<T, ProviderError> {
-        let response = Self::with_auth(self.client.get(url), auth).timeout(Duration::from_secs(90)).send().await?;
-        let status = response.status();
-        let text = response.text().await?;
-        if !status.is_success() {
-            return Err(refusal(status, &text));
+        let mut pause = Duration::from_secs(1);
+        let mut attempt = 0;
+        loop {
+            let answer = async {
+                let response = Self::with_auth(self.client.get(url), auth.clone()).timeout(Duration::from_secs(90)).send().await?;
+                let status = response.status();
+                let asked = retry_after(response.headers());
+                Ok::<_, ProviderError>((status, asked, response.text().await?))
+            }
+            .await;
+            let (refused, asked) = match answer {
+                Ok((status, _, text)) if status.is_success() => {
+                    return serde_json::from_str(&text).map_err(|error| ProviderError::Network(format!("{url}: not the expected JSON ({error})")));
+                }
+                Ok((status, asked, text)) => (refusal(status, &text), asked),
+                Err(error) => (error, None),
+            };
+            if !matches!(refused, ProviderError::Busy(_) | ProviderError::Network(_)) || attempt == 3 {
+                return Err(refused);
+            }
+            tokio::time::sleep(asked.unwrap_or(pause).min(Duration::from_secs(30))).await;
+            pause *= 2;
+            attempt += 1;
         }
-        serde_json::from_str(&text).map_err(|error| ProviderError::Network(format!("{url}: not the expected JSON ({error})")))
     }
 
     /// POSTs JSON; the status and the body come back whatever the status, the caller reads both.
@@ -67,6 +86,11 @@ impl Http {
         let mime = response.headers().get(reqwest::header::CONTENT_TYPE).and_then(|value| value.to_str().ok()).map(|value| value.split(';').next().unwrap_or(value).trim().to_string());
         Ok((response.bytes().await?.to_vec(), mime))
     }
+}
+
+/// The pause a refusal asks for in whole seconds, when it names one.
+fn retry_after(headers: &reqwest::header::HeaderMap) -> Option<Duration> {
+    headers.get(reqwest::header::RETRY_AFTER)?.to_str().ok()?.trim().parse::<u64>().ok().map(Duration::from_secs)
 }
 
 /// A refused request as an error: 429 and 5xx are worth sending again, the rest are not.
