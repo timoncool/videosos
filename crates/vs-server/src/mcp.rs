@@ -300,6 +300,34 @@ fn tools() -> &'static [Tool] {
                 call: |_| get_call("/api/app/paths".into()),
             },
             Tool {
+                name: "studio_open_data_folder",
+                description: "Opens one of VideoSOS's folders in the file manager for the person: data (the default), projects, generations, exports or logs.",
+                looks: true,
+                schema: || object(json!({ "folder": { "type": "string", "enum": ["data", "projects", "generations", "exports", "logs"] } }), &[]),
+                call: |_| composite("open_folder"),
+            },
+            Tool {
+                name: "studio_system",
+                description: "This computer as the resource monitor shows it: the graphics card (its memory, load, temperature and power), RAM, and the memory VideoSOS's server takes.",
+                looks: true,
+                schema: nothing,
+                call: |_| get_call("/api/hw/snapshot".into()),
+            },
+            Tool {
+                name: "studio_capabilities",
+                description: "What VideoSOS can make now: each task (image, video, music, speech...) with the providers that have models for it and whether their key is set, and what the window does on this computer for free.",
+                looks: true,
+                schema: nothing,
+                call: |_| composite("capabilities"),
+            },
+            Tool {
+                name: "assistant_set",
+                description: "Who answers the window's assistant (Improve prompt, Prompt from the picture, the storyboard's split, the 3D blocking, the Chat tab): agent - you, over MCP, nothing paid - or openrouter, a paid model of the person's key. As Settings, Agents, Assistant.",
+                looks: false,
+                schema: || object(json!({ "assistant": { "type": "string", "enum": ["agent", "openrouter"] } }), &["assistant"]),
+                call: |args| send(Method::PUT, "/api/settings".into(), json!({ "assistant": text(args, "assistant")? })),
+            },
+            Tool {
                 name: "catalog_refresh",
                 description: "Reads the model catalogues again (all providers, or one). Runs in the background; models_list shows progress.",
                 looks: false,
@@ -361,6 +389,13 @@ fn tools() -> &'static [Tool] {
                 looks: false,
                 schema: || object(json!({ "key": { "type": "string" } }), &["key"]),
                 call: |args| window("press_key", args, 15),
+            },
+            Tool {
+                name: "ui_select",
+                description: "Chooses an option of a list (a select ui_read_page shows with its options) by its value, as a click on it does. A combobox opens with ui_click, then its option is clicked.",
+                looks: false,
+                schema: || object(json!({ "ref": { "type": "string" }, "text": { "type": "string" }, "value": { "type": "string" } }), &["value"]),
+                call: |args| window("select", args, 15),
             },
             Tool {
                 name: "ui_scroll",
@@ -988,6 +1023,7 @@ const JOURNAL: &[(&str, &str, &str)] = &[
     ("transcribe", "created", "transcript"),
     ("captions_add", "created", "captions"),
     ("window_settings_set", "updated", "settings"),
+    ("assistant_set", "updated", "settings"),
     ("element_save", "created", "element"),
     ("element_delete", "deleted", "element"),
     ("preset_save", "created", "preset"),
@@ -1012,7 +1048,7 @@ const JOURNAL: &[(&str, &str, &str)] = &[
 
 /// Tools that change something yet leave no line: the window's own controls and the service's upkeep.
 #[cfg(test)]
-const UNJOURNALED: &[&str] = &["catalog_refresh", "assistant_request_answer", "ui_open_settings", "ui_navigate", "ui_click", "ui_type", "ui_press_key", "ui_scroll", "ui_notify", "url_tool_install", "url_tool_update", "project_open", "playhead_seek", "playback", "editor_tab"];
+const UNJOURNALED: &[&str] = &["catalog_refresh", "assistant_request_answer", "ui_open_settings", "ui_navigate", "ui_click", "ui_type", "ui_press_key", "ui_scroll", "ui_notify", "ui_select", "studio_open_data_folder", "url_tool_install", "url_tool_update", "project_open", "playhead_seek", "playback", "editor_tab"];
 
 fn journal_facts(name: &str) -> Option<(&'static str, &'static str)> {
     JOURNAL.iter().find(|(tool, _, _)| *tool == name).map(|(_, verb, kind)| (*verb, *kind))
@@ -1040,6 +1076,8 @@ fn change_target(kind: &str, args: &Value, before: &str, answer: &Value) -> Stri
         "video" => answer.get("path").and_then(Value::as_str).map(file_name),
         "download" => answer.get("title").and_then(Value::as_str).or_else(|| answer.get("url").and_then(Value::as_str)).or_else(|| args.get("url").and_then(Value::as_str)).map(str::to_string),
         "fcpxml" => answer.get("path").and_then(Value::as_str).map(file_name),
+        // the settings named with what they were set to, as "assistant: agent"
+        "settings" => args.as_object().map(|set| set.iter().map(|(key, value)| format!("{key}: {}", value.as_str().map_or_else(|| value.to_string(), str::to_string))).collect::<Vec<_>>().join(", ")).filter(|line| !line.is_empty()),
         _ => ["name", "element", "preset", "template", "title"]
             .iter()
             .find_map(|key| answer.get(*key).or_else(|| args.get(*key)).and_then(Value::as_str))
@@ -1259,6 +1297,46 @@ async fn status_summary(state: &AppState) -> Value {
         "window_open": window_open(),
         "editor": editor,
     })
+}
+
+/// What VideoSOS can make now: each task with the providers that have models for it and whether their key is
+/// set, and what the window does on this computer for free.
+fn capabilities(state: &AppState) -> Value {
+    let entries = state.catalog.entries();
+    let tasks: Vec<Value> = vs_providers::model::Task::ALL
+        .iter()
+        .map(|task| {
+            let providers: Vec<Value> = vs_providers::model::Provider::ALL
+                .iter()
+                .filter_map(|provider| {
+                    let models = entries.iter().filter(|entry| entry.provider == *provider && entry.status == "live" && entry.tasks.contains(task)).count();
+                    (models > 0).then(|| json!({ "provider": provider.as_str(), "models": models, "key": crate::credentials::key(*provider).is_some() }))
+                })
+                .collect();
+            let ready = providers.iter().any(|provider| provider["key"] == true);
+            json!({ "task": task.as_str(), "ready": ready, "providers": providers })
+        })
+        .collect();
+    json!({
+        "tasks": tasks,
+        "on_this_computer": ["transcribe (Whisper, Parakeet) and captions_add", "previs_render (3D blocking)", "motion_render (HTML motion graphics)", "media_cut, media_frame, media_last_frame", "export_video (mp4, webm, mov, mkv)", "export_fcpxml", "timeline_edit"],
+    })
+}
+
+/// Opens one of VideoSOS's folders in the file manager for the person.
+async fn open_folder(state: &AppState, args: &Value) -> Result<Value, String> {
+    let folder = args.get("folder").and_then(Value::as_str).unwrap_or("data");
+    let path = match folder {
+        "data" => state.data.clone(),
+        "projects" => state.workspace.clone(),
+        "generations" => state.data.join("generations"),
+        "exports" => state.data.join("exports"),
+        "logs" => state.data.join("logs"),
+        other => return Err(format!("{other} is not a folder of VideoSOS: data, projects, generations, exports or logs")),
+    };
+    std::fs::create_dir_all(&path).map_err(|error| format!("{}: {error}", path.display()))?;
+    let (status, text) = call_route(Call { method: Method::POST, path: "/api/reveal".into(), payload: Payload::Json(json!({ "path": path.display().to_string() })) }).await?;
+    if status.is_success() { Ok(json!({ "opened": path.display().to_string() })) } else { Err(text) }
 }
 
 async fn wait_for(state: &AppState, args: &Value) -> Result<Value, String> {
@@ -1572,6 +1650,8 @@ async fn run_tool(state: &AppState, tool: &Tool, args: &Value, before: &str) -> 
         Payload::Composite("status") => Ok(Answer::Json(status_summary(state).await)),
         Payload::Composite("wait") => wait_for(state, args).await.map(Answer::Json),
         Payload::Composite("studio_wait") => studio_wait(state, args).await,
+        Payload::Composite("capabilities") => Ok(Answer::Json(capabilities(state))),
+        Payload::Composite("open_folder") => open_folder(state, args).await.map(Answer::Json),
         Payload::Composite("questions") => Ok(with_pictures(state, wait_for_questions(args).await)),
         Payload::Composite("answer") => answer_question(args).map(Answer::Json),
         Payload::Composite("projects") => Ok(Answer::Json(projects(state))),

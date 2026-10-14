@@ -133,15 +133,19 @@ You cannot hear or watch the window, so look at results before you use them:
 ## Hand the work over
 
 - `export_video {format, quality}` renders the finished video into the exports folder and answers with its path.
-- `export_fcpxml` writes the timeline for Final Cut, DaVinci Resolve or Premiere.
+- `export_fcpxml` writes the timeline for Final Cut, DaVinci Resolve or Premiere: clips, titles, markers, gain and
+  fades; `left` names what it has no place for (transitions between connected clips, speed changes, shapes,
+  effects).
 
 ## The program itself
 
 `window_settings_get` / `window_settings_set` (language, sounds, snapping, autosave, transcription defaults…),
 `proxy_get` / `proxy_test` / `proxy_set`, `network_status`, `studio_paths`, `ui_open_settings {section}` to show
 the person a setting, `ui_navigate {page}`, `projects_trash`, `project_restore`, `project_duplicate`,
-`project_delete` (to the trash). The daily limit for agents and whether your edits wait for the person's Accept
-are theirs alone: `settings_get` reads them.
+`project_delete` (to the trash). `studio_capabilities` says what can be made now and with which keys,
+`studio_system` shows the graphics card and memory, `studio_open_data_folder {folder}` opens a folder for the
+person, `ui_select` chooses in a list, `assistant_set` makes you (or OpenRouter) the window's assistant. The daily
+limit for agents and whether your edits wait for the person's Accept are theirs alone: `settings_get` reads them.
 
 ## Recipes
 
