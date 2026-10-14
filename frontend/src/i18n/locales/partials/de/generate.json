@@ -307,6 +307,128 @@
       "allClips_one": "Clip für {{count}} Einstellung auf die Zeitleiste",
       "allClips_other": "Clips für {{count}} Einstellungen auf die Zeitleiste",
       "allClipsHint": "Die Clips folgen ab dem Abspielkopf nacheinander"
+    },
+    "canvas": {
+      "prompt": "Text",
+      "media": "Bild oder Video",
+      "generate": "Generierung",
+      "promptHint": "Was erstellt werden soll; es fließt in den Prompt der verbundenen Generierungen ein.",
+      "mediaHint": "Ziehe eine Datei aus der Mediathek oder ein Ergebnis hierher.",
+      "remove": "Knoten entfernen",
+      "task": "Aufgabe",
+      "run": "Starten",
+      "runAgain": "Erneut starten",
+      "waiting_one": "Wartet auf {{count}} Knoten davor",
+      "waiting_other": "Wartet auf {{count}} Knoten davor",
+      "noRoom_one": "{{count}} Datei hat in diesem Modell keinen Platz",
+      "noRoom_other": "{{count}} Dateien haben in diesem Modell keinen Platz",
+      "empty": "Füge einen Text, ein Bild und eine Generierung hinzu und verbinde sie: Text mit dem Prompt, Dateien mit den Slots des Modells. Ziehe Dateien aus der Mediathek auf die Arbeitsfläche.",
+      "input": {
+        "prompt": "Prompt",
+        "media": "Dateien"
+      },
+      "workflow": {
+        "templates": "Vorlagen",
+        "save": "Workflow speichern",
+        "open": "Workflow öffnen",
+        "failed": "Der Workflow konnte nicht geöffnet werden: {{reason}}",
+        "template": {
+          "frameToVideo": {
+            "name": "Bild zu Video",
+            "about": "Ein Prompt erzeugt ein Bild, aus dem Bild entsteht ein Video mit eigenem Bewegungs-Prompt.",
+            "prompts": {
+              "idea": "Ein Leuchtturm auf einer Klippe in der Abenddämmerung, unten brechen sich die Wellen, warmes Licht im Fenster",
+              "motion": "Langsame Annäherung, der Lichtstrahl des Leuchtturms streicht über das Meer"
+            }
+          },
+          "compareImages": {
+            "name": "Bildmodelle vergleichen",
+            "about": "Ein Prompt in drei Bildmodelle nebeneinander; das Modell des Panels und die Vergleichsmodelle sind bereits eingestellt.",
+            "prompts": {
+              "idea": "Porträt eines alten Fischers in einem gelben Regenmantel, weiches Licht bei bedecktem Himmel, 85 mm"
+            }
+          },
+          "promptWriter": {
+            "name": "Prompt-Autor",
+            "about": "Ein Sprachmodell schreibt aus einer Idee den Prompt, ein Bildmodell zeichnet ihn.",
+            "prompts": {
+              "idea": "Schreibe einen anschaulichen Prompt für ein Bildmodell: ein gemütlicher Ramen-Laden in einer regnerischen Nacht in Tokio. Antworte nur mit dem Prompt."
+            }
+          },
+          "productShot": {
+            "name": "Produktfoto",
+            "about": "Ein Produktfoto: Hintergrund entfernt, von einem Bearbeitungsmodell in eine neue Szene gesetzt, dann hochskaliert.",
+            "prompts": {
+              "scene": "Platziere das Produkt auf einem Marmortisch im Morgenlicht, weiche Schatten, geringe Schärfentiefe"
+            }
+          },
+          "talkingHead": {
+            "name": "Sprechender Kopf",
+            "about": "Text, den eine Stimme vorliest, und ein Gesicht aus der Mediathek, das ihn spricht.",
+            "prompts": {
+              "words": "Hallo! Heute zeige ich dir drei Tricks, mit denen du Videos schneller schneidest."
+            }
+          },
+          "soundtrack": {
+            "name": "Musik und Ton",
+            "about": "Ein Musikstück und ein Soundeffekt aus zwei Prompts.",
+            "prompts": {
+              "mood": "Ruhiges Ambient-Klavier mit sanften Streichern, langsames Tempo, hoffnungsvoll",
+              "effect": "Wellen an einem Kieselstrand, in der Ferne Möwen"
+            }
+          }
+        }
+      }
+    },
+    "motion": {
+      "tabLabel": "HTML-Grafik",
+      "hint": "Titel, Bauchbinden, Zähler und Badges in HTML und CSS: Die Animation läuft von selbst, und der Clip bleibt über dem Video darunter transparent.",
+      "templates": {
+        "title": "Titel",
+        "lowerThird": "Bauchbinde",
+        "counter": "Zähler",
+        "badge": "Badge"
+      },
+      "preview": "Vorschau",
+      "code": "HTML und CSS",
+      "seconds": "Sekunden",
+      "make": "Clip an der Abspielposition erstellen",
+      "rendering": "Frames werden gezeichnet… {{percent}} %",
+      "done": "„{{name}}“ liegt in der Mediathek und an der Abspielposition",
+      "failed": "Der Clip wurde nicht erstellt: {{reason}}",
+      "made": "Erstellt",
+      "edit": "Code öffnen",
+      "defaultName": "HTML-Grafik"
+    },
+    "previs": {
+      "tabLabel": "3D-Blocking",
+      "hint": "Lege die Einstellung in 3D an, bevor du dafür bezahlst: Beschreibe den Ort, wer sich wohin bewegt und wie die Kamera fährt; das Prompt-Modell baut Platzhalterformen und einen Kamerapfad (etwa zwei Cent). Sieh durch die Kamera, von oben oder von der Seite, gib dann ihr Bild an ein Video- oder Bildmodell weiter oder nimm die Kamerabewegung auf.",
+      "description": "Die Einstellung",
+      "placeholder": "Eine Frau geht durch einen schmalen Korridor auf eine Tür zu; die Kamera folgt ihr von hinten und schwenkt dann herum, bis sie ihr Gesicht zeigt, als sie stehen bleibt. 6 Sekunden, 35 mm, am Ende 50 mm.",
+      "build": "Blocking erstellen",
+      "change": "Aktuelles nach Beschreibung ändern",
+      "building": "Blocking wird erstellt…",
+      "example": "Mit einem Beispiel beginnen",
+      "failed": "Nicht geklappt: {{reason}}",
+      "views": "Ansicht",
+      "view": {
+        "camera": "Kamera",
+        "top": "Oben",
+        "orbit": "Umlauf"
+      },
+      "play": "Abspielen",
+      "pause": "Pause",
+      "time": "Moment der Einstellung",
+      "toVideo": "Bild → erstes Bild eines Videos",
+      "toPicture": "Bild → Referenz eines Bildes",
+      "video": "Kamerabewegung aufnehmen",
+      "recording": "Aufnahme… {{percent}} %",
+      "videoDone": "„{{name}}“ liegt in der Mediathek.",
+      "frameName": "{{title}}, Blocking-Bild",
+      "videoName": "{{title}}, Blocking",
+      "json": "Szene als JSON",
+      "apply": "Anwenden",
+      "badJson": "Der Text ist kein JSON: {{reason}}"
     }
   }
 }

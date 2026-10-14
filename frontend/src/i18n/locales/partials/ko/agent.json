@@ -17,7 +17,9 @@
       "project_open": "프로젝트를 엽니다",
       "export_video": "동영상을 내보냅니다",
       "checkpoint_create": "복원 지점 저장",
-      "checkpoint_restore": "복원 지점으로 되돌리기"
+      "checkpoint_restore": "복원 지점으로 되돌리기",
+      "motion_render": "HTML 그래픽을 클립으로 만듭니다",
+      "previs_render": "샷을 3D로 블로킹합니다"
     },
     "proposal": {
       "title": "에이전트가 편집을 제안합니다",

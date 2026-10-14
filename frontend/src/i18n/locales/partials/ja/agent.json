@@ -17,7 +17,9 @@
       "project_open": "プロジェクトを開く",
       "export_video": "動画を書き出す",
       "checkpoint_create": "復元ポイントを保存する",
-      "checkpoint_restore": "復元ポイントに戻す"
+      "checkpoint_restore": "復元ポイントに戻す",
+      "motion_render": "HTMLグラフィックスをクリップにします",
+      "previs_render": "ショットを3Dでブロッキングします"
     },
     "proposal": {
       "title": "エージェントが編集を提案しています",

@@ -307,6 +307,128 @@
       "allClips_one": "为 {{count}} 个镜头生成片段并放到时间线",
       "allClips_other": "为 {{count}} 个镜头生成片段并放到时间线",
       "allClipsHint": "片段从播放头处依次排列"
+    },
+    "canvas": {
+      "prompt": "文本",
+      "media": "图片或视频",
+      "generate": "生成",
+      "promptHint": "要做什么；它会进入所连接生成的提示词。",
+      "mediaHint": "把媒体库中的文件或某个结果拖放到这里。",
+      "remove": "移除节点",
+      "task": "任务",
+      "run": "运行",
+      "runAgain": "重新运行",
+      "waiting_one": "正在等待前面的 {{count}} 个节点",
+      "waiting_other": "正在等待前面的 {{count}} 个节点",
+      "noRoom_one": "{{count}} 个文件在此模型中没有可用的位置",
+      "noRoom_other": "{{count}} 个文件在此模型中没有可用的位置",
+      "empty": "添加文本、图片和生成并把它们连起来：文本连到提示词，文件连到模型的输入位。可把媒体库中的文件拖到画布上。",
+      "input": {
+        "prompt": "提示词",
+        "media": "文件"
+      },
+      "workflow": {
+        "templates": "模板",
+        "save": "保存 工作流",
+        "open": "打开 工作流",
+        "failed": "工作流 未能打开：{{reason}}",
+        "template": {
+          "frameToVideo": {
+            "name": "画面转视频",
+            "about": "用提示词生成一张图片，再用这张图片和它自己的运动提示词开始生成视频。",
+            "prompts": {
+              "idea": "黄昏时悬崖上的灯塔，脚下海浪拍岸，窗里透出温暖的灯光",
+              "motion": "镜头缓缓推进，灯塔的光束扫过海面"
+            }
+          },
+          "compareImages": {
+            "name": "对比图片模型",
+            "about": "同一条提示词并排送入三个图片模型；面板的模型和用于对比的模型已设置好。",
+            "prompts": {
+              "idea": "一位身穿黄色雨衣的老渔夫的肖像，阴天的柔和光线，85 毫米"
+            }
+          },
+          "promptWriter": {
+            "name": "提示词撰写",
+            "about": "语言模型根据一个想法写出提示词，图片模型把它画出来。",
+            "prompts": {
+              "idea": "为图片模型写一条生动的提示词：雨夜东京一家温馨的拉面店。只回复提示词。"
+            }
+          },
+          "productShot": {
+            "name": "产品镜头",
+            "about": "产品照片：去除背景，由编辑模型放进新场景，再放大。",
+            "prompts": {
+              "scene": "把产品放在晨光下的大理石桌面上，柔和的阴影，浅景深"
+            }
+          },
+          "talkingHead": {
+            "name": "口播头像",
+            "about": "由声音朗读的文字，再让媒体库中的一张脸把它说出来。",
+            "prompts": {
+              "words": "大家好！今天我来教你三个更快剪辑视频的小技巧。"
+            }
+          },
+          "soundtrack": {
+            "name": "音乐与音效",
+            "about": "用两条提示词生成一段音乐和一个音效。",
+            "prompts": {
+              "mood": "平静的氛围钢琴搭配柔和的弦乐，节奏缓慢，充满希望",
+              "effect": "卵石海滩上的海浪，远处传来海鸥的叫声"
+            }
+          }
+        }
+      }
+    },
+    "motion": {
+      "tabLabel": "HTML 图形",
+      "hint": "用 HTML 和 CSS 编写的标题、字幕条、计数器和徽章：动画自动播放，片段在下方视频之上保持透明。",
+      "templates": {
+        "title": "标题",
+        "lowerThird": "字幕条",
+        "counter": "计数器",
+        "badge": "徽章"
+      },
+      "preview": "预览",
+      "code": "HTML 和 CSS",
+      "seconds": "秒",
+      "make": "在播放头位置制作片段",
+      "rendering": "正在绘制帧… {{percent}}%",
+      "done": "“{{name}}”已在媒体库和播放头位置",
+      "failed": "片段未能制作：{{reason}}",
+      "made": "已制作",
+      "edit": "打开其代码",
+      "defaultName": "HTML 图形"
+    },
+    "previs": {
+      "tabLabel": "3D 走位预演",
+      "hint": "付费之前先用 3D 为镜头做 走位预演：描述场景地点、谁往哪里移动以及镜头如何运动；提示词模型会搭建占位形状和镜头路径（约两美分）。可以透过镜头、从上方或绕着场景查看，然后把它的画面交给视频或图片模型，或录制镜头的运动。",
+      "description": "镜头",
+      "placeholder": "一个女人沿着狭窄的走廊走向一扇门；镜头从身后跟随她，她停下时绕到她的正面。6 秒，35 毫米，结尾为 50 毫米。",
+      "build": "生成 走位预演",
+      "change": "按文字修改当前 走位预演",
+      "building": "正在生成 走位预演…",
+      "example": "从示例开始",
+      "failed": "未完成：{{reason}}",
+      "views": "视角",
+      "view": {
+        "camera": "镜头",
+        "top": "俯视",
+        "orbit": "环绕"
+      },
+      "play": "播放",
+      "pause": "暂停",
+      "time": "镜头的时刻",
+      "toVideo": "画面 → 视频的首帧",
+      "toPicture": "画面 → 图片的参考",
+      "video": "录制镜头运动",
+      "recording": "正在录制… {{percent}}%",
+      "videoDone": "“{{name}}”已在媒体库中。",
+      "frameName": "{{title}}，走位预演 画面",
+      "videoName": "{{title}}，走位预演",
+      "json": "JSON 场景",
+      "apply": "应用",
+      "badJson": "文本不是 JSON：{{reason}}"
     }
   }
 }

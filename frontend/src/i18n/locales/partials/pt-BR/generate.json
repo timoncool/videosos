@@ -307,6 +307,128 @@
       "allClips_one": "Clipe para {{count}} plano na linha do tempo",
       "allClips_other": "Clipes para {{count}} planos na linha do tempo",
       "allClipsHint": "Os clipes ficam um após o outro a partir do cabeçote de reprodução"
+    },
+    "canvas": {
+      "prompt": "Texto",
+      "media": "Imagem ou vídeo",
+      "generate": "Geração",
+      "promptHint": "O que criar; vai para o prompt das gerações às quais está conectado.",
+      "mediaHint": "Solte aqui um arquivo da biblioteca de mídia ou um resultado.",
+      "remove": "Remover o nó",
+      "task": "Tarefa",
+      "run": "Executar",
+      "runAgain": "Executar de novo",
+      "waiting_one": "Aguardando {{count}} nó anterior",
+      "waiting_other": "Aguardando {{count}} nós anteriores",
+      "noRoom_one": "{{count}} arquivo não tem espaço neste modelo",
+      "noRoom_other": "{{count}} arquivos não têm espaço neste modelo",
+      "empty": "Adicione um texto, uma imagem e uma geração e conecte-os: o texto ao prompt, os arquivos aos slots do modelo. Arraste arquivos da biblioteca de mídia para a tela.",
+      "input": {
+        "prompt": "prompt",
+        "media": "arquivos"
+      },
+      "workflow": {
+        "templates": "Modelos",
+        "save": "Salvar workflow",
+        "open": "Abrir workflow",
+        "failed": "Não foi possível abrir o workflow: {{reason}}",
+        "template": {
+          "frameToVideo": {
+            "name": "Quadro para vídeo",
+            "about": "Um prompt cria uma imagem, e a imagem inicia um vídeo com seu próprio prompt de movimento.",
+            "prompts": {
+              "idea": "Um farol num penhasco ao entardecer, ondas quebrando lá embaixo, luz quente na janela",
+              "motion": "Aproximação lenta, o feixe do farol varre o mar"
+            }
+          },
+          "compareImages": {
+            "name": "Comparar modelos de imagem",
+            "about": "Um prompt em três modelos de imagem lado a lado; o modelo do painel e os de comparação já estão definidos.",
+            "prompts": {
+              "idea": "Retrato de um velho pescador com capa de chuva amarela, luz suave de dia nublado, 85 mm"
+            }
+          },
+          "promptWriter": {
+            "name": "Redator de prompts",
+            "about": "Um modelo de linguagem escreve o prompt a partir de uma ideia, e um modelo de imagem o desenha.",
+            "prompts": {
+              "idea": "Escreva um prompt vívido para um modelo de imagem: um aconchegante restaurante de ramen numa noite chuvosa em Tóquio. Responda apenas com o prompt."
+            }
+          },
+          "productShot": {
+            "name": "Foto de produto",
+            "about": "Uma foto de produto: fundo removido, colocada em uma nova cena por um modelo de edição e depois ampliada.",
+            "prompts": {
+              "scene": "Coloque o produto sobre uma mesa de mármore sob a luz da manhã, sombras suaves, baixa profundidade de campo"
+            }
+          },
+          "talkingHead": {
+            "name": "Apresentador falando",
+            "about": "Um texto lido por uma voz e um rosto da biblioteca que o fala.",
+            "prompts": {
+              "words": "Olá! Hoje vou mostrar três truques para editar vídeo mais rápido."
+            }
+          },
+          "soundtrack": {
+            "name": "Música e som",
+            "about": "Uma peça musical e um efeito sonoro a partir de dois prompts.",
+            "prompts": {
+              "mood": "Piano ambiente calmo com cordas suaves, andamento lento, esperançoso",
+              "effect": "Ondas numa praia de seixos, gaivotas ao longe"
+            }
+          }
+        }
+      }
+    },
+    "motion": {
+      "tabLabel": "Gráficos HTML",
+      "hint": "Títulos, terços inferiores, contadores e selos escritos em HTML e CSS: a animação roda sozinha, e o clipe mantém a transparência sobre o vídeo abaixo.",
+      "templates": {
+        "title": "Título",
+        "lowerThird": "Terço inferior",
+        "counter": "Contador",
+        "badge": "Selo"
+      },
+      "preview": "Pré-visualização",
+      "code": "HTML e CSS",
+      "seconds": "Segundos",
+      "make": "Criar um clipe na posição do cursor",
+      "rendering": "Desenhando os quadros… {{percent}}%",
+      "done": "\"{{name}}\" está na biblioteca e na posição do cursor",
+      "failed": "O clipe não foi criado: {{reason}}",
+      "made": "Criado",
+      "edit": "Abrir o código",
+      "defaultName": "Gráficos HTML"
+    },
+    "previs": {
+      "tabLabel": "Blocking 3D",
+      "hint": "Faça o blocking do plano em 3D antes de pagar por ele: descreva o lugar, quem se move para onde e como a câmera anda; o modelo de prompts monta formas provisórias e um trajeto de câmera (cerca de dois centavos). Olhe pela câmera, de cima ou ao redor e depois passe o quadro dela para um modelo de vídeo ou de imagem, ou grave o movimento da câmera.",
+      "description": "O plano",
+      "placeholder": "Uma mulher anda por um corredor estreito em direção a uma porta; a câmera a segue por trás e depois dá a volta para ficar de frente para ela quando ela para. 6 segundos, 35 mm, terminando em 50 mm.",
+      "build": "Criar o blocking",
+      "change": "Alterar o atual conforme o texto",
+      "building": "Criando o blocking…",
+      "example": "Começar por um exemplo",
+      "failed": "Não foi possível: {{reason}}",
+      "views": "Vista",
+      "view": {
+        "camera": "Câmera",
+        "top": "De cima",
+        "orbit": "Ao redor"
+      },
+      "play": "Reproduzir",
+      "pause": "Pausar",
+      "time": "Momento do plano",
+      "toVideo": "Quadro → primeiro quadro de um vídeo",
+      "toPicture": "Quadro → referência de uma imagem",
+      "video": "Gravar o movimento da câmera",
+      "recording": "Gravando… {{percent}}%",
+      "videoDone": "\"{{name}}\" está na biblioteca de mídia.",
+      "frameName": "{{title}}, quadro de blocking",
+      "videoName": "{{title}}, blocking",
+      "json": "Cena como JSON",
+      "apply": "Aplicar",
+      "badJson": "O texto não é JSON: {{reason}}"
     }
   }
 }

@@ -17,7 +17,9 @@
       "project_open": "bir proje açar",
       "export_video": "videoyu dışa aktarır",
       "checkpoint_create": "bir geri yükleme noktası saklar",
-      "checkpoint_restore": "bir geri yükleme noktasına döner"
+      "checkpoint_restore": "bir geri yükleme noktasına döner",
+      "motion_render": "HTML grafiklerini klibe dönüştürür",
+      "previs_render": "bir çekimi 3D olarak blocking yapar"
     },
     "proposal": {
       "title": "Ajan bir düzenleme öneriyor",

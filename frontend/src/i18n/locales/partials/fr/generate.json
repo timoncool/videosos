@@ -307,6 +307,128 @@
       "allClips_one": "Clip pour {{count}} plan sur la timeline",
       "allClips_other": "Clips pour {{count}} plans sur la timeline",
       "allClipsHint": "Les clips se posent les uns après les autres à partir de la tête de lecture"
+    },
+    "canvas": {
+      "prompt": "Texte",
+      "media": "Image ou vidéo",
+      "generate": "Génération",
+      "promptHint": "Ce qu’il faut créer ; cela entre dans le prompt des générations auxquelles il est relié.",
+      "mediaHint": "Déposez ici un fichier de la médiathèque ou un résultat.",
+      "remove": "Supprimer le nœud",
+      "task": "Tâche",
+      "run": "Lancer",
+      "runAgain": "Relancer",
+      "waiting_one": "En attente de {{count}} nœud avant celui-ci",
+      "waiting_other": "En attente de {{count}} nœuds avant celui-ci",
+      "noRoom_one": "{{count}} fichier n’a pas d’emplacement dans ce modèle",
+      "noRoom_other": "{{count}} fichiers n’ont pas d’emplacement dans ce modèle",
+      "empty": "Ajoutez un texte, une image et une génération, puis reliez-les : le texte au prompt, les fichiers aux emplacements du modèle. Faites glisser des fichiers de la médiathèque sur le canevas.",
+      "input": {
+        "prompt": "prompt",
+        "media": "fichiers"
+      },
+      "workflow": {
+        "templates": "Modèles",
+        "save": "Enregistrer le workflow",
+        "open": "Ouvrir un workflow",
+        "failed": "Le workflow ne s’est pas ouvert : {{reason}}",
+        "template": {
+          "frameToVideo": {
+            "name": "Image vers vidéo",
+            "about": "Un prompt crée une image, et l’image lance une vidéo avec son propre prompt de mouvement.",
+            "prompts": {
+              "idea": "Un phare sur une falaise au crépuscule, des vagues qui se brisent en contrebas, une lumière chaude à la fenêtre",
+              "motion": "Lent travelling avant, le faisceau du phare balaie la mer"
+            }
+          },
+          "compareImages": {
+            "name": "Comparer des modèles d’image",
+            "about": "Un prompt dans trois modèles d’image côte à côte ; le modèle du panneau et ceux à comparer sont déjà réglés.",
+            "prompts": {
+              "idea": "Portrait d’un vieux pêcheur en ciré jaune, lumière douce de ciel couvert, 85 mm"
+            }
+          },
+          "promptWriter": {
+            "name": "Rédacteur de prompts",
+            "about": "Un modèle de langage rédige le prompt à partir d’une idée, un modèle d’image le dessine.",
+            "prompts": {
+              "idea": "Écris un prompt vivant pour un modèle d’image : un chaleureux restaurant de ramen par une nuit pluvieuse à Tokyo. Réponds uniquement par le prompt."
+            }
+          },
+          "productShot": {
+            "name": "Photo produit",
+            "about": "Une photo de produit : fond supprimé, placé dans une nouvelle scène par un modèle d’édition, puis agrandi.",
+            "prompts": {
+              "scene": "Place le produit sur une table en marbre dans la lumière du matin, ombres douces, faible profondeur de champ"
+            }
+          },
+          "talkingHead": {
+            "name": "Présentateur face caméra",
+            "about": "Un texte lu par une voix et un visage de la médiathèque qui le prononce.",
+            "prompts": {
+              "words": "Bonjour ! Aujourd’hui, je vais vous montrer trois astuces pour monter une vidéo plus vite."
+            }
+          },
+          "soundtrack": {
+            "name": "Musique et son",
+            "about": "Un morceau de musique et un effet sonore à partir de deux prompts.",
+            "prompts": {
+              "mood": "Piano ambient calme avec des cordes douces, tempo lent, plein d’espoir",
+              "effect": "Des vagues sur une plage de galets, des mouettes au loin"
+            }
+          }
+        }
+      }
+    },
+    "motion": {
+      "tabLabel": "Graphiques HTML",
+      "hint": "Titres, bandeaux, compteurs et badges écrits en HTML et CSS : l’animation se lance toute seule et le clip garde sa transparence au-dessus de la vidéo en dessous.",
+      "templates": {
+        "title": "Titre",
+        "lowerThird": "Bandeau",
+        "counter": "Compteur",
+        "badge": "Badge"
+      },
+      "preview": "Aperçu",
+      "code": "HTML et CSS",
+      "seconds": "Secondes",
+      "make": "Créer un clip sur la tête de lecture",
+      "rendering": "Dessin des images… {{percent}} %",
+      "done": "« {{name}} » est dans la médiathèque et sur la tête de lecture",
+      "failed": "Le clip n’a pas été créé : {{reason}}",
+      "made": "Créé",
+      "edit": "Ouvrir son code",
+      "defaultName": "Graphiques HTML"
+    },
+    "previs": {
+      "tabLabel": "Blocking 3D",
+      "hint": "Préparez le plan en 3D avant de le payer : décrivez le lieu, qui se déplace où et comment la caméra bouge ; le modèle de prompts construit des formes provisoires et une trajectoire de caméra (environ deux centimes). Regardez à travers la caméra, du dessus ou autour, puis donnez son image à un modèle vidéo ou image, ou enregistrez le mouvement de la caméra.",
+      "description": "Le plan",
+      "placeholder": "Une femme marche dans un couloir étroit vers une porte ; la caméra la suit par derrière, puis passe devant elle quand elle s’arrête. 6 secondes, 35 mm, finissant à 50 mm.",
+      "build": "Créer le blocking",
+      "change": "Modifier le blocking actuel selon le texte",
+      "building": "Création du blocking…",
+      "example": "Partir d’un exemple",
+      "failed": "Échec : {{reason}}",
+      "views": "Vue",
+      "view": {
+        "camera": "Caméra",
+        "top": "Dessus",
+        "orbit": "Autour"
+      },
+      "play": "Lire",
+      "pause": "Pause",
+      "time": "Instant du plan",
+      "toVideo": "Image → première image d’une vidéo",
+      "toPicture": "Image → référence d’une image",
+      "video": "Enregistrer le mouvement de la caméra",
+      "recording": "Enregistrement… {{percent}} %",
+      "videoDone": "« {{name}} » est dans la médiathèque.",
+      "frameName": "{{title}}, image de blocking",
+      "videoName": "{{title}}, blocking",
+      "json": "Scène en JSON",
+      "apply": "Appliquer",
+      "badJson": "Le texte n’est pas du JSON : {{reason}}"
     }
   }
 }

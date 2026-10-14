@@ -307,6 +307,128 @@
       "allClips_one": "Clip para {{count}} plano en la línea de tiempo",
       "allClips_other": "Clips para {{count}} planos en la línea de tiempo",
       "allClipsHint": "Los clips se colocan uno tras otro desde el cabezal de reproducción"
+    },
+    "canvas": {
+      "prompt": "Texto",
+      "media": "Imagen o vídeo",
+      "generate": "Generación",
+      "promptHint": "Qué crear; pasa al prompt de las generaciones a las que está conectado.",
+      "mediaHint": "Suelta aquí un archivo de la biblioteca multimedia o un resultado.",
+      "remove": "Quitar el nodo",
+      "task": "Tarea",
+      "run": "Ejecutar",
+      "runAgain": "Ejecutar de nuevo",
+      "waiting_one": "Esperando {{count}} nodo anterior",
+      "waiting_other": "Esperando {{count}} nodos anteriores",
+      "noRoom_one": "{{count}} archivo no tiene hueco en este modelo",
+      "noRoom_other": "{{count}} archivos no tienen hueco en este modelo",
+      "empty": "Añade un texto, una imagen y una generación, y conéctalos: el texto al prompt, los archivos a las entradas del modelo. Arrastra archivos de la biblioteca multimedia al lienzo.",
+      "input": {
+        "prompt": "prompt",
+        "media": "archivos"
+      },
+      "workflow": {
+        "templates": "Plantillas",
+        "save": "Guardar workflow",
+        "open": "Abrir workflow",
+        "failed": "No se pudo abrir el workflow: {{reason}}",
+        "template": {
+          "frameToVideo": {
+            "name": "De fotograma a vídeo",
+            "about": "Un prompt crea una imagen y la imagen inicia un vídeo con su propio prompt de movimiento.",
+            "prompts": {
+              "idea": "Un faro en un acantilado al anochecer, las olas rompen abajo, luz cálida en la ventana",
+              "motion": "Avance lento, el haz del faro barre el mar"
+            }
+          },
+          "compareImages": {
+            "name": "Comparar modelos de imagen",
+            "about": "Un prompt en tres modelos de imagen lado a lado; el modelo del panel y los de comparación ya están configurados.",
+            "prompts": {
+              "idea": "Retrato de un viejo pescador con un impermeable amarillo, luz suave de día nublado, 85 mm"
+            }
+          },
+          "promptWriter": {
+            "name": "Redactor de prompts",
+            "about": "Un modelo de lenguaje escribe el prompt a partir de una idea y un modelo de imagen lo dibuja.",
+            "prompts": {
+              "idea": "Escribe un prompt vívido para un modelo de imagen: una acogedora tienda de ramen en una noche lluviosa en Tokio. Responde solo con el prompt."
+            }
+          },
+          "productShot": {
+            "name": "Foto de producto",
+            "about": "Una foto de producto: se quita el fondo, un modelo de edición la sitúa en una escena nueva y después se escala.",
+            "prompts": {
+              "scene": "Coloca el producto sobre una mesa de mármol con luz de la mañana, sombras suaves, poca profundidad de campo"
+            }
+          },
+          "talkingHead": {
+            "name": "Presentador hablando",
+            "about": "Un texto leído por una voz y un rostro de la biblioteca multimedia que lo dice.",
+            "prompts": {
+              "words": "¡Hola! Hoy te voy a enseñar tres trucos para editar vídeo más rápido."
+            }
+          },
+          "soundtrack": {
+            "name": "Música y sonido",
+            "about": "Una pieza de música y un efecto de sonido a partir de dos prompts.",
+            "prompts": {
+              "mood": "Piano ambient tranquilo con cuerdas suaves, tempo lento, esperanzador",
+              "effect": "Olas en una playa de guijarros, gaviotas a lo lejos"
+            }
+          }
+        }
+      }
+    },
+    "motion": {
+      "tabLabel": "Gráficos HTML",
+      "hint": "Títulos, tercios inferiores, contadores e insignias escritos en HTML y CSS: la animación funciona sola y el clip conserva su transparencia sobre el vídeo de debajo.",
+      "templates": {
+        "title": "Título",
+        "lowerThird": "Tercio inferior",
+        "counter": "Contador",
+        "badge": "Insignia"
+      },
+      "preview": "Vista previa",
+      "code": "HTML y CSS",
+      "seconds": "Segundos",
+      "make": "Crear un clip en el cabezal",
+      "rendering": "Dibujando los fotogramas… {{percent}} %",
+      "done": "«{{name}}» está en la biblioteca y en el cabezal",
+      "failed": "No se creó el clip: {{reason}}",
+      "made": "Creado",
+      "edit": "Abrir su código",
+      "defaultName": "Gráficos HTML"
+    },
+    "previs": {
+      "tabLabel": "Blocking 3D",
+      "hint": "Planifica el plano en 3D antes de pagar por él: describe el lugar, quién se mueve y hacia dónde, y cómo va la cámara; el modelo de prompts construye formas provisionales y una trayectoria de cámara (unos dos céntimos). Mira a través de la cámara, desde arriba o alrededor, y luego pasa su fotograma a un modelo de vídeo o de imagen, o graba el movimiento de la cámara.",
+      "description": "El plano",
+      "placeholder": "Una mujer camina por un pasillo estrecho hacia una puerta; la cámara la sigue por detrás y luego da la vuelta hasta quedar frente a ella cuando se detiene. 6 segundos, 35 mm, terminando en 50 mm.",
+      "build": "Crear el blocking",
+      "change": "Cambiar el actual según las palabras",
+      "building": "Creando el blocking…",
+      "example": "Empezar desde un ejemplo",
+      "failed": "No se pudo: {{reason}}",
+      "views": "Vista",
+      "view": {
+        "camera": "Cámara",
+        "top": "Cenital",
+        "orbit": "Órbita"
+      },
+      "play": "Reproducir",
+      "pause": "Pausa",
+      "time": "Momento del plano",
+      "toVideo": "Fotograma → primer fotograma de un vídeo",
+      "toPicture": "Fotograma → referencia de una imagen",
+      "video": "Grabar el movimiento de la cámara",
+      "recording": "Grabando… {{percent}} %",
+      "videoDone": "«{{name}}» está en la biblioteca multimedia.",
+      "frameName": "{{title}}, fotograma de blocking",
+      "videoName": "{{title}}, blocking",
+      "json": "Escena como JSON",
+      "apply": "Aplicar",
+      "badJson": "El texto no es JSON: {{reason}}"
     }
   }
 }

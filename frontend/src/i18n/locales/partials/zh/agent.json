@@ -17,7 +17,9 @@
       "project_open": "打开项目",
       "export_video": "导出视频",
       "checkpoint_create": "保存还原点",
-      "checkpoint_restore": "回到还原点"
+      "checkpoint_restore": "回到还原点",
+      "motion_render": "把 HTML 图形做成片段",
+      "previs_render": "用 3D 为镜头做 走位预演"
     },
     "proposal": {
       "title": "智能体提出了一项编辑",

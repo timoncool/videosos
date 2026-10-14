@@ -17,7 +17,9 @@
       "project_open": "abre um projeto",
       "export_video": "exporta o vídeo",
       "checkpoint_create": "salva um ponto de restauração",
-      "checkpoint_restore": "volta a um ponto de restauração"
+      "checkpoint_restore": "volta a um ponto de restauração",
+      "motion_render": "transforma gráficos HTML em um clipe",
+      "previs_render": "faz o blocking de um plano em 3D"
     },
     "proposal": {
       "title": "O agente propõe uma edição",

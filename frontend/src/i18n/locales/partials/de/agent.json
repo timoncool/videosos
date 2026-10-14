@@ -17,7 +17,9 @@
       "project_open": "öffnet ein Projekt",
       "export_video": "exportiert das Video",
       "checkpoint_create": "speichert einen Wiederherstellungspunkt",
-      "checkpoint_restore": "kehrt zu einem Wiederherstellungspunkt zurück"
+      "checkpoint_restore": "kehrt zu einem Wiederherstellungspunkt zurück",
+      "motion_render": "macht aus HTML-Grafiken einen Clip",
+      "previs_render": "legt eine Einstellung in 3D an"
     },
     "proposal": {
       "title": "Der Agent schlägt eine Änderung vor",

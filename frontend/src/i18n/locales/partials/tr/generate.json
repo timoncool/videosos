@@ -307,6 +307,128 @@
       "allClips_one": "{{count}} çekim için klip zaman çizelgesine",
       "allClips_other": "{{count}} çekim için klipler zaman çizelgesine",
       "allClipsHint": "Klipler oynatma başlığından itibaren peş peşe yerleşir"
+    },
+    "canvas": {
+      "prompt": "Metin",
+      "media": "Görsel veya video",
+      "generate": "Üretim",
+      "promptHint": "Ne yapılacağı; bağlı olduğu üretimlerin prompt'una girer.",
+      "mediaHint": "Medya kitaplığından bir dosyayı veya bir sonucu buraya bırak.",
+      "remove": "Düğümü kaldır",
+      "task": "Görev",
+      "run": "Çalıştır",
+      "runAgain": "Tekrar çalıştır",
+      "waiting_one": "Öncesindeki {{count}} düğüm bekleniyor",
+      "waiting_other": "Öncesindeki {{count}} düğüm bekleniyor",
+      "noRoom_one": "{{count}} dosyanın bu modelde yeri yok",
+      "noRoom_other": "{{count}} dosyanın bu modelde yeri yok",
+      "empty": "Bir metin, bir görsel ve bir üretim ekle ve birbirine bağla: metin prompt'a, dosyalar modelin yuvalarına. Dosyaları medya kitaplığından tuvale sürükle.",
+      "input": {
+        "prompt": "prompt",
+        "media": "dosyalar"
+      },
+      "workflow": {
+        "templates": "Şablonlar",
+        "save": "Workflow'u kaydet",
+        "open": "Workflow aç",
+        "failed": "Workflow açılamadı: {{reason}}",
+        "template": {
+          "frameToVideo": {
+            "name": "Kareden videoya",
+            "about": "Bir prompt görsel oluşturur, görsel kendi hareket prompt'uyla bir videoyu başlatır.",
+            "prompts": {
+              "idea": "Alacakaranlıkta bir uçurumun üstünde deniz feneri, aşağıda kırılan dalgalar, penceredeki sıcak ışık",
+              "motion": "Yavaş yaklaşma, deniz fenerinin ışık demeti denizi tarıyor"
+            }
+          },
+          "compareImages": {
+            "name": "Görsel modellerini karşılaştır",
+            "about": "Tek bir prompt, yan yana üç görsel modeline; panelin modeli ve karşılaştırılacak modeller ayarlı.",
+            "prompts": {
+              "idea": "Sarı yağmurluklu yaşlı bir balıkçının portresi, bulutlu havanın yumuşak ışığı, 85 mm"
+            }
+          },
+          "promptWriter": {
+            "name": "Prompt yazarı",
+            "about": "Bir dil modeli fikirden prompt yazar, bir görsel modeli onu çizer.",
+            "prompts": {
+              "idea": "Bir görsel modeli için canlı bir prompt yaz: yağmurlu bir gecede Tokyo'da sıcak bir ramen dükkânı. Yalnızca prompt ile yanıt ver."
+            }
+          },
+          "productShot": {
+            "name": "Ürün çekimi",
+            "about": "Bir ürün fotoğrafı: arka plan kaldırılır, bir düzenleme modeli yeni bir sahneye yerleştirir, sonra büyütülür.",
+            "prompts": {
+              "scene": "Ürünü sabah güneşinde mermer bir masaya yerleştir, yumuşak gölgeler, sığ alan derinliği"
+            }
+          },
+          "talkingHead": {
+            "name": "Konuşan kafa",
+            "about": "Bir sesin okuduğu metin ve kitaplıktaki bir yüzün onu söylemesi.",
+            "prompts": {
+              "words": "Merhaba! Bugün sana videoyu daha hızlı kurgulamanın üç püf noktasını göstereceğim."
+            }
+          },
+          "soundtrack": {
+            "name": "Müzik ve ses",
+            "about": "İki prompt'tan bir müzik parçası ve bir ses efekti.",
+            "prompts": {
+              "mood": "Yumuşak yaylılarla sakin ambient piyano, yavaş tempo, umut dolu",
+              "effect": "Çakıllı bir plajda dalgalar, uzaklarda martılar"
+            }
+          }
+        }
+      }
+    },
+    "motion": {
+      "tabLabel": "HTML grafikleri",
+      "hint": "HTML ve CSS ile yazılmış başlıklar, alt bantlar, sayaçlar ve rozetler: animasyon kendiliğinden çalışır, klip alttaki videonun üzerinde şeffaflığını korur.",
+      "templates": {
+        "title": "Başlık",
+        "lowerThird": "Alt bant",
+        "counter": "Sayaç",
+        "badge": "Rozet"
+      },
+      "preview": "Önizleme",
+      "code": "HTML ve CSS",
+      "seconds": "Saniye",
+      "make": "Oynatma başlığında klip oluştur",
+      "rendering": "Kareler çiziliyor… %{{percent}}",
+      "done": "\"{{name}}\" kitaplıkta ve oynatma başlığında",
+      "failed": "Klip oluşturulamadı: {{reason}}",
+      "made": "Oluşturuldu",
+      "edit": "Kodunu aç",
+      "defaultName": "HTML grafikleri"
+    },
+    "previs": {
+      "tabLabel": "3D blocking",
+      "hint": "Çekimi parasını ödemeden önce 3D olarak blocking yap: yeri, kimin nereye hareket ettiğini ve kameranın nasıl gittiğini anlat; prompt modeli yer tutucu şekiller ve bir kamera yolu oluşturur (yaklaşık iki sent). Kameradan, yukarıdan veya etrafından bak, sonra karesini bir video veya görsel modeline ver ya da kameranın hareketini kaydet.",
+      "description": "Çekim",
+      "placeholder": "Bir kadın dar bir koridorda bir kapıya doğru yürüyor; kamera arkasından onu takip ediyor, o durunca dönüp karşısına geçiyor. 6 saniye, 35 mm, sonda 50 mm.",
+      "build": "Blocking oluştur",
+      "change": "Mevcut olanı yazıya göre değiştir",
+      "building": "Blocking oluşturuluyor…",
+      "example": "Bir örnekle başla",
+      "failed": "Olmadı: {{reason}}",
+      "views": "Görünüm",
+      "view": {
+        "camera": "Kamera",
+        "top": "Yukarıdan",
+        "orbit": "Etrafında"
+      },
+      "play": "Oynat",
+      "pause": "Duraklat",
+      "time": "Çekimin anı",
+      "toVideo": "Kare → videonun ilk karesi",
+      "toPicture": "Kare → görselin referansı",
+      "video": "Kameranın hareketini kaydet",
+      "recording": "Kaydediliyor… %{{percent}}",
+      "videoDone": "\"{{name}}\" medya kitaplığında.",
+      "frameName": "{{title}}, blocking karesi",
+      "videoName": "{{title}}, blocking",
+      "json": "JSON olarak sahne",
+      "apply": "Uygula",
+      "badJson": "Metin JSON değil: {{reason}}"
     }
   }
 }
