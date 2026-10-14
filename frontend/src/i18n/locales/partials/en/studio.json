@@ -197,5 +197,22 @@
         "text": "You pay providers directly; nothing goes through us"
       }
     }
+  },
+  "share": {
+    "title": "Share",
+    "text": "\"{{title}}\" - made in VideoSOS",
+    "file": "Send the file…",
+    "fileUnavailable": "Sending files is not available here",
+    "fileRefused": "The system does not take this file for sending - save it and send it yourself",
+    "failed": "Could not share: {{reason}}",
+    "copyText": "Copy the text with the link",
+    "copied": "Text with the link copied",
+    "places": {
+      "telegram": "Telegram",
+      "x": "X (Twitter)",
+      "vk": "VK",
+      "whatsapp": "WhatsApp",
+      "reddit": "Reddit"
+    }
   }
 }

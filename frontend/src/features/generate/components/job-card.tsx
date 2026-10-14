@@ -13,9 +13,9 @@ import { placeMediaAtPlayhead, placeTextAtPlayhead } from '../services/timeline-
 import { OUTPUT_DRAG_TYPE } from './field-control'
 import { ProviderBadge } from './model-picker'
 import { ImageLightbox } from './image-lightbox'
-import { exactMoment, openSettings, relativeMoment } from '../deps/studio'
+import { exactMoment, openSettings, relativeMoment, ShareMenu } from '../deps/studio'
 import { fieldLabel } from '../services/field-label'
-import { promptOf } from '../services/result-title'
+import { promptOf, resultFileName } from '../services/result-title'
 
 /** A result picture: dragged into a slot or the timeline, opened at full size by a click. */
 function ImagePreview({ url, name, onDragStart }: { url: string; name: string; onDragStart: (event: React.DragEvent) => void }) {
@@ -226,6 +226,17 @@ function JobProblem({ job }: { job: Job }) {
   )
 }
 
+/** A job's first picture, video or sound as a file named by its title, for sharing. */
+async function resultFile(job: Job): Promise<File> {
+  const media = job.outputs.filter((output) => output.kind !== 'text')
+  const output = media[0]
+  if (!output) throw new Error(job.title)
+  const response = await fetch(generateApi.fileUrl(job.id, output.index), { cache: 'no-store' })
+  if (!response.ok) throw new Error(`${response.status} ${response.statusText}`)
+  const extension = output.file.split('.').pop() ?? 'bin'
+  return new File([await response.blob()], resultFileName(job, 0, 1, extension), { type: output.mime })
+}
+
 export function JobCard({ job, onReuse, selected, onSelect }: JobCardProps) {
   const { t, i18n } = useTranslation()
   const running = job.status === 'queued' || job.status === 'sending' || job.status === 'running'
@@ -316,6 +327,9 @@ export function JobCard({ job, onReuse, selected, onSelect }: JobCardProps) {
           </>
         )}
         {job.status === 'done' && job.outputs[0] && <UseAs job={job} output={job.outputs[0]} />}
+        {job.status === 'done' && job.outputs.some((output) => output.kind !== 'text') && (
+          <ShareMenu compact title={job.title} file={() => resultFile(job)} />
+        )}
         {!running && (
           <>
             <Button size="sm" variant="ghost" className="h-6 px-1.5 text-[11px]" title={t('generate.actions.reuseHint')} onClick={() => onReuse(job)}>

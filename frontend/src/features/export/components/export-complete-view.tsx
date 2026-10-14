@@ -4,6 +4,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
+import { ShareMenu } from '../deps/studio'
 import { CheckCircle2, Clock, Download, HardDrive } from 'lucide-react'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
@@ -20,6 +21,8 @@ export interface ExportCompleteViewProps {
   elapsedSeconds: number
   onClose: () => void
   onDownload: () => void
+  /** The finished render as a file, for sharing; null when there is none. */
+  resultFile: () => File | null
 }
 
 export function ExportCompleteView({
@@ -30,16 +33,18 @@ export function ExportCompleteView({
   elapsedSeconds,
   onClose,
   onDownload,
+  resultFile,
 }: ExportCompleteViewProps) {
   const { t, i18n } = useTranslation()
+  const shared = resultFile()
 
   return (
     <div className="space-y-4 py-4">
       {previewUrl && <ExportPreviewPlayer src={previewUrl} isVideo={isVideoResult} />}
 
-      <Alert className="border-green-900 bg-green-950">
-        <CheckCircle2 className="h-4 w-4 text-green-500" />
-        <AlertDescription className="text-green-400">
+      <Alert className="border-[var(--color-accent)]/40 bg-[var(--color-accent)]/10">
+        <CheckCircle2 className="h-4 w-4 text-[var(--color-accent)]" />
+        <AlertDescription className="text-[var(--color-accent)]">
           {mode === 'audio' ? t('export.complete.audioSuccess') : t('export.complete.videoSuccess')}
         </AlertDescription>
       </Alert>
@@ -65,6 +70,7 @@ export function ExportCompleteView({
         <Button variant="outline" onClick={onClose}>
           {t('common.close')}
         </Button>
+        {shared && <ShareMenu title={shared.name} className="h-9 px-3 text-sm" file={async () => shared} />}
         <Button onClick={onDownload}>
           <Download className="mr-2 h-4 w-4" />
           {t('export.complete.download')}

@@ -85,6 +85,8 @@ interface UseClientRenderReturn {
   startExport: (settings: ExportSettings | ExtendedExportSettings) => Promise<void>
   cancelExport: () => void
   downloadVideo: () => void
+  /** The finished render as a file named after the project, for sharing. */
+  resultFile: () => File | null
   resetState: () => void
 
   // Utilities
@@ -380,6 +382,13 @@ export function useClientRender(): UseClientRenderReturn {
   /**
    * Download the rendered video/audio
    */
+  const resultFile = useCallback(() => {
+    if (!result) return null
+    const project = useProjectStore.getState().currentProject?.name ?? 'videosos'
+    const baseName = project.replace(/[<>:"/\\|?*]+/g, '_').trim() || 'videosos'
+    return new File([result.blob], `${baseName}.${extensionOf(result.mimeType)}`, { type: result.mimeType })
+  }, [result])
+
   const downloadVideo = useCallback(() => {
     if (!result) return
     void (async () => {
@@ -525,6 +534,7 @@ export function useClientRender(): UseClientRenderReturn {
     startExport,
     cancelExport,
     downloadVideo,
+    resultFile,
     resetState,
     getSupportedCodecs: getSupportedCodecsForResolution,
     estimateFileSize: estimateFileSizeForSettings,
