@@ -159,6 +159,8 @@ export interface Job {
   provider: Provider
   model: string
   model_name: string
+  /** What its results are called: the prompt's first words, or the model. */
+  title: string
   task: Task | ''
   values: Record<string, unknown>
   status: JobStatus

@@ -41,6 +41,8 @@ pub struct Job {
     pub provider: Provider,
     pub model: String,
     pub model_name: String,
+    /// What its results are called: the prompt's first words, or the model.
+    pub title: String,
     pub task: String,
     pub values: Value,
     /// `queued`, `sending`, `running`, `done`, `failed`, `cancelled`.
@@ -92,12 +94,13 @@ const COLUMNS: &str = "id, project_id, provider, model, model_name, task, values
 
 fn row_to_job(row: &rusqlite::Row) -> rusqlite::Result<Job> {
     let parse = |text: Option<String>| text.and_then(|text| serde_json::from_str::<Value>(&text).ok());
-    Ok(Job {
+    let mut job = Job {
         id: row.get(0)?,
         project_id: row.get(1)?,
         provider: Provider::parse(&row.get::<_, String>(2)?).unwrap_or(Provider::Runware),
         model: row.get(3)?,
         model_name: row.get(4)?,
+        title: String::new(),
         task: row.get(5)?,
         values: parse(row.get(6)?).unwrap_or(Value::Null),
         status: row.get(7)?,
@@ -114,7 +117,9 @@ fn row_to_job(row: &rusqlite::Row) -> rusqlite::Result<Job> {
         handle: parse(row.get(18)?),
         place: row.get::<_, i64>(19)? != 0,
         error_code: row.get(20)?,
-    })
+    };
+    job.title = crate::title::result_title(&job.values, &job.model_name);
+    Ok(job)
 }
 
 /// How a job's request names a file: a media item of the workspace, a file of an earlier job, a file
@@ -292,6 +297,7 @@ impl Jobs {
                 provider: form.provider,
                 model: form.id.clone(),
                 model_name: model_name.clone(),
+                title: crate::title::result_title(&Value::Object(request.values.clone()), &model_name),
                 task: request.task.clone().unwrap_or_default(),
                 values: Value::Object(request.values.clone()),
                 status: "queued".into(),
@@ -557,11 +563,12 @@ impl Jobs {
         if let Err(error) = std::fs::create_dir_all(&dir) {
             return self.fail(id, "storage", error.to_string());
         }
-        let provider = self.get(id).map(|job| job.provider);
-        let key = provider.and_then(credentials::key).map(|(key, _)| key);
+        let Some(job) = self.get(id) else { return };
+        let key = credentials::key(job.provider).map(|(key, _)| key);
+        let tags = crate::tagging::ResultTags { title: &job.title, prompt: crate::title::prompt_of(&job.values), model: &job.model_name };
         let mut files = Vec::new();
         for (index, output) in outputs.into_iter().enumerate() {
-            match self.save(&dir, index, output, key.as_deref()).await {
+            match self.save(&dir, index, output, key.as_deref(), &tags).await {
                 Ok(file) => files.push(file),
                 Err(error) => return self.fail(id, "download_failed", t!("jobs-download-failed", reason = error)),
             }
@@ -588,7 +595,7 @@ impl Jobs {
         }
     }
 
-    async fn save(&self, dir: &Path, index: usize, output: Output, key: Option<&str>) -> Result<OutputFile, String> {
+    async fn save(&self, dir: &Path, index: usize, output: Output, key: Option<&str>, tags: &crate::tagging::ResultTags<'_>) -> Result<OutputFile, String> {
         use base64::Engine;
         let (bytes, mime, text) = match output {
             Output::Text { text } => (text.clone().into_bytes(), "text/plain".to_string(), Some(text)),
@@ -631,9 +638,23 @@ impl Jobs {
             _ => extension,
         };
         let file = format!("{:02}.{extension}", index + 1);
-        tokio::fs::write(dir.join(&file), &bytes).await.map_err(|e| e.to_string())?;
+        let path = dir.join(&file);
+        tokio::fs::write(&path, &bytes).await.map_err(|e| e.to_string())?;
         let kind = mime.split('/').next().filter(|kind| matches!(*kind, "image" | "video" | "audio" | "text")).unwrap_or("file").to_string();
-        Ok(OutputFile { index, kind, file, mime, size: bytes.len() as u64, text })
+        let mut size = bytes.len() as u64;
+        if matches!(kind.as_str(), "image" | "video" | "audio") {
+            let (written, title, prompt, model, media_type) = (path.clone(), tags.title.to_string(), tags.prompt.map(str::to_string), tags.model.to_string(), mime.clone());
+            let tagged = tokio::task::spawn_blocking(move || {
+                crate::tagging::write(&written, &media_type, &crate::tagging::ResultTags { title: &title, prompt: prompt.as_deref(), model: &model })
+            })
+            .await
+            .map_err(|e| e.to_string())?;
+            match tagged {
+                Ok(()) => size = tokio::fs::metadata(&path).await.map(|meta| meta.len()).unwrap_or(size),
+                Err(error) => tracing::warn!("[ERROR] the tags of {} were not written: {error:#}", path.display()),
+            }
+        }
+        Ok(OutputFile { index, kind, file, mime, size, text })
     }
 
     pub async fn cancel(&self, id: &str) -> Option<Job> {

@@ -26,6 +26,8 @@ pub mod service;
 pub mod settings;
 mod spa;
 mod spend;
+mod tagging;
+mod title;
 
 use std::net::TcpListener;
 use std::path::{Path, PathBuf};
