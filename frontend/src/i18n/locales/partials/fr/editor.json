@@ -648,7 +648,19 @@
       "background": "Arrière-plan",
       "on": "Activé",
       "off": "Désactivé",
-      "padding": "Marge intérieure"
+      "padding": "Marge intérieure",
+      "reveal": "Apparition",
+      "revealMode": {
+        "whole": "Entière",
+        "words": "Mot à mot",
+        "karaoke": "Karaoké"
+      },
+      "revealHint": {
+        "whole": "Toute la ligne d'un coup",
+        "words": "Les mots apparaissent quand ils sont prononcés",
+        "karaoke": "Toute la ligne, le mot prononcé surligné"
+      },
+      "highlight": "Surlignage"
     },
     "captionPresets": {
       "netflixHint": "Inter sur un cadre sombre arrondi, bas de l'image — neutre de qualité broadcast.",

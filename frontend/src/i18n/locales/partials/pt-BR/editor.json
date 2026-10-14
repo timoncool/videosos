@@ -648,7 +648,19 @@
       "background": "Fundo",
       "on": "Ligado",
       "off": "Desligado",
-      "padding": "Espaçamento interno"
+      "padding": "Espaçamento interno",
+      "reveal": "Aparição",
+      "revealMode": {
+        "whole": "Inteira",
+        "words": "Por palavra",
+        "karaoke": "Karaokê"
+      },
+      "revealHint": {
+        "whole": "A linha inteira de uma vez",
+        "words": "As palavras aparecem ao serem ditas",
+        "karaoke": "A linha inteira, a palavra dita destacada"
+      },
+      "highlight": "Destaque"
     },
     "captionPresets": {
       "netflixHint": "Inter sobre uma caixa escura arredondada, terço inferior — neutro de qualidade broadcast.",

@@ -648,7 +648,19 @@
       "background": "背景",
       "on": "开",
       "off": "关",
-      "padding": "内边距"
+      "padding": "内边距",
+      "reveal": "出现方式",
+      "revealMode": {
+        "whole": "整行",
+        "words": "逐词",
+        "karaoke": "卡拉OK"
+      },
+      "revealHint": {
+        "whole": "整行一次显示",
+        "words": "说到哪个词就显示哪个词",
+        "karaoke": "整行显示，正在说的词高亮"
+      },
+      "highlight": "高亮颜色"
     },
     "captionPresets": {
       "netflixHint": "圆角深色框上的 Inter，画面下三分之一——广播级中性。",

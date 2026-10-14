@@ -648,7 +648,19 @@
       "background": "Background",
       "on": "On",
       "off": "Off",
-      "padding": "Padding"
+      "padding": "Padding",
+      "reveal": "Reveal",
+      "revealMode": {
+        "whole": "Whole",
+        "words": "By word",
+        "karaoke": "Karaoke"
+      },
+      "revealHint": {
+        "whole": "The whole line at once",
+        "words": "Words appear as they are spoken",
+        "karaoke": "The whole line, the spoken word lit"
+      },
+      "highlight": "Highlight"
     },
     "captionPresets": {
       "netflixHint": "Inter on a rounded dark box, lower-third — broadcast-grade neutral.",

@@ -648,7 +648,19 @@
       "background": "Arka plan",
       "on": "Açık",
       "off": "Kapalı",
-      "padding": "Dolgu"
+      "padding": "Dolgu",
+      "reveal": "Görünüm",
+      "revealMode": {
+        "whole": "Tümü",
+        "words": "Kelime kelime",
+        "karaoke": "Karaoke"
+      },
+      "revealHint": {
+        "whole": "Satırın tamamı bir kerede",
+        "words": "Kelimeler söylendikçe belirir",
+        "karaoke": "Satırın tamamı, söylenen kelime vurgulu"
+      },
+      "highlight": "Vurgu"
     },
     "captionPresets": {
       "netflixHint": "Yuvarlatılmış koyu kutuda Inter, alt üçte birlik konum — yayın kalitesinde nötr.",

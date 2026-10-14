@@ -648,7 +648,19 @@
       "background": "背景",
       "on": "オン",
       "off": "オフ",
-      "padding": "余白"
+      "padding": "余白",
+      "reveal": "表示",
+      "revealMode": {
+        "whole": "一括",
+        "words": "単語ごと",
+        "karaoke": "カラオケ"
+      },
+      "revealHint": {
+        "whole": "行全体を一度に",
+        "words": "話された単語から表示",
+        "karaoke": "行全体で、話している単語を強調"
+      },
+      "highlight": "強調色"
     },
     "captionPresets": {
       "netflixHint": "角丸の暗いボックスに Inter、下三分の一 — 放送品質のニュートラル。",

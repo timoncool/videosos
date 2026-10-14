@@ -648,7 +648,19 @@
       "background": "배경",
       "on": "켜짐",
       "off": "꺼짐",
-      "padding": "여백"
+      "padding": "여백",
+      "reveal": "나타내기",
+      "revealMode": {
+        "whole": "한 번에",
+        "words": "단어별",
+        "karaoke": "가라오케"
+      },
+      "revealHint": {
+        "whole": "줄 전체를 한 번에",
+        "words": "말하는 대로 단어가 나타남",
+        "karaoke": "줄 전체, 말하는 단어 강조"
+      },
+      "highlight": "강조 색"
     },
     "captionPresets": {
       "netflixHint": "둥근 어두운 박스 위 Inter, 하단 3분의 1 — 방송 품질의 중립적인 스타일.",

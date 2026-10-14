@@ -10,6 +10,7 @@
 
 import type { SubtitleSegmentItem, TextItem } from '@/types/timeline'
 import { parseSubtitleCueText } from '@/shared/utils/subtitle-cue-format'
+import { revealCaption } from '@/shared/timeline/caption-reveal'
 import {
   layoutTextBlock,
   lineInkWidth,
@@ -493,7 +494,21 @@ export function renderSubtitleSegmentItem(
   const secondsIntoSegment = (frame - item.from) / fps
   const activeCue = findActiveSubtitleCue(item.cues, secondsIntoSegment)
   if (!activeCue) return
-  const parsed = parseSubtitleCueText(activeCue.text)
+  const revealed = revealCaption(
+    activeCue,
+    secondsIntoSegment,
+    item.captionReveal,
+    item.color,
+    item.captionHighlight,
+  )
+  const parsed = revealed
+    ? {
+        plainText: revealed.text,
+        spans: revealed.spans,
+        alignment: undefined,
+        isEmpty: revealed.text.length === 0,
+      }
+    : parseSubtitleCueText(activeCue.text)
   if (parsed.isEmpty) return
 
   const ephemeralText: TextItem = {
@@ -506,6 +521,7 @@ export function renderSubtitleSegmentItem(
     mediaId: item.mediaId,
     text: parsed.plainText,
     textSpans: parsed.spans,
+    spanLayout: revealed ? 'inline' : undefined,
     fontSize: item.fontSize,
     fontFamily: item.fontFamily,
     fontWeight: item.fontWeight,

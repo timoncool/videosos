@@ -12,6 +12,7 @@ import { DEFAULT_PROJECT_HEIGHT, DEFAULT_PROJECT_WIDTH } from '@/shared/projects
 import type { MediaTranscript, MediaTranscriptModel, MediaTranscriptSegment } from '@/types/storage'
 import type {
   AudioItem,
+  CaptionWord,
   SubtitleSegmentItem,
   TimelineTranscriptCaptionCue,
   TimelineItem,
@@ -68,7 +69,7 @@ const PREFERRED_TRANSCRIPT_CAPTION_SECONDS = 1.4
 const MIN_TRANSCRIPT_CAPTION_WORDS = 2
 // A short but audible pause is a better phrase boundary than a blanket timing offset.
 const TRANSCRIPT_CAPTION_BREAK_GAP_SECONDS = 0.18
-const TRANSCRIPT_CAPTION_TIMING_VERSION = 4
+const TRANSCRIPT_CAPTION_TIMING_VERSION = 5
 const SENTENCE_END_PATTERN = /[.!?。！？]$/
 const DEFAULT_QUANTIZATION = DEFAULT_WHISPER_QUANTIZATION
 
@@ -280,6 +281,25 @@ function segmentTranscriptForCaptions(segments: TranscriptSegment[]): MediaTrans
   return captionSegments.toSorted((left, right) => left.start - right.start)
 }
 
+/** The words of a caption as pieces whose joining is its text, each with the space the joining puts before it. */
+function captionWords(segment: MediaTranscriptSegment): CaptionWord[] | undefined {
+  const words = segment.words
+  if (!words || words.length === 0) return undefined
+  const pieces: CaptionWord[] = []
+  let joined = ''
+  for (let index = 0; index < words.length; index++) {
+    const next = joinTranscriptWords(words.slice(0, index + 1).map((word) => word.text))
+    if (!next.startsWith(joined)) return undefined
+    pieces.push({
+      text: next.slice(joined.length),
+      startSeconds: words[index]!.start,
+      endSeconds: words[index]!.end,
+    })
+    joined = next
+  }
+  return joined === segment.text ? pieces : undefined
+}
+
 function buildTimelineTranscriptCaptionCues(
   mediaId: string,
   segments: readonly MediaTranscriptSegment[],
@@ -289,6 +309,7 @@ function buildTimelineTranscriptCaptionCues(
     startSeconds: segment.start,
     endSeconds: segment.end,
     text: segment.text,
+    words: captionWords(segment),
   }))
 }
 
@@ -631,12 +652,7 @@ class MediaTranscriptionService {
     // an older transcript snapshot.
     const compositionsState = useCompositionsStore.getState()
     for (const composition of compositionsState.compositions) {
-      const synced = syncTranscriptCaptionItems(
-        composition.items,
-        mediaId,
-        transcript,
-        sourceCues,
-      )
+      const synced = syncTranscriptCaptionItems(composition.items, mediaId, transcript, sourceCues)
       if (synced.updatedClipCount === 0) continue
       compositionsState.updateComposition(composition.id, { items: synced.items })
       updatedClipCount += synced.updatedClipCount
@@ -653,9 +669,7 @@ class MediaTranscriptionService {
       return synced.updatedClipCount > 0 ? { ...stash, items: synced.items } : stash
     }
     const nextStashStack = navigationState.stashStack.map(syncStash)
-    const nextMainHolder = navigationState.mainHolder
-      ? syncStash(navigationState.mainHolder)
-      : null
+    const nextMainHolder = navigationState.mainHolder ? syncStash(navigationState.mainHolder) : null
     if (updatedStashedClipCount > 0) {
       useCompositionNavigationStore.setState({
         stashStack: nextStashStack,
@@ -725,9 +739,7 @@ class MediaTranscriptionService {
     const generatedCaptionIdsToRemove = options.replaceExisting
       ? new Set(
           targetClips.flatMap((clip) =>
-            findReplaceableCaptionItemsForClip(items, clip, 'transcript').map(
-              (item) => item.id,
-            ),
+            findReplaceableCaptionItemsForClip(items, clip, 'transcript').map((item) => item.id),
           ),
         )
       : new Set<string>()
@@ -845,9 +857,7 @@ class MediaTranscriptionService {
     const generatedCaptionIdsToRemove = options.replaceExisting
       ? new Set(
           targetClips.flatMap((clip) =>
-            findReplaceableCaptionItemsForClip(items, clip, 'transcript').map(
-              (item) => item.id,
-            ),
+            findReplaceableCaptionItemsForClip(items, clip, 'transcript').map((item) => item.id),
           ),
         )
       : new Set<string>()

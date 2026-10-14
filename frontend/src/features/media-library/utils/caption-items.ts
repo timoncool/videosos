@@ -62,7 +62,7 @@ interface BuildSubtitleTextItemsOptions {
 
 interface BuildSubtitleTextItemsForClipOptions {
   trackId: string
-  cues: readonly SubtitleCue[]
+  cues: readonly (SubtitleCue & { words?: import('@/types/timeline').CaptionWord[] })[]
   clip: AudioItem | VideoItem
   timelineFps: number
   canvasWidth: number
@@ -83,6 +83,8 @@ export type CaptionTextItemTemplate = Pick<
   | 'color'
   | 'backgroundColor'
   | 'backgroundRadius'
+  | 'captionReveal'
+  | 'captionHighlight'
   | 'textPadding'
   | 'textAlign'
   | 'verticalAlign'
@@ -535,6 +537,8 @@ export function getCaptionTextItemTemplate(
     color: item.color,
     backgroundColor: item.backgroundColor,
     backgroundRadius: item.backgroundRadius,
+    captionReveal: item.captionReveal,
+    captionHighlight: item.captionHighlight,
     textPadding: item.textPadding,
     textAlign: item.textAlign,
     verticalAlign: item.verticalAlign,
@@ -827,7 +831,7 @@ export function findCaptionTargetClipsForMedia(
 
 interface BuildSubtitleSegmentForClipOptions {
   trackId: string
-  cues: readonly SubtitleCue[]
+  cues: readonly (SubtitleCue & { words?: import('@/types/timeline').CaptionWord[] })[]
   clip: AudioItem | VideoItem
   timelineFps: number
   canvasWidth: number
@@ -882,11 +886,17 @@ export function buildSubtitleSegmentForClip(
     const cueEndFrames = Math.ceil(cueEndTimeline * timelineFps)
     if (cueEndFrames <= cueStartFrames) continue
 
+    const toTimeline = (seconds: number) => (seconds - sourceStartSeconds) / speed
     overlappingCues.push({
       id: cue.id,
       startSeconds: cueStartTimeline,
       endSeconds: cueEndTimeline,
       text: cue.text,
+      words: cue.words?.map((word) => ({
+        text: word.text,
+        startSeconds: toTimeline(word.startSeconds),
+        endSeconds: toTimeline(word.endSeconds),
+      })),
     })
     if (cueStartFrames < firstFromOffset) firstFromOffset = cueStartFrames
     if (cueEndFrames > lastEndOffset) lastEndOffset = cueEndFrames
@@ -903,11 +913,17 @@ export function buildSubtitleSegmentForClip(
   const durationInFrames = Math.max(1, segmentEndOffset - segmentFromOffset)
 
   // Cue times are now stored segment-relative (start = 0 at the segment's `from`).
+  const shift = segmentFromOffset / timelineFps
   const segmentRelativeCues = overlappingCues.map((cue) => ({
     id: cue.id,
-    startSeconds: cue.startSeconds - segmentFromOffset / timelineFps,
-    endSeconds: cue.endSeconds - segmentFromOffset / timelineFps,
+    startSeconds: cue.startSeconds - shift,
+    endSeconds: cue.endSeconds - shift,
     text: cue.text,
+    words: cue.words?.map((word) => ({
+      text: word.text,
+      startSeconds: word.startSeconds - shift,
+      endSeconds: word.endSeconds - shift,
+    })),
   }))
 
   const defaultStyle = {
@@ -976,8 +992,7 @@ export function appendVirtualTranscriptCaptionTrack(
     unfilteredBaseTracks.flatMap((track) =>
       (track.items ?? [])
         .filter(
-          (item) =>
-            (item.type === 'video' || item.type === 'audio') && item.isReversed === true,
+          (item) => (item.type === 'video' || item.type === 'audio') && item.isReversed === true,
         )
         .map((item) => item.id),
     ),

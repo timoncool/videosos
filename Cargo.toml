@@ -40,3 +40,7 @@ debug = "line-tables-only"
 
 [profile.dev.package."*"]
 debug = false
+
+# model files are checked by SHA-256 as they download; unoptimized it hashes at a few dozen MB/s
+[profile.dev.package.sha2]
+opt-level = 3

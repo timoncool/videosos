@@ -170,13 +170,13 @@ const MODELS: &[LocalModel] = &[
     LocalModel {
         id: "ltx-2.5",
         name: "LTX-2.5",
-        description: "Lightricks' video model of August 2026, distilled to 8 steps: video with its own sound, from a prompt or a first frame, at 24 fps; with its Gemma-4-12B text encoder.",
+        description: "Lightricks' video model of August 2026, distilled to 8 steps: video with its own sound, from a prompt or a first frame, at 24 fps; with Lightricks' own INT8 Gemma-4-12B text encoder.",
         kind: Kind::Video,
         files: &[
             ModelFile { slot: Slot::Diffusion, download: Download { url: "https://huggingface.co/unsloth/LTX-2.5-GGUF/resolve/6eae90030f7f15460a0ecf9ab16445d676b2bbb6/distilled/ltx-2.5-22b-distilled-Q4_K_M.gguf", dest: "models/ltx-2.5/ltx-2.5-22b-distilled-Q4_K_M.gguf", size: 13_584_703_872, sha256: "ba40d53770314e69e88361661e55c6cc3b12a363646ba2ea53c8bcd459b66747", unzip_into: None } },
-            ModelFile { slot: Slot::Llm, download: Download { url: "https://huggingface.co/elix3r/gemma4-12b-with-proj-ltx-2.5-GGUF/resolve/2a18e836d286eb0570ec9f013c3591eb8c614d57/gemma4-12b-with-proj-ltx-2.5-Q4_K_M.gguf", dest: "models/ltx-2.5/gemma4-12b-with-proj-ltx-2.5-Q4_K_M.gguf", size: 8_414_653_376, sha256: "add54057106a531383711accfaf17e341e234cbe953fdafbc6cd6b309fb5e356", unzip_into: None } },
-            ModelFile { slot: Slot::Vae, download: Download { url: "https://huggingface.co/Lightricks/LTX-2.5/resolve/49b093a39c19169a8a81721dcc541e07e945232f/vae/ltx-2.5-video-vae-conv-bf16.safetensors", dest: "models/ltx-2.5/ltx-2.5-video-vae-conv-bf16.safetensors", size: 1_452_269_922, sha256: "685b06ee3d9b2039647698fc4ea33175112462fc374e2777312c907897dfce8d", unzip_into: None } },
-            ModelFile { slot: Slot::AudioVae, download: Download { url: "https://huggingface.co/Lightricks/LTX-2.5/resolve/49b093a39c19169a8a81721dcc541e07e945232f/vae/ltx-2.5-audio-vae-bf16.safetensors", dest: "models/ltx-2.5/ltx-2.5-audio-vae-bf16.safetensors", size: 364_866_540, sha256: "c52733d37f6a7fb7949c3dc0fb468c6cb2169e4d836983a73babb9f0d54837a5", unzip_into: None } },
+            ModelFile { slot: Slot::Llm, download: Download { url: "https://huggingface.co/PulpCut/LTX-2.5-INT8-ConvRot-safetensors/resolve/7597fb305b4cab9e7ff2c1d1e9551279c2932f0f/text_encoders/gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors", dest: "models/ltx-2.5/gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors", size: 15_372_969_374, sha256: "6ce688a0aa98a5fa36a9f1e6c3f42152a498cc2b53ee8c15674c64244f91487f", unzip_into: None } },
+            ModelFile { slot: Slot::Vae, download: Download { url: "https://huggingface.co/comfyicu/LTX-2.5/resolve/1026e00f808dbd9601911479b22d65b760737dc8/vae/ltx-2.5-video-vae-conv-bf16.safetensors", dest: "models/ltx-2.5/ltx-2.5-video-vae-conv-bf16.safetensors", size: 1_452_269_922, sha256: "685b06ee3d9b2039647698fc4ea33175112462fc374e2777312c907897dfce8d", unzip_into: None } },
+            ModelFile { slot: Slot::AudioVae, download: Download { url: "https://huggingface.co/comfyicu/LTX-2.5/resolve/1026e00f808dbd9601911479b22d65b760737dc8/vae/ltx-2.5-audio-vae-bf16.safetensors", dest: "models/ltx-2.5/ltx-2.5-audio-vae-bf16.safetensors", size: 364_866_540, sha256: "c52733d37f6a7fb7949c3dc0fb468c6cb2169e4d836983a73babb9f0d54837a5", unzip_into: None } },
         ],
         sizes: &[(1280, 704), (704, 1280), (832, 480), (480, 832)],
         steps: 8,

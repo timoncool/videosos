@@ -648,7 +648,19 @@
       "background": "Hintergrund",
       "on": "Ein",
       "off": "Aus",
-      "padding": "Innenabstand"
+      "padding": "Innenabstand",
+      "reveal": "Einblenden",
+      "revealMode": {
+        "whole": "Ganz",
+        "words": "Wortweise",
+        "karaoke": "Karaoke"
+      },
+      "revealHint": {
+        "whole": "Die ganze Zeile auf einmal",
+        "words": "Wörter erscheinen, wenn sie gesprochen werden",
+        "karaoke": "Die ganze Zeile, das gesprochene Wort hervorgehoben"
+      },
+      "highlight": "Hervorhebung"
     },
     "captionPresets": {
       "netflixHint": "Inter auf einer abgerundeten dunklen Box, unteres Drittel — broadcast-taugliches Neutral.",
