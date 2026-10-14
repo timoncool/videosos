@@ -35,7 +35,18 @@
       "noLimit": "无限制",
       "badBudget": "限额是以美元为单位的数字。",
       "confirmEdits": "智能体对时间线的编辑需经我确认",
-      "confirmEditsHint": "智能体的编辑会显示将发生的更改，在你接受之前不会有任何改变。"
+      "confirmEditsHint": "智能体的编辑会显示将发生的更改，在你接受之前不会有任何改变。",
+      "agentAbsent": "当前没有连接的智能体：在下方连接一个，并让它监听 VideoSOS 的提问。",
+      "agentConnected": "已连接智能体：{{seconds}} 秒前有响应。",
+      "assistant": "窗口助手",
+      "assistantEngine": {
+        "agent": "智能体 (MCP)",
+        "openrouter": "OpenRouter"
+      },
+      "assistantHint": {
+        "agent": "「优化提示词」、「根据图片生成提示词」、分镜拆分、「3D 走位预演」和「聊天」标签页会询问连接到 VideoSOS 的智能体：它本身就是语言模型，不会额外付费。它在监听时作答 (assistant_requests_wait)。",
+        "openrouter": "「优化提示词」、「根据图片生成提示词」、分镜拆分、「3D 走位预演」和「聊天」标签页会询问 OpenRouter 上的模型，费用由你的密钥支付。"
+      }
     },
     "general": {
       "language": "界面语言",

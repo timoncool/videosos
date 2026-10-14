@@ -157,6 +157,8 @@
           "title": "Ausgewähltes Format kann nicht kodiert werden",
           "detail": "Dieser Browser kann die ausgewählten Exporteinstellungen nicht kodieren.",
           "detailWithError": "{{error}}",
+          "containerUnsupported": "Dieser Browser kann kein {{container}}-Video kodieren.",
+          "noCodecs": "Dieser Browser hat keinen Video-Encoder für den Export.",
           "fix": "Wähle ein anderes Format/einen anderen Codec oder verwende einen aktuellen Chromium-Browser."
         },
         "audio-export-ready": {

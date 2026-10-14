@@ -157,6 +157,8 @@
           "title": "Le format sélectionné ne peut pas être encodé",
           "detail": "Ce navigateur ne peut pas encoder les paramètres d’exportation sélectionnés.",
           "detailWithError": "{{error}}",
+          "containerUnsupported": "Ce navigateur ne sait pas encoder de vidéo {{container}}.",
+          "noCodecs": "Ce navigateur n’a aucun encodeur vidéo pour l’export.",
           "fix": "Choisissez un autre format/codec ou essayez un navigateur Chromium récent."
         },
         "audio-export-ready": {

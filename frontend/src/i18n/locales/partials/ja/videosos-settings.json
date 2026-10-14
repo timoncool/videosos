@@ -35,7 +35,18 @@
       "noLimit": "上限なし",
       "badBudget": "上限はドル単位の数値で指定してください。",
       "confirmEdits": "エージェントのタイムライン編集は承認を待つ",
-      "confirmEditsHint": "エージェントの編集は変更内容を表示し、承認するまで何も変わりません。"
+      "confirmEditsHint": "エージェントの編集は変更内容を表示し、承認するまで何も変わりません。",
+      "agentAbsent": "現在接続中のエージェントはありません。下で接続し、VideoSOS からの質問を待ち受けるよう頼んでください。",
+      "agentConnected": "エージェントが接続中です: {{seconds}} 秒前に応答しました。",
+      "assistant": "ウィンドウのアシスタント",
+      "assistantEngine": {
+        "agent": "エージェント (MCP)",
+        "openrouter": "OpenRouter"
+      },
+      "assistantHint": {
+        "agent": "「プロンプトを改善」、「画像からプロンプト」、ストーリーボードの分割、「3Dブロッキング」、「チャット」タブは VideoSOS に接続したエージェントに問い合わせます。エージェント自体が言語モデルなので追加料金はかかりません。待ち受け中に応答します (assistant_requests_wait)。",
+        "openrouter": "「プロンプトを改善」、「画像からプロンプト」、ストーリーボードの分割、「3Dブロッキング」、「チャット」タブは OpenRouter のモデルに問い合わせ、あなたのキーで支払われます。"
+      }
     },
     "general": {
       "language": "表示言語",

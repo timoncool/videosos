@@ -157,6 +157,8 @@
           "title": "O formato selecionado não pode ser codificado",
           "detail": "Este navegador não consegue codificar as configurações de exportação selecionadas.",
           "detailWithError": "{{error}}",
+          "containerUnsupported": "Este navegador não consegue codificar vídeo {{container}}.",
+          "noCodecs": "Este navegador não tem um codificador de vídeo para exportar.",
           "fix": "Escolha outro formato/codec ou tente um navegador Chromium recente."
         },
         "audio-export-ready": {

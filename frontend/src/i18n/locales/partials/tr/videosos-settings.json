@@ -35,7 +35,18 @@
       "noLimit": "sınır yok",
       "badBudget": "Sınır, dolar cinsinden bir sayıdır.",
       "confirmEdits": "Ajanın zaman çizelgesi düzenlemeleri onayımı beklesin",
-      "confirmEditsHint": "Ajanın düzenlemesi nelerin değişeceğini gösterir; sen kabul edene kadar hiçbir şey değişmez."
+      "confirmEditsHint": "Ajanın düzenlemesi nelerin değişeceğini gösterir; sen kabul edene kadar hiçbir şey değişmez.",
+      "agentAbsent": "Şu anda bağlı bir ajan yok: aşağıdan birini bağlayın ve VideoSOS'un sorularını dinlemesini isteyin.",
+      "agentConnected": "Bir ajan bağlı: {{seconds}} sn önce yanıt verdi.",
+      "assistant": "Pencerenin asistanı",
+      "assistantEngine": {
+        "agent": "Ajan (MCP)",
+        "openrouter": "OpenRouter"
+      },
+      "assistantHint": {
+        "agent": "“İstemi iyileştir”, “Görselden istem”, storyboard bölme, “3D blocking” ve “Sohbet” sekmesi, VideoSOS'a bağlı ajana sorar: kendisi bir dil modeli olduğundan ek ücret ödenmez. Dinlediği sürece yanıt verir (assistant_requests_wait).",
+        "openrouter": "“İstemi iyileştir”, “Görselden istem”, storyboard bölme, “3D blocking” ve “Sohbet” sekmesi, anahtarınızla ödenen bir OpenRouter modeline sorar."
+      }
     },
     "general": {
       "language": "Arayüz dili",

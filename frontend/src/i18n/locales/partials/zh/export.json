@@ -157,6 +157,8 @@
           "title": "无法编码所选格式",
           "detail": "此浏览器无法编码所选导出设置。",
           "detailWithError": "{{error}}",
+          "containerUnsupported": "此浏览器无法编码 {{container}} 视频。",
+          "noCodecs": "此浏览器没有可用于导出的视频编码器。",
           "fix": "请选择其他格式/编解码器，或尝试较新的 Chromium 浏览器。"
         },
         "audio-export-ready": {

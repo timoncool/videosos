@@ -157,6 +157,8 @@
           "title": "Seçilen biçim kodlanamıyor",
           "detail": "Bu tarayıcı seçilen dışa aktarma ayarlarını kodlayamıyor.",
           "detailWithError": "{{error}}",
+          "containerUnsupported": "Bu tarayıcı {{container}} videoyu kodlayamıyor.",
+          "noCodecs": "Bu tarayıcıda dışa aktarım için video kodlayıcı yok.",
           "fix": "Farklı bir biçim/kodek seçin veya güncel bir Chromium tarayıcı deneyin."
         },
         "audio-export-ready": {

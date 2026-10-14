@@ -35,7 +35,18 @@
       "noLimit": "sin límite",
       "badBudget": "El límite es una cantidad en dólares.",
       "confirmEdits": "Las ediciones del agente en la línea de tiempo esperan mi aprobación",
-      "confirmEditsHint": "Una edición del agente muestra qué cambiará y nada cambia hasta que la aceptes."
+      "confirmEditsHint": "Una edición del agente muestra qué cambiará y nada cambia hasta que la aceptes.",
+      "agentAbsent": "Ahora no hay ningún agente conectado: conecta uno (abajo) y pídele que escuche las preguntas de VideoSOS.",
+      "agentConnected": "Hay un agente conectado: llamó hace {{seconds}} s.",
+      "assistant": "Asistente de la ventana",
+      "assistantEngine": {
+        "agent": "Agente (MCP)",
+        "openrouter": "OpenRouter"
+      },
+      "assistantHint": {
+        "agent": "“Mejorar prompt”, “Prompt desde la imagen”, la división del storyboard, “Blocking 3D” y la pestaña “Chat” preguntan al agente conectado a VideoSOS: es un modelo de lenguaje, así que no se paga nada más. Responde mientras escucha (assistant_requests_wait).",
+        "openrouter": "“Mejorar prompt”, “Prompt desde la imagen”, la división del storyboard, “Blocking 3D” y la pestaña “Chat” preguntan a un modelo de OpenRouter, pagado con tu clave."
+      }
     },
     "general": {
       "language": "Idioma de la interfaz",

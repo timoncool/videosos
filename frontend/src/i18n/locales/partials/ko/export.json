@@ -157,6 +157,8 @@
           "title": "선택한 형식을 인코딩할 수 없습니다",
           "detail": "이 브라우저는 선택한 내보내기 설정을 인코딩할 수 없습니다.",
           "detailWithError": "{{error}}",
+          "containerUnsupported": "이 브라우저는 {{container}} 동영상을 인코딩할 수 없습니다.",
+          "noCodecs": "이 브라우저에는 내보내기용 동영상 인코더가 없습니다.",
           "fix": "다른 형식/코덱을 선택하거나 최신 Chromium 브라우저를 사용해 보세요."
         },
         "audio-export-ready": {

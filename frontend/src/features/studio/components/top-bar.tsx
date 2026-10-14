@@ -77,7 +77,7 @@ export function TopBar({ go }: { go: (place: TopBarPlace) => void }) {
       {/* Below lg the editor's modes and buttons move to a second row, under the app's own. */}
       <div
         id="editor-modes-slot"
-        className="order-5 flex min-w-0 flex-1 items-center gap-2 overflow-x-auto py-1.5 empty:hidden lg:order-2 lg:ml-1 lg:flex-none lg:overflow-visible lg:py-0"
+        className="order-5 flex min-w-0 flex-1 items-center gap-2 overflow-x-auto py-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden empty:hidden lg:order-2 lg:ml-1 lg:flex-none lg:overflow-visible lg:py-0"
       />
       <div className="order-2 flex min-w-0 flex-1 lg:order-3">
         <StatusBar />

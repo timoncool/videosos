@@ -35,7 +35,18 @@
       "noLimit": "kein Limit",
       "badBudget": "Das Limit ist ein Betrag in Dollar.",
       "confirmEdits": "Änderungen des Agenten an der Zeitleiste warten auf mich",
-      "confirmEditsHint": "Eine Änderung des Agenten zeigt, was sich ändert, und nichts ändert sich, bis du sie annimmst."
+      "confirmEditsHint": "Eine Änderung des Agenten zeigt, was sich ändert, und nichts ändert sich, bis du sie annimmst.",
+      "agentAbsent": "Gerade ist kein Agent verbunden: verbinde einen (unten) und bitte ihn, auf die Fragen von VideoSOS zu hören.",
+      "agentConnected": "Ein Agent ist verbunden: er hat sich vor {{seconds}} s gemeldet.",
+      "assistant": "Assistent des Fensters",
+      "assistantEngine": {
+        "agent": "Agent (MCP)",
+        "openrouter": "OpenRouter"
+      },
+      "assistantHint": {
+        "agent": "„Prompt verbessern“, „Prompt aus dem Bild“, die Aufteilung des Storyboards, „3D-Blocking“ und der Tab „Chat“ fragen den mit VideoSOS verbundenen Agenten: Er ist selbst ein Sprachmodell, also kostet es nichts extra. Er antwortet, solange er zuhört (assistant_requests_wait).",
+        "openrouter": "„Prompt verbessern“, „Prompt aus dem Bild“, die Aufteilung des Storyboards, „3D-Blocking“ und der Tab „Chat“ fragen ein Modell bei OpenRouter, bezahlt mit deinem Schlüssel."
+      }
     },
     "general": {
       "language": "Sprache der Benutzeroberfläche",

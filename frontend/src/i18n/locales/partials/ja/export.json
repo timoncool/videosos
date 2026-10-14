@@ -157,6 +157,8 @@
           "title": "選択した形式をエンコードできません",
           "detail": "このブラウザーでは選択した書き出し設定をエンコードできません。",
           "detailWithError": "{{error}}",
+          "containerUnsupported": "このブラウザーは {{container}} 動画をエンコードできません。",
+          "noCodecs": "このブラウザーには書き出し用の動画エンコーダーがありません。",
           "fix": "別の形式/コーデックを選ぶか、最近の Chromium ブラウザーを試してください。"
         },
         "audio-export-ready": {

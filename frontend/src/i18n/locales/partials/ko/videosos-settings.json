@@ -35,7 +35,18 @@
       "noLimit": "한도 없음",
       "badBudget": "한도는 달러 단위의 숫자로 입력하세요.",
       "confirmEdits": "에이전트의 타임라인 편집은 내 승인을 기다림",
-      "confirmEditsHint": "에이전트의 편집은 무엇이 바뀌는지 보여주며, 수락하기 전에는 아무것도 바뀌지 않습니다."
+      "confirmEditsHint": "에이전트의 편집은 무엇이 바뀌는지 보여주며, 수락하기 전에는 아무것도 바뀌지 않습니다.",
+      "agentAbsent": "지금 연결된 에이전트가 없습니다. 아래에서 연결하고 VideoSOS의 질문을 듣도록 요청하세요.",
+      "agentConnected": "에이전트가 연결되어 있습니다: {{seconds}}초 전에 응답했습니다.",
+      "assistant": "창의 어시스턴트",
+      "assistantEngine": {
+        "agent": "에이전트 (MCP)",
+        "openrouter": "OpenRouter"
+      },
+      "assistantHint": {
+        "agent": "“프롬프트 개선”, “이미지로 프롬프트 만들기”, 스토리보드 분할, “3D 블로킹”, “채팅” 탭은(는) VideoSOS에 연결된 에이전트에게 묻습니다. 에이전트 자체가 언어 모델이므로 추가 비용이 없습니다. 듣고 있는 동안 답합니다 (assistant_requests_wait).",
+        "openrouter": "“프롬프트 개선”, “이미지로 프롬프트 만들기”, 스토리보드 분할, “3D 블로킹”, “채팅” 탭은(는) 내 키로 결제되는 OpenRouter 모델에게 묻습니다."
+      }
     },
     "general": {
       "language": "인터페이스 언어",

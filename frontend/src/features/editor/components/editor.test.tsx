@@ -246,6 +246,10 @@ vi.mock('@/shared/state/editor', () => ({
     }),
 }))
 
+vi.mock('@/features/editor/hooks/use-compact-layout', () => ({
+  useCompactSidebars: () => false,
+}))
+
 vi.mock('@/features/editor/deps/composition-runtime', () => ({
   clearPreviewAudioCache: mocks.clearPreviewAudioCache,
 }))

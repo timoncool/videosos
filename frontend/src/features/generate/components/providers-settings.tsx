@@ -52,7 +52,7 @@ function ProviderRow({ state, onChanged }: { state: KeyState; onChanged: () => v
       className="space-y-1.5 rounded-lg border border-border p-3"
       data-testid={`provider-${state.provider}`}
     >
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
         <span className="text-sm font-medium">{PROVIDER_LABELS[state.provider]}</span>
         <span
           className={cn('text-[11px]', state.set ? 'text-emerald-400' : 'text-muted-foreground')}
@@ -73,14 +73,14 @@ function ProviderRow({ state, onChanged }: { state: KeyState; onChanged: () => v
           <ExternalLink className="h-3 w-3" />
         </a>
       </div>
-      <div className="flex gap-1.5">
+      <div className="flex flex-wrap gap-1.5">
         <Input
           type="password"
           value={value}
           onChange={(event) => setValue(event.target.value)}
           placeholder={state.set ? t('settings.providers.replace') : t('generate.keys.placeholder')}
           disabled={state.source === 'environment'}
-          className="h-8 text-xs"
+          className="h-8 min-w-0 flex-1 basis-full text-xs sm:basis-0"
         />
         <Button
           size="sm"
