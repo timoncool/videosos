@@ -25,18 +25,18 @@ describe('resolveTranscriptionEngine', () => {
     })
   })
 
-  it('falls back to whisper base for unsupported languages', () => {
+  it('falls back to Whisper Large Turbo for unsupported languages', () => {
     expect(resolveTranscriptionEngine('parakeet-tdt-v3', 'ja', { webgpu: true })).toEqual({
       engine: 'whisper',
-      model: 'whisper-base',
+      model: 'whisper-large',
       fallbackReason: 'language',
     })
   })
 
-  it('falls back to whisper base when WebGPU is unavailable', () => {
+  it('falls back to Whisper Large Turbo when WebGPU is unavailable', () => {
     expect(resolveTranscriptionEngine('parakeet-tdt-v3', 'en', { webgpu: false })).toEqual({
       engine: 'whisper',
-      model: 'whisper-base',
+      model: 'whisper-large',
       fallbackReason: 'no-webgpu',
     })
   })
@@ -44,7 +44,7 @@ describe('resolveTranscriptionEngine', () => {
   it('prioritizes the language fallback over the WebGPU fallback', () => {
     expect(resolveTranscriptionEngine('parakeet-tdt-v3', 'zh', { webgpu: false })).toEqual({
       engine: 'whisper',
-      model: 'whisper-base',
+      model: 'whisper-large',
       fallbackReason: 'language',
     })
   })

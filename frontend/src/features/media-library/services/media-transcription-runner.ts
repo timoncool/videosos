@@ -25,7 +25,7 @@ export interface RunMediaTranscriptionJobOptions {
   updateProgress?: boolean
   onProgress?: TranscribeOptions['onProgress']
   onQueueStatusChange?: (state: QueueState) => void
-  onModelFallback?: (from: MediaTranscriptModel, to: MediaTranscriptModel) => void
+  onLowMemoryRetry?: () => void
 }
 
 export type MediaTranscriptionJobResult =
@@ -94,10 +94,10 @@ export async function runMediaTranscriptionJob(
   setInitialTranscriptionState(mediaId)
 
   try {
-    const transcribeWithModel = (model: MediaTranscriptModel | undefined) =>
+    const transcribeWith = (quantization: MediaTranscriptQuantization | undefined) =>
       mediaTranscriptionService.transcribeMedia(mediaId, {
-        model,
-        quantization: options.quantization,
+        model: options.model,
+        quantization,
         language: options.language || undefined,
         onQueueStatusChange: createQueueStatusHandler(mediaId, options.onQueueStatusChange),
         onProgress: createProgressHandler(mediaId, updateProgress, options.onProgress),
@@ -105,16 +105,19 @@ export async function runMediaTranscriptionJob(
 
     let transcript: MediaTranscript
     try {
-      transcript = await transcribeWithModel(options.model)
+      transcript = await transcribeWith(options.quantization)
     } catch (error) {
-      if (options.model !== 'whisper-large' || !isTranscriptionOutOfMemoryError(error)) {
+      if (
+        options.model !== 'whisper-large' ||
+        options.quantization === 'q4' ||
+        !isTranscriptionOutOfMemoryError(error)
+      ) {
         throw error
       }
 
-      const fallbackModel: MediaTranscriptModel = 'whisper-small'
-      options.onModelFallback?.(options.model, fallbackModel)
+      options.onLowMemoryRetry?.()
       setInitialTranscriptionState(mediaId)
-      transcript = await transcribeWithModel(fallbackModel)
+      transcript = await transcribeWith('q4')
     }
 
     useMediaLibraryStore.getState().setTranscriptStatus(mediaId, 'ready')

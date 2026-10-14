@@ -11,9 +11,9 @@ import { i18n, changeAppLanguage, loadLanguageResources } from './index'
 
 // A key that lives only in partials (not in the base locale files), so it
 // exercises the partial-merge path for every language tested.
-const PARTIAL_ONLY_KEY = 'editor.tts.kokoroOption'
-const EN_VALUE = 'Kokoro (English, WebGPU)'
-const DE_VALUE = 'Kokoro (Englisch, WebGPU)'
+const PARTIAL_ONLY_KEY = 'editor.tts.mossOption'
+const EN_VALUE = 'MOSS Nano (20 languages, CPU)'
+const DE_VALUE = 'MOSS Nano (20 Sprachen, CPU)'
 
 describe('lazy locale loading', () => {
   beforeEach(async () => {

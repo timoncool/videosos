@@ -5,22 +5,16 @@ import {
   SCENE_VERIFICATION_MODEL_LABELS,
   type SceneVerificationModelId,
 } from './scene-verification-models'
-import {
-  MUSICGEN_MODEL_IDS,
-  getMusicgenModelDefinition,
-  type MusicgenModelId,
-} from './musicgen-models'
 import { ONNX_MODEL_CACHE_NAME } from './onnx-model-cache'
 
 export const TRANSFORMERS_CACHE_NAME = 'transformers-cache'
 const WHISPER_CACHE_MATCH_FRAGMENTS = ['/onnx-community/whisper-']
-const KOKORO_TTS_CACHE_MATCH_FRAGMENTS = ['/onnx-community/kokoro-82m-v1.0-onnx/']
 
 export type LocalModelCacheId =
   | 'whisper'
   | SceneVerificationModelId
-  | MusicgenModelId
-  | 'kokoro-tts'
+  | 'removed-models'
+  | 'removed-parakeet'
   | 'parakeet'
   | 'supertonic-tts'
   | 'rife'
@@ -52,20 +46,6 @@ const SCENE_VERIFICATION_MODEL_CACHE_DEFINITIONS: LocalModelCacheDefinition[] =
     matchPathFragments: [...SCENE_VERIFICATION_MODEL_CACHE_MATCH_FRAGMENTS[id]],
   }))
 
-const MUSICGEN_MODEL_CACHE_DEFINITIONS: LocalModelCacheDefinition[] = MUSICGEN_MODEL_IDS.map(
-  (id) => {
-    const definition = getMusicgenModelDefinition(id)
-
-    return {
-      id,
-      label: definition.label,
-      description: `${definition.label} model files and tokenizers.`,
-      cacheName: TRANSFORMERS_CACHE_NAME,
-      matchPathFragments: [...definition.cacheMatchFragments],
-    }
-  },
-)
-
 export const LOCAL_MODEL_CACHE_DEFINITIONS: LocalModelCacheDefinition[] = [
   {
     id: 'whisper',
@@ -75,20 +55,12 @@ export const LOCAL_MODEL_CACHE_DEFINITIONS: LocalModelCacheDefinition[] = [
     matchPathFragments: WHISPER_CACHE_MATCH_FRAGMENTS,
   },
   ...SCENE_VERIFICATION_MODEL_CACHE_DEFINITIONS,
-  ...MUSICGEN_MODEL_CACHE_DEFINITIONS,
-  {
-    id: 'kokoro-tts',
-    label: 'Kokoro TTS',
-    description: 'Kokoro ONNX model weights and tokenizer files.',
-    cacheName: TRANSFORMERS_CACHE_NAME,
-    matchPathFragments: KOKORO_TTS_CACHE_MATCH_FRAGMENTS,
-  },
   {
     id: 'parakeet',
-    label: 'Parakeet',
-    description: 'Parakeet TDT ASR encoder, decoder/joint, preprocessor, and vocab files.',
+    label: 'Parakeet Ultra',
+    description: 'Parakeet Ultra int8 ASR encoder, decoder/joint, preprocessor, and vocab files.',
     cacheName: ONNX_MODEL_CACHE_NAME,
-    matchPathFragments: ['/parakeet-tdt-0.6b-v3-smoothquant-onnx/'],
+    matchPathFragments: ['/parakeet-tdt-0.6b-ultra-onnx/', '/parakeet-tdt-0.6b-v3-onnx/'],
   },
   {
     id: 'supertonic-tts',
@@ -103,6 +75,24 @@ export const LOCAL_MODEL_CACHE_DEFINITIONS: LocalModelCacheDefinition[] = [
     description: 'RIFE frame interpolation model, used to render higher-frame-rate video.',
     cacheName: ONNX_MODEL_CACHE_NAME,
     matchPathFragments: ['/RIFE_fp32_timestep/'],
+  },
+  {
+    id: 'removed-models',
+    label: 'Removed models',
+    description: 'Files of Kokoro, MusicGen and LFM that this version no longer uses.',
+    cacheName: TRANSFORMERS_CACHE_NAME,
+    matchPathFragments: [
+      '/onnx-community/kokoro-82m-v1.0-onnx/',
+      '/xenova/musicgen-small/',
+      '/liquidai/lfm2.5-vl-450m-onnx/',
+    ],
+  },
+  {
+    id: 'removed-parakeet',
+    label: 'Removed Parakeet v3',
+    description: 'Files of the older Parakeet that this version no longer uses.',
+    cacheName: ONNX_MODEL_CACHE_NAME,
+    matchPathFragments: ['/parakeet-tdt-0.6b-v3-smoothquant-onnx/'],
   },
 ]
 

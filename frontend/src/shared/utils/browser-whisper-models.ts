@@ -1,14 +1,12 @@
 import type { MediaTranscriptModel } from '@/types/storage'
 
-// Parakeet TDT 0.6B v3 (NVIDIA, CC-BY-4.0) is the default browser ASR engine: measured
-// ~30-37x realtime via a hybrid WebGPU-encoder + WASM-decode pipeline (~10x faster than
-// Whisper base) with native punctuation. It covers 25 European languages; for ja/ko/zh
-// or when WebGPU is unavailable, transcription auto-falls back to Whisper base. See
-// `transcription-engine.ts` for the routing.
+// Parakeet Ultra 0.6B int8 is the browser ASR engine, as in Dub Studio. It covers 25 European
+// languages; for the rest, or without WebGPU, transcription falls back to Whisper Large v3
+// Turbo. See `transcription-engine.ts` for the routing.
 export const DEFAULT_BROWSER_WHISPER_MODEL: MediaTranscriptModel = 'parakeet-tdt-v3'
 
 export const BROWSER_WHISPER_MODEL_LABELS: Record<MediaTranscriptModel, string> = {
-  'parakeet-tdt-v3': 'Parakeet (fast)',
+  'parakeet-tdt-v3': 'Parakeet Ultra',
   'whisper-tiny': 'Whisper Tiny',
   'whisper-base': 'Whisper Base',
   'whisper-small': 'Whisper Small',
@@ -17,8 +15,6 @@ export const BROWSER_WHISPER_MODEL_LABELS: Record<MediaTranscriptModel, string> 
 
 export const BROWSER_WHISPER_MODEL_OPTIONS = [
   { value: 'parakeet-tdt-v3', label: BROWSER_WHISPER_MODEL_LABELS['parakeet-tdt-v3'] },
-  { value: 'whisper-base', label: BROWSER_WHISPER_MODEL_LABELS['whisper-base'] },
-  { value: 'whisper-small', label: BROWSER_WHISPER_MODEL_LABELS['whisper-small'] },
   { value: 'whisper-large', label: BROWSER_WHISPER_MODEL_LABELS['whisper-large'] },
 ] as const satisfies ReadonlyArray<{
   value: MediaTranscriptModel

@@ -12,7 +12,7 @@
     "noTranscript": "此片段尚无字幕稿。",
     "transcriptionFailed": "转写失败。",
     "tryAgain": "重试",
-    "largeTurboFallback": "Large Turbo 内存不足。正在改用 Whisper Small 重试…",
+    "largeTurboFallback": "Large Turbo 内存不足。正在改用 Q4 重试…",
     "generate": "生成字幕稿",
     "transcribing": "转写中…",
     "loading": "正在加载字幕稿…",

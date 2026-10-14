@@ -13,7 +13,6 @@ import {
   CheckCircle2,
   ChevronDown,
   Download,
-  Info,
   ListPlus,
   Loader2,
   Pause,
@@ -25,7 +24,6 @@ import {
 import { Button } from '@/components/ui/button'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { Label } from '@/components/ui/label'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import {
   Select,
   SelectContent,
@@ -35,7 +33,6 @@ import {
 } from '@/components/ui/select'
 import { Slider } from '@/components/ui/slider'
 import { Textarea } from '@/components/ui/textarea'
-import { getMusicgenModelDefinition } from '@/shared/utils/musicgen-models'
 import { useMediaPlaybackControls } from '@/shared/media/use-media-playback-controls'
 import {
   getStoredTtsEngine,
@@ -52,15 +49,6 @@ import {
 import { usePlaybackStore } from '@/shared/state/playback'
 import type { MediaMetadata } from '@/types/storage'
 import {
-  KOKORO_TTS_BEST_MODEL,
-  KOKORO_TTS_VOICE_OPTIONS,
-  getKokoroTtsModelOption,
-  getKokoroTtsVoiceOption,
-  kokoroTtsService,
-  type KokoroTtsModel,
-  type KokoroTtsVoice,
-} from '../services/kokoro-tts-service'
-import {
   MOSS_TTS_VOICE_OPTIONS,
   getMossTtsVoiceOption,
   mossTtsService,
@@ -74,41 +62,8 @@ import {
   type SupertonicTtsLanguageSelection,
   type SupertonicTtsVoice,
 } from '../services/supertonic-tts-service'
-import {
-  DEFAULT_MUSICGEN_MODEL,
-  MUSICGEN_MODEL_OPTIONS,
-  musicgenService,
-  type MusicgenModelId,
-} from '../services/musicgen-service'
 import { insertGeneratedAudioOnNewTrack } from '../utils/insert-generated-audio'
 import { getLanguageDisplayName, insertTextAtCursor } from '../utils/tts-ui-helpers'
-
-const MUSIC_PROMPT_PRESETS = [
-  {
-    labelKey: 'editor.aiPanel.musicPresets.lofiChillLabel',
-    promptKey: 'editor.aiPanel.musicPresets.lofiChillPrompt',
-  },
-  {
-    labelKey: 'editor.aiPanel.musicPresets.pop80sLabel',
-    promptKey: 'editor.aiPanel.musicPresets.pop80sPrompt',
-  },
-  {
-    labelKey: 'editor.aiPanel.musicPresets.rock90sLabel',
-    promptKey: 'editor.aiPanel.musicPresets.rock90sPrompt',
-  },
-  {
-    labelKey: 'editor.aiPanel.musicPresets.upbeatEdmLabel',
-    promptKey: 'editor.aiPanel.musicPresets.upbeatEdmPrompt',
-  },
-  {
-    labelKey: 'editor.aiPanel.musicPresets.countryLabel',
-    promptKey: 'editor.aiPanel.musicPresets.countryPrompt',
-  },
-  {
-    labelKey: 'editor.aiPanel.musicPresets.lofiElectroLabel',
-    promptKey: 'editor.aiPanel.musicPresets.lofiElectroPrompt',
-  },
-]
 
 interface AudioGeneration {
   id: string
@@ -227,12 +182,10 @@ export const AiPanel = memo(function AiPanel() {
 
   const [ttsText, setTtsText] = useState(() => t('editor.aiPanel.defaultTtsPrompt'))
   const [ttsEngine, setTtsEngine] = useState<StoredTtsEngine>(() => getStoredTtsEngine())
-  const [ttsKokoroVoice, setTtsKokoroVoice] = useState<KokoroTtsVoice>('af_heart')
   const [ttsMossVoice, setTtsMossVoice] = useState<MossTtsVoice>('Xiaoyu')
   const [ttsSupertonicVoice, setTtsSupertonicVoice] = useState<SupertonicTtsVoice>('M3')
   const [ttsSupertonicLanguage, setTtsSupertonicLanguage] =
     useState<SupertonicTtsLanguageSelection>('auto')
-  const ttsModel: KokoroTtsModel = KOKORO_TTS_BEST_MODEL
   const [ttsSpeed, setTtsSpeed] = useState(1)
   const [isTtsGenerating, setIsTtsGenerating] = useState(false)
   const [ttsProgress, setTtsProgress] = useState<string | null>(null)
@@ -240,38 +193,13 @@ export const AiPanel = memo(function AiPanel() {
   const [ttsGenerations, setTtsGenerations] = useState<AudioGeneration[]>([])
   const [ttsSectionOpen, setTtsSectionOpen] = useState(true)
 
-  const [musicPrompt, setMusicPrompt] = useState(() => t(MUSIC_PROMPT_PRESETS[0]!.promptKey))
-  const [musicModel] = useState<MusicgenModelId>(DEFAULT_MUSICGEN_MODEL)
-  const currentMusicModel = useMemo(() => getMusicgenModelDefinition(musicModel), [musicModel])
-  const [musicDuration, setMusicDuration] = useState(currentMusicModel.defaultDurationSeconds)
-  const [isMusicGenerating, setIsMusicGenerating] = useState(false)
-  const [musicProgress, setMusicProgress] = useState<string | null>(null)
-  const [musicError, setMusicError] = useState<string | null>(null)
-  const [musicGenerations, setMusicGenerations] = useState<AudioGeneration[]>([])
-  const [musicProgressPct, setMusicProgressPct] = useState<number | null>(null)
-  const [musicInfoOpen, setMusicInfoOpen] = useState(false)
-  const [musicSectionOpen, setMusicSectionOpen] = useState(true)
-
-  const musicAbortRef = useRef<AbortController | null>(null)
   const ttsTextareaRef = useRef<HTMLTextAreaElement>(null)
   const generationUrlsRef = useRef<Set<string>>(new Set())
 
   // Revoke all blob URLs on unmount
   useEffect(() => {
-    setMusicDuration((previous) =>
-      Math.min(
-        currentMusicModel.maxDurationSeconds,
-        Math.max(currentMusicModel.minDurationSeconds, previous),
-      ),
-    )
-  }, [currentMusicModel.maxDurationSeconds, currentMusicModel.minDurationSeconds])
-
-  // Abort in-flight generation and revoke all blob URLs on unmount
-  useEffect(() => {
     const urls = generationUrlsRef.current
     return () => {
-      musicAbortRef.current?.abort()
-      musicAbortRef.current = null
       for (const url of urls) {
         URL.revokeObjectURL(url)
       }
@@ -282,10 +210,9 @@ export const AiPanel = memo(function AiPanel() {
     setStoredTtsEngine(ttsEngine)
   }, [ttsEngine])
 
-  const isKokoroSupported = kokoroTtsService.isSupported()
   const isMossSupported = mossTtsService.isSupported()
   const isSupertonicSupported = supertonicTtsService.isSupported()
-  const supportsNativeTtsSpeed = ttsEngine === 'kokoro' || ttsEngine === 'supertonic'
+  const supportsNativeTtsSpeed = ttsEngine === 'supertonic'
   const ttsSpeedMin = ttsEngine === 'supertonic' ? 0.8 : 0.5
   const ttsSpeedMax = ttsEngine === 'supertonic' ? 1.3 : 2
 
@@ -294,36 +221,18 @@ export const AiPanel = memo(function AiPanel() {
   }, [ttsSpeedMax, ttsSpeedMin])
 
   const effectiveTtsSpeed = supportsNativeTtsSpeed ? ttsSpeed : 1
-  const isTtsSupported =
-    ttsEngine === 'kokoro'
-      ? isKokoroSupported
-      : ttsEngine === 'moss'
-        ? isMossSupported
-        : isSupertonicSupported
-  const isMusicSupported = musicgenService.isSupported()
+  const isTtsSupported = ttsEngine === 'moss' ? isMossSupported : isSupertonicSupported
   const trimmedTtsText = ttsText.trim()
-  const trimmedMusicPrompt = musicPrompt.trim()
 
   const totalTtsBytes = useMemo(
     () => ttsGenerations.reduce((sum, generation) => sum + generation.byteSize, 0),
     [ttsGenerations],
   )
 
-  const totalMusicBytes = useMemo(
-    () => musicGenerations.reduce((sum, generation) => sum + generation.byteSize, 0),
-    [musicGenerations],
-  )
-
   const anyTtsSaving = ttsGenerations.some((generation) => generation.saving)
-  const anyMusicSaving = musicGenerations.some((generation) => generation.saving)
   const text = ttsText
   const setText = setTtsText
-  const voice =
-    ttsEngine === 'kokoro'
-      ? ttsKokoroVoice
-      : ttsEngine === 'moss'
-        ? ttsMossVoice
-        : ttsSupertonicVoice
+  const voice = ttsEngine === 'moss' ? ttsMossVoice : ttsSupertonicVoice
   const speed = ttsSpeed
   const setSpeed = setTtsSpeed
   const isGenerating = isTtsGenerating
@@ -333,10 +242,8 @@ export const AiPanel = memo(function AiPanel() {
   const totalBytes = totalTtsBytes
   const anySaving = anyTtsSaving
   const trimmedText = trimmedTtsText
-  const currentTtsBackendLabel =
-    ttsEngine === 'kokoro' ? 'WebGPU' : ttsEngine === 'moss' ? 'CPU' : 'WebGPU/WASM'
-  const currentTtsRuntimeLabel =
-    ttsEngine === 'kokoro' ? 'Kokoro TTS Best' : ttsEngine === 'moss' ? 'MOSS Nano' : 'Supertonic 3'
+  const currentTtsBackendLabel = ttsEngine === 'moss' ? 'CPU' : 'WebGPU/WASM'
+  const currentTtsRuntimeLabel = ttsEngine === 'moss' ? 'MOSS Nano' : 'Supertonic 3'
 
   // --- actions ---
 
@@ -351,14 +258,12 @@ export const AiPanel = memo(function AiPanel() {
     }
     if (!isTtsSupported) {
       setTtsError(
-        ttsEngine === 'kokoro'
-          ? t('editor.tts.errors.kokoroUnsupported')
-          : ttsEngine === 'moss'
-            ? t('editor.tts.errors.mossUnsupported')
-            : t('editor.tts.errors.supertonicUnsupported', {
-                defaultValue:
-                  'This browser cannot run the local Supertonic TTS runtime. Try a recent Chrome or Edge browser.',
-              }),
+        ttsEngine === 'moss'
+          ? t('editor.tts.errors.mossUnsupported')
+          : t('editor.tts.errors.supertonicUnsupported', {
+              defaultValue:
+                'This browser cannot run the local Supertonic TTS runtime. Try a recent Chrome or Edge browser.',
+            }),
       )
       return
     }
@@ -369,63 +274,40 @@ export const AiPanel = memo(function AiPanel() {
 
     try {
       const result =
-        ttsEngine === 'kokoro'
-          ? await kokoroTtsService.generateSpeechFile({
+        ttsEngine === 'moss'
+          ? await mossTtsService.generateSpeechFile({
               text: trimmedTtsText,
-              voice: ttsKokoroVoice,
+              voice: ttsMossVoice,
               speed: effectiveTtsSpeed,
-              model: ttsModel,
               onProgress: setTtsProgress,
             })
-          : ttsEngine === 'moss'
-            ? await mossTtsService.generateSpeechFile({
-                text: trimmedTtsText,
-                voice: ttsMossVoice,
-                speed: effectiveTtsSpeed,
-                onProgress: setTtsProgress,
-              })
-            : await supertonicTtsService.generateSpeechFile({
-                text: trimmedTtsText,
-                voice: ttsSupertonicVoice,
-                language: ttsSupertonicLanguage,
-                speed: effectiveTtsSpeed,
-                onProgress: setTtsProgress,
-              })
+          : await supertonicTtsService.generateSpeechFile({
+              text: trimmedTtsText,
+              voice: ttsSupertonicVoice,
+              language: ttsSupertonicLanguage,
+              speed: effectiveTtsSpeed,
+              onProgress: setTtsProgress,
+            })
 
       const { blob, file, duration } = result
 
       const objectUrl = URL.createObjectURL(blob)
       generationUrlsRef.current.add(objectUrl)
       const voiceLabel =
-        ttsEngine === 'kokoro'
-          ? getKokoroTtsVoiceOption(ttsKokoroVoice).label
-          : ttsEngine === 'moss'
-            ? getMossTtsVoiceOption(ttsMossVoice).label
-            : (SUPERTONIC_TTS_VOICE_OPTIONS.find((option) => option.value === ttsSupertonicVoice)
-                ?.label ?? ttsSupertonicVoice)
-      const modelLabel =
-        ttsEngine === 'kokoro'
-          ? getKokoroTtsModelOption(ttsModel).label
-          : ttsEngine === 'moss'
-            ? 'Multilingual Nano'
-            : 'Supertonic 3'
+        ttsEngine === 'moss'
+          ? getMossTtsVoiceOption(ttsMossVoice).label
+          : (SUPERTONIC_TTS_VOICE_OPTIONS.find((option) => option.value === ttsSupertonicVoice)
+              ?.label ?? ttsSupertonicVoice)
+      const modelLabel = ttsEngine === 'moss' ? 'Multilingual Nano' : 'Supertonic 3'
       const engineTags =
-        ttsEngine === 'kokoro'
-          ? [
+        ttsEngine === 'moss'
+          ? ['ai-generated', 'moss-tts', 'tts-engine:moss', `moss-voice:${ttsMossVoice}`]
+          : [
               'ai-generated',
-              'kokoro-tts',
-              'tts-engine:kokoro',
-              `kokoro-quality:${ttsModel}`,
-              `kokoro-voice:${ttsKokoroVoice}`,
+              'supertonic-tts',
+              'tts-engine:supertonic',
+              `supertonic-voice:${ttsSupertonicVoice}`,
             ]
-          : ttsEngine === 'moss'
-            ? ['ai-generated', 'moss-tts', 'tts-engine:moss', `moss-voice:${ttsMossVoice}`]
-            : [
-                'ai-generated',
-                'supertonic-tts',
-                'tts-engine:supertonic',
-                `supertonic-voice:${ttsSupertonicVoice}`,
-              ]
 
       const generation: AudioGeneration = {
         id: crypto.randomUUID(),
@@ -461,93 +343,11 @@ export const AiPanel = memo(function AiPanel() {
     isTtsSupported,
     trimmedTtsText,
     ttsEngine,
-    ttsKokoroVoice,
-    ttsModel,
     ttsMossVoice,
     ttsSupertonicLanguage,
     ttsSupertonicVoice,
     t,
   ])
-
-  const handleMusicGenerate = useCallback(async () => {
-    if (!currentProjectId) return null
-    if (!trimmedMusicPrompt) {
-      setMusicError(t('editor.aiPanel.errors.describeMusic'))
-      return null
-    }
-    if (!isMusicSupported) {
-      setMusicError(t('editor.aiPanel.errors.musicgenUnsupported'))
-      return null
-    }
-
-    const abortController = new AbortController()
-    musicAbortRef.current = abortController
-
-    setMusicError(null)
-    setIsMusicGenerating(true)
-    setMusicProgress(t('editor.aiPanel.progressPreparingMusic'))
-    setMusicProgressPct(null)
-
-    try {
-      const { blob, file, duration } = await musicgenService.generateMusicFile({
-        prompt: trimmedMusicPrompt,
-        model: musicModel,
-        durationSeconds: musicDuration,
-        onProgress: (stage, fraction) => {
-          setMusicProgress(stage)
-          setMusicProgressPct(fraction ?? null)
-        },
-        signal: abortController.signal,
-      })
-
-      const objectUrl = URL.createObjectURL(blob)
-      generationUrlsRef.current.add(objectUrl)
-
-      const modelLabel =
-        MUSICGEN_MODEL_OPTIONS.find((option) => option.value === musicModel)?.label ?? musicModel
-      const generation: AudioGeneration = {
-        id: crypto.randomUUID(),
-        file,
-        objectUrl,
-        byteSize: blob.size,
-        duration,
-        textSnippet: trimmedMusicPrompt,
-        voice: modelLabel,
-        model: `target ${musicDuration}s`,
-        summary: trimmedMusicPrompt,
-        details: `${modelLabel} / target ${musicDuration}s / ${duration > 0 ? `${duration.toFixed(1)}s` : '-'} / ${formatBytes(blob.size)}`,
-        tags: [
-          'ai-generated',
-          'musicgen',
-          `musicgen-model:${musicModel}`,
-          `musicgen-target:${musicDuration}s`,
-        ],
-        savedMediaId: null,
-        saving: false,
-      }
-
-      setMusicGenerations((prev) => [generation, ...prev])
-    } catch (generationError) {
-      if (generationError instanceof DOMException && generationError.name === 'AbortError') {
-        // Intentional cancellation — no error shown.
-      } else {
-        setMusicError(
-          generationError instanceof Error
-            ? generationError.message
-            : t('editor.aiPanel.errors.generateMusicFailed'),
-        )
-      }
-    } finally {
-      musicAbortRef.current = null
-      setIsMusicGenerating(false)
-      setMusicProgress(null)
-      setMusicProgressPct(null)
-    }
-  }, [currentProjectId, trimmedMusicPrompt, isMusicSupported, musicModel, musicDuration, t])
-
-  const handleMusicCancel = useCallback(() => {
-    musicAbortRef.current?.abort()
-  }, [])
 
   const updateGenerationInList = useCallback(
     (
@@ -723,14 +523,12 @@ export const AiPanel = memo(function AiPanel() {
           <CollapsibleContent className="space-y-4 pt-3">
             {!isTtsSupported && (
               <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-100">
-                {ttsEngine === 'kokoro'
-                  ? t('editor.tts.kokoroUnsupported')
-                  : ttsEngine === 'moss'
-                    ? t('editor.tts.mossUnsupported')
-                    : t('editor.tts.supertonicUnsupported', {
-                        defaultValue:
-                          'This browser cannot run the local Supertonic TTS runtime. Try a recent Chrome or Edge browser.',
-                      })}
+                {ttsEngine === 'moss'
+                  ? t('editor.tts.mossUnsupported')
+                  : t('editor.tts.supertonicUnsupported', {
+                      defaultValue:
+                        'This browser cannot run the local Supertonic TTS runtime. Try a recent Chrome or Edge browser.',
+                    })}
               </div>
             )}
 
@@ -786,9 +584,6 @@ export const AiPanel = memo(function AiPanel() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="kokoro" className="text-xs">
-                      {t('editor.tts.kokoroOption')}
-                    </SelectItem>
                     <SelectItem value="moss" className="text-xs">
                       {t('editor.tts.mossOption')}
                     </SelectItem>
@@ -807,9 +602,7 @@ export const AiPanel = memo(function AiPanel() {
                   <Select
                     value={voice}
                     onValueChange={(value) => {
-                      if (ttsEngine === 'kokoro') {
-                        setTtsKokoroVoice(value as KokoroTtsVoice)
-                      } else if (ttsEngine === 'moss') {
+                      if (ttsEngine === 'moss') {
                         setTtsMossVoice(value as MossTtsVoice)
                       } else {
                         setTtsSupertonicVoice(value as SupertonicTtsVoice)
@@ -821,12 +614,7 @@ export const AiPanel = memo(function AiPanel() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="max-h-72">
-                      {(ttsEngine === 'kokoro'
-                        ? KOKORO_TTS_VOICE_OPTIONS
-                        : ttsEngine === 'moss'
-                          ? MOSS_TTS_VOICE_OPTIONS
-                          : SUPERTONIC_TTS_VOICE_OPTIONS
-                      ).map((option) => (
+                      {(ttsEngine === 'moss' ? MOSS_TTS_VOICE_OPTIONS : SUPERTONIC_TTS_VOICE_OPTIONS).map((option) => (
                         <SelectItem key={option.value} value={option.value} className="text-xs">
                           {option.label}
                         </SelectItem>
@@ -952,219 +740,6 @@ export const AiPanel = memo(function AiPanel() {
           </CollapsibleContent>
         </Collapsible>
 
-        <Collapsible open={musicSectionOpen} onOpenChange={setMusicSectionOpen}>
-          <div className="-mx-3 bg-secondary/50 px-3 py-2">
-            <div className="flex items-center gap-2">
-              <CollapsibleTrigger asChild>
-                <button
-                  type="button"
-                  className="flex flex-1 items-center justify-between gap-2 text-left"
-                  aria-label={
-                    musicSectionOpen
-                      ? t('editor.aiPanel.collapseMusicGeneration')
-                      : t('editor.aiPanel.expandMusicGeneration')
-                  }
-                >
-                  <h2 className="text-sm font-medium">{t('editor.aiPanel.musicGeneration')}</h2>
-                  <ChevronDown
-                    className={cn(
-                      'h-4 w-4 text-muted-foreground transition-transform',
-                      musicSectionOpen && 'rotate-180',
-                    )}
-                  />
-                </button>
-              </CollapsibleTrigger>
-              <Popover open={musicInfoOpen} onOpenChange={setMusicInfoOpen}>
-                <PopoverTrigger asChild>
-                  <button
-                    type="button"
-                    className="rounded-full p-0.5 text-muted-foreground hover:text-foreground"
-                    aria-label={t('editor.aiPanel.musicGenerationInfo')}
-                    onMouseEnter={() => setMusicInfoOpen(true)}
-                    onMouseLeave={() => setMusicInfoOpen(false)}
-                  >
-                    <Info className="h-3.5 w-3.5" />
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent
-                  side="bottom"
-                  align="start"
-                  className="w-72 space-y-2 p-3 text-xs"
-                  onMouseEnter={() => setMusicInfoOpen(true)}
-                  onMouseLeave={() => setMusicInfoOpen(false)}
-                  onOpenAutoFocus={(e) => e.preventDefault()}
-                >
-                  <div className="flex flex-wrap items-center gap-1.5">
-                    <span className="rounded-full border border-border bg-background px-2 py-0.5 text-[11px] uppercase tracking-wide text-muted-foreground">
-                      WebGPU
-                    </span>
-                    <span className="rounded-full border border-border bg-background px-2 py-0.5 text-[11px] uppercase tracking-wide text-muted-foreground">
-                      Local
-                    </span>
-                  </div>
-                  <p className="leading-relaxed text-muted-foreground">
-                    {t('editor.aiPanel.musicgenDescription')}
-                  </p>
-                  <table className="w-full text-[11px]">
-                    <tbody>
-                      {MUSICGEN_MODEL_OPTIONS.map((option) => (
-                        <tr key={option.value} className="border-t border-border/50">
-                          <td className="py-1 pr-2 font-medium text-foreground">{option.label}</td>
-                          <td className="py-1 text-right text-muted-foreground">
-                            {option.downloadLabel}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                  <p className="leading-relaxed text-muted-foreground">
-                    {t('editor.aiPanel.musicgenPromptHint')}
-                  </p>
-                </PopoverContent>
-              </Popover>
-            </div>
-          </div>
-
-          <CollapsibleContent className="space-y-4 pt-3">
-            {!isMusicSupported && (
-              <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-100">
-                {t('editor.aiPanel.musicgenUnsupported')}
-              </div>
-            )}
-
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="ai-music-prompt">{t('editor.aiPanel.prompt')}</Label>
-                <Select
-                  value=""
-                  onValueChange={(value) => setMusicPrompt(value)}
-                  disabled={isMusicGenerating}
-                >
-                  <SelectTrigger className="h-6 w-auto gap-1 border-none bg-transparent px-1.5 text-[11px] text-muted-foreground shadow-none hover:text-foreground">
-                    <SelectValue placeholder={t('editor.aiPanel.presets')} />
-                  </SelectTrigger>
-                  <SelectContent align="end">
-                    {MUSIC_PROMPT_PRESETS.map((preset) => (
-                      <SelectItem
-                        key={preset.labelKey}
-                        value={t(preset.promptKey)}
-                        className="text-xs"
-                      >
-                        {t(preset.labelKey)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <Textarea
-                id="ai-music-prompt"
-                value={musicPrompt}
-                onChange={(event) => setMusicPrompt(event.target.value)}
-                placeholder={t('editor.aiPanel.musicPromptPlaceholder')}
-                className="min-h-24 resize-y bg-secondary/30 text-sm"
-                disabled={isMusicGenerating}
-              />
-            </div>
-
-            <div className="flex items-center gap-2">
-              <SliderInput
-                label={t('editor.aiPanel.length')}
-                value={musicDuration}
-                onChange={(value) => setMusicDuration(Math.round(value))}
-                min={currentMusicModel.minDurationSeconds}
-                max={currentMusicModel.maxDurationSeconds}
-                step={1}
-                unit="s"
-                disabled={isMusicGenerating}
-              />
-              {isMusicGenerating && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleMusicCancel}
-                  className="h-7 shrink-0 gap-1.5 text-muted-foreground"
-                >
-                  <X className="h-3.5 w-3.5" />
-                  {t('common.cancel')}
-                </Button>
-              )}
-              <Button
-                size="sm"
-                onClick={() => {
-                  void handleMusicGenerate()
-                }}
-                disabled={
-                  isMusicGenerating || !trimmedMusicPrompt || !currentProjectId || !isMusicSupported
-                }
-                className="h-7 shrink-0 gap-1.5"
-              >
-                {isMusicGenerating ? (
-                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                ) : (
-                  <WandSparkles className="h-3.5 w-3.5" />
-                )}
-                {isMusicGenerating ? t('editor.tts.generating') : t('editor.tts.generate')}
-              </Button>
-            </div>
-
-            {musicProgress && (
-              <div className="space-y-2 rounded-lg border border-border bg-secondary/20 p-3">
-                <p className="text-xs text-muted-foreground">{musicProgress}</p>
-                {musicProgressPct != null && (
-                  <div className="h-1.5 overflow-hidden rounded-full bg-secondary">
-                    <div
-                      className="h-full rounded-full bg-primary transition-[width] duration-300 ease-linear"
-                      style={{ width: `${Math.round(musicProgressPct * 100)}%` }}
-                    />
-                  </div>
-                )}
-              </div>
-            )}
-
-            {musicError && (
-              <div className="rounded-lg border border-destructive/40 bg-destructive/10 p-3 text-xs text-destructive">
-                {musicError}
-              </div>
-            )}
-
-            {musicGenerations.length > 0 && (
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-medium text-muted-foreground">
-                    {t('editor.aiPanel.musicHistory', {
-                      count: musicGenerations.length,
-                      size: formatBytes(totalMusicBytes),
-                    })}
-                  </span>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-6 gap-1 px-2 text-[11px] text-muted-foreground"
-                    onClick={() => clearGenerationList(setMusicGenerations)}
-                    disabled={anyMusicSaving}
-                  >
-                    <Trash2 className="h-3 w-3" />
-                    {t('editor.aiPanel.clearAll')}
-                  </Button>
-                </div>
-
-                <div className="space-y-2">
-                  {musicGenerations.map((generation) => (
-                    <GenerationRow
-                      key={generation.id}
-                      generation={generation}
-                      onSave={(entry) => handleSave(entry, setMusicGenerations, setMusicError)}
-                      onSaveAndInsert={(entry) =>
-                        handleSaveAndInsert(entry, setMusicGenerations, setMusicError)
-                      }
-                      onRemove={(id) => removeGenerationFromList(setMusicGenerations, id)}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-          </CollapsibleContent>
-        </Collapsible>
       </div>
     </div>
   )

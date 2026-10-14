@@ -15,12 +15,15 @@ const logger = createLogger('ParakeetWorker')
 
 const ORT_WASM_PATH =
   'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.26.0-dev.20260410-5e55544225/dist/'
-// a fixed revision: the repository moved its files into per-precision folders once, and main may move them again
+// Parakeet Ultra int8, the files and revisions Dub Studio pins; the ultra repository has no nemo128
+// preprocessor, which is byte-identical to the base model's.
 const HF_BASE =
-  'https://huggingface.co/Olicorne/parakeet-tdt-0.6b-v3-smoothquant-onnx/resolve/0185392e8c7fe5e6bbcc00fb6793236c38b01fe5'
+  'https://huggingface.co/Masterx/parakeet-tdt-0.6b-ultra-onnx/resolve/99b09f030a5a6efeaa13cf2cf54592100ce2c3f1'
+const PREPROCESSOR_BASE =
+  'https://huggingface.co/istupakov/parakeet-tdt-0.6b-v3-onnx/resolve/8f23f0c03c8761650bdb5b40aaf3e40d2c15f1ce'
 
-const ENCODER_INT8 = 'int8/encoder-model.int8.onnx'
-const DECODER_INT8 = 'int8/decoder_joint-model.int8.onnx'
+const ENCODER_INT8 = 'encoder-model.int8.onnx'
+const DECODER_INT8 = 'decoder_joint-model.int8.onnx'
 const PREPROCESSOR = 'nemo128.onnx'
 const VOCAB_FILE = 'vocab.txt'
 
@@ -234,7 +237,7 @@ async function initPipeline(): Promise<void> {
     // monotonic merge would then drop every `downloading` event that followed.
     const download = new DownloadProgress([PREPROCESSOR, encoderFile, DECODER_INT8])
     const preprocBytes = await fetchOnnxModelBytes(
-      `${HF_BASE}/${PREPROCESSOR}`,
+      `${PREPROCESSOR_BASE}/${PREPROCESSOR}`,
       download.track(PREPROCESSOR),
     )
     const encoderBytes = await fetchOnnxModelBytes(

@@ -110,7 +110,7 @@ self.onmessage = async (event: MessageEvent) => {
     processing = false
     paused = false
     initChain = initChain
-      .then(() => initPipeline(message.modelId, message.quantization ?? 'hybrid'))
+      .then(() => initPipeline(message.modelId, message.quantization ?? 'q8'))
       .catch(() => {})
     await initChain
     return
@@ -160,10 +160,7 @@ async function initPipeline(modelId: string, quantization: QuantizationType): Pr
     if (!asrPipeline || currentModelId !== modelId) {
       currentModelId = modelId
       const downloadCache: DownloadProgressCache = new Map()
-      const dtype =
-        quantization === 'hybrid'
-          ? { encoder_model: 'fp32', decoder_model_merged: 'q4' }
-          : quantization
+      const dtype = quantization === 'q4' ? 'q4' : 'q8'
 
       const progressCallback = (progress: ProgressInfo) => {
         if (progress.status !== 'progress') {

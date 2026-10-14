@@ -6,6 +6,7 @@ import {
   DEFAULT_WHISPER_MODEL,
   DEFAULT_WHISPER_QUANTIZATION,
   normalizeSelectableWhisperModel,
+  normalizeWhisperQuantization,
 } from '@/shared/utils/whisper-settings'
 import type { EditorDensityPresetName } from '@/config/editor-layout'
 import { DEFAULT_EDITOR_DENSITY_PRESET, normalizeEditorDensityPreset } from '@/config/editor-layout'
@@ -188,6 +189,9 @@ export const useSettingsStore = create<SettingsStore>()(
           if (key === 'defaultWhisperModel') {
             return { [key]: normalizeSelectableWhisperModel(value as MediaTranscriptModel) }
           }
+          if (key === 'defaultWhisperQuantization') {
+            return { [key]: normalizeWhisperQuantization(value as MediaTranscriptQuantization) }
+          }
           if (key === 'captioningIntervalUnit') {
             const unit = normalizeCaptioningIntervalUnit(value)
             return {
@@ -318,6 +322,9 @@ export const useSettingsStore = create<SettingsStore>()(
           ...currentState,
           ...typedState,
           defaultWhisperModel: normalizeSelectableWhisperModel(typedState.defaultWhisperModel),
+          defaultWhisperQuantization: normalizeWhisperQuantization(
+            typedState.defaultWhisperQuantization,
+          ),
           hotkeyOverrides: sanitizeHotkeyOverrides(typedState.hotkeyOverrides),
           editorDensity: normalizeEditorDensityPreset(typedState.editorDensity),
           captioningIntervalUnit,

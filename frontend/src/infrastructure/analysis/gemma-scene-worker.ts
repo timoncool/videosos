@@ -1,5 +1,5 @@
 /**
- * Web Worker for Gemma-4 scene cut verification.
+ * Web Worker for Gemma-4 scene cut verification and frame captions.
  *
  * Loads Gemma-4-E4B-it-ONNX via @huggingface/transformers (bundled by Vite).
  * Runs inside a Worker so that model loading and inference don't block the
@@ -8,9 +8,11 @@
  * Messages:
  *   → { type: 'init' }                         — preload model
  *   → { type: 'verify', id, before, after }     — verify a candidate cut
+ *   → { type: 'describe', id, image }           — describe an image with tags
  *   ← { type: 'ready' }                         — model loaded
  *   ← { type: 'progress', stage, percent }       — loading progress
  *   ← { type: 'result', id, isSceneCut, reason } — verification result
+ *   ← { type: 'caption', id, caption }             — image caption
  *   ← { type: 'error', message }                 — error
  */
 
@@ -21,8 +23,10 @@ import {
   env,
 } from '@huggingface/transformers'
 import { createModelLoadProgressCallback } from './model-load-progress'
+import { SCENE_CAPTION_PROMPT, parseSceneCaptionResponse } from './captioning/scene-caption-format'
 
 const MODEL_ID = 'onnx-community/gemma-4-E4B-it-ONNX'
+const DESCRIBE_MAX_NEW_TOKENS = 160
 
 // Configure transformers.js for browser worker context
 env.useBrowserCache = true
@@ -174,6 +178,42 @@ async function verifyCandidate(id: number, beforeBlob: Blob, afterBlob: Blob): P
   }
 }
 
+async function describeImage(id: number, imageBlob: Blob): Promise<void> {
+  if (!model || !processor) {
+    post({ type: 'error', message: 'Model not loaded' })
+    return
+  }
+
+  try {
+    const image = await RawImage.fromBlob(imageBlob)
+    const messages = [
+      {
+        role: 'user',
+        content: [{ type: 'image' }, { type: 'text', text: SCENE_CAPTION_PROMPT }],
+      },
+    ]
+    const prompt = processor.apply_chat_template(messages, {
+      enable_thinking: false,
+      add_generation_prompt: true,
+    })
+    const inputs = await processor(prompt, [image], null, { add_special_tokens: false })
+    const outputs = await model.generate({
+      ...inputs,
+      max_new_tokens: DESCRIBE_MAX_NEW_TOKENS,
+      do_sample: false,
+      repetition_penalty: 1.05,
+    })
+    const decoded = processor.batch_decode(
+      outputs.slice(null, [inputs.input_ids.dims.at(-1), null]),
+      { skip_special_tokens: true },
+    )
+    const parsed = parseSceneCaptionResponse(decoded[0] ?? '')
+    post({ type: 'caption', id, caption: parsed.text, sceneData: parsed.sceneData })
+  } catch (err) {
+    post({ type: 'caption', id, caption: '', error: (err as Error).message })
+  }
+}
+
 /** Release model and processor to free VRAM. */
 function dispose(): void {
   disposed = true
@@ -195,6 +235,8 @@ self.addEventListener('message', (event: MessageEvent) => {
     void loadModel()
   } else if (msg.type === 'verify') {
     void verifyCandidate(msg.id, msg.before, msg.after)
+  } else if (msg.type === 'describe') {
+    void describeImage(msg.id, msg.image)
   } else if (msg.type === 'dispose') {
     dispose()
   }

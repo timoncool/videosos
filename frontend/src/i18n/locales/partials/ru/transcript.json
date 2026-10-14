@@ -12,7 +12,7 @@
     "noTranscript": "У этого клипа пока нет расшифровки.",
     "transcriptionFailed": "Не удалось создать расшифровку.",
     "tryAgain": "Повторить",
-    "largeTurboFallback": "Недостаточно памяти для Large Turbo. Повторная попытка с Whisper Small…",
+    "largeTurboFallback": "Недостаточно памяти для Large Turbo. Повторная попытка в Q4…",
     "generate": "Создать расшифровку",
     "transcribing": "Создание расшифровки…",
     "loading": "Загрузка расшифровки…",

@@ -12,7 +12,7 @@
     "noTranscript": "Bu klibin henüz transkripti yok.",
     "transcriptionFailed": "Yazıya dökme başarısız oldu.",
     "tryAgain": "Tekrar dene",
-    "largeTurboFallback": "Large Turbo için bellek yetersiz kaldı. Whisper Small ile yeniden deneniyor…",
+    "largeTurboFallback": "Large Turbo için bellek yetersiz kaldı. Q4 ile yeniden deneniyor…",
     "generate": "Transkript oluştur",
     "transcribing": "Yazıya dökülüyor…",
     "loading": "Transkript yükleniyor…",

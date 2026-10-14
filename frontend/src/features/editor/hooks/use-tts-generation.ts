@@ -1,6 +1,5 @@
 import { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { KokoroTtsModel } from '../services/kokoro-tts-service'
 import type { SupertonicTtsLanguageSelection } from '../services/supertonic-tts-service'
 import {
   generateTtsAudio,
@@ -40,7 +39,6 @@ export interface TtsGenerationParams {
   language: SupertonicTtsLanguageSelection
   /** Effective speed: 1 for engines that ignore the slider. */
   speed: number
-  model: KokoroTtsModel
   isSupported: boolean
   loadMediaItems: () => Promise<void>
   showNotification: (notification: { type: 'success' | 'warning'; message: string }) => void
@@ -52,8 +50,7 @@ export interface TtsGenerationParams {
  */
 export function useTtsGeneration(params: TtsGenerationParams) {
   const { t } = useTranslation()
-  const { projectId, sourceItemId, text, engine, voice, voiceLabel, language, speed, model } =
-    params
+  const { projectId, sourceItemId, text, engine, voice, voiceLabel, language, speed } = params
   const { isSupported, loadMediaItems, showNotification } = params
 
   const [isGenerating, setIsGenerating] = useState(false)
@@ -123,11 +120,11 @@ export function useTtsGeneration(params: TtsGenerationParams) {
         duration: output.duration,
         voice: voiceLabel,
         model: TTS_MODEL_LABEL_BY_ENGINE[engine],
-        tags: TTS_RESULT_TAGS_BY_ENGINE[engine](voice, model),
+        tags: TTS_RESULT_TAGS_BY_ENGINE[engine](voice),
       })
       setProgress(null)
     },
-    [engine, model, voice, voiceLabel],
+    [engine, voice, voiceLabel],
   )
 
   const generate = useCallback(async () => {
@@ -147,7 +144,6 @@ export function useTtsGeneration(params: TtsGenerationParams) {
       voice,
       language,
       speed,
-      model,
       onProgress: (message) => {
         if (sessionIdRef.current === session) setProgress(message)
       },
@@ -171,7 +167,6 @@ export function useTtsGeneration(params: TtsGenerationParams) {
     engine,
     isSupported,
     language,
-    model,
     projectId,
     speed,
     t,

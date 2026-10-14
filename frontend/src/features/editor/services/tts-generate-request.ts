@@ -1,4 +1,3 @@
-import { kokoroTtsService, type KokoroTtsModel, type KokoroTtsVoice } from './kokoro-tts-service'
 import { mossTtsService, type MossTtsVoice } from './moss-tts-service'
 import {
   supertonicTtsService,
@@ -14,7 +13,6 @@ export interface TtsGenerateInput {
   voice: string
   language: SupertonicTtsLanguageSelection
   speed: number
-  model: KokoroTtsModel
   onProgress: (message: string) => void
 }
 
@@ -32,14 +30,6 @@ const ENGINE_GENERATORS: Record<
   StoredTtsEngine,
   (input: TtsGenerateInput) => Promise<TtsGenerateOutput>
 > = {
-  kokoro: ({ text, voice, speed, model, onProgress }) =>
-    kokoroTtsService.generateSpeechFile({
-      text,
-      voice: voice as KokoroTtsVoice,
-      speed,
-      model,
-      onProgress,
-    }),
   moss: ({ text, voice, speed, onProgress }) =>
     mossTtsService.generateSpeechFile({
       text,

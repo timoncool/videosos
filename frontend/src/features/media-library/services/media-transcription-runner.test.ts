@@ -91,25 +91,25 @@ describe('runMediaTranscriptionJob', () => {
     expect(storeState.clearTranscriptProgress).toHaveBeenCalledWith('media-1')
   })
 
-  it('retries Large Turbo with Whisper Small after an out-of-memory failure', async () => {
-    const transcript = { ...makeTranscript(), model: 'whisper-small' as const }
-    const onModelFallback = vi.fn()
+  it('retries Large Turbo at Q4 after an out-of-memory failure', async () => {
+    const transcript = { ...makeTranscript(), model: 'whisper-large' as const }
+    const onLowMemoryRetry = vi.fn()
     mediaTranscriptionServiceMocks.transcribeMedia
       .mockRejectedValueOnce(new Error('WebGPU device lost: out of memory'))
       .mockResolvedValueOnce(transcript)
 
     const result = await runMediaTranscriptionJob('media-1', {
       model: 'whisper-large',
-      quantization: 'hybrid',
-      onModelFallback,
+      quantization: 'q8',
+      onLowMemoryRetry,
     })
 
     expect(result).toEqual({ status: 'completed', transcript })
-    expect(onModelFallback).toHaveBeenCalledWith('whisper-large', 'whisper-small')
+    expect(onLowMemoryRetry).toHaveBeenCalledTimes(1)
     expect(mediaTranscriptionServiceMocks.transcribeMedia).toHaveBeenNthCalledWith(
       2,
       'media-1',
-      expect.objectContaining({ model: 'whisper-small' }),
+      expect.objectContaining({ model: 'whisper-large', quantization: 'q4' }),
     )
     expect(storeState.setTranscriptStatus).toHaveBeenLastCalledWith('media-1', 'ready')
   })

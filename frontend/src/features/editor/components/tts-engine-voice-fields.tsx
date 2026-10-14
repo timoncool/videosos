@@ -63,12 +63,6 @@ export function TtsEngineVoiceFields({
             </PopoverTrigger>
             <PopoverContent align="start" className="w-80 space-y-2 p-3">
               <div className="space-y-1">
-                <p className="text-xs font-medium">Kokoro</p>
-                <p className="text-[11px] text-muted-foreground">
-                  {t('editor.tts.kokoroDescription')}
-                </p>
-              </div>
-              <div className="space-y-1">
                 <p className="text-xs font-medium">MOSS Nano</p>
                 <p className="text-[11px] text-muted-foreground">
                   {t('editor.tts.supportedLanguages', { languages: mossLanguagesLabel })}
@@ -92,9 +86,6 @@ export function TtsEngineVoiceFields({
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="kokoro" className="text-xs">
-              {t('editor.tts.kokoroOption')}
-            </SelectItem>
             <SelectItem value="moss" className="text-xs">
               {t('editor.tts.mossOption')}
             </SelectItem>

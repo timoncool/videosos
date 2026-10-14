@@ -5,7 +5,7 @@ const page = {
   slug: 'local-ai',
   title: 'Local AI Tools',
   description:
-    'Local text to speech, music generation, and transcription, with local model caching.',
+    'Local text to speech and transcription, with local model caching.',
   category: 'Creative Tools',
   related: ['scene-browser', 'text-captions-subtitles', 'audio'],
   sections: [
@@ -42,7 +42,6 @@ const page = {
           kind: 'table',
           headers: ['Engine', 'Languages', 'Runs on'],
           rows: [
-            ['Kokoro', 'English', 'WebGPU'],
             ['MOSS Nano', '20 languages', 'CPU'],
             ['Supertonic 3', '31 languages', 'Local ONNX'],
           ],
@@ -50,14 +49,13 @@ const page = {
       ],
     },
     {
-      title: 'Music generation',
+      title: 'Music',
       blocks: [
         {
           kind: 'list',
           items: [
-            'Expand **Music Generation** and describe the track with a prompt, or start from a preset such as Lo-fi chill or Upbeat EDM.',
-            'Set the length in seconds, then **Generate Music**; the first run downloads the model and caches it.',
-            'Preview the clip, then **Save and Insert** into the timeline or **Save to Library**.',
+            'Music comes from the **Generate** tab: cloud models, or YuE2, MiniMax Music3 and ACE-Step Studio when one of them runs on this computer.',
+            'A song made in a studio stays in its library, and its audio lands in VideoSOS media.',
           ],
         },
       ],
@@ -69,8 +67,8 @@ const page = {
           kind: 'list',
           items: [
             'Transcription lives in the Media library and Transcript workflow, separate from the AI tab.',
-            '**Parakeet** is the fast default engine and covers many European languages.',
-            'Whisper models (Tiny, Base, Small, Large v3 Turbo) are also available, and VideoSOS falls back to Whisper when needed.',
+            '**Parakeet Ultra** (int8) is the default engine and covers 25 European languages, as in Dub Studio.',
+            'Other languages, or a browser without WebGPU, go to **Whisper Large v3 Turbo** (int8).',
           ],
         },
         {

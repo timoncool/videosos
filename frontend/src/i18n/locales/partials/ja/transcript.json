@@ -12,7 +12,7 @@
     "noTranscript": "このクリップにはまだ文字起こしがありません。",
     "transcriptionFailed": "文字起こしに失敗しました。",
     "tryAgain": "再試行",
-    "largeTurboFallback": "Large Turbo のメモリが不足しました。Whisper Small で再試行しています…",
+    "largeTurboFallback": "Large Turbo のメモリが不足しました。Q4 で再試行しています…",
     "generate": "文字起こしを生成",
     "transcribing": "文字起こし中…",
     "loading": "文字起こしを読み込み中…",

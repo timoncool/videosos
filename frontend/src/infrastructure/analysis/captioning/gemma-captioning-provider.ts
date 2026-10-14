@@ -1,9 +1,9 @@
 import { createLogger } from '@/shared/logging/logger'
-import { createLfmSceneWorker } from '../create-lfm-worker'
+import { createGemmaSceneWorker } from '../create-gemma-worker'
 import { seekVideo } from '../scene-detection-utils'
 import type { CaptioningOptions, MediaCaption, MediaCaptioningProvider } from './types'
 
-const log = createLogger('LfmCaptioningProvider')
+const log = createLogger('GemmaCaptioningProvider')
 
 const MAX_DIM = 512
 const DEFAULT_SAMPLE_INTERVAL_SEC = 3
@@ -36,7 +36,7 @@ function waitForReady(
   return new Promise<void>((resolve, reject) => {
     let timeout = setTimeout(() => {
       worker.removeEventListener('message', onMessage)
-      reject(new Error('LFM worker init timed out'))
+      reject(new Error('Gemma worker init timed out'))
     }, INIT_TIMEOUT_MS)
 
     const cleanup = () => {
@@ -62,7 +62,7 @@ function waitForReady(
         clearTimeout(timeout)
         timeout = setTimeout(() => {
           worker.removeEventListener('message', onMessage)
-          reject(new Error('LFM worker init timed out'))
+          reject(new Error('Gemma worker init timed out'))
         }, INIT_TIMEOUT_MS)
         onProgress?.({
           stage: 'loading-model',
@@ -139,9 +139,9 @@ function captionSingle(
   })
 }
 
-export const lfmCaptioningProvider: MediaCaptioningProvider = {
-  id: 'lfm-captioning',
-  label: 'LFM 2.5 VL',
+export const gemmaCaptioningProvider: MediaCaptioningProvider = {
+  id: 'gemma-captioning',
+  label: 'Gemma 4 E4B',
   async captionVideo(video, options = {}) {
     const {
       onProgress,
@@ -154,7 +154,7 @@ export const lfmCaptioningProvider: MediaCaptioningProvider = {
         ? rawSampleInterval
         : DEFAULT_SAMPLE_INTERVAL_SEC
 
-    const worker = createLfmSceneWorker()
+    const worker = createGemmaSceneWorker()
     try {
       await waitForReady(worker, onProgress, signal)
       if (signal?.aborted) {
@@ -229,7 +229,7 @@ export const lfmCaptioningProvider: MediaCaptioningProvider = {
   async captionImage(imageBlob, options = {}) {
     const { onProgress, signal } = options
 
-    const worker = createLfmSceneWorker()
+    const worker = createGemmaSceneWorker()
     try {
       await waitForReady(worker, onProgress, signal)
       if (signal?.aborted) {

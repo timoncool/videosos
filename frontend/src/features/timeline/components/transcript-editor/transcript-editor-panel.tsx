@@ -734,7 +734,7 @@ export function TranscriptEditorPanel({ active }: TranscriptEditorPanelProps) {
         try {
           const result = await runMediaTranscriptionJob(mediaId, {
             ...values,
-            onModelFallback: () => {
+            onLowMemoryRetry: () => {
               toast.info(t('transcript.largeTurboFallback'))
             },
           })

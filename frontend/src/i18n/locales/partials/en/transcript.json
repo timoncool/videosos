@@ -12,7 +12,7 @@
     "noTranscript": "This clip has no transcript yet.",
     "transcriptionFailed": "Transcript generation failed.",
     "tryAgain": "Try again",
-    "largeTurboFallback": "Large Turbo ran out of memory. Retrying with Whisper Small…",
+    "largeTurboFallback": "Large Turbo ran out of memory. Retrying at Q4…",
     "generate": "Generate transcript",
     "transcribing": "Transcribing…",
     "loading": "Loading transcript…",

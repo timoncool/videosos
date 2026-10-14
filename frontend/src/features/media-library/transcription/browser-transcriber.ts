@@ -19,7 +19,7 @@ import {
   resolveTranscriptionEngine,
   type ResolvedTranscriptionEngine,
 } from './transcription-engine'
-import { DEFAULT_WHISPER_MODEL } from '@/shared/utils/whisper-settings'
+import { DEFAULT_WHISPER_MODEL, DEFAULT_WHISPER_QUANTIZATION } from '@/shared/utils/whisper-settings'
 import { usePlaybackStore } from '@/shared/state/playback'
 
 export class BrowserTranscriber {
@@ -235,7 +235,8 @@ export class TranscribeStream implements AsyncIterable<TranscriptSegment> {
     const now = Date.now()
     const isParakeet = this.resolved.engine === 'parakeet'
     const quantization =
-      (this.options.quantization as MediaTranscriptQuantization | undefined) ?? 'hybrid'
+      (this.options.quantization as MediaTranscriptQuantization | undefined) ??
+      DEFAULT_WHISPER_QUANTIZATION
 
     localInferenceRuntimeRegistry.registerRuntime(
       {

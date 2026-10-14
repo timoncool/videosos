@@ -12,7 +12,7 @@
     "noTranscript": "Ce clip n’a pas encore de transcription.",
     "transcriptionFailed": "Échec de la transcription.",
     "tryAgain": "Réessayer",
-    "largeTurboFallback": "Large Turbo a manqué de mémoire. Nouvelle tentative avec Whisper Small…",
+    "largeTurboFallback": "Large Turbo a manqué de mémoire. Nouvelle tentative en Q4…",
     "generate": "Générer la transcription",
     "transcribing": "Transcription…",
     "loading": "Chargement de la transcription…",

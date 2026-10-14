@@ -35,11 +35,12 @@ describe('whisper-settings', () => {
   })
 
   it('includes quantization guidance for memory tradeoffs', () => {
-    expect(getWhisperQuantizationOption('hybrid')).toMatchObject({
-      value: 'hybrid',
-      label: 'Hybrid (Recommended)',
+    expect(getWhisperQuantizationOption('q8')).toMatchObject({
+      value: 'q8',
+      label: 'Q8 (Recommended)',
     })
-    expect(getWhisperQuantizationOption('q4').description).toContain('low-memory')
-    expect(getWhisperQuantizationOption(undefined).value).toBe('hybrid')
+    expect(getWhisperQuantizationOption('q4').description).toContain('tight memory')
+    expect(getWhisperQuantizationOption(undefined).value).toBe('q8')
+    expect(getWhisperQuantizationOption('fp32').value).toBe('q8')
   })
 })

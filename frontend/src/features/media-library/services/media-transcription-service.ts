@@ -56,6 +56,7 @@ import {
 import {
   DEFAULT_WHISPER_MODEL,
   DEFAULT_WHISPER_QUANTIZATION,
+  normalizeWhisperQuantization,
   normalizeWhisperLanguage,
 } from '@/shared/utils/whisper-settings'
 import { TRANSCRIPTION_CANCELLED_MESSAGE } from '@/shared/utils/transcription-cancellation'
@@ -400,8 +401,9 @@ class MediaTranscriptionService {
   ): Promise<MediaTranscript> {
     const settings = useSettingsStore.getState()
     const model = options.model ?? settings.defaultWhisperModel ?? DEFAULT_MODEL
-    const quantization =
-      options.quantization ?? settings.defaultWhisperQuantization ?? DEFAULT_QUANTIZATION
+    const quantization = normalizeWhisperQuantization(
+      options.quantization ?? settings.defaultWhisperQuantization ?? DEFAULT_QUANTIZATION,
+    )
     const language = normalizeWhisperLanguage(options.language ?? settings.defaultWhisperLanguage)
     const requestKey = `${mediaId}:${model}:${quantization}:${language ?? 'auto'}`
     const listener: QueuedTranscriptionListener = {

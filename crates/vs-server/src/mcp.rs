@@ -724,7 +724,7 @@ fn tools() -> &'static [Tool] {
             },
             Tool {
                 name: "transcribe",
-                description: "Transcribes the speech of a video or sound of the library on this computer (free; Whisper or Parakeet in the window): words with their times. model: parakeet-tdt-v3, whisper-tiny|base|small|large; language as a code.",
+                description: "Transcribes the speech of a video or sound of the library on this computer (free; Parakeet Ultra int8 in the window, Whisper Large v3 Turbo int8 for the languages Parakeet lacks): words with their times. model: parakeet-tdt-v3 or whisper-large; language as a code.",
                 looks: false,
                 schema: || object(json!({ "media_id": { "type": "string" }, "model": { "type": "string" }, "language": { "type": "string" } }), &["media_id"]),
                 call: |args| window("transcribe", args, 600),

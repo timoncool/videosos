@@ -96,7 +96,7 @@ export type WhisperWorkerMessage =
 export const MODEL_IDS: Record<WhisperModel, string> = {
   // Parakeet resolves its own ONNX assets inside the worker; this entry is the source repo
   // for reference and to satisfy the exhaustive model map.
-  'parakeet-tdt-v3': 'Olicorne/parakeet-tdt-0.6b-v3-smoothquant-onnx',
+  'parakeet-tdt-v3': 'Masterx/parakeet-tdt-0.6b-ultra-onnx',
   'whisper-tiny': 'onnx-community/whisper-tiny_timestamped',
   'whisper-base': 'onnx-community/whisper-base_timestamped',
   'whisper-small': 'onnx-community/whisper-small_timestamped',

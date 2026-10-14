@@ -15,12 +15,6 @@ import {
   type StoredTtsEngine,
 } from '@/shared/utils/tts-settings'
 import { useMediaLibraryStore } from '@/features/editor/deps/media-library'
-import {
-  KOKORO_TTS_BEST_MODEL,
-  kokoroTtsService,
-  type KokoroTtsModel,
-  type KokoroTtsVoice,
-} from '@/features/editor/services/kokoro-tts-service'
 import { mossTtsService, type MossTtsVoice } from '@/features/editor/services/moss-tts-service'
 import {
   supertonicTtsService,
@@ -57,19 +51,15 @@ export const TtsGenerateDialog = memo(function TtsGenerateDialog() {
 
   const [text, setText] = useState('')
   const [engine, setEngine] = useState<StoredTtsEngine>(() => getStoredTtsEngine())
-  const [kokoroVoice, setKokoroVoice] = useState<KokoroTtsVoice>('af_heart')
   const [mossVoice, setMossVoice] = useState<MossTtsVoice>('Xiaoyu')
   const [supertonicVoice, setSupertonicVoice] = useState<SupertonicTtsVoice>('M3')
   const [supertonicLanguage, setSupertonicLanguage] =
     useState<SupertonicTtsLanguageSelection>('auto')
-  const model: KokoroTtsModel = KOKORO_TTS_BEST_MODEL
   const [speed, setSpeed] = useState(1)
 
-  const isKokoroSupported = kokoroTtsService.isSupported()
   const isMossSupported = mossTtsService.isSupported()
   const isSupertonicSupported = supertonicTtsService.isSupported()
   const engineSupport: Record<StoredTtsEngine, boolean> = {
-    kokoro: isKokoroSupported,
     moss: isMossSupported,
     supertonic: isSupertonicSupported,
   }
@@ -79,7 +69,6 @@ export const TtsGenerateDialog = memo(function TtsGenerateDialog() {
   const effectiveSpeed = supportsNativeSpeed ? speed : 1
   const trimmedText = text.trim()
   const voices: TtsVoiceSelection = {
-    kokoro: kokoroVoice,
     moss: mossVoice,
     supertonic: supertonicVoice,
   }
@@ -110,7 +99,6 @@ export const TtsGenerateDialog = memo(function TtsGenerateDialog() {
     voiceLabel,
     language: supertonicLanguage,
     speed: effectiveSpeed,
-    model,
     isSupported: isTtsSupported,
     loadMediaItems,
     showNotification,
@@ -148,7 +136,6 @@ export const TtsGenerateDialog = memo(function TtsGenerateDialog() {
   const handleVoiceChange = useCallback(
     (value: string) => {
       TTS_VOICE_CHANGE_HANDLERS[engine](value, {
-        kokoro: setKokoroVoice,
         moss: setMossVoice,
         supertonic: setSupertonicVoice,
       })

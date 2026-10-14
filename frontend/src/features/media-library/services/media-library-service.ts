@@ -1953,8 +1953,8 @@ class MediaLibraryService {
     })()
 
     const resolvedOptions = {
-      service: options?.service ?? existingEnvelope?.service ?? 'lfm-captioning',
-      model: options?.model ?? existingEnvelope?.model ?? 'lfm-2.5-vl',
+      service: options?.service ?? existingEnvelope?.service ?? 'gemma-captioning',
+      model: options?.model ?? existingEnvelope?.model ?? 'gemma-4-e4b',
       sampleIntervalSec: options?.sampleIntervalSec ?? existingSampleInterval,
       embeddingModel: options?.embeddingModel ?? existingEnvelope?.data.embeddingModel,
       embeddingDim: options?.embeddingDim ?? existingEnvelope?.data.embeddingDim,
