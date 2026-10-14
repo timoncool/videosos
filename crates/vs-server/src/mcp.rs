@@ -312,6 +312,62 @@ fn tools() -> &'static [Tool] {
                 call: |args| window("console", args, 15),
             },
             Tool {
+                name: "url_tool_status",
+                description: "Whether videos can be downloaded by their links: the link tool (yt-dlp with deno, and ffmpeg) installed or missing, how many bytes it takes, an install running, and yt-dlp's version and update.",
+                looks: true,
+                schema: nothing,
+                call: |_| get_call("/api/url/tool".into()),
+            },
+            Tool {
+                name: "url_tool_install",
+                description: "Downloads the link tool (yt-dlp, deno and ffmpeg, pinned and checked by SHA-256; about 230 MB on Windows) in the background; url_tool_status follows it.",
+                looks: false,
+                schema: nothing,
+                call: |_| send(Method::POST, "/api/url/tool/install".into(), json!({})),
+            },
+            Tool {
+                name: "url_tool_update",
+                description: "Looks for a newer yt-dlp now (it is also looked for once a day) and installs it beside the working one once it passes its checks.",
+                looks: false,
+                schema: nothing,
+                call: |_| send(Method::POST, "/api/url/tool/update".into(), json!({})),
+            },
+            Tool {
+                name: "url_probe",
+                description: "What a video link is before downloading it: title, duration, uploader, the highest height, the qualities worth asking for and the expected size. cookies_path: a cookies.txt on this computer for a site that wants a signed-in user.",
+                looks: true,
+                schema: || object(json!({ "url": { "type": "string" }, "cookies_path": { "type": "string" } }), &["url"]),
+                call: |args| send(Method::POST, "/api/url/probe".into(), args.clone()),
+            },
+            Tool {
+                name: "url_fetch",
+                description: "Downloads a video by its link (YouTube and the other sites yt-dlp knows, or a direct file) into a project's media library: the window with that project open imports it. quality: best (default), 1080, 720, 480 or audio. Returns the download; follow it with url_fetches_list.",
+                looks: false,
+                schema: || object(json!({ "url": { "type": "string" }, "project_id": { "type": "string" }, "quality": { "type": "string", "enum": ["best", "1080", "720", "480", "audio"] }, "cookies_path": { "type": "string" } }), &["url", "project_id"]),
+                call: |args| send(Method::POST, "/api/url/fetches".into(), args.clone()),
+            },
+            Tool {
+                name: "url_fetches_list",
+                description: "The downloads by link, newest first: status, phase, bytes, speed, the error with a hint, and the media items made of a finished one.",
+                looks: true,
+                schema: nothing,
+                call: |_| get_call("/api/url/fetches".into()),
+            },
+            Tool {
+                name: "url_fetch_cancel",
+                description: "Stops a running download by link and removes what it fetched.",
+                looks: false,
+                schema: || object(json!({ "fetch_id": { "type": "string" } }), &["fetch_id"]),
+                call: |args| send(Method::POST, format!("/api/url/fetches/{}/cancel", segment(&text(args, "fetch_id")?)), json!({})),
+            },
+            Tool {
+                name: "url_fetch_resume",
+                description: "Goes on with a failed or interrupted download by link from where it stopped.",
+                looks: false,
+                schema: || object(json!({ "fetch_id": { "type": "string" } }), &["fetch_id"]),
+                call: |args| send(Method::POST, format!("/api/url/fetches/{}/resume", segment(&text(args, "fetch_id")?)), json!({})),
+            },
+            Tool {
                 name: "ui_notify",
                 description: "Shows the person a short message in the window for a few seconds - what you did, what you need from them - and keeps it in the window's journal. tone: info (default), success or error.",
                 looks: false,
@@ -561,11 +617,14 @@ const JOURNAL: &[(&str, &str, &str)] = &[
     ("timeline_redo", "redone", "timeline"),
     ("media_import", "imported", "media"),
     ("export_video", "exported", "video"),
+    ("url_fetch", "started", "download"),
+    ("url_fetch_cancel", "cancelled", "download"),
+    ("url_fetch_resume", "started", "download"),
 ];
 
 /// Tools that change something yet leave no line: the window's own controls and the service's upkeep.
 #[cfg(test)]
-const UNJOURNALED: &[&str] = &["catalog_refresh", "ui_click", "ui_type", "ui_press_key", "ui_scroll", "ui_notify", "project_open", "playhead_seek", "playback", "editor_tab"];
+const UNJOURNALED: &[&str] = &["catalog_refresh", "ui_click", "ui_type", "ui_press_key", "ui_scroll", "ui_notify", "url_tool_install", "url_tool_update", "project_open", "playhead_seek", "playback", "editor_tab"];
 
 fn journal_facts(name: &str) -> Option<(&'static str, &'static str)> {
     JOURNAL.iter().find(|(tool, _, _)| *tool == name).map(|(_, verb, kind)| (*verb, *kind))
@@ -591,6 +650,7 @@ fn change_target(kind: &str, args: &Value, before: &str, answer: &Value) -> Stri
         }
         "media" => args.get("path").or_else(|| args.get("url")).and_then(Value::as_str).map(file_name),
         "video" => answer.get("path").and_then(Value::as_str).map(file_name),
+        "download" => answer.get("title").and_then(Value::as_str).or_else(|| answer.get("url").and_then(Value::as_str)).or_else(|| args.get("url").and_then(Value::as_str)).map(str::to_string),
         _ => None,
     };
     named.map(|name| name.trim().chars().take(80).collect()).unwrap_or_default()

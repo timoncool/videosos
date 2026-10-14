@@ -29,6 +29,9 @@ mod spa;
 mod spend;
 mod tagging;
 mod title;
+pub mod tools;
+pub mod url_import;
+pub mod ytdlp;
 
 use std::net::TcpListener;
 use std::path::{Path, PathBuf};
@@ -59,6 +62,8 @@ pub struct Inner {
     pub catalog: Arc<catalog::Catalog>,
     pub jobs: Arc<jobs::Jobs>,
     pub journal: journal::Journal,
+    /// Videos downloaded by their links.
+    pub fetches: url_import::Fetches,
 }
 
 impl std::ops::Deref for AppState {
@@ -91,7 +96,8 @@ impl AppState {
         spend::init(jobs.clone());
         hub::start(&data, http.client.clone());
         let journal = journal::Journal::open(&data)?;
-        Ok(Self { inner: Arc::new(Inner { repo_root: repo_root.to_path_buf(), workspace, data, http, catalog, jobs, journal }) })
+        let fetches = url_import::Fetches::open(&data);
+        Ok(Self { inner: Arc::new(Inner { repo_root: repo_root.to_path_buf(), workspace, data, http, catalog, jobs, journal, fetches }) })
     }
 
     /// Work left from the last run and the catalogue read afresh.
@@ -170,6 +176,7 @@ pub fn app(state: AppState) -> Router {
         .merge(keys::router())
         .merge(settings::router())
         .merge(choices::router())
+        .merge(url_import::router())
         .merge(exports::router())
         .merge(hw::router())
         .merge(journal::router())

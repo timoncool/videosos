@@ -145,7 +145,8 @@
       "generation": "generation",
       "timeline": "timeline",
       "media": "media",
-      "video": "video"
+      "video": "video",
+      "download": "link download"
     }
   },
   "files": {

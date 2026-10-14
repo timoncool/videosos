@@ -240,6 +240,14 @@ fn proxy_for(settings: &ProxySettings, system: &Matcher, url: &reqwest::Url) -> 
 }
 
 
+/// The proxy a request to `url` goes through under the kept settings, None for straight out: for a program
+/// VideoSOS runs (yt-dlp), which is told its proxy rather than routed by a client.
+pub fn proxy_url_for(url: &str) -> Option<reqwest::Url> {
+    let url = reqwest::Url::parse(url).ok()?;
+    let route = route().read().expect("proxy route");
+    proxy_for(&route.settings, &route.system, &url)
+}
+
 /// Any client builder routed as the settings say.
 pub fn with_proxy(builder: reqwest::ClientBuilder) -> reqwest::ClientBuilder {
     builder.proxy(reqwest::Proxy::custom(|url| {
