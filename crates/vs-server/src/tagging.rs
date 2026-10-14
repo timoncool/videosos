@@ -10,7 +10,7 @@ use std::path::Path;
 
 use lofty::config::WriteOptions;
 use lofty::file::FileType;
-use lofty::prelude::{Accessor, TagExt};
+use lofty::prelude::{Accessor, TagExt, TaggedFileExt};
 use lofty::tag::{Tag, TagType};
 
 /// What a result's file says about itself.
@@ -27,11 +27,23 @@ pub fn write(path: &Path, mime: &str, tags: &ResultTags) -> anyhow::Result<()> {
         return write_exif(path, tags);
     }
     let file_type = FileType::from_path(path).ok_or_else(|| anyhow::anyhow!("{} is not a file VideoSOS tags", path.display()))?;
-    let mut tag = Tag::new(file_type.primary_tag_type());
-    tag.set_title(tags.title.to_string());
-    tag.set_artist(tags.model.to_string());
-    tag.set_album(SOFTWARE.to_string());
-    if let Some(prompt) = tags.prompt {
+    // a studio's track already says what it is (its title, lyrics, genre): only what it leaves out is added
+    let mut tag = lofty::read_from_path(path)
+        .ok()
+        .and_then(|file| file.tag(file_type.primary_tag_type()).cloned())
+        .unwrap_or_else(|| Tag::new(file_type.primary_tag_type()));
+    if tag.title().is_none() {
+        tag.set_title(tags.title.to_string());
+    }
+    if tag.artist().is_none() {
+        tag.set_artist(tags.model.to_string());
+    }
+    if tag.album().is_none() {
+        tag.set_album(SOFTWARE.to_string());
+    }
+    if let Some(prompt) = tags.prompt
+        && tag.comment().is_none()
+    {
         tag.set_comment(prompt.to_string());
     }
     tag.save_to_path(path, WriteOptions::default())?;
@@ -111,5 +123,37 @@ mod tests {
         let metadata = little_exif::metadata::Metadata::new_from_path(&path).unwrap();
         let description = metadata.get_tag(&little_exif::exif_tag::ExifTag::ImageDescription(String::new())).next().cloned();
         assert_eq!(description, Some(little_exif::exif_tag::ExifTag::ImageDescription("red fox, snow".into())));
+    }
+
+    fn wav() -> Vec<u8> {
+        let samples = [0u8; 3200];
+        let mut bytes = b"RIFF".to_vec();
+        bytes.extend_from_slice(&(36 + samples.len() as u32).to_le_bytes());
+        bytes.extend_from_slice(b"WAVEfmt ");
+        bytes.extend_from_slice(&16u32.to_le_bytes());
+        bytes.extend_from_slice(&1u16.to_le_bytes());
+        bytes.extend_from_slice(&1u16.to_le_bytes());
+        bytes.extend_from_slice(&16_000u32.to_le_bytes());
+        bytes.extend_from_slice(&32_000u32.to_le_bytes());
+        bytes.extend_from_slice(&2u16.to_le_bytes());
+        bytes.extend_from_slice(&16u16.to_le_bytes());
+        bytes.extend_from_slice(b"data");
+        bytes.extend_from_slice(&(samples.len() as u32).to_le_bytes());
+        bytes.extend_from_slice(&samples);
+        bytes
+    }
+
+    #[test]
+    fn a_studio_track_keeps_what_it_says_about_itself() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("01.wav");
+        std::fs::write(&path, wav()).unwrap();
+        write(&path, "audio/wav", &ResultTags { title: "Paper Boat", prompt: None, model: "YuE2" }).unwrap();
+        write(&path, "audio/wav", &ResultTags { title: "YuE2 Studio", prompt: Some("indie pop"), model: "YuE2 Studio" }).unwrap();
+        let file = lofty::read_from_path(&path).unwrap();
+        let tag = file.tag(TagType::Id3v2).or_else(|| file.primary_tag()).unwrap();
+        assert_eq!(tag.title().as_deref(), Some("Paper Boat"));
+        assert_eq!(tag.artist().as_deref(), Some("YuE2"));
+        assert_eq!(tag.comment().as_deref(), Some("indie pop"));
     }
 }

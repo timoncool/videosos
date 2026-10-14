@@ -46,10 +46,11 @@ pub fn trim_title(raw: &str) -> String {
     format!("{trimmed}…")
 }
 
-/// The title of a job's results.
+/// The title of a job's results: the title the model was given, else its prompt, else the model's name.
 pub fn result_title(values: &Value, model_name: &str) -> String {
-    match prompt_of(values) {
-        Some(prompt) => trim_title(prompt),
+    let given = values.get("title").and_then(Value::as_str).filter(|title| !title.trim().is_empty());
+    match given.or_else(|| prompt_of(values)) {
+        Some(text) => trim_title(text),
         None => model_name.to_string(),
     }
 }
@@ -64,6 +65,13 @@ mod tests {
         assert_eq!(prompt_of(&json!({ "negative_prompt": "blur", "prompt": "a lighthouse at dusk" })), Some("a lighthouse at dusk"));
         assert_eq!(prompt_of(&json!({ "positivePrompt": "neon city" })), Some("neon city"));
         assert_eq!(prompt_of(&json!({ "image_url": "x" })), None);
+    }
+
+    #[test]
+    fn a_title_given_to_the_model_names_its_results() {
+        assert_eq!(result_title(&json!({ "title": "Paper Boat", "style": "indie pop" }), "YuE2 Studio"), "Paper Boat");
+        assert_eq!(result_title(&json!({ "title": " ", "prompt": "a lighthouse at dusk" }), "FLUX"), "a lighthouse at dusk");
+        assert_eq!(result_title(&json!({ "style": "indie pop" }), "YuE2 Studio"), "YuE2 Studio");
     }
 
     #[test]
