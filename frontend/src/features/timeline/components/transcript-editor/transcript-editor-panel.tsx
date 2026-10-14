@@ -232,7 +232,7 @@ const TranscriptSegmentRow = memo(function TranscriptSegmentRow({
                 className={cn(
                   'cursor-text rounded px-0.5',
                   isSelected
-                    ? 'bg-primary text-primary-foreground'
+                    ? 'bg-[var(--color-overlay)] text-[var(--color-text)] shadow-sm'
                     : isActive
                       ? 'bg-yellow-300 text-neutral-900 shadow-sm'
                       : isMatch
@@ -1127,7 +1127,7 @@ function ScopeToggle({
           className={cn(
             'flex-1 rounded-md px-2 py-1 text-xs font-medium transition-colors',
             scope === option.value
-              ? 'bg-primary text-primary-foreground'
+              ? 'bg-[var(--color-overlay)] text-[var(--color-text)] shadow-sm'
               : 'bg-secondary/30 text-muted-foreground hover:bg-secondary/60 hover:text-foreground',
           )}
         >

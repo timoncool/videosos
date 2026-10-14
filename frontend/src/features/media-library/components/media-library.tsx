@@ -915,7 +915,7 @@ export const MediaLibrary = memo(function MediaLibrary({ onMediaSelect }: MediaL
                 className={cn(
                   'flex items-center gap-1 h-6 px-1.5 @[280px]:px-2 rounded-[3px] text-[11px] transition-colors duration-150',
                   !sceneBrowserOpen
-                    ? 'bg-primary text-primary-foreground'
+                    ? 'bg-[var(--color-overlay)] text-[var(--color-text)] shadow-sm'
                     : 'text-muted-foreground hover:text-foreground',
                 )}
               >
@@ -932,7 +932,7 @@ export const MediaLibrary = memo(function MediaLibrary({ onMediaSelect }: MediaL
                 className={cn(
                   'flex items-center gap-1 h-6 px-1.5 @[280px]:px-2 rounded-[3px] text-[11px] transition-colors duration-150',
                   sceneBrowserOpen
-                    ? 'bg-primary text-primary-foreground'
+                    ? 'bg-[var(--color-overlay)] text-[var(--color-text)] shadow-sm'
                     : 'text-muted-foreground hover:text-foreground',
                 )}
               >

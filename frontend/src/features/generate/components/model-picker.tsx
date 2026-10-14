@@ -146,7 +146,7 @@ export function ModelPicker({ task, value, onChange, keys, autoSelect = true }: 
                 onClick={() => setProvider(each)}
                 className={cn(
                   'rounded px-2 py-0.5 text-[11px]',
-                  provider === each ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-secondary',
+                  provider === each ? 'bg-[var(--color-overlay)] text-[var(--color-text)] shadow-sm' : 'text-muted-foreground hover:bg-secondary',
                 )}
               >
                 {each === 'all' ? t('generate.model.all') : PROVIDER_LABELS[each]}
