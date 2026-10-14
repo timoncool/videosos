@@ -39,6 +39,15 @@ export interface Persisted {
   storyboardModels: { image?: ModelRef; video?: ModelRef }
   /** Each project's node canvas. */
   canvases: Record<string, CanvasGraph>
+  /** The HTML graphics made into clips, newest first, with their code to change and make again. */
+  motionClips: MotionClip[]
+}
+
+export interface MotionClip {
+  mediaId: string
+  name: string
+  html: string
+  seconds: number
 }
 
 export interface PromptPreset {
@@ -46,7 +55,7 @@ export interface PromptPreset {
   text: string
 }
 
-const DEFAULTS: Persisted = { task: 'image', modelByTask: {}, valuesByModel: {}, repeat: 1, placeOnTimeline: false, favorites: [], presets: [], variables: {}, extraModelsByTask: {}, elements: [], storyboards: {}, storyboardModels: {}, canvases: {} }
+const DEFAULTS: Persisted = { task: 'image', modelByTask: {}, valuesByModel: {}, repeat: 1, placeOnTimeline: false, favorites: [], presets: [], variables: {}, extraModelsByTask: {}, elements: [], storyboards: {}, storyboardModels: {}, canvases: {}, motionClips: [] }
 
 let saving: ReturnType<typeof setTimeout> | null = null
 
@@ -101,6 +110,7 @@ interface GenerateState extends Persisted {
   updateShot: (projectId: string, id: string, change: Partial<Shot>) => void
   setStoryboardModel: (kind: 'image' | 'video', model: ModelRef) => void
   setCanvas: (projectId: string, graph: CanvasGraph) => void
+  keepMotion: (clip: MotionClip) => void
   removeElement: (name: string) => void
   setVariable: (name: string, value: string) => void
   setExtraModels: (task: Task, models: ModelRef[]) => void
@@ -126,6 +136,7 @@ function persisted(state: GenerateState): Persisted {
     storyboards: state.storyboards,
     storyboardModels: state.storyboardModels,
     canvases: state.canvases,
+    motionClips: state.motionClips,
   }
 }
 
@@ -191,6 +202,10 @@ export const useGenerateStore = create<GenerateState>()((set, get) => ({
     const board = get().storyboards[projectId]
     if (!board) return
     set({ storyboards: { ...get().storyboards, [projectId]: { ...board, shots: board.shots.map((shot) => (shot.id === id ? { ...shot, ...change } : shot)) } } })
+    save(get())
+  },
+  keepMotion: (clip) => {
+    set({ motionClips: [clip, ...get().motionClips.filter((each) => each.mediaId !== clip.mediaId)].slice(0, 20) })
     save(get())
   },
   setCanvas: (projectId, graph) => {

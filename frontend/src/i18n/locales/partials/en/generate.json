@@ -327,6 +327,26 @@
         "prompt": "prompt",
         "media": "files"
       }
+    },
+    "motion": {
+      "tabLabel": "HTML graphics",
+      "hint": "Titles, lower thirds, counters and badges written in HTML and CSS: the animation runs on its own, and the clip keeps its transparency over the video below.",
+      "templates": {
+        "title": "Title",
+        "lowerThird": "Lower third",
+        "counter": "Counter",
+        "badge": "Badge"
+      },
+      "preview": "Preview",
+      "code": "HTML and CSS",
+      "seconds": "Seconds",
+      "make": "Make a clip at the playhead",
+      "rendering": "Drawing the frames… {{percent}}%",
+      "done": "\"{{name}}\" is in the library and at the playhead",
+      "failed": "The clip was not made: {{reason}}",
+      "made": "Made",
+      "edit": "Open its code",
+      "defaultName": "HTML graphics"
     }
   }
 }

@@ -406,6 +406,13 @@ fn tools() -> &'static [Tool] {
                 call: |args| window("timeline_edit", args, 300),
             },
             Tool {
+                name: "motion_render",
+                description: "Makes HTML and CSS motion graphics (a title, a lower third, a counter, a badge) into a video clip with transparency, as WeftCut's Motifs: html is the body of a page of the project's size with a <style> of CSS animations (no scripts, they do not run); the clip goes into the open project's library and onto the timeline at the playhead. seconds is its length (0.5 to 30, 4 by default). Free: nothing is sent anywhere.",
+                looks: false,
+                schema: || object(json!({ "html": { "type": "string" }, "seconds": { "type": "number", "minimum": 0.5, "maximum": 30 }, "name": { "type": "string" } }), &["html"]),
+                call: |args| window("motion_render", args, 300),
+            },
+            Tool {
                 name: "checkpoint_list",
                 description: "The checkpoints of a project's timeline, newest first: the timeline as it was before each agent's edit, before each going back, and where one was made on purpose.",
                 looks: true,
@@ -646,6 +653,7 @@ const JOURNAL: &[(&str, &str, &str)] = &[
     ("timeline_undo", "undone", "timeline"),
     ("timeline_redo", "redone", "timeline"),
     ("checkpoint_create", "created", "checkpoint"),
+    ("motion_render", "imported", "media"),
     ("checkpoint_restore", "restored", "timeline"),
     ("media_import", "imported", "media"),
     ("export_video", "exported", "video"),
@@ -680,7 +688,7 @@ fn change_target(kind: &str, args: &Value, before: &str, answer: &Value) -> Stri
             let first = jobs.as_array().and_then(|jobs| jobs.first()).unwrap_or(jobs);
             first.get("model_name").and_then(Value::as_str).or_else(|| args.get("model").and_then(Value::as_str)).map(str::to_string)
         }
-        "media" => args.get("path").or_else(|| args.get("url")).and_then(Value::as_str).map(file_name),
+        "media" => args.get("path").or_else(|| args.get("url")).and_then(Value::as_str).map(file_name).or_else(|| answer.get("name").and_then(Value::as_str).map(str::to_string)),
         "video" => answer.get("path").and_then(Value::as_str).map(file_name),
         "download" => answer.get("title").and_then(Value::as_str).or_else(|| answer.get("url").and_then(Value::as_str)).or_else(|| args.get("url").and_then(Value::as_str)).map(str::to_string),
         _ => None,

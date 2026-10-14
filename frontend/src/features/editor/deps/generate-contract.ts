@@ -2,6 +2,7 @@
 export { GeneratePanel } from '@/features/generate/components/generate-panel'
 export { StoryboardPanel } from '@/features/generate/components/storyboard-panel'
 export { NodeCanvas } from '@/features/generate/components/node-canvas'
+export { MotionPanel } from '@/features/generate/components/motion-panel'
 export { ProvidersSettings } from '@/features/generate/components/providers-settings'
 export { AgentBudget } from '@/features/generate/components/agent-budget'
 export { useGenerateStore } from '@/features/generate/stores/generate-store'

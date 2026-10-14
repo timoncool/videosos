@@ -57,6 +57,8 @@ cannot cancel, the program only stops waiting.
   - `{"op": "addKeyframe", "itemId": "...", "property": "opacity", "frame": 0, "value": 0}`.
   Give an op `callerId` and refer to what it created later: `{"$ref": "a#/detail/created/0"}`.
 - `timeline_undo` / `timeline_redo`, `playhead_seek`, `playback`, `editor_tab`.
+- `motion_render {html, seconds?, name?}` makes HTML and CSS motion graphics (titles, lower thirds, counters,
+  badges) into a transparent clip at the playhead; CSS animations only, no scripts. Free.
 - Rehearse a many-step edit first: `timeline_edit` with `"dry_run": true` answers with what the ops would make and
   leaves the timeline as it was.
 - When the person has asked to accept agents' edits, `timeline_edit` waits while they read what will change; a

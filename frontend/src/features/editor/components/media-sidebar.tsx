@@ -1,6 +1,30 @@
 import { useCallback, useMemo, useRef, useEffect, memo, lazy, Suspense, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Blend, Captions, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Circle, Clapperboard, Film, Heart, Hexagon, Layers, MessagesSquare, Pen, Pentagon, Sparkles, Square, Star, Sticker, Triangle, Type, WandSparkles } from 'lucide-react'
+import {
+  Blend,
+  Captions,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
+  Circle,
+  Clapperboard,
+  CodeXml,
+  Film,
+  Heart,
+  Hexagon,
+  Layers,
+  MessagesSquare,
+  Pen,
+  Pentagon,
+  Sparkles,
+  Square,
+  Star,
+  Sticker,
+  Triangle,
+  Type,
+  WandSparkles,
+} from 'lucide-react'
 import { motion, useReducedMotion } from 'motion/react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/shared/ui/cn'
@@ -50,6 +74,9 @@ const LazyGeneratePanel = lazy(() =>
 )
 const LazyStoryboardPanel = lazy(() =>
   import('../deps/generate').then((m) => ({ default: m.StoryboardPanel })),
+)
+const LazyMotionPanel = lazy(() =>
+  import('../deps/generate').then((m) => ({ default: m.MotionPanel })),
 )
 const LazyTranscriptEditorPanel = lazy(() =>
   importTranscriptEditorPanel().then(({ TranscriptEditorPanel }) => ({
@@ -294,6 +321,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
   const [chatTabActivated, setChatTabActivated] = useState(activeTab === 'chat')
   const [generateTabActivated, setGenerateTabActivated] = useState(activeTab === 'generate')
   const [storyboardTabActivated, setStoryboardTabActivated] = useState(activeTab === 'storyboard')
+  const [graphicsTabActivated, setGraphicsTabActivated] = useState(activeTab === 'graphics')
   // The Lottie panel hits an external API on mount, so keep it unmounted until
   // the tab is first opened; it then stays mounted (state preserved).
   const [lottieTabActivated, setLottieTabActivated] = useState(activeTab === 'lottie')
@@ -302,6 +330,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
     if (activeTab === 'chat') setChatTabActivated(true)
     if (activeTab === 'generate') setGenerateTabActivated(true)
     if (activeTab === 'storyboard') setStoryboardTabActivated(true)
+    if (activeTab === 'graphics') setGraphicsTabActivated(true)
     if (activeTab === 'lottie') setLottieTabActivated(true)
   }, [activeTab])
 
@@ -428,8 +457,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
     const { fps } = useTimelineSettingsStore.getState()
     const { activeTrackId, selectItems, setActiveTrack } = useSelectionStore.getState()
     const currentProject = useProjectStore.getState().currentProject
-    const activeCompositionId =
-      useCompositionNavigationStore.getState().activeCompositionId
+    const activeCompositionId = useCompositionNavigationStore.getState().activeCompositionId
     const activeComposition = activeCompositionId
       ? useCompositionsStore.getState().getComposition(activeCompositionId)
       : undefined
@@ -536,6 +564,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
     { id: 'storyboard' as const, icon: Clapperboard, label: t('generate.storyboard.tabLabel') },
     { id: 'media' as const, icon: Film, label: t('editor.mediaSidebar.media') },
     { id: 'text' as const, icon: Type, label: t('editor.mediaSidebar.text') },
+    { id: 'graphics' as const, icon: CodeXml, label: t('generate.motion.tabLabel') },
     { id: 'shapes' as const, icon: Pentagon, label: t('editor.mediaSidebar.shapes') },
     { id: 'effects' as const, icon: Layers, label: t('editor.mediaSidebar.effects') },
     { id: 'transitions' as const, icon: Blend, label: t('editor.mediaSidebar.transitions') },
@@ -603,7 +632,11 @@ export const MediaSidebar = memo(function MediaSidebar() {
               width: EDITOR_LAYOUT_CSS_VALUES.sidebarHeaderButtonSize,
               height: EDITOR_LAYOUT_CSS_VALUES.sidebarHeaderButtonSize,
             }}
-            aria-label={leftSidebarOpen ? t('editor.mediaSidebar.collapsePanel') : t('editor.mediaSidebar.expandPanel')}
+            aria-label={
+              leftSidebarOpen
+                ? t('editor.mediaSidebar.collapsePanel')
+                : t('editor.mediaSidebar.expandPanel')
+            }
             data-tooltip={
               leftSidebarOpen
                 ? t('editor.mediaSidebar.collapsePanel')
@@ -792,7 +825,9 @@ export const MediaSidebar = memo(function MediaSidebar() {
                             >
                               {renderTextTemplatePreview(preset)}
                               <span className="text-[11px] text-muted-foreground group-hover:text-foreground text-center leading-tight w-full">
-                                {t(`names.textPresets.${preset.id}`, { defaultValue: preset.label })}
+                                {t(`names.textPresets.${preset.id}`, {
+                                  defaultValue: preset.label,
+                                })}
                               </span>
                             </button>
                           ))}
@@ -1171,8 +1206,21 @@ export const MediaSidebar = memo(function MediaSidebar() {
               )}
             </div>
 
+            {/* Graphics Tab */}
+            <div
+              className={`min-h-0 flex-1 overflow-hidden ${activeTab === 'graphics' ? 'flex flex-col' : 'hidden'}`}
+            >
+              {graphicsTabActivated && (
+                <Suspense fallback={null}>
+                  <LazyMotionPanel />
+                </Suspense>
+              )}
+            </div>
+
             {/* Storyboard Tab */}
-            <div className={`min-h-0 flex-1 overflow-hidden ${activeTab === 'storyboard' ? 'flex flex-col' : 'hidden'}`}>
+            <div
+              className={`min-h-0 flex-1 overflow-hidden ${activeTab === 'storyboard' ? 'flex flex-col' : 'hidden'}`}
+            >
               {storyboardTabActivated && (
                 <Suspense fallback={null}>
                   <LazyStoryboardPanel />
@@ -1192,7 +1240,9 @@ export const MediaSidebar = memo(function MediaSidebar() {
             </div>
 
             {/* Chat Tab */}
-            <div className={`min-h-0 flex-1 overflow-hidden ${activeTab === 'chat' ? 'flex flex-col' : 'hidden'}`}>
+            <div
+              className={`min-h-0 flex-1 overflow-hidden ${activeTab === 'chat' ? 'flex flex-col' : 'hidden'}`}
+            >
               {chatTabActivated && (
                 <Suspense fallback={null}>
                   <LazyChatTab />

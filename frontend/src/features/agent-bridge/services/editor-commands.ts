@@ -15,6 +15,8 @@ import {
   buildRenderJob,
   captureSnapshot,
   keepCheckpoint,
+  makeMotionClip,
+  motionName,
   mediaLibraryService,
   restoreCheckpoint,
   restoreSnapshot,
@@ -29,7 +31,7 @@ import {
 import { bridgeError, failed, numberArg, registerBridgeCommand, takeArgs, textArg } from './bridge'
 import { describeOps, useProposalStore } from './proposals'
 
-const TABS: EditorSidebarTab[] = ['generate', 'media', 'text', 'shapes', 'effects', 'transitions', 'lottie', 'transcript', 'ai', 'chat', 'storyboard']
+const TABS: EditorSidebarTab[] = ['generate', 'media', 'text', 'shapes', 'effects', 'transitions', 'lottie', 'transcript', 'ai', 'chat', 'storyboard', 'graphics']
 
 function openProject() {
   const project = useProjectStore.getState().currentProject
@@ -164,6 +166,24 @@ export function registerEditorCommands(showProject: ShowProject): void {
       )
     }
     return { applied: applied.length, results: outcome.results, timeline: timeline() }
+  })
+
+  registerBridgeCommand('motion_render', async (args) => {
+    takeArgs('motion_render', args, ['html', 'seconds', 'name'])
+    openProject()
+    const html = textArg('motion_render', args, 'html')
+    if (!html) throw bridgeError('missing', { command: 'motion_render', field: 'html' })
+    const seconds = numberArg('motion_render', args, 'seconds') ?? 4
+    if (seconds < 0.5 || seconds > 30) throw bridgeError('bad_value', { command: 'motion_render', field: 'seconds', expected: 'from 0.5 to 30' })
+    const name = textArg('motion_render', args, 'name') ?? motionName(html, 'HTML graphics')
+    let mediaId
+    try {
+      mediaId = await makeMotionClip(html, seconds, name)
+    } catch (problem) {
+      throw failed('motion_render', problem)
+    }
+    await save(openProject().id)
+    return { media_id: mediaId, name, timeline: timeline() }
   })
 
   registerBridgeCommand('checkpoint_create', async (args) => {
