@@ -39,7 +39,7 @@
     "refresh": "Comprobar ahora",
     "reset": "Nuevo id de instalación",
     "what": "Qué se envía",
-    "why": "Saber cuánta gente usa VideoSOS y para qué ayuda a decidir en qué trabajar a continuación. Nada personal: ni prompts, ni archivos, ni claves; solo el número de generaciones por tarea y proveedor, los modelos usados, la versión, el sistema y el idioma de la ventana.",
+    "why": "Cuántas personas usan VideoSOS y para qué ayuda a decidir en qué trabajar. Nada personal: ni prompts, ni archivos, ni claves; solo el número de generaciones por tarea y proveedor y sus fallos (los nombres, rutas y todo lo que va entre comillas se eliminan en este equipo), los modelos usados, qué funciones de VideoSOS se usaron (por nombre, nunca con qué), las descargas de modelos completadas o fallidas, los segundos de vídeo hechos con la tarjeta gráfica de este equipo, la versión, el sistema, la clase de tarjeta gráfica, el idioma de la ventana y un número del equipo común a nuestros programas (un hash irreversible, no el número del sistema).",
     "ad": "Publicidad"
   },
   "monitor": {

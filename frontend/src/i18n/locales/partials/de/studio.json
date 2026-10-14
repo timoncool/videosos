@@ -39,7 +39,7 @@
     "refresh": "Jetzt prüfen",
     "reset": "Neue Installations-ID",
     "what": "Was gesendet wird",
-    "why": "Wie viele Menschen VideoSOS nutzen und wofür, hilft bei der Entscheidung, woran als Nächstes gearbeitet wird. Nichts Persönliches: keine Prompts, Dateien oder Schlüssel – nur die Anzahl der Generierungen nach Aufgabe und Anbieter, die verwendeten Modelle, die Version, das System und die Fenstersprache.",
+    "why": "Wie viele Menschen VideoSOS nutzen und wofür, hilft zu entscheiden, woran als Nächstes gearbeitet wird. Nichts Persönliches: keine Prompts, Dateien oder Schlüssel – nur die Zahl der Generierungen nach Aufgabe und Anbieter und ihre Fehler (Namen, Pfade und alles in Anführungszeichen werden auf diesem Computer entfernt), die genutzten Modelle, welche Funktionen von VideoSOS genutzt wurden (nur ihr Name, nie womit), erfolgreiche und fehlgeschlagene Modell-Downloads, die Sekunden Video, die auf der Grafikkarte dieses Computers entstanden, Version, System, Grafikkartenklasse, Sprache des Fensters und eine gemeinsame Computernummer unserer Programme (ein nicht umkehrbarer Hash, nicht die Systemnummer selbst).",
     "ad": "Werbung"
   },
   "monitor": {

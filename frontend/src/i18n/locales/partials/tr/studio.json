@@ -39,7 +39,7 @@
     "refresh": "Şimdi denetle",
     "reset": "Yeni kurulum kimliği",
     "what": "Neler gönderilir",
-    "why": "VideoSOS'u kaç kişinin ve ne için kullandığını bilmek, sırada neyin geliştirileceğine karar vermeye yardımcı olur. Kişisel hiçbir şey yok: istem, dosya veya anahtar gönderilmez - yalnızca göreve ve sağlayıcıya göre üretim sayıları, kullanılan modeller, sürüm, sistem ve pencere dili.",
+    "why": "VideoSOS'u kaç kişinin ve ne için kullandığını bilmek, sırada ne üzerinde çalışılacağına karar vermeye yardımcı olur. Kişisel bir şey yok: istem, dosya ya da anahtar gönderilmez; yalnızca görev ve sağlayıcıya göre üretim sayıları ve hataları (adlar, yollar ve tırnak içindeki her şey bu bilgisayarda çıkarılır), kullanılan modeller, VideoSOS'un hangi işlevlerinin kullanıldığı (yalnızca adıyla, içeriği olmadan), başarılı ya da başarısız model indirmeleri, bu bilgisayarın ekran kartında yapılan videonun saniyeleri, sürüm, sistem, ekran kartı sınıfı, pencere dili ve programlarımızın ortak bilgisayar numarası (geri döndürülemez bir özet, sistem numarasının kendisi değil).",
     "ad": "Reklam"
   },
   "monitor": {

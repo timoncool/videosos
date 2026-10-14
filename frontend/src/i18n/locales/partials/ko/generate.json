@@ -480,6 +480,7 @@
       "download": "다운로드 · {{size}}",
       "remove": "삭제",
       "downloading": "{{done}} / {{total}} · {{file}}",
+      "takenFrom": "{{app}}에서 가져옴",
       "notDownloaded": "{{model}}이(가) 아직 다운로드되지 않았습니다: {{size}}.",
       "engineToo": "그래픽카드용 엔진도 함께 다운로드됩니다.",
       "unsupported": "로컬 생성은 현재 Windows에서만 사용할 수 있습니다."

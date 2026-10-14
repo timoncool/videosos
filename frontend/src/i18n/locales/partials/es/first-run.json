@@ -5,7 +5,7 @@
     "keys": "La generación funciona con tus propias cuentas: abre un proyecto y la pestaña Generar, y pega allí una clave de proveedor, o en Ajustes, Proveedores. Pagas directamente al proveedor; VideoSOS muestra el precio antes de cada ejecución.",
     "agent": "Un agente de IA (Claude y otros) puede manejar VideoSOS a través de su servidor MCP; la dirección está en Ajustes.",
     "statistics": "Enviar estadísticas anónimas",
-    "statisticsHint": "Cuántas generaciones se ejecutaron y con qué modelos, la versión y el sistema. Nunca prompts, archivos ni claves. Puedes cambiarlo en Ajustes.",
+    "statisticsHint": "Cuántas generaciones hubo y con qué modelos, qué funciones se usaron (por nombre), la versión, el sistema, la clase de tarjeta gráfica y un número del equipo común a nuestros programas (un hash irreversible). Nunca prompts, archivos ni claves. Se puede cambiar en Ajustes.",
     "start": "Empezar"
   }
 }

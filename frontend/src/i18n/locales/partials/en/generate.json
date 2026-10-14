@@ -481,6 +481,7 @@
       "download": "Download · {{size}}",
       "remove": "Remove",
       "downloading": "{{done}} of {{total}} · {{file}}",
+      "takenFrom": "taken from {{app}}",
       "notDownloaded": "{{model}} is not downloaded yet: {{size}}.",
       "engineToo": "The engine for your card comes with it.",
       "unsupported": "Local generation is available on Windows for now."

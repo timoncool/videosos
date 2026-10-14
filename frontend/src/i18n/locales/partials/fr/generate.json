@@ -481,6 +481,7 @@
       "download": "Télécharger · {{size}}",
       "remove": "Supprimer",
       "downloading": "{{done}} sur {{total}} · {{file}}",
+      "takenFrom": "repris de {{app}}",
       "notDownloaded": "{{model}} n'est pas encore téléchargé : {{size}}.",
       "engineToo": "Le moteur pour votre carte vient avec.",
       "unsupported": "La génération locale n'est disponible que sous Windows pour l'instant."

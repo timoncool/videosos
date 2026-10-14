@@ -352,6 +352,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "cmov"
+version = "0.5.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0c9ea0ac24bc397ab3c98583a3c9ba74fa56b09a4449bbe172b9b1ddb016027a"
+
+[[package]]
 name = "combine"
 version = "4.6.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -467,6 +473,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "ctutils"
+version = "0.4.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "03bb0e1cc970d482d121d9a1744999169b69a07470b3d644a7894e53fcaf4574"
+dependencies = [
+ "cmov",
+]
+
+[[package]]
 name = "darling"
 version = "0.20.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -516,6 +531,7 @@ dependencies = [
  "block-buffer",
  "const-oid",
  "crypto-common",
+ "ctutils",
 ]
 
 [[package]]
@@ -965,6 +981,15 @@ name = "hex"
 version = "0.4.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7f24254aa9a54b5c858eaee2f5bccdb46aaf0e486a595ed5fd8f86ba55232a70"
+
+[[package]]
+name = "hmac"
+version = "0.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6303bc9732ae41b04cb554b844a762b4115a61bfaa81e3e83050991eeb56863f"
+dependencies = [
+ "digest",
+]
 
 [[package]]
 name = "http"
@@ -1533,6 +1558,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fde178a3caf126c440fa15628147772d8ee590a39477d711353fbe2e58a73a5b"
 dependencies = [
  "sha2",
+]
+
+[[package]]
+name = "machine-uid"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cfe0d6336d341b10ae80e099b8f3c59f34bf8aef66ef25e83aa98bf2955c0ae7"
+dependencies = [
+ "libc",
+ "windows-registry",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -2656,14 +2692,17 @@ dependencies = [
 [[package]]
 name = "studio-hub-client"
 version = "0.1.0"
-source = "git+https://github.com/timoncool/studio-hub-client?rev=531327a64882580bd44f8e173908be0a046c7adc#531327a64882580bd44f8e173908be0a046c7adc"
+source = "git+https://github.com/timoncool/studio-hub-client?rev=365c2b757bfddd45fff67e7264b41f4f961a0032#365c2b757bfddd45fff67e7264b41f4f961a0032"
 dependencies = [
  "axum",
  "chrono",
+ "hmac",
+ "machine-uid",
  "regex",
  "reqwest",
  "serde",
  "serde_json",
+ "sha2",
  "tokio",
  "tracing",
  "uuid",
@@ -2771,7 +2810,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "32497e9a4c7b38532efcdebeef879707aa9f794296a4f0244f6f69e9bc8574bd"
 dependencies = [
  "fastrand",
- "getrandom 0.4.3",
+ "getrandom 0.3.4",
  "once_cell",
  "rustix",
  "windows-sys 0.61.2",

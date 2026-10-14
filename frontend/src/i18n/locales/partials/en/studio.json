@@ -39,7 +39,7 @@
     "refresh": "Check now",
     "reset": "New install id",
     "what": "What is sent",
-    "why": "How many people use VideoSOS and what for helps decide what to work on next. Nothing personal: no prompts, files or keys - only counts of generations by task and provider, the models used, the version, the system and the window language.",
+    "why": "How many people use VideoSOS and what for helps decide what to work on next. Nothing personal: no prompts, files or keys - only counts of generations by task and provider and their failures (names, paths and anything quoted are cut out on this computer), the models used, which features of VideoSOS were used (by name, never with what), model downloads done or failed, the seconds of video made on this computer's graphics card, the version, the system, the graphics card class, the window language and a computer number shared by our programs (a one-way hash, not the system number itself).",
     "ad": "Ad"
   },
   "monitor": {

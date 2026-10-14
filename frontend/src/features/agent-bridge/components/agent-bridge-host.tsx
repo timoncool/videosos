@@ -21,12 +21,13 @@ import { ProposalCard } from './proposal-card'
 let registered = false
 
 /** The server writes its own messages (errors, the update window) in the language the window shows. */
-function reportLanguage(language: string): void {
+function reportLanguage(language: string, byItself = false): void {
   void isDesktop().then((desktop) => {
     if (!desktop) return
     fetch('/api/ui-language', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      // the call at start is the window's own, not a person changing the language: no feature for the hub
+      headers: { 'Content-Type': 'application/json', ...(byItself ? { 'x-hub-skip': '1' } : {}) },
       body: JSON.stringify({ language }),
     }).catch((error: unknown) =>
       console.error('[ERROR] the window language did not reach VideoSOS:', error),
@@ -76,8 +77,8 @@ export function AgentBridgeHost({
       registerEditorCommands(showProject)
       registerStudioCommands(showProject, showPage)
       registerBridgeCommand('notify', notify)
-      reportLanguage(i18n.language)
-      i18n.on('languageChanged', reportLanguage)
+      reportLanguage(i18n.language, true)
+      i18n.on('languageChanged', (language: string) => reportLanguage(language))
     }
     startBridge()
     const show = (event: Event) => {

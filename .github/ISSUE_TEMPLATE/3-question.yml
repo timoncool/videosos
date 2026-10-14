@@ -1,0 +1,22 @@
+name: Question / Вопрос
+description: How to do something, or something is unclear · Как что-то сделать или что-то непонятно
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Write in any language — English, Русский, 中文. · Пишите на любом языке.
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question / Ваш вопрос
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version / Версия
+  - type: input
+    id: gpu
+    attributes:
+      label: Graphics card / Видеокарта

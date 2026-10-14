@@ -16,6 +16,18 @@ import { useLocalStatus } from '../hooks/use-local-status'
 
 const DEVICES: LocalStatus['device'][] = ['auto', 'cuda', 'vulkan', 'cpu']
 
+/** The author's programs by their id in CONTRACT.md, for "taken from". */
+const PROGRAMS: Record<string, string> = {
+  yue2: 'YuE2 Studio',
+  minimax: 'MiniMax Music3 Studio',
+  ace: 'ACE-Step Studio',
+  dub: 'Dub Studio',
+  speech: 'Speech Studio',
+  dungeon: 'Dungeon Ultimate',
+  bulka: 'Bulka',
+  videosos: 'VideoSOS',
+}
+
 function InstallProgress({ status, what }: { status: LocalStatus; what: string }) {
   const { t } = useTranslation()
   const install = status.install
@@ -131,6 +143,11 @@ function ModelRow({
           {model.installed ? t('generate.local.installed') : t('generate.local.notInstalled')}
         </span>
       </div>
+      {model.taken_from && (
+        <p className="text-[11px] text-muted-foreground">
+          {t('generate.local.takenFrom', { app: PROGRAMS[model.taken_from] ?? model.taken_from })}
+        </p>
+      )}
       {model.presets.length > 1 && (
         <p className="text-[11px] text-muted-foreground">
           {t('generate.local.accelerators', {

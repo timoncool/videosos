@@ -37,6 +37,7 @@ async function getJson<T>(path: string): Promise<T> {
 
 export const api = {
   appPaths: () => getJson<AppPaths>('/api/app/paths'),
+  info: () => getJson<{ version: string; system: string }>('/api/info'),
   hwSnapshot: () => getJson<HwSnapshot>('/api/hw/snapshot'),
   mcpStatus: () => getJson<McpStatus>('/api/agent/status'),
   mcpUrl: () => `${window.location.origin.replace('localhost', '127.0.0.1')}/mcp`,

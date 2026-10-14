@@ -481,6 +481,7 @@
       "download": "Herunterladen · {{size}}",
       "remove": "Entfernen",
       "downloading": "{{done}} von {{total}} · {{file}}",
+      "takenFrom": "aus {{app}} übernommen",
       "notDownloaded": "{{model}} ist noch nicht heruntergeladen: {{size}}.",
       "engineToo": "Die Engine für deine Grafikkarte kommt mit.",
       "unsupported": "Lokale Generierung gibt es vorerst nur unter Windows."

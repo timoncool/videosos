@@ -481,6 +481,7 @@
       "download": "Descargar · {{size}}",
       "remove": "Eliminar",
       "downloading": "{{done}} de {{total}} · {{file}}",
+      "takenFrom": "tomado de {{app}}",
       "notDownloaded": "{{model}} aún no está descargado: {{size}}.",
       "engineToo": "Con él se descarga el motor para tu tarjeta.",
       "unsupported": "Por ahora la generación local solo está disponible en Windows."

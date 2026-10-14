@@ -51,7 +51,7 @@ dunce = "1"
 lofty = "0.25.4"
 png = "0.18"
 little_exif = "0.6.23"
-studio-hub-client = { git = "https://github.com/timoncool/studio-hub-client", rev = "531327a64882580bd44f8e173908be0a046c7adc" }
+studio-hub-client = { git = "https://github.com/timoncool/studio-hub-client", rev = "365c2b757bfddd45fff67e7264b41f4f961a0032" }
 
 [target.'cfg(windows)'.dependencies]
 windows-sys = { version = "0.61", features = ["Win32_Foundation", "Win32_Security", "Win32_System_JobObjects", "Win32_System_Threading"] }

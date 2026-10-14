@@ -61,6 +61,8 @@ export interface LocalModelState {
   size_bytes: number
   /** The model's accelerators, the default first; their files come with the model. */
   presets: { id: string; label: string }[]
+  /** The program its files were taken from in this run instead of downloaded, by its id in CONTRACT.md. */
+  taken_from: string | null
 }
 
 /** Generation on this computer: engine builds, models, the device and a download running. */

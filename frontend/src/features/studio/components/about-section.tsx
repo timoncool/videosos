@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Bug, Check, CodeXml, Copy, FolderOpen, Scale, Tag } from 'lucide-react'
 import { api, type AppPaths } from '../services/studio-api'
-import { DONATE, LINKS } from '../services/links'
+import { DONATE, LINKS, issueReportUrl } from '../services/links'
 import { ProgramFamily } from './program-family'
 
 /** The author's crypto addresses, the same as in DONATE.md and Bulka's support tab. */
@@ -114,6 +114,18 @@ export default function AboutSection() {
   const { t } = useTranslation()
   const [paths, setPaths] = useState<AppPaths | null>(null)
   const [pathsError, setPathsError] = useState<string | null>(null)
+  const [known, setKnown] = useState<{ gpu: string | null; os: string | null }>({ gpu: null, os: null })
+  useEffect(() => {
+    void Promise.allSettled([api.hwSnapshot(), api.info()]).then(([hw, info]) => {
+      const card = hw.status === 'fulfilled' && hw.value.gpuName ? hw.value : null
+      setKnown({
+        gpu: card
+          ? `${card.gpuName}${card.totalVram ? `, ${Math.round(card.totalVram / 1024 ** 3)} GB` : ''}`
+          : null,
+        os: info.status === 'fulfilled' ? info.value.system : null,
+      })
+    })
+  }, [])
   useEffect(() => {
     api
       .appPaths()
@@ -150,7 +162,12 @@ export default function AboutSection() {
             <CodeXml size={13} />
             {t('prefs.repo')}
           </a>
-          <a href={LINKS.issues} target="_blank" rel="noreferrer" className={link}>
+          <a
+            href={issueReportUrl({ version: __APP_VERSION__, ...known })}
+            target="_blank"
+            rel="noreferrer"
+            className={link}
+          >
             <Bug size={13} />
             {t('prefs.issues')}
           </a>

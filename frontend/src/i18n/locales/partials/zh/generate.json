@@ -480,6 +480,7 @@
       "download": "下载 · {{size}}",
       "remove": "删除",
       "downloading": "{{done}} / {{total}} · {{file}}",
+      "takenFrom": "取自 {{app}}",
       "notDownloaded": "{{model}} 尚未下载：{{size}}。",
       "engineToo": "会同时下载适用于你的显卡的引擎。",
       "unsupported": "本地生成目前仅支持 Windows。"

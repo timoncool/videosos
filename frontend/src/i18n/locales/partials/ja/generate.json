@@ -480,6 +480,7 @@
       "download": "ダウンロード · {{size}}",
       "remove": "削除",
       "downloading": "{{done}} / {{total}} · {{file}}",
+      "takenFrom": "{{app}} から取得",
       "notDownloaded": "{{model}} はまだダウンロードされていません: {{size}}。",
       "engineToo": "お使いのグラフィックカード用エンジンも一緒にダウンロードされます。",
       "unsupported": "ローカル生成は現在 Windows でのみ利用できます。"

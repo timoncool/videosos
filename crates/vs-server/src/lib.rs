@@ -112,6 +112,7 @@ impl AppState {
         self.jobs.resume();
         self.catalog.refresh_all();
         studios::watch();
+        local::link_from_neighbors(&self.data);
     }
 }
 
@@ -145,6 +146,7 @@ async fn info(State(state): State<AppState>) -> Json<Value> {
         "workspace": state.workspace.display().to_string(),
         "data": state.data.display().to_string(),
         "os": std::env::consts::OS,
+        "system": hub::os_label(),
     }))
 }
 
@@ -171,7 +173,9 @@ async fn local_only(request: axum::extract::Request, next: axum::middleware::Nex
 /// The API and the window on one origin. Every answer carries the cross-origin isolation headers the
 /// editor needs for SharedArrayBuffer (decoding and export workers).
 pub fn app(state: AppState) -> Router {
-    let api = Router::new()
+    // counted before the MCP tools take the router: an agent's calls are VideoSOS's features too
+    let api = hub::track(
+        Router::new()
         .route("/health", get(service::health))
         .route("/api/info", get(info))
         .route("/api/app/paths", get(app_paths))
@@ -193,7 +197,8 @@ pub fn app(state: AppState) -> Router {
         .merge(hw::router())
         .merge(journal::router())
         .with_state(state.clone())
-        .merge(hub::router());
+        .merge(hub::router()),
+    );
     mcp::install(api.clone());
     api.merge(mcp::router().with_state(state.clone()))
         .merge(spa::router(&state.repo_root))

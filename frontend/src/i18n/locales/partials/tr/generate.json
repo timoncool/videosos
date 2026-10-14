@@ -480,6 +480,7 @@
       "download": "İndir · {{size}}",
       "remove": "Kaldır",
       "downloading": "{{done}} / {{total}} · {{file}}",
+      "takenFrom": "{{app}} uygulamasından alındı",
       "notDownloaded": "{{model}} henüz indirilmedi: {{size}}.",
       "engineToo": "Ekran kartınız için motor da birlikte iner.",
       "unsupported": "Yerel üretim şimdilik yalnızca Windows'ta kullanılabilir."

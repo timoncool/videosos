@@ -5,7 +5,7 @@
     "keys": "Die Generierung läuft über Ihre eigenen Konten: Öffnen Sie ein Projekt und den Tab „Generieren“ und fügen Sie dort oder unter „Einstellungen“, „Anbieter“ einen Anbieterschlüssel ein. Sie bezahlen den Anbieter direkt; VideoSOS zeigt den Preis vor jedem Lauf an.",
     "agent": "Ein KI-Agent (Claude und andere) kann VideoSOS über seinen MCP-Server steuern; die Adresse finden Sie in den Einstellungen.",
     "statistics": "Anonyme Statistiken senden",
-    "statisticsHint": "Wie viele Generierungen mit welchen Modellen liefen, die Version und das System. Niemals Prompts, Dateien oder Schlüssel. Sie können das in den Einstellungen ändern.",
+    "statisticsHint": "Wie viele Generierungen es gab und mit welchen Modellen, welche Funktionen genutzt wurden (nur ihr Name), Version, System, Grafikkartenklasse und eine gemeinsame Computernummer unserer Programme (ein nicht umkehrbarer Hash). Nie Prompts, Dateien oder Schlüssel. Änderbar in den Einstellungen.",
     "start": "Starten"
   }
 }

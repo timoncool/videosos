@@ -5,7 +5,7 @@
     "keys": "Üretim kendi hesaplarınızla çalışır: bir proje ve Üret sekmesini açın, sağlayıcı anahtarını orada veya Ayarlar, Sağlayıcılar bölümünde yapıştırın. Sağlayıcıya doğrudan siz ödersiniz; VideoSOS her çalıştırmadan önce fiyatı gösterir.",
     "agent": "Bir yapay zeka ajanı (Claude ve diğerleri) MCP sunucusu üzerinden VideoSOS'u yönetebilir; adres Ayarlar'dadır.",
     "statistics": "Anonim istatistik gönder",
-    "statisticsHint": "Kaç üretimin hangi modellerle çalıştığı, sürüm ve sistem. Asla istem, dosya veya anahtar gönderilmez. Ayarlar'dan değiştirebilirsiniz.",
+    "statisticsHint": "Kaç üretim yapıldığı ve hangi modellerle, hangi işlevlerin kullanıldığı (yalnızca adıyla), sürüm, sistem, ekran kartı sınıfı ve programlarımızın ortak bilgisayar numarası (geri döndürülemez bir özet). İstem, dosya ya da anahtar asla gönderilmez. Ayarlardan değiştirilebilir.",
     "start": "Başla"
   }
 }

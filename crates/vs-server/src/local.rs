@@ -332,6 +332,14 @@ fn preset(model: &'static LocalModel, id: Option<&str>) -> Result<&'static Prese
     }
 }
 
+
+/// The weight files a run of `id` with `preset` loads, by file name: the parts of the model set the hub counts.
+pub fn components(id: &str, preset_id: Option<&str>) -> Vec<String> {
+    let Some(model) = model(id) else { return Vec::new() };
+    let Ok(preset) = preset(model, preset_id) else { return Vec::new() };
+    model.files.iter().chain(preset.files.iter()).map(|file| file.download.dest.rsplit('/').next().unwrap_or(file.download.dest).to_string()).collect()
+}
+
 fn file_there(data: &Path, download: &Download) -> bool {
     std::fs::metadata(data.join(download.dest)).is_ok_and(|meta| meta.is_file() && meta.len() == download.size)
 }
@@ -471,6 +479,49 @@ struct Install {
     installing: bool,
 }
 
+/// The program each model's files were taken from in this run instead of downloaded, by its contract id.
+fn taken() -> &'static Mutex<std::collections::HashMap<&'static str, String>> {
+    static TAKEN: OnceLock<Mutex<std::collections::HashMap<&'static str, String>>> = OnceLock::new();
+    TAKEN.get_or_init(Default::default)
+}
+
+/// Model files being looked for at another program now, so a second poll does not start the same search.
+fn linking() -> &'static Mutex<std::collections::HashSet<PathBuf>> {
+    static LINKING: OnceLock<Mutex<std::collections::HashSet<PathBuf>>> = OnceLock::new();
+    LINKING.get_or_init(Default::default)
+}
+
+/// The setup screen links in what another program of the author's has on the same drive: a hard link, checked
+/// by SHA-256 before it is used; another drive waits for the install, which copies.
+pub(crate) fn link_from_neighbors(data: &Path) {
+    if installing().load(Ordering::SeqCst) {
+        return;
+    }
+    for model in MODELS {
+        for file in all_files(model) {
+            let download = &file.download;
+            let dest = data.join(download.dest);
+            if download.unzip_into.is_some() || file_there(data, download) || !linking().lock().unwrap_or_else(|p| p.into_inner()).insert(dest.clone()) {
+                continue;
+            }
+            tokio::task::spawn_blocking(move || {
+                if let Some(name) = dest.file_name()
+                    && let Some((source, app)) = studio_hub_client::neighbors::find_file(name, download.size, None)
+                {
+                    match studio_hub_client::neighbors::take_file(&source, &dest, false, |staged| sha256_of(staged).is_some_and(|got| got == download.sha256)) {
+                        Ok(()) => {
+                            taken().lock().unwrap_or_else(|p| p.into_inner()).insert(model.id, app);
+                            changed();
+                        }
+                        Err(error) => tracing::warn!("[ERROR] {} from {app} was not linked in: {error}", source.display()),
+                    }
+                }
+                linking().lock().unwrap_or_else(|p| p.into_inner()).remove(&dest);
+            });
+        }
+    }
+}
+
 fn install_state() -> &'static Mutex<Install> {
     static STATE: OnceLock<Mutex<Install>> = OnceLock::new();
     STATE.get_or_init(|| Mutex::new(Install::default()))
@@ -523,6 +574,7 @@ pub fn start_install(data: &Path, what: &str) -> Result<bool, String> {
         && free < total.saturating_add(total / 10)
     {
         installing().store(false, Ordering::SeqCst);
+        crate::hub::setup_failed("disk_space");
         return Err(t!("url-disk-space", need = total / 1_000_000, free = free / 1_000_000));
     }
     *install_state().lock().unwrap_or_else(|p| p.into_inner()) = Install { what: what.into(), installing: true, total, ..Install::default() };
@@ -531,8 +583,13 @@ pub fn start_install(data: &Path, what: &str) -> Result<bool, String> {
     tokio::spawn(async move {
         let mut result = download_all(&data, &files).await;
         if result.is_ok() && needs_ffmpeg {
-            result = crate::tools::install_ffmpeg(&data).await.map_err(|e| e.detail);
+            result = crate::tools::install_ffmpeg(&data).await.map_err(|e| ("ffmpeg", e.detail));
         }
+        match &result {
+            Ok(()) => crate::hub::setup_ready(),
+            Err((code, _)) => crate::hub::setup_failed(code),
+        }
+        let result = result.map_err(|(_, message)| message);
         installing().store(false, Ordering::SeqCst);
         {
             let mut state = install_state().lock().unwrap_or_else(|p| p.into_inner());
@@ -548,11 +605,24 @@ pub fn start_install(data: &Path, what: &str) -> Result<bool, String> {
     Ok(true)
 }
 
-async fn download_all(data: &Path, files: &[&'static Download]) -> Result<(), String> {
-    let client = crate::tools::client(Duration::from_secs(120)).map_err(|e| e.detail)?;
+/// Downloads the files, each taken from another program of the author's first when it has the same one; an error
+/// carries a code for the hub with its message.
+async fn download_all(data: &Path, files: &[&'static Download]) -> Result<(), (&'static str, String)> {
+    let client = crate::tools::client(Duration::from_secs(120)).map_err(|e| ("download", e.detail))?;
     let mut done = 0u64;
     for file in files {
         install_state().lock().unwrap_or_else(|p| p.into_inner()).current = Some(file.dest.rsplit('/').next().unwrap_or(file.dest).to_string());
+        let dest = data.join(file.dest);
+        if let Some(app) = take_from_neighbor(file, &dest).await {
+            let what = install_state().lock().unwrap_or_else(|p| p.into_inner()).what.clone();
+            if let Some(model) = model(&what) {
+                taken().lock().unwrap_or_else(|p| p.into_inner()).insert(model.id, app);
+            }
+            done += file.size;
+            install_state().lock().unwrap_or_else(|p| p.into_inner()).downloaded = done;
+            changed();
+            continue;
+        }
         let last = Mutex::new(Instant::now());
         let tell = |bytes: u64| {
             install_state().lock().unwrap_or_else(|p| p.into_inner()).downloaded = done + bytes;
@@ -562,8 +632,7 @@ async fn download_all(data: &Path, files: &[&'static Download]) -> Result<(), St
                 changed();
             }
         };
-        let dest = data.join(file.dest);
-        fetch_resumable(&client, file, &dest, &tell).await?;
+        fetch_resumable(&client, file, &dest, &tell).await.map_err(|message| ("download", message))?;
         done += file.size;
         if let Some(folder) = file.unzip_into {
             let (archive, folder) = (dest.clone(), data.join(folder));
@@ -572,11 +641,51 @@ async fn download_all(data: &Path, files: &[&'static Download]) -> Result<(), St
                 crate::tools::unzip(&archive, &folder, None)
             })
             .await
-            .map_err(|e| e.to_string())??;
+            .map_err(|e| ("unzip", e.to_string()))?
+            .map_err(|message| ("unzip", message))?;
             let _ = std::fs::remove_file(&dest);
         }
     }
     Ok(())
+}
+
+/// A model file another program of the author's already has, put at `dest` (a hard link, a copy on another drive)
+/// once its SHA-256 matches; the program's id, or None when no program has it and it is downloaded.
+async fn take_from_neighbor(file: &'static Download, dest: &Path) -> Option<String> {
+    // an archive is unpacked and removed, so no program keeps one to give
+    if file.unzip_into.is_some() || dest.is_file() {
+        return None;
+    }
+    let dest = dest.to_path_buf();
+    tokio::task::spawn_blocking(move || {
+        let (source, app) = studio_hub_client::neighbors::find_file(dest.file_name()?, file.size, None)?;
+        match studio_hub_client::neighbors::take_file(&source, &dest, true, |staged| sha256_of(staged).is_some_and(|got| got == file.sha256)) {
+            Ok(()) => Some(app),
+            Err(error) => {
+                tracing::warn!("[ERROR] {} from {app} was not taken, it is downloaded: {error}", source.display());
+                None
+            }
+        }
+    })
+    .await
+    .ok()
+    .flatten()
+}
+
+fn sha256_of(path: &Path) -> Option<String> {
+    use sha2::{Digest, Sha256};
+    use std::io::Read;
+    let mut reader = std::fs::File::open(path).ok()?;
+    let mut digest = Sha256::new();
+    let mut buffer = vec![0u8; 1 << 20];
+    loop {
+        let read = reader.read(&mut buffer).ok()?;
+        if read == 0 {
+            break;
+        }
+        digest.update(&buffer[..read]);
+    }
+    Some(hex::encode(digest.finalize()))
 }
 
 /// Downloads into `<dest>.part`, going on from what an earlier download left, checks size and SHA-256 over the
@@ -684,6 +793,7 @@ pub fn status(data: &Path) -> Value {
             "download_bytes": all_files(model).iter().filter(|file| !file_there(data, &file.download)).map(|file| file.download.size).sum::<u64>(),
             "size_bytes": all_files(model).iter().map(|file| file.download.size).sum::<u64>(),
             "presets": model.presets.iter().map(|preset| json!({ "id": preset.id, "label": preset_label(preset) })).collect::<Vec<_>>(),
+            "taken_from": taken().lock().unwrap_or_else(|p| p.into_inner()).get(model.id),
         })).collect::<Vec<_>>(),
         "loaded": loaded,
         "install": install,
@@ -1059,6 +1169,7 @@ fn refused(error: String) -> Response {
 }
 
 async fn status_route(State(state): State<AppState>) -> Json<Value> {
+    link_from_neighbors(&state.data);
     Json(status(&state.data))
 }
 
