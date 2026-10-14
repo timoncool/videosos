@@ -51,6 +51,9 @@ jobs:
           dmg="$(find desktop/src-tauri/target/release/bundle/dmg -name '*.dmg' | head -n 1)"
           version="$(node -p "require('./desktop/src-tauri/tauri.conf.json').version")"
           cp "$dmg" "out/VideoSOS-${version}-macos-arm64.dmg"
+          # the updater's archive; scripts/make-release.sh signs it with the key that lives only on the release machine
+          app="$(find desktop/src-tauri/target/release/bundle/macos -maxdepth 1 -name '*.app' | head -n 1)"
+          tar -czf "out/VideoSOS-${version}-macos-arm64.app.tar.gz" -C "$(dirname "$app")" "$(basename "$app")"
           ls -la out
       - uses: actions/upload-artifact@v4
         with:

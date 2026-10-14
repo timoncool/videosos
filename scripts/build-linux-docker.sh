@@ -2,6 +2,8 @@
 # The Linux x86-64 .deb and AppImage, built on this machine in an Ubuntu 22.04 container (glibc 2.35, so they run
 # there and on anything newer; Docker under WSL on Windows) from the committed HEAD, as Dub Studio builds its own.
 #   scripts/build-linux-docker.sh <output folder> [cache folder]
+# The AppImage is signed for the updater with ~/.tauri/videosos-updater.key and its .password beside it
+# (VIDEOSOS_KEY_FILE overrides the path), mounted read-only; they never go into the output folder.
 # The cache keeps Rust, Node and the cargo target between runs. With VIDEOSOS_SOURCE_READY=1 the committed tree is
 # taken from <output folder>/.source.tar and .source-commit, made beforehand (on Windows: git archive HEAD -o ...),
 # for a worktree whose git folder WSL cannot read.
@@ -32,10 +34,14 @@ if [ "${1:-}" = "--inside" ]; then
   mkdir -p desktop/src-tauri
   ln -sfn /cache/target desktop/src-tauri/target
   echo "[..] build (log: build.log)"
-  bash scripts/build-release-linux.sh > /out/build.log 2>&1 || { echo "[ERROR] build failed"; tail -40 /out/build.log; exit 1; }
+  TAURI_SIGNING_PRIVATE_KEY="$(cat /keys/updater.key)" TAURI_SIGNING_PRIVATE_KEY_PASSWORD="$(cat /keys/updater.key.password)" \
+    bash scripts/build-release-linux.sh > /out/build.log 2>&1 || { echo "[ERROR] build failed"; tail -40 /out/build.log; exit 1; }
   version="$(node -p "require('./desktop/src-tauri/tauri.conf.json').version")"
   cp "$(find /cache/target/release/bundle/deb -name '*.deb' | head -n 1)" "/out/VideoSOS-${version}-linux-amd64.deb"
-  cp "$(find /cache/target/release/bundle/appimage -name '*.AppImage' | head -n 1)" "/out/VideoSOS-${version}-linux-x86_64.AppImage"
+  appimage="$(find /cache/target/release/bundle/appimage -name '*.AppImage' | head -n 1)"
+  [ -f "$appimage.sig" ] || { echo "[ERROR] the AppImage was not signed for the updater"; exit 1; }
+  cp "$appimage" "/out/VideoSOS-${version}-linux-x86_64.AppImage"
+  cp "$appimage.sig" "/out/VideoSOS-${version}-linux-x86_64.AppImage.sig"
   ls -la /out/*.deb /out/*.AppImage
   echo "[OK] VideoSOS ${version} for Linux"
   exit 0
@@ -52,4 +58,7 @@ if [ "${VIDEOSOS_SOURCE_READY:-}" != "1" ]; then
   git -C "$repo" rev-parse --short HEAD > "$out/.source-commit"
 fi
 [ -s "$out/.source.tar" ] || { echo "[ERROR] no committed tree in $out/.source.tar"; exit 1; }
-docker run --rm -v "$(cd "$out" && pwd):/out" -v "$cache:/cache" ubuntu:22.04 bash /out/.build-linux-docker.sh --inside
+key="${VIDEOSOS_KEY_FILE:-$HOME/.tauri/videosos-updater.key}"
+[ -f "$key" ] && [ -f "$key.password" ] || { echo "[ERROR] no updater key: $key and $key.password"; exit 1; }
+docker run --rm -v "$(cd "$out" && pwd):/out" -v "$cache:/cache" -v "$key:/keys/updater.key:ro" -v "$key.password:/keys/updater.key.password:ro" \
+  ubuntu:22.04 bash /out/.build-linux-docker.sh --inside

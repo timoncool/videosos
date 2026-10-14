@@ -4,7 +4,7 @@
   },
   "bundle": {
     "active": true,
-    "createUpdaterArtifacts": false,
+    "createUpdaterArtifacts": true,
     "targets": ["deb", "appimage"],
     "resources": {
       "staging/frontend/dist": "frontend/dist"
