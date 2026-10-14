@@ -30,6 +30,7 @@ pub mod remote;
 pub mod request_log;
 pub mod service;
 pub mod settings;
+mod studios;
 mod spa;
 mod spend;
 mod tagging;
@@ -110,6 +111,7 @@ impl AppState {
     pub fn start_background(&self) {
         self.jobs.resume();
         self.catalog.refresh_all();
+        studios::watch();
     }
 }
 

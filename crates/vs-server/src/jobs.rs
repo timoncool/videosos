@@ -477,7 +477,9 @@ impl Jobs {
             Err(error) => return self.fail(&id, "invalid", error),
         };
         let data = self.dir.parent().map(Path::to_path_buf).unwrap_or_else(|| self.dir.clone());
-        if let Err(reason) = crate::local::ready(&data, &job.model) {
+        let studio = crate::studios::studio(&job.model).is_some();
+        let ready = if studio { crate::studios::ready(&job.model) } else { crate::local::ready(&data, &job.model) };
+        if let Err(reason) = ready {
             return self.fail(&id, "local_missing", reason);
         }
         self.update(&id, |job| {
@@ -492,7 +494,13 @@ impl Jobs {
         let out_dir = self.dir.join(&id).join("_local");
         let jobs = self.clone();
         let (model, job_id) = (job.model.clone(), id.clone());
-        let made = tokio::task::spawn_blocking(move || {
+        let made = if studio {
+            // one video card: the picture or video model loaded here makes room for the studio's
+            crate::local::unload();
+            let cancelled = || jobs.is_cancelled(&job_id);
+            crate::studios::run(&model, &values, &out_dir, &cancelled).await
+        } else {
+            tokio::task::spawn_blocking(move || {
             let last = Mutex::new(std::time::Instant::now());
             let progress = |fraction: f64| {
                 let mut last = last.lock().unwrap_or_else(|p| p.into_inner());
@@ -502,9 +510,10 @@ impl Jobs {
                 }
             };
             crate::local::run(&data, &model, &values, &out_dir, &progress)
-        })
-        .await
-        .unwrap_or_else(|panic| Err(panic.to_string()));
+            })
+            .await
+            .unwrap_or_else(|panic| Err(panic.to_string()))
+        };
         drop(permit);
         if self.is_cancelled(&id) {
             self.forget_cancel(&id);
@@ -757,6 +766,7 @@ impl Jobs {
         self.cancelled.lock().unwrap_or_else(|p| p.into_inner()).insert(id.to_string());
         if job.provider == Provider::Local && job.status == "running" {
             crate::local::cancel();
+            crate::studios::cancel();
         }
         // fal stops a job only while it waits in its queue; one that runs already is billed whatever is asked
         let stopped = match (job.provider, &job.handle, credentials::key(Provider::Fal)) {

@@ -168,6 +168,11 @@ local-preset = { $name }, { $steps ->
 }
 local-preset-full = No accelerator, full quality
 local-unknown-preset = { $model } has no preset { $preset }; its presets: { $presets }
+studio-description = { $studio }, running on this computer: the song is made there and kept in its library, a copy comes here. Its own options as in the studio.
+studio-offline = { $studio } is not running: open it to make songs from here
+studio-no-job = { $studio } did not start a song
+studio-cancelled = { $studio }: the song was cancelled
+studio-no-song = { $studio } finished without a song file
 local-engine-missing = the generation engine for { $device } is not installed: install it in Settings, Local models
 local-unsupported = local generation is not available on this system yet
 local-unknown = no local model or engine { $what }

@@ -374,12 +374,13 @@ fn recommended_device() -> Device {
 
 // ---------------------------------------------------------------- the catalogue
 
+/// The models run here: VideoSOS's own, and the author's studios found running on this computer.
 pub fn entries() -> Vec<ModelEntry> {
-    MODELS.iter().map(entry_of).collect()
+    MODELS.iter().map(entry_of).chain(crate::studios::entries()).collect()
 }
 
 pub fn entry(id: &str) -> Option<ModelEntry> {
-    model(id).map(entry_of)
+    model(id).map(entry_of).or_else(|| crate::studios::entry(id))
 }
 
 fn entry_of(model: &'static LocalModel) -> ModelEntry {
@@ -402,6 +403,9 @@ fn entry_of(model: &'static LocalModel) -> ModelEntry {
 }
 
 pub fn form(id: &str) -> Result<ModelForm, String> {
+    if crate::studios::studio(id).is_some() {
+        return crate::studios::form(id);
+    }
     let model = model(id).ok_or_else(|| t!("catalog-unknown-model", provider = "local", model = id.to_string()))?;
     let size_choice = |(w, h): &(u32, u32)| Choice { value: json!(format!("{w}x{h}")), label: format!("{w}×{h}") };
     let mut fields = vec![
@@ -472,7 +476,7 @@ fn installing() -> &'static AtomicBool {
     &FLAG
 }
 
-fn changed() {
+pub(crate) fn changed() {
     crate::events::send("local", json!({}));
 }
 

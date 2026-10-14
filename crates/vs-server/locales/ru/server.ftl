@@ -171,6 +171,11 @@ local-preset = { $name }, { $steps ->
 }
 local-preset-full = Без ускорения, полное качество
 local-unknown-preset = у { $model } нет пресета { $preset }; его пресеты: { $presets }
+studio-description = { $studio }, запущенная на этом компьютере: песня делается в ней и остаётся в её библиотеке, сюда приходит копия. Настройки — её собственные, как в самой студии.
+studio-offline = { $studio } не запущена: откройте её, чтобы делать песни отсюда
+studio-no-job = { $studio } не начала песню
+studio-cancelled = { $studio }: песня отменена
+studio-no-song = { $studio } закончила без файла песни
 local-engine-missing = движок генерации для { $device } не установлен: установите его в Настройках, «Локальные модели»
 local-unsupported = локальная генерация пока недоступна на этой системе
 local-unknown = нет локальной модели или движка { $what }
