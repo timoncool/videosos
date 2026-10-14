@@ -409,6 +409,34 @@ function placeAudioClip(
 }
 
 /** Place a `video/` clip plus the linked audio companion the app creates on import. */
+/**
+ * The track of the sound of the clip just before `from` on a video track, when it is free for the new clip's
+ * sound: a shot that goes on a sequence keeps its sound beside the sequence's.
+ */
+function soundTrackBefore(videoTrackId: string, from: number, durationInFrames: number) {
+  const items = useItemsStore.getState().items
+  const before = items
+    .filter(
+      (item) =>
+        item.trackId === videoTrackId &&
+        item.type === 'video' &&
+        item.linkedGroupId &&
+        item.from + item.durationInFrames <= from,
+    )
+    .sort((a, b) => b.from + b.durationInFrames - (a.from + a.durationInFrames))[0]
+  const sound = before
+    ? items.find((item) => item.type === 'audio' && item.linkedGroupId === before.linkedGroupId)
+    : undefined
+  if (!sound) return undefined
+  const busy = items.some(
+    (item) =>
+      item.trackId === sound.trackId &&
+      item.from < from + durationInFrames &&
+      from < item.from + item.durationInFrames,
+  )
+  return busy ? undefined : sound.trackId
+}
+
 function placeVideoClip(
   op: EditOp,
   { mediaId, media, from, projectFps }: ClipPlacement,
@@ -444,7 +472,8 @@ function placeVideoClip(
     type: 'audio',
     trackId:
       op.keepFrom === true
-        ? freeTrackAt('audio', from, durationInFrames)
+        ? (soundTrackBefore(video.trackId, from, durationInFrames) ??
+          freeTrackAt('audio', from, durationInFrames))
         : getOrCreateTrack('audio'),
     from,
     durationInFrames,

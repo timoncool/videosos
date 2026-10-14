@@ -402,6 +402,51 @@ describe('editProject', () => {
     expect(tracks.find((t) => t.id === placed.trackId)!.order).toBeLessThan(-1)
   })
 
+  it("addClip with keepFrom after a shot goes on its track, its sound beside the shot's", async () => {
+    const track = (id: string, kind: 'video' | 'audio', order: number) => ({
+      id,
+      name: id,
+      kind,
+      height: 80,
+      locked: false,
+      visible: true,
+      muted: false,
+      solo: false,
+      order,
+    })
+    const music = { ...videoMedia, id: 'm-aud', mimeType: 'audio/mpeg' } as MediaMetadata
+    const result = await editProject({
+      project: baseProject({
+        tracks: [
+          track('v_title', 'video', -2),
+          track('v_main', 'video', 0),
+          track('a_sound', 'audio', 1),
+          track('a_music', 'audio', 2),
+        ],
+      }),
+      ops: [
+        {
+          op: 'addText',
+          text: 'Title',
+          from: 0,
+          durationInFrames: 30,
+          trackId: 'v_title',
+        } as EditOp,
+        { op: 'addClip', mediaId: 'm-vid', from: 0, trackId: 'v_main' } as EditOp,
+        { op: 'addClip', mediaId: 'm-aud', from: 0, trackId: 'a_music' } as EditOp,
+        { op: 'addClip', mediaId: 'm-vid', from: 100, keepFrom: true } as EditOp,
+      ],
+      media: [
+        { mediaId: 'm-vid', metadata: videoMedia },
+        { mediaId: 'm-aud', metadata: music },
+      ],
+    })
+    const items = result.project.timeline!.items
+    const next = items.filter((item) => item.from === 100)
+    expect(next.find((item) => item.type === 'video')!.trackId).toBe('v_main')
+    expect(next.find((item) => item.type === 'audio')!.trackId).toBe('a_sound')
+  })
+
   it('addClip image defaults to a 150-frame still', async () => {
     const result = await editProject({
       project: baseProject(),

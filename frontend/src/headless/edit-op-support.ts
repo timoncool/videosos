@@ -156,6 +156,26 @@ function resolveOrCreateTrack(preferred: unknown, kind: 'video' | 'audio'): stri
  * there, the track a clip goes to by default; otherwise a free track above everything there (a lower order
  * draws on top), the nearest one, or a new track at the top. Sound mixes, so a free audio track is enough.
  */
+/** The unlocked track whose last clip before `from` ends nearest to it: where a sequence goes on, as a person cuts. */
+export function continuedTrack(
+  candidates: readonly { id: string; locked?: boolean }[],
+  from: number,
+): string | undefined {
+  const items = useItemsStore.getState().items
+  let best: { id: string; end: number } | undefined
+  for (const track of candidates) {
+    if (track.locked) continue
+    const end = Math.max(
+      -1,
+      ...items
+        .filter((item) => item.trackId === track.id && item.from + item.durationInFrames <= from)
+        .map((item) => item.from + item.durationInFrames),
+    )
+    if (end >= 0 && (!best || end > best.end)) best = { id: track.id, end }
+  }
+  return best?.id
+}
+
 export function freeTrackAt(
   kind: 'video' | 'audio',
   from: number,
@@ -174,7 +194,7 @@ export function freeTrackAt(
     .filter((t) => !t.isGroup && (t.kind ?? 'video') === kind)
     .sort((a, b) => a.order - b.order)
   const taken = ofKind.filter((t) => busy(t.id))
-  if (taken.length === 0) return getOrCreateTrack(kind)
+  if (taken.length === 0) return continuedTrack(ofKind, from) ?? getOrCreateTrack(kind)
   const free = ofKind.filter((t) => !t.locked && !busy(t.id))
   const top = Math.min(...taken.map((t) => t.order))
   const chosen = kind === 'video' ? free.filter((t) => t.order < top).at(-1) : free[0]
