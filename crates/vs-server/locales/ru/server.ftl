@@ -74,3 +74,7 @@ jobs-finished-after-cancel = Провайдер доделал задачу уж
 hw-no-nvidia = нет NVIDIA GPU
 remote-only-here = Доступ из сети меняют на компьютере, где запущен VideoSOS.
 settings-proxy-not-saved = Прокси уже работает, но не сохранён: { $error }
+quit-title = Закрыть VideoSOS?
+quit-running = Не закончено генераций: { $count }. Уже отправленные в fal или Runware подхватятся при следующем запуске; та, что сейчас отправляется, и запрос OpenRouter пропадут, а оплата за них может пройти.
+quit-button-quit = Закрыть
+quit-button-stay = Остаться

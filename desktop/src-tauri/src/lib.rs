@@ -169,6 +169,62 @@ fn spawn_update_check(app: tauri::AppHandle, portable: bool) {
     });
 }
 
+/// The service's answer to a plain local request: `Err(false)` when nothing listens, `Err(true)` when it did not
+/// answer in `wait`.
+fn service_call(path: &str, wait: Duration) -> Result<String, bool> {
+    use std::io::{Read, Write};
+    let Some(port) = service::recorded_port() else { return Err(false) };
+    let address = std::net::SocketAddr::from(([127, 0, 0, 1], port));
+    let Ok(mut stream) = std::net::TcpStream::connect_timeout(&address, Duration::from_millis(500)) else {
+        return Err(false);
+    };
+    let _ = stream.set_read_timeout(Some(wait));
+    let request = format!("GET {path} HTTP/1.0\r\nHost: 127.0.0.1:{port}\r\nContent-Length: 0\r\n\r\n");
+    let mut response = String::new();
+    if stream.write_all(request.as_bytes()).is_err() || stream.read_to_string(&mut response).is_err() {
+        return Err(true);
+    }
+    response.split("\r\n\r\n").nth(1).map(str::to_owned).ok_or(true)
+}
+
+/// Generations not finished yet; `None` when the service could not say in `wait`.
+fn generations_in_progress(wait: Duration) -> Option<usize> {
+    match service_call("/api/jobs?limit=1000", wait) {
+        Ok(body) => serde_json::from_str::<serde_json::Value>(&body).ok().and_then(|answer| {
+            answer["jobs"].as_array().map(|jobs| {
+                jobs.iter().filter(|job| matches!(job["status"].as_str(), Some("queued" | "sending" | "running"))).count()
+            })
+        }),
+        Err(false) => Some(0),
+        Err(true) => None,
+    }
+}
+
+/// Quit, asking first only while a generation is not finished: one being sent, or answered in one request, is
+/// lost with the program and may still be paid.
+fn confirm_quit(app: &tauri::AppHandle) {
+    use tauri_plugin_dialog::{DialogExt, MessageDialogButtons, MessageDialogKind};
+    let running = generations_in_progress(Duration::from_secs(2));
+    if running == Some(0) {
+        app.exit(0);
+        return;
+    }
+    let text = |key: &str, args: &[(&'static str, String)]| vs_server::i18n::text(key, args);
+    let count = running.map_or_else(|| "?".to_string(), |count| count.to_string());
+    let mut dialog = app
+        .dialog()
+        .message(text("quit-running", &[("count", count)]))
+        .title(text("quit-title", &[]))
+        .kind(MessageDialogKind::Warning)
+        .buttons(MessageDialogButtons::OkCancelCustom(text("quit-button-quit", &[]), text("quit-button-stay", &[])));
+    if let Some(window) = app.get_webview_window("main") {
+        dialog = dialog.parent(&window);
+    }
+    if dialog.blocking_show() {
+        app.exit(0);
+    }
+}
+
 /// Tauri's own WebView2 switches, the proxy the person chose for what the window loads itself (as in the music
 /// studios), and whatever is set in the variable WebView2 documents for exactly this.
 #[cfg(windows)]
@@ -303,9 +359,21 @@ pub fn run() {
         })
         .build(context)
         .expect("Tauri did not start")
-        .run(|_, event| {
-            if let tauri::RunEvent::Exit = event {
-                vs_server::hub::flush_on_exit();
+        .run(|app, event| match &event {
+            // closing the main window quits on every platform; Cmd+Q and the Dock reach it as an exit request
+            // with no code, and an exit the program requests itself carries one and goes through
+            tauri::RunEvent::WindowEvent { label, event: tauri::WindowEvent::CloseRequested { api, .. }, .. } if label == "main" => {
+                api.prevent_close();
+                let app = app.clone();
+                std::thread::spawn(move || confirm_quit(&app));
             }
+            #[cfg(target_os = "macos")]
+            tauri::RunEvent::ExitRequested { code: None, api, .. } => {
+                api.prevent_exit();
+                let app = app.clone();
+                std::thread::spawn(move || confirm_quit(&app));
+            }
+            tauri::RunEvent::Exit => vs_server::hub::flush_on_exit(),
+            _ => {}
         });
 }

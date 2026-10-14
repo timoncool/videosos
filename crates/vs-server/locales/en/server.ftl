@@ -73,3 +73,7 @@ jobs-finished-after-cancel = The provider finished the job after it was cancelle
 hw-no-nvidia = no NVIDIA GPU
 remote-only-here = Access from the network is changed on the computer VideoSOS runs on.
 settings-proxy-not-saved = The proxy is in use but was not saved: { $error }
+quit-title = Quit VideoSOS?
+quit-running = { $count } generation(s) are not finished. One already sent to fal or Runware is picked up at the next start; one being sent, or an OpenRouter request, is lost and may still be paid.
+quit-button-quit = Quit
+quit-button-stay = Stay
