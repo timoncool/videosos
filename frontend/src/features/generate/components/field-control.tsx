@@ -26,7 +26,7 @@ function kindOfMime(mime: string): MediaKind | null {
   return null
 }
 
-function MediaThumb({ reference }: { reference: MediaRef }) {
+export function MediaThumb({ reference }: { reference: MediaRef }) {
   const [url, setUrl] = useState<string | null>(null)
   const mediaItems = useMediaLibraryStore((state) => state.mediaItems)
   useEffect(() => {

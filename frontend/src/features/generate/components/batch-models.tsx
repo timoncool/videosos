@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Plus, X } from 'lucide-react'
 import { fieldLabel } from '../services/field-label'
 import { carryValues } from '../services/batch-values'
+import { applyElements } from '../services/prompt-elements'
 import { PROVIDER_LABELS, formatUsd, generateApi, type Field, type ModelForm, type Provider, type Task } from '../services/generate-api'
 import { useEstimate } from '../hooks/use-estimate'
 import { modelKey, useGenerateStore, type ModelRef } from '../stores/generate-store'
@@ -38,7 +39,8 @@ function ExtraModel({ task, model, fields, values, repeat, keys, onRun, onRemove
     if (form) return
     generateApi.form(model.provider, model.id).then((answer) => useGenerateStore.getState().setForm(answer.form), (error: unknown) => setFormError(error instanceof Error ? error.message : String(error)))
   }, [form, model.provider, model.id])
-  const carried = form ? carryValues(fields, values, form.fields) : {}
+  const elements = useGenerateStore((state) => state.elements)
+  const carried = form ? applyElements(form.fields, carryValues(fields, values, form.fields), elements).values : {}
   const { estimate, error } = useEstimate(form ? model.provider : undefined, model.id, carried, repeat)
   const missing = (form?.fields ?? [])
     .filter((field) => field.required && field.default === undefined && (carried[field.key] === undefined || carried[field.key] === '' || (Array.isArray(carried[field.key]) && (carried[field.key] as unknown[]).length === 0)))

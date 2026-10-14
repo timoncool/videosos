@@ -247,6 +247,21 @@
       "keepHint": "Keep the field's text under this name",
       "remove": "Remove the preset \"{{name}}\""
     },
+    "elements": {
+      "button": "Elements",
+      "hint": "Characters, objects and places kept with their pictures: \"@name\" in the prompt sends the pictures to the model",
+      "empty": "Keep a character, an object or a place: put its pictures into the form's picture fields and give it a name. Name it in the prompt as @name.",
+      "use": "Put @{{name}} into the prompt",
+      "pictures_one": "{{count}} picture",
+      "pictures_other": "{{count}} pictures",
+      "remove": "Remove @{{name}}",
+      "name": "Name, one word",
+      "keep": "Keep",
+      "keepHint": "Pictures in the form: {{count}}; they are kept under this name",
+      "noPictures": "Put its pictures into the form first",
+      "badName": "One word: letters, digits, _ and -",
+      "left": "{{names}}: this model has no room for their pictures, they go as words"
+    },
     "variables": {
       "title": "Prompt variables",
       "missing": "Fill in the variables: {{names}}"

@@ -46,6 +46,8 @@ import { FieldControl } from './field-control'
 import { describeImage, improvePrompt } from '../services/prompt-assist'
 import { fillVariables, variablesOf } from '../services/prompt-variables'
 import { PromptPresets } from './prompt-presets'
+import { PromptElements } from './prompt-elements'
+import { applyElements } from '../services/prompt-elements'
 import { GenerationHistory } from './generation-history'
 import { ModelPicker } from './model-picker'
 import { BatchModels, type BatchRun } from './batch-models'
@@ -174,7 +176,10 @@ export function GeneratePanel() {
     return null
   }, [form, values])
   const [previousPrompt, setPreviousPrompt] = useState<{ key: string; text: string } | null>(null)
-  const { estimate, error: estimateError } = useEstimate(model?.provider, model?.id, values, repeat)
+  const elements = useGenerateStore((state) => state.elements)
+  // what the run is sent with: variables filled, each "@element" named in the prompt brought in with its pictures
+  const sent = useMemo(() => applyElements(form?.fields ?? [], fillVariables(values, variables), elements), [form, values, variables, elements])
+  const { estimate, error: estimateError } = useEstimate(model?.provider, model?.id, sent.values, repeat)
   // the price of the whole batch: unknown while any of its runs is
   const total = estimate?.estimate && batchRuns.every((run) => run.usd !== null) ? estimate.estimate.usd + batchRuns.reduce((sum, run) => sum + (run.usd ?? 0), 0) : null
   const totalExact = (estimate?.estimate?.exact ?? false) && batchRuns.every((run) => run.exact)
@@ -258,7 +263,7 @@ export function GeneratePanel() {
         provider: model.provider,
         model: model.id,
         task,
-        values: fillVariables(values, variables),
+        values: sent.values,
         project_id: projectId,
         repeat,
         place: placeOnTimeline,
@@ -381,6 +386,14 @@ export function GeneratePanel() {
                       text={typeof values[field.key] === 'string' ? (values[field.key] as string) : ''}
                       onUse={(text) => useGenerateStore.getState().setValue(model, field.key, text)}
                     />
+                    <PromptElements
+                      fields={fields}
+                      values={values}
+                      onMention={(name) => {
+                        const text = typeof values[field.key] === 'string' ? (values[field.key] as string) : ''
+                        useGenerateStore.getState().setValue(model, field.key, `${text}${text && !/\s$/.test(text) ? ' ' : ''}@${name} `)
+                      }}
+                    />
                     {firstImage && (
                       <button
                         type="button"
@@ -420,6 +433,9 @@ export function GeneratePanel() {
                   </div>
                 )}
                 {field.role === 'prompt' && improveError && <p className="text-[11px] text-destructive">{improveError}</p>}
+                {field.role === 'prompt' && sent.left.length > 0 && (
+                  <p className="text-[11px] text-muted-foreground">{t('generate.elements.left', { names: sent.left.map((name) => `@${name}`).join(', ') })}</p>
+                )}
                 {field.role === 'prompt' && variableNames.length > 0 && (
                   <div className="grid grid-cols-2 gap-2 rounded-md border border-border bg-secondary/20 p-2" aria-label={t('generate.variables.title')}>
                     {variableNames.map((name) => (

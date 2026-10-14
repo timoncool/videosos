@@ -8,6 +8,7 @@
 
 import { create } from 'zustand'
 import { generateApi, type Job, type MediaKind, type MediaRef, type ModelForm, type Provider, type Role, type Task } from '../services/generate-api'
+import type { PromptElement } from '../services/prompt-elements'
 
 export interface ModelRef {
   provider: Provider
@@ -28,6 +29,8 @@ export interface Persisted {
   variables: Record<string, string>
   /** Other models each task's run goes to as well, at most two: the batch. */
   extraModelsByTask: Partial<Record<Task, ModelRef[]>>
+  /** Characters, objects and places kept under a name with their pictures, named in a prompt as "@name". */
+  elements: PromptElement[]
 }
 
 export interface PromptPreset {
@@ -35,7 +38,7 @@ export interface PromptPreset {
   text: string
 }
 
-const DEFAULTS: Persisted = { task: 'image', modelByTask: {}, valuesByModel: {}, repeat: 1, placeOnTimeline: false, favorites: [], presets: [], variables: {}, extraModelsByTask: {} }
+const DEFAULTS: Persisted = { task: 'image', modelByTask: {}, valuesByModel: {}, repeat: 1, placeOnTimeline: false, favorites: [], presets: [], variables: {}, extraModelsByTask: {}, elements: [] }
 
 let saving: ReturnType<typeof setTimeout> | null = null
 
@@ -85,6 +88,8 @@ interface GenerateState extends Persisted {
   toggleFavorite: (key: string) => void
   savePreset: (name: string, text: string) => void
   removePreset: (name: string) => void
+  saveElement: (element: PromptElement) => void
+  removeElement: (name: string) => void
   setVariable: (name: string, value: string) => void
   setExtraModels: (task: Task, models: ModelRef[]) => void
   setJobs: (jobs: Job[]) => void
@@ -105,6 +110,7 @@ function persisted(state: GenerateState): Persisted {
     presets: state.presets,
     variables: state.variables,
     extraModelsByTask: state.extraModelsByTask,
+    elements: state.elements,
   }
 }
 
@@ -160,6 +166,14 @@ export const useGenerateStore = create<GenerateState>()((set, get) => ({
   },
   removePreset: (name) => {
     set({ presets: get().presets.filter((preset) => preset.name !== name) })
+    save(get())
+  },
+  saveElement: (element) => {
+    set({ elements: [...get().elements.filter((each) => each.name !== element.name), element] })
+    save(get())
+  },
+  removeElement: (name) => {
+    set({ elements: get().elements.filter((each) => each.name !== name) })
     save(get())
   },
   setExtraModels: (task, models) => {
