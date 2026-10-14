@@ -256,6 +256,13 @@
       "remove": "Remove the model from the batch",
       "lacks": "lacks: {{fields}}",
       "noKey": "no {{provider}} key"
+    },
+    "segment": {
+      "cutting": "Cutting {{from}}–{{to}} s of the clip…",
+      "ready": "The part is in \"Edit video\" as the source: say what to change in it",
+      "failed": "The part was not cut: {{reason}}",
+      "noFile": "The file of {{name}} is not in the library",
+      "name": "{{title}}, {{from}}–{{to}} s"
     }
   }
 }

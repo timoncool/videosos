@@ -99,6 +99,8 @@ type MediaActionsProps = ItemContextMenuSectionProps & {
   onRemoveSilence?: () => void
   onRemoveFillers?: () => void
   onGenerateAudioFromText?: () => void
+  canRegenerateSegment?: boolean
+  onRegenerateSegment?: () => void
 }
 
 type LayoutActionsProps = ItemContextMenuSectionProps & {
@@ -510,6 +512,8 @@ function MediaActions({
   onRemoveSilence,
   onRemoveFillers,
   onGenerateAudioFromText,
+  canRegenerateSegment,
+  onRegenerateSegment,
 }: MediaActionsProps) {
   return (
     <>
@@ -527,6 +531,15 @@ function MediaActions({
           <ContextMenuItem onClick={onFreezeFrame}>
             {t('timeline.contextMenu.insertFreezeFrame')}
             <ContextMenuShortcut>Shift+F</ContextMenuShortcut>
+          </ContextMenuItem>
+          <ContextMenuSeparator />
+        </>
+      )}
+
+      {canRegenerateSegment && onRegenerateSegment && (
+        <>
+          <ContextMenuItem onClick={onRegenerateSegment}>
+            {t('timeline.contextMenu.regenerateSegment')}
           </ContextMenuItem>
           <ContextMenuSeparator />
         </>

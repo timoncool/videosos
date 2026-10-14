@@ -38,6 +38,7 @@ jobs-field-too-long = { $field } is { $count } characters long; the model takes 
 jobs-no-key = No { $provider } key: add it in Settings, Providers.
 jobs-place-needs-project = Placing on the timeline needs project_id: the project open in the window (editor_state names it).
 jobs-place-at-invalid = place_at is a moment of the timeline in seconds, 0 or more.
+jobs-openrouter-video-link = OpenRouter takes { $field } only as an https link, not as a file of this computer: choose a fal or Runware model of this task, or give a link.
 jobs-not-found = No job { $job }
 jobs-still-running = The job is still running; cancel it first.
 

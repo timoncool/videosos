@@ -51,7 +51,8 @@ cannot cancel, the program only stops waiting.
     its track goes after it, and with `"keepFrom": true` it stays at `from` on a track free there instead;
   - `{"op": "addText", "text": "Title", "from": 0, "durationInFrames": 90, "fontSize": 96}`;
   - `{"op": "moveItem", "id": "...", "from": 150}`, `{"op": "removeItems", "ids": ["..."]}`;
-  - `{"op": "split", "id": "...", "frame": 120}`, `{"op": "trimStart", "id": "...", "frames": 15}`;
+  - `{"op": "split", "id": "...", "frame": 120}`, `{"op": "trimStart", "id": "...", "amount": 15}` (positive cuts the start off),
+    `{"op": "trimEnd", "id": "...", "amount": -15}` (negative cuts the end off);
   - `{"op": "addTransition", "leftClipId": "...", "rightClipId": "...", "durationInFrames": 15}`;
   - `{"op": "addKeyframe", "itemId": "...", "property": "opacity", "frame": 0, "value": 0}`.
   Give an op `callerId` and refer to what it created later: `{"$ref": "a#/detail/created/0"}`.

@@ -30,6 +30,7 @@ makes it, and the release notes on GitHub are taken from the release's section.
 - **Each generation card's details**: the model, every value it was asked with, the time it took.
 - **Results named and tagged by their prompt**: a picture carries the prompt and the model in its metadata (Windows
   shows them as its title and comment), a video or a sound in its tags, and the library item has the same title.
+- **Regenerate a part of a clip**: a video clip's menu on the timeline cuts the part it shows from its file in the window, puts it into the library and into Edit video as the source, and moves the playhead to the clip, so the new take lands over it with Put on the timeline.
 - **Generation placeholder on the timeline**: a run put on the timeline is drawn where it will land, with its model and progress, while it runs; the result lands at that moment, on a free track when the spot is taken, instead of after what is in the way. Agents can name the moment (`place_at_seconds`) and keep a clip at its time (`keepFrom`).
 - **Compare models in one run**: the same prompt goes to up to two more models of the task, each with its price, and the results stand side by side in the history.
 - **Prompt presets and variables**: keep a prompt under a name and put it into any form; `{{subject}}` in a prompt gets its own field and is filled in when the job is sent.
@@ -57,6 +58,9 @@ makes it, and the release notes on GitHub are taken from the release's section.
 
 ### Fixed
 
+- **OpenRouter video editing models take their source video**: FLUX Video Edit and Aleph show a source video field and send it as OpenRouter's video reference; a file of this computer, which OpenRouter does not take, is refused before the run with a word to pick a fal or Runware model.
+- **A result put on the timeline is seen**: when its moment is taken, it lands on a free track above what is there (or a new one at the top), not under it.
+- **Agents' trim operations are described as they work**: `trimStart` and `trimEnd` take `amount`.
 - **A video's last frame is named by its prompt**: "Continue from the last frame" puts the frame into the library as "<prompt>, last frame", as every other result is named.
 - **Generation form labels name their fields**: a screen reader, a click on the label and an agent reading the page reach the prompt, the selects and the switches by their names.
 - **An agent's import of a file on this computer** works again.

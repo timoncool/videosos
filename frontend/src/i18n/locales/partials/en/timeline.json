@@ -74,6 +74,7 @@
       "generateAudioFromText": "Generate Audio From Text",
       "generateCaptions": "Generate Captions",
       "insertFreezeFrame": "Insert Freeze Frame",
+      "regenerateSegment": "Regenerate this part",
       "joinSelected": "Join Selected",
       "joinWithNext": "Join With Next",
       "joinWithPrevious": "Join With Previous",

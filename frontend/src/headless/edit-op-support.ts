@@ -145,19 +145,22 @@ function resolveOrCreateTrack(preferred: unknown, kind: 'video' | 'audio'): stri
 }
 
 /**
- * A track of the kind with nothing in [from, from + durationInFrames), the first in the timeline's order, or a
- * new one above the video tracks or below the audio ones, so a clip lands at exactly that moment.
+ * A track where a clip lands at exactly [from, from + durationInFrames) and is seen: when nothing of the kind is
+ * there, the track a clip goes to by default; otherwise a free track above everything there (a lower order
+ * draws on top), the nearest one, or a new track at the top. Sound mixes, so a free audio track is enough.
  */
 export function freeTrackAt(kind: 'video' | 'audio', from: number, durationInFrames: number): string {
   const items = useItemsStore.getState().items
   const busy = (trackId: string) =>
     items.some((item) => item.trackId === trackId && item.from < from + durationInFrames && from < item.from + item.durationInFrames)
   const all = tracks()
-  const free = all
-    .filter((t) => !t.isGroup && !t.locked && (t.kind ?? 'video') === kind)
-    .sort((a, b) => a.order - b.order)
-    .find((t) => !busy(t.id))
-  if (free) return free.id
+  const ofKind = all.filter((t) => !t.isGroup && (t.kind ?? 'video') === kind).sort((a, b) => a.order - b.order)
+  const taken = ofKind.filter((t) => busy(t.id))
+  if (taken.length === 0) return getOrCreateTrack(kind)
+  const free = ofKind.filter((t) => !t.locked && !busy(t.id))
+  const top = Math.min(...taken.map((t) => t.order))
+  const chosen = kind === 'video' ? free.filter((t) => t.order < top).at(-1) : free[0]
+  if (chosen) return chosen.id
   const orders = all.map((t) => t.order)
   const order = kind === 'video' ? Math.min(0, ...orders) - 1 : Math.max(0, ...orders) + 1
   const track = createClassicTrack({ tracks: all, kind, order })

@@ -262,6 +262,23 @@ describe('editProject', () => {
     expect(tracks.find((t) => t.id === video.trackId)!.order).toBeLessThan(tracks.find((t) => t.id === still.trackId)!.order)
   })
 
+  it('addClip with keepFrom goes above what is there, not onto a free track under it', async () => {
+    const track = (id: string, order: number) => ({ id, name: id, kind: 'video' as const, height: 80, locked: false, visible: true, muted: false, solo: false, order })
+    const still = { ...videoMedia, id: 'm-img', mimeType: 'image/png', audioCodec: undefined } as MediaMetadata
+    const result = await editProject({
+      project: baseProject({ tracks: [track('t_top', -1), track('t_low', 0)] }),
+      ops: [
+        { op: 'addClip', mediaId: 'm-img', from: 0, trackId: 't_top' } as EditOp,
+        { op: 'addClip', mediaId: 'm-img', from: 30, keepFrom: true } as EditOp,
+      ],
+      media: [{ mediaId: 'm-img', metadata: still }],
+    })
+    const tracks = result.project.timeline!.tracks
+    const placed = result.project.timeline!.items.find((i) => i.from === 30)!
+    expect(placed.trackId).not.toBe('t_low')
+    expect(tracks.find((t) => t.id === placed.trackId)!.order).toBeLessThan(-1)
+  })
+
   it('addClip image defaults to a 150-frame still', async () => {
     const result = await editProject({
       project: baseProject(),

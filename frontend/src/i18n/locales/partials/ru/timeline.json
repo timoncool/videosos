@@ -74,6 +74,7 @@
       "generateAudioFromText": "Сгенерировать речь из текста",
       "generateCaptions": "Создать субтитры",
       "insertFreezeFrame": "Вставить стоп-кадр",
+      "regenerateSegment": "Перегенерировать отрезок",
       "joinSelected": "Объединить выбранные",
       "joinWithNext": "Объединить со следующим",
       "joinWithPrevious": "Объединить с предыдущим",

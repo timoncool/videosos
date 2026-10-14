@@ -8,6 +8,7 @@ import { useSelectionStore } from '@/shared/state/selection'
 import { usePlaybackStore } from '@/shared/state/playback'
 import { useClearKeyframesDialogStore } from '@/shared/state/clear-keyframes-dialog'
 import { useTtsGenerateDialogStore } from '@/shared/state/tts-generate-dialog'
+import { useSegmentRequestStore } from '@/shared/state/segment-request-store'
 import { getTextItemPlainText } from '@/shared/utils/text-item-spans'
 import {
   isTranscriptionOutOfMemoryError,
@@ -210,6 +211,26 @@ export function useTimelineItemActions({
     const { currentFrame } = usePlaybackStore.getState()
     void insertFreezeFrame(item.id, currentFrame)
   }, [item.id, item.type])
+
+  const handleRegenerateSegment = useCallback(() => {
+    if (item.type !== 'video' || !item.mediaId) {
+      return
+    }
+    const projectFps = useTimelineSettingsStore.getState().fps || 30
+    const sourceFps = item.sourceFps && item.sourceFps > 0 ? item.sourceFps : projectFps
+    const start = (item.sourceStart ?? 0) / sourceFps
+    const end =
+      item.sourceEnd !== undefined
+        ? item.sourceEnd / sourceFps
+        : start + (item.durationInFrames / projectFps) * (item.speed ?? 1)
+    useSegmentRequestStore.getState().ask({
+      mediaId: item.mediaId,
+      label: item.label,
+      start,
+      end,
+      at: item.from / projectFps,
+    })
+  }, [item])
 
   const textContent = item.type === 'text' ? getTextItemPlainText(item) : ''
   const hasSpeakableText = textContent.trim().length > 0
@@ -609,6 +630,7 @@ export function useTimelineItemActions({
     handleBentoLayout,
     handleFreezeFrame,
     handleGenerateAudioFromText,
+    handleRegenerateSegment,
     handleCaptionsFromDialog,
     handleCreatePreComp,
     handleEnterComposition,

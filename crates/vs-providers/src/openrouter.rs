@@ -211,6 +211,9 @@ pub fn form(entry: &ModelEntry) -> Result<ModelForm, ProviderError> {
         "video" => {
             let model = &source["model"];
             fields.push(prompt("prompt", "Prompt", true));
+            if entry.tasks.contains(&Task::VideoEdit) {
+                fields.push(media("input_video", "Source video", MediaKind::Video, 1, 1, Role::Source));
+            }
             let frames: Vec<&str> = model["supported_frame_images"].as_array().map(|list| list.iter().filter_map(Value::as_str).collect()).unwrap_or_default();
             if frames.contains(&"first_frame") {
                 fields.push(media("frame_first", "First frame", MediaKind::Image, 0, 1, Role::FirstFrame));
@@ -320,6 +323,13 @@ pub fn build(form: &ModelForm, values: &Map<String, Value>) -> Map<String, Value
                     let mut part = image_part(url);
                     part["frame_type"] = json!(if key == "frame_first" { "first_frame" } else { "last_frame" });
                     body.entry("frame_images").or_insert_with(|| json!([])).as_array_mut().expect("an array").push(part);
+                }
+            }
+            "input_video" => {
+                let url = value.as_array().and_then(|list| list.first()).and_then(Value::as_str).or(value.as_str());
+                if let Some(url) = url {
+                    let part = json!({ "type": "video_url", "video_url": { "url": url } });
+                    body.entry("input_references").or_insert_with(|| json!([])).as_array_mut().expect("an array").push(part);
                 }
             }
             "input_audio" => {
@@ -482,6 +492,30 @@ mod tests {
         assert!(seeing.fields.iter().any(|field| field.key == "input_images"));
         let blind = form(&entry(json!(["text"]))).unwrap();
         assert!(!blind.fields.iter().any(|field| field.key == "input_images"));
+    }
+
+    #[test]
+    fn a_video_edit_model_takes_its_source_as_a_video_reference() {
+        let entry = ModelEntry {
+            provider: Provider::Openrouter,
+            id: "black-forest-labs/flux-video-edit".into(),
+            name: "FLUX Video Edit".into(),
+            description: String::new(),
+            tasks: vec![Task::VideoEdit],
+            created: None,
+            status: "live".into(),
+            price: None,
+            rates: Vec::new(),
+            thumbnail: None,
+            source: json!({ "kind": "video", "model": { "pricing_skus": {} } }),
+        };
+        let edit = form(&entry).unwrap();
+        let source = edit.fields.iter().find(|field| field.key == "input_video").expect("a source video field");
+        assert!(source.required && source.role == Some(Role::Source));
+        let values = Map::from_iter([("prompt".into(), json!("paint it")), ("input_video".into(), json!(["data:video/mp4;base64,AAAA"]))]);
+        let body = build(&edit, &values);
+        assert_eq!(body["input_references"], json!([{ "type": "video_url", "video_url": { "url": "data:video/mp4;base64,AAAA" } }]));
+        assert!(body.get("input_video").is_none());
     }
 
     #[test]

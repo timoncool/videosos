@@ -17,7 +17,7 @@ use rusqlite::{params, Connection, OptionalExtension};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Map, Value};
 use tokio::sync::Semaphore;
-use vs_providers::{fal, openrouter, price, runware, FieldKind, MediaPayload, ModelForm, Output, Polled, Provider, ProviderError, Submitted};
+use vs_providers::{fal, openrouter, price, runware, FieldKind, MediaKind, MediaPayload, ModelForm, Output, Polled, Provider, ProviderError, Submitted};
 
 use crate::catalog::{bad, Catalog};
 use crate::{credentials, events, AppState};
@@ -811,6 +811,20 @@ async fn create(State(state): State<AppState>, Json(request): Json<CreateRequest
         };
         if missing && field.default.is_none() {
             return bad(t!("jobs-field-required", field = field.label.clone()));
+        }
+    }
+    // OpenRouter reads a video only from an https link, never from the data the server could send it
+    if form.provider == Provider::Openrouter {
+        for field in &form.fields {
+            let FieldKind::Media { media: MediaKind::Video, .. } = field.kind else { continue };
+            let items = match request.values.get(&field.key) {
+                Some(Value::Array(items)) => items.clone(),
+                Some(Value::Null) | None => Vec::new(),
+                Some(single) => vec![single.clone()],
+            };
+            if items.iter().any(|item| !item.as_str().is_some_and(|link| link.starts_with("https://"))) {
+                return bad(t!("jobs-openrouter-video-link", field = field.label.clone()));
+            }
         }
     }
     // a text longer than the model takes is refused here, before it is sent and paid for

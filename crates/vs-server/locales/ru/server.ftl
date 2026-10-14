@@ -39,6 +39,7 @@ jobs-field-too-long = { $field }: { $count } символов, модель пр
 jobs-no-key = Нет ключа { $provider }: добавьте его в Настройках, раздел «Провайдеры».
 jobs-place-needs-project = Чтобы поставить результат на таймлайн, нужен project_id — проект, открытый в окне (его называет editor_state).
 jobs-place-at-invalid = place_at — момент таймлайна в секундах, от 0.
+jobs-openrouter-video-link = OpenRouter принимает «{ $field }» только https-ссылкой, а не файлом с этого компьютера: выберите модель fal или Runware для этой задачи или дайте ссылку.
 jobs-not-found = Нет задачи { $job }
 jobs-still-running = Задача ещё идёт; сначала отмените её.
 
