@@ -42,7 +42,9 @@
       "ok": "Der Schlüssel funktioniert.",
       "okBalance": "Der Schlüssel funktioniert. Guthaben: {{balance}}",
       "failed": "Der Anbieter hat den Schlüssel nicht akzeptiert.",
-      "getOne": "{{provider}}-Schlüssel erhalten"
+      "getOne": "{{provider}}-Schlüssel erhalten",
+      "spent": "Mit diesem Schlüssel ausgegeben: {{spent}}.",
+      "balanceAdminOnly": "fal zeigt das Guthaben nur einem Admin-Schlüssel."
     },
     "form": {
       "loading": "Modelleinstellungen werden geladen …",

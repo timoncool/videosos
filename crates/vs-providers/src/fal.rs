@@ -191,6 +191,19 @@ pub fn form(endpoint: &str, document: &Value) -> Result<ModelForm, ProviderError
 }
 
 /// The price per unit; fal asks for a key.
+/// The account's credit balance in USD. fal tells it only to an admin key: a key it refuses gets None.
+pub async fn balance(http: &Http, key: &str) -> Result<Option<f64>, ProviderError> {
+    match http.get_json::<Value>(&format!("{PLATFORM}/account/billing?expand=credits"), auth(key)).await {
+        Ok(body) => body
+            .pointer("/credits/current_balance")
+            .and_then(Value::as_f64)
+            .map(Some)
+            .ok_or_else(|| ProviderError::Network("fal billing: no credits.current_balance in the answer".into())),
+        Err(ProviderError::Refused(_)) => Ok(None),
+        Err(error) => Err(error),
+    }
+}
+
 pub async fn price(http: &Http, key: &str, endpoint: &str) -> Result<PriceRule, ProviderError> {
     let url = format!("{PLATFORM}/models/pricing?endpoint_id={}", urlencode(endpoint));
     let body: Value = http.get_json(&url, auth(key)).await?;

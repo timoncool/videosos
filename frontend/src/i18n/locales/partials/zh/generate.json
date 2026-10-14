@@ -42,7 +42,9 @@
       "ok": "密钥有效。",
       "okBalance": "密钥有效。余额：{{balance}}",
       "failed": "提供商未接受该密钥。",
-      "getOne": "获取 {{provider}} 密钥"
+      "getOne": "获取 {{provider}} 密钥",
+      "spent": "此密钥已花费：{{spent}}。",
+      "balanceAdminOnly": "fal 仅向管理员密钥显示余额。"
     },
     "form": {
       "loading": "正在读取模型设置…",

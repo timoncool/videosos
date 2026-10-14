@@ -292,12 +292,9 @@ export const generateApi = {
       body: JSON.stringify({ key }),
     }),
   checkKey: (provider: Provider) =>
-    request<{ ok: boolean; balance?: number | null; error?: string }>(
-      `/api/keys/${provider}/check`,
-      {
-        method: 'POST',
-      },
-    ),
+    request<KeyCheck>(`/api/keys/${provider}/check`, {
+      method: 'POST',
+    }),
   spend: (projectId: string | null) =>
     request<Spend>(`/api/spend?${new URLSearchParams({ project: projectId ?? '' })}`),
   settings: () => request<AgentSettings>('/api/settings'),
@@ -359,6 +356,16 @@ export function priceLine(t: TFunction, entry: Pick<ModelEntry, 'price' | 'rates
       output: formatUsd(output.amount * 1e6),
     })
   return entry.price
+}
+
+/** A key checked with the provider: the account's balance when the provider tells it, what the key has spent. */
+export interface KeyCheck {
+  ok: boolean
+  balance?: number | null
+  spent?: number | null
+  /** fal tells the balance only to an admin key. */
+  balance_admin_only?: boolean
+  error?: string
 }
 
 export function formatUsd(amount: number): string {

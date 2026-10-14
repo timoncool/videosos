@@ -42,7 +42,9 @@
       "ok": "A chave funciona.",
       "okBalance": "A chave funciona. Saldo: {{balance}}",
       "failed": "O provedor não aceitou a chave.",
-      "getOne": "Obter uma chave da {{provider}}"
+      "getOne": "Obter uma chave da {{provider}}",
+      "spent": "Gasto com esta chave: {{spent}}.",
+      "balanceAdminOnly": "O fal mostra o saldo apenas para uma chave de administrador."
     },
     "form": {
       "loading": "Carregando as configurações do modelo…",

@@ -1,5 +1,6 @@
 //! Routes for the providers' keys: whether each is set, store or clear one, and check one against the
-//! provider with a free call (OpenRouter `/key`, Runware account details, fal's price list).
+//! provider with a free call (OpenRouter `/key`, Runware account details, fal's price list and, for an admin key,
+//! its billing).
 
 use axum::extract::{Path, State};
 use axum::http::StatusCode;
@@ -40,9 +41,12 @@ async fn check(State(state): State<AppState>, Path(provider): Path<String>) -> R
         return Json(json!({ "ok": false, "error": vs_providers::ProviderError::NoKey(provider.as_str()).to_string() })).into_response();
     };
     let checked = match provider {
-        Provider::Openrouter => openrouter::balance(&state.http, &key).await.map(|balance| json!({ "ok": true, "balance": balance })),
+        Provider::Openrouter => openrouter::key_money(&state.http, &key).await.map(|(balance, spent)| json!({ "ok": true, "balance": balance, "spent": spent })),
         Provider::Runware => runware::balance(&state.http, &key).await.map(|balance| json!({ "ok": true, "balance": balance })),
-        Provider::Fal => fal::price(&state.http, &key, "fal-ai/flux/schnell").await.map(|_| json!({ "ok": true, "balance": null })),
+        Provider::Fal => match fal::price(&state.http, &key, "fal-ai/flux/schnell").await {
+            Ok(_) => fal::balance(&state.http, &key).await.map(|balance| json!({ "ok": true, "balance": balance, "balance_admin_only": balance.is_none() })),
+            Err(error) => Err(error),
+        },
     };
     match checked {
         Ok(answer) => Json(answer).into_response(),

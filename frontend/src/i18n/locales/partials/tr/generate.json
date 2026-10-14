@@ -42,7 +42,9 @@
       "ok": "Anahtar çalışıyor.",
       "okBalance": "Anahtar çalışıyor. Bakiye: {{balance}}",
       "failed": "Sağlayıcı anahtarı kabul etmedi.",
-      "getOne": "{{provider}} anahtarı al"
+      "getOne": "{{provider}} anahtarı al",
+      "spent": "Bu anahtarla harcanan: {{spent}}.",
+      "balanceAdminOnly": "fal bakiyeyi yalnızca yönetici anahtarına gösterir."
     },
     "form": {
       "loading": "Modelin ayarları okunuyor…",

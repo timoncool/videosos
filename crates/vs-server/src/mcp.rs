@@ -310,7 +310,7 @@ fn tools() -> &'static [Tool] {
             },
             Tool {
                 name: "key_check",
-                description: "Checks a provider key with a free call and reports the balance when the provider tells it.",
+                description: "Checks a provider key with a free call and reports the balance when the provider tells it: Runware the account's, OpenRouter what the key has spent (spent) and what is left of its limit when it has one, fal the account's only to an admin key (balance_admin_only: true otherwise).",
                 looks: true,
                 schema: || object(json!({ "provider": { "type": "string", "enum": ["openrouter", "fal", "runware"] } }), &["provider"]),
                 call: |args| send(Method::POST, format!("/api/keys/{}/check", segment(&text(args, "provider")?)), json!({})),

@@ -42,7 +42,9 @@
       "ok": "키가 정상 작동합니다.",
       "okBalance": "키가 정상 작동합니다. 잔액: {{balance}}",
       "failed": "공급자가 키를 수락하지 않았습니다.",
-      "getOne": "{{provider}} 키 받기"
+      "getOne": "{{provider}} 키 받기",
+      "spent": "이 키로 사용한 금액: {{spent}}.",
+      "balanceAdminOnly": "fal 잔액은 관리자 키에서만 표시됩니다."
     },
     "form": {
       "loading": "모델 설정을 불러오는 중…",

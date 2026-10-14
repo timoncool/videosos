@@ -13,6 +13,7 @@ import {
   type KeyState,
   type Provider,
 } from '../services/generate-api'
+import { keyCheckText } from '../services/key-check-text'
 
 const KEY_PAGES: Record<Provider, string> = {
   openrouter: 'https://openrouter.ai/settings/keys',
@@ -42,17 +43,7 @@ function ProviderRow({ state, onChanged }: { state: KeyState; onChanged: () => v
   const check = () =>
     run(async () => {
       const answer = await generateApi.checkKey(state.provider)
-      setMessage(
-        answer.ok
-          ? {
-              ok: true,
-              text:
-                answer.balance !== null && answer.balance !== undefined
-                  ? t('generate.keys.okBalance', { balance: formatUsd(answer.balance) })
-                  : t('generate.keys.ok'),
-            }
-          : { ok: false, text: answer.error ?? t('generate.keys.failed') },
-      )
+      setMessage({ ok: answer.ok, text: keyCheckText(t, answer) })
     })
 
   return (
@@ -99,11 +90,7 @@ function ProviderRow({ state, onChanged }: { state: KeyState; onChanged: () => v
               await generateApi.storeKey(state.provider, value.trim())
               setValue('')
               const answer = await generateApi.checkKey(state.provider)
-              setMessage(
-                answer.ok
-                  ? { ok: true, text: t('generate.keys.ok') }
-                  : { ok: false, text: answer.error ?? t('generate.keys.failed') },
-              )
+              setMessage({ ok: answer.ok, text: keyCheckText(t, answer) })
             })
           }
         >

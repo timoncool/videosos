@@ -495,10 +495,11 @@ pub fn upload(media: &MediaPayload) -> String {
     media.data_uri()
 }
 
-/// What the key may still spend, when it has a limit.
-pub async fn balance(http: &Http, key: &str) -> Result<Option<f64>, ProviderError> {
+/// What the key may still spend when it has a limit, and what it has spent, in USD (`GET /key`). The account's
+/// own credits are told only to a management key, so a model key cannot read them.
+pub async fn key_money(http: &Http, key: &str) -> Result<(Option<f64>, Option<f64>), ProviderError> {
     let answer: Value = http.get_json(&format!("{API}/key"), auth(key)).await?;
-    Ok(answer.pointer("/data/limit_remaining").and_then(Value::as_f64))
+    Ok((answer.pointer("/data/limit_remaining").and_then(Value::as_f64), answer.pointer("/data/usage").and_then(Value::as_f64)))
 }
 
 #[cfg(test)]

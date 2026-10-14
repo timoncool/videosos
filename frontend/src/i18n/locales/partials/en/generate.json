@@ -42,7 +42,9 @@
       "ok": "The key works.",
       "okBalance": "The key works. Balance: {{balance}}",
       "failed": "The provider did not accept the key.",
-      "getOne": "Get a {{provider}} key"
+      "getOne": "Get a {{provider}} key",
+      "spent": "Spent by this key: {{spent}}.",
+      "balanceAdminOnly": "fal shows the balance only to an admin key."
     },
     "form": {
       "loading": "Reading the model's settings…",

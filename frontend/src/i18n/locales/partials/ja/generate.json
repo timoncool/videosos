@@ -42,7 +42,9 @@
       "ok": "キーは有効です。",
       "okBalance": "キーは有効です。残高: {{balance}}",
       "failed": "プロバイダーがキーを受け付けませんでした。",
-      "getOne": "{{provider}}のキーを取得"
+      "getOne": "{{provider}}のキーを取得",
+      "spent": "このキーの利用額: {{spent}}。",
+      "balanceAdminOnly": "fal の残高は管理者キーでのみ表示されます。"
     },
     "form": {
       "loading": "モデルの設定を読み込み中…",

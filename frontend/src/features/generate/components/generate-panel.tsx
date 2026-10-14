@@ -40,6 +40,7 @@ import {
   type Provider,
   type Task,
 } from '../services/generate-api'
+import { keyCheckText } from '../services/key-check-text'
 import {
   assistantReadiness,
   modelKey,
@@ -103,11 +104,7 @@ function KeyPrompt({ provider }: { provider: Provider }) {
       setState({
         busy: false,
         ok: checked.ok,
-        message: checked.ok
-          ? checked.balance !== null && checked.balance !== undefined
-            ? t('generate.keys.okBalance', { balance: formatUsd(checked.balance) })
-            : t('generate.keys.ok')
-          : (checked.error ?? t('generate.keys.failed')),
+        message: keyCheckText(t, checked),
       })
       if (checked.ok) setValue('')
     } catch (error) {

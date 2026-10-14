@@ -42,7 +42,9 @@
       "ok": "La clé fonctionne.",
       "okBalance": "La clé fonctionne. Solde : {{balance}}",
       "failed": "Le fournisseur n’a pas accepté la clé.",
-      "getOne": "Obtenir une clé {{provider}}"
+      "getOne": "Obtenir une clé {{provider}}",
+      "spent": "Dépensé avec cette clé : {{spent}}.",
+      "balanceAdminOnly": "fal n'indique le solde qu'à une clé administrateur."
     },
     "form": {
       "loading": "Lecture des paramètres du modèle…",
