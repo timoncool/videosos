@@ -181,6 +181,21 @@ fn tools() -> &'static [Tool] {
                 })),
             },
             Tool {
+                name: "generate_file",
+                description: "One call from a model to its files on this computer, without a project, for when you need the picture, clip, music or voice itself (paid by the person's key, as generate). Waits up to wait_seconds (45 by default, at most 55); a longer job answers with its job_id - studio_wait with it, then call generate_file again with the same arguments: the same request is the same job and is not paid twice (again: true runs it anew). out_dir copies the files into a folder. values and media inputs as in generate.",
+                looks: false,
+                schema: || object(json!({
+                    "provider": { "type": "string", "enum": ["openrouter", "fal", "runware"] },
+                    "model": { "type": "string" },
+                    "task": { "type": "string", "description": TASKS },
+                    "values": { "type": "object" },
+                    "out_dir": { "type": "string", "description": "a folder on this computer to copy the files into" },
+                    "wait_seconds": { "type": "integer", "minimum": 0, "maximum": 55 },
+                    "again": { "type": "boolean", "description": "run it again even when the same request was made (paid again)" },
+                }), &["provider", "model", "values"]),
+                call: |_| composite("generate_file"),
+            },
+            Tool {
                 name: "jobs_list",
                 description: "Generation jobs, newest first: status, error, cost, files. Optionally only one project's.",
                 looks: true,
@@ -1011,6 +1026,7 @@ async fn ask_window(command: &str, args: Value, seconds: u64) -> Result<Value, S
 const JOURNAL: &[(&str, &str, &str)] = &[
     ("generate", "started", "generation"),
     ("job_retry", "started", "generation"),
+    ("generate_file", "started", "generation"),
     ("job_cancel", "cancelled", "generation"),
     ("job_delete", "deleted", "generation"),
     ("timeline_edit", "updated", "timeline"),
@@ -1346,6 +1362,72 @@ async fn open_folder(state: &AppState, args: &Value) -> Result<Value, String> {
     if status.is_success() { Ok(json!({ "opened": path.display().to_string() })) } else { Err(text) }
 }
 
+/// One call from a model and its settings to the files on this computer, as Dub Studio's file tools are: no
+/// project, the files where the job keeps them (and copied into out_dir). The same request made again is the
+/// same job, so a second call answers with what the first made instead of paying again; again: true runs it anew.
+async fn generate_file(state: &AppState, args: &Value) -> Result<Value, String> {
+    let provider = text(args, "provider")?;
+    let model = text(args, "model")?;
+    let values = args.get("values").cloned().unwrap_or_else(|| json!({}));
+    let seconds = args.get("wait_seconds").and_then(Value::as_u64).unwrap_or(45).min(55);
+    let again = args.get("again").and_then(Value::as_bool) == Some(true);
+    let known = (!again)
+        .then(|| {
+            state.jobs.list(None, 200).into_iter().find(|job| {
+                job.project_id.is_none() && job.provider.as_str() == provider && job.model == model && job.values == values && !matches!(job.status.as_str(), "failed" | "cancelled")
+            })
+        })
+        .flatten();
+    let reused = known.is_some();
+    let id = match known {
+        Some(job) => job.id,
+        None => {
+            let body = json!({ "provider": provider, "model": model, "task": args.get("task").cloned().unwrap_or(Value::Null), "values": values, "project_id": null, "repeat": 1, "place": false, "place_at": null, "origin": "agent" });
+            let (status, answer) = call_route(Call { method: Method::POST, path: "/api/jobs".into(), payload: Payload::Json(body) }).await?;
+            let answer: Value = serde_json::from_str(&answer).unwrap_or(Value::Null);
+            if !status.is_success() {
+                return Err(answer["error"].as_str().map(str::to_string).unwrap_or_else(|| answer.to_string()));
+            }
+            answer["jobs"][0]["id"].as_str().map(str::to_string).ok_or_else(|| "the server started no job".to_string())?
+        }
+    };
+    let deadline = tokio::time::Instant::now() + Duration::from_secs(seconds);
+    loop {
+        let job = state.jobs.get(&id).ok_or_else(|| format!("No job {id}"))?;
+        match job.status.as_str() {
+            "done" => {
+                let out_dir = args.get("out_dir").and_then(Value::as_str).map(std::path::PathBuf::from);
+                if let Some(dir) = &out_dir {
+                    std::fs::create_dir_all(dir).map_err(|error| format!("{}: {error}", dir.display()))?;
+                }
+                let mut files = Vec::new();
+                for output in &job.outputs {
+                    let mut entry = json!({ "kind": output.kind, "mime": output.mime });
+                    if let Some(text) = &output.text {
+                        entry["text"] = json!(text);
+                    }
+                    if let Some(path) = state.jobs.file_path(&id, output.index) {
+                        entry["path"] = json!(path.display().to_string());
+                        if let Some(dir) = &out_dir {
+                            let name = format!("{}-{}", id, output.file);
+                            let copy = dir.join(name);
+                            std::fs::copy(&path, &copy).map_err(|error| format!("{}: {error}", copy.display()))?;
+                            entry["copy"] = json!(copy.display().to_string());
+                        }
+                    }
+                    files.push(entry);
+                }
+                return Ok(json!({ "done": true, "job_id": id, "files": files, "cost": job.cost, "reused": reused, "model_name": job.model_name }));
+            }
+            "failed" | "cancelled" => return Err(format!("job {id} {}: {}", job.status, job.error.unwrap_or_default())),
+            _ if tokio::time::Instant::now() >= deadline => {
+                return Ok(json!({ "done": false, "job_id": id, "status": job.status, "progress": job.progress, "reused": reused, "model_name": job.model_name, "note": "still running: studio_wait with this job_id, then call generate_file again with the same arguments for the files" }));
+            }
+            _ => tokio::time::sleep(Duration::from_millis(700)).await,
+        }
+    }
+}
+
 async fn wait_for(state: &AppState, args: &Value) -> Result<Value, String> {
     let id = text(args, "job_id")?;
     let seconds = args.get("seconds").and_then(Value::as_u64).unwrap_or(30).clamp(1, 55);
@@ -1594,7 +1676,7 @@ fn annotations(tool: &Tool) -> Value {
     const OVERWRITES: &[&str] = &["timeline_edit", "checkpoint_restore", "storyboard_set", "canvas_set", "captions_add", "key_set", "proxy_set", "variables_set", "url_fetch_cancel"];
     let destructive = name.ends_with("_delete") || OVERWRITES.contains(&name);
     // what reaches the internet: the providers, the catalogues, downloads by link and the proxy check
-    const OPEN_WORLD: &[&str] = &["generate", "job_retry", "catalog_refresh", "key_check", "proxy_test", "url_fetch", "url_fetch_resume", "url_tool_install", "url_tool_update", "media_import"];
+    const OPEN_WORLD: &[&str] = &["generate", "generate_file", "job_retry", "catalog_refresh", "key_check", "proxy_test", "url_fetch", "url_fetch_resume", "url_tool_install", "url_tool_update", "media_import"];
     let idempotent = tool.looks || name.ends_with("_set") || name.ends_with("_get") || matches!(name, "project_open" | "editor_tab" | "playhead_seek" | "ui_navigate" | "ui_open_settings" | "ui_select");
     json!({ "readOnlyHint": tool.looks, "destructiveHint": !tool.looks && destructive, "idempotentHint": idempotent, "openWorldHint": OPEN_WORLD.contains(&name) })
 }
@@ -1744,6 +1826,7 @@ async fn run_tool(state: &AppState, tool: &Tool, args: &Value, before: &str) -> 
         Payload::Composite("wait") => wait_for(state, args).await.map(Answer::Json),
         Payload::Composite("studio_wait") => studio_wait(state, args).await,
         Payload::Composite("capabilities") => Ok(Answer::Json(capabilities(state))),
+        Payload::Composite("generate_file") => generate_file(state, args).await.map(Answer::Json),
         Payload::Composite("providers_log") => {
             let lines = args.get("lines").and_then(Value::as_u64).unwrap_or(50).clamp(1, 300) as usize;
             Ok(Answer::Json(json!({ "lines": crate::request_log::tail(lines) })))
@@ -1881,6 +1964,8 @@ async fn studio_wait(state: &AppState, args: &Value) -> Result<Answer, String> {
 fn journal_answer(state: &AppState, name: &str, args: &Value, before: &str, answer: &Result<Answer, String>) {
     match answer {
         Ok(Answer::Json(value)) if value.get("work_id").is_some() && value["done"] == false => {}
+        // a request made again found its job: nothing new was started
+        Ok(Answer::Json(value)) if value["reused"] == true => {}
         Ok(Answer::Json(value)) => journal_change(state, name, args, before, value),
         Ok(Answer::Text(text)) => journal_change(state, name, args, before, &serde_json::from_str(text).unwrap_or(Value::Null)),
         Ok(Answer::Image { .. }) | Ok(Answer::Pictures { .. }) | Err(_) => {}
