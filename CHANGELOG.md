@@ -52,6 +52,7 @@ makes it, and the release notes on GitHub are taken from the release's section.
 
 ### Changed
 
+- **The timeline shows its clips whole**: it opens at 36% of the window, and the video tracks with their clip names are in view by default instead of half of the height going to empty sound tracks; switches that are on (snapping, linked selection, the sidebar's tab) are a tinted background with the accent icon, not a solid block; the new project's frame shapes are neutral outlines.
 - **VideoSOS's own colours**: a neutral graphite console as in the family's studios, an AI-violet signature gradient on the main actions (Export, Generate, New project, the storyboard's clips), light violet for what is on, a spotlight gold for the playhead and the preview's handles, timeline clips coloured by kind (video indigo, sound emerald, pictures blue, text pink, shapes green), contrast to WCAG AA throughout; the icon takes the same gradient and the browser tab shows it instead of FreeCut's scissors.
 - **Own accent colour**: the teal of the VideoSOS icon; Onest and JetBrains Mono, the design of the author's studios.
 - **Settings window as in the studios**: sections with hints, every row with what it does, Done and Reset.

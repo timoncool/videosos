@@ -24,7 +24,7 @@ const EDITOR_DENSITY_PRESETS = {
     previewSplitHeaderHeight: 32,
     previewControlsHeight: 32,
     previewControlButtonSize: 30,
-    timelineDefaultSize: 28,
+    timelineDefaultSize: 36,
     timelineMinSize: 14,
     timelineMaxSize: 80,
     graphPanelSizeIncrease: 10,

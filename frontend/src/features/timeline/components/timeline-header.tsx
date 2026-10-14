@@ -91,7 +91,7 @@ const InlineKeyframesToggle = memo(function InlineKeyframesToggle({
         width: EDITOR_LAYOUT_CSS_VALUES.toolbarButtonSize,
         height: EDITOR_LAYOUT_CSS_VALUES.toolbarButtonSize,
       }}
-      className={isOpen ? 'bg-primary text-primary-foreground hover:bg-primary/90' : ''}
+      className={isOpen ? 'bg-[var(--color-accent)]/15 text-[var(--color-accent)] hover:bg-[var(--color-accent)]/25' : ''}
       onClick={onToggle}
       aria-label={label}
       aria-pressed={isOpen}
@@ -523,7 +523,7 @@ export const TimelineHeader = memo(function TimelineHeader({
               style={btnSize}
               className={
                 activeTool === 'select'
-                  ? 'bg-primary text-primary-foreground hover:bg-primary/90'
+                  ? 'bg-[var(--color-accent)]/15 text-[var(--color-accent)] hover:bg-[var(--color-accent)]/25'
                   : ''
               }
               onClick={() => setActiveTool('select')}
@@ -539,7 +539,7 @@ export const TimelineHeader = memo(function TimelineHeader({
               style={btnSize}
               className={
                 activeTool === 'trim-edit'
-                  ? 'bg-primary text-primary-foreground hover:bg-primary/90'
+                  ? 'bg-[var(--color-accent)]/15 text-[var(--color-accent)] hover:bg-[var(--color-accent)]/25'
                   : ''
               }
               onClick={() => setActiveTool(activeTool === 'trim-edit' ? 'select' : 'trim-edit')}
@@ -555,7 +555,7 @@ export const TimelineHeader = memo(function TimelineHeader({
               style={btnSize}
               className={
                 activeTool === 'razor'
-                  ? 'bg-primary text-primary-foreground hover:bg-primary/90'
+                  ? 'bg-[var(--color-accent)]/15 text-[var(--color-accent)] hover:bg-[var(--color-accent)]/25'
                   : ''
               }
               onClick={() => setActiveTool(activeTool === 'razor' ? 'select' : 'razor')}
@@ -571,7 +571,7 @@ export const TimelineHeader = memo(function TimelineHeader({
               style={btnSize}
               className={
                 activeTool === 'rate-stretch'
-                  ? 'bg-primary text-primary-foreground hover:bg-primary/90'
+                  ? 'bg-[var(--color-accent)]/15 text-[var(--color-accent)] hover:bg-[var(--color-accent)]/25'
                   : ''
               }
               onClick={() =>
@@ -591,7 +591,7 @@ export const TimelineHeader = memo(function TimelineHeader({
                     style={{ height: EDITOR_LAYOUT_CSS_VALUES.toolbarButtonSize }}
                     className={`gap-1 px-2 ${
                       activeTool === 'slip' || activeTool === 'slide'
-                        ? 'bg-primary text-primary-foreground hover:bg-primary/90'
+                        ? 'bg-[var(--color-accent)]/15 text-[var(--color-accent)] hover:bg-[var(--color-accent)]/25'
                         : ''
                     }`}
                     aria-label={t('timeline.header.slipSlideTools')}
@@ -775,7 +775,7 @@ export const TimelineHeader = memo(function TimelineHeader({
             variant="ghost"
             size="icon"
             style={btnSize}
-            className={snapEnabled ? 'bg-primary text-primary-foreground hover:bg-primary/90' : ''}
+            className={snapEnabled ? 'bg-[var(--color-accent)]/15 text-[var(--color-accent)] hover:bg-[var(--color-accent)]/25' : ''}
             onClick={toggleSnap}
             aria-label={
               snapEnabled
@@ -794,7 +794,7 @@ export const TimelineHeader = memo(function TimelineHeader({
             size="icon"
             style={btnSize}
             className={
-              audioSkimmingEnabled ? 'bg-primary text-primary-foreground hover:bg-primary/90' : ''
+              audioSkimmingEnabled ? 'bg-[var(--color-accent)]/15 text-[var(--color-accent)] hover:bg-[var(--color-accent)]/25' : ''
             }
             onClick={toggleAudioSkimming}
             aria-label={
@@ -821,7 +821,7 @@ export const TimelineHeader = memo(function TimelineHeader({
             size="icon"
             style={btnSize}
             className={
-              linkedSelectionEnabled ? 'bg-primary text-primary-foreground hover:bg-primary/90' : ''
+              linkedSelectionEnabled ? 'bg-[var(--color-accent)]/15 text-[var(--color-accent)] hover:bg-[var(--color-accent)]/25' : ''
             }
             onClick={() => setLinkedSelectionEnabled(!linkedSelectionEnabled)}
             aria-label={

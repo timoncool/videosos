@@ -637,7 +637,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                 w-9 h-9 rounded-lg flex items-center justify-center transition-[transform,background-color,color] duration-150 active:scale-95
                 ${
                   activeTab === id && leftSidebarOpen
-                    ? 'bg-primary text-primary-foreground hover:bg-primary/90'
+                    ? 'bg-[var(--color-accent)]/15 text-[var(--color-accent)] hover:bg-[var(--color-accent)]/25'
                     : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
                 }
               `}
