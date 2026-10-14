@@ -32,7 +32,8 @@ you take in it is shown to them ("Agent: edits the timeline") and written to the
    - `{"job": "<job id>", "index": 0}` — a result of an earlier generation;
    - `{"file": "C:\\path\\to\\file.png"}` — a file on this computer;
    - an `https://` URL.
-   `place_on_timeline: true` puts the result at the playhead once it arrives. `repeat` runs it several times
+   `place_on_timeline: true` puts the result on the timeline once it arrives: at `place_at_seconds`, or at the
+   playhead then; while it runs, the window marks where it will land. `repeat` runs it several times
    (each run is paid).
 5. `job_wait` until `status` is `done` (or `failed` with `error`). A finished job lists `outputs`; with a
    project open the results are already in its library (`media_list`, tagged `generated`).
@@ -46,7 +47,8 @@ cannot cancel, the program only stops waiting.
 - `timeline_get` — tracks and clips of the open project: ids, `from`/`durationInFrames` in frames of the
   project's `fps`, `start_s`/`length_s` in seconds, media names, text.
 - `timeline_edit` with `ops`, each one undoable step of the editor:
-  - `{"op": "addClip", "mediaId": "...", "from": 0}` — a media item as a clip;
+  - `{"op": "addClip", "mediaId": "...", "from": 0}` — a media item as a clip; a clip that meets another on
+    its track goes after it, and with `"keepFrom": true` it stays at `from` on a track free there instead;
   - `{"op": "addText", "text": "Title", "from": 0, "durationInFrames": 90, "fontSize": 96}`;
   - `{"op": "moveItem", "id": "...", "from": 150}`, `{"op": "removeItems", "ids": ["..."]}`;
   - `{"op": "split", "id": "...", "frame": 120}`, `{"op": "trimStart", "id": "...", "frames": 15}`;

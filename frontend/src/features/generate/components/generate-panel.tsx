@@ -50,6 +50,7 @@ import { ModelPicker } from './model-picker'
 import { BatchModels, type BatchRun } from './batch-models'
 import { useEstimate } from '../hooks/use-estimate'
 import { fieldLabel, overLength, providerWords } from '../services/field-label'
+import { playheadSeconds } from '../services/timeline-actions'
 
 const NO_VALUES: Record<string, unknown> = {}
 
@@ -238,6 +239,7 @@ export function GeneratePanel() {
     if (!model) return
     setSubmitting(true)
     setSubmitError(null)
+    const placeAt = placeOnTimeline ? playheadSeconds() : null
     try {
       const { jobs: created } = await generateApi.createJobs({
         provider: model.provider,
@@ -247,6 +249,7 @@ export function GeneratePanel() {
         project_id: projectId,
         repeat,
         place: placeOnTimeline,
+        place_at: placeAt,
       })
       for (const job of created) useGenerateStore.getState().upsertJob(job)
       for (const run of batchRuns) {
@@ -258,6 +261,7 @@ export function GeneratePanel() {
           project_id: projectId,
           repeat,
           place: placeOnTimeline,
+          place_at: placeAt,
         })
         for (const job of more) useGenerateStore.getState().upsertJob(job)
       }

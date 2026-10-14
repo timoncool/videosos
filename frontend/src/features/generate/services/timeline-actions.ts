@@ -25,6 +25,23 @@ export function placeMediaAtPlayhead(mediaId: string): unknown {
   return applyOp({ op: 'addClip', mediaId, from })
 }
 
+/**
+ * A media item of the library as a clip at a moment of the timeline, in seconds, on a track free there so it is
+ * not pushed along; at the playhead without one.
+ */
+export function placeMediaAt(mediaId: string, seconds: number | null): unknown {
+  if (seconds === null) return placeMediaAtPlayhead(mediaId)
+  syncCanvas()
+  const fps = useProjectStore.getState().currentProject?.metadata?.fps ?? 30
+  return applyOp({ op: 'addClip', mediaId, from: Math.round(seconds * fps), keepFrom: true })
+}
+
+/** The playhead in seconds, where a run asked for now lands. */
+export function playheadSeconds(): number {
+  const fps = useProjectStore.getState().currentProject?.metadata?.fps ?? 30
+  return usePlaybackStore.getState().currentFrame / fps
+}
+
 /** Text as a text item at the playhead, five seconds long. */
 export function placeTextAtPlayhead(text: string): unknown {
   syncCanvas()

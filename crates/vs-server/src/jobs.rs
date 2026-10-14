@@ -57,8 +57,10 @@ pub struct Job {
     pub cost_source: Option<String>,
     pub outputs: Vec<OutputFile>,
     pub imported: Value,
-    /// The results go onto the open project's timeline at the playhead once imported.
+    /// The results go onto the open project's timeline once imported.
     pub place: bool,
+    /// Where on the timeline, in seconds, as it was when the run was asked for; none means the playhead at import.
+    pub place_at: Option<f64>,
     pub origin: String,
     pub created: i64,
     pub updated: i64,
@@ -90,7 +92,7 @@ fn now_ms() -> i64 {
     chrono::Utc::now().timestamp_millis()
 }
 
-const COLUMNS: &str = "id, project_id, provider, model, model_name, task, values_json, status, progress, error, estimate, cost, cost_source, outputs, imported, origin, created, updated, handle, place, error_code";
+const COLUMNS: &str = "id, project_id, provider, model, model_name, task, values_json, status, progress, error, estimate, cost, cost_source, outputs, imported, origin, created, updated, handle, place, error_code, place_at";
 
 fn row_to_job(row: &rusqlite::Row) -> rusqlite::Result<Job> {
     let parse = |text: Option<String>| text.and_then(|text| serde_json::from_str::<Value>(&text).ok());
@@ -117,6 +119,7 @@ fn row_to_job(row: &rusqlite::Row) -> rusqlite::Result<Job> {
         handle: parse(row.get(18)?),
         place: row.get::<_, i64>(19)? != 0,
         error_code: row.get(20)?,
+        place_at: row.get(21)?,
     };
     job.title = crate::title::result_title(&job.values, &job.model_name);
     Ok(job)
@@ -144,7 +147,7 @@ impl Jobs {
                 id TEXT PRIMARY KEY, project_id TEXT, provider TEXT NOT NULL, model TEXT NOT NULL, model_name TEXT NOT NULL,
                 task TEXT NOT NULL, values_json TEXT NOT NULL, status TEXT NOT NULL, progress REAL, error TEXT,
                 estimate REAL, cost REAL, cost_source TEXT, outputs TEXT, imported TEXT, origin TEXT NOT NULL,
-                created INTEGER NOT NULL, updated INTEGER NOT NULL, handle TEXT, place INTEGER NOT NULL DEFAULT 0, error_code TEXT);
+                created INTEGER NOT NULL, updated INTEGER NOT NULL, handle TEXT, place INTEGER NOT NULL DEFAULT 0, error_code TEXT, place_at REAL);
              CREATE INDEX IF NOT EXISTS jobs_project ON jobs(project_id, created);",
         )?;
         let columns: Vec<String> = db.prepare("PRAGMA table_info(jobs)")?.query_map([], |row| row.get::<_, String>(1))?.collect::<rusqlite::Result<_>>()?;
@@ -153,6 +156,9 @@ impl Jobs {
         }
         if !columns.iter().any(|column| column == "error_code") {
             db.execute_batch("ALTER TABLE jobs ADD COLUMN error_code TEXT;")?;
+        }
+        if !columns.iter().any(|column| column == "place_at") {
+            db.execute_batch("ALTER TABLE jobs ADD COLUMN place_at REAL;")?;
         }
         let limits = HashMap::from([
             (Provider::Fal, Arc::new(Semaphore::new(2))),
@@ -217,7 +223,7 @@ impl Jobs {
 
     fn insert(&self, job: &Job) -> rusqlite::Result<()> {
         self.db().execute(
-            &format!("INSERT INTO jobs ({COLUMNS}) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21)"),
+            &format!("INSERT INTO jobs ({COLUMNS}) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22)"),
             params![
                 job.id,
                 job.project_id,
@@ -240,6 +246,7 @@ impl Jobs {
                 Option::<String>::None,
                 i64::from(job.place),
                 job.error_code,
+                job.place_at,
             ],
         )?;
         Ok(())
@@ -310,6 +317,7 @@ impl Jobs {
                 outputs: Vec::new(),
                 imported: json!([]),
                 place: request.place,
+                place_at: request.place.then_some(request.place_at).flatten(),
                 origin: request.origin.clone().unwrap_or_else(|| "window".into()),
                 created: now,
                 updated: now,
@@ -771,6 +779,8 @@ pub struct CreateRequest {
     pub origin: Option<String>,
     #[serde(default)]
     pub place: bool,
+    #[serde(default)]
+    pub place_at: Option<f64>,
 }
 
 fn one() -> u32 {
@@ -784,6 +794,9 @@ async fn create(State(state): State<AppState>, Json(request): Json<CreateRequest
     }
     if request.place && request.project_id.as_deref().is_none_or(str::is_empty) {
         return bad(t!("jobs-place-needs-project"));
+    }
+    if request.place_at.is_some_and(|at| !at.is_finite() || at < 0.0) {
+        return bad(t!("jobs-place-at-invalid"));
     }
     let form = match state.catalog.form(provider, &request.model).await {
         Ok(form) => form,
@@ -869,6 +882,7 @@ async fn retry(State(state): State<AppState>, UrlPath(id): UrlPath<String>) -> R
         repeat: 1,
         origin: Some(job.origin.clone()),
         place: job.place,
+        place_at: job.place_at,
     };
     create(State(state), Json(request)).await
 }

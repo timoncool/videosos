@@ -178,6 +178,8 @@ export interface Job {
   outputs: OutputFile[]
   imported: string[]
   place: boolean
+  /** Where on the timeline the results go, in seconds; null puts them at the playhead on arrival. */
+  place_at: number | null
   origin: string
   created: number
   updated: number
@@ -247,6 +249,7 @@ export const generateApi = {
     project_id: string | null
     repeat: number
     place: boolean
+    place_at: number | null
   }) => request<{ jobs: Job[] }>('/api/jobs', { method: 'POST', body: JSON.stringify(body) }),
   jobs: (projectId: string | null) =>
     request<{ jobs: Job[] }>(`/api/jobs?${new URLSearchParams({ project: projectId ?? '' })}`),

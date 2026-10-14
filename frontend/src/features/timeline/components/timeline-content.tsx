@@ -43,6 +43,7 @@ import { TimelineTrack } from './timeline-track'
 import { TimelineGuidelines } from './timeline-guidelines'
 import { TimelineMediaDropZone } from './timeline-media-drop-zone'
 import { TimelineRecordingOverlay } from './timeline-recording-overlay'
+import { TimelineGenerationOverlay } from './timeline-generation-overlay'
 import { IO_LANE_HEIGHT } from './timeline-markers'
 import { FirstTrackRowFrame, TrackRowFrame, TrackSectionDivider } from './track-row-frame'
 import { MarqueeOverlay } from '@/shared/marquee/marquee-overlay'
@@ -2083,6 +2084,7 @@ export const TimelineContent = memo(function TimelineContent({
       <>
         {isDragging && <TimelineGuidelines />}
         <TimelineRecordingOverlay />
+        <TimelineGenerationOverlay />
       </>
     ),
     [isDragging],

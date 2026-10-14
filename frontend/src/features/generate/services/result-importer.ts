@@ -3,7 +3,7 @@
  * is fetched from the server and imported through the library's own path for
  * generated media (thumbnails, waveforms, metadata), then the job is marked
  * imported on the server, so a second window or a restart does not import it
- * again. A result is named by what its prompt asked for. Jobs started with "put on the timeline" are placed at the playhead.
+ * again. A result is named by what its prompt asked for. Jobs started with "put on the timeline" are placed where the playhead was when they were asked for.
  */
 
 import { createLogger } from '@/shared/logging/logger'
@@ -11,7 +11,7 @@ import { i18n } from '@/i18n'
 import { generateApi, type Job } from './generate-api'
 import { mediaLibraryService, saveTimeline, useMediaLibraryStore, useProjectStore } from '../deps/editor'
 import { useGenerateStore } from '../stores/generate-store'
-import { placeMediaAtPlayhead } from './timeline-actions'
+import { placeMediaAt } from './timeline-actions'
 import { resultFileName } from './result-title'
 
 const logger = createLogger('GenerateImport')
@@ -50,7 +50,7 @@ async function importJob(job: Job, projectId: string): Promise<void> {
   const updated = await generateApi.markImported(job.id, mediaIds)
   useGenerateStore.getState().upsertJob(updated)
   if (job.place) {
-    for (const mediaId of mediaIds) placeMediaAtPlayhead(mediaId)
+    for (const mediaId of mediaIds) placeMediaAt(mediaId, job.place_at)
     await saveTimeline(projectId)
   }
 }

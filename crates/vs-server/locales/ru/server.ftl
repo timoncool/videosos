@@ -38,6 +38,7 @@ jobs-field-required = Заполните: { $field }
 jobs-field-too-long = { $field }: { $count } символов, модель принимает не больше { $max }.
 jobs-no-key = Нет ключа { $provider }: добавьте его в Настройках, раздел «Провайдеры».
 jobs-place-needs-project = Чтобы поставить результат на таймлайн, нужен project_id — проект, открытый в окне (его называет editor_state).
+jobs-place-at-invalid = place_at — момент таймлайна в секундах, от 0.
 jobs-not-found = Нет задачи { $job }
 jobs-still-running = Задача ещё идёт; сначала отмените её.
 

@@ -48,9 +48,10 @@ import {
   assertTransitionUpdateApplied,
   buildTextItem,
   getEditCanvas,
+  freeTrackAt,
   getOrCreateTrack,
   newId,
-  resolveOrCreateTrack,
+  placementTrack,
   requireItem,
   requireTrack,
   requireTransition,
@@ -230,12 +231,13 @@ interface ClipPlacement {
 
 /** Place an `image/` clip: a still on a video track. */
 function placeImageClip(op: EditOp, { mediaId, media, from }: ClipPlacement): CreatedClip[] {
+  const durationInFrames = asNumber(op.durationInFrames, 150)!
   const item: ImageItem = {
     id: newId(),
     type: 'image',
-    trackId: resolveOrCreateTrack(op.trackId, 'video'),
+    trackId: placementTrack(op, 'video', from, durationInFrames),
     from,
-    durationInFrames: asNumber(op.durationInFrames, 150)!,
+    durationInFrames,
     label: media.fileName ?? mediaId,
     mediaId,
     src: '',
@@ -252,13 +254,14 @@ function placeAudioClip(
   { mediaId, media, from, projectFps }: ClipPlacement,
 ): CreatedClip[] {
   const sf = sourceFieldsFor(media, projectFps)
+  const durationInFrames =
+    asNumber(op.durationInFrames) ?? Math.max(1, Math.round((media.duration ?? 0) * projectFps))
   const item: AudioItem = {
     id: newId(),
     type: 'audio',
-    trackId: resolveOrCreateTrack(op.trackId, 'audio'),
+    trackId: placementTrack(op, 'audio', from, durationInFrames),
     from,
-    durationInFrames:
-      asNumber(op.durationInFrames) ?? Math.max(1, Math.round((media.duration ?? 0) * projectFps)),
+    durationInFrames,
     label: media.fileName ?? mediaId,
     mediaId,
     src: '',
@@ -282,7 +285,7 @@ function placeVideoClip(
   const video: VideoItem = {
     id: newId(),
     type: 'video',
-    trackId: resolveOrCreateTrack(op.trackId, 'video'),
+    trackId: placementTrack(op, 'video', from, durationInFrames),
     from,
     durationInFrames,
     label,
@@ -303,7 +306,7 @@ function placeVideoClip(
   const audio: AudioItem = {
     id: newId(),
     type: 'audio',
-    trackId: getOrCreateTrack('audio'),
+    trackId: op.keepFrom === true ? freeTrackAt('audio', from, durationInFrames) : getOrCreateTrack('audio'),
     from,
     durationInFrames,
     label: `${label} audio`,

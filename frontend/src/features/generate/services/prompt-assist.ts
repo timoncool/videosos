@@ -30,6 +30,7 @@ async function runText(values: Record<string, unknown>): Promise<string> {
     project_id: null,
     repeat: 1,
     place: false,
+    place_at: null,
   })
   const id = jobs[0]?.id
   if (!id) throw new Error('the server did not start the job')

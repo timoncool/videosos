@@ -37,6 +37,7 @@ jobs-field-required = Fill in: { $field }
 jobs-field-too-long = { $field } is { $count } characters long; the model takes at most { $max }.
 jobs-no-key = No { $provider } key: add it in Settings, Providers.
 jobs-place-needs-project = Placing on the timeline needs project_id: the project open in the window (editor_state names it).
+jobs-place-at-invalid = place_at is a moment of the timeline in seconds, 0 or more.
 jobs-not-found = No job { $job }
 jobs-still-running = The job is still running; cancel it first.
 

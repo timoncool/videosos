@@ -133,7 +133,7 @@ export function getOrCreateTrack(kind: 'video' | 'audio'): string {
 }
 
 /** The requested track if it exists, else find-or-create one of the given kind. */
-export function resolveOrCreateTrack(preferred: unknown, kind: 'video' | 'audio'): string {
+function resolveOrCreateTrack(preferred: unknown, kind: 'video' | 'audio'): string {
   const requested = asString(preferred)
   if (requested) {
     const track = requireTrack(requested)
@@ -142,6 +142,33 @@ export function resolveOrCreateTrack(preferred: unknown, kind: 'video' | 'audio'
     return requested
   }
   return getOrCreateTrack(kind)
+}
+
+/**
+ * A track of the kind with nothing in [from, from + durationInFrames), the first in the timeline's order, or a
+ * new one above the video tracks or below the audio ones, so a clip lands at exactly that moment.
+ */
+export function freeTrackAt(kind: 'video' | 'audio', from: number, durationInFrames: number): string {
+  const items = useItemsStore.getState().items
+  const busy = (trackId: string) =>
+    items.some((item) => item.trackId === trackId && item.from < from + durationInFrames && from < item.from + item.durationInFrames)
+  const all = tracks()
+  const free = all
+    .filter((t) => !t.isGroup && !t.locked && (t.kind ?? 'video') === kind)
+    .sort((a, b) => a.order - b.order)
+    .find((t) => !busy(t.id))
+  if (free) return free.id
+  const orders = all.map((t) => t.order)
+  const order = kind === 'video' ? Math.min(0, ...orders) - 1 : Math.max(0, ...orders) + 1
+  const track = createClassicTrack({ tracks: all, kind, order })
+  setTracks([...all, track])
+  return track.id
+}
+
+/** The track a clip op asked for; with `keepFrom` and no track named, one that is free where the clip lands. */
+export function placementTrack(op: EditOp, kind: 'video' | 'audio', from: number, durationInFrames: number): string {
+  if (op.keepFrom === true && !asString(op.trackId)) return freeTrackAt(kind, from, durationInFrames)
+  return resolveOrCreateTrack(op.trackId, kind)
 }
 
 /** Source-frame fields for a media clip (source* are in source-native fps). */

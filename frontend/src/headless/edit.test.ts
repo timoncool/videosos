@@ -236,6 +236,32 @@ describe('editProject', () => {
     expect(audio.from).toBe(video.from)
   })
 
+  it('addClip with keepFrom lands at its moment on a track free there, the pair together', async () => {
+    const result = await editProject({
+      project: baseProject(),
+      ops: [
+        { op: 'addClip', mediaId: 'm-img', from: 0 } as EditOp,
+        { op: 'addClip', mediaId: 'm-vid', from: 30, keepFrom: true } as EditOp,
+      ],
+      media: [
+        {
+          mediaId: 'm-img',
+          metadata: { ...videoMedia, id: 'm-img', mimeType: 'image/png', audioCodec: undefined } as MediaMetadata,
+        },
+        { mediaId: 'm-vid', metadata: videoMedia },
+      ],
+    })
+    const items = result.project.timeline!.items
+    const still = items.find((i) => i.type === 'image')!
+    const video = items.find((i) => i.type === 'video')!
+    const audio = items.find((i) => i.type === 'audio')!
+    expect(video.from).toBe(30)
+    expect(audio.from).toBe(30)
+    expect(video.trackId).not.toBe(still.trackId)
+    const tracks = result.project.timeline!.tracks
+    expect(tracks.find((t) => t.id === video.trackId)!.order).toBeLessThan(tracks.find((t) => t.id === still.trackId)!.order)
+  })
+
   it('addClip image defaults to a 150-frame still', async () => {
     const result = await editProject({
       project: baseProject(),

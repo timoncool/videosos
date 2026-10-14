@@ -60,6 +60,7 @@
       "shorten": "Shorten {{field}}: {{count}} characters, the model takes at most {{max}}"
     },
     "placeOnTimeline": "Put on the timeline",
+    "placeholder": "Generating, {{model}}: {{state}}",
     "repeat": "Runs",
     "repeatHint": "How many times to run it; each run is a separate result and is paid separately",
     "submit": "Generate",

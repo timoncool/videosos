@@ -149,7 +149,7 @@ fn tools() -> &'static [Tool] {
             },
             Tool {
                 name: "generate",
-                description: "Starts a generation (paid by the person's key). values are the model_form keys; a field of type media takes a list of files: {\"media\": \"<media id of the library>\"}, {\"job\": \"<job id>\", \"index\": 0} for an earlier result, {\"file\": \"<absolute path on this computer>\"} or an https URL. With project_id the result goes into that project's library when its window is open, and with place_on_timeline onto its timeline at the playhead. Returns the jobs; follow them with job_wait. Refused when it would pass the daily limit the person set for agents.",
+                description: "Starts a generation (paid by the person's key). values are the model_form keys; a field of type media takes a list of files: {\"media\": \"<media id of the library>\"}, {\"job\": \"<job id>\", \"index\": 0} for an earlier result, {\"file\": \"<absolute path on this computer>\"} or an https URL. With project_id the result goes into that project's library when its window is open, and with place_on_timeline onto its timeline: at place_at_seconds, or at the playhead when it is imported; the window shows where it will land while it runs. Returns the jobs; follow them with job_wait. Refused when it would pass the daily limit the person set for agents.",
                 looks: false,
                 schema: || object(json!({
                     "provider": { "type": "string", "enum": ["openrouter", "fal", "runware"] },
@@ -159,6 +159,7 @@ fn tools() -> &'static [Tool] {
                     "project_id": { "type": "string" },
                     "repeat": { "type": "integer", "minimum": 1, "maximum": 8, "description": "separate runs, each paid" },
                     "place_on_timeline": { "type": "boolean" },
+                    "place_at_seconds": { "type": "number", "minimum": 0, "description": "where on the timeline, with place_on_timeline" },
                 }), &["provider", "model", "values"]),
                 call: |args| send(Method::POST, "/api/jobs".into(), json!({
                     "provider": text(args, "provider")?,
@@ -168,6 +169,7 @@ fn tools() -> &'static [Tool] {
                     "project_id": args.get("project_id").cloned().unwrap_or(Value::Null),
                     "repeat": args.get("repeat").cloned().unwrap_or(json!(1)),
                     "place": args.get("place_on_timeline").cloned().unwrap_or(json!(false)),
+                    "place_at": args.get("place_at_seconds").cloned().unwrap_or(Value::Null),
                     "origin": "agent",
                 })),
             },
@@ -397,7 +399,7 @@ fn tools() -> &'static [Tool] {
             },
             Tool {
                 name: "timeline_edit",
-                description: "Edits the open project's timeline with the editor's own operations, as one undoable step each. ops is a list of {op, ...}: addClip {mediaId, from, trackId?}; addText {text, from, durationInFrames, fontSize?, color?}; moveItem {id, from, trackId?}; updateItem {id, updates}; removeItems {ids}; split {id, frame}; trimStart {id, frames}; trimEnd {id, frames}; addTransition {leftClipId, rightClipId, type?, durationInFrames?}; removeTransition {id}; addTrack {kind: video|audio}; addKeyframe {itemId, property, frame, value, easing?}; addEffect {itemId, effect}; setTransform {id, transform}. Frames are of the project's frame rate. An op may name the result of an earlier one with {\"$ref\": \"<callerId>#/detail/created/0\"} when it carries callerId.",
+                description: "Edits the open project's timeline with the editor's own operations, as one undoable step each. ops is a list of {op, ...}: addClip {mediaId, from, trackId?, keepFrom?} (keepFrom: true lands it at from on a track free there, a new one when none is, instead of after what is in the way); addText {text, from, durationInFrames, fontSize?, color?}; moveItem {id, from, trackId?}; updateItem {id, updates}; removeItems {ids}; split {id, frame}; trimStart {id, frames}; trimEnd {id, frames}; addTransition {leftClipId, rightClipId, type?, durationInFrames?}; removeTransition {id}; addTrack {kind: video|audio}; addKeyframe {itemId, property, frame, value, easing?}; addEffect {itemId, effect}; setTransform {id, transform}. Frames are of the project's frame rate. An op may name the result of an earlier one with {\"$ref\": \"<callerId>#/detail/created/0\"} when it carries callerId.",
                 looks: false,
                 schema: || object(json!({ "ops": { "type": "array", "items": { "type": "object" } } }), &["ops"]),
                 call: |args| window("timeline_edit", args, 60),
