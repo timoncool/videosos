@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Check, Loader2, RotateCcw, Trash2 } from 'lucide-react'
+import { Check, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { createLogger } from '@/shared/logging/logger'
@@ -131,7 +131,7 @@ export function LocalModelCacheControl({ className }: LocalModelCacheControlProp
           }}
           disabled={!inspectionSupported || isLoading}
         >
-          <RotateCcw className={cn('h-3.5 w-3.5', isLoading && 'animate-spin')} />
+          {isLoading && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
           {isLoading
             ? t('projects.settings.modelCache.checking')
             : t('projects.settings.modelCache.refresh')}
@@ -182,7 +182,6 @@ export function LocalModelCacheControl({ className }: LocalModelCacheControlProp
               >
                 {isClearing && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
                 {isCleared && !isClearing && <Check className="h-3.5 w-3.5" />}
-                {!isClearing && !isCleared && <Trash2 className="h-3.5 w-3.5" />}
                 {isClearing
                   ? t('common.clearing')
                   : isCleared

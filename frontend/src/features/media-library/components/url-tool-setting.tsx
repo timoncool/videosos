@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Download, Loader2, RefreshCw } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { UrlError, urlApi } from '../services/url-api'
 import { useUrlFetchStore } from '../stores/url-fetch-store'
@@ -30,12 +30,12 @@ export function UrlToolSetting() {
     <div className="flex flex-col items-end gap-1">
       {tool.ready ? (
         <Button variant="outline" size="sm" className="h-8 min-w-28 gap-1.5" disabled={ytdlp.updating} onClick={update}>
-          {ytdlp.updating ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />}
+          {ytdlp.updating && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
           {ytdlp.updating ? t('media.url.updating') : t('media.url.tool.update')}
         </Button>
       ) : (
         <Button variant="outline" size="sm" className="h-8 min-w-28 gap-1.5" disabled={tool.install.installing} onClick={install}>
-          {tool.install.installing ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Download className="h-3.5 w-3.5" />}
+          {tool.install.installing && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
           {tool.install.installing ? t('media.url.tool.installing') : t('media.url.install')}
         </Button>
       )}

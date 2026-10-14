@@ -325,14 +325,14 @@ export function GeneratePanel() {
                 data-testid={`generate-task-${each}`}
                 aria-pressed={task === each}
                 className={cn(
-                  'flex h-[52px] flex-col items-center justify-center gap-1 rounded-md border px-1 text-[11px] leading-[1.15] transition-colors',
+                  'flex h-[56px] flex-col items-center justify-start gap-1 rounded-md border px-1 pt-2 text-[11px] leading-[1.15] transition-colors',
                   task === each
                     ? 'border-[var(--color-accent)] bg-[var(--color-accent)]/10 text-[var(--color-text)]'
                     : 'border-[var(--color-border)] text-[var(--color-muted)] hover:border-[var(--color-overlay)] hover:text-[var(--color-text)]',
                 )}
               >
                 <Icon className={cn('h-4 w-4 shrink-0', task === each && 'text-[var(--color-accent)]')} />
-                <span className="line-clamp-2 text-center">{t(`generate.tasks.${each}`)}</span>
+                <span className="flex h-[26px] items-center text-center"><span className="line-clamp-2">{t(`generate.tasks.${each}`)}</span></span>
               </button>
             )
           })}
