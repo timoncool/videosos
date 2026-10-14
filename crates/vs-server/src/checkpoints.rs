@@ -124,6 +124,8 @@ pub fn router() -> Router<AppState> {
     Router::new()
         .route("/api/checkpoints/{project}", get(list).post(create))
         .route("/api/checkpoints/{project}/{id}", get(read))
+        // the body is held to the checkpoint's own limit, not the framework's default of 2 MB
+        .layer(axum::extract::DefaultBodyLimit::max(MAX_BYTES + 64 * 1024))
 }
 
 #[cfg(test)]

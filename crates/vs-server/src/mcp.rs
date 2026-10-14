@@ -2073,7 +2073,9 @@ pub fn router() -> Router<AppState> {
     Router::new()
         .route("/mcp", post(handle))
         .route("/mcp/window", get(window_events))
-        .route("/mcp/window/result", post(window_result))
+        // a window's answer may carry a large frame or a long timeline: past the framework's 2 MB it would be cut
+        // off and the agent left waiting
+        .route("/mcp/window/result", post(window_result).layer(axum::extract::DefaultBodyLimit::max(64 * 1024 * 1024)))
         .route("/mcp/window/focus", post(window_focus))
         .route("/api/agent/status", get(status_route))
         .route("/api/inbox/{id}/{name}", get(inbox))
