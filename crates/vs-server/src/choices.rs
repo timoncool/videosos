@@ -26,13 +26,22 @@ fn path() -> Result<&'static PathBuf, (StatusCode, String)> {
     PATH.get().ok_or((StatusCode::INTERNAL_SERVER_ERROR, "the generation choices are not open".to_string()))
 }
 
-async fn read() -> Result<Json<Value>, (StatusCode, String)> {
+/// The choices as the window last saved them; an empty object before it ever did.
+pub fn current() -> Result<Value, String> {
+    read_value().map_err(|(_, error)| error)
+}
+
+fn read_value() -> Result<Value, (StatusCode, String)> {
     let path = path()?;
     match std::fs::read_to_string(path) {
-        Ok(text) => serde_json::from_str(&text).map(Json).map_err(|error| (StatusCode::INTERNAL_SERVER_ERROR, format!("{}: {error}", path.display()))),
-        Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(Json(Value::Object(Default::default()))),
+        Ok(text) => serde_json::from_str(&text).map_err(|error| (StatusCode::INTERNAL_SERVER_ERROR, format!("{}: {error}", path.display()))),
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(Value::Object(Default::default())),
         Err(error) => Err((StatusCode::INTERNAL_SERVER_ERROR, format!("{}: {error}", path.display()))),
     }
+}
+
+async fn read() -> Result<Json<Value>, (StatusCode, String)> {
+    read_value().map(Json)
 }
 
 async fn write(Json(choices): Json<Value>) -> Result<StatusCode, (StatusCode, String)> {

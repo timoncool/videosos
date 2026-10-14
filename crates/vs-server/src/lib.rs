@@ -11,6 +11,7 @@ pub mod catalog;
 mod chat;
 mod checkpoints;
 mod choices;
+mod elements;
 pub use vs_providers;
 pub mod credentials;
 pub mod events;

@@ -787,7 +787,7 @@ fn one() -> u32 {
     1
 }
 
-async fn create(State(state): State<AppState>, Json(request): Json<CreateRequest>) -> Response {
+async fn create(State(state): State<AppState>, Json(mut request): Json<CreateRequest>) -> Response {
     let Some(provider) = Provider::parse(&request.provider) else { return bad(t!("catalog-unknown-provider", provider = request.provider)) };
     if credentials::key(provider).is_none() {
         return bad(t!("jobs-no-key", provider = provider.as_str()));
@@ -802,6 +802,13 @@ async fn create(State(state): State<AppState>, Json(request): Json<CreateRequest
         Ok(form) => form,
         Err(error) => return (StatusCode::BAD_GATEWAY, Json(json!({ "error": error }))).into_response(),
     };
+    let elements = match crate::choices::current() {
+        Ok(choices) => crate::elements::from_choices(&choices),
+        Err(error) => return (StatusCode::INTERNAL_SERVER_ERROR, Json(json!({ "error": error }))).into_response(),
+    };
+    if let Err(error) = crate::elements::apply(&form.fields, &mut request.values, &elements) {
+        return bad(error);
+    }
     for field in form.fields.iter().filter(|field| field.required) {
         let missing = match request.values.get(&field.key) {
             None | Some(Value::Null) => true,
