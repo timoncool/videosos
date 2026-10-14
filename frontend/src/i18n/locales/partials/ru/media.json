@@ -426,6 +426,17 @@
         "cancelled": "Загрузка отменена.",
         "ytdlp_failed": "yt-dlp не смог скачать видео.",
         "generic": "Не получилось."
+      },
+      "tool": {
+        "label": "Видео по ссылке",
+        "hint": "yt-dlp с deno и ffmpeg: качает видео с YouTube и других сайтов. Новая версия yt-dlp проверяется раз в сутки и встаёт только после проверки SHA-256.",
+        "update": "Обновить",
+        "installing": "Устанавливаю…",
+        "version": "yt-dlp {{version}}",
+        "pinned": "встроенная версия",
+        "fromUpdate": "обновление",
+        "latest": "последняя {{version}}",
+        "checked": "проверено {{when}}"
       }
     }
   }

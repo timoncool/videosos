@@ -51,6 +51,7 @@ import {
   AudioWaveform,
   Images,
   Eraser,
+  Link2,
 } from 'lucide-react'
 import {
   LocalInferenceUnloadControl,
@@ -67,6 +68,7 @@ import {
   importProxyService,
   importMediaLibraryService,
   importThumbnailGenerator,
+  UrlToolSetting,
 } from '@/features/editor/deps/media-library'
 import {
   importGifFrameCache,
@@ -942,6 +944,9 @@ export function SettingsDialog({ open, onOpenChange, target }: SettingsDialogPro
                     {activeSection === 'storage' && (
                       <div className="space-y-4">
                         <SettingsTable>
+                          <SettingRow icon={Link2} label={t('media.url.tool.label')} hint={t('media.url.tool.hint')}>
+                            <UrlToolSetting />
+                          </SettingRow>
                           <SettingRow icon={Film} label={t('settings.storage.generateMissingProxies')} hint={t('settings.storage.generateMissingProxiesDescription')}>
                             <Button
                               variant="outline"

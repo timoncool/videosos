@@ -17,6 +17,7 @@ export interface UrlTool {
     pinned_version: string
     updated: boolean
     latest: string | null
+    checked_at: number
     update_available: boolean
     updating: boolean
     last_error: string | null

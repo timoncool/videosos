@@ -396,6 +396,17 @@
         "cancelled": "Download cancelled.",
         "ytdlp_failed": "yt-dlp could not download the video.",
         "generic": "It did not work."
+      },
+      "tool": {
+        "label": "Videos by link",
+        "hint": "yt-dlp with deno and ffmpeg: downloads videos from YouTube and other sites. A new yt-dlp is looked for once a day and is used only after its SHA-256 check.",
+        "update": "Update",
+        "installing": "Installing…",
+        "version": "yt-dlp {{version}}",
+        "pinned": "built-in version",
+        "fromUpdate": "update",
+        "latest": "latest {{version}}",
+        "checked": "checked {{when}}"
       }
     }
   }
