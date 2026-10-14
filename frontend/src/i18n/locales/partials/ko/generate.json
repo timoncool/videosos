@@ -138,6 +138,14 @@
       "out": "축소",
       "fit": "창에 맞추기",
       "close": "닫기"
+    },
+    "sort": {
+      "label": "정렬: {{order}}",
+      "title": "정렬",
+      "newest": "최신순",
+      "oldest": "오래된순",
+      "costliest": "비싼순",
+      "cheapest": "저렴한순"
     }
   }
 }

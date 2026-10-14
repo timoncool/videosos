@@ -138,6 +138,14 @@
       "out": "Verkleinern",
       "fit": "An Fenster anpassen",
       "close": "Schließen"
+    },
+    "sort": {
+      "label": "Sortierung: {{order}}",
+      "title": "Sortierung",
+      "newest": "Neueste zuerst",
+      "oldest": "Älteste zuerst",
+      "costliest": "Teuerste zuerst",
+      "cheapest": "Günstigste zuerst"
     }
   }
 }

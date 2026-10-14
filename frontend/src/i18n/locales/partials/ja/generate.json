@@ -138,6 +138,14 @@
       "out": "縮小",
       "fit": "ウィンドウに合わせる",
       "close": "閉じる"
+    },
+    "sort": {
+      "label": "並べ替え：{{order}}",
+      "title": "並べ替え",
+      "newest": "新しい順",
+      "oldest": "古い順",
+      "costliest": "高い順",
+      "cheapest": "安い順"
     }
   }
 }

@@ -13,6 +13,7 @@ import { placeMediaAtPlayhead, placeTextAtPlayhead } from '../services/timeline-
 import { OUTPUT_DRAG_TYPE } from './field-control'
 import { ProviderBadge } from './model-picker'
 import { ImageLightbox } from './image-lightbox'
+import { exactMoment, relativeMoment } from '../deps/studio'
 
 /** A result picture: dragged into a slot or the timeline, opened at full size by a click. */
 function ImagePreview({ url, name, onDragStart }: { url: string; name: string; onDragStart: (event: React.DragEvent) => void }) {
@@ -140,7 +141,7 @@ interface JobCardProps {
 }
 
 export function JobCard({ job, onReuse, selected, onSelect }: JobCardProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const running = job.status === 'queued' || job.status === 'sending' || job.status === 'running'
   const prompt = Object.entries(job.values).find(([key]) => /prompt|^input$|^text$/i.test(key))?.[1]
   const text = job.outputs.find((output) => output.kind === 'text')?.text
@@ -177,6 +178,9 @@ export function JobCard({ job, onReuse, selected, onSelect }: JobCardProps) {
         </span>
       </div>
       {typeof prompt === 'string' && <p className="line-clamp-2 text-[10px] text-muted-foreground">{prompt}</p>}
+      <time dateTime={new Date(job.created).toISOString()} title={exactMoment(new Date(job.created), i18n.language)} className="block text-[10px] text-muted-foreground">
+        {relativeMoment(new Date(job.created), i18n.language)}
+      </time>
       {job.outputs.map((output) => (
         <Preview key={output.index} job={job} output={output} />
       ))}

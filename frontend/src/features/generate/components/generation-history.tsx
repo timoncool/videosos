@@ -1,13 +1,36 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { BarChart3, Columns2, Pause, Play, Search } from 'lucide-react'
+import { ArrowUpDown, BarChart3, Columns2, Pause, Play, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { formatUsd, generateApi, PROVIDER_LABELS, TASKS, type Job, type Spend, type Task } from '../services/generate-api'
 import { JobCard } from './job-card'
 
 type StatusFilter = 'all' | 'done' | 'running' | 'failed'
+
+/** The orders the history can be read in, as Dub Studio's project list has them. */
+const ORDERS = ['newest', 'oldest', 'costliest', 'cheapest'] as const
+type Order = (typeof ORDERS)[number]
+const ORDER_KEY = 'videosos-history-order'
+
+// the order is a view of this window, so it lives in the window's storage
+function savedOrder(): Order {
+  const saved = localStorage.getItem(ORDER_KEY)
+  return ORDERS.find((order) => order === saved) ?? 'newest'
+}
+
+function price(job: Job): number {
+  return job.cost ?? job.estimate ?? 0
+}
+
+const SORTERS: Record<Order, (a: Job, b: Job) => number> = {
+  newest: (a, b) => b.created - a.created,
+  oldest: (a, b) => a.created - b.created,
+  costliest: (a, b) => price(b) - price(a) || b.created - a.created,
+  cheapest: (a, b) => price(a) - price(b) || b.created - a.created,
+}
 
 const RUNNING = new Set(['queued', 'sending', 'running'])
 
@@ -143,6 +166,11 @@ export function GenerationHistory({ jobs, projectId, onReuse }: { jobs: Job[]; p
   const [picked, setPicked] = useState<string[]>([])
   const [stats, setStats] = useState(false)
   const [compare, setCompare] = useState(false)
+  const [order, setOrder] = useState<Order>(savedOrder)
+  const choose = (next: Order) => {
+    setOrder(next)
+    localStorage.setItem(ORDER_KEY, next)
+  }
 
   const shown = useMemo(() => {
     const words = query.toLowerCase().split(/\s+/).filter(Boolean)
@@ -153,8 +181,8 @@ export function GenerationHistory({ jobs, projectId, onReuse }: { jobs: Job[]; p
       if (status === 'running' && !RUNNING.has(job.status)) return false
       const haystack = `${promptOf(job)} ${job.model_name} ${job.model}`.toLowerCase()
       return words.every((word) => haystack.includes(word))
-    })
-  }, [jobs, query, task, status])
+    }).sort(SORTERS[order])
+  }, [jobs, query, task, status, order])
 
   const comparable = (job: Job) => job.status === 'done' && job.outputs.length > 0
   const pickedJobs = jobs.filter((job) => picked.includes(job.id))
@@ -170,6 +198,22 @@ export function GenerationHistory({ jobs, projectId, onReuse }: { jobs: Job[]; p
             {t('generate.compare.button', { count: picked.length })}
           </Button>
         )}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button size="sm" variant="ghost" className="h-6 gap-1 px-1.5 text-[10px]" aria-label={t('generate.sort.label', { order: t(`generate.sort.${order}`) })} title={t('generate.sort.label', { order: t(`generate.sort.${order}`) })}>
+              <ArrowUpDown className="h-3 w-3" />
+              {t(`generate.sort.${order}`)}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel className="text-[10px] uppercase tracking-wide text-muted-foreground">{t('generate.sort.title')}</DropdownMenuLabel>
+            {ORDERS.map((each) => (
+              <DropdownMenuCheckboxItem key={each} checked={each === order} onCheckedChange={() => choose(each)} className="text-xs">
+                {t(`generate.sort.${each}`)}
+              </DropdownMenuCheckboxItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
         {projectId && (
           <Button size="sm" variant="ghost" className="h-6 gap-1 px-1.5 text-[10px]" onClick={() => setStats(true)} data-testid="generate-stats">
             <BarChart3 className="h-3 w-3" />

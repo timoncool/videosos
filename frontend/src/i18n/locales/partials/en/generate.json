@@ -138,6 +138,14 @@
       "out": "Zoom out",
       "fit": "Fit the window",
       "close": "Close"
+    },
+    "sort": {
+      "label": "Sort: {{order}}",
+      "title": "Sort",
+      "newest": "Newest first",
+      "oldest": "Oldest first",
+      "costliest": "Most expensive",
+      "cheapest": "Cheapest"
     }
   }
 }

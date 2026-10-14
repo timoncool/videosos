@@ -138,6 +138,14 @@
       "out": "缩小",
       "fit": "适应窗口",
       "close": "关闭"
+    },
+    "sort": {
+      "label": "排序：{{order}}",
+      "title": "排序",
+      "newest": "最新优先",
+      "oldest": "最早优先",
+      "costliest": "最贵优先",
+      "cheapest": "最便宜优先"
     }
   }
 }

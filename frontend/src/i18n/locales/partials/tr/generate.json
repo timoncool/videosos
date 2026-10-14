@@ -138,6 +138,14 @@
       "out": "Uzaklaştır",
       "fit": "Pencereye sığdır",
       "close": "Kapat"
+    },
+    "sort": {
+      "label": "Sıralama: {{order}}",
+      "title": "Sıralama",
+      "newest": "Önce yeni",
+      "oldest": "Önce eski",
+      "costliest": "Önce pahalı",
+      "cheapest": "Önce ucuz"
     }
   }
 }

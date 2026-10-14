@@ -138,6 +138,14 @@
       "out": "Réduire",
       "fit": "Ajuster à la fenêtre",
       "close": "Fermer"
+    },
+    "sort": {
+      "label": "Tri : {{order}}",
+      "title": "Tri",
+      "newest": "Plus récents",
+      "oldest": "Plus anciens",
+      "costliest": "Plus chers",
+      "cheapest": "Moins chers"
     }
   }
 }
