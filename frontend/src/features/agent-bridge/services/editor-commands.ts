@@ -10,6 +10,8 @@ import { setEditCanvas } from '@/headless/edit-op-support'
 import { useEditorStore } from '@/shared/state/editor'
 import { usePlaybackStore } from '@/shared/state/playback'
 import { timelineCaptionCues } from '@/shared/timeline/caption-cues'
+import { serializeSrt, serializeVtt, type SubtitleCue } from '@/shared/utils/subtitles'
+import { saveToDisk } from '@/infrastructure/desktop'
 import type { TimelineItem } from '@/types/timeline'
 import type { EditorSidebarTab } from '@/config/editor-workspaces'
 import type { ExtendedExportSettings, VideoContainer } from '@/types/export'
@@ -115,6 +117,37 @@ function captionsOf(item: TimelineItem, fps: number) {
         end_s: round(cue.to / fps),
       }))
     : undefined
+}
+
+/** Every caption and subtitle the timeline shows, in its seconds and in time order, as the video export reads them. */
+function subtitleCues(fps: number): SubtitleCue[] {
+  const { items, tracks } = useItemsStore.getState()
+  const hidden = new Set(tracks.filter((track) => track.visible === false).map((track) => track.id))
+  const cues: SubtitleCue[] = []
+  for (const item of items) {
+    if (hidden.has(item.trackId)) continue
+    if (item.type === 'subtitle') {
+      const start = item.from / fps
+      const end = (item.from + item.durationInFrames) / fps
+      for (const cue of item.cues) {
+        const endSeconds = Math.min(end, start + cue.endSeconds)
+        const startSeconds = Math.max(0, start + cue.startSeconds)
+        if (endSeconds > startSeconds && cue.text.trim()) {
+          cues.push({ id: cue.id, startSeconds, endSeconds, text: cue.text.trim() })
+        }
+      }
+      continue
+    }
+    for (const cue of timelineCaptionCues(item, fps)) {
+      cues.push({
+        id: `${item.id}-${cue.from}`,
+        startSeconds: cue.from / fps,
+        endSeconds: cue.to / fps,
+        text: cue.text,
+      })
+    }
+  }
+  return cues.sort((a, b) => a.startSeconds - b.startSeconds || a.endSeconds - b.endSeconds)
 }
 
 function timeline() {
@@ -547,6 +580,54 @@ export function registerEditorCommands(showProject: ShowProject): void {
       if (current.status === 'failed')
         throw failed('export_video', current.error ?? 'the render failed')
       if (current.status === 'cancelled') throw failed('export_video', 'the render was cancelled')
+    }
+  })
+
+  registerBridgeCommand('subtitles_export', async (args) => {
+    takeArgs('subtitles_export', args, ['format', 'file_name'])
+    const project = openProject()
+    const format = textArg('subtitles_export', args, 'format') ?? 'srt'
+    if (!['srt', 'vtt', 'txt', 'json'].includes(format)) {
+      throw bridgeError('bad_value', {
+        command: 'subtitles_export',
+        field: 'format',
+        expected: 'srt, vtt, txt or json',
+      })
+    }
+    const cues = subtitleCues(fpsOf(project))
+    if (cues.length === 0)
+      throw failed('subtitles_export', 'the timeline shows no captions or subtitles')
+    const content =
+      format === 'srt'
+        ? serializeSrt(cues)
+        : format === 'vtt'
+          ? serializeVtt(cues)
+          : format === 'txt'
+            ? `${cues.map((cue) => cue.text).join('\n')}\n`
+            : `${JSON.stringify(
+                {
+                  cues: cues.map((cue) => ({
+                    start_s: Math.round(cue.startSeconds * 1000) / 1000,
+                    end_s: Math.round(cue.endSeconds * 1000) / 1000,
+                    text: cue.text,
+                  })),
+                },
+                null,
+                2,
+              )}\n`
+    const fileName = textArg('subtitles_export', args, 'file_name')
+      ?.replace(/[<>:"/\\|?*]+/g, '_')
+      .trim()
+    try {
+      const saved = await saveToDisk(
+        new Blob([content], { type: format === 'json' ? 'application/json' : 'text/plain' }),
+        `${fileName || project.name}.${format}`,
+        { dialog: false },
+      )
+      if (!saved.path) throw new Error('the file was not saved')
+      return { path: saved.path, cues: cues.length }
+    } catch (problem) {
+      throw failed('subtitles_export', problem)
     }
   })
 

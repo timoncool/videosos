@@ -835,6 +835,16 @@ fn tools() -> &'static [Tool] {
                 call: |args| window("export_fcpxml", args, 120),
             },
             Tool {
+                name: "subtitles_export",
+                description: "Writes the captions and subtitles the open project's timeline shows (subtitle tracks and clips' captions on visible tracks, in the timeline's time) into the exports folder as srt (the default), vtt, txt (the text only, a line per caption) or json ({cues: [{start_s, end_s, text}]}); answers with the file's path and how many captions it holds.",
+                looks: false,
+                schema: || object(json!({
+                    "format": { "type": "string", "enum": ["srt", "vtt", "txt", "json"] },
+                    "file_name": { "type": "string" },
+                }), &[]),
+                call: |args| window("subtitles_export", args, 60),
+            },
+            Tool {
                 name: "assistant_requests_wait",
                 description: "When the person has made you VideoSOS's assistant (Settings, Agents: Assistant 'Agent (MCP)'), what the window would ask its own assistant waits here: Improve prompt, Prompt from the picture, splitting a script into shots, building a 3D blocking, and the Chat tab's messages. Returns the waiting requests - id, target, the instructions the window's assistant would get, the request, the pictures it would see (media or job references: look at them with media_frame or job_get), and the JSON form the answer must take when there is one - as soon as there is one, or after seconds (30 by default, at most 55). Answer each with assistant_request_answer; keep calling while the person works. A chat message is the person writing to you: do what it asks with the tools, then answer in words.",
                 looks: true,
@@ -1114,6 +1124,7 @@ const JOURNAL: &[(&str, &str, &str)] = &[
     ("canvas_set", "updated", "canvas"),
     ("canvas_template", "created", "canvas"),
     ("export_fcpxml", "exported", "fcpxml"),
+    ("subtitles_export", "exported", "subtitles"),
     ("key_set", "updated", "key"),
     ("key_delete", "deleted", "key"),
     ("proxy_set", "updated", "proxy"),
@@ -1410,7 +1421,7 @@ fn capabilities(state: &AppState) -> Value {
         .collect();
     json!({
         "tasks": tasks,
-        "on_this_computer": ["transcribe (Whisper, Parakeet) and captions_add", "previs_render (3D blocking)", "motion_render (HTML motion graphics)", "media_cut, media_frame, media_last_frame", "export_video (mp4, webm, mov, mkv)", "export_fcpxml", "timeline_edit"],
+        "on_this_computer": ["transcribe (Whisper, Parakeet) and captions_add", "previs_render (3D blocking)", "motion_render (HTML motion graphics)", "media_cut, media_frame, media_last_frame", "export_video (mp4, webm, mov, mkv)", "export_fcpxml", "subtitles_export", "timeline_edit"],
     })
 }
 
