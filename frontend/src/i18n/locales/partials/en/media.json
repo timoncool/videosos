@@ -313,6 +313,10 @@
       "importAnyway": "Import Anyway",
       "note": "Note",
       "title": "Unsupported codec"
+    },
+    "viewMode": {
+      "grid": "Grid",
+      "list": "List"
     }
   }
 }

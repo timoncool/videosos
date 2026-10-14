@@ -300,6 +300,10 @@
       "importAnyway": "Importar mesmo assim",
       "note": "Observacao",
       "title": "Codec não suportado"
+    },
+    "viewMode": {
+      "grid": "Grade",
+      "list": "Lista"
     }
   }
 }

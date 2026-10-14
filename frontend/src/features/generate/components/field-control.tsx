@@ -268,7 +268,7 @@ export function FieldControl({ field, value, onChange }: FieldControlProps) {
       return (
         <div className="flex items-center justify-between gap-2 py-0.5">
           {label}
-          <Switch checked={effective === true} onCheckedChange={(checked) => onChange(checked)} />
+          <Switch checked={effective === true} onCheckedChange={(checked) => onChange(checked)} aria-label={field.label} />
         </div>
       )
     case 'select':

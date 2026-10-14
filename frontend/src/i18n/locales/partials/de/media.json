@@ -300,6 +300,10 @@
       "importAnyway": "Trotzdem importieren",
       "note": "Konvertiere sie für bessere Kompatibilität in MP4 (H.264/AAC) oder WebM.",
       "title": "Codec nicht unterstützt"
+    },
+    "viewMode": {
+      "grid": "Raster",
+      "list": "Liste"
     }
   }
 }

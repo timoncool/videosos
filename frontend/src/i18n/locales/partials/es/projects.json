@@ -70,7 +70,8 @@
       "alsoDeleteLocalFiles": "Eliminar también los archivos locales del disco",
       "removeFilesFromFolder": "Eliminar los archivos de la carpeta vinculada. Esto no se puede deshacer.",
       "removeFilesFromNamedFolder": "Eliminar los archivos de la carpeta vinculada \"{{folder}}\". Esto no se puede deshacer.",
-      "openProject": "Abrir proyecto"
+      "openProject": "Abrir proyecto",
+      "actions": "Acciones del proyecto"
     },
     "form": {
       "createTitle": "Crear nuevo proyecto",

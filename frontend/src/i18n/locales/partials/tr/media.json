@@ -300,6 +300,10 @@
       "importAnyway": "Yine de içe aktar",
       "note": "Not",
       "title": "Desteklenmeyen codec"
+    },
+    "viewMode": {
+      "grid": "Izgara",
+      "list": "Liste"
     }
   }
 }

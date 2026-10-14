@@ -615,6 +615,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
               width: EDITOR_LAYOUT_CSS_VALUES.sidebarHeaderButtonSize,
               height: EDITOR_LAYOUT_CSS_VALUES.sidebarHeaderButtonSize,
             }}
+            aria-label={leftSidebarOpen ? t('editor.mediaSidebar.collapsePanel') : t('editor.mediaSidebar.expandPanel')}
             data-tooltip={
               leftSidebarOpen
                 ? t('editor.mediaSidebar.collapsePanel')
@@ -652,6 +653,8 @@ export const MediaSidebar = memo(function MediaSidebar() {
                     : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
                 }
               `}
+              aria-label={label}
+              aria-pressed={activeTab === id && leftSidebarOpen}
               data-tooltip={label}
               data-tooltip-side="right"
             >

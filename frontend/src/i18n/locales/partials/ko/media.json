@@ -300,6 +300,10 @@
       "importAnyway": "그래도 가져오기",
       "note": "호환성을 위해 MP4 (H.264/AAC) 또는 WebM으로 변환하세요.",
       "title": "지원되지 않는 코덱"
+    },
+    "viewMode": {
+      "grid": "격자",
+      "list": "목록"
     }
   }
 }

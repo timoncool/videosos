@@ -300,6 +300,10 @@
       "importAnyway": "Importar de todos modos",
       "note": "Conviértelos a MP4 (H.264/AAC) o WebM para mayor compatibilidad.",
       "title": "Códec no compatible"
+    },
+    "viewMode": {
+      "grid": "Cuadrícula",
+      "list": "Lista"
     }
   }
 }

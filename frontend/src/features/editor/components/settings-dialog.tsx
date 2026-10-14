@@ -706,6 +706,7 @@ export function SettingsDialog({ open, onOpenChange, target }: SettingsDialogPro
                         <div className="flex items-center justify-between">
                           <Label className="text-sm">{t('settings.general.autoSave')}</Label>
                           <Switch
+                            aria-label={t('settings.general.autoSave')}
                             checked={autoSaveInterval > 0}
                             onCheckedChange={(v) => setSetting('autoSaveInterval', v ? 5 : 0)}
                           />
@@ -717,6 +718,7 @@ export function SettingsDialog({ open, onOpenChange, target }: SettingsDialogPro
                             </Label>
                             <div className="w-32 flex items-center gap-2">
                               <Slider
+                                aria-label={t('settings.general.interval')}
                                 value={[autoSaveInterval]}
                                 onValueChange={([v]) => setSetting('autoSaveInterval', v || 5)}
                                 min={5}
@@ -735,6 +737,7 @@ export function SettingsDialog({ open, onOpenChange, target }: SettingsDialogPro
                           </Label>
                           <div className="w-32 flex items-center gap-2">
                             <Slider
+                              aria-label={t('settings.general.undoHistoryDepth')}
                               value={[maxUndoHistory]}
                               onValueChange={([v]) => setSetting('maxUndoHistory', v || 10)}
                               min={10}
@@ -749,6 +752,7 @@ export function SettingsDialog({ open, onOpenChange, target }: SettingsDialogPro
                         <div className="flex items-center justify-between">
                           <Label className="text-sm">{t('settings.general.uiSounds')}</Label>
                           <Switch
+                            aria-label={t('settings.general.uiSounds')}
                             checked={uiSoundsEnabled}
                             onCheckedChange={(v) => {
                               setUiSoundEnabled(v)
@@ -764,6 +768,7 @@ export function SettingsDialog({ open, onOpenChange, target }: SettingsDialogPro
                             </Label>
                             <div className="w-32 flex items-center gap-2">
                               <Slider
+                                aria-label={t('settings.general.uiSoundVolume')}
                                 value={[uiSoundVolume]}
                                 onValueChange={([v]) => {
                                   setUiSoundVolume(v ?? 0.6)
@@ -870,6 +875,7 @@ export function SettingsDialog({ open, onOpenChange, target }: SettingsDialogPro
                               ))}
                             </div>
                             <Input
+                              aria-label={t('settings.ai.captionSampleInterval')}
                               type="number"
                               inputMode="decimal"
                               className="h-8 w-24"
@@ -960,6 +966,7 @@ export function SettingsDialog({ open, onOpenChange, target }: SettingsDialogPro
                             </p>
                           </div>
                           <Switch
+                            aria-label={t('settings.timeline.snapByDefault')}
                             checked={snapEnabled}
                             onCheckedChange={(v) => setSetting('snapEnabled', v)}
                           />
@@ -967,6 +974,7 @@ export function SettingsDialog({ open, onOpenChange, target }: SettingsDialogPro
                         <div className="flex items-center justify-between">
                           <Label className="text-sm">{t('settings.timeline.showWaveforms')}</Label>
                           <Switch
+                            aria-label={t('settings.timeline.showWaveforms')}
                             checked={showWaveforms}
                             onCheckedChange={(v) => setSetting('showWaveforms', v)}
                           />
@@ -974,6 +982,7 @@ export function SettingsDialog({ open, onOpenChange, target }: SettingsDialogPro
                         <div className="flex items-center justify-between">
                           <Label className="text-sm">{t('settings.timeline.showFilmstrips')}</Label>
                           <Switch
+                            aria-label={t('settings.timeline.showFilmstrips')}
                             checked={showFilmstrips}
                             onCheckedChange={(v) => setSetting('showFilmstrips', v)}
                           />
@@ -988,6 +997,7 @@ export function SettingsDialog({ open, onOpenChange, target }: SettingsDialogPro
                             </p>
                           </div>
                           <Switch
+                            aria-label={t('settings.timeline.enableFilmstripExtraction')}
                             checked={enableFilmstripExtraction}
                             onCheckedChange={(v) => setSetting('enableFilmstripExtraction', v)}
                           />

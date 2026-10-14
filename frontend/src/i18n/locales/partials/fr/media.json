@@ -300,6 +300,10 @@
       "importAnyway": "Importer quand même",
       "note": "Convertissez-les en MP4 (H.264/AAC) ou WebM pour une meilleure compatibilité.",
       "title": "Codec non pris en charge"
+    },
+    "viewMode": {
+      "grid": "Grille",
+      "list": "Liste"
     }
   }
 }

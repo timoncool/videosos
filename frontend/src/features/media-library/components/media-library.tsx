@@ -1139,6 +1139,9 @@ export const MediaLibrary = memo(function MediaLibrary({ onMediaSelect }: MediaL
                     variant="ghost"
                     size="sm"
                     onClick={() => setViewMode('grid')}
+                    aria-label={t('media.viewMode.grid')}
+                    aria-pressed={viewMode === 'grid'}
+                    data-tooltip={t('media.viewMode.grid')}
                     className={`h-6 w-6 p-0 rounded-none rounded-l ${
                       viewMode === 'grid'
                         ? 'bg-primary/10 text-primary'
@@ -1151,6 +1154,9 @@ export const MediaLibrary = memo(function MediaLibrary({ onMediaSelect }: MediaL
                     variant="ghost"
                     size="sm"
                     onClick={() => setViewMode('list')}
+                    aria-label={t('media.viewMode.list')}
+                    aria-pressed={viewMode === 'list'}
+                    data-tooltip={t('media.viewMode.list')}
                     className={`h-6 w-6 p-0 rounded-none rounded-r ${
                       viewMode === 'list'
                         ? 'bg-primary/10 text-primary'

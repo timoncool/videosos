@@ -386,6 +386,7 @@ export function GeneratePanel() {
             <Switch
               checked={placeOnTimeline}
               onCheckedChange={(checked) => useGenerateStore.getState().setPlaceOnTimeline(checked)}
+              aria-label={t('generate.placeOnTimeline')}
             />
             {t('generate.placeOnTimeline')}
           </label>

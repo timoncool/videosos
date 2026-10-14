@@ -300,6 +300,10 @@
       "importAnyway": "仍然导入",
       "note": "为获得更好的兼容性，请转换为 MP4 (H.264/AAC) 或 WebM。",
       "title": "不支持的编解码器"
+    },
+    "viewMode": {
+      "grid": "网格",
+      "list": "列表"
     }
   }
 }

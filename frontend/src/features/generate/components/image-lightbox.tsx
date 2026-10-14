@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import { Minus, Plus, X } from 'lucide-react'
 
@@ -27,7 +28,8 @@ export function ImageLightbox({ src, alt, onClose }: { src: string; alt?: string
     setOffset({ x: 0, y: 0 })
   }, [])
 
-  return (
+  // over the whole window: the panel it is opened from is transformed, which would hold a fixed element inside it
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
@@ -70,6 +72,7 @@ export function ImageLightbox({ src, alt, onClose }: { src: string; alt?: string
           style={{ transform: `translate(${offset.x}px, ${offset.y}px) scale(${scale})`, cursor: scale > 1 ? 'grab' : 'zoom-in' }}
         />
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }
