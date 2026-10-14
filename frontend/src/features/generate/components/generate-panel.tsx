@@ -20,6 +20,7 @@ import {
   WandSparkles,
   Undo2,
   ZoomIn,
+  ScanEye,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -34,6 +35,7 @@ import {
   TASKS,
   type Estimate,
   type Job,
+  type MediaRef,
   type ModelEntry,
   type Provider,
   type Task,
@@ -41,7 +43,7 @@ import {
 import { modelKey, useGenerateStore } from '../stores/generate-store'
 import { useProjectStore } from '../deps/editor'
 import { FieldControl } from './field-control'
-import { improvePrompt } from '../services/prompt-assist'
+import { describeImage, improvePrompt } from '../services/prompt-assist'
 import { GenerationHistory } from './generation-history'
 import { ModelPicker } from './model-picker'
 import { fieldLabel, overLength, providerWords } from '../services/field-label'
@@ -160,7 +162,7 @@ function useEstimate(provider: Provider | undefined, id: string | undefined, val
 }
 
 export function GeneratePanel() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const projectId = useProjectStore((state) => state.currentProject?.id ?? null)
   const task = useGenerateStore((state) => state.task)
   const model = useGenerateStore((state) => state.modelByTask[state.task])
@@ -178,6 +180,16 @@ export function GeneratePanel() {
   const [moreOpen, setMoreOpen] = useState(false)
   const [improving, setImproving] = useState(false)
   const [improveError, setImproveError] = useState<string | null>(null)
+  // the picture a prompt can be written from: the first one put into any of the form's picture slots
+  const firstImage = useMemo(() => {
+    for (const field of form?.fields ?? []) {
+      if (field.type !== 'media' || field.media !== 'image') continue
+      const value = values[field.key]
+      const first = Array.isArray(value) ? value[0] : value
+      if (first !== undefined && first !== null && first !== '') return first as MediaRef
+    }
+    return null
+  }, [form, values])
   const [previousPrompt, setPreviousPrompt] = useState<{ key: string; text: string } | null>(null)
   const { estimate, error: estimateError } = useEstimate(model?.provider, model?.id, values, repeat)
 
@@ -329,7 +341,7 @@ export function GeneratePanel() {
                   onChange={(value) => useGenerateStore.getState().setValue(model, field.key, value)}
                 />
                 {field.role === 'prompt' && task !== 'transcribe' && (
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                     <button
                       type="button"
                       disabled={improving || typeof values[field.key] !== 'string' || !(values[field.key] as string).trim() || !keys.openrouter}
@@ -346,11 +358,34 @@ export function GeneratePanel() {
                           .catch((error: unknown) => setImproveError(error instanceof Error ? error.message : String(error)))
                           .finally(() => setImproving(false))
                       }}
-                      className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground disabled:opacity-40"
+                      className="inline-flex items-center gap-1 whitespace-nowrap text-[11px] text-muted-foreground hover:text-foreground disabled:opacity-40"
                     >
                       {improving ? <Loader2 className="h-3 w-3 animate-spin" /> : <WandSparkles className="h-3 w-3" />}
                       {t('generate.improve.button')}
                     </button>
+                    {firstImage && (
+                      <button
+                        type="button"
+                        disabled={improving || !keys.openrouter}
+                        title={keys.openrouter ? t('generate.describe.hint') : t('generate.improve.needsKey')}
+                        onClick={() => {
+                          const original = typeof values[field.key] === 'string' ? (values[field.key] as string) : ''
+                          setImproving(true)
+                          setImproveError(null)
+                          describeImage(firstImage, task, model.id, i18n.language)
+                            .then((written) => {
+                              setPreviousPrompt({ key: field.key, text: original })
+                              useGenerateStore.getState().setValue(model, field.key, written)
+                            })
+                            .catch((error: unknown) => setImproveError(error instanceof Error ? error.message : String(error)))
+                            .finally(() => setImproving(false))
+                        }}
+                        className="inline-flex items-center gap-1 whitespace-nowrap text-[11px] text-muted-foreground hover:text-foreground disabled:opacity-40"
+                      >
+                        <ScanEye className="h-3 w-3" />
+                        {t('generate.describe.button')}
+                      </button>
+                    )}
                     {previousPrompt?.key === field.key && (
                       <button
                         type="button"
@@ -358,7 +393,7 @@ export function GeneratePanel() {
                           useGenerateStore.getState().setValue(model, field.key, previousPrompt.text)
                           setPreviousPrompt(null)
                         }}
-                        className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground"
+                        className="inline-flex items-center gap-1 whitespace-nowrap text-[11px] text-muted-foreground hover:text-foreground"
                       >
                         <Undo2 className="h-3 w-3" />
                         {t('generate.improve.undo')}

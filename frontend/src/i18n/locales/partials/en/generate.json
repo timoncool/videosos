@@ -231,6 +231,10 @@
       "second": "{{price}} per second",
       "characters": "{{price}} per 1000 characters",
       "tokens": "{{input}} / {{output}} per million tokens"
+    },
+    "describe": {
+      "button": "Prompt from the picture",
+      "hint": "A model looks at the form's first picture and writes the prompt that would make it. The OpenRouter key pays."
     }
   }
 }
