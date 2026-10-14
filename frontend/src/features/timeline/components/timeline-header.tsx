@@ -266,9 +266,11 @@ const TimelineZoomControls = memo(function TimelineZoomControls({
   useEffect(() => {
     window.addEventListener('pointerup', finishSliderZoomInteraction)
     window.addEventListener('pointercancel', finishSliderZoomInteraction)
+    window.addEventListener('pointercancel', finishSliderZoomInteraction)
 
     return () => {
       window.removeEventListener('pointerup', finishSliderZoomInteraction)
+      window.removeEventListener('pointercancel', finishSliderZoomInteraction)
       window.removeEventListener('pointercancel', finishSliderZoomInteraction)
       if (sliderRafRef.current !== null) {
         cancelAnimationFrame(sliderRafRef.current)

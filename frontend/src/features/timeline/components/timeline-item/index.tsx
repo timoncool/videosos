@@ -141,8 +141,9 @@ export const TimelineItem = memo(function TimelineItem({
   useEffect(() => {
     if (!pointerHint) return
     const handleMouseUp = () => setPointerHint(null)
-    window.addEventListener('mouseup', handleMouseUp)
-    return () => window.removeEventListener('mouseup', handleMouseUp)
+    window.addEventListener('pointerup', handleMouseUp)
+    window.addEventListener('pointercancel', handleMouseUp)
+    return () => window.removeEventListener('pointerup', handleMouseUp)
   }, [pointerHint])
 
   const transformRef = useRef<HTMLDivElement>(null)
@@ -698,8 +699,8 @@ export const TimelineItem = memo(function TimelineItem({
           onHoverChange={onHoverChange}
           onClick={handleClick}
           onDoubleClick={handleDoubleClick}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
+          onPointerDown={handleMouseDown}
+          onPointerMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
           onContextMenu={handleContextMenu}
           onDragEnter={handleEffectDragEnter}

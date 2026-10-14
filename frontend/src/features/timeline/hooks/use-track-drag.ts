@@ -181,20 +181,23 @@ export function useTrackDrag(track: TimelineTrack): UseTrackDragReturn {
           })
 
           // Remove this listener
-          window.removeEventListener('mousemove', checkDragThreshold)
-          window.removeEventListener('mouseup', cancelDrag)
+          window.removeEventListener('pointermove', checkDragThreshold)
+          window.removeEventListener('pointerup', cancelDrag)
+          window.removeEventListener('pointercancel', cancelDrag)
         }
       }
 
       const cancelDrag = () => {
         // Clean up if mouse released before threshold
         dragStateRef.current = null
-        window.removeEventListener('mousemove', checkDragThreshold)
-        window.removeEventListener('mouseup', cancelDrag)
+        window.removeEventListener('pointermove', checkDragThreshold)
+        window.removeEventListener('pointerup', cancelDrag)
+        window.removeEventListener('pointercancel', cancelDrag)
       }
 
-      window.addEventListener('mousemove', checkDragThreshold)
-      window.addEventListener('mouseup', cancelDrag)
+      window.addEventListener('pointermove', checkDragThreshold)
+      window.addEventListener('pointerup', cancelDrag)
+      window.addEventListener('pointercancel', cancelDrag)
     },
     [track.id, selectTracks, setDragState],
   )
@@ -396,13 +399,15 @@ export function useTrackDrag(track: TimelineTrack): UseTrackDragReturn {
     }
 
     if (dragStateRef.current) {
-      window.addEventListener('mousemove', handleMouseMove)
-      window.addEventListener('mouseup', handleMouseUp)
+      window.addEventListener('pointermove', handleMouseMove)
+      window.addEventListener('pointerup', handleMouseUp)
+      window.addEventListener('pointercancel', handleMouseUp)
       window.addEventListener('keydown', handleKeyDown)
 
       return () => {
-        window.removeEventListener('mousemove', handleMouseMove)
-        window.removeEventListener('mouseup', handleMouseUp)
+        window.removeEventListener('pointermove', handleMouseMove)
+        window.removeEventListener('pointerup', handleMouseUp)
+        window.removeEventListener('pointercancel', handleMouseUp)
         window.removeEventListener('keydown', handleKeyDown)
       }
     }

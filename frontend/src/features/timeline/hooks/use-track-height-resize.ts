@@ -142,8 +142,9 @@ export function useTrackHeightResize() {
       handleMouseUp(event)
     }
 
-    document.addEventListener('mousemove', queueMouseMove, { capture: true })
-    document.addEventListener('mouseup', handleCoalescedMouseUp, { capture: true })
+    document.addEventListener('pointermove', queueMouseMove, { capture: true })
+    document.addEventListener('pointerup', handleCoalescedMouseUp, { capture: true })
+    document.addEventListener('pointercancel', handleCoalescedMouseUp, { capture: true })
 
     const preventClick = (event: MouseEvent) => {
       event.preventDefault()
@@ -154,8 +155,9 @@ export function useTrackHeightResize() {
 
     return () => {
       coalescedMouseMove.cancel()
-      document.removeEventListener('mousemove', queueMouseMove, { capture: true })
-      document.removeEventListener('mouseup', handleCoalescedMouseUp, { capture: true })
+      document.removeEventListener('pointermove', queueMouseMove, { capture: true })
+      document.removeEventListener('pointerup', handleCoalescedMouseUp, { capture: true })
+      document.removeEventListener('pointercancel', handleCoalescedMouseUp, { capture: true })
       document.removeEventListener('click', preventClick, { capture: true })
     }
   }, [handleMouseMove, handleMouseUp, resizeState.trackId])

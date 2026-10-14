@@ -575,7 +575,7 @@ export const KeyframeGraphPanel = memo(function KeyframeGraphPanel({
         'bg-secondary/30 hover:bg-primary/30 transition-colors',
         isResizing && 'bg-primary/50',
       )}
-      onMouseDown={handleResizeStart}
+      onPointerDown={handleResizeStart}
     >
       <div className="w-8 h-0.5 rounded-full bg-muted-foreground/30" />
     </div>

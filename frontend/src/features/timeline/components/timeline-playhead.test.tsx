@@ -145,18 +145,18 @@ describe('TimelinePlayhead', () => {
     expect(hitArea).toHaveAttribute('data-playhead-handle')
     expect(hitArea).toHaveStyle({ cursor: 'ew-resize' })
 
-    fireEvent.mouseDown(hitArea!, { clientX: 24, clientY: 8, button: 0 })
+    fireEvent.pointerDown(hitArea!, { clientX: 24, clientY: 8, button: 0 })
     expect(mainTimelineScrubActiveRef.current).toBe(true)
     expect(timelineSkimmerScrubSignal.current).toBe(true)
     expect(document.body).toHaveStyle({ cursor: 'ew-resize' })
-    fireEvent.mouseMove(document, { clientX: 120, clientY: 8 })
+    fireEvent.pointerMove(document, { clientX: 120, clientY: 8 })
 
     await waitFor(() => {
       expect(usePlaybackStore.getState().previewFrame).toBe(36)
       expect(usePlaybackStore.getState().currentFrame).toBe(36)
     })
 
-    fireEvent.mouseUp(document, { clientX: 120, clientY: 8 })
+    fireEvent.pointerUp(document, { clientX: 120, clientY: 8 })
     expect(mainTimelineScrubActiveRef.current).toBe(false)
     expect(timelineSkimmerScrubSignal.current).toBe(false)
     expect(document.body.style.cursor).toBe('')
@@ -192,7 +192,7 @@ describe('TimelinePlayhead', () => {
     })
     const hitArea = container.querySelector('[data-playhead-handle]') as HTMLDivElement
 
-    fireEvent.mouseDown(hitArea, { clientX: 24, clientY: 8, button: 0 })
+    fireEvent.pointerDown(hitArea, { clientX: 24, clientY: 8, button: 0 })
 
     expect(usePlaybackStore.getState()).toMatchObject({
       isPlaying: false,
@@ -205,8 +205,8 @@ describe('TimelinePlayhead', () => {
     })
     expect(mainTimelineScrubActiveRef.current).toBe(true)
 
-    fireEvent.mouseMove(document, { clientX: 120, clientY: 8 })
-    fireEvent.mouseUp(document, { clientX: 120, clientY: 8 })
+    fireEvent.pointerMove(document, { clientX: 120, clientY: 8 })
+    fireEvent.pointerUp(document, { clientX: 120, clientY: 8 })
 
     expect(usePlaybackStore.getState()).toMatchObject({
       currentFrame: 36,
@@ -256,7 +256,7 @@ describe('TimelinePlayhead', () => {
     })
     const hitArea = container.querySelector('[style*="width: 20px"]') as HTMLDivElement
 
-    fireEvent.mouseDown(hitArea, { clientX: 120, clientY: 8, button: 0 })
+    fireEvent.pointerDown(hitArea, { clientX: 120, clientY: 8, button: 0 })
     expect(mainTimelineScrubActiveRef.current).toBe(true)
     expect(timelineSkimmerScrubSignal.current).toBe(true)
     expect(frameCallbacks).toHaveLength(1)
@@ -310,8 +310,8 @@ describe('TimelinePlayhead', () => {
     })
 
     const hitArea = container.querySelector('[style*="width: 20px"]') as HTMLDivElement
-    fireEvent.mouseDown(hitArea, { clientX: 130, clientY: 8, button: 0 })
-    fireEvent.mouseUp(document, { clientX: 130, clientY: 8 })
+    fireEvent.pointerDown(hitArea, { clientX: 130, clientY: 8, button: 0 })
+    fireEvent.pointerUp(document, { clientX: 130, clientY: 8 })
 
     expect(usePlaybackStore.getState().currentFrame).toBe(60)
   })
@@ -342,11 +342,11 @@ describe('TimelinePlayhead', () => {
     const hitArea = container.querySelector('[style*="width: 20px"]') as HTMLDivElement
     const playhead = container.querySelector('[data-timeline-playhead="ruler"]') as HTMLDivElement
 
-    fireEvent.mouseDown(hitArea, { clientX: 24, clientY: 8, button: 0 })
+    fireEvent.pointerDown(hitArea, { clientX: 24, clientY: 8, button: 0 })
     frameCallbacks.shift()?.(16)
     expect(playhead).toHaveStyle({ transform: 'translate3d(23px, 0, 0)' })
 
-    fireEvent.mouseUp(document, { clientX: 24, clientY: 8 })
+    fireEvent.pointerUp(document, { clientX: 24, clientY: 8 })
     expect(usePlaybackStore.getState().currentFrame).toBe(7)
     expect(playhead).toHaveStyle({ transform: 'translate3d(23px, 0, 0)' })
   })
@@ -422,7 +422,7 @@ describe('TimelinePlayhead', () => {
       '[data-timeline-playhead="tracks"]',
     )!
 
-    fireEvent.mouseDown(hitArea, { clientX: 300, clientY: 8, button: 0 })
+    fireEvent.pointerDown(hitArea, { clientX: 300, clientY: 8, button: 0 })
     expect(frameCallbacks).toHaveLength(1)
     frameCallbacks.shift()?.(16)
     const firstScrollLeft = scrollContainer.scrollLeft
@@ -440,7 +440,7 @@ describe('TimelinePlayhead', () => {
     )
     expect(tracksPlayhead.style.transform).toBe(rulerPlayhead.style.transform)
 
-    fireEvent.mouseUp(document, { clientX: 300, clientY: 8 })
+    fireEvent.pointerUp(document, { clientX: 300, clientY: 8 })
     expect(usePlaybackStore.getState().previewFrame).toBeNull()
     animationFrameSpy.mockRestore()
   })
@@ -486,7 +486,7 @@ describe('TimelinePlayhead', () => {
       '[data-timeline-playhead="tracks"]',
     )!
 
-    fireEvent.mouseDown(hitArea, { clientX: 250, clientY: 8, button: 0 })
+    fireEvent.pointerDown(hitArea, { clientX: 250, clientY: 8, button: 0 })
     frameCallbacks.shift()?.(16)
 
     expect(rulerPlayhead).toHaveStyle({
@@ -495,7 +495,7 @@ describe('TimelinePlayhead', () => {
     expect(tracksPlayhead.style.transform).toBe(rulerPlayhead.style.transform)
     expect(usePlaybackStore.getState().currentFrame).toBe(30)
 
-    fireEvent.mouseUp(document, { clientX: 250, clientY: 8 })
+    fireEvent.pointerUp(document, { clientX: 250, clientY: 8 })
     animationFrameSpy.mockRestore()
   })
 })

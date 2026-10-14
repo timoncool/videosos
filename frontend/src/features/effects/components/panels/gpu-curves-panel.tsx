@@ -501,7 +501,7 @@ export const GpuCurvesPanel = memo(function GpuCurvesPanel({
                 isDock ? 'h-full w-full' : 'aspect-square w-full',
                 effect.enabled ? 'cursor-crosshair' : 'cursor-default',
               )}
-              onMouseDown={handleSvgMouseDown}
+              onPointerDown={handleSvgMouseDown}
             >
               {[0.25, 0.5, 0.75].map((grid) => (
                 <g key={grid}>
@@ -620,7 +620,7 @@ export const GpuCurvesPanel = memo(function GpuCurvesPanel({
                       stroke="rgba(3,7,18,0.95)"
                       strokeWidth={pointStrokeWidth}
                       className={effect.enabled ? 'cursor-move' : 'pointer-events-none'}
-                      onMouseDown={(event) => handlePointMouseDown(event, index)}
+                      onPointerDown={(event) => handlePointMouseDown(event, index)}
                       onKeyDown={(event) => handlePointKeyDown(event, index)}
                     />
                   </g>

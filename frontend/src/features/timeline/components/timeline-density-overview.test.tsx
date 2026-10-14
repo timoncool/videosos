@@ -50,8 +50,8 @@ describe('TimelineDensityOverview', () => {
     const bucket = view.container.querySelector('[data-timeline-density-bucket]')
     expect(bucket).not.toBeNull()
 
-    fireEvent.mouseDown(bucket!, { button: 0, clientX: 0, clientY: 10 })
-    fireEvent.mouseUp(bucket!, { button: 0, clientX: 0, clientY: 10 })
+    fireEvent.pointerDown(bucket!, { button: 0, clientX: 0, clientY: 10 })
+    fireEvent.pointerUp(bucket!, { button: 0, clientX: 0, clientY: 10 })
     fireEvent.click(bucket!, { button: 0, clientX: 0, clientY: 10 })
 
     expect(useSelectionStore.getState().selectedItemIds).toEqual(['overview-1'])
@@ -113,8 +113,8 @@ describe('TimelineDensityOverview', () => {
     )
     const bucket = view.container.querySelector('[data-timeline-density-bucket]')!
 
-    fireEvent.mouseDown(bucket, { button: 0, clientX: 0, clientY: 10 })
-    fireEvent.mouseUp(bucket, { button: 0, clientX: 0, clientY: 10 })
+    fireEvent.pointerDown(bucket, { button: 0, clientX: 0, clientY: 10 })
+    fireEvent.pointerUp(bucket, { button: 0, clientX: 0, clientY: 10 })
     fireEvent.click(bucket, { button: 0, clientX: 0, clientY: 10 })
 
     expect(nativeClick).toHaveBeenCalledOnce()

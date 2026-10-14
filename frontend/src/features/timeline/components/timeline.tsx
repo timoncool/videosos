@@ -419,16 +419,18 @@ export const Timeline = memo(function Timeline({ duration }: TimelineProps) {
         sectionDividerDragRef.current = null
         document.body.style.userSelect = ''
         document.body.style.cursor = ''
-        window.removeEventListener('mousemove', handleMouseMove)
-        window.removeEventListener('mouseup', handleMouseUp)
+        window.removeEventListener('pointermove', handleMouseMove)
+        window.removeEventListener('pointerup', handleMouseUp)
+        window.removeEventListener('pointercancel', handleMouseUp)
         setSectionDividerPosition(latestPosition)
         // Persist to localStorage so the split survives a refresh (one write
         // per gesture, on release — not on every mousemove frame).
         useSettingsStore.getState().setSetting('timelineSectionDividerPosition', latestPosition)
       }
 
-      window.addEventListener('mousemove', handleMouseMove)
-      window.addEventListener('mouseup', handleMouseUp)
+      window.addEventListener('pointermove', handleMouseMove)
+      window.addEventListener('pointerup', handleMouseUp)
+      window.addEventListener('pointercancel', handleMouseUp)
     },
     [
       audioDisplayHeight,
@@ -932,7 +934,7 @@ export const Timeline = memo(function Timeline({ duration }: TimelineProps) {
       {/* Timeline Content */}
       <div
         className="flex-1 flex overflow-hidden min-h-0"
-        onMouseDown={handleTimelineAreaMouseDown}
+        onPointerDown={handleTimelineAreaMouseDown}
       >
         {/* Track Headers Sidebar */}
         <div
@@ -1043,7 +1045,7 @@ export const Timeline = memo(function Timeline({ duration }: TimelineProps) {
                     dropIndicatorLocalIndex: videoDropIndicatorIndex,
                     firstTrackFrame: 'with-top-divider',
                   })}
-                  <TrackSectionDivider onMouseDown={handleSectionDividerMouseDown} />
+                  <TrackSectionDivider onPointerDown={handleSectionDividerMouseDown} />
                   {renderTrackHeadersSection(audioTracks, {
                     section: 'audio',
                     height: audioPaneHeight,

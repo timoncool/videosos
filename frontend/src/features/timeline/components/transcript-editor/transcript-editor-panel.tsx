@@ -492,6 +492,7 @@ export function TranscriptEditorPanel({ active }: TranscriptEditorPanelProps) {
       isSelectingRef.current = false
     }
     window.addEventListener('pointerup', stop)
+    window.addEventListener('pointercancel', stop)
     return () => window.removeEventListener('pointerup', stop)
   }, [])
 

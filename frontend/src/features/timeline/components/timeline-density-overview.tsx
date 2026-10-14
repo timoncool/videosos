@@ -51,7 +51,8 @@ function suppressTransferredPointerClick() {
   let fallbackTimer = 0
   const cleanup = () => {
     document.removeEventListener('click', handleClick, true)
-    document.removeEventListener('mouseup', handleMouseUp, true)
+    document.removeEventListener('pointerup', handleMouseUp, true)
+    document.removeEventListener('pointercancel', handleMouseUp, true)
     window.clearTimeout(fallbackTimer)
   }
   const handleClick = (event: MouseEvent) => {
@@ -66,7 +67,8 @@ function suppressTransferredPointerClick() {
   }
 
   document.addEventListener('click', handleClick, true)
-  document.addEventListener('mouseup', handleMouseUp, true)
+  document.addEventListener('pointerup', handleMouseUp, true)
+  document.addEventListener('pointercancel', handleMouseUp, true)
   fallbackTimer = window.setTimeout(cleanup, 1000)
 }
 
@@ -150,7 +152,7 @@ export const TimelineDensityOverview = memo(function TimelineDensityOverview({
               opacity: trackHidden ? 0.3 : trackLocked ? 0.6 : 1,
               contain: 'layout style paint',
             }}
-            onMouseDown={(event) => {
+            onPointerDown={(event) => {
               if (event.button !== 0) return
               event.stopPropagation()
               if (trackLocked) {
@@ -197,7 +199,7 @@ export const TimelineDensityOverview = memo(function TimelineDensityOverview({
                 document.querySelectorAll<HTMLElement>('[data-timeline-item][data-item-id]'),
               ).find((element) => element.dataset.itemId === item.id)
               promoted?.dispatchEvent(
-                new MouseEvent('mousedown', {
+                new MouseEvent('pointerdown', {
                   bubbles: true,
                   cancelable: true,
                   button: 0,

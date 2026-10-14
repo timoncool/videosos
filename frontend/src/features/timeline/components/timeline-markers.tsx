@@ -612,13 +612,15 @@ export const TimelineMarkers = memo(function TimelineMarkers({
       endTimelineSkimmerScrub(skimmerScrubOwner)
     }
 
-    document.addEventListener('mousemove', handleMouseMove)
-    document.addEventListener('mouseup', handleMouseUp)
+    document.addEventListener('pointermove', handleMouseMove)
+    document.addEventListener('pointerup', handleMouseUp)
+    document.addEventListener('pointercancel', handleMouseUp)
     window.addEventListener('blur', handleMouseUp)
 
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove)
-      document.removeEventListener('mouseup', handleMouseUp)
+      document.removeEventListener('pointermove', handleMouseMove)
+      document.removeEventListener('pointerup', handleMouseUp)
+      document.removeEventListener('pointercancel', handleMouseUp)
       window.removeEventListener('blur', handleMouseUp)
       document.body.style.cursor = originalCursor
       // Ensure cleanup
@@ -641,8 +643,8 @@ export const TimelineMarkers = memo(function TimelineMarkers({
     <div
       ref={containerRef}
       className="border-b border-border/80 relative"
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleRulerMouseMove}
+      onPointerDown={handleMouseDown}
+      onPointerMove={handleRulerMouseMove}
       onMouseLeave={handleRulerMouseLeave}
       style={{
         background: 'oklch(0.22 0 0 / 0.22)',

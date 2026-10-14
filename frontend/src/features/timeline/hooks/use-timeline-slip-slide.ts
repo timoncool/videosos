@@ -1422,13 +1422,15 @@ export function useTimelineSlipSlide(
         handleMouseUp()
       }
 
-      window.addEventListener('mousemove', queueMouseMove)
-      window.addEventListener('mouseup', handleCoalescedMouseUp)
+      window.addEventListener('pointermove', queueMouseMove)
+      window.addEventListener('pointerup', handleCoalescedMouseUp)
+      window.addEventListener('pointercancel', handleCoalescedMouseUp)
 
       return () => {
         coalescedMouseMove.cancel()
-        window.removeEventListener('mousemove', queueMouseMove)
-        window.removeEventListener('mouseup', handleCoalescedMouseUp)
+        window.removeEventListener('pointermove', queueMouseMove)
+        window.removeEventListener('pointerup', handleCoalescedMouseUp)
+        window.removeEventListener('pointercancel', handleCoalescedMouseUp)
       }
     }
   }, [state.isActive, handleMouseMove, handleMouseUp])
@@ -1465,8 +1467,9 @@ export function useTimelineSlipSlide(
         const startY = e.clientY
 
         const cleanupPendingStart = () => {
-          window.removeEventListener('mousemove', checkPendingStart)
-          window.removeEventListener('mouseup', cancelPendingStart)
+          window.removeEventListener('pointermove', checkPendingStart)
+          window.removeEventListener('pointerup', cancelPendingStart)
+          window.removeEventListener('pointercancel', cancelPendingStart)
           pendingStartCleanupRef.current = null
         }
 
@@ -1492,8 +1495,9 @@ export function useTimelineSlipSlide(
         }
 
         pendingStartCleanupRef.current = cleanupPendingStart
-        window.addEventListener('mousemove', checkPendingStart)
-        window.addEventListener('mouseup', cancelPendingStart)
+        window.addEventListener('pointermove', checkPendingStart)
+        window.addEventListener('pointerup', cancelPendingStart)
+        window.addEventListener('pointercancel', cancelPendingStart)
         return
       }
 

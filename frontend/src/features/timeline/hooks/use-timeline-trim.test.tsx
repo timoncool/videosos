@@ -108,7 +108,7 @@ function holdKey(key: 'Alt' | 'Shift') {
 
 function moveMouse(clientX: number) {
   act(() => {
-    window.dispatchEvent(new MouseEvent('mousemove', { clientX }))
+    window.dispatchEvent(new MouseEvent('pointermove', { clientX }))
     const callbacks = rafCallbacks
     rafCallbacks = []
     for (const callback of callbacks) callback(performance.now())
@@ -117,7 +117,7 @@ function moveMouse(clientX: number) {
 
 function releaseMouse() {
   act(() => {
-    window.dispatchEvent(new MouseEvent('mouseup'))
+    window.dispatchEvent(new MouseEvent('pointerup'))
   })
 }
 

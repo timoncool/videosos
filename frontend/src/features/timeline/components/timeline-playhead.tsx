@@ -262,8 +262,8 @@ export function TimelinePlayhead({
   }, [])
 
   // Handle drag start
-  const handleMouseDown = useCallback(
-    (e: React.MouseEvent) => {
+  const handlePointerDown = useCallback(
+    (e: React.PointerEvent) => {
       e.preventDefault()
       e.stopPropagation()
       // Seeking is disabled during a voiceover take (see timeline-markers).
@@ -401,7 +401,7 @@ export function TimelinePlayhead({
       if (isDraggingRef.current) rafIdRef.current = requestAnimationFrame(runScrubLoop)
     }
 
-    const handleMouseMove = (e: MouseEvent) => {
+    const handlePointerMove = (e: PointerEvent) => {
       scrubClientXRef.current = e.clientX
     }
 
@@ -450,18 +450,22 @@ export function TimelinePlayhead({
         usePlaybackStore.getState().cancelPlaybackScrubResume()
       }
     }
-    const handleMouseUp = () => finishDrag(true)
-    const handleWindowBlur = () => finishDrag(false)
+    const handlePointerUp = () => finishDrag(true)
+    const handleCancel = () => finishDrag(false)
 
-    document.addEventListener('mousemove', handleMouseMove)
-    document.addEventListener('mouseup', handleMouseUp)
-    window.addEventListener('blur', handleWindowBlur)
+    document.addEventListener('pointermove', handlePointerMove)
+    document.addEventListener('pointerup', handlePointerUp)
+    document.addEventListener('pointercancel', handlePointerUp)
+    document.addEventListener('pointercancel', handleCancel)
+    window.addEventListener('blur', handleCancel)
     rafIdRef.current = requestAnimationFrame(runScrubLoop)
 
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove)
-      document.removeEventListener('mouseup', handleMouseUp)
-      window.removeEventListener('blur', handleWindowBlur)
+      document.removeEventListener('pointermove', handlePointerMove)
+      document.removeEventListener('pointerup', handlePointerUp)
+      document.removeEventListener('pointercancel', handlePointerUp)
+      document.removeEventListener('pointercancel', handleCancel)
+      window.removeEventListener('blur', handleCancel)
       // Restore original cursor
       document.body.style.cursor = originalCursor
       // Cancel any pending RAF to prevent memory leaks
@@ -493,7 +497,7 @@ export function TimelinePlayhead({
       {inRuler && (
         <div
           data-playhead-handle
-          className="absolute"
+          className="absolute touch-none [@media(pointer:coarse)]:!h-8 [@media(pointer:coarse)]:!w-8"
           style={{
             top: `${topOffsetPx}px`,
             left: '0px',
@@ -505,7 +509,7 @@ export function TimelinePlayhead({
             pointerEvents: activeToolRef.current === 'razor' || isExternalDrag ? 'none' : 'auto',
             backgroundColor: 'transparent',
           }}
-          onMouseDown={handleMouseDown}
+          onPointerDown={handlePointerDown}
         />
       )}
     </div>

@@ -330,10 +330,12 @@ function TrackSectionScrollbarOverlay({
       window.addEventListener('pointermove', handlePointerMove, { passive: false })
       window.addEventListener('pointerup', handlePointerUp, { passive: true })
       window.addEventListener('pointercancel', handlePointerUp, { passive: true })
+      window.addEventListener('pointercancel', handlePointerUp, { passive: true })
 
       detachDragListenersRef.current = () => {
         window.removeEventListener('pointermove', handlePointerMove)
         window.removeEventListener('pointerup', handlePointerUp)
+        window.removeEventListener('pointercancel', handlePointerUp)
         window.removeEventListener('pointercancel', handlePointerUp)
       }
     },
@@ -696,7 +698,7 @@ const TimelineTrackSectionsSurface = memo(function TimelineTrackSectionsSurface(
               firstTrackFrame: 'with-top-divider',
               scrollRef: videoTracksScrollRef,
             })}
-            <TrackSectionDivider onMouseDown={onSectionDividerMouseDown} />
+            <TrackSectionDivider onPointerDown={onSectionDividerMouseDown} />
             {renderTrackSection(audioTracks, {
               section: 'audio',
               height: audioPaneHeight,
@@ -1261,12 +1263,14 @@ export const TimelineContent = memo(function TimelineContent({
       }
     }
 
-    document.addEventListener('mousedown', handleScrubStart, true)
-    document.addEventListener('mouseup', handleScrubEnd)
+    document.addEventListener('pointerdown', handleScrubStart, true)
+    document.addEventListener('pointerup', handleScrubEnd)
+    document.addEventListener('pointercancel', handleScrubEnd)
 
     return () => {
-      document.removeEventListener('mousedown', handleScrubStart, true)
-      document.removeEventListener('mouseup', handleScrubEnd)
+      document.removeEventListener('pointerdown', handleScrubStart, true)
+      document.removeEventListener('pointerup', handleScrubEnd)
+      document.removeEventListener('pointercancel', handleScrubEnd)
       if (scrubTimeoutRef.current !== null) {
         clearTimeout(scrubTimeoutRef.current)
         scrubTimeoutRef.current = null
@@ -2110,9 +2114,9 @@ export const TimelineContent = memo(function TimelineContent({
           scrollBehavior: 'auto',
           willChange: 'scroll-position',
         }}
-        onMouseDownCapture={handleTimelineMouseDownCapture}
+        onPointerDownCapture={handleTimelineMouseDownCapture}
         onClick={handleContainerClick}
-        onMouseMove={handleTimelineMouseMove}
+        onPointerMove={handleTimelineMouseMove}
         onMouseLeave={handleTimelineMouseLeave}
       >
         <div

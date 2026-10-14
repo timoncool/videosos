@@ -157,8 +157,9 @@ export function useTransitionResize(transition: Transition) {
   useEffect(() => {
     if (resizeState.isResizing) {
       // Use capture phase to ensure these handlers run before other listeners
-      document.addEventListener('mousemove', handleMouseMove, { capture: true })
-      document.addEventListener('mouseup', handleMouseUp, { capture: true })
+      document.addEventListener('pointermove', handleMouseMove, { capture: true })
+      document.addEventListener('pointerup', handleMouseUp, { capture: true })
+      document.addEventListener('pointercancel', handleMouseUp, { capture: true })
       // Also prevent click events that might fire after mouseup
       const preventClick = (e: MouseEvent) => {
         e.preventDefault()
@@ -167,8 +168,9 @@ export function useTransitionResize(transition: Transition) {
       document.addEventListener('click', preventClick, { capture: true, once: true })
 
       return () => {
-        document.removeEventListener('mousemove', handleMouseMove, { capture: true })
-        document.removeEventListener('mouseup', handleMouseUp, { capture: true })
+        document.removeEventListener('pointermove', handleMouseMove, { capture: true })
+        document.removeEventListener('pointerup', handleMouseUp, { capture: true })
+        document.removeEventListener('pointercancel', handleMouseUp, { capture: true })
         document.removeEventListener('click', preventClick, { capture: true })
       }
     }

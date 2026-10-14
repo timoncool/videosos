@@ -17,7 +17,7 @@ interface TrackRowFrameBaseProps extends TrackRowFrameProps {
 
 interface TrackSectionDividerProps {
   className?: string
-  onMouseDown?: (event: MouseEvent<HTMLButtonElement>) => void
+  onPointerDown?: (event: MouseEvent<HTMLButtonElement>) => void
 }
 
 /**
@@ -60,7 +60,7 @@ function TrackRowFrameBase({
             resizeHandlePositionClass,
           )}
           aria-label={resizeHandleLabel ?? t('timeline.trackRow.resizeTrackHeight')}
-          onMouseDown={onResizeMouseDown}
+          onPointerDown={onResizeMouseDown}
           onDoubleClick={onResizeDoubleClick}
         />
       )}
@@ -76,7 +76,7 @@ export function FirstTrackRowFrame(props: TrackRowFrameProps) {
   return <TrackRowFrameBase {...props} dividers="top-and-bottom" />
 }
 
-export function TrackSectionDivider({ className, onMouseDown }: TrackSectionDividerProps) {
+export function TrackSectionDivider({ className, onPointerDown }: TrackSectionDividerProps) {
   const { t } = useTranslation()
   return (
     <div
@@ -90,13 +90,13 @@ export function TrackSectionDivider({ className, onMouseDown }: TrackSectionDivi
       >
         <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-border/80 shadow-[0_1px_0_rgba(255,255,255,0.15)]" />
       </div>
-      {onMouseDown && (
+      {onPointerDown && (
         <button
           type="button"
           data-track-section-divider="true"
           className="absolute inset-0 z-40 cursor-row-resize bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
           aria-label={t('timeline.trackRow.resizeSections')}
-          onMouseDown={onMouseDown}
+          onPointerDown={onPointerDown}
         />
       )}
     </div>
