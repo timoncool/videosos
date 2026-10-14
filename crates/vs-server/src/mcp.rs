@@ -1151,6 +1151,34 @@ async fn wait_for_questions(args: &Value) -> Value {
     }
 }
 
+/// The window's questions with the pictures it would send a model: each question names their files, and the
+/// pictures small enough for an MCP answer come with it, so the agent sees what the model would have seen.
+fn with_pictures(state: &AppState, mut waiting: Value) -> Answer {
+    const LARGEST: u64 = 4 * 1024 * 1024;
+    let mut pictures = Vec::new();
+    for question in waiting["requests"].as_array_mut().into_iter().flatten() {
+        let mut files = Vec::new();
+        for reference in question["images"].as_array().cloned().unwrap_or_default() {
+            match state.jobs.media_file(reference) {
+                Ok(path) => {
+                    let mime = mime_guess::from_path(&path).first_or_octet_stream().essence_str().to_string();
+                    let size = std::fs::metadata(&path).map(|meta| meta.len()).unwrap_or(u64::MAX);
+                    if mime.starts_with("image/") && size <= LARGEST
+                        && let Ok(bytes) = std::fs::read(&path) {
+                            pictures.push((mime, base64::Engine::encode(&base64::engine::general_purpose::STANDARD, bytes)));
+                        }
+                    files.push(json!(path.display().to_string()));
+                }
+                Err(problem) => files.push(json!({ "error": problem })),
+            }
+        }
+        if !files.is_empty() {
+            question["files"] = Value::Array(files);
+        }
+    }
+    if pictures.is_empty() { Answer::Json(waiting) } else { Answer::Pictures { json: waiting, pictures } }
+}
+
 fn answer_question(args: &Value) -> Result<Value, String> {
     let id = text(args, "request_id")?;
     let answer = match args.get("answer") {
@@ -1472,11 +1500,11 @@ async fn handle(State(state): State<AppState>, body: axum::body::Bytes) -> Respo
             match &answer {
                 Ok(Answer::Json(value)) => journal_change(&state, name, &args, &before, value),
                 Ok(Answer::Text(text)) => journal_change(&state, name, &args, &before, &serde_json::from_str(text).unwrap_or(Value::Null)),
-                Ok(Answer::Image { .. }) | Err(_) => {}
+                Ok(Answer::Image { .. }) | Ok(Answer::Pictures { .. }) | Err(_) => {}
             }
             if let Some(step) = step {
                 let (ok, summary) = match &answer {
-                    Ok(Answer::Json(value)) => (true, serde_json::to_string(value).unwrap_or_default()),
+                    Ok(Answer::Json(value)) | Ok(Answer::Pictures { json: value, .. }) => (true, serde_json::to_string(value).unwrap_or_default()),
                     Ok(Answer::Text(text)) | Ok(Answer::Image { text, .. }) => (true, text.clone()),
                     Err(problem) => (false, problem.clone()),
                 };
@@ -1486,6 +1514,11 @@ async fn handle(State(state): State<AppState>, body: axum::body::Bytes) -> Respo
                 Ok(Answer::Json(value)) => tool_json(id, value),
                 Ok(Answer::Text(text)) => tool_result(id, cut(text), None, false),
                 Ok(Answer::Image { data, mime, text }) => rpc(id, json!({ "content": [{ "type": "image", "data": data, "mimeType": mime }, { "type": "text", "text": text }], "isError": false })),
+                Ok(Answer::Pictures { json, pictures }) => {
+                    let mut content = vec![json!({ "type": "text", "text": serde_json::to_string_pretty(&json).unwrap_or_default() })];
+                    content.extend(pictures.into_iter().map(|(mime, data)| json!({ "type": "image", "data": data, "mimeType": mime })));
+                    rpc(id, json!({ "content": content, "structuredContent": json, "isError": false }))
+                }
                 Err(problem) => tool_result(id, problem, None, true),
             }
         }
@@ -1512,10 +1545,14 @@ pub(crate) async fn chat_call(state: &AppState, name: &str, args: &Value) -> Res
     match &answer {
         Answer::Json(value) => journal_change(state, name, args, &before, value),
         Answer::Text(text) => journal_change(state, name, args, &before, &serde_json::from_str(text).unwrap_or(Value::Null)),
-        Answer::Image { .. } => {}
+        Answer::Image { .. } | Answer::Pictures { .. } => {}
     }
     Ok(match answer {
         Answer::Json(value) => ChatAnswer { text: cut(serde_json::to_string(&value).unwrap_or_default()), image: None },
+        Answer::Pictures { json, pictures } => ChatAnswer {
+            text: cut(serde_json::to_string(&json).unwrap_or_default()),
+            image: pictures.into_iter().next().map(|(mime, data)| format!("data:{mime};base64,{data}")),
+        },
         Answer::Text(text) => ChatAnswer { text: cut(text), image: None },
         Answer::Image { data, mime, text } => ChatAnswer { text, image: Some(format!("data:{mime};base64,{data}")) },
     })
@@ -1525,6 +1562,8 @@ enum Answer {
     Json(Value),
     Text(String),
     Image { data: String, mime: String, text: String },
+    /// JSON with the pictures it names, as (mime, base64).
+    Pictures { json: Value, pictures: Vec<(String, String)> },
 }
 
 async fn run_tool(state: &AppState, tool: &Tool, args: &Value) -> Result<Answer, String> {
@@ -1532,7 +1571,7 @@ async fn run_tool(state: &AppState, tool: &Tool, args: &Value) -> Result<Answer,
     match call.payload {
         Payload::Composite("status") => Ok(Answer::Json(status_summary(state).await)),
         Payload::Composite("wait") => wait_for(state, args).await.map(Answer::Json),
-        Payload::Composite("questions") => Ok(Answer::Json(wait_for_questions(args).await)),
+        Payload::Composite("questions") => Ok(with_pictures(state, wait_for_questions(args).await)),
         Payload::Composite("answer") => answer_question(args).map(Answer::Json),
         Payload::Composite("projects") => Ok(Answer::Json(projects(state))),
         Payload::Composite("project") => project(state, args).map(Answer::Json),

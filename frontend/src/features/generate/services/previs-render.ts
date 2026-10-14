@@ -60,7 +60,7 @@ function figure(size: PrevisVector, material: THREE.Material, seated: boolean): 
   const add = (geometry: THREE.BufferGeometry, x: number, y: number, z = 0) =>
     group.add(solid(geometry, material, [x, y, z]))
   add(new THREE.SphereGeometry(head, 20, 14), 0, height - head - drop)
-  add(new THREE.SphereGeometry(head * 0.28, 8, 6), 0, height - head - drop, -head * 0.95)
+  add(new THREE.SphereGeometry(head * 0.28, 8, 6), 0, height - head - drop, head * 0.95)
   add(new THREE.BoxGeometry(width * 0.62, height * 0.36, depth * 0.8), 0, height * 0.63 - drop)
   const shoulders = height * 0.81
   const chin = height - head * 2
@@ -77,8 +77,8 @@ function figure(size: PrevisVector, material: THREE.Material, seated: boolean): 
     )
     const leg = width * 0.24
     if (seated) {
-      add(new THREE.BoxGeometry(leg, leg, height * 0.25), side * width * 0.17, seat, -height * 0.1)
-      add(new THREE.BoxGeometry(leg, seat, leg), side * width * 0.17, seat / 2, -height * 0.22)
+      add(new THREE.BoxGeometry(leg, leg, height * 0.25), side * width * 0.17, seat, height * 0.1)
+      add(new THREE.BoxGeometry(leg, seat, leg), side * width * 0.17, seat / 2, height * 0.22)
     } else {
       add(
         new THREE.BoxGeometry(leg, height * 0.45, depth * 0.62),

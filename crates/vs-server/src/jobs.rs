@@ -500,8 +500,22 @@ impl Jobs {
         Ok(values)
     }
 
+    /// The file on this computer a request names the way a job's request names files.
+    pub(crate) fn media_file(&self, reference: Value) -> Result<PathBuf, String> {
+        let reference: MediaRef = serde_json::from_value(reference).map_err(|e| e.to_string())?;
+        self.media_path(reference)
+    }
+
     fn read_media(&self, reference: MediaRef) -> Result<MediaPayload, String> {
-        let path = match reference {
+        let path = self.media_path(reference)?;
+        let bytes = std::fs::read(&path).map_err(|e| format!("{}: {e}", path.display()))?;
+        let mime = mime_guess::from_path(&path).first_or_octet_stream().essence_str().to_string();
+        let name = path.file_name().map(|name| name.to_string_lossy().into_owned()).unwrap_or_else(|| "file".into());
+        Ok(MediaPayload { bytes, mime, name })
+    }
+
+    fn media_path(&self, reference: MediaRef) -> Result<PathBuf, String> {
+        Ok(match reference {
             MediaRef::Media { media } => {
                 let dir = crate::fs_api::resolve(&self.workspace, &format!("media/{media}")).map_err(|_| t!("jobs-bad-media", media = media.clone()))?;
                 let skip = ["metadata.json", "thumbnail.jpg", "thumbnail.meta.json", "source.link.json"];
@@ -513,11 +527,7 @@ impl Jobs {
             MediaRef::Job { job, index } => self.file_path(&job, index).ok_or_else(|| t!("jobs-no-such-output", job = job))?,
             MediaRef::File { file } => PathBuf::from(file),
             MediaRef::Link(other) => PathBuf::from(other),
-        };
-        let bytes = std::fs::read(&path).map_err(|e| format!("{}: {e}", path.display()))?;
-        let mime = mime_guess::from_path(&path).first_or_octet_stream().essence_str().to_string();
-        let name = path.file_name().map(|name| name.to_string_lossy().into_owned()).unwrap_or_else(|| "file".into());
-        Ok(MediaPayload { bytes, mime, name })
+        })
     }
 
     async fn follow(self: Arc<Self>, id: String) {

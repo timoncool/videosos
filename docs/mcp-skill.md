@@ -19,8 +19,8 @@ build a scene from — write the scene. What is paid is media: pictures, video, 
 **When the person made you VideoSOS's assistant** (Settings, Agents, Assistant "Agent (MCP)"), the window asks you
 what it would ask a model: Improve prompt, Prompt from the picture, the storyboard's split, the 3D blocking and the
 Chat tab's messages. Keep `assistant_requests_wait` running while the person works; answer each request with
-`assistant_request_answer` in the form its `answer_form` or instructions ask; look at its pictures with `media_frame`
-or `job_get`. A chat message is the person writing to you: do what it asks with the tools, then answer in words; until you
+`assistant_request_answer` in the form its `answer_form` or instructions ask. A request's pictures come with the
+answer of `assistant_requests_wait`, and its `files` name them on this computer. A chat message is the person writing to you: do what it asks with the tools, then answer in words; until you
 answer, the chat shows each tool you call as a step.
 `studio_status` shows `assistant` and `assistant_requests_waiting`.
 
