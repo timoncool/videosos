@@ -484,6 +484,7 @@
       },
       "installed": "скачана",
       "notInstalled": "не скачана",
+      "accelerators": "Ускорители: {{list}}",
       "download": "Скачать · {{size}}",
       "remove": "Удалить",
       "downloading": "{{done}} из {{total}} · {{file}}",

@@ -160,6 +160,16 @@ local-field-negative = Негативный промпт
 local-field-steps = Шаги
 local-field-cfg = Следование промпту (CFG)
 local-field-seed = Сид
+local-field-preset = Ускорение
+local-field-preset-hint = Ускоритель модели от её авторов или известной лаборатории: меньше шагов — быстрее; файлы скачиваются вместе с моделью
+local-field-steps-hint = Пусто — столько, на сколько обучен выбранный ускоритель
+local-field-cfg-hint = Пусто — значение выбранного ускорителя
+local-preset = { $name }, { $steps ->
+    [one] { $steps } шаг
+    [few] { $steps } шага
+   *[many] { $steps } шагов
+}
+local-preset-full = Без ускорения, полное качество
 local-engine-missing = движок генерации для { $device } не установлен: установите его в Настройках, «Локальные модели»
 local-unsupported = локальная генерация пока недоступна на этой системе
 local-unknown = нет локальной модели или движка { $what }

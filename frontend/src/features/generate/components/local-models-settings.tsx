@@ -131,6 +131,13 @@ function ModelRow({
           {model.installed ? t('generate.local.installed') : t('generate.local.notInstalled')}
         </span>
       </div>
+      {model.presets.length > 1 && (
+        <p className="text-[11px] text-muted-foreground">
+          {t('generate.local.accelerators', {
+            list: model.presets.map((preset) => preset.label).join(' · '),
+          })}
+        </p>
+      )}
       <InstallProgress status={status} what={model.id} />
       <div className="flex gap-1.5">
         {!model.installed && !busy && (

@@ -471,6 +471,7 @@
       },
       "installed": "已下载",
       "notInstalled": "未下载",
+      "accelerators": "加速器：{{list}}",
       "download": "下载 · {{size}}",
       "remove": "删除",
       "downloading": "{{done}} / {{total}} · {{file}}",

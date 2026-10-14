@@ -46,6 +46,7 @@ fn main() {
                 seed: 42,
                 sigmas: Vec::new(),
                 ref_images: Vec::new(),
+                loras: Vec::new(),
             };
             let image = context.image(&params, Some(Box::new(|step, steps| println!("[{}%] step {step}/{steps}", step * 100 / steps.max(1))))).expect("image");
             write_ppm(Path::new(&args[5]), &image);
@@ -76,6 +77,7 @@ fn main() {
                 seed: 42,
                 first_frame: None,
                 last_frame: None,
+                loras: Vec::new(),
             };
             let video = context.video(&params, Some(Box::new(|step, steps| println!("[{}%] step {step}/{steps}", step * 100 / steps.max(1))))).expect("video");
             let dir = PathBuf::from(&args[5]);

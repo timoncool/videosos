@@ -59,6 +59,8 @@ export interface LocalModelState {
   /** What is left to download. */
   download_bytes: number
   size_bytes: number
+  /** The model's accelerators, the default first; their files come with the model. */
+  presets: { id: string; label: string }[]
 }
 
 /** Generation on this computer: engine builds, models, the device and a download running. */

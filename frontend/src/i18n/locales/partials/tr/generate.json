@@ -471,6 +471,7 @@
       },
       "installed": "indirildi",
       "notInstalled": "indirilmedi",
+      "accelerators": "Hızlandırıcılar: {{list}}",
       "download": "İndir · {{size}}",
       "remove": "Kaldır",
       "downloading": "{{done}} / {{total}} · {{file}}",

@@ -472,6 +472,7 @@
       },
       "installed": "heruntergeladen",
       "notInstalled": "nicht heruntergeladen",
+      "accelerators": "Beschleuniger: {{list}}",
       "download": "Herunterladen · {{size}}",
       "remove": "Entfernen",
       "downloading": "{{done}} von {{total}} · {{file}}",

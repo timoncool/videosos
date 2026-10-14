@@ -81,6 +81,13 @@ pub struct ModelConfig {
     pub rng_cpu: bool,
 }
 
+/// An adapter laid over the model's weights for one call, an accelerator's few-step LoRA among them.
+#[derive(Debug, Clone)]
+pub struct Lora {
+    pub path: PathBuf,
+    pub multiplier: f32,
+}
+
 /// One picture.
 #[derive(Debug, Clone)]
 pub struct ImageParams {
@@ -96,6 +103,7 @@ pub struct ImageParams {
     pub sigmas: Vec<f32>,
     /// Pictures a model edits from or follows.
     pub ref_images: Vec<RawImage>,
+    pub loras: Vec<Lora>,
 }
 
 /// One video.
@@ -110,11 +118,12 @@ pub struct VideoParams {
     /// 0 keeps the model's own.
     pub steps: i32,
     pub cfg_scale: f32,
-    /// Wan's flow shift; 0 keeps the model's own.
+    /// The video stream's flow shift; 0 keeps the model's own.
     pub flow_shift: f32,
     pub seed: i64,
     pub first_frame: Option<RawImage>,
     pub last_frame: Option<RawImage>,
+    pub loras: Vec<Lora>,
 }
 
 type ProgressSink = Box<dyn Fn(i32, i32) + Send + Sync>;
@@ -363,6 +372,9 @@ impl Context<'_> {
             request.ref_images = refs.as_mut_ptr();
             request.ref_images_count = refs.len() as c_int;
         }
+        let (_lora_paths, loras) = lora_list(&params.loras)?;
+        request.loras = loras.as_ptr();
+        request.lora_count = loras.len() as u32;
 
         set_progress_sink(progress);
         let mut out: *mut SdImage = std::ptr::null_mut();
@@ -411,6 +423,9 @@ impl Context<'_> {
         if let Some(image) = params.last_frame.as_ref() {
             request.end_image = sd_image(image, &mut last_buffer);
         }
+        let (_lora_paths, loras) = lora_list(&params.loras)?;
+        request.loras = loras.as_ptr();
+        request.lora_count = loras.len() as u32;
 
         set_progress_sink(progress);
         let mut frames: *mut SdImage = std::ptr::null_mut();
@@ -501,6 +516,13 @@ fn text(value: &str) -> Result<CString, DiffusionError> {
 
 fn path_to_cstring(path: &Path) -> Result<CString, DiffusionError> {
     text(&path.to_string_lossy())
+}
+
+/// The engine's LoRA records point into the returned paths, which must outlive the call.
+fn lora_list(loras: &[Lora]) -> Result<(Vec<CString>, Vec<SdLora>), DiffusionError> {
+    let paths = loras.iter().map(|lora| path_to_cstring(&lora.path)).collect::<Result<Vec<_>, _>>()?;
+    let list = loras.iter().zip(&paths).map(|(lora, path)| SdLora { is_high_noise: false, multiplier: lora.multiplier, path: path.as_ptr() }).collect();
+    Ok((paths, list))
 }
 
 /// Puts the engine's folder first on PATH once, so its backends' own libraries are found.

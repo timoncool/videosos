@@ -471,6 +471,7 @@
       },
       "installed": "다운로드됨",
       "notInstalled": "다운로드 안 됨",
+      "accelerators": "가속기: {{list}}",
       "download": "다운로드 · {{size}}",
       "remove": "삭제",
       "downloading": "{{done}} / {{total}} · {{file}}",

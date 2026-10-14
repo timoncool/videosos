@@ -11,7 +11,7 @@ use std::time::{Duration, Instant};
 
 use serde::Serialize;
 use serde_json::{json, Map, Value};
-use vs_diffusion::{Canceller, Context, Engine, ImageParams, ModelConfig, RawImage, VideoParams};
+use vs_diffusion::{Canceller, Context, Engine, ImageParams, Lora, ModelConfig, RawImage, VideoParams};
 use vs_providers::model::{Choice, Field, FieldKind, MediaKind, ModelEntry, ModelForm, Output, PriceRule, Provider, Role, Task};
 
 /// One file to download, relative to the data folder.
@@ -86,12 +86,14 @@ const BUILDS: &[Build] = &[
 const BUILDS: &[Build] = &[];
 
 /// The part of a model a file is.
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq)]
 enum Slot {
     Diffusion,
     Llm,
     Vae,
     AudioVae,
+    /// An adapter laid over the diffusion weights at generation time.
+    Lora,
 }
 
 struct ModelFile {
@@ -111,12 +113,9 @@ struct LocalModel {
     description: &'static str,
     kind: Kind,
     files: &'static [ModelFile],
+    /// Ways to sample the model, the default first; their files are downloaded with the model's own.
+    presets: &'static [Preset],
     sizes: &'static [(u32, u32)],
-    /// 0 keeps the model's own.
-    steps: i32,
-    cfg: f32,
-    /// A distilled model's fixed noise schedule.
-    sigmas: &'static [f32],
     rng_cpu: bool,
     /// Seconds a video can last, frames at `fps` rounded up to the model's grid of `frame_step * k + frame_offset`.
     seconds: &'static [u32],
@@ -125,21 +124,92 @@ struct LocalModel {
     frame_offset: i32,
 }
 
+/// A speed preset: an accelerator's files and the sampling it was distilled for.
+struct Preset {
+    id: &'static str,
+    /// The accelerator's name as its makers publish it; empty for the model's own sampling.
+    name: &'static str,
+    /// A LoRA laid over the diffusion weights, or other diffusion weights of the same model in place of the model's own.
+    files: &'static [ModelFile],
+    /// 0 keeps the engine's.
+    steps: i32,
+    cfg: f32,
+    /// The video stream's flow shift the accelerator was trained with; 0 keeps the model's.
+    flow_shift: f32,
+    schedule: Schedule,
+}
+
+enum Schedule {
+    Engine,
+    /// Sigmas a distilled model was trained on, the closing 0 included.
+    Fixed(&'static [f32]),
+    /// An even grid shifted for the picture's token count the way Qwen-Image 2.1's scheduler does, with no terminal stretch.
+    QwenShifted(&'static [f32]),
+}
+
+impl Schedule {
+    fn sigmas(&self, width: u32, height: u32) -> Vec<f32> {
+        match self {
+            Schedule::Engine => Vec::new(),
+            Schedule::Fixed(sigmas) => sigmas.to_vec(),
+            Schedule::QwenShifted(grid) => {
+                let tokens = f64::from((width / 16) * (height / 16));
+                let slope = (0.9 - 0.5) / (8192.0 - 256.0);
+                let mu = (tokens * slope + 0.5 - slope * 256.0).exp();
+                grid.iter().map(|&t| (mu / (mu + (1.0 / f64::from(t) - 1.0))) as f32).chain([0.0]).collect()
+            }
+        }
+    }
+}
+
+const QWEN_IMAGE_2_1: ModelFile = ModelFile { slot: Slot::Diffusion, download: Download { url: "https://huggingface.co/unsloth/Qwen-Image-2.1-GGUF/resolve/2c31ccd392b367a6637841a143813320a02dff55/qwen-image-2.1-Q4_K_M.gguf", dest: "models/qwen-image-2.1/qwen-image-2.1-Q4_K_M.gguf", size: 4_199_565_024, sha256: "631d532e7ca71e8d90a87c71d3699761a812039d22e3370e87498d87754660fe", unzip_into: None } };
+
 const MODELS: &[LocalModel] = &[
     LocalModel {
-        id: "qwen-image-2.1-turbo",
-        name: "Qwen-Image 2.1 Turbo",
-        description: "Alibaba's picture model of September 2026, the first among open models, distilled to 8 steps; with its Qwen3-VL-8B text encoder.",
+        id: "qwen-image-2.1",
+        name: "Qwen-Image 2.1",
+        description: "Alibaba's picture model of September 2026, the first among open models; with its Qwen3-VL-8B text encoder. Three accelerators: Alibaba's own Turbo, LightX2V Lightning and Viggle Turbo.",
         kind: Kind::Image,
         files: &[
-            ModelFile { slot: Slot::Diffusion, download: Download { url: "https://huggingface.co/unsloth/Qwen-Image-2.1-Turbo-GGUF/resolve/5d1f9f759ea877ae556cda88dbec958b62ad3809/qwen-image-2.1-turbo-Q4_K_M.gguf", dest: "models/qwen-image-2.1-turbo/qwen-image-2.1-turbo-Q4_K_M.gguf", size: 4_199_565_120, sha256: "8940e8b522af886e0c0f5afddf720e82dd223cb9a43580b5f61c4d740452ac20", unzip_into: None } },
-            ModelFile { slot: Slot::Llm, download: Download { url: "https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct-GGUF/resolve/f982a07559d4a2f6c8744d840bf6fccab30eea96/Qwen3VL-8B-Instruct-Q4_K_M.gguf", dest: "models/qwen-image-2.1-turbo/Qwen3VL-8B-Instruct-Q4_K_M.gguf", size: 5_027_784_800, sha256: "67d1659bfe71b89d50b45a4ad1a9e5b997e5bb16ce5da66a6a6167abd569e9e2", unzip_into: None } },
-            ModelFile { slot: Slot::Vae, download: Download { url: "https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/a8342359c61979b06a8dafb1a47991fe1f30e994/vae/qwen_image_2.1_vae_bf16.safetensors", dest: "models/qwen-image-2.1-turbo/qwen_image_2.1_vae_bf16.safetensors", size: 675_509_688, sha256: "bb21f7473051e1ac368515dd3f2e15cd44d7a11748ee8823e1ddca3e4876b7c9", unzip_into: None } },
+            ModelFile { slot: Slot::Llm, download: Download { url: "https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct-GGUF/resolve/f982a07559d4a2f6c8744d840bf6fccab30eea96/Qwen3VL-8B-Instruct-Q4_K_M.gguf", dest: "models/qwen-image-2.1/Qwen3VL-8B-Instruct-Q4_K_M.gguf", size: 5_027_784_800, sha256: "67d1659bfe71b89d50b45a4ad1a9e5b997e5bb16ce5da66a6a6167abd569e9e2", unzip_into: None } },
+            ModelFile { slot: Slot::Vae, download: Download { url: "https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/a8342359c61979b06a8dafb1a47991fe1f30e994/vae/qwen_image_2.1_vae_bf16.safetensors", dest: "models/qwen-image-2.1/qwen_image_2.1_vae_bf16.safetensors", size: 675_509_688, sha256: "bb21f7473051e1ac368515dd3f2e15cd44d7a11748ee8823e1ddca3e4876b7c9", unzip_into: None } },
+        ],
+        presets: &[
+            Preset {
+                id: "turbo",
+                name: "Qwen-Image 2.1 Turbo",
+                files: &[ModelFile { slot: Slot::Diffusion, download: Download { url: "https://huggingface.co/unsloth/Qwen-Image-2.1-Turbo-GGUF/resolve/5d1f9f759ea877ae556cda88dbec958b62ad3809/qwen-image-2.1-turbo-Q4_K_M.gguf", dest: "models/qwen-image-2.1/qwen-image-2.1-turbo-Q4_K_M.gguf", size: 4_199_565_120, sha256: "8940e8b522af886e0c0f5afddf720e82dd223cb9a43580b5f61c4d740452ac20", unzip_into: None } }],
+                steps: 8,
+                cfg: 1.0,
+                flow_shift: 0.0,
+                schedule: Schedule::Fixed(&[1.0, 0.978453, 0.95418, 0.926626, 0.89508, 0.845148, 0.704534, 0.414568, 0.0]),
+            },
+            Preset {
+                id: "lightning",
+                name: "LightX2V Lightning",
+                files: &[
+                    QWEN_IMAGE_2_1,
+                    ModelFile { slot: Slot::Lora, download: Download { url: "https://huggingface.co/lightx2v/Qwen-Image-2.1-Lightning/resolve/6b0a1176327c01522a44276c5da67331a025b6fc/pytorch_lora_weights.safetensors", dest: "models/qwen-image-2.1/loras/qwen-image-2.1-lightning-4step.safetensors", size: 67_144_280, sha256: "53c69320d4163da51032f90275074028cb098556039c72b45f8dce9f0f9e34a3", unzip_into: None } },
+                ],
+                steps: 4,
+                cfg: 1.0,
+                flow_shift: 0.0,
+                schedule: Schedule::QwenShifted(&[1.0, 0.75, 0.5, 0.25]),
+            },
+            Preset {
+                id: "viggle",
+                name: "Viggle Turbo v0.3",
+                files: &[
+                    QWEN_IMAGE_2_1,
+                    ModelFile { slot: Slot::Lora, download: Download { url: "https://huggingface.co/Viggle/Qwen-Image-2.1-viggle-turbo/resolve/009a44a895ef85f7e643c80fdca9543795248867/Qwen-Image-2.1-viggle-turbo-v0.3-6step-lora-r256.safetensors", dest: "models/qwen-image-2.1/loras/qwen-image-2.1-viggle-turbo-v0.3-6step-lora-r256.safetensors", size: 1_359_147_904, sha256: "f06c266e04438b5272bdfb99410421d52a65d7a37f6f42aabc3cb1faf0142644", unzip_into: None } },
+                ],
+                steps: 6,
+                cfg: 1.0,
+                flow_shift: 0.0,
+                schedule: Schedule::QwenShifted(&[1.0, 0.9375, 0.875, 0.75, 0.5, 0.25]),
+            },
         ],
         sizes: &[(1024, 1024), (1344, 768), (768, 1344), (1152, 896), (896, 1152), (1536, 640), (640, 1536)],
-        steps: 8,
-        cfg: 1.0,
-        sigmas: &[1.0, 0.978453, 0.95418, 0.926626, 0.89508, 0.845148, 0.704534, 0.414568, 0.0],
         rng_cpu: false,
         seconds: &[],
         fps: 0,
@@ -149,7 +219,7 @@ const MODELS: &[LocalModel] = &[
     LocalModel {
         id: "minimax-h3",
         name: "MiniMax-H3",
-        description: "MiniMax's video model of August 2026, the strongest open one: video with its own sound, from a prompt or a first frame, at 24 fps; with its Qwen3-VL-32B text encoder. The weights' license excludes the US, EU, UK and South Korea.",
+        description: "MiniMax's video model of August 2026, the strongest open one: video with its own sound, from a prompt or a first frame, at 24 fps; with its Qwen3-VL-32B text encoder. Accelerators: LightX2V Turbo in 8 and 4 steps. The weights' license excludes the US, EU, UK and South Korea.",
         kind: Kind::Video,
         files: &[
             ModelFile { slot: Slot::Diffusion, download: Download { url: "https://huggingface.co/unsloth/MiniMax-H3-GGUF/resolve/d629413c2e5b51b38c453668b75ca3b06ca92703/minimax_h3_fl2va_pruned-Q4_K.gguf", dest: "models/minimax-h3/minimax_h3_fl2va_pruned-Q4_K.gguf", size: 11_420_663_904, sha256: "dd948e08ad0ba3c71bd42f368e283dd82e790f5122a63b276e22a3e0283d0c10", unzip_into: None } },
@@ -157,10 +227,28 @@ const MODELS: &[LocalModel] = &[
             ModelFile { slot: Slot::Vae, download: Download { url: "https://huggingface.co/unsloth/MiniMax-H3-GGUF/resolve/d629413c2e5b51b38c453668b75ca3b06ca92703/vae/minimax_h3_video_vae_fp16.safetensors", dest: "models/minimax-h3/minimax_h3_video_vae_fp16.safetensors", size: 5_207_808_496, sha256: "7c1f131492e7eddacaac9069a61b81bdd39de5cc96561e677c5eab1cdce5e522", unzip_into: None } },
             ModelFile { slot: Slot::AudioVae, download: Download { url: "https://huggingface.co/unsloth/MiniMax-H3-GGUF/resolve/d629413c2e5b51b38c453668b75ca3b06ca92703/vae/minimax_h3_audio_vae_fp32.safetensors", dest: "models/minimax-h3/minimax_h3_audio_vae_fp32.safetensors", size: 605_254_808, sha256: "8e505d95dd1561d47abd43d4238fd40d9bb1ae9e147ed0a4cba778d76ae4db48", unzip_into: None } },
         ],
+        presets: &[
+            Preset {
+                id: "turbo-8",
+                name: "LightX2V Turbo 768p",
+                files: &[ModelFile { slot: Slot::Lora, download: Download { url: "https://huggingface.co/lightx2v/Minimax-h3-Turbo/resolve/3ec17a324ced54151364f24f8b5fb6bf7e26414f/minimax_h3_fl2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors", dest: "models/minimax-h3/loras/minimax_h3_fl2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors", size: 1_956_193_000, sha256: "08cfe946033af7d27719b964b6e0a0e50c32138daabbd6ce4137e23df6bf9980", unzip_into: None } }],
+                steps: 8,
+                cfg: 1.0,
+                flow_shift: 6.0,
+                schedule: Schedule::Engine,
+            },
+            Preset {
+                id: "turbo-4",
+                name: "LightX2V Turbo 768p v1.2",
+                files: &[ModelFile { slot: Slot::Lora, download: Download { url: "https://huggingface.co/lightx2v/Minimax-h3-Turbo/resolve/3ec17a324ced54151364f24f8b5fb6bf7e26414f/minimax_h3_fl2v_turbo_4step_v1.2_768p_comfyui_bf16.safetensors", dest: "models/minimax-h3/loras/minimax_h3_fl2v_turbo_4step_v1.2_768p_comfyui_bf16.safetensors", size: 1_956_193_000, sha256: "c8168ebc17bbacc4296103dda2fec1ba85b24392fa08cf2bfbcef0cff0dc3cc8", unzip_into: None } }],
+                steps: 4,
+                cfg: 1.0,
+                flow_shift: 6.0,
+                schedule: Schedule::Engine,
+            },
+            Preset { id: "full", name: "", files: &[], steps: 0, cfg: 1.0, flow_shift: 0.0, schedule: Schedule::Engine },
+        ],
         sizes: &[(864, 480), (480, 864), (1280, 704), (704, 1280), (640, 640)],
-        steps: 0,
-        cfg: 1.0,
-        sigmas: &[],
         rng_cpu: true,
         seconds: &[2, 3, 5],
         fps: 24,
@@ -178,10 +266,8 @@ const MODELS: &[LocalModel] = &[
             ModelFile { slot: Slot::Vae, download: Download { url: "https://huggingface.co/comfyicu/LTX-2.5/resolve/1026e00f808dbd9601911479b22d65b760737dc8/vae/ltx-2.5-video-vae-conv-bf16.safetensors", dest: "models/ltx-2.5/ltx-2.5-video-vae-conv-bf16.safetensors", size: 1_452_269_922, sha256: "685b06ee3d9b2039647698fc4ea33175112462fc374e2777312c907897dfce8d", unzip_into: None } },
             ModelFile { slot: Slot::AudioVae, download: Download { url: "https://huggingface.co/comfyicu/LTX-2.5/resolve/1026e00f808dbd9601911479b22d65b760737dc8/vae/ltx-2.5-audio-vae-bf16.safetensors", dest: "models/ltx-2.5/ltx-2.5-audio-vae-bf16.safetensors", size: 364_866_540, sha256: "c52733d37f6a7fb7949c3dc0fb468c6cb2169e4d836983a73babb9f0d54837a5", unzip_into: None } },
         ],
+        presets: &[Preset { id: "distilled", name: "LTX-2.5 Distilled", files: &[], steps: 8, cfg: 1.0, flow_shift: 0.0, schedule: Schedule::Engine }],
         sizes: &[(1280, 704), (704, 1280), (832, 480), (480, 832)],
-        steps: 8,
-        cfg: 1.0,
-        sigmas: &[],
         rng_cpu: false,
         seconds: &[2, 3, 5],
         fps: 24,
@@ -194,12 +280,27 @@ fn model(id: &str) -> Option<&'static LocalModel> {
     MODELS.iter().find(|model| model.id == id)
 }
 
+/// The model's own files and its presets', each once.
+fn all_files(model: &'static LocalModel) -> Vec<&'static ModelFile> {
+    let mut files: Vec<&'static ModelFile> = Vec::new();
+    for file in model.files.iter().chain(model.presets.iter().flat_map(|preset| preset.files.iter())) {
+        if !files.iter().any(|known| known.download.dest == file.download.dest) {
+            files.push(file);
+        }
+    }
+    files
+}
+
+fn preset(model: &'static LocalModel, id: Option<&str>) -> &'static Preset {
+    id.and_then(|id| model.presets.iter().find(|preset| preset.id == id)).unwrap_or(&model.presets[0])
+}
+
 fn file_there(data: &Path, download: &Download) -> bool {
     std::fs::metadata(data.join(download.dest)).is_ok_and(|meta| meta.is_file() && meta.len() == download.size)
 }
 
-fn model_installed(data: &Path, model: &LocalModel) -> bool {
-    model.files.iter().all(|file| file_there(data, &file.download))
+fn model_installed(data: &Path, model: &'static LocalModel) -> bool {
+    all_files(model).iter().all(|file| file_there(data, &file.download))
 }
 
 fn build(device: Device) -> Option<&'static Build> {
@@ -244,7 +345,7 @@ pub fn entry(id: &str) -> Option<ModelEntry> {
     model(id).map(entry_of)
 }
 
-fn entry_of(model: &LocalModel) -> ModelEntry {
+fn entry_of(model: &'static LocalModel) -> ModelEntry {
     ModelEntry {
         provider: Provider::Local,
         id: model.id.into(),
@@ -259,7 +360,7 @@ fn entry_of(model: &LocalModel) -> ModelEntry {
         price: Some(t!("local-price")),
         rates: Vec::new(),
         thumbnail: None,
-        source: json!({ "download_bytes": model.files.iter().map(|file| file.download.size).sum::<u64>() }),
+        source: json!({ "download_bytes": all_files(model).iter().map(|file| file.download.size).sum::<u64>() }),
     }
 }
 
@@ -292,11 +393,21 @@ pub fn form(id: &str) -> Result<ModelForm, String> {
         });
         fields.push(Field { key: "first_frame".into(), label: t!("local-field-first-frame"), description: None, kind: FieldKind::Media { media: MediaKind::Image, min: 0, max: 1, list: false }, required: false, default: None, advanced: false, role: Some(Role::FirstFrame) });
     }
-    fields.push(Field { key: "negative_prompt".into(), label: t!("local-field-negative"), description: None, kind: FieldKind::Textarea { max_length: None }, required: false, default: None, advanced: true, role: Some(Role::NegativePrompt) });
-    if model.steps > 0 {
-        fields.push(Field { key: "steps".into(), label: t!("local-field-steps"), description: None, kind: FieldKind::Integer { min: Some(1.0), max: Some(80.0) }, required: false, default: Some(json!(model.steps)), advanced: true, role: None });
+    if model.presets.len() > 1 {
+        fields.push(Field {
+            key: "preset".into(),
+            label: t!("local-field-preset"),
+            description: Some(t!("local-field-preset-hint")),
+            kind: FieldKind::Select { options: model.presets.iter().map(|preset| Choice { value: json!(preset.id), label: preset_label(preset) }).collect() },
+            required: false,
+            default: Some(json!(model.presets[0].id)),
+            advanced: false,
+            role: None,
+        });
     }
-    fields.push(Field { key: "cfg".into(), label: t!("local-field-cfg"), description: None, kind: FieldKind::Number { min: Some(1.0), max: Some(15.0) }, required: false, default: Some(json!(model.cfg)), advanced: true, role: None });
+    fields.push(Field { key: "negative_prompt".into(), label: t!("local-field-negative"), description: None, kind: FieldKind::Textarea { max_length: None }, required: false, default: None, advanced: true, role: Some(Role::NegativePrompt) });
+    fields.push(Field { key: "steps".into(), label: t!("local-field-steps"), description: Some(t!("local-field-steps-hint")), kind: FieldKind::Integer { min: Some(1.0), max: Some(80.0) }, required: false, default: None, advanced: true, role: None });
+    fields.push(Field { key: "cfg".into(), label: t!("local-field-cfg"), description: Some(t!("local-field-cfg-hint")), kind: FieldKind::Number { min: Some(1.0), max: Some(15.0) }, required: false, default: None, advanced: true, role: None });
     fields.push(Field { key: "seed".into(), label: t!("local-field-seed"), description: None, kind: FieldKind::Integer { min: Some(-1.0), max: Some(2_147_483_647.0) }, required: false, default: Some(json!(-1)), advanced: true, role: Some(Role::Seed) });
     Ok(ModelForm { provider: Provider::Local, id: model.id.into(), fields, price: PriceRule::default(), delivery: "sync".into(), source: Value::Null })
 }
@@ -340,7 +451,7 @@ fn missing_for(data: &Path, what: &str) -> Result<Vec<&'static Download>, String
         return Ok(files);
     }
     let model = model(what).ok_or_else(|| t!("local-unknown", what = what.to_string()))?;
-    files.extend(model.files.iter().map(|file| &file.download).filter(|download| !file_there(data, download)));
+    files.extend(all_files(model).into_iter().map(|file| &file.download).filter(|download| !file_there(data, download)));
     if chosen_device(data).is_err() {
         let device = Device::parse(&crate::settings::get().local_device).unwrap_or_else(recommended_device);
         let build = build(device).ok_or_else(|| t!("local-unsupported"))?;
@@ -489,7 +600,7 @@ pub fn remove(data: &Path, id: &str) -> Result<(), String> {
         return Err(t!("local-install-busy"));
     }
     unload_if(id);
-    for file in model.files {
+    for file in all_files(model) {
         let path = data.join(file.download.dest);
         for each in [path.clone(), PathBuf::from(format!("{}.part", path.display()))] {
             if each.is_file() {
@@ -524,8 +635,9 @@ pub fn status(data: &Path) -> Value {
             "name": model.name,
             "task": if model.kind == Kind::Image { "image" } else { "video" },
             "installed": model_installed(data, model),
-            "download_bytes": model.files.iter().filter(|file| !file_there(data, &file.download)).map(|file| file.download.size).sum::<u64>(),
-            "size_bytes": model.files.iter().map(|file| file.download.size).sum::<u64>(),
+            "download_bytes": all_files(model).iter().filter(|file| !file_there(data, &file.download)).map(|file| file.download.size).sum::<u64>(),
+            "size_bytes": all_files(model).iter().map(|file| file.download.size).sum::<u64>(),
+            "presets": model.presets.iter().map(|preset| json!({ "id": preset.id, "label": preset_label(preset) })).collect::<Vec<_>>(),
         })).collect::<Vec<_>>(),
         "loaded": loaded,
         "install": install,
@@ -554,6 +666,8 @@ fn ffmpeg(data: &Path) -> PathBuf {
 struct Loaded {
     model: String,
     device: Device,
+    /// The diffusion weights read, which a preset can swap for another checkpoint of the model.
+    weights: &'static str,
     context: Context<'static>,
 }
 
@@ -595,18 +709,32 @@ pub fn cancel() {
     }
 }
 
-fn config(data: &Path, model: &LocalModel, device: Device) -> ModelConfig {
+fn config(data: &Path, model: &LocalModel, preset: &Preset, device: Device) -> ModelConfig {
     let mut config = ModelConfig { offload_to_cpu: device != Device::Cpu, flash_attn: device != Device::Cpu, n_threads: -1, rng_cpu: model.rng_cpu, ..ModelConfig::default() };
-    for file in model.files {
+    for file in model.files.iter().chain(preset.files.iter().filter(|file| file.slot == Slot::Diffusion)) {
         let path = Some(data.join(file.download.dest));
         match file.slot {
             Slot::Diffusion => config.diffusion_model = path,
             Slot::Llm => config.llm = path,
             Slot::Vae => config.vae = path,
             Slot::AudioVae => config.audio_vae = path,
+            Slot::Lora => {}
         }
     }
     config
+}
+
+/// The diffusion weights a preset samples: its own checkpoint, or the model's.
+fn weights(model: &'static LocalModel, preset: &'static Preset) -> &'static str {
+    preset.files.iter().chain(model.files.iter()).find(|file| file.slot == Slot::Diffusion).map(|file| file.download.dest).unwrap_or_default()
+}
+
+fn preset_label(preset: &Preset) -> String {
+    if preset.name.is_empty() {
+        t!("local-preset-full")
+    } else {
+        t!("local-preset", name = preset.name, steps = preset.steps)
+    }
 }
 
 fn number(values: &Map<String, Value>, key: &str) -> Option<f64> {
@@ -635,18 +763,23 @@ pub fn run(data: &Path, id: &str, values: &Map<String, Value>, out_dir: &Path, p
         .filter(|size| model.sizes.contains(size))
         .or_else(|| model.sizes.first().copied())
         .ok_or_else(|| t!("local-bad-size"))?;
-    let steps = number(values, "steps").map(|n| n.round() as i32).unwrap_or(model.steps).clamp(0, 80);
-    let cfg = number(values, "cfg").map(|n| n as f32).unwrap_or(model.cfg);
+    let preset = preset(model, values.get("preset").and_then(Value::as_str));
+    let steps = number(values, "steps").map(|n| n.round() as i32).unwrap_or(preset.steps).clamp(0, 80);
+    let cfg = number(values, "cfg").map(|n| n as f32).unwrap_or(preset.cfg);
+    // a preset's schedule is the one its step count was distilled to; another count takes the engine's
+    let sigmas = if steps == preset.steps { preset.schedule.sigmas(width, height) } else { Vec::new() };
+    let loras: Vec<Lora> = preset.files.iter().filter(|file| file.slot == Slot::Lora).map(|file| Lora { path: data.join(file.download.dest), multiplier: 1.0 }).collect();
+    let weights = weights(model, preset);
     let seed = number(values, "seed").map(|n| n as i64).filter(|seed| *seed >= 0).unwrap_or_else(|| (std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_nanos()).unwrap_or(0) % 2_147_483_647) as i64);
 
     let mut loaded = LOADED.lock().unwrap_or_else(|p| p.into_inner());
-    if !loaded.as_ref().is_some_and(|loaded| loaded.model == id && loaded.device == device) {
+    if !loaded.as_ref().is_some_and(|loaded| loaded.model == id && loaded.device == device && loaded.weights == weights) {
         // the old model's memory is freed before the new one is read
         *loaded = None;
         progress(0.0);
         let engine = engine(data, device)?;
-        let context = engine.new_context(&config(data, model, device)).map_err(|e| e.to_string())?;
-        *loaded = Some(Loaded { model: id.into(), device, context });
+        let context = engine.new_context(&config(data, model, preset, device)).map_err(|e| e.to_string())?;
+        *loaded = Some(Loaded { model: id.into(), device, weights, context });
     }
     let Some(current) = loaded.as_mut() else { return Err(t!("local-not-loaded")) };
     *RUNNING.lock().unwrap_or_else(|p| p.into_inner()) = Some(current.context.canceller());
@@ -666,7 +799,7 @@ pub fn run(data: &Path, id: &str, values: &Map<String, Value>, out_dir: &Path, p
         let made = match model.kind {
             Kind::Image => current
                 .context
-                .image(&ImageParams { prompt: prompt.clone(), negative_prompt: negative.clone(), width: width as i32, height: height as i32, steps, cfg_scale: cfg, seed, sigmas: model.sigmas.to_vec(), ref_images: Vec::new() }, Some(sink))
+                .image(&ImageParams { prompt: prompt.clone(), negative_prompt: negative.clone(), width: width as i32, height: height as i32, steps, cfg_scale: cfg, seed, sigmas, ref_images: Vec::new(), loras: loras.clone() }, Some(sink))
                 .map(Made::Image),
             Kind::Video => {
                 let seconds = number(values, "duration").map(|n| n.round() as u32).filter(|s| model.seconds.contains(s)).unwrap_or(model.seconds[0]);
@@ -678,7 +811,7 @@ pub fn run(data: &Path, id: &str, values: &Map<String, Value>, out_dir: &Path, p
                 };
                 current
                     .context
-                    .video(&VideoParams { prompt: prompt.clone(), negative_prompt: negative.clone(), width: width as i32, height: height as i32, frames, fps: model.fps, steps, cfg_scale: cfg, flow_shift: 0.0, seed, first_frame, last_frame: None }, Some(sink))
+                    .video(&VideoParams { prompt: prompt.clone(), negative_prompt: negative.clone(), width: width as i32, height: height as i32, frames, fps: model.fps, steps, cfg_scale: cfg, flow_shift: preset.flow_shift, seed, first_frame, last_frame: None, loras: loras.clone() }, Some(sink))
                     .map(Made::Video)
             }
         };
@@ -773,7 +906,7 @@ mod tests {
 
     #[test]
     fn every_file_is_pinned_by_revision_size_and_hash() {
-        let downloads = MODELS.iter().flat_map(|model| model.files.iter().map(|file| &file.download)).chain(BUILDS.iter().flat_map(|build| build.files.iter()));
+        let downloads = MODELS.iter().flat_map(|model| all_files(model).into_iter().map(|file| &file.download)).chain(BUILDS.iter().flat_map(|build| build.files.iter()));
         for download in downloads {
             assert!(download.size > 0, "{}", download.dest);
             assert_eq!(download.sha256.len(), 64, "{}", download.dest);
@@ -792,7 +925,36 @@ mod tests {
             assert!(form.fields.iter().any(|field| field.role == Some(Role::Prompt)));
             assert!(form.fields.iter().any(|field| matches!(&field.kind, FieldKind::Size { options, .. } if options.len() == model.sizes.len())));
             assert_eq!(form.fields.iter().any(|field| field.role == Some(Role::Duration)), model.kind == Kind::Video);
+            assert_eq!(form.fields.iter().any(|field| field.key == "preset"), model.presets.len() > 1);
         }
+    }
+
+    #[test]
+    fn every_preset_samples_one_set_of_diffusion_weights() {
+        for model in MODELS {
+            assert!(!model.presets.is_empty(), "{}", model.id);
+            for preset in model.presets {
+                let own = model.files.iter().filter(|file| file.slot == Slot::Diffusion).count();
+                let swapped = preset.files.iter().filter(|file| file.slot == Slot::Diffusion).count();
+                assert!(own + swapped >= 1 && swapped <= 1, "{} {}", model.id, preset.id);
+                assert!(preset.files.iter().all(|file| matches!(file.slot, Slot::Diffusion | Slot::Lora)), "{} {}", model.id, preset.id);
+                if let Schedule::Fixed(sigmas) | Schedule::QwenShifted(sigmas) = &preset.schedule {
+                    let evaluations = if matches!(preset.schedule, Schedule::Fixed(_)) { sigmas.len() - 1 } else { sigmas.len() };
+                    assert_eq!(evaluations as i32, preset.steps, "{} {}", model.id, preset.id);
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn qwen_shift_follows_the_token_count_without_a_terminal_stretch() {
+        let sigmas = Schedule::QwenShifted(&[1.0, 0.75, 0.5, 0.25]).sigmas(1024, 1024);
+        let mu = (4096.0 * 0.4 / 7936.0 + 0.5 - 0.4 / 7936.0 * 256.0_f64).exp();
+        let expected: Vec<f32> = [1.0, 0.75, 0.5, 0.25].iter().map(|t: &f64| (mu / (mu + 1.0 / t - 1.0)) as f32).chain([0.0]).collect();
+        assert_eq!(sigmas.len(), expected.len());
+        assert!(sigmas.iter().zip(&expected).all(|(got, want)| (got - want).abs() < 1e-6), "{sigmas:?} {expected:?}");
+        assert!((sigmas[1] - 0.8572).abs() < 1e-3, "{sigmas:?}");
+        assert!(Schedule::QwenShifted(&[1.0, 0.5]).sigmas(1024, 1024)[1] < Schedule::QwenShifted(&[1.0, 0.5]).sigmas(1536, 1536)[1]);
     }
 }
 

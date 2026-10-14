@@ -158,6 +158,15 @@ local-field-negative = Negative prompt
 local-field-steps = Steps
 local-field-cfg = Guidance (CFG)
 local-field-seed = Seed
+local-field-preset = Accelerator
+local-field-preset-hint = The model's accelerator from its makers or a known lab: fewer steps run faster; its files come with the model
+local-field-steps-hint = Empty: the steps the chosen accelerator was trained for
+local-field-cfg-hint = Empty: the chosen accelerator's value
+local-preset = { $name }, { $steps ->
+    [one] { $steps } step
+   *[other] { $steps } steps
+}
+local-preset-full = No accelerator, full quality
 local-engine-missing = the generation engine for { $device } is not installed: install it in Settings, Local models
 local-unsupported = local generation is not available on this system yet
 local-unknown = no local model or engine { $what }
