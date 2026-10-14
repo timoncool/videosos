@@ -1,6 +1,6 @@
 {
   "agent": {
-    "action": "Agent: {{action}}",
+    "name": "智能体",
     "commands": {
       "click": "clicks",
       "type": "types",

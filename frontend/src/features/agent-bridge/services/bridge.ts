@@ -409,8 +409,8 @@ const builtIn: Record<string, Handler> = {
   },
 };
 
-/** Commands that only look: the user is not shown them as the agent's actions. */
-const LOOKING = new Set(["read_page", "console", "editor_state", "timeline_get", "media_list", "screenshot"]);
+/** Commands the user is not shown as the agent's actions: they only look, or show their own message. */
+const LOOKING = new Set(["read_page", "console", "editor_state", "timeline_get", "media_list", "screenshot", "notify"]);
 
 // ---------------------------------------------------------------- the connection
 

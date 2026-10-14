@@ -35,12 +35,13 @@ function StatusBar() {
 /**
  * The bar over every screen, as Dub Studio has it: the name and version, the editor's modes (portalled into
  * `editor-modes-slot`), the status in the middle, the docked monitors (`dock-slot`), the editor's own buttons
- * (`editor-actions-slot`), then New, What's new, Help, Settings and the language.
+ * (`editor-actions-slot`), then New, What's new, Help, Settings and the language; an agent's action is
+ * captioned just under it (`agent-caption-slot`).
  */
 export function TopBar({ go }: { go: (place: TopBarPlace) => void }) {
   const { t } = useTranslation();
   return (
-    <header className="flex h-14 shrink-0 items-center gap-2 border-b border-[var(--color-border)] bg-[var(--color-surface)] px-4 min-[1440px]:px-5">
+    <header className="relative flex h-14 shrink-0 items-center gap-2 border-b border-[var(--color-border)] bg-[var(--color-surface)] px-4 min-[1440px]:px-5">
       <div className="flex shrink-0 items-center gap-3">
         <button type="button" onClick={() => go("/projects")} title={t("topbar.projects")} className="flex items-center gap-2 font-bold tracking-tight">
           <img src="/videosos-icon.svg" alt="" width={20} height={20} className="rounded-[5px] shadow-[0_0_10px_rgba(45,212,191,0.25)]" />
@@ -65,6 +66,7 @@ export function TopBar({ go }: { go: (place: TopBarPlace) => void }) {
           className="rounded-md p-1.5 text-[var(--color-muted)] transition-colors hover:text-[var(--color-text)]"><Settings size={18} /></button>
         <LanguageSwitcher size="sm" align="end" side="bottom" />
       </div>
+      <div id="agent-caption-slot" className="pointer-events-none absolute left-1/2 top-full z-[80] mt-2 -translate-x-1/2" />
     </header>
   );
 }

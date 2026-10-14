@@ -312,6 +312,13 @@ fn tools() -> &'static [Tool] {
                 call: |args| window("console", args, 15),
             },
             Tool {
+                name: "ui_notify",
+                description: "Shows the person a short message in the window for a few seconds - what you did, what you need from them - and keeps it in the window's journal. tone: info (default), success or error.",
+                looks: false,
+                schema: || object(json!({ "text": { "type": "string" }, "tone": { "type": "string", "enum": ["info", "success", "error"] } }), &["text"]),
+                call: |args| window("notify", args, 15),
+            },
+            Tool {
                 name: "project_open",
                 description: "Opens a project in the editor of the window (projects_list names them), or the projects list with no id.",
                 looks: false,
@@ -547,7 +554,7 @@ const JOURNAL: &[(&str, &str, &str)] = &[
 
 /// Tools that change something yet leave no line: the window's own controls and the service's upkeep.
 #[cfg(test)]
-const UNJOURNALED: &[&str] = &["catalog_refresh", "ui_click", "ui_type", "ui_press_key", "ui_scroll", "project_open", "playhead_seek", "playback", "editor_tab"];
+const UNJOURNALED: &[&str] = &["catalog_refresh", "ui_click", "ui_type", "ui_press_key", "ui_scroll", "ui_notify", "project_open", "playhead_seek", "playback", "editor_tab"];
 
 fn journal_facts(name: &str) -> Option<(&'static str, &'static str)> {
     JOURNAL.iter().find(|(tool, _, _)| *tool == name).map(|(_, verb, kind)| (*verb, *kind))

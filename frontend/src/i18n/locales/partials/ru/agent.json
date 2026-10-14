@@ -1,6 +1,6 @@
 {
   "agent": {
-    "action": "Агент: {{action}}",
+    "name": "Агент",
     "commands": {
       "click": "нажимает",
       "type": "печатает",

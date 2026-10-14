@@ -56,6 +56,7 @@ cannot cancel, the program only stops waiting.
 - `timeline_undo` / `timeline_redo`, `playhead_seek`, `playback`, `editor_tab`.
 - `media_import` with `path` (a file on this computer) or `url`.
 - `ui_screenshot` to see the result; `ui_read_page`, `ui_click`, `ui_type` for any control of the window.
+- `ui_notify` to tell the person what you did or what you need from them; it stays in the journal.
 
 ## Recipes
 

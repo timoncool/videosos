@@ -1,6 +1,6 @@
 {
   "agent": {
-    "action": "Agent: {{action}}",
+    "name": "에이전트",
     "commands": {
       "click": "clicks",
       "type": "types",
