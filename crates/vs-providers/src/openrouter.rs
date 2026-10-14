@@ -124,7 +124,7 @@ pub async fn catalog(http: &Http) -> Result<Vec<ModelEntry>, ProviderError> {
             price: None,
             rates,
             thumbnail: None,
-            source: json!({ "kind": kind, "voices": model["supported_voices"], "pricing": model["pricing"], "parameters": model["supported_parameters"] }),
+            source: json!({ "kind": kind, "voices": model["supported_voices"], "pricing": model["pricing"], "parameters": model["supported_parameters"], "inputs": model.pointer("/architecture/input_modalities") }),
         });
     }
     Ok(entries)
@@ -175,7 +175,7 @@ fn prompt(key: &str, label: &str, required: bool) -> Field {
 }
 
 fn media(key: &str, label: &str, kind: MediaKind, min: u32, max: u32, role: Role) -> Field {
-    Field { key: key.into(), label: label.into(), description: None, kind: FieldKind::Media { media: kind, min, max, list: key == "input_references" }, required: min > 0, default: None, advanced: false, role: Some(role) }
+    Field { key: key.into(), label: label.into(), description: None, kind: FieldKind::Media { media: kind, min, max, list: matches!(key, "input_references" | "input_images") }, required: min > 0, default: None, advanced: false, role: Some(role) }
 }
 
 pub fn form(entry: &ModelEntry) -> Result<ModelForm, ProviderError> {
@@ -256,6 +256,9 @@ pub fn form(entry: &ModelEntry) -> Result<ModelForm, ProviderError> {
         }
         "text" => {
             fields.push(prompt("prompt", "Request", true));
+            if source["inputs"].as_array().is_some_and(|inputs| inputs.iter().any(|input| input == "image")) {
+                fields.push(media("input_images", "Images", MediaKind::Image, 0, 4, Role::Reference));
+            }
             fields.push(Field { key: "system".into(), label: "Instructions".into(), description: Some("How the model should answer".into()), kind: FieldKind::Textarea { max_length: None }, required: false, default: None, advanced: true, role: None });
             fields.push(Field { key: "temperature".into(), label: "Temperature".into(), description: None, kind: FieldKind::Number { min: Some(0.0), max: Some(2.0) }, required: false, default: None, advanced: true, role: None });
             if let (Some(input), Some(output)) = (price_number(&source["pricing"]["prompt"]), price_number(&source["pricing"]["completion"])) {
@@ -408,7 +411,14 @@ pub async fn submit(http: &Http, key: &str, form: &ModelForm, values: &Map<Strin
                 messages.push(json!({ "role": "system", "content": system }));
             }
             let request = body.remove("prompt").and_then(|value| value.as_str().map(str::to_string)).unwrap_or_default();
-            messages.push(json!({ "role": "user", "content": request }));
+            let images: Vec<Value> = body.remove("input_images").and_then(|value| value.as_array().cloned()).unwrap_or_default().iter().filter_map(Value::as_str).map(image_part).collect();
+            if images.is_empty() {
+                messages.push(json!({ "role": "user", "content": request }));
+            } else {
+                let mut content = vec![json!({ "type": "text", "text": request })];
+                content.extend(images);
+                messages.push(json!({ "role": "user", "content": content }));
+            }
             body.insert("messages".into(), Value::Array(messages));
             let answer = post(http, key, "/chat/completions", &body).await?;
             let text = answer.pointer("/choices/0/message/content").and_then(Value::as_str).ok_or_else(|| ProviderError::Refused(format!("OpenRouter answered without text: {}", answer.to_string().chars().take(300).collect::<String>())))?;
@@ -452,6 +462,27 @@ pub async fn balance(http: &Http, key: &str) -> Result<Option<f64>, ProviderErro
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn a_text_model_that_sees_pictures_takes_them() {
+        let entry = |inputs: Value| ModelEntry {
+            provider: Provider::Openrouter,
+            id: "x/vision".into(),
+            name: "Vision".into(),
+            description: String::new(),
+            tasks: vec![Task::Text],
+            created: None,
+            status: "live".into(),
+            price: None,
+            rates: Vec::new(),
+            thumbnail: None,
+            source: json!({ "kind": "text", "pricing": {}, "parameters": [], "inputs": inputs }),
+        };
+        let seeing = form(&entry(json!(["text", "image"]))).unwrap();
+        assert!(seeing.fields.iter().any(|field| field.key == "input_images"));
+        let blind = form(&entry(json!(["text"]))).unwrap();
+        assert!(!blind.fields.iter().any(|field| field.key == "input_images"));
+    }
 
     #[test]
     fn video_skus_become_rates() {
