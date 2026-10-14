@@ -7,7 +7,7 @@
  * panel inside a workspace, and their per-workspace tweaks are persisted
  * by the editor store (`editor:workspaceLayout:<id>` in localStorage).
  */
-export type EditorWorkspaceId = 'edit' | 'color' | 'motion'
+export type EditorWorkspaceId = 'edit' | 'color' | 'motion' | 'canvas'
 
 export type EditorSidebarTab =
   | 'generate'
@@ -52,6 +52,12 @@ const EDITOR_WORKSPACE_PRESETS: Record<EditorWorkspaceId, EditorWorkspaceLayout>
     activeTab: 'media',
     propertiesFullColumn: false,
   },
+  canvas: {
+    colorScopesOpen: false,
+    clipInspectorTab: 'video',
+    activeTab: 'media',
+    propertiesFullColumn: false,
+  },
 }
 
 /**
@@ -64,12 +70,14 @@ export const EDITOR_WORKSPACE_TIMELINE_SIZE: Record<EditorWorkspaceId, number | 
   color: 18,
   // Motion reuses the standard split and swaps only the timeline surface.
   motion: null,
+  canvas: null,
 }
 
 const DEFAULT_EDITOR_WORKSPACE: EditorWorkspaceId = 'edit'
 
 export function normalizeEditorWorkspaceId(value: unknown): EditorWorkspaceId {
   if (value === 'color') return 'color'
+  if (value === 'canvas') return 'canvas'
   // Animate and Compose were separate historical surfaces. Both now migrate
   // into the single Motion workspace so persisted sessions cannot reopen the
   // disconnected legacy editor.

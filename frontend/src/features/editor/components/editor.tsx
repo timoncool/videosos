@@ -81,6 +81,7 @@ const LazyColorTimelineNavigator = lazy(() =>
     default: ColorTimelineNavigator,
   })),
 )
+const LazyNodeCanvas = lazy(() => import('../deps/generate').then(({ NodeCanvas }) => ({ default: NodeCanvas })))
 const EDITOR_PROJECT_ROUTE_ID = '/editor/$projectId'
 
 function workspaceTimelineSizeStorageKey(workspace: EditorWorkspaceId): string {
@@ -710,7 +711,22 @@ export const LoadedEditor = memo(function LoadedEditor({
         )}
 
         {/* Right side: Preview/Properties + Timeline */}
-        {isColorWorkspace ? (
+        {workspace === 'canvas' ? (
+          <div className="flex min-w-0 flex-1 overflow-hidden">
+            {!mediaFullColumn && (
+              <ErrorBoundary level="feature">
+                <MediaSidebar />
+              </ErrorBoundary>
+            )}
+            <div className="min-w-0 flex-1">
+              <ErrorBoundary level="feature">
+                <Suspense fallback={null}>
+                  <LazyNodeCanvas />
+                </Suspense>
+              </ErrorBoundary>
+            </div>
+          </div>
+        ) : isColorWorkspace ? (
           <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
             <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
               <ErrorBoundary level="feature">

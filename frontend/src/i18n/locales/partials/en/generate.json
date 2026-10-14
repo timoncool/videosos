@@ -307,6 +307,26 @@
       "allClips_one": "Clip for {{count}} shot onto the timeline",
       "allClips_other": "Clips for {{count}} shots onto the timeline",
       "allClipsHint": "The clips land one after another from the playhead"
+    },
+    "canvas": {
+      "prompt": "Text",
+      "media": "Picture or video",
+      "generate": "Generation",
+      "promptHint": "What to make; it goes into the prompt of the generations it is joined to.",
+      "mediaHint": "Drop a file from the library or a result here.",
+      "remove": "Remove the node",
+      "task": "Task",
+      "run": "Run",
+      "runAgain": "Run again",
+      "waiting_one": "Waiting for {{count}} node before it",
+      "waiting_other": "Waiting for {{count}} nodes before it",
+      "noRoom_one": "{{count}} file has no slot in this model",
+      "noRoom_other": "{{count}} files have no slot in this model",
+      "empty": "Add a text, a picture and a generation, and join them: text into the prompt, files into the model's slots. Drag files from the library onto the canvas.",
+      "input": {
+        "prompt": "prompt",
+        "media": "files"
+      }
     }
   }
 }

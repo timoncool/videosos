@@ -41,7 +41,8 @@
       "label": "Рабочие пространства",
       "edit": "Монтаж",
       "color": "Цвет",
-      "animate": "Анимация"
+      "animate": "Анимация",
+      "canvas": "Холст"
     },
     "backToProjects": "Ко всем проектам",
     "backToProjectsAria": "Назад к проектам",
