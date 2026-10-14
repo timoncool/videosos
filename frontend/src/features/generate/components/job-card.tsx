@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ArrowDownToLine, Ban, CircleAlert, Copy, Forward, Loader2, RotateCcw, SquarePen, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -11,6 +12,21 @@ import { useProjectStore } from '../deps/editor'
 import { placeMediaAtPlayhead, placeTextAtPlayhead } from '../services/timeline-actions'
 import { OUTPUT_DRAG_TYPE } from './field-control'
 import { ProviderBadge } from './model-picker'
+import { ImageLightbox } from './image-lightbox'
+
+/** A result picture: dragged into a slot or the timeline, opened at full size by a click. */
+function ImagePreview({ url, name, onDragStart }: { url: string; name: string; onDragStart: (event: React.DragEvent) => void }) {
+  const { t } = useTranslation()
+  const [zoomed, setZoomed] = useState(false)
+  return (
+    <>
+      <button type="button" onClick={() => setZoomed(true)} aria-label={t('generate.zoom.open')} title={t('generate.zoom.open')} className="block w-full cursor-zoom-in">
+        <img src={url} alt="" draggable onDragStart={onDragStart} className="max-h-40 w-full rounded border border-border bg-black object-contain" />
+      </button>
+      {zoomed && <ImageLightbox src={url} alt={name} onClose={() => setZoomed(false)} />}
+    </>
+  )
+}
 
 function Preview({ job, output }: { job: Job; output: OutputFile }) {
   const url = generateApi.fileUrl(job.id, output.index)
@@ -22,15 +38,7 @@ function Preview({ job, output }: { job: Job; output: OutputFile }) {
     )
   }
   if (output.kind === 'image') {
-    return (
-      <img
-        src={url}
-        alt=""
-        draggable
-        onDragStart={drag}
-        className="max-h-40 w-full rounded border border-border bg-black object-contain"
-      />
-    )
+    return <ImagePreview url={url} name={job.model_name} onDragStart={drag} />
   }
   if (output.kind === 'video') {
     return (

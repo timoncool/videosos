@@ -140,5 +140,9 @@
       "media": "medya",
       "video": "video"
     }
+  },
+  "files": {
+    "title": "Dosyalar",
+    "showInFolder": "Klasörde göster"
   }
 }

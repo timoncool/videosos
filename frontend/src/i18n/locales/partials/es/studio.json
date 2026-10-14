@@ -140,5 +140,9 @@
       "media": "medio",
       "video": "vídeo"
     }
+  },
+  "files": {
+    "title": "Archivos",
+    "showInFolder": "Mostrar en la carpeta"
   }
 }

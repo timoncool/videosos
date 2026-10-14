@@ -140,5 +140,9 @@
       "media": "média",
       "video": "vidéo"
     }
+  },
+  "files": {
+    "title": "Fichiers",
+    "showInFolder": "Afficher dans le dossier"
   }
 }

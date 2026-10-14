@@ -130,6 +130,14 @@
       "allTasks": "All tasks",
       "allStates": "Any state",
       "nothing": "No generation matches."
+    },
+    "zoom": {
+      "title": "Image",
+      "open": "Ouvrir en taille réelle",
+      "in": "Agrandir",
+      "out": "Réduire",
+      "fit": "Ajuster à la fenêtre",
+      "close": "Fermer"
     }
   }
 }

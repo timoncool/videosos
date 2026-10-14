@@ -140,5 +140,9 @@
       "media": "미디어",
       "video": "동영상"
     }
+  },
+  "files": {
+    "title": "파일",
+    "showInFolder": "폴더에서 보기"
   }
 }

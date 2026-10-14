@@ -130,6 +130,14 @@
       "allTasks": "All tasks",
       "allStates": "Any state",
       "nothing": "No generation matches."
+    },
+    "zoom": {
+      "title": "이미지",
+      "open": "원래 크기로 열기",
+      "in": "확대",
+      "out": "축소",
+      "fit": "창에 맞추기",
+      "close": "닫기"
     }
   }
 }

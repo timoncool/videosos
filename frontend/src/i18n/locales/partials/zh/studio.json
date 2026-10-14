@@ -140,5 +140,9 @@
       "media": "媒体",
       "video": "视频"
     }
+  },
+  "files": {
+    "title": "文件",
+    "showInFolder": "在文件夹中显示"
   }
 }

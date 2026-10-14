@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useSonner } from 'sonner'
 import { HubBars } from './hub-bars'
 import { HubPopup } from './hub-popup'
+import FilesPanel from './files-panel'
 import ServerOffline from './server-offline'
 import { hubChanged, showsNow, useHubState, type HubButton } from '../services/studio-hub'
 import { openNews, openSettings } from '../services/settings-nav'
@@ -85,6 +86,7 @@ export function StudioHost({ children }: { children: ReactNode }) {
     <div className="flex h-dvh min-h-0 flex-col">
       {hub && ready && <HubBars items={hub.items} />}
       <div className="relative min-h-0 flex-1 overflow-auto">{children}</div>
+      <FilesPanel />
       {popup && <HubPopup item={popup} onClose={() => close(popup.id)} onOpen={openTarget} />}
       {offline && (
         <div className="fixed inset-0 z-[80] flex bg-[var(--color-bg)]">

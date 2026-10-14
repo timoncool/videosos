@@ -130,6 +130,14 @@
       "allTasks": "All tasks",
       "allStates": "Any state",
       "nothing": "No generation matches."
+    },
+    "zoom": {
+      "title": "画像",
+      "open": "原寸で開く",
+      "in": "拡大",
+      "out": "縮小",
+      "fit": "ウィンドウに合わせる",
+      "close": "閉じる"
     }
   }
 }

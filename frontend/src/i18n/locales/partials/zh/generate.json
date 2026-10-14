@@ -130,6 +130,14 @@
       "allTasks": "All tasks",
       "allStates": "Any state",
       "nothing": "No generation matches."
+    },
+    "zoom": {
+      "title": "图片",
+      "open": "以原始尺寸打开",
+      "in": "放大",
+      "out": "缩小",
+      "fit": "适应窗口",
+      "close": "关闭"
     }
   }
 }

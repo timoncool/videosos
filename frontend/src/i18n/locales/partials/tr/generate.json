@@ -130,6 +130,14 @@
       "allTasks": "All tasks",
       "allStates": "Any state",
       "nothing": "No generation matches."
+    },
+    "zoom": {
+      "title": "Görsel",
+      "open": "Tam boyutta aç",
+      "in": "Yakınlaştır",
+      "out": "Uzaklaştır",
+      "fit": "Pencereye sığdır",
+      "close": "Kapat"
     }
   }
 }

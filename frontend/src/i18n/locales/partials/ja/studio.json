@@ -140,5 +140,9 @@
       "media": "メディア",
       "video": "動画"
     }
+  },
+  "files": {
+    "title": "ファイル",
+    "showInFolder": "フォルダーで表示"
   }
 }
