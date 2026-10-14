@@ -323,7 +323,6 @@
       "parakeetAutoDetects": "Автоматически определяет {{count}} европейских языков.",
       "parakeetChooseWhisper": "Для китайского, японского, корейского и других языков выберите модель Whisper.",
       "progressAria": "Ход расшифровки",
-      "quantization": "Квантование",
       "refreshTitle": "Обновить расшифровку",
       "searchLanguages": "Поиск языков",
       "start": "Начать",

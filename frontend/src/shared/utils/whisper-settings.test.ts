@@ -34,12 +34,9 @@ describe('whisper-settings', () => {
     expect(getWhisperLanguageSelectValue('yue')).toBe(WHISPER_AUTO_LANGUAGE_VALUE)
   })
 
-  it('includes quantization guidance for memory tradeoffs', () => {
-    expect(getWhisperQuantizationOption('q8')).toMatchObject({
-      value: 'q8',
-      label: 'Q8 (Recommended)',
-    })
-    expect(getWhisperQuantizationOption('q4').description).toContain('tight memory')
+  it('runs Whisper at Q8 whatever was stored', () => {
+    expect(getWhisperQuantizationOption('q8')).toMatchObject({ value: 'q8', label: 'Q8 (Recommended)' })
+    expect(getWhisperQuantizationOption('q4').value).toBe('q8')
     expect(getWhisperQuantizationOption(undefined).value).toBe('q8')
     expect(getWhisperQuantizationOption('fp32').value).toBe('q8')
   })

@@ -1,17 +1,13 @@
 import type { MainThreadMessage, PCMChunk, TranscriptWord, WhisperWorkerMessage } from '../types'
-import { createLogger } from '@/shared/logging/logger'
 import { getChunkStartProgress, transcribingProgressEvent } from '../lib/chunk-progress'
 import { fetchOnnxModelBytes, fetchOnnxModelText } from '@/shared/utils/onnx-model-cache'
 
 // Parakeet TDT 0.6B v3 (NVIDIA, CC-BY-4.0) on-device ASR. Clean-room ORT-web pipeline
 // (nemo128 log-mel preprocessor -> FastConformer encoder -> token-and-duration greedy
-// decode -> BPE detokenize), authored from the published onnx-asr algorithm. The int8 encoder
-// runs on WebGPU where it can, else on WASM, while the tiny autoregressive joint runs on WASM/CPU — the joint
-// has hundreds of sequential steps per span and per-step GPU dispatch sync dominates, so
-// keeping it on CPU is ~7x faster overall (measured). Implements the same worker message
+// decode -> BPE detokenize), authored from the published onnx-asr algorithm. The model is Dub
+// Studio's Parakeet Ultra int8, run on multi-threaded WASM. Implements the same worker message
 // protocol as whisper.worker.ts so the Bridge can drive either engine.
 
-const logger = createLogger('ParakeetWorker')
 
 const ORT_WASM_PATH =
   'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.26.0-dev.20260410-5e55544225/dist/'
@@ -35,10 +31,7 @@ const STATE_SHAPE = [2, 1, 640] as const // [pred_rnn_layers, batch, pred_hidden
 const RECENT_WORD_RETENTION_SECONDS = 8
 const DUPLICATE_WORD_START_TOLERANCE_SECONDS = 0.5
 
-const ESTIMATED_BYTES: Record<'webgpu' | 'wasm', number> = {
-  webgpu: Math.round(670 * 1024 * 1024),
-  wasm: Math.round(670 * 1024 * 1024),
-}
+const ESTIMATED_BYTES = Math.round(670 * 1024 * 1024)
 
 // Approximate on-disk sizes, summing to ESTIMATED_BYTES. These only weight the aggregate
 // download bar so it advances evenly across files rather than restarting at each one; the
@@ -59,7 +52,6 @@ let preproc: OrtSession | null = null
 let encoder: OrtSession | null = null
 let decoder: OrtSession | null = null
 let vocab: { idToToken: Map<number, string>; vocabSize: number; blankIdx: number } | null = null
-let activeBackend: 'webgpu' | 'wasm' = 'wasm'
 
 let port: MessagePort | null = null
 let pipelineReady = false
@@ -129,7 +121,7 @@ function getOrt(): Promise<OrtModule> {
   if (!ortPromise) {
     ortPromise = import('onnxruntime-web').then((module) => {
       module.env.wasm.wasmPaths = ORT_WASM_PATH
-      module.env.wasm.numThreads = 1
+      module.env.wasm.numThreads = Math.min(8, Math.max(1, Math.floor((navigator.hardwareConcurrency || 2) / 2)))
       return module
     })
   }
@@ -157,8 +149,8 @@ async function loadVocab(): Promise<NonNullable<typeof vocab>> {
   return { idToToken, vocabSize: idToToken.size, blankIdx }
 }
 
-function sessionOptions(backend: 'webgpu' | 'wasm') {
-  return { executionProviders: [backend], graphOptimizationLevel: 'all' } as const
+function sessionOptions() {
+  return { executionProviders: ['wasm'], graphOptimizationLevel: 'all' } as const
 }
 
 /**
@@ -211,7 +203,7 @@ async function initPipeline(): Promise<void> {
     // Warm reuse: sessions already compiled — skip download/compile entirely.
     postMain({
       type: 'runtime',
-      info: { backend: activeBackend, estimatedBytes: ESTIMATED_BYTES[activeBackend] },
+      info: { backend: 'wasm', estimatedBytes: ESTIMATED_BYTES },
     })
     postMain({ type: 'progress', event: { stage: 'preparing', progress: 1 } })
     postMain({ type: 'ready' })
@@ -227,9 +219,6 @@ async function initPipeline(): Promise<void> {
     const ort = await getOrt()
     vocab = await loadVocab()
 
-    // The heavy encoder prefers WebGPU and falls back to WASM, the same int8 weights either way.
-    const webgpuAvailable =
-      typeof navigator !== 'undefined' && 'gpu' in navigator && navigator.gpu != null
     const encoderFile = ENCODER_INT8
 
     // Pass 1 — fetch every weight file under a single aggregate byte counter. Compiling each
@@ -249,36 +238,18 @@ async function initPipeline(): Promise<void> {
       download.track(DECODER_INT8),
     )
 
-    // Pass 2 — compile. ORT reports no progress here and the encoder takes a while on WebGPU, so
+    // Pass 2 — compile. ORT reports no progress here and the encoder takes a while, so
     // the UI renders `preparing` as an indeterminate bar rather than a stalled one.
     postMain({ type: 'progress', event: { stage: 'preparing', progress: 0 } })
 
-    // Preprocessor + autoregressive joint always run on WASM (tiny graphs, no per-step GPU sync).
-    preproc = await ort.InferenceSession.create(preprocBytes, sessionOptions('wasm'))
+    // int8 on ORT-web's WebGPU decodes to <unk> and empty text, so all three graphs run on WASM
+    preproc = await ort.InferenceSession.create(preprocBytes, sessionOptions())
+    encoder = await ort.InferenceSession.create(encoderBytes, sessionOptions())
+    decoder = await ort.InferenceSession.create(decoderBytes, sessionOptions())
 
-    let encoderBackend: 'webgpu' | 'wasm' = 'wasm'
-    if (webgpuAvailable) {
-      try {
-        encoder = await ort.InferenceSession.create(encoderBytes, sessionOptions('webgpu'))
-        encoderBackend = 'webgpu'
-      } catch (error) {
-        logger.warn(
-          `WebGPU encoder init failed, falling back to WASM int8: ${error instanceof Error ? error.message : String(error)}`,
-        )
-        encoder = null
-      }
-    }
-    if (!encoder) {
-      encoder = await ort.InferenceSession.create(encoderBytes, sessionOptions('wasm'))
-      encoderBackend = 'wasm'
-    }
-
-    decoder = await ort.InferenceSession.create(decoderBytes, sessionOptions('wasm'))
-
-    activeBackend = encoderBackend
     postMain({
       type: 'runtime',
-      info: { backend: activeBackend, estimatedBytes: ESTIMATED_BYTES[activeBackend] },
+      info: { backend: 'wasm', estimatedBytes: ESTIMATED_BYTES },
     })
 
     pipelineReady = true

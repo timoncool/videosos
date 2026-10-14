@@ -12,7 +12,6 @@
     "noTranscript": "Dieser Clip hat noch kein Transkript.",
     "transcriptionFailed": "Transkription fehlgeschlagen.",
     "tryAgain": "Erneut versuchen",
-    "largeTurboFallback": "Large Turbo hatte nicht genug Speicher. Neuer Versuch mit Q4…",
     "generate": "Transkript erstellen",
     "transcribing": "Transkribieren…",
     "loading": "Transkript wird geladen…",

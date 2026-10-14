@@ -293,7 +293,6 @@
       "parakeetAutoDetects": "Détecte automatiquement {{count}} langues européennes.",
       "parakeetChooseWhisper": "Pour le chinois, le japonais, le coréen et les autres langues, choisissez un modèle Whisper.",
       "progressAria": "Progression de la transcription",
-      "quantization": "Quantification",
       "refreshTitle": "Actualiser la transcription",
       "searchLanguages": "Rechercher une langue",
       "start": "Démarrer",

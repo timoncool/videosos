@@ -955,12 +955,6 @@ const MediaCardInternal = memo(function MediaCardInternal({
                 model: values.model,
                 quantization: values.quantization,
                 language: values.language || undefined,
-                onLowMemoryRetry: () => {
-                  store.showNotification({
-                    type: 'info',
-                    message: i18n.t('transcript.largeTurboFallback'),
-                  })
-                },
               })
               if (result.status === 'cancelled') {
                 continue

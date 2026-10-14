@@ -734,9 +734,6 @@ export function TranscriptEditorPanel({ active }: TranscriptEditorPanelProps) {
         try {
           const result = await runMediaTranscriptionJob(mediaId, {
             ...values,
-            onLowMemoryRetry: () => {
-              toast.info(t('transcript.largeTurboFallback'))
-            },
           })
           if (!mountedRef.current) return
           if (result.status === 'cancelled') {

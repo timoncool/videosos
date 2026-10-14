@@ -3,10 +3,7 @@ import type {
   MediaTranscriptModel,
   MediaTranscriptQuantization,
 } from '@/types/storage'
-import {
-  isTranscriptionCancellationError,
-  isTranscriptionOutOfMemoryError,
-} from '@/shared/utils/transcription-cancellation'
+import { isTranscriptionCancellationError } from '@/shared/utils/transcription-cancellation'
 import type { TranscribeOptions } from '../transcription/types'
 import type { MediaTranscriptStatus } from '../types'
 import { useMediaLibraryStore } from '../stores/media-library-store'
@@ -25,7 +22,6 @@ export interface RunMediaTranscriptionJobOptions {
   updateProgress?: boolean
   onProgress?: TranscribeOptions['onProgress']
   onQueueStatusChange?: (state: QueueState) => void
-  onLowMemoryRetry?: () => void
 }
 
 export type MediaTranscriptionJobResult =
@@ -94,31 +90,13 @@ export async function runMediaTranscriptionJob(
   setInitialTranscriptionState(mediaId)
 
   try {
-    const transcribeWith = (quantization: MediaTranscriptQuantization | undefined) =>
-      mediaTranscriptionService.transcribeMedia(mediaId, {
-        model: options.model,
-        quantization,
-        language: options.language || undefined,
-        onQueueStatusChange: createQueueStatusHandler(mediaId, options.onQueueStatusChange),
-        onProgress: createProgressHandler(mediaId, updateProgress, options.onProgress),
-      })
-
-    let transcript: MediaTranscript
-    try {
-      transcript = await transcribeWith(options.quantization)
-    } catch (error) {
-      if (
-        options.model !== 'whisper-large' ||
-        options.quantization === 'q4' ||
-        !isTranscriptionOutOfMemoryError(error)
-      ) {
-        throw error
-      }
-
-      options.onLowMemoryRetry?.()
-      setInitialTranscriptionState(mediaId)
-      transcript = await transcribeWith('q4')
-    }
+    const transcript = await mediaTranscriptionService.transcribeMedia(mediaId, {
+      model: options.model,
+      quantization: options.quantization,
+      language: options.language || undefined,
+      onQueueStatusChange: createQueueStatusHandler(mediaId, options.onQueueStatusChange),
+      onProgress: createProgressHandler(mediaId, updateProgress, options.onProgress),
+    })
 
     useMediaLibraryStore.getState().setTranscriptStatus(mediaId, 'ready')
     useMediaLibraryStore.getState().clearTranscriptProgress(mediaId)

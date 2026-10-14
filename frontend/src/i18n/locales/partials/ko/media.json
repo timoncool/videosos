@@ -293,7 +293,6 @@
       "parakeetAutoDetects": "유럽 언어 {{count}}개를 자동으로 감지합니다.",
       "parakeetChooseWhisper": "중국어, 일본어, 한국어 및 기타 언어에는 Whisper 모델을 선택하세요.",
       "progressAria": "전사 진행률",
-      "quantization": "양자화",
       "refreshTitle": "전사 새로 고침",
       "searchLanguages": "언어 검색",
       "start": "시작",

@@ -23,12 +23,7 @@ export const WHISPER_QUANTIZATION_OPTIONS: ReadonlyArray<{
   {
     value: 'q8',
     label: 'Q8 (Recommended)',
-    description: 'int8 encoder and decoder, the precision Dub Studio runs Whisper at.',
-  },
-  {
-    value: 'q4',
-    label: 'Q4 (Lowest Memory)',
-    description: 'For tight memory. Expect rougher captions.',
+    description: 'int8 encoder and decoder on multi-threaded WASM, the precision Dub Studio runs Whisper at.',
   },
 ]
 

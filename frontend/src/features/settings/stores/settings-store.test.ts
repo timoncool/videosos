@@ -43,7 +43,7 @@ describe('settings-store', () => {
       useSettingsStore.getState().setSetting('defaultWhisperQuantization', 'q4')
 
       expect(useSettingsStore.getState().defaultWhisperModel).toBe('whisper-large')
-      expect(useSettingsStore.getState().defaultWhisperQuantization).toBe('q4')
+      expect(useSettingsStore.getState().defaultWhisperQuantization).toBe('q8')
     })
 
     it('normalizes removed model selections back to the default model', () => {

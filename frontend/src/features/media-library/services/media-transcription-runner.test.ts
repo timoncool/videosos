@@ -91,30 +91,7 @@ describe('runMediaTranscriptionJob', () => {
     expect(storeState.clearTranscriptProgress).toHaveBeenCalledWith('media-1')
   })
 
-  it('retries Large Turbo at Q4 after an out-of-memory failure', async () => {
-    const transcript = { ...makeTranscript(), model: 'whisper-large' as const }
-    const onLowMemoryRetry = vi.fn()
-    mediaTranscriptionServiceMocks.transcribeMedia
-      .mockRejectedValueOnce(new Error('WebGPU device lost: out of memory'))
-      .mockResolvedValueOnce(transcript)
-
-    const result = await runMediaTranscriptionJob('media-1', {
-      model: 'whisper-large',
-      quantization: 'q8',
-      onLowMemoryRetry,
-    })
-
-    expect(result).toEqual({ status: 'completed', transcript })
-    expect(onLowMemoryRetry).toHaveBeenCalledTimes(1)
-    expect(mediaTranscriptionServiceMocks.transcribeMedia).toHaveBeenNthCalledWith(
-      2,
-      'media-1',
-      expect.objectContaining({ model: 'whisper-large', quantization: 'q4' }),
-    )
-    expect(storeState.setTranscriptStatus).toHaveBeenLastCalledWith('media-1', 'ready')
-  })
-
-  it('does not hide unrelated Large Turbo failures behind the fallback', async () => {
+  it('reports a Large Turbo failure as it is', async () => {
     mediaTranscriptionServiceMocks.transcribeMedia.mockRejectedValue(new Error('Network failed'))
 
     await expect(

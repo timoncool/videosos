@@ -293,7 +293,6 @@
       "parakeetAutoDetects": "自动检测 {{count}} 种欧洲语言。",
       "parakeetChooseWhisper": "如需转录中文、日语、韩语或其他语言，请选择 Whisper 模型。",
       "progressAria": "字幕进度",
-      "quantization": "量化",
       "refreshTitle": "刷新字幕",
       "searchLanguages": "搜索语言",
       "start": "开始",

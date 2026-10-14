@@ -40,26 +40,20 @@ export function isParakeetModel(model: MediaTranscriptModel | undefined): boolea
   return model === PARAKEET_MODEL
 }
 
-function detectWebGpu(): boolean {
-  return typeof navigator !== 'undefined' && 'gpu' in navigator && navigator.gpu != null
-}
-
 export interface ResolvedTranscriptionEngine {
   engine: TranscriptionEngine
   /** The model actually used — may differ from the requested one when falling back. */
   model: MediaTranscriptModel
-  fallbackReason?: 'language' | 'no-webgpu'
+  fallbackReason?: 'language'
 }
 
 /**
- * Decide which on-device engine runs a job. Parakeet is used when selected and viable
- * (supported language + WebGPU); otherwise the job transparently falls back to Whisper.
- * `webgpu` can be injected for testing; it defaults to runtime feature detection.
+ * Decide which on-device engine runs a job: Parakeet when selected and the language is one of its
+ * own, otherwise Whisper.
  */
 export function resolveTranscriptionEngine(
   model: MediaTranscriptModel,
   language: string | undefined,
-  options: { webgpu?: boolean } = {},
 ): ResolvedTranscriptionEngine {
   if (!isParakeetModel(model)) {
     return { engine: 'whisper', model }
@@ -71,15 +65,6 @@ export function resolveTranscriptionEngine(
       engine: 'whisper',
       model: PARAKEET_FALLBACK_WHISPER_MODEL,
       fallbackReason: 'language',
-    }
-  }
-
-  const webgpu = options.webgpu ?? detectWebGpu()
-  if (!webgpu) {
-    return {
-      engine: 'whisper',
-      model: PARAKEET_FALLBACK_WHISPER_MODEL,
-      fallbackReason: 'no-webgpu',
     }
   }
 

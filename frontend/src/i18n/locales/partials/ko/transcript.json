@@ -12,7 +12,6 @@
     "noTranscript": "이 클립에는 아직 전사가 없습니다.",
     "transcriptionFailed": "전사에 실패했습니다.",
     "tryAgain": "다시 시도",
-    "largeTurboFallback": "Large Turbo의 메모리가 부족합니다. Q4로 다시 시도 중…",
     "generate": "전사 생성",
     "transcribing": "전사 중…",
     "loading": "전사 불러오는 중…",
