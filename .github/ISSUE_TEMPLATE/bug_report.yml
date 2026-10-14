@@ -1,4 +1,4 @@
-name: 🐛 Bug Report
+name: Bug report
 description: Report a bug or unexpected behavior in VideoSOS
 title: "[Bug]: "
 labels: ["bug", "triage"]
@@ -65,7 +65,7 @@ body:
     id: logs
     attributes:
       label: Logs or Screenshots
-      description: If applicable, add screenshots, or the error text shown in the window or in the job card
+      description: Screenshots, the error text shown in the window or the job card, and the log from Settings, About, Logs (the newest file)
       placeholder: Paste logs or drag screenshots here
     validations:
       required: false
