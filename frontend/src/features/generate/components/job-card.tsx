@@ -15,6 +15,7 @@ import { ProviderBadge } from './model-picker'
 import { ImageLightbox } from './image-lightbox'
 import { exactMoment, openSettings, relativeMoment } from '../deps/studio'
 import { fieldLabel } from '../services/field-label'
+import { promptOf } from '../services/result-title'
 
 /** A result picture: dragged into a slot or the timeline, opened at full size by a click. */
 function ImagePreview({ url, name, onDragStart }: { url: string; name: string; onDragStart: (event: React.DragEvent) => void }) {
@@ -228,7 +229,7 @@ function JobProblem({ job }: { job: Job }) {
 export function JobCard({ job, onReuse, selected, onSelect }: JobCardProps) {
   const { t, i18n } = useTranslation()
   const running = job.status === 'queued' || job.status === 'sending' || job.status === 'running'
-  const prompt = Object.entries(job.values).find(([key]) => /prompt|^input$|^text$/i.test(key))?.[1]
+  const prompt = promptOf(job.values)
   const text = job.outputs.find((output) => output.kind === 'text')?.text
 
   return (
@@ -265,7 +266,7 @@ export function JobCard({ job, onReuse, selected, onSelect }: JobCardProps) {
           {running && job.progress !== null && ` ${Math.round(job.progress * 100)}%`}
         </span>
       </div>
-      {typeof prompt === 'string' && <p className="line-clamp-2 text-[11px] text-muted-foreground">{prompt}</p>}
+      {prompt && <p className="line-clamp-2 text-[11px] text-muted-foreground">{prompt}</p>}
       <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
         <time dateTime={new Date(job.created).toISOString()} title={exactMoment(new Date(job.created), i18n.language)}>
           {relativeMoment(new Date(job.created), i18n.language)}

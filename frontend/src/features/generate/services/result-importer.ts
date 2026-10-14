@@ -3,7 +3,7 @@
  * is fetched from the server and imported through the library's own path for
  * generated media (thumbnails, waveforms, metadata), then the job is marked
  * imported on the server, so a second window or a restart does not import it
- * again. Jobs started with "put on the timeline" are placed at the playhead.
+ * again. A result is named by what its prompt asked for. Jobs started with "put on the timeline" are placed at the playhead.
  */
 
 import { createLogger } from '@/shared/logging/logger'
@@ -12,6 +12,7 @@ import { generateApi, type Job } from './generate-api'
 import { mediaLibraryService, saveTimeline, useMediaLibraryStore, useProjectStore } from '../deps/editor'
 import { useGenerateStore } from '../stores/generate-store'
 import { placeMediaAtPlayhead } from './timeline-actions'
+import { resultFileName } from './result-title'
 
 const logger = createLogger('GenerateImport')
 
@@ -30,22 +31,20 @@ function needsImport(job: Job, projectId: string | null): boolean {
 async function importJob(job: Job, projectId: string): Promise<void> {
   const mediaIds: string[] = []
   const tags = ['generated', job.provider, job.model_name]
-  for (const output of job.outputs) {
-    if (output.kind !== 'image' && output.kind !== 'video' && output.kind !== 'audio') continue
+  const media = job.outputs.filter((output) => output.kind === 'image' || output.kind === 'video' || output.kind === 'audio')
+  for (const [position, output] of media.entries()) {
     const response = await fetch(generateApi.fileUrl(job.id, output.index), { cache: 'no-store' })
     if (!response.ok) throw new Error(`${response.status} ${response.statusText}`)
     const blob = await response.blob()
     const extension = output.file.split('.').pop() ?? 'bin'
-    const base = (job.model_name || job.model).replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '').slice(0, 40)
-    const name = `${base}-${job.id.slice(-6)}-${output.index + 1}.${extension}`
-    const file = new File([blob], name, { type: output.mime })
-    const media =
+    const file = new File([blob], resultFileName(job, position, media.length, extension), { type: output.mime })
+    const imported =
       output.kind === 'image'
         ? await mediaLibraryService.importGeneratedImage(file, projectId, { tags })
         : output.kind === 'video'
           ? await mediaLibraryService.importGeneratedVideo(file, projectId, { tags })
           : await mediaLibraryService.importGeneratedAudio(file, projectId, { tags })
-    mediaIds.push(media.id)
+    mediaIds.push(imported.id)
   }
   await useMediaLibraryStore.getState().loadMediaItems()
   const updated = await generateApi.markImported(job.id, mediaIds)
