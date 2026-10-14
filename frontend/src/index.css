@@ -17,12 +17,11 @@ body.canvas-translate-cursor-not-allowed * {
    `var(--ease-out-strong)` in raw CSS / inline styles) AND generate Tailwind
    utilities: `ease-out-strong`, `ease-in-out-strong`, `ease-drawer`. Reference
    these instead of hand-rolling cubic-beziers so "feels right" is the default. */
-/* FreeCut marks its active states with the orange scale; in VideoSOS that is the program's own teal. */
 @theme {
-  --color-orange-300: #5eead4;
-  --color-orange-400: #40dcc8;
-  --color-orange-500: #2dd4bf;
-  --color-orange-600: #14b8a6;
+  --color-orange-300: #c4b5fd;
+  --color-orange-400: #a78bfa;
+  --color-orange-500: #8b5cf6;
+  --color-orange-600: #7c3aed;
 }
 
 @theme {
@@ -33,22 +32,21 @@ body.canvas-translate-cursor-not-allowed * {
 
 @layer base {
   :root {
-    /* The studios' "dark studio console" (Dub Studio): a near-black instrument panel, one signal accent, depth
-       by luminance steps and 1px hairlines rather than shadows. Each program has its own accent; VideoSOS's is
-       the teal of its icon. */
-    --color-bg: #0b0c0e;
-    --color-surface: #121317;
-    --color-surface-2: #1a1c22;
-    --color-overlay: #23262e;
-    --color-border: #262a31;
-    --color-hairline: #ffffff14;
-    --color-text: #e8eaed;
-    --color-muted: #888e99;
-    --color-accent: #2dd4bf;
-    --color-on-accent: #0b0c0e;
-    --color-accent-2: #22d3ee;
-    --color-warn: #ffb020;
+    --color-bg: #0a0a0b;
+    --color-surface: #111113;
+    --color-surface-2: #18181b;
+    --color-overlay: #232327;
+    --color-border: #27272a;
+    --color-hairline: #ffffff12;
+    --color-text: #f4f4f5;
+    --color-muted: #a1a1aa;
+    --color-accent: #a78bfa;
+    --color-on-accent: #0a0a0b;
+    --color-accent-strong: #7c3aed;
+    --color-accent-2: #fbbf24;
+    --color-warn: #f59e0b;
     --color-danger: #ef4444;
+    --gradient-brand: linear-gradient(135deg, #7c3aed 0%, #4f46e5 60%, #2563eb 100%);
     --font-ui: 'Onest', 'Noto Sans SC', ui-sans-serif, system-ui, sans-serif;
     --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
@@ -58,11 +56,11 @@ body.canvas-translate-cursor-not-allowed * {
     --card-foreground: var(--color-text);
     --popover: var(--color-surface-2);
     --popover-foreground: var(--color-text);
-    --primary: var(--color-accent);
-    --primary-foreground: var(--color-on-accent);
+    --primary: var(--color-accent-strong);
+    --primary-foreground: #ffffff;
     --secondary: var(--color-surface-2);
     --secondary-foreground: var(--color-text);
-    --muted: #16181c;
+    --muted: #141416;
     --muted-foreground: var(--color-muted);
     --accent: var(--color-overlay);
     --accent-foreground: var(--color-text);
@@ -73,13 +71,13 @@ body.canvas-translate-cursor-not-allowed * {
     --ring: var(--color-accent);
 
     --panel-bg: var(--color-surface);
-    --panel-header: #0f1013;
+    --panel-header: #0e0e10;
     --timeline-bg: var(--color-bg);
 
     --sidebar: var(--color-surface);
     --sidebar-foreground: var(--color-text);
-    --sidebar-primary: var(--color-accent);
-    --sidebar-primary-foreground: var(--color-on-accent);
+    --sidebar-primary: var(--color-accent-strong);
+    --sidebar-primary-foreground: #ffffff;
     --sidebar-accent: var(--color-surface-2);
     --sidebar-accent-foreground: var(--color-text);
     --sidebar-border: var(--color-border);
@@ -203,24 +201,32 @@ body.canvas-translate-cursor-not-allowed * {
 /* Professional video editor utility classes */
 @layer utilities {
   .panel-bg {
-    background-color: oklch(var(--panel-bg));
+    background-color: var(--panel-bg);
   }
 
   .panel-header {
-    background-color: oklch(var(--panel-header));
+    background-color: var(--panel-header);
   }
 
   .timeline-bg {
-    background-color: oklch(var(--timeline-bg));
+    background-color: var(--timeline-bg);
   }
 
   /* Subtle glow for active elements */
   .glow-primary {
-    box-shadow: 0 0 12px oklch(var(--primary) / 0.3);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--primary) 30%, transparent);
   }
 
   .glow-primary-sm {
-    box-shadow: 0 0 6px oklch(var(--primary) / 0.25);
+    box-shadow: 0 0 6px color-mix(in srgb, var(--primary) 25%, transparent);
+  }
+
+  .bg-brand {
+    background-image: var(--gradient-brand);
+    color: #ffffff;
+  }
+  .bg-brand:hover:not(:disabled) {
+    filter: brightness(1.12);
   }
 
   /* Text shadows for better readability on dark */
@@ -294,8 +300,8 @@ body.canvas-translate-cursor-not-allowed * {
 }
 
 [data-media-id].media-marquee-preview > * {
-  border-color: oklch(var(--primary));
-  box-shadow: 0 0 0 1px oklch(var(--primary) / 0.2);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--primary) 20%, transparent);
 }
 
 [data-composition-id].composition-marquee-preview {

@@ -52,6 +52,7 @@ makes it, and the release notes on GitHub are taken from the release's section.
 
 ### Changed
 
+- **VideoSOS's own colours**: a neutral graphite console as in the family's studios, an AI-violet signature gradient on the main actions (Export, Generate, New project, the storyboard's clips), light violet for what is on, a spotlight gold for the playhead and the preview's handles, timeline clips coloured by kind (video indigo, sound emerald, pictures blue, text pink, shapes green), contrast to WCAG AA throughout; the icon takes the same gradient and the browser tab shows it instead of FreeCut's scissors.
 - **Own accent colour**: the teal of the VideoSOS icon; Onest and JetBrains Mono, the design of the author's studios.
 - **Settings window as in the studios**: sections with hints, every row with what it does, Done and Reset.
 - **The projects page opens with a start block**: what VideoSOS does, New project and Import.

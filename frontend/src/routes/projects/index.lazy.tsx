@@ -285,7 +285,7 @@ function ProjectsIndex() {
             <h2 className="text-[18px] font-semibold">{t('start.cardTitle')}</h2>
             <p className="mx-auto mt-1.5 max-w-sm text-sm text-[var(--color-muted)]">{t('start.cardText')}</p>
             <div className="mt-6 flex flex-col gap-2.5">
-              <Button asChild size="lg" className="h-11 gap-2 text-[15px] font-semibold">
+              <Button asChild size="lg" className="bg-brand h-11 gap-2 text-[15px] font-semibold">
                 <Link to="/projects/new">
                   <Plus className="h-4 w-4" />
                   {t('projects.newProject')}

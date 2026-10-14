@@ -44,7 +44,7 @@ export function TopBar({ go }: { go: (place: TopBarPlace) => void }) {
     <header className="relative flex h-14 shrink-0 items-center gap-2 border-b border-[var(--color-border)] bg-[var(--color-surface)] px-4 min-[1440px]:px-5">
       <div className="flex shrink-0 items-center gap-3">
         <button type="button" onClick={() => go("/projects")} title={t("topbar.projects")} className="flex items-center gap-2 font-bold tracking-tight">
-          <img src="/videosos-icon.svg" alt="" width={20} height={20} className="rounded-[5px] shadow-[0_0_10px_rgba(45,212,191,0.25)]" />
+          <img src="/videosos-icon.svg" alt="" width={20} height={20} className="rounded-[5px] shadow-[0_0_10px_rgba(124,58,237,0.35)]" />
           {t("app.name")}
           <span className="hidden text-[11px] font-normal tracking-normal text-[var(--color-muted)] min-[1440px]:inline">v{__APP_VERSION__}</span>
         </button>

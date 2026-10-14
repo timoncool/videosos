@@ -498,7 +498,7 @@ export function GeneratePanel() {
           </label>
         </div>
         <Button
-          className="h-9 w-full gap-2"
+          className="bg-brand h-9 w-full gap-2"
           disabled={!form || !hasKey || submitting || missing.length > 0 || tooLong.length > 0 || unfilled.length > 0 || batchBlocked || !projectId}
           onClick={() => void generate()}
           data-testid="generate-submit"

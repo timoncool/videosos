@@ -485,7 +485,7 @@ export function StoryboardPanel() {
           </Button>
           <Button
             size="sm"
-            className="h-8 w-full justify-between text-xs"
+            className="bg-brand h-8 w-full justify-between text-xs"
             disabled={!videoForm || clipsReady === 0}
             onClick={() => attempt(allClips)}
             title={t('generate.storyboard.allClipsHint')}

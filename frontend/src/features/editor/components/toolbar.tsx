@@ -253,7 +253,7 @@ export const Toolbar = memo(function Toolbar({
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button size="sm" className="gap-1.5 glow-primary-sm">
+            <Button size="sm" className="bg-brand gap-1.5 glow-primary-sm">
               <Download className="h-4 w-4" />
               {t('toolbar.export')}
               <ChevronDown className="h-3 w-3" />
