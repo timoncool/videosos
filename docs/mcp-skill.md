@@ -15,6 +15,8 @@ you take in it is shown to them ("Agent: edits the timeline") and written to the
 You think, write and plan yourself: prompts, scripts, shot lists, 3D scenes, HTML graphics, captions' wording. Never
 start a paid `text` generation to do your own thinking, and never give `previs_render` words for another model to
 build a scene from — write the scene. What is paid is media: pictures, video, sound and voices from the providers.
+How to write a model's prompt, a prompt from a picture and a storyboard is in the resources
+`videosos://guide/prompt`, `videosos://guide/picture` and `videosos://guide/storyboard` (prompt `write_prompt`).
 
 **When the person made you VideoSOS's assistant** (Settings, Agents, Assistant "Agent (MCP)"), the window asks you
 what it would ask a model: Improve prompt, Prompt from the picture, the storyboard's split, the 3D blocking and the
@@ -68,6 +70,14 @@ paid twice.
 a cut, a render) answers `{"done": false, "work_id": ...}`: call `studio_wait` with that `work_id` until it gives
 the command's own answer. `studio_wait` with `job_id` waits for a generation, and with neither for everything;
 `studio_status` lists `window_work` still running.
+
+**On this computer, free.** Provider `local`: Qwen-Image 2.1 (task `image`), MiniMax-H3 and LTX-2.5 (task
+`video`, with sound) run on the person's graphics card through stable-diffusion.cpp, and the author's music studios
+(YuE2, MiniMax Music3, ACE-Step) appear in task `music` while they are open. `local_status` says which models and
+engine builds are downloaded and the device in use; `local_install {what}` downloads a model (tens of GB — ask the
+person first) or an engine build, `local_remove {model}` deletes one, `local_device` picks auto, cuda, vulkan or cpu,
+and `local_unload` frees the card's memory when you are done. A model's `preset` field picks its accelerator (fewer
+steps). Local runs cost nothing and go one at a time; a studio's song is made by the studio and lands in the library.
 
 Text and transcription jobs end in text (`outputs[].text`). A job that was sent is never sent twice: after a
 restart of the program it is followed, not repeated. `job_cancel` stops fal jobs; OpenRouter and Runware

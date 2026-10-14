@@ -4,7 +4,7 @@
 
 # VideoSOS 2
 
-**Десктопная AI-видеостудия: генерируйте картинки, видео, музыку, озвучку, звуки и тексты лучшими моделями OpenRouter, fal и Runware, планируйте фильм на раскадровке, узловом холсте и в 3D-блокинге и монтируйте всё на настоящем многодорожечном таймлайне в готовый ролик. Одна нативная программа (Rust + Tauri) для Windows, Linux и macOS, ваши ключи, ваши файлы на вашем диске и MCP-сервер, чтобы ИИ-агент собирал видео вместе с вами.**
+**Десктопная AI-видеостудия: генерируйте картинки, видео, музыку, озвучку, звуки и тексты лучшими моделями OpenRouter, fal и Runware или бесплатно на своей видеокарте, планируйте фильм на раскадровке, узловом холсте и в 3D-блокинге и монтируйте всё на настоящем многодорожечном таймлайне в готовый ролик. Одна нативная программа (Rust + Tauri) для Windows, Linux и macOS, ваши ключи, ваши файлы на вашем диске и MCP-сервер, чтобы ИИ-агент собирал видео вместе с вами.**
 
 [![License](https://img.shields.io/github/license/timoncool/videosos?style=flat-square)](LICENSE)
 [![Stars](https://img.shields.io/github/stars/timoncool/videosos?style=flat-square)](https://github.com/timoncool/videosos/stargazers)
@@ -30,7 +30,7 @@
 
 Редактор — полноценный NLE: много видео- и аудиодорожек, подрезка со сдвигом и без, переходы, ключевые кадры с
 графиком Безье, маски, режимы наложения, цветокоррекция со скопами, текст и фигуры, субтитры и быстрый экспорт в
-MP4, WebM, MOV или MKV на видеокарте — или FCPXML для Final Cut, DaVinci Resolve и Premiere.
+MP4, WebM, MOV или MKV на видеокарте — или FCPXML для Final Cut, DaVinci Resolve и Premiere. Громкость экспорта по желанию приводится к −14, −16 или −23 LUFS, а субтитры из расшифровки показываются целиком, по словам или караоке.
 
 VideoSOS 1 был веб-приложением в браузере. **Вторая версия — нативная десктопная программа**: сервер на Rust,
 проекты и генерации лежат обычными файлами на диске, задачи переживают перезапуск, и никакого нашего аккаунта — вы
@@ -71,6 +71,28 @@ VideoSOS 1 был веб-приложением в браузере. **Втор�
   промпту.
 - **Видео по ссылке.** Ссылка YouTube, любого сайта, который знает yt-dlp, или прямая ссылка на файл попадает в
   медиатеку с прогрессом, отменой и докачкой.
+- **Генерация без конца.** Запуски повторяются с новыми сидами, пока вы их не остановите или один не упадёт.
+- **Сколько потратил ключ.** Проверка ключа показывает расход и лимит OpenRouter и баланс Runware.
+
+## Генерация на этом компьютере
+
+Без ключа и без счёта: провайдер **«Локально»** стоит рядом с облачными (пока на Windows).
+
+| Модель | Что делает | Ускорители |
+|---|---|---|
+| Qwen-Image 2.1 | картинки | Turbo 8 шагов, LightX2V Lightning 4, Viggle Turbo 6 |
+| MiniMax-H3 | видео со своим звуком, по промпту или от первого кадра | LightX2V Turbo 8 и 4 шага |
+| LTX-2.5 | видео со звуком, два прохода с апскейлером Lightricks ×2 | дистиллированная, 8 шагов |
+
+- **stable-diffusion.cpp** запускает их на CUDA, Vulkan или процессоре; «Авто» выбирает видеокарту. Используются
+  только квантованные веса (GGUF Q4, int8).
+- **Настройки → Локальные модели** скачивают каждую модель и её движок один раз, с закреплённой версией, проверкой
+  SHA-256 и докачкой. Файл, который уже есть у другой программы автора, берётся у неё (жёсткая ссылка на том же
+  диске), а не скачивается, и в строке модели написано, откуда она взята.
+- **Музыкальные студии автора.** Пока открыта [YuE2 Studio](https://github.com/timoncool/YuE2-Studio), [MiniMax Music3 Studio](https://github.com/timoncool/MiniMax-Music3-Studio) или [ACE-Step Studio](https://github.com/timoncool/ACE-Step-Studio), она появляется в «Музыке» со своей формой;
+  песню делает сама студия, а её файл попадает в медиатеку со своими тегами.
+- **Свои модели окна** работают в самом окне: Parakeet Ultra (int8) и Whisper Large v3 Turbo (Q8) для расшифровки,
+  Gemma 4 E4B для описания сцен и проверки склеек.
 
 ## Планируйте фильм
 
@@ -109,6 +131,9 @@ claude mcp add --transport http videosos http://127.0.0.1:8796/mcp
   никогда не показываются.
 - **Чат в окне.** Вкладка «Чат» запускает выбранную модель OpenRouter с теми же инструментами — шаг за шагом, с ценой
   каждого шага и кнопкой «Стоп».
+- **Подключённый агент как ассистент окна**, как в YuE2 Studio: если в «Настройки → Агенты» выбран агент MCP,
+  улучшение промпта, промпт по картинке, раскадровка, блокинг и чат уходят агенту — без ключа и без оплаты. Гайды
+  по промптам отдаются ресурсами `videosos://guide/prompt`, `picture` и `storyboard`.
 
 ## Скриншоты
 
@@ -139,7 +164,8 @@ claude mcp add --transport http videosos http://127.0.0.1:8796/mcp
 - **Linux** x86-64 (экспериментально): `.deb` или AppImage, WebKitGTK и GStreamer из системы.
 - **macOS** 13 и новее на Apple Silicon (экспериментально).
 - Видеокарта с WebGPU (любая свежая NVIDIA, AMD или Intel) для превью и быстрого экспорта.
-- Интернет для генерации; монтаж и экспорт работают без него.
+- Интернет для облачной генерации; локальная генерация, монтаж и экспорт работают без него. Локальные
+  видеомодели проверены на карте с 24 ГБ.
 
 В Настройках, раздел «Сеть», есть прокси для провайдеров и загрузок и **«Доступ из сети»**: по умолчанию выключен;
 включённый, он открывает тот же интерфейс в браузере на другом компьютере или телефоне по ключу доступа, а всё
@@ -147,10 +173,15 @@ claude mcp add --transport http videosos http://127.0.0.1:8796/mcp
 
 ## Что программа скачивает
 
-Всё, что нужно для монтажа и генерации, уже в программе. Два инструмента скачиваются только при первом импорте видео
-по ссылке, с их собственных релизов на GitHub, и каждый файл перед использованием сверяется с закреплённым размером и
-SHA-256; потом yt-dlp обновляется сам раз в день. На Linux те же инструменты в Linux-сборках; на macOS импорт по
-ссылке пока недоступен.
+В программе есть всё, что нужно для монтажа и облачной генерации. Остальное скачивается, только когда вы об этом
+просите, оттуда, где оно опубликовано, и каждый файл перед использованием сверяется с закреплёнными размером и
+SHA-256: yt-dlp, Deno и ffmpeg — при первом импорте видео по ссылке (потом yt-dlp обновляется сам раз в день), движок
+stable-diffusion.cpp и локальные модели — когда вы скачиваете их в «Настройки → Локальные модели». На Linux
+инструменты в Linux-сборках; на macOS импорт по ссылке пока недоступен; локальная генерация пока только на Windows.
+
+Свои модели окна скачиваются с Hugging Face при первом использовании их функции и хранятся в кэше окна (очистка —
+«Настройки → Хранилище»): Parakeet Ultra int8 и Whisper Large v3 Turbo Q8 для расшифровки, Gemma 4 E4B для описания
+сцен, CLIP, MiniLM и CLAP для поиска и слов-паразитов, RIFE для интерполяции кадров.
 
 <!-- downloads:start -->
 | Инструмент | Зачем | Файл (прямая ссылка) | Размер | Куда |
@@ -158,6 +189,12 @@ SHA-256; потом yt-dlp обновляется сам раз в день. Н�
 | yt-dlp + Deno | импорт видео по ссылке | [yt-dlp.exe](https://github.com/yt-dlp/yt-dlp/releases/download/2026.08.19/yt-dlp.exe) | 17.8 MB | `data\tools\yt-dlp\` (как есть) |
 |  |  | [deno-x86_64-pc-windows-msvc.zip](https://github.com/denoland/deno/releases/download/v2.9.7/deno-x86_64-pc-windows-msvc.zip) | 42.6 MB | `data\tools\yt-dlp\` (распакованным) |
 | ffmpeg | склейка картинки и звука видео по ссылке | [ffmpeg-N-126342-gf88b741dbf-win64-gpl.zip](https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-08-31-13-27/ffmpeg-N-126342-gf88b741dbf-win64-gpl.zip) | 170.7 MB | `data\tools\ffmpeg\` (ffmpeg.exe и ffprobe.exe из архива) |
+| stable-diffusion.cpp CUDA 12 | локальная генерация на картах NVIDIA | [sd-master-1d0a58a-bin-win-cuda12-x64.zip](https://github.com/leejet/stable-diffusion.cpp/releases/download/master-964-1d0a58a/sd-master-1d0a58a-bin-win-cuda12-x64.zip)<br>[cudart-sd-bin-win-cu12-x64.zip](https://github.com/leejet/stable-diffusion.cpp/releases/download/master-964-1d0a58a/cudart-sd-bin-win-cu12-x64.zip) | 901.5 MB | `data\tools\sd\cuda12\` (распакованным) |
+| stable-diffusion.cpp Vulkan | локальная генерация на других картах | [sd-master-1d0a58a-bin-win-vulkan-x64.zip](https://github.com/leejet/stable-diffusion.cpp/releases/download/master-964-1d0a58a/sd-master-1d0a58a-bin-win-vulkan-x64.zip) | 30.2 MB | `data\tools\sd\vulkan\` (распакованным) |
+| stable-diffusion.cpp CPU | локальная генерация без видеокарты | [sd-master-1d0a58a-bin-win-cpu-x64.zip](https://github.com/leejet/stable-diffusion.cpp/releases/download/master-964-1d0a58a/sd-master-1d0a58a-bin-win-cpu-x64.zip) | 17.6 MB | `data\tools\sd\cpu\` (распакованным) |
+| Qwen-Image 2.1 | картинки на этом компьютере, по желанию | [Qwen3VL-8B-Instruct-Q4_K_M.gguf](https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct-GGUF/resolve/f982a07559d4a2f6c8744d840bf6fccab30eea96/Qwen3VL-8B-Instruct-Q4_K_M.gguf)<br>[qwen_image_2.1_vae_bf16.safetensors](https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/a8342359c61979b06a8dafb1a47991fe1f30e994/vae/qwen_image_2.1_vae_bf16.safetensors)<br>[qwen-image-2.1-turbo-Q4_K_M.gguf](https://huggingface.co/unsloth/Qwen-Image-2.1-Turbo-GGUF/resolve/5d1f9f759ea877ae556cda88dbec958b62ad3809/qwen-image-2.1-turbo-Q4_K_M.gguf)<br>[pytorch_lora_weights.safetensors](https://huggingface.co/lightx2v/Qwen-Image-2.1-Lightning/resolve/6b0a1176327c01522a44276c5da67331a025b6fc/pytorch_lora_weights.safetensors)<br>[Qwen-Image-2.1-viggle-turbo-v0.3-6step-lora-r256.safetensors](https://huggingface.co/Viggle/Qwen-Image-2.1-viggle-turbo/resolve/009a44a895ef85f7e643c80fdca9543795248867/Qwen-Image-2.1-viggle-turbo-v0.3-6step-lora-r256.safetensors)<br>[qwen-image-2.1-Q4_K_M.gguf](https://huggingface.co/unsloth/Qwen-Image-2.1-GGUF/resolve/2c31ccd392b367a6637841a143813320a02dff55/qwen-image-2.1-Q4_K_M.gguf) | 15.5 GB | `data\models\qwen-image-2.1\` (как есть) |
+| MiniMax-H3 | видео со звуком на этом компьютере, по желанию | [minimax_h3_fl2va_pruned-Q4_K.gguf](https://huggingface.co/unsloth/MiniMax-H3-GGUF/resolve/d629413c2e5b51b38c453668b75ca3b06ca92703/minimax_h3_fl2va_pruned-Q4_K.gguf)<br>[qwen3vl_32b_minimax_h3-Q4_K_M.gguf](https://huggingface.co/unsloth/MiniMax-H3-GGUF/resolve/d629413c2e5b51b38c453668b75ca3b06ca92703/qwen3vl_32b_minimax_h3-Q4_K_M.gguf)<br>[minimax_h3_video_vae_fp16.safetensors](https://huggingface.co/unsloth/MiniMax-H3-GGUF/resolve/d629413c2e5b51b38c453668b75ca3b06ca92703/vae/minimax_h3_video_vae_fp16.safetensors)<br>[minimax_h3_audio_vae_fp32.safetensors](https://huggingface.co/unsloth/MiniMax-H3-GGUF/resolve/d629413c2e5b51b38c453668b75ca3b06ca92703/vae/minimax_h3_audio_vae_fp32.safetensors)<br>[minimax_h3_fl2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors](https://huggingface.co/lightx2v/Minimax-h3-Turbo/resolve/3ec17a324ced54151364f24f8b5fb6bf7e26414f/minimax_h3_fl2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors)<br>[minimax_h3_fl2v_turbo_4step_v1.2_768p_comfyui_bf16.safetensors](https://huggingface.co/lightx2v/Minimax-h3-Turbo/resolve/3ec17a324ced54151364f24f8b5fb6bf7e26414f/minimax_h3_fl2v_turbo_4step_v1.2_768p_comfyui_bf16.safetensors) | 39.4 GB | `data\models\minimax-h3\` (как есть) |
+| LTX-2.5 | видео со звуком на этом компьютере, по желанию | [ltx-2.5-22b-distilled-Q4_K_M.gguf](https://huggingface.co/unsloth/LTX-2.5-GGUF/resolve/6eae90030f7f15460a0ecf9ab16445d676b2bbb6/distilled/ltx-2.5-22b-distilled-Q4_K_M.gguf)<br>[gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors](https://huggingface.co/PulpCut/LTX-2.5-INT8-ConvRot-safetensors/resolve/7597fb305b4cab9e7ff2c1d1e9551279c2932f0f/text_encoders/gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors)<br>[ltx-2.5-video-vae-conv-bf16.safetensors](https://huggingface.co/comfyicu/LTX-2.5/resolve/1026e00f808dbd9601911479b22d65b760737dc8/vae/ltx-2.5-video-vae-conv-bf16.safetensors)<br>[ltx-2.5-audio-vae-bf16.safetensors](https://huggingface.co/comfyicu/LTX-2.5/resolve/1026e00f808dbd9601911479b22d65b760737dc8/vae/ltx-2.5-audio-vae-bf16.safetensors)<br>[ltx-2.5-latent-spatial-upscaler-x2-bf16-1.0.safetensors](https://huggingface.co/comfyicu/LTX-2.5/resolve/1026e00f808dbd9601911479b22d65b760737dc8/latent_upscale_models/ltx-2.5-latent-spatial-upscaler-x2-bf16-1.0.safetensors) | 31.8 GB | `data\models\ltx-2.5\` (как есть) |
 <!-- downloads:end -->
 
 ## Где ваши файлы

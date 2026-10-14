@@ -4,7 +4,7 @@
 
 # VideoSOS 2
 
-**A desktop AI video studio: generate images, video, music, voices, sound effects and text with the best models of OpenRouter, fal and Runware, plan the film on a storyboard, a node canvas and a 3D blocking, and cut it all on a real multitrack timeline into a finished video. One native app (Rust + Tauri) for Windows, Linux and macOS, your own keys, your files on your disk, and an MCP server so an AI agent can make the video with you.**
+**A desktop AI video studio: generate images, video, music, voices, sound effects and text with the best models of OpenRouter, fal and Runware or free on your own graphics card, plan the film on a storyboard, a node canvas and a 3D blocking, and cut it all on a real multitrack timeline into a finished video. One native app (Rust + Tauri) for Windows, Linux and macOS, your own keys, your files on your disk, and an MCP server so an AI agent can make the video with you.**
 
 [![License](https://img.shields.io/github/license/timoncool/videosos?style=flat-square)](LICENSE)
 [![Stars](https://img.shields.io/github/stars/timoncool/videosos?style=flat-square)](https://github.com/timoncool/videosos/stargazers)
@@ -25,14 +25,15 @@
 **VideoSOS 2** puts AI generation and video editing into one window. On the left you pick what to make —
 an image, an edit of an image, a video from text or from a frame, a lip-synced talking head, an upscale, a
 removed background, music, a voice-over, sound effects, a transcript or a script — and a model of **OpenRouter,
-fal or Runware**. The form is drawn from the model's own description, so every setting the model takes is
+fal or Runware**, or one that runs **on this computer for free**. The form is drawn from the model's own description, so every setting the model takes is
 there, and the price is shown **before** you press Generate. The result lands in the project's media library
 and, if you like, straight onto the timeline at the playhead.
 
 The editor is a full NLE: multiple video and audio tracks, ripple/rolling/slip/slide trims, transitions,
 keyframes with a Bezier graph, masks, blend modes, color grading with scopes, text and shapes, captions, and a
-fast export to MP4, WebM, MOV or MKV that runs on your graphics card — or an FCPXML for Final Cut, DaVinci
-Resolve and Premiere.
+fast export to MP4, WebM, MOV or MKV that runs on your graphics card, its loudness brought to -14, -16 or -23
+LUFS if you like — or an FCPXML for Final Cut, DaVinci Resolve and Premiere. Captions come from the transcript
+whole, word by word as spoken, or as karaoke.
 
 VideoSOS 1 was a web app in the browser. **Version 2 is a native desktop program**: its server written in Rust,
 projects and generations kept as plain files on your disk, jobs that survive a restart, and no account of ours
@@ -71,6 +72,30 @@ anywhere — you pay the providers directly with your own keys. The window speak
   again. Results are downloaded at once, before the providers' links expire, and named and tagged by their prompt.
 - **Videos by their links.** A YouTube link, any site yt-dlp knows, or a direct file goes into the library with
   its progress, cancel and resume.
+- **Generate without end.** The runs go again with new seeds until you stop them or one fails.
+- **What a key has spent.** The key check shows OpenRouter's spend and limit and Runware's balance.
+
+## Generate on this computer
+
+No key and no bill: the **Local** provider sits beside the cloud ones (Windows for now).
+
+| Model | What it makes | Accelerators |
+|---|---|---|
+| Qwen-Image 2.1 | pictures | Turbo 8 steps, LightX2V Lightning 4, Viggle Turbo 6 |
+| MiniMax-H3 | video with its own sound, from a prompt or a first frame | LightX2V Turbo 8 and 4 steps |
+| LTX-2.5 | video with sound, two passes with Lightricks' ×2 upscaler | distilled 8 steps |
+
+- **stable-diffusion.cpp** runs them on CUDA, Vulkan or the processor; Auto picks the card. Only quantized weights
+  (GGUF Q4, int8) are used.
+- **Settings, Local models** downloads each model and its engine once, pinned and checked by SHA-256, with resume.
+  A file one of the author's other programs already has is taken from it (a hard link on the same drive) instead of
+  downloaded, and the model's row says where it came from.
+- **The author's music studios.** While [YuE2 Studio](https://github.com/timoncool/YuE2-Studio),
+  [MiniMax Music3 Studio](https://github.com/timoncool/MiniMax-Music3-Studio) or
+  [ACE-Step Studio](https://github.com/timoncool/ACE-Step-Studio) is open, it appears in Music with its own form; the
+  studio makes the song, and its file lands in the library with its tags.
+- **The window's own models** run in the window: Parakeet Ultra (int8) and Whisper Large v3 Turbo (Q8) for
+  transcripts, Gemma 4 E4B for scene captions and cut checks.
 
 ## Plan the film
 
@@ -109,6 +134,9 @@ The server serves its guide as the resource `videosos://skill` (prompt `videosos
   shown to them.
 - **Chat in the window.** The Chat tab runs an OpenRouter model of your choice with the same tools, step by step, with
   each step's cost and a Stop button.
+- **The connected agent as the window's assistant**, as in YuE2 Studio: with Settings, Agents set to the MCP agent,
+  improving a prompt, a prompt from a picture, a storyboard, a blocking and the chat go to the agent, with no key and
+  no charge. Writing guides are served as the resources `videosos://guide/prompt`, `picture` and `storyboard`.
 
 ## Screenshots
 
@@ -139,17 +167,23 @@ Rules for contributors and coding agents: [AGENTS.md](AGENTS.md).
 - **Linux** x86-64 (experimental): the `.deb` or the AppImage, with WebKitGTK and GStreamer from the system.
 - **macOS** 13 or newer on Apple Silicon (experimental).
 - A graphics card with WebGPU (any recent NVIDIA, AMD or Intel) for the preview and the fast export.
-- An internet connection for generation; editing and export work offline.
+- An internet connection for cloud generation; local generation, editing and export work offline. The local video
+  models are checked on a 24 GB card.
 
 Settings, Network has a proxy for the providers and the downloads, and **Access from the network**: off by default; on,
 a browser on another computer or a phone opens the same interface with an access key, while everything runs here.
 
 ## Everything the app downloads
 
-The program itself holds everything it needs to edit and generate. Two tools are fetched only when you first import a
-video by its link, from their own GitHub releases, each file checked against its pinned size and SHA-256 before it is
-used; yt-dlp then updates itself once a day. On Linux the same tools come in their Linux builds; on macOS importing by
-link is not available yet.
+The program holds what it needs to edit and to generate in the cloud. The rest is downloaded only when you ask for it,
+from where it is published, each file checked against its pinned size and SHA-256 before it is used: yt-dlp, Deno and
+ffmpeg when you first import a video by its link (yt-dlp then updates itself once a day), the stable-diffusion.cpp
+engine and the local models when you download them in Settings, Local models. On Linux the tools come in their Linux
+builds; on macOS importing by link is not available yet; local generation is on Windows for now.
+
+The window's own models are fetched from Hugging Face the first time their feature is used and kept in the window's
+cache (Settings, Storage clears them): Parakeet Ultra int8 and Whisper Large v3 Turbo Q8 for transcripts, Gemma 4 E4B
+for scene captions, CLIP, MiniLM and CLAP for search and filler words, RIFE for frame interpolation.
 
 <!-- downloads:start -->
 | Tool | What for | File (direct link) | Size | Where it goes |
@@ -157,6 +191,12 @@ link is not available yet.
 | yt-dlp + Deno | importing a video by its link | [yt-dlp.exe](https://github.com/yt-dlp/yt-dlp/releases/download/2026.08.19/yt-dlp.exe) | 17.8 MB | `data\tools\yt-dlp\` (as is) |
 |  |  | [deno-x86_64-pc-windows-msvc.zip](https://github.com/denoland/deno/releases/download/v2.9.7/deno-x86_64-pc-windows-msvc.zip) | 42.6 MB | `data\tools\yt-dlp\` (unpacked) |
 | ffmpeg | joining a linked video's picture and sound | [ffmpeg-N-126342-gf88b741dbf-win64-gpl.zip](https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-08-31-13-27/ffmpeg-N-126342-gf88b741dbf-win64-gpl.zip) | 170.7 MB | `data\tools\ffmpeg\` (ffmpeg.exe and ffprobe.exe of the archive) |
+| stable-diffusion.cpp CUDA 12 | local generation on NVIDIA cards | [sd-master-1d0a58a-bin-win-cuda12-x64.zip](https://github.com/leejet/stable-diffusion.cpp/releases/download/master-964-1d0a58a/sd-master-1d0a58a-bin-win-cuda12-x64.zip)<br>[cudart-sd-bin-win-cu12-x64.zip](https://github.com/leejet/stable-diffusion.cpp/releases/download/master-964-1d0a58a/cudart-sd-bin-win-cu12-x64.zip) | 901.5 MB | `data\tools\sd\cuda12\` (unpacked) |
+| stable-diffusion.cpp Vulkan | local generation on other cards | [sd-master-1d0a58a-bin-win-vulkan-x64.zip](https://github.com/leejet/stable-diffusion.cpp/releases/download/master-964-1d0a58a/sd-master-1d0a58a-bin-win-vulkan-x64.zip) | 30.2 MB | `data\tools\sd\vulkan\` (unpacked) |
+| stable-diffusion.cpp CPU | local generation without a card | [sd-master-1d0a58a-bin-win-cpu-x64.zip](https://github.com/leejet/stable-diffusion.cpp/releases/download/master-964-1d0a58a/sd-master-1d0a58a-bin-win-cpu-x64.zip) | 17.6 MB | `data\tools\sd\cpu\` (unpacked) |
+| Qwen-Image 2.1 | pictures on this computer, optional | [Qwen3VL-8B-Instruct-Q4_K_M.gguf](https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct-GGUF/resolve/f982a07559d4a2f6c8744d840bf6fccab30eea96/Qwen3VL-8B-Instruct-Q4_K_M.gguf)<br>[qwen_image_2.1_vae_bf16.safetensors](https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/a8342359c61979b06a8dafb1a47991fe1f30e994/vae/qwen_image_2.1_vae_bf16.safetensors)<br>[qwen-image-2.1-turbo-Q4_K_M.gguf](https://huggingface.co/unsloth/Qwen-Image-2.1-Turbo-GGUF/resolve/5d1f9f759ea877ae556cda88dbec958b62ad3809/qwen-image-2.1-turbo-Q4_K_M.gguf)<br>[pytorch_lora_weights.safetensors](https://huggingface.co/lightx2v/Qwen-Image-2.1-Lightning/resolve/6b0a1176327c01522a44276c5da67331a025b6fc/pytorch_lora_weights.safetensors)<br>[Qwen-Image-2.1-viggle-turbo-v0.3-6step-lora-r256.safetensors](https://huggingface.co/Viggle/Qwen-Image-2.1-viggle-turbo/resolve/009a44a895ef85f7e643c80fdca9543795248867/Qwen-Image-2.1-viggle-turbo-v0.3-6step-lora-r256.safetensors)<br>[qwen-image-2.1-Q4_K_M.gguf](https://huggingface.co/unsloth/Qwen-Image-2.1-GGUF/resolve/2c31ccd392b367a6637841a143813320a02dff55/qwen-image-2.1-Q4_K_M.gguf) | 15.5 GB | `data\models\qwen-image-2.1\` (as is) |
+| MiniMax-H3 | video with sound on this computer, optional | [minimax_h3_fl2va_pruned-Q4_K.gguf](https://huggingface.co/unsloth/MiniMax-H3-GGUF/resolve/d629413c2e5b51b38c453668b75ca3b06ca92703/minimax_h3_fl2va_pruned-Q4_K.gguf)<br>[qwen3vl_32b_minimax_h3-Q4_K_M.gguf](https://huggingface.co/unsloth/MiniMax-H3-GGUF/resolve/d629413c2e5b51b38c453668b75ca3b06ca92703/qwen3vl_32b_minimax_h3-Q4_K_M.gguf)<br>[minimax_h3_video_vae_fp16.safetensors](https://huggingface.co/unsloth/MiniMax-H3-GGUF/resolve/d629413c2e5b51b38c453668b75ca3b06ca92703/vae/minimax_h3_video_vae_fp16.safetensors)<br>[minimax_h3_audio_vae_fp32.safetensors](https://huggingface.co/unsloth/MiniMax-H3-GGUF/resolve/d629413c2e5b51b38c453668b75ca3b06ca92703/vae/minimax_h3_audio_vae_fp32.safetensors)<br>[minimax_h3_fl2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors](https://huggingface.co/lightx2v/Minimax-h3-Turbo/resolve/3ec17a324ced54151364f24f8b5fb6bf7e26414f/minimax_h3_fl2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors)<br>[minimax_h3_fl2v_turbo_4step_v1.2_768p_comfyui_bf16.safetensors](https://huggingface.co/lightx2v/Minimax-h3-Turbo/resolve/3ec17a324ced54151364f24f8b5fb6bf7e26414f/minimax_h3_fl2v_turbo_4step_v1.2_768p_comfyui_bf16.safetensors) | 39.4 GB | `data\models\minimax-h3\` (as is) |
+| LTX-2.5 | video with sound on this computer, optional | [ltx-2.5-22b-distilled-Q4_K_M.gguf](https://huggingface.co/unsloth/LTX-2.5-GGUF/resolve/6eae90030f7f15460a0ecf9ab16445d676b2bbb6/distilled/ltx-2.5-22b-distilled-Q4_K_M.gguf)<br>[gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors](https://huggingface.co/PulpCut/LTX-2.5-INT8-ConvRot-safetensors/resolve/7597fb305b4cab9e7ff2c1d1e9551279c2932f0f/text_encoders/gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors)<br>[ltx-2.5-video-vae-conv-bf16.safetensors](https://huggingface.co/comfyicu/LTX-2.5/resolve/1026e00f808dbd9601911479b22d65b760737dc8/vae/ltx-2.5-video-vae-conv-bf16.safetensors)<br>[ltx-2.5-audio-vae-bf16.safetensors](https://huggingface.co/comfyicu/LTX-2.5/resolve/1026e00f808dbd9601911479b22d65b760737dc8/vae/ltx-2.5-audio-vae-bf16.safetensors)<br>[ltx-2.5-latent-spatial-upscaler-x2-bf16-1.0.safetensors](https://huggingface.co/comfyicu/LTX-2.5/resolve/1026e00f808dbd9601911479b22d65b760737dc8/latent_upscale_models/ltx-2.5-latent-spatial-upscaler-x2-bf16-1.0.safetensors) | 31.8 GB | `data\models\ltx-2.5\` (as is) |
 <!-- downloads:end -->
 
 ## Where your files are
