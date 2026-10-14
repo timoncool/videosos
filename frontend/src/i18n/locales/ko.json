@@ -37,11 +37,12 @@
   "toolbar": {
     "ariaLabel": "편집기 도구 모음",
     "workspaces": {
-      "motion": "Motion",
+      "motion": "모션",
       "label": "작업 영역",
       "edit": "편집",
       "color": "컬러",
-      "animate": "애니메이트"
+      "animate": "애니메이트",
+      "canvas": "캔버스"
     },
     "backToProjects": "프로젝트로 돌아가기",
     "backToProjectsAria": "프로젝트로 돌아가기",

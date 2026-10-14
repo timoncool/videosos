@@ -37,11 +37,12 @@
   "toolbar": {
     "ariaLabel": "Barra de herramientas del editor",
     "workspaces": {
-      "motion": "Motion",
+      "motion": "Movimiento",
       "label": "Espacios de trabajo",
       "edit": "Edición",
       "color": "Color",
-      "animate": "Animación"
+      "animate": "Animación",
+      "canvas": "Lienzo"
     },
     "backToProjects": "Volver a proyectos",
     "backToProjectsAria": "Volver a proyectos",

@@ -37,11 +37,12 @@
   "toolbar": {
     "ariaLabel": "Editor-Symbolleiste",
     "workspaces": {
-      "motion": "Motion",
+      "motion": "Bewegung",
       "label": "Arbeitsbereiche",
       "edit": "Schnitt",
       "color": "Farbe",
-      "animate": "Animation"
+      "animate": "Animation",
+      "canvas": "Leinwand"
     },
     "backToProjects": "Zurück zu Projekten",
     "backToProjectsAria": "Zurück zu Projekten",

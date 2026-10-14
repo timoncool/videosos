@@ -37,11 +37,12 @@
   "toolbar": {
     "ariaLabel": "Editör araç çubuğu",
     "workspaces": {
-      "motion": "Motion",
+      "motion": "Hareket",
       "label": "Çalışma alanları",
       "edit": "Kurgu",
       "color": "Renk",
-      "animate": "Animasyon"
+      "animate": "Animasyon",
+      "canvas": "Tuval"
     },
     "backToProjects": "Projelere Dön",
     "backToProjectsAria": "Projelere dön",

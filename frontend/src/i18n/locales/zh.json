@@ -37,11 +37,12 @@
   "toolbar": {
     "ariaLabel": "编辑器工具栏",
     "workspaces": {
-      "motion": "Motion",
+      "motion": "运动",
       "label": "工作区",
       "edit": "剪辑",
       "color": "调色",
-      "animate": "动画"
+      "animate": "动画",
+      "canvas": "画布"
     },
     "backToProjects": "返回项目",
     "backToProjectsAria": "返回项目",

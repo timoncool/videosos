@@ -37,11 +37,12 @@
   "toolbar": {
     "ariaLabel": "エディターツールバー",
     "workspaces": {
-      "motion": "Motion",
+      "motion": "モーション",
       "label": "ワークスペース",
       "edit": "編集",
       "color": "カラー",
-      "animate": "アニメート"
+      "animate": "アニメート",
+      "canvas": "キャンバス"
     },
     "backToProjects": "プロジェクトに戻る",
     "backToProjectsAria": "プロジェクトに戻る",
