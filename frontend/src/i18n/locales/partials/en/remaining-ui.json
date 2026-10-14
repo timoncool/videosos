@@ -6,7 +6,6 @@
       "shapes": "Shapes",
       "effects": "Effects",
       "transitions": "Transitions",
-      "ai": "AI",
       "collapsePanel": "Collapse panel",
       "expandPanel": "Expand panel",
       "keyframeEditor": "Keyframe editor",
@@ -106,69 +105,6 @@
         "pop": "Pop",
         "swing": "Swing"
       }
-    },
-    "tts": {
-      "seek": "Seek",
-      "dialogTitle": "Generate audio from text",
-      "dialogDescription": "Generate speech and insert it at the text clip's position.",
-      "mossUnsupported": "Browser-managed storage is not available in this browser. MOSS multilingual TTS works best in a recent Chromium browser.",
-      "supertonicUnsupported": "This browser cannot run the local Supertonic TTS runtime. Try a recent Chrome or Edge browser.",
-      "engine": "Engine",
-      "engineSupportDetails": "TTS engine support details",
-      "supertonicDescription": "31-language local ONNX voices on WebGPU or WASM.",
-      "supportedLanguages": "Supported languages: {{languages}}.",
-      "mossOption": "MOSS Nano (20 languages, CPU)",
-      "supertonicOption": "Supertonic 3 (31 languages, local ONNX)",
-      "language": "Language",
-      "autoDetectLanguage": "Auto detect",
-      "voice": "Voice",
-      "text": "Text",
-      "textPlaceholder": "Enter the text you want to hear spoken...",
-      "expressiveTags": "Expressive tags",
-      "speed": "Speed",
-      "progressPreparing": "Preparing local TTS...",
-      "insertedAndLinked": "Inserted and linked",
-      "generate": "Generate",
-      "generating": "Generating...",
-      "regenerate": "Regenerate",
-      "insertAndLink": "Insert and link",
-      "inserting": "Inserting...",
-      "errors": {
-        "openProject": "Open a project before generating audio.",
-        "enterText": "Enter some text to synthesize.",
-        "mossUnsupported": "Browser-managed storage is required for MOSS multilingual TTS. Try a recent Chromium browser.",
-        "supertonicUnsupported": "This browser cannot run the local Supertonic TTS runtime. Try a recent Chrome or Edge browser.",
-        "generateFailed": "Failed to generate speech.",
-        "insertFailed": "Failed to save and insert audio."
-      },
-      "notifications": {
-        "addedAndLinked": "Added \"{{fileName}}\" to timeline and linked with text.",
-        "savedNoTrack": "Saved \"{{fileName}}\" but no audio track is available."
-      }
-    },
-    "aiPanel": {
-      "textToSpeech": "Text to Speech",
-      "collapseTextToSpeech": "Collapse text to speech",
-      "expandTextToSpeech": "Expand text to speech",
-      "runsLocally": "{{runtime}} runs locally in the browser on {{backend}}.",
-      "history": "History ({{count}}) - {{size}}",
-      "clearAll": "Clear all",
-      "prompt": "Prompt",
-      "presets": "Presets",
-      "length": "Length",
-      "remove": "Remove",
-      "saved": "Saved",
-      "saving": "Saving...",
-      "saveAndInsert": "Save & Insert",
-      "saveToLibrary": "Save to Library",
-      "errors": {
-        "saveAudioFailed": "Failed to save audio to the media library."
-      },
-      "notifications": {
-        "savedToLibrary": "Saved \"{{fileName}}\" to the media library.",
-        "savedAndAdded": "Saved \"{{fileName}}\" and added to timeline."
-      },
-      "defaultTtsPrompt": "Welcome to freecut. This voice was generated locally in the browser."
     },
     "clearKeyframesDialog": {
       "descriptionProperty": "Clear {{property}} keyframes from {{count}} selected item(s)?",

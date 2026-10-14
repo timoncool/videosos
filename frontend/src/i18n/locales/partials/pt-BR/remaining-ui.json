@@ -6,7 +6,6 @@
       "shapes": "Formas",
       "effects": "Efeitos",
       "transitions": "Transições",
-      "ai": "IA",
       "collapsePanel": "Recolher painel",
       "expandPanel": "Expandir painel",
       "keyframeEditor": "Editor de keyframes",
@@ -106,69 +105,6 @@
         "pop": "Surgir",
         "swing": "Balançar"
       }
-    },
-    "tts": {
-      "seek": "Buscar",
-      "dialogTitle": "Gerar áudio a partir de texto",
-      "dialogDescription": "Gere fala e insira na posição do clipe de texto.",
-      "mossUnsupported": "O armazenamento gerenciado pelo navegador não está disponível. O MOSS TTS multilíngue funciona melhor em um navegador Chromium recente.",
-      "engine": "Motor",
-      "engineSupportDetails": "Detalhes de suporte do motor TTS",
-      "supportedLanguages": "Idiomas compatíveis: {{languages}}.",
-      "mossOption": "MOSS Nano (20 idiomas, CPU)",
-      "voice": "Voz",
-      "text": "Texto",
-      "textPlaceholder": "Digite o texto que você quer ouvir...",
-      "speed": "Velocidade",
-      "progressPreparing": "Preparando TTS local...",
-      "insertedAndLinked": "Inserido e vinculado",
-      "generate": "Gerar",
-      "generating": "Gerando...",
-      "regenerate": "Gerar novamente",
-      "insertAndLink": "Inserir e vincular",
-      "inserting": "Inserindo...",
-      "errors": {
-        "openProject": "Abra um projeto antes de gerar áudio.",
-        "enterText": "Digite algum texto para sintetizar.",
-        "mossUnsupported": "O armazenamento gerenciado pelo navegador é necessário para MOSS TTS multilíngue. Tente um navegador Chromium recente.",
-        "generateFailed": "Falha ao gerar fala.",
-        "insertFailed": "Falha ao salvar e inserir áudio.",
-        "supertonicUnsupported": "Este navegador não consegue executar o runtime local do Supertonic TTS. Tente uma versão recente do Chrome ou Edge."
-      },
-      "notifications": {
-        "addedAndLinked": "\"{{fileName}}\" foi adicionado à linha do tempo e vinculado ao texto.",
-        "savedNoTrack": "\"{{fileName}}\" foi salvo, mas nenhuma faixa de áudio está disponível."
-      },
-      "supertonicUnsupported": "Este navegador não consegue executar o runtime local do Supertonic TTS. Tente uma versão recente do Chrome ou Edge.",
-      "supertonicDescription": "Vozes ONNX locais em 31 idiomas no WebGPU ou WASM.",
-      "supertonicOption": "Supertonic 3 (31 idiomas, ONNX local)",
-      "language": "Idioma",
-      "autoDetectLanguage": "Detectar automaticamente",
-      "expressiveTags": "Tags expressivas"
-    },
-    "aiPanel": {
-      "textToSpeech": "Texto para fala",
-      "collapseTextToSpeech": "Recolher texto para fala",
-      "expandTextToSpeech": "Expandir texto para fala",
-      "runsLocally": "{{runtime}} roda localmente no navegador em {{backend}}.",
-      "history": "Histórico ({{count}}) - {{size}}",
-      "clearAll": "Limpar tudo",
-      "prompt": "Comando",
-      "presets": "Predefinições",
-      "length": "Duração",
-      "remove": "Remover",
-      "saved": "Salvo",
-      "saving": "Salvando...",
-      "saveAndInsert": "Salvar e inserir",
-      "saveToLibrary": "Salvar na biblioteca",
-      "errors": {
-        "saveAudioFailed": "Não foi possível salvar o áudio na biblioteca de mídia."
-      },
-      "notifications": {
-        "savedToLibrary": "\"{{fileName}}\" foi salvo na biblioteca de mídia.",
-        "savedAndAdded": "\"{{fileName}}\" foi salvo e adicionado à linha do tempo."
-      },
-      "defaultTtsPrompt": "Bem-vindo ao freecut. Esta voz foi gerada localmente no navegador."
     },
     "clearKeyframesDialog": {
       "descriptionProperty": "Limpar keyframes de {{property}} de {{count}} item(ns) selecionado(s)?",

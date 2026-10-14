@@ -116,6 +116,7 @@
       "transcribe": "Transkribieren",
       "needsProject": "Öffnen Sie zuerst ein Projekt: Der Frame wird in dessen Medienbibliothek abgelegt.",
       "noSlot": "{{model}} akzeptiert keine Datei dieser Art: Wählen Sie ein anderes Modell für diese Aufgabe.",
+      "noPrompt": "{{model}} hat kein Textfeld: Wähle ein anderes Modell dieser Aufgabe.",
       "placed": "In „{{field}}“ eingefügt",
       "lastFrameName": "{{title}}, letztes Bild"
     },

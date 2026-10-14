@@ -116,6 +116,7 @@
       "transcribe": "Transcribir",
       "needsProject": "Abre primero un proyecto: el fotograma se guarda en su biblioteca de medios.",
       "noSlot": "{{model}} no admite archivos de este tipo: elige otro modelo para esta tarea.",
+      "noPrompt": "{{model}} no tiene campo de texto: elige otro modelo de esta tarea.",
       "placed": "Colocado en «{{field}}»",
       "lastFrameName": "{{title}}, último fotograma"
     },

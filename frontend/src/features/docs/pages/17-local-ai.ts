@@ -5,7 +5,7 @@ const page = {
   slug: 'local-ai',
   title: 'Local AI Tools',
   description:
-    'Local text to speech and transcription, with local model caching.',
+    'Local transcription and scene analysis, with local model caching; speech and music through Generate.',
   category: 'Creative Tools',
   related: ['scene-browser', 'text-captions-subtitles', 'audio'],
   sections: [
@@ -28,22 +28,13 @@ const page = {
       ],
     },
     {
-      title: 'Text to speech',
+      title: 'Speech',
       blocks: [
         {
-          kind: 'steps',
+          kind: 'list',
           items: [
-            'Open the **AI** tab and expand **Text to Speech**, then type or paste your script.',
-            'Pick an engine (see the table), then choose a voice and, where supported, speed, language, and expressive tags.',
-            'Preview the result, then **Save and Insert** to drop linked audio at the playhead, or **Save to Library**.',
-          ],
-        },
-        {
-          kind: 'table',
-          headers: ['Engine', 'Languages', 'Runs on'],
-          rows: [
-            ['MOSS Nano', '20 languages', 'CPU'],
-            ['Supertonic 3', '31 languages', 'Local ONNX'],
+            'Speech comes from the **Generate** tab, task **Speech**: cloud voices of OpenRouter, fal and Runware.',
+            'On a text clip, **Generate Audio From Text** opens it with the clip\'s text in the prompt and the playhead at the clip.',
           ],
         },
       ],

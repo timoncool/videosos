@@ -7,7 +7,7 @@ import type { MediaTranscriptModel, MediaTranscriptQuantization } from '@/types/
 import { useSelectionStore } from '@/shared/state/selection'
 import { usePlaybackStore } from '@/shared/state/playback'
 import { useClearKeyframesDialogStore } from '@/shared/state/clear-keyframes-dialog'
-import { useTtsGenerateDialogStore } from '@/shared/state/tts-generate-dialog'
+import { useSpeechRequestStore } from '@/shared/state/speech-request-store'
 import { useSegmentRequestStore } from '@/shared/state/segment-request-store'
 import { getTextItemPlainText } from '@/shared/utils/text-item-spans'
 import {
@@ -239,8 +239,9 @@ export function useTimelineItemActions({
     if (!hasSpeakableText) {
       return
     }
-    useTtsGenerateDialogStore.getState().open(textContent, item.id)
-  }, [hasSpeakableText, item.id, textContent])
+    const projectFps = useTimelineSettingsStore.getState().fps || 30
+    useSpeechRequestStore.getState().ask({ text: textContent, at: item.from / projectFps })
+  }, [hasSpeakableText, item.from, textContent])
 
   const handleCaptionGeneration = useCallback(
     (

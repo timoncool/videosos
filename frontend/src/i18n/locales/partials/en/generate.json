@@ -118,6 +118,7 @@
       "transcribe": "Transcribe",
       "needsProject": "Open a project first: the frame goes into its media library.",
       "noSlot": "{{model}} takes no file of this kind: choose another model of this task.",
+      "noPrompt": "{{model}} has no text field: choose another model of this task.",
       "placed": "Put into \"{{field}}\""
     },
     "compare": {

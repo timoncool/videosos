@@ -116,6 +116,7 @@
       "transcribe": "转写",
       "needsProject": "请先打开项目：该帧将放入项目的媒体库。",
       "noSlot": "{{model}} 不接受此类文件：请为此任务选择其他模型。",
+      "noPrompt": "{{model}} 没有文本栏：请选择此任务的其他模型。",
       "placed": "已放入「{{field}}」",
       "lastFrameName": "{{title}}，尾帧"
     },

@@ -14,9 +14,8 @@ export type LocalModelCacheId =
   | 'whisper'
   | SceneVerificationModelId
   | 'removed-models'
-  | 'removed-parakeet'
+  | 'removed-onnx'
   | 'parakeet'
-  | 'supertonic-tts'
   | 'rife'
 
 export interface LocalModelCacheDefinition {
@@ -63,13 +62,6 @@ export const LOCAL_MODEL_CACHE_DEFINITIONS: LocalModelCacheDefinition[] = [
     matchPathFragments: ['/parakeet-tdt-0.6b-ultra-onnx/', '/parakeet-tdt-0.6b-v3-onnx/'],
   },
   {
-    id: 'supertonic-tts',
-    label: 'Supertonic TTS',
-    description: 'Supertonic TTS ONNX models, tokenizer configs, and voice styles.',
-    cacheName: ONNX_MODEL_CACHE_NAME,
-    matchPathFragments: ['/supertonic-3/'],
-  },
-  {
     id: 'rife',
     label: 'RIFE',
     description: 'RIFE frame interpolation model, used to render higher-frame-rate video.',
@@ -88,11 +80,11 @@ export const LOCAL_MODEL_CACHE_DEFINITIONS: LocalModelCacheDefinition[] = [
     ],
   },
   {
-    id: 'removed-parakeet',
-    label: 'Removed Parakeet v3',
-    description: 'Files of the older Parakeet that this version no longer uses.',
+    id: 'removed-onnx',
+    label: 'Removed Supertonic and Parakeet v3',
+    description: 'Files of Supertonic and the older Parakeet that this version no longer uses.',
     cacheName: ONNX_MODEL_CACHE_NAME,
-    matchPathFragments: ['/parakeet-tdt-0.6b-v3-smoothquant-onnx/'],
+    matchPathFragments: ['/parakeet-tdt-0.6b-v3-smoothquant-onnx/', '/supertonic-3/'],
   },
 ]
 

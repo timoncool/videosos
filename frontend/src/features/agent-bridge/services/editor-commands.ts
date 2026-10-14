@@ -49,7 +49,6 @@ const TABS: EditorSidebarTab[] = [
   'transitions',
   'lottie',
   'transcript',
-  'ai',
   'chat',
   'storyboard',
   'graphics',

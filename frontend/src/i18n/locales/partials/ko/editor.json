@@ -740,7 +740,6 @@
       "shapes": "도형",
       "effects": "효과",
       "transitions": "전환",
-      "ai": "AI",
       "collapsePanel": "패널 접기",
       "expandPanel": "패널 펼치기",
       "keyframeEditor": "키프레임 편집기",
@@ -840,69 +839,6 @@
         "pop": "팝",
         "swing": "스윙"
       }
-    },
-    "tts": {
-      "seek": "탐색",
-      "dialogTitle": "텍스트에서 오디오 생성",
-      "dialogDescription": "음성을 생성하고 텍스트 클립 위치에 삽입합니다.",
-      "mossUnsupported": "이 브라우저에서는 브라우저 관리 저장소를 사용할 수 없습니다. MOSS 다국어 TTS는 최신 Chromium 브라우저에서 가장 잘 작동합니다.",
-      "engine": "엔진",
-      "engineSupportDetails": "TTS 엔진 지원 정보",
-      "supportedLanguages": "지원 언어: {{languages}}.",
-      "mossOption": "MOSS Nano (20개 언어, CPU)",
-      "voice": "음성",
-      "text": "텍스트",
-      "textPlaceholder": "읽어 줄 텍스트를 입력하세요...",
-      "speed": "속도",
-      "progressPreparing": "로컬 TTS 준비 중...",
-      "insertedAndLinked": "삽입 및 연결됨",
-      "generate": "생성",
-      "generating": "생성 중...",
-      "regenerate": "다시 생성",
-      "insertAndLink": "삽입 및 연결",
-      "inserting": "삽입 중...",
-      "errors": {
-        "openProject": "오디오를 생성하기 전에 프로젝트를 여세요.",
-        "enterText": "합성할 텍스트를 입력하세요.",
-        "mossUnsupported": "MOSS 다국어 TTS에는 브라우저 관리 저장소가 필요합니다. 최신 Chromium 브라우저를 사용해 보세요.",
-        "generateFailed": "음성을 생성하지 못했습니다.",
-        "insertFailed": "오디오를 저장하고 삽입하지 못했습니다.",
-        "supertonicUnsupported": "이 브라우저에서는 로컬 Supertonic TTS 런타임을 실행할 수 없습니다. 최신 Chrome 또는 Edge를 사용해 보세요."
-      },
-      "notifications": {
-        "addedAndLinked": "\"{{fileName}}\"을(를) 타임라인에 추가하고 텍스트와 연결했습니다.",
-        "savedNoTrack": "\"{{fileName}}\"을(를) 저장했지만 사용 가능한 오디오 트랙이 없습니다."
-      },
-      "supertonicUnsupported": "이 브라우저에서는 로컬 Supertonic TTS 런타임을 실행할 수 없습니다. 최신 Chrome 또는 Edge를 사용해 보세요.",
-      "supertonicDescription": "WebGPU 또는 WASM에서 실행되는 31개 언어 로컬 ONNX 음성입니다.",
-      "supertonicOption": "Supertonic 3 (31개 언어, 로컬 ONNX)",
-      "language": "언어",
-      "autoDetectLanguage": "자동 감지",
-      "expressiveTags": "표현 태그"
-    },
-    "aiPanel": {
-      "textToSpeech": "텍스트 음성 변환",
-      "collapseTextToSpeech": "텍스트 음성 변환 접기",
-      "expandTextToSpeech": "텍스트 음성 변환 펼치기",
-      "runsLocally": "{{runtime}}은(는) 브라우저에서 {{backend}}로 로컬 실행됩니다.",
-      "history": "기록 ({{count}}) - {{size}}",
-      "clearAll": "모두 지우기",
-      "prompt": "프롬프트",
-      "presets": "프리셋",
-      "length": "길이",
-      "remove": "제거",
-      "saved": "저장됨",
-      "saving": "저장 중...",
-      "saveAndInsert": "저장 및 삽입",
-      "saveToLibrary": "라이브러리에 저장",
-      "errors": {
-        "saveAudioFailed": "오디오를 미디어 라이브러리에 저장하지 못했습니다."
-      },
-      "notifications": {
-        "savedToLibrary": "\"{{fileName}}\"이(가) 미디어 라이브러리에 저장되었습니다.",
-        "savedAndAdded": "\"{{fileName}}\"이(가) 저장되어 타임라인에 추가되었습니다."
-      },
-      "defaultTtsPrompt": "freecut에 오신 것을 환영합니다. 이 음성은 브라우저에서 로컬로 생성되었습니다."
     },
     "colorPanel": {
       "emptyState": "색 보정할 클립을 선택하세요",

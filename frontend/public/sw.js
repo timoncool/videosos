@@ -14,7 +14,6 @@ const APP_SHELL_URLS = [
   '/icons/icon-maskable-512.png',
 ]
 const CACHEABLE_DESTINATIONS = new Set(['document', 'script', 'style', 'font', 'image'])
-const EXCLUDED_PATH_PREFIXES = ['/moss-tts/']
 const MAX_DYNAMIC_CACHE_ENTRIES = 160
 
 self.addEventListener('install', (event) => {
@@ -52,10 +51,6 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(request.url)
 
   if (url.origin !== self.location.origin) {
-    return
-  }
-
-  if (EXCLUDED_PATH_PREFIXES.some((pathPrefix) => url.pathname.startsWith(pathPrefix))) {
     return
   }
 

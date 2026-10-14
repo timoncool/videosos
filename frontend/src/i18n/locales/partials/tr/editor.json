@@ -740,7 +740,6 @@
       "shapes": "Şekiller",
       "effects": "Efektler",
       "transitions": "Geçişler",
-      "ai": "YZ",
       "collapsePanel": "Paneli daralt",
       "expandPanel": "Paneli genişlet",
       "keyframeEditor": "Anahtar kare düzenleyici",
@@ -840,69 +839,6 @@
         "pop": "Pop",
         "swing": "Salla"
       }
-    },
-    "tts": {
-      "seek": "Git",
-      "dialogTitle": "Metinden ses oluştur",
-      "dialogDescription": "Konuşma oluşturup metin klibinin konumuna ekleyin.",
-      "mossUnsupported": "Bu tarayıcıda tarayıcı tarafından yönetilen depolama kullanılamıyor. MOSS çok dilli TTS en iyi güncel bir Chromium tarayıcıda çalışır.",
-      "engine": "Motor",
-      "engineSupportDetails": "TTS motoru destek ayrıntıları",
-      "supportedLanguages": "Desteklenen diller: {{languages}}.",
-      "mossOption": "MOSS Nano (20 dil, CPU)",
-      "voice": "Ses",
-      "text": "Metin",
-      "textPlaceholder": "Seslendirilmesini istediğiniz metni girin...",
-      "speed": "Hız",
-      "progressPreparing": "Yerel TTS hazırlanıyor...",
-      "insertedAndLinked": "Eklendi ve bağlandı",
-      "generate": "Oluştur",
-      "generating": "Oluşturuluyor...",
-      "regenerate": "Yeniden oluştur",
-      "insertAndLink": "Ekle ve bağla",
-      "inserting": "Ekleniyor...",
-      "errors": {
-        "openProject": "Ses oluşturmadan önce bir proje açın.",
-        "enterText": "Sentezlemek için metin girin.",
-        "mossUnsupported": "MOSS çok dilli TTS için tarayıcı tarafından yönetilen depolama gerekir. Güncel bir Chromium tarayıcı deneyin.",
-        "generateFailed": "Konuşma oluşturulamadı.",
-        "insertFailed": "Ses kaydedilip eklenemedi.",
-        "supertonicUnsupported": "Bu tarayıcı yerel Supertonic TTS çalışma zamanını çalıştıramıyor. Güncel bir Chrome veya Edge deneyin."
-      },
-      "notifications": {
-        "addedAndLinked": "\"{{fileName}}\" zaman çizelgesine eklendi ve metinle bağlandı.",
-        "savedNoTrack": "\"{{fileName}}\" kaydedildi ancak kullanılabilir ses izi yok."
-      },
-      "supertonicUnsupported": "Bu tarayıcı yerel Supertonic TTS çalışma zamanını çalıştıramıyor. Güncel bir Chrome veya Edge deneyin.",
-      "supertonicDescription": "WebGPU veya WASM üzerinde 31 dilde yerel ONNX sesleri.",
-      "supertonicOption": "Supertonic 3 (31 dil, yerel ONNX)",
-      "language": "Dil",
-      "autoDetectLanguage": "Otomatik algıla",
-      "expressiveTags": "İfade etiketleri"
-    },
-    "aiPanel": {
-      "textToSpeech": "Metinden Sese",
-      "collapseTextToSpeech": "Metinden sese bölümünü daralt",
-      "expandTextToSpeech": "Metinden sese bölümünü genişlet",
-      "runsLocally": "{{runtime}}, tarayıcıda {{backend}} üzerinde yerel çalışır.",
-      "history": "Geçmiş ({{count}}) - {{size}}",
-      "clearAll": "Tümünü temizle",
-      "prompt": "İstem",
-      "presets": "Ön Ayarlar",
-      "length": "Uzunluk",
-      "remove": "Kaldır",
-      "saved": "Kaydedildi",
-      "saving": "Kaydediliyor...",
-      "saveAndInsert": "Kaydet ve Ekle",
-      "saveToLibrary": "Kitaplığa Kaydet",
-      "errors": {
-        "saveAudioFailed": "Ses medya kitaplığına kaydedilemedi."
-      },
-      "notifications": {
-        "savedToLibrary": "\"{{fileName}}\" medya kitaplığına kaydedildi.",
-        "savedAndAdded": "\"{{fileName}}\" kaydedildi ve zaman çizelgesine eklendi."
-      },
-      "defaultTtsPrompt": "VideoSOS'a hoş geldiniz. Bu ses tarayıcıda yerel olarak oluşturuldu."
     },
     "colorPanel": {
       "emptyState": "Renk düzenlemek için bir klip seçin",

@@ -87,8 +87,8 @@ describe('editor-store', () => {
     useEditorStore.getState().setActiveTab('transitions')
     expect(useEditorStore.getState().activeTab).toBe('transitions')
 
-    useEditorStore.getState().setActiveTab('ai')
-    expect(useEditorStore.getState().activeTab).toBe('ai')
+    useEditorStore.getState().setActiveTab('transcript')
+    expect(useEditorStore.getState().activeTab).toBe('transcript')
   })
 
   it('sets clip inspector tab', () => {
@@ -218,7 +218,7 @@ describe('editor-store', () => {
 
   it('persists workspace layout tweaks without requiring a workspace switch', () => {
     useEditorStore.getState().setWorkspace('color')
-    useEditorStore.getState().setActiveTab('ai')
+    useEditorStore.getState().setActiveTab('transcript')
     useEditorStore.getState().setClipInspectorTab('audio')
     useEditorStore.getState().setColorScopesOpen(false)
     useEditorStore.getState().togglePropertiesFullColumn()
@@ -226,7 +226,7 @@ describe('editor-store', () => {
     const raw = localStorage.getItem('editor:workspaceLayout:color')
     expect(raw).not.toBeNull()
     expect(JSON.parse(raw ?? '{}')).toEqual({
-      activeTab: 'ai',
+      activeTab: 'transcript',
       clipInspectorTab: 'audio',
       colorScopesOpen: false,
       propertiesFullColumn: false,

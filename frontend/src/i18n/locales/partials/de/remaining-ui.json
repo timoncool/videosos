@@ -6,7 +6,6 @@
       "shapes": "Formen",
       "effects": "Effekte",
       "transitions": "Übergänge",
-      "ai": "KI",
       "collapsePanel": "Panel einklappen",
       "expandPanel": "Panel ausklappen",
       "keyframeEditor": "Keyframe-Editor",
@@ -106,69 +105,6 @@
         "pop": "Pop",
         "swing": "Schwingen"
       }
-    },
-    "tts": {
-      "seek": "Suchen",
-      "dialogTitle": "Audio aus Text generieren",
-      "dialogDescription": "Sprache erzeugen und an der Position des Textclips einfügen.",
-      "mossUnsupported": "Browserverwalteter Speicher ist nicht verfügbar. MOSS mehrsprachiges TTS funktioniert am besten in einem aktuellen Chromium-Browser.",
-      "supertonicUnsupported": "Dieser Browser kann die lokale Supertonic-TTS-Laufzeit nicht ausführen. Versuche es mit einer aktuellen Version von Chrome oder Edge.",
-      "engine": "Engine",
-      "engineSupportDetails": "Details zur TTS-Engine-Unterstützung",
-      "supertonicDescription": "Lokale ONNX-Stimmen in 31 Sprachen mit WebGPU oder WASM.",
-      "supportedLanguages": "Unterstützte Sprachen: {{languages}}.",
-      "mossOption": "MOSS Nano (20 Sprachen, CPU)",
-      "supertonicOption": "Supertonic 3 (31 Sprachen, lokales ONNX)",
-      "language": "Sprache",
-      "autoDetectLanguage": "Automatisch erkennen",
-      "voice": "Stimme",
-      "text": "Text",
-      "textPlaceholder": "Gib den Text ein, den du hören möchtest...",
-      "expressiveTags": "Ausdrucks-Tags",
-      "speed": "Geschwindigkeit",
-      "progressPreparing": "Lokales TTS wird vorbereitet...",
-      "insertedAndLinked": "Eingefügt und verknüpft",
-      "generate": "Generieren",
-      "generating": "Generieren...",
-      "regenerate": "Neu generieren",
-      "insertAndLink": "Einfügen und verknüpfen",
-      "inserting": "Einfügen...",
-      "errors": {
-        "openProject": "Öffne ein Projekt, bevor du Audio generierst.",
-        "enterText": "Gib Text zum Synthetisieren ein.",
-        "mossUnsupported": "Browserverwalteter Speicher ist für MOSS mehrsprachiges TTS erforderlich. Versuche einen aktuellen Chromium-Browser.",
-        "supertonicUnsupported": "Dieser Browser kann die lokale Supertonic-TTS-Laufzeit nicht ausführen. Versuche es mit einer aktuellen Version von Chrome oder Edge.",
-        "generateFailed": "Sprache konnte nicht generiert werden.",
-        "insertFailed": "Audio konnte nicht gespeichert und eingefügt werden."
-      },
-      "notifications": {
-        "addedAndLinked": "\"{{fileName}}\" wurde zur Timeline hinzugefügt und mit Text verknüpft.",
-        "savedNoTrack": "\"{{fileName}}\" wurde gespeichert, aber es ist keine Audiospur verfügbar."
-      }
-    },
-    "aiPanel": {
-      "textToSpeech": "Text zu Sprache",
-      "collapseTextToSpeech": "Text zu Sprache einklappen",
-      "expandTextToSpeech": "Text zu Sprache ausklappen",
-      "runsLocally": "{{runtime}} läuft lokal im Browser mit {{backend}}.",
-      "history": "Verlauf ({{count}}) - {{size}}",
-      "clearAll": "Alle löschen",
-      "prompt": "Prompt",
-      "presets": "Vorgaben",
-      "length": "Länge",
-      "remove": "Entfernen",
-      "saved": "Gespeichert",
-      "saving": "Speichern...",
-      "saveAndInsert": "Speichern und einfügen",
-      "saveToLibrary": "In Bibliothek speichern",
-      "errors": {
-        "saveAudioFailed": "Audio konnte nicht in der Medienbibliothek gespeichert werden."
-      },
-      "notifications": {
-        "savedToLibrary": "\"{{fileName}}\" wurde in der Medienbibliothek gespeichert.",
-        "savedAndAdded": "\"{{fileName}}\" wurde gespeichert und zur Timeline hinzugefügt."
-      },
-      "defaultTtsPrompt": "Willkommen bei freecut. Diese Stimme wurde lokal im Browser erzeugt."
     },
     "clearKeyframesDialog": {
       "descriptionProperty": "{{property}}-Keyframes von {{count}} ausgewählten Element(en) löschen?",

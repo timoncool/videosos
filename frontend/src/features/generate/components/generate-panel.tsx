@@ -264,6 +264,19 @@ export function GeneratePanel() {
     toast.success(t('generate.use.placed', { field: slot.label }))
   }, [pendingUse, task, model, form, t])
 
+  const pendingText = useGenerateStore((state) => state.pendingText)
+  useEffect(() => {
+    if (!pendingText || pendingText.task !== task || !model || !form) return
+    const prompt = form.fields.find((field) => field.role === 'prompt')
+    useGenerateStore.getState().writeAs(null)
+    if (!prompt) {
+      toast.error(t('generate.use.noPrompt', { model: model.id }))
+      return
+    }
+    useGenerateStore.getState().setValue(model, prompt.key, pendingText.text)
+    toast.success(t('generate.use.placed', { field: prompt.label }))
+  }, [pendingText, task, model, form, t])
+
   // another model of the task takes what the form held, field by meaning, where it has nothing of its own yet
   const carryFrom = useRef<{ to: string; fields: Field[]; values: Record<string, unknown> } | null>(
     null,

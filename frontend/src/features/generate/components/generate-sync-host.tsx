@@ -4,6 +4,7 @@ import { useGenerationPlacementsStore } from '@/shared/state/generation-placemen
 import { useProjectStore } from '../deps/editor'
 import { useGenerateChoices, useGenerateSync } from '../hooks/use-generate-sync'
 import { useSegmentRequests } from '../hooks/use-segment-requests'
+import { useSpeechRequests } from '../hooks/use-speech-requests'
 import { generateApi } from '../services/generate-api'
 import { placementsOf } from '../services/placements'
 import { modelKey, useGenerateStore } from '../stores/generate-store'
@@ -25,6 +26,7 @@ export function GenerateSyncHost() {
   useGenerateChoices()
   useGenerateSync(projectId)
   useSegmentRequests()
+  useSpeechRequests()
   useEffect(() => {
     const placements = placementsOf(jobs, projectId, forms)
     useGenerationPlacementsStore.getState().setPlacements(placements)

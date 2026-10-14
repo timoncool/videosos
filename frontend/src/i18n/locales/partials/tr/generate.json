@@ -116,6 +116,7 @@
       "transcribe": "Yazıya dök",
       "needsProject": "Önce bir proje açın: kare, projenin medya kitaplığına eklenir.",
       "noSlot": "{{model}} bu türde dosya kabul etmiyor: bu görev için başka bir model seçin.",
+      "noPrompt": "{{model}} için metin alanı yok: bu görevin başka bir modelini seçin.",
       "placed": "\"{{field}}\" alanına yerleştirildi",
       "lastFrameName": "{{title}}, son kare"
     },

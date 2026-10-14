@@ -116,6 +116,7 @@
       "transcribe": "Transcrire",
       "needsProject": "Ouvrez d’abord un projet : l’image est placée dans sa médiathèque.",
       "noSlot": "{{model}} n’accepte pas de fichier de ce type : choisissez un autre modèle pour cette tâche.",
+      "noPrompt": "{{model}} n’a pas de champ de texte : choisissez un autre modèle pour cette tâche.",
       "placed": "Placé dans « {{field}} »",
       "lastFrameName": "{{title}}, dernière image"
     },

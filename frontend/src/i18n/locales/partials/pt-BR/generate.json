@@ -116,6 +116,7 @@
       "transcribe": "Transcrever",
       "needsProject": "Abra um projeto primeiro: o quadro vai para a biblioteca de mídia dele.",
       "noSlot": "{{model}} não aceita arquivos deste tipo: escolha outro modelo para esta tarefa.",
+      "noPrompt": "{{model}} não tem campo de texto: escolha outro modelo desta tarefa.",
       "placed": "Colocado em \"{{field}}\"",
       "lastFrameName": "{{title}}, último quadro"
     },

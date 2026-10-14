@@ -121,12 +121,20 @@ export interface PendingUse {
   ref: MediaRef
 }
 
+/** Text to be written into the prompt of a task's form, applied once that form is open. */
+export interface PendingText {
+  task: Task
+  text: string
+}
+
 interface GenerateState extends Persisted {
   /** The choices were read from the server; until then nothing is written back over them. */
   choicesRead: boolean
   readChoices: (choices: Partial<Persisted>) => void
   pendingUse: PendingUse | null
   useAs: (use: PendingUse | null) => void
+  pendingText: PendingText | null
+  writeAs: (pending: PendingText | null) => void
   jobs: Job[]
   keys: Partial<Record<Provider, boolean>>
   /** Who answers the window's assistant questions: the agent connected over MCP, or a paid model of OpenRouter. */
@@ -200,6 +208,14 @@ export const useGenerateStore = create<GenerateState>()((set, get) => ({
     set({ pendingUse })
     if (pendingUse) {
       set({ task: pendingUse.task })
+      save(get())
+    }
+  },
+  pendingText: null,
+  writeAs: (pendingText) => {
+    set({ pendingText })
+    if (pendingText) {
+      set({ task: pendingText.task })
       save(get())
     }
   },

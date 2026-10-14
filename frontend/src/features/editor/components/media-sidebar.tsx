@@ -24,7 +24,6 @@ import {
   Sticker,
   Triangle,
   Type,
-  WandSparkles,
 } from 'lucide-react'
 import { motion, useReducedMotion } from 'motion/react'
 import { Button } from '@/components/ui/button'
@@ -69,7 +68,6 @@ import { EffectThumbnail, useGpuEffectPreviewData } from '@/features/editor/deps
 import { createLogger } from '@/shared/logging/logger'
 import { useSettingsStore } from '@/features/editor/deps/settings'
 import { resolveGeneratedLayerCanvasSize } from '../utils/generated-layer-canvas-size'
-const LazyAiPanel = lazy(() => import('./ai-tab').then((m) => ({ default: m.AiTab })))
 const LazyChatTab = lazy(() => import('./chat-tab').then((m) => ({ default: m.ChatTab })))
 const LazyGeneratePanel = lazy(() =>
   import('../deps/generate').then((m) => ({ default: m.GeneratePanel })),
@@ -323,7 +321,6 @@ export const MediaSidebar = memo(function MediaSidebar() {
   const setSidebarWidth = useEditorStore((s) => s.setSidebarWidth)
   const prefersReducedMotion = useReducedMotion()
 
-  const [aiTabActivated, setAiTabActivated] = useState(activeTab === 'ai')
   const [chatTabActivated, setChatTabActivated] = useState(activeTab === 'chat')
   const [generateTabActivated, setGenerateTabActivated] = useState(activeTab === 'generate')
   const [storyboardTabActivated, setStoryboardTabActivated] = useState(activeTab === 'storyboard')
@@ -333,7 +330,6 @@ export const MediaSidebar = memo(function MediaSidebar() {
   // the tab is first opened; it then stays mounted (state preserved).
   const [lottieTabActivated, setLottieTabActivated] = useState(activeTab === 'lottie')
   useEffect(() => {
-    if (activeTab === 'ai') setAiTabActivated(true)
     if (activeTab === 'chat') setChatTabActivated(true)
     if (activeTab === 'generate') setGenerateTabActivated(true)
     if (activeTab === 'storyboard') setStoryboardTabActivated(true)
@@ -579,7 +575,6 @@ export const MediaSidebar = memo(function MediaSidebar() {
     { id: 'transitions' as const, icon: Blend, label: t('editor.mediaSidebar.transitions') },
     { id: 'lottie' as const, icon: Sticker, label: t('lottieBrowser.tabLabel') },
     { id: 'transcript' as const, icon: Captions, label: t('transcript.tabLabel') },
-    { id: 'ai' as const, icon: WandSparkles, label: t('editor.mediaSidebar.ai') },
     { id: 'chat' as const, icon: MessagesSquare, label: t('chat.tabLabel') },
   ]
 
@@ -1257,17 +1252,6 @@ export const MediaSidebar = memo(function MediaSidebar() {
               {storyboardTabActivated && (
                 <Suspense fallback={null}>
                   <LazyStoryboardPanel />
-                </Suspense>
-              )}
-            </div>
-
-            {/* AI Tab */}
-            <div
-              className={`min-h-0 flex-1 overflow-hidden ${activeTab === 'ai' ? 'block' : 'hidden'}`}
-            >
-              {aiTabActivated && (
-                <Suspense fallback={null}>
-                  <LazyAiPanel />
                 </Suspense>
               )}
             </div>
