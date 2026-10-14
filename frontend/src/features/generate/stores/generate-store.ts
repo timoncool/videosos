@@ -9,7 +9,7 @@
 import { create } from 'zustand'
 import { generateApi, type Job, type MediaKind, type MediaRef, type ModelForm, type Provider, type Role, type Task } from '../services/generate-api'
 
-interface ModelRef {
+export interface ModelRef {
   provider: Provider
   id: string
 }
@@ -26,6 +26,8 @@ export interface Persisted {
   presets: PromptPreset[]
   /** What each `{{variable}}` of a prompt is filled with. */
   variables: Record<string, string>
+  /** Other models each task's run goes to as well, at most two: the batch. */
+  extraModelsByTask: Partial<Record<Task, ModelRef[]>>
 }
 
 export interface PromptPreset {
@@ -33,7 +35,7 @@ export interface PromptPreset {
   text: string
 }
 
-const DEFAULTS: Persisted = { task: 'image', modelByTask: {}, valuesByModel: {}, repeat: 1, placeOnTimeline: false, favorites: [], presets: [], variables: {} }
+const DEFAULTS: Persisted = { task: 'image', modelByTask: {}, valuesByModel: {}, repeat: 1, placeOnTimeline: false, favorites: [], presets: [], variables: {}, extraModelsByTask: {} }
 
 let saving: ReturnType<typeof setTimeout> | null = null
 
@@ -84,6 +86,7 @@ interface GenerateState extends Persisted {
   savePreset: (name: string, text: string) => void
   removePreset: (name: string) => void
   setVariable: (name: string, value: string) => void
+  setExtraModels: (task: Task, models: ModelRef[]) => void
   setJobs: (jobs: Job[]) => void
   upsertJob: (job: Job) => void
   removeJob: (id: string) => void
@@ -101,6 +104,7 @@ function persisted(state: GenerateState): Persisted {
     favorites: state.favorites,
     presets: state.presets,
     variables: state.variables,
+    extraModelsByTask: state.extraModelsByTask,
   }
 }
 
@@ -156,6 +160,10 @@ export const useGenerateStore = create<GenerateState>()((set, get) => ({
   },
   removePreset: (name) => {
     set({ presets: get().presets.filter((preset) => preset.name !== name) })
+    save(get())
+  },
+  setExtraModels: (task, models) => {
+    set({ extraModelsByTask: { ...get().extraModelsByTask, [task]: models.slice(0, 2) } })
     save(get())
   },
   setVariable: (name, value) => {

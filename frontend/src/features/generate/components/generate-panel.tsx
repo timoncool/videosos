@@ -33,7 +33,6 @@ import {
   generateApi,
   PROVIDER_LABELS,
   TASKS,
-  type Estimate,
   type Job,
   type MediaRef,
   type ModelEntry,
@@ -48,6 +47,8 @@ import { fillVariables, variablesOf } from '../services/prompt-variables'
 import { PromptPresets } from './prompt-presets'
 import { GenerationHistory } from './generation-history'
 import { ModelPicker } from './model-picker'
+import { BatchModels, type BatchRun } from './batch-models'
+import { useEstimate } from '../hooks/use-estimate'
 import { fieldLabel, overLength, providerWords } from '../services/field-label'
 
 const NO_VALUES: Record<string, unknown> = {}
@@ -134,34 +135,6 @@ function KeyPrompt({ provider }: { provider: Provider }) {
   )
 }
 
-function useEstimate(provider: Provider | undefined, id: string | undefined, values: Record<string, unknown>, repeat: number) {
-  const [estimate, setEstimate] = useState<Estimate | null>(null)
-  const [error, setError] = useState<string | null>(null)
-  const key = JSON.stringify([provider, id, values, repeat])
-  useEffect(() => {
-    if (!provider || !id) return
-    let cancelled = false
-    const timer = setTimeout(() => {
-      generateApi
-        .estimate(provider, id, values, repeat)
-        .then((answer) => {
-          if (cancelled) return
-          setEstimate(answer)
-          setError(null)
-        })
-        .catch((reason: unknown) => {
-          if (cancelled) return
-          setEstimate(null)
-          setError(reason instanceof Error ? reason.message : String(reason))
-        })
-    }, 250)
-    return () => {
-      cancelled = true
-      clearTimeout(timer)
-    }
-  }, [key]) // eslint-disable-line react-hooks/exhaustive-deps
-  return { estimate, error }
-}
 
 export function GeneratePanel() {
   const { t, i18n } = useTranslation()
@@ -182,6 +155,8 @@ export function GeneratePanel() {
   const [moreOpen, setMoreOpen] = useState(false)
   const [improving, setImproving] = useState(false)
   const [improveError, setImproveError] = useState<string | null>(null)
+  const [batchRuns, setBatchRuns] = useState<BatchRun[]>([])
+  const batchBlocked = batchRuns.some((run) => run.missing.length > 0 || run.error !== null)
   const variables = useGenerateStore((state) => state.variables)
   const variableNames = useMemo(() => variablesOf(values), [values])
   const unfilled = variableNames.filter((name) => !variables[name]?.trim())
@@ -197,6 +172,9 @@ export function GeneratePanel() {
   }, [form, values])
   const [previousPrompt, setPreviousPrompt] = useState<{ key: string; text: string } | null>(null)
   const { estimate, error: estimateError } = useEstimate(model?.provider, model?.id, values, repeat)
+  // the price of the whole batch: unknown while any of its runs is
+  const total = estimate?.estimate && batchRuns.every((run) => run.usd !== null) ? estimate.estimate.usd + batchRuns.reduce((sum, run) => sum + (run.usd ?? 0), 0) : null
+  const totalExact = (estimate?.estimate?.exact ?? false) && batchRuns.every((run) => run.exact)
 
   useEffect(() => {
     if (!model) return
@@ -271,6 +249,18 @@ export function GeneratePanel() {
         place: placeOnTimeline,
       })
       for (const job of created) useGenerateStore.getState().upsertJob(job)
+      for (const run of batchRuns) {
+        const { jobs: more } = await generateApi.createJobs({
+          provider: run.ref.provider,
+          model: run.ref.id,
+          task,
+          values: run.values,
+          project_id: projectId,
+          repeat,
+          place: placeOnTimeline,
+        })
+        for (const job of more) useGenerateStore.getState().upsertJob(job)
+      }
     } catch (error) {
       setSubmitError(error instanceof Error ? error.message : String(error))
     } finally {
@@ -326,6 +316,7 @@ export function GeneratePanel() {
         </div>
 
         <ModelPicker task={task} value={model} onChange={chooseModel} keys={keys} />
+        <BatchModels task={task} form={form} values={fillVariables(values, variables)} repeat={repeat} keys={keys} onRuns={setBatchRuns} />
 
         {model && !hasKey && <KeyPrompt provider={model.provider} />}
 
@@ -474,16 +465,14 @@ export function GeneratePanel() {
         </div>
         <Button
           className="h-9 w-full gap-2"
-          disabled={!form || !hasKey || submitting || missing.length > 0 || tooLong.length > 0 || unfilled.length > 0 || !projectId}
+          disabled={!form || !hasKey || submitting || missing.length > 0 || tooLong.length > 0 || unfilled.length > 0 || batchBlocked || !projectId}
           onClick={() => void generate()}
           data-testid="generate-submit"
         >
           {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
           {t('generate.submit')}
           <span className="ml-auto text-xs opacity-80">
-            {estimate?.estimate
-              ? `${estimate.estimate.exact ? '' : '≈'}${formatUsd(estimate.estimate.usd)}`
-              : t('generate.cost.unknown')}
+            {total !== null ? `${totalExact ? '' : '≈'}${formatUsd(total)}` : t('generate.cost.unknown')}
           </span>
         </Button>
         {missing.length > 0 && (

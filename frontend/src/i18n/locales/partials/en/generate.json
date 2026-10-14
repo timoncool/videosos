@@ -248,6 +248,12 @@
     "variables": {
       "title": "Prompt variables",
       "missing": "Fill in the variables: {{names}}"
+    },
+    "batch": {
+      "add": "Compare with another model",
+      "remove": "Remove the model from the batch",
+      "lacks": "lacks: {{fields}}",
+      "noKey": "no {{provider}} key"
     }
   }
 }

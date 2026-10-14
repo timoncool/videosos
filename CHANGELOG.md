@@ -30,6 +30,7 @@ makes it, and the release notes on GitHub are taken from the release's section.
 - **Each generation card's details**: the model, every value it was asked with, the time it took.
 - **Results named and tagged by their prompt**: a picture carries the prompt and the model in its metadata (Windows
   shows them as its title and comment), a video or a sound in its tags, and the library item has the same title.
+- **Compare models in one run**: the same prompt goes to up to two more models of the task, each with its price, and the results stand side by side in the history.
 - **Prompt presets and variables**: keep a prompt under a name and put it into any form; `{{subject}}` in a prompt gets its own field and is filled in when the job is sent.
 - **Prompt from the picture**: a model that sees the form's picture writes the prompt that would make it.
 - **A prompt is checked against its model** before it is sent: the counter shows the model's limit, and Create

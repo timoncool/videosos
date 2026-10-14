@@ -34,9 +34,11 @@ interface ModelPickerProps {
   value: { provider: Provider; id: string } | undefined
   onChange: (entry: ModelEntry) => void
   keys: Partial<Record<Provider, boolean>>
+  /** Without a model yet, take the first one with a key; off for a picker that adds a model by choice. */
+  autoSelect?: boolean
 }
 
-export function ModelPicker({ task, value, onChange, keys }: ModelPickerProps) {
+export function ModelPicker({ task, value, onChange, keys, autoSelect = true }: ModelPickerProps) {
   const { t, i18n } = useTranslation()
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
@@ -72,7 +74,7 @@ export function ModelPicker({ task, value, onChange, keys }: ModelPickerProps) {
         if (cancelled) return
         setAnswer(result)
         setError(null)
-        if (!value && result.models.length > 0) {
+        if (autoSelect && !value && result.models.length > 0) {
           const withKey = result.models.find((entry) => result.keys[entry.provider] && entry.status === 'live')
           onChange(withKey ?? result.models[0]!)
         }
