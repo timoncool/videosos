@@ -17,6 +17,7 @@ import { cn } from '@/shared/ui/cn'
 import { generateApi, type Field, type MediaKind, type MediaRef } from '../services/generate-api'
 import { getMediaDragData, mediaLibraryService, useMediaLibraryStore } from '../deps/editor'
 import { fieldLabel, overLength, providerWords } from '../services/field-label'
+import { useGenerateStore } from '../stores/generate-store'
 
 /** Drag payload of a finished generation's file. */
 export const OUTPUT_DRAG_TYPE = 'application/x-videosos-output'
@@ -35,6 +36,14 @@ function kindOfMime(mime: string): MediaKind | null {
 export function MediaThumb({ reference }: { reference: MediaRef }) {
   const [url, setUrl] = useState<string | null>(null)
   const mediaItems = useMediaLibraryStore((state) => state.mediaItems)
+  // a generation's file is drawn by what it is: a video by its first frame, not as a picture
+  const outputKind = useGenerateStore((state) =>
+    typeof reference === 'object' && 'job' in reference
+      ? state.jobs
+          .find((job) => job.id === reference.job)
+          ?.outputs.find((output) => output.index === reference.index)?.kind
+      : undefined,
+  )
   useEffect(() => {
     let cancelled = false
     if (typeof reference === 'object' && 'media' in reference) {
@@ -56,7 +65,19 @@ export function MediaThumb({ reference }: { reference: MediaRef }) {
         : typeof reference === 'string'
           ? reference
           : `#${reference.index + 1}`
-  return url ? (
+  if (url && outputKind === 'video') {
+    return (
+      <video
+        src={url}
+        muted
+        preload="metadata"
+        aria-label={name}
+        className="h-full w-full object-cover"
+        onError={() => setUrl(null)}
+      />
+    )
+  }
+  return url && outputKind !== 'audio' ? (
     <img src={url} alt={name} className="h-full w-full object-cover" onError={() => setUrl(null)} />
   ) : (
     <span className="line-clamp-3 break-all p-1 text-[11px] text-muted-foreground">{name}</span>

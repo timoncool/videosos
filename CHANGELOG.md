@@ -69,6 +69,7 @@ makes it, and the release notes on GitHub are taken from the release's section.
 
 ### Fixed
 
+- **A generated video is shown by its first frame** in a canvas node and in a form's file slot, instead of its number.
 - **Several results finishing together all land on the timeline**: a library load that ends after a newer one no longer overwrites it, and an import puts its own files into the library before placing them.
 - **A result put on a new track is in view**: the timeline scrolls its tracks to it.
 - **Choosing another model keeps what the form held**: the prompt, the pictures and the video put in through "Use as" go to the new model's fields of the same meaning, where it has nothing of its own yet.
