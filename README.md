@@ -102,7 +102,7 @@ The server serves its guide as the resource `videosos://skill` (prompt `videosos
 
 - **Checkpoints.** The timeline is kept before every agent's edit; the Checkpoints button beside undo and redo brings
   any of them back. An agent can rehearse an edit (`dry_run`) and see what it would make without touching anything.
-- **Proposals.** With Settings, Agents, *Agents' timeline edits wait for me* on, an agent's edit is shown in plain words
+- **Proposals.** With Settings, Providers and agent, *Agents' timeline edits wait for me* on, an agent's edit is shown in plain words
   and applies only after you press Accept.
 - **A spending limit.** Generations are paid: Settings, Providers and agent sets a daily limit for agents, past which
   `generate` is refused. Only agents on this computer and the program's own window may connect; provider keys are never
@@ -174,7 +174,7 @@ Windows lacks it. On a blocked connection that fetch fails: install WebView2 fro
 [Evergreen Standalone x64](https://go.microsoft.com/fwlink/p/?LinkId=2124701), then run the installer of VideoSOS again.
 
 **A generation fails.** The card says what kind of failure it was; *Error text* shows the provider's own words, and a
-missing or refused key opens Settings, Providers. A job that was sent is never sent again by itself: press *Run again*
+missing or refused key opens Settings, Providers. A job that was sent is never sent again by itself: press *Again* on its card
 when you want another try.
 
 **A video by its link stops with "confirm you are not a bot".** The site wants a signed-in browser: export
