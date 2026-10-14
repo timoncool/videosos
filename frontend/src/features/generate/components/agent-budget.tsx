@@ -17,6 +17,8 @@ export function AgentBudget() {
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [confirmEdits, setConfirmEdits] = useState(false)
+  const [assistant, setAssistant] = useState<'openrouter' | 'agent'>('openrouter')
+  const [agent, setAgent] = useState<{ connected: boolean; ago: number | null } | null>(null)
 
   useEffect(() => {
     generateApi
@@ -26,11 +28,35 @@ export function AgentBudget() {
           settings.agent_daily_budget_usd === null ? '' : String(settings.agent_daily_budget_usd),
         )
         setConfirmEdits(settings.agent_confirm_edits)
+        setAssistant(settings.assistant === 'agent' ? 'agent' : 'openrouter')
       })
       .catch((reason: unknown) =>
         setError(reason instanceof Error ? reason.message : String(reason)),
       )
   }, [])
+
+  useEffect(() => {
+    const read = () =>
+      generateApi.agentStatus().then(
+        (status) => setAgent({ connected: status.agent_connected, ago: status.agent_seconds_ago }),
+        (reason: unknown) => setError(reason instanceof Error ? reason.message : String(reason)),
+      )
+    void read()
+    const timer = window.setInterval(() => void read(), 5000)
+    return () => window.clearInterval(timer)
+  }, [])
+
+  const chooseAssistant = (next: 'openrouter' | 'agent') => {
+    const before = assistant
+    setAssistant(next)
+    generateApi.storeSettings({ assistant: next }).then(
+      (settings) => setAssistant(settings.assistant === 'agent' ? 'agent' : 'openrouter'),
+      (reason: unknown) => {
+        setAssistant(before)
+        setError(reason instanceof Error ? reason.message : String(reason))
+      },
+    )
+  }
 
   const save = async () => {
     const trimmed = budget.trim().replace(',', '.')
@@ -49,6 +75,41 @@ export function AgentBudget() {
 
   return (
     <div className="space-y-1.5 rounded-lg border border-border p-3" data-testid="agent-budget">
+      <div className="space-y-1.5 border-b border-border pb-2">
+        <div className="flex items-center justify-between gap-3">
+          <span className="text-xs">{t('settings.providers.assistant')}</span>
+          <div
+            className="flex rounded-md bg-[var(--color-surface-2)] p-0.5"
+            role="radiogroup"
+            aria-label={t('settings.providers.assistant')}
+          >
+            {(['agent', 'openrouter'] as const).map((each) => (
+              <button
+                key={each}
+                type="button"
+                role="radio"
+                aria-checked={assistant === each}
+                onClick={() => chooseAssistant(each)}
+                className={`rounded px-2 py-1 text-[11px] ${assistant === each ? 'bg-[var(--color-overlay)] text-[var(--color-text)]' : 'text-[var(--color-muted)] hover:text-[var(--color-text)]'}`}
+              >
+                {t(`settings.providers.assistantEngine.${each}`)}
+              </button>
+            ))}
+          </div>
+        </div>
+        <p className="text-[11px] text-muted-foreground">
+          {t(`settings.providers.assistantHint.${assistant}`)}
+        </p>
+        {assistant === 'agent' && agent && (
+          <p
+            className={`text-[11px] ${agent.connected ? 'text-[var(--color-accent)]' : 'text-[var(--color-warn)]'}`}
+          >
+            {agent.connected
+              ? t('settings.providers.agentConnected', { seconds: agent.ago ?? 0 })
+              : t('settings.providers.agentAbsent')}
+          </p>
+        )}
+      </div>
       <div className="flex items-center gap-2">
         <Label className="text-xs text-muted-foreground">{t('settings.providers.budget')}</Label>
         <Input

@@ -1,11 +1,9 @@
 /** A 3D blocking's frame and camera video into the open project's library, to start a generation from. */
 
 import { mediaLibraryService, useMediaLibraryStore, useProjectStore } from '../deps/editor'
-import { blockShot } from './prompt-assist'
 import { createPrevisRenderer, type PrevisRenderer } from './previs-render'
 import { normalizePrevisScene, type PrevisScene } from './previs-scene'
 import { resultFileName } from './result-title'
-import { aspectOf } from './storyboard'
 import { useGenerateStore } from '../stores/generate-store'
 
 const LONG_SIDE = { frame: 1920, video: 1280 }
@@ -92,33 +90,19 @@ export async function importPrevisVideo(
   return media.id
 }
 
-/**
- * An agent's blocking: the scene it wrote, or one the prompt model builds from its words (changing the project's
- * current blocking unless asked for a fresh one), kept as the project's blocking so the person sees it in the tab.
- */
+/** An agent's blocking: the scene it wrote, kept as the project's blocking so the person sees it in the tab. */
 export async function agentBlocking(input: {
-  scene?: unknown
-  description?: string
-  /** Builds a new scene from the words instead of changing the current one. */
-  fresh?: boolean
+  scene: unknown
   /** Refuses a scene before it replaces the project's blocking. */
   accept?: (scene: PrevisScene) => void
 }): Promise<PrevisScene> {
   const project = openProject()
   const current = useGenerateStore.getState().blockings[project.id]
-  const scene =
-    input.scene !== undefined
-      ? normalizePrevisScene(input.scene)
-      : await blockShot(
-          input.description ?? '',
-          aspectOf(project.metadata.width, project.metadata.height),
-          input.fresh ? null : (current?.scene ?? null),
-        )
+  const scene = normalizePrevisScene(input.scene)
   input.accept?.(scene)
-  useGenerateStore.getState().setBlocking(project.id, {
-    description: input.description ?? current?.description ?? '',
-    scene,
-  })
+  useGenerateStore
+    .getState()
+    .setBlocking(project.id, { description: current?.description ?? '', scene })
   return scene
 }
 

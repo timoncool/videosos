@@ -92,7 +92,10 @@
     "importFailed": "El resultado llegó pero no se añadió a la biblioteca: {{reason}}",
     "improve": {
       "button": "Mejorar prompt",
-      "hint": "Reescribe el prompt para este modelo con un LLM de OpenRouter (una fracción de céntimo)",
+      "hint": {
+        "openrouter": "Reescribe el prompt para este modelo con un LLM de OpenRouter (una fracción de céntimo)",
+        "agent": "Reescribir el prompt para este modelo: lo escribe el agente conectado, sin coste"
+      },
       "needsKey": "Requiere una clave de OpenRouter",
       "undo": "Volver al mío"
     },
@@ -236,7 +239,10 @@
     },
     "describe": {
       "button": "Prompt desde la imagen",
-      "hint": "Un modelo mira la primera imagen del formulario y escribe el prompt que la produciría. Lo paga la clave de OpenRouter."
+      "hint": {
+        "openrouter": "Un modelo mira la primera imagen del formulario y escribe el prompt que la produciría. Lo paga la clave de OpenRouter.",
+        "agent": "El agente conectado mira la primera imagen del formulario y escribe el prompt que la generaría; sin coste"
+      }
     },
     "presets": {
       "button": "Preajustes",
@@ -286,7 +292,10 @@
       "scriptHint": "Qué ocurre, escena por escena o en una frase. Los nombres @elemento traen sus imágenes.",
       "count": "Planos",
       "split": "Dividir en planos",
-      "splitHint": "Un modelo de lenguaje de OpenRouter escribe los planos; se paga como Mejorar prompt",
+      "splitHint": {
+        "openrouter": "Un modelo de lenguaje de OpenRouter escribe los planos; se paga como Mejorar prompt",
+        "agent": "Los planos los escribe el agente conectado; sin coste"
+      },
       "frameModel": "Fotogramas de",
       "clipModel": "Clips de",
       "shots": "Planos",
@@ -402,7 +411,10 @@
     },
     "previs": {
       "tabLabel": "Blocking 3D",
-      "hint": "Planifica el plano en 3D antes de pagar por él: describe el lugar, quién se mueve y hacia dónde, y cómo va la cámara; el modelo de prompts construye formas provisionales y una trayectoria de cámara (unos dos céntimos). Mira a través de la cámara, desde arriba o alrededor, y luego pasa su fotograma a un modelo de vídeo o de imagen, o graba el movimiento de la cámara.",
+      "hint": {
+        "openrouter": "Planifica el plano en 3D antes de pagar por él: describe el lugar, quién se mueve y hacia dónde, y cómo va la cámara; el modelo de prompts construye formas provisionales y una trayectoria de cámara (unos dos céntimos). Mira a través de la cámara, desde arriba o alrededor, y luego pasa su fotograma a un modelo de vídeo o de imagen, o graba el movimiento de la cámara.",
+        "agent": "Pon en escena en 3D antes de pagar una generación: describe el lugar, quién va adónde y cómo se mueve la cámara, y el agente conectado arma gratis las figuras y el recorrido de la cámara. Mira a través de la cámara, desde arriba o alrededor, y luego pasa el fotograma a un modelo de vídeo o de imagen o graba el movimiento de cámara."
+      },
       "description": "El plano",
       "placeholder": "Una mujer camina por un pasillo estrecho hacia una puerta; la cámara la sigue por detrás y luego da la vuelta hasta quedar frente a ella cuando se detiene. 6 segundos, 35 mm, terminando en 50 mm.",
       "build": "Crear el blocking",

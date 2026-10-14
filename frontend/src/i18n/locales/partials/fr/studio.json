@@ -252,6 +252,8 @@
     "stop": "Arrêter",
     "footnote": "Entrée envoie, Maj+Entrée passe à la ligne. Avant les générations coûteuses, l’assistant demande confirmation.",
     "needsKey": "Le chat a besoin d’une clé OpenRouter : l’assistant répond avec un modèle OpenRouter et travaille avec les outils de VideoSOS.",
-    "openKeys": "Ouvrir les clés"
+    "openKeys": "Ouvrir les clés",
+    "byAgent": "L'agent connecté (MCP) répond",
+    "introAgent": "Vos messages vont à l'agent connecté par MCP : il travaille dans VideoSOS avec ses outils, lit la timeline, génère, monte et exporte, et ses étapes s'affichent ici. Ses réponses ne coûtent rien ; les générations comptent dans la limite quotidienne des agents."
   }
 }

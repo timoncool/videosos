@@ -92,7 +92,10 @@
     "importFailed": "Sonuç geldi ancak kitaplığa eklenemedi: {{reason}}",
     "improve": {
       "button": "İstemi iyileştir",
-      "hint": "İstemi bu model için bir OpenRouter LLM ile yeniden yaz (bir kuruşun çok altında)",
+      "hint": {
+        "openrouter": "İstemi bu model için bir OpenRouter LLM ile yeniden yaz (bir kuruşun çok altında)",
+        "agent": "İstemi bu model için yeniden yaz: bağlı ajan yazar, ücretsiz"
+      },
       "needsKey": "OpenRouter anahtarı gerekli",
       "undo": "Kendi istemime dön"
     },
@@ -236,7 +239,10 @@
     },
     "describe": {
       "button": "Görselden istem",
-      "hint": "Bir model formdaki ilk görsele bakar ve onu üretecek istemi yazar. Ücreti OpenRouter anahtarı öder."
+      "hint": {
+        "openrouter": "Bir model formdaki ilk görsele bakar ve onu üretecek istemi yazar. Ücreti OpenRouter anahtarı öder.",
+        "agent": "Bağlı ajan formdaki ilk resme bakar ve onu oluşturacak istemi yazar; ücretsiz"
+      }
     },
     "presets": {
       "button": "Ön ayarlar",
@@ -286,7 +292,10 @@
       "scriptHint": "Ne oluyor, sahne sahne ya da tek cümleyle. @öğe adları görsellerini getirir.",
       "count": "Çekim",
       "split": "Çekimlere böl",
-      "splitHint": "Çekimleri OpenRouter’ın bir dil modeli yazar; “İstemi iyileştir” gibi ücretlidir",
+      "splitHint": {
+        "openrouter": "Çekimleri OpenRouter’ın bir dil modeli yazar; “İstemi iyileştir” gibi ücretlidir",
+        "agent": "Çekimleri bağlı ajan yazar; ücretsiz"
+      },
       "frameModel": "Kareler şuradan",
       "clipModel": "Klipler şuradan",
       "shots": "Çekimler",
@@ -402,7 +411,10 @@
     },
     "previs": {
       "tabLabel": "3D blocking",
-      "hint": "Çekimi parasını ödemeden önce 3D olarak blocking yap: yeri, kimin nereye hareket ettiğini ve kameranın nasıl gittiğini anlat; prompt modeli yer tutucu şekiller ve bir kamera yolu oluşturur (yaklaşık iki sent). Kameradan, yukarıdan veya etrafından bak, sonra karesini bir video veya görsel modeline ver ya da kameranın hareketini kaydet.",
+      "hint": {
+        "openrouter": "Çekimi parasını ödemeden önce 3D olarak blocking yap: yeri, kimin nereye hareket ettiğini ve kameranın nasıl gittiğini anlat; prompt modeli yer tutucu şekiller ve bir kamera yolu oluşturur (yaklaşık iki sent). Kameradan, yukarıdan veya etrafından bak, sonra karesini bir video veya görsel modeline ver ya da kameranın hareketini kaydet.",
+        "agent": "Bir üretime para ödemeden önce sahneyi 3B'de kurun: yeri, kimin nereye gittiğini ve kameranın nasıl hareket ettiğini anlatın; bağlı ajan yer tutucuları ve kamera yolunu ücretsiz kurar. Kameradan, yukarıdan ya da çevresinden bakın, sonra kareyi bir video ya da görsel modeline verin veya kamera hareketini kaydedin."
+      },
       "description": "Çekim",
       "placeholder": "Bir kadın dar bir koridorda bir kapıya doğru yürüyor; kamera arkasından onu takip ediyor, o durunca dönüp karşısına geçiyor. 6 saniye, 35 mm, sonda 50 mm.",
       "build": "Blocking oluştur",

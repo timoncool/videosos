@@ -92,7 +92,10 @@
     "importFailed": "Das Ergebnis ist eingetroffen, wurde aber nicht zur Bibliothek hinzugefügt: {{reason}}",
     "improve": {
       "button": "Prompt verbessern",
-      "hint": "Den Prompt mit einem OpenRouter-LLM für dieses Modell umschreiben (Bruchteil eines Cents)",
+      "hint": {
+        "openrouter": "Den Prompt mit einem OpenRouter-LLM für dieses Modell umschreiben (Bruchteil eines Cents)",
+        "agent": "Den Prompt für dieses Modell umschreiben: der verbundene Agent schreibt ihn, kostenlos"
+      },
       "needsKey": "Benötigt einen OpenRouter-Schlüssel",
       "undo": "Zurück zu meinem"
     },
@@ -236,7 +239,10 @@
     },
     "describe": {
       "button": "Prompt aus dem Bild",
-      "hint": "Ein Modell betrachtet das erste Bild des Formulars und schreibt den Prompt, der es erzeugen würde. Bezahlt wird über den OpenRouter-Schlüssel."
+      "hint": {
+        "openrouter": "Ein Modell betrachtet das erste Bild des Formulars und schreibt den Prompt, der es erzeugen würde. Bezahlt wird über den OpenRouter-Schlüssel.",
+        "agent": "Der verbundene Agent sieht sich das erste Bild des Formulars an und schreibt den Prompt, der es ergeben würde; kostenlos"
+      }
     },
     "presets": {
       "button": "Vorgaben",
@@ -286,7 +292,10 @@
       "scriptHint": "Was passiert, szenenweise oder in einem Satz. @Element-Namen bringen ihre Bilder mit.",
       "count": "Einstellungen",
       "split": "In Einstellungen aufteilen",
-      "splitHint": "Die Einstellungen schreibt ein Sprachmodell von OpenRouter; kostenpflichtig wie „Prompt verbessern“",
+      "splitHint": {
+        "openrouter": "Die Einstellungen schreibt ein Sprachmodell von OpenRouter; kostenpflichtig wie „Prompt verbessern“",
+        "agent": "Der verbundene Agent schreibt die Shots; kostenlos"
+      },
       "frameModel": "Frames von",
       "clipModel": "Clips von",
       "shots": "Einstellungen",
@@ -402,7 +411,10 @@
     },
     "previs": {
       "tabLabel": "3D-Blocking",
-      "hint": "Lege die Einstellung in 3D an, bevor du dafür bezahlst: Beschreibe den Ort, wer sich wohin bewegt und wie die Kamera fährt; das Prompt-Modell baut Platzhalterformen und einen Kamerapfad (etwa zwei Cent). Sieh durch die Kamera, von oben oder von der Seite, gib dann ihr Bild an ein Video- oder Bildmodell weiter oder nimm die Kamerabewegung auf.",
+      "hint": {
+        "openrouter": "Lege die Einstellung in 3D an, bevor du dafür bezahlst: Beschreibe den Ort, wer sich wohin bewegt und wie die Kamera fährt; das Prompt-Modell baut Platzhalterformen und einen Kamerapfad (etwa zwei Cent). Sieh durch die Kamera, von oben oder von der Seite, gib dann ihr Bild an ein Video- oder Bildmodell weiter oder nimm die Kamerabewegung auf.",
+        "agent": "Stellen Sie die Szene in 3D, bevor Sie für eine Generierung zahlen: Beschreiben Sie den Ort, wer wohin geht und wie sich die Kamera bewegt, und der verbundene Agent baut kostenlos Platzhalter und den Kameraweg. Schauen Sie durch die Kamera, von oben oder rundherum, und geben Sie das Bild dann einem Video- oder Bildmodell oder zeichnen Sie die Kamerafahrt auf."
+      },
       "description": "Die Einstellung",
       "placeholder": "Eine Frau geht durch einen schmalen Korridor auf eine Tür zu; die Kamera folgt ihr von hinten und schwenkt dann herum, bis sie ihr Gesicht zeigt, als sie stehen bleibt. 6 Sekunden, 35 mm, am Ende 50 mm.",
       "build": "Blocking erstellen",

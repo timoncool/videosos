@@ -1,6 +1,12 @@
 // The server routes the studio parts of the window read: folders, the resource monitor, the agents' status.
 
-export type AppPaths = { data_dir: string; projects_dir: string; generations_dir: string; exports_dir: string; logs_dir: string }
+export type AppPaths = {
+  data_dir: string
+  projects_dir: string
+  generations_dir: string
+  exports_dir: string
+  logs_dir: string
+}
 export type McpStatus = {
   agent_connected: boolean
   agent_last_call: string | null
@@ -49,6 +55,10 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ path }),
     })
-    if (!response.ok) throw new Error(((await response.json().catch(() => ({}))) as { error?: string }).error ?? `HTTP ${response.status}`)
+    if (!response.ok)
+      throw new Error(
+        ((await response.json().catch(() => ({}))) as { error?: string }).error ??
+          `HTTP ${response.status}`,
+      )
   },
 }

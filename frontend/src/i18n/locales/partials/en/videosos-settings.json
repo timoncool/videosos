@@ -33,7 +33,18 @@
       "confirmEditsHint": "An agent's edit shows what will change, and nothing changes until you accept it.",
       "budget": "Daily limit for agents, $",
       "noLimit": "no limit",
-      "badBudget": "The limit is a number of dollars."
+      "badBudget": "The limit is a number of dollars.",
+      "assistant": "The window's assistant",
+      "assistantEngine": {
+        "agent": "Agent (MCP)",
+        "openrouter": "OpenRouter"
+      },
+      "assistantHint": {
+        "agent": "Improve prompt, Prompt from the picture, the storyboard's split, the 3D blocking and the Chat tab ask the agent connected to VideoSOS: it is a language model itself, so nothing more is paid. It answers while it listens (assistant_requests_wait).",
+        "openrouter": "Improve prompt, Prompt from the picture, the storyboard's split, the 3D blocking and the Chat tab ask a model of OpenRouter, paid by your key."
+      },
+      "agentConnected": "An agent is connected: it called {{seconds}} s ago.",
+      "agentAbsent": "No agent is connected now: connect one (below) and ask it to listen to VideoSOS's questions."
     },
     "general": {
       "language": "Interface language",

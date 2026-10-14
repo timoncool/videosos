@@ -140,6 +140,36 @@ async fn conversation(state: AppState, body: ChatBody, key: String, events: mpsc
     }
 }
 
+/// The chat when the person made the connected agent VideoSOS's assistant: their message is a question for the
+/// agent, which does what it asks with the tools it already has and answers in words.
+async fn agent_conversation(body: ChatBody, events: mpsc::Sender<Value>) {
+    let history: Vec<String> = body.messages.iter().filter(|message| !message.content.trim().is_empty()).map(|message| format!("{}: {}", message.role, message.content.trim())).collect();
+    let asked = history.last().cloned().unwrap_or_default();
+    let question = json!({
+        "target": "chat",
+        "instructions": format!(
+            "The person writes to you in VideoSOS's Chat tab{}. Do what they ask with the VideoSOS tools you have (the chat shows each call you make until you answer), then answer them in words, briefly, in the language with the code \"{}\". The conversation so far is in context.",
+            body.project_id.as_deref().map(|id| format!(" with the project {id} open")).unwrap_or_default(),
+            body.language.as_deref().unwrap_or("en"),
+        ),
+        "request": asked,
+        "context": history,
+        "project_id": body.project_id,
+    });
+    let following = crate::mcp::follow_agent_steps(events.clone());
+    let answered = crate::mcp::ask_agent(question).await;
+    drop(following);
+    match answered {
+        Ok(answer) => {
+            send(&events, json!({ "type": "text", "text": answer })).await;
+            send(&events, json!({ "type": "done", "cost": 0.0 })).await;
+        }
+        Err(error) => {
+            send(&events, json!({ "type": "error", "message": error, "cost": 0.0 })).await;
+        }
+    }
+}
+
 /// Runs the conversation to its end and answers with what it cost.
 async fn converse(state: &AppState, body: &ChatBody, key: &str, events: &mpsc::Sender<Value>) -> f64 {
     let mut messages = vec![json!({ "role": "system", "content": system_prompt(body.project_id.as_deref(), body.language.as_deref()) })];
@@ -196,14 +226,22 @@ async fn converse(state: &AppState, body: &ChatBody, key: &str, events: &mpsc::S
 }
 
 async fn chat(State(state): State<AppState>, Json(body): Json<ChatBody>) -> Response {
-    let Some((key, _)) = crate::credentials::key(Provider::Openrouter) else {
-        return (axum::http::StatusCode::PRECONDITION_FAILED, Json(json!({ "error": t!("jobs-no-key", provider = "openrouter") }))).into_response();
-    };
-    if body.model.trim().is_empty() || body.messages.is_empty() {
+    if body.messages.is_empty() {
         return (axum::http::StatusCode::BAD_REQUEST, Json(json!({ "error": t!("chat-empty") }))).into_response();
     }
     let (events, received) = mpsc::channel::<Value>(256);
-    tokio::spawn(conversation(state, body, key, events));
+    if crate::settings::get().assistant == "agent" {
+        // the connected agent is the language model: the person's message goes to it, nothing is paid
+        tokio::spawn(agent_conversation(body, events));
+    } else {
+        let Some((key, _)) = crate::credentials::key(Provider::Openrouter) else {
+            return (axum::http::StatusCode::PRECONDITION_FAILED, Json(json!({ "error": t!("jobs-no-key", provider = "openrouter") }))).into_response();
+        };
+        if body.model.trim().is_empty() {
+            return (axum::http::StatusCode::BAD_REQUEST, Json(json!({ "error": t!("chat-empty") }))).into_response();
+        }
+        tokio::spawn(conversation(state, body, key, events));
+    }
     let stream = tokio_stream::wrappers::ReceiverStream::new(received).map(|event| Ok::<Event, Infallible>(Event::default().data(event.to_string())));
     Sse::new(stream).keep_alive(KeepAlive::default()).into_response()
 }

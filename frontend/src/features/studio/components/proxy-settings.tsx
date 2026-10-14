@@ -36,7 +36,15 @@ const KINDS: { id: Kind; label: string }[] = [
   { id: 'socks4', label: 'SOCKS4' },
 ]
 
-function Segments<T extends string>({ items, value, onPick }: { items: { id: T; label: string }[]; value: T; onPick: (id: T) => void }) {
+function Segments<T extends string>({
+  items,
+  value,
+  onPick,
+}: {
+  items: { id: T; label: string }[]
+  value: T
+  onPick: (id: T) => void
+}) {
   return (
     <div className="flex w-fit rounded-md border border-[var(--color-border)] p-0.5">
       {items.map((item) => (
@@ -66,7 +74,9 @@ export function ProxySettings() {
 
   useEffect(() => {
     void fetch('/api/network/proxy')
-      .then((response) => (response.ok ? response.json() : Promise.reject(new Error(String(response.status)))))
+      .then((response) =>
+        response.ok ? response.json() : Promise.reject(new Error(String(response.status))),
+      )
       .then((body: Settings & { problem?: string | null }) => {
         setMode(body.mode)
         setKind(body.kind)
@@ -74,7 +84,9 @@ export function ProxySettings() {
         // a saved address the service cannot read: requests go straight out until it is fixed here
         if (body.problem) setError(body.problem)
       })
-      .catch((reason: unknown) => setError(reason instanceof Error ? reason.message : String(reason)))
+      .catch((reason: unknown) =>
+        setError(reason instanceof Error ? reason.message : String(reason)),
+      )
   }, [])
 
   const form = (): Settings => ({ mode, kind, address: address.trim() || null })
@@ -84,7 +96,11 @@ export function ProxySettings() {
   }
 
   const send = async <T,>(path: string, method: 'PUT' | 'POST'): Promise<T> => {
-    const response = await fetch(path, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form()) })
+    const response = await fetch(path, {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(form()),
+    })
     const text = await response.text()
     if (!response.ok) throw new Error(text || String(response.status))
     return JSON.parse(text) as T
@@ -110,11 +126,19 @@ export function ProxySettings() {
 
   const target = (name: string, ok: boolean, detail: string | null) => (
     <div className="flex items-start gap-2 text-[12px]" key={name}>
-      {ok ? <Check size={14} className="mt-0.5 shrink-0 text-[var(--color-accent)]" /> : <X size={14} className="mt-0.5 shrink-0 text-[var(--color-warn)]" />}
+      {ok ? (
+        <Check size={14} className="mt-0.5 shrink-0 text-[var(--color-accent)]" />
+      ) : (
+        <X size={14} className="mt-0.5 shrink-0 text-[var(--color-warn)]" />
+      )}
       <span className="min-w-0">
         <span className="font-semibold">{name}</span>{' '}
-        <span className={ok ? 'text-[var(--color-accent)]' : 'text-[var(--color-warn)]'}>{ok ? t('network.proxyReachable') : t('network.proxyUnreachable')}</span>
-        {!ok && detail && <span className="block break-words text-[11px] text-[var(--color-muted)]">{detail}</span>}
+        <span className={ok ? 'text-[var(--color-accent)]' : 'text-[var(--color-warn)]'}>
+          {ok ? t('network.proxyReachable') : t('network.proxyUnreachable')}
+        </span>
+        {!ok && detail && (
+          <span className="block break-words text-[11px] text-[var(--color-muted)]">{detail}</span>
+        )}
       </span>
     </div>
   )
@@ -140,7 +164,9 @@ export function ProxySettings() {
       {mode === 'custom' && (
         <div className="space-y-3">
           <div>
-            <span className="mb-1 block text-[11px] uppercase tracking-wide text-[var(--color-muted)]">{t('network.proxyKind')}</span>
+            <span className="mb-1 block text-[11px] uppercase tracking-wide text-[var(--color-muted)]">
+              {t('network.proxyKind')}
+            </span>
             <Segments
               items={KINDS}
               value={kind}
@@ -149,10 +175,14 @@ export function ProxySettings() {
                 changed()
               }}
             />
-            <p className="mt-1 text-[11px] leading-4 text-[var(--color-muted)]">{t('network.proxyKindHint')}</p>
+            <p className="mt-1 text-[11px] leading-4 text-[var(--color-muted)]">
+              {t('network.proxyKindHint')}
+            </p>
           </div>
           <div>
-            <span className="mb-1 block text-[11px] uppercase tracking-wide text-[var(--color-muted)]">{t('network.proxyAddress')}</span>
+            <span className="mb-1 block text-[11px] uppercase tracking-wide text-[var(--color-muted)]">
+              {t('network.proxyAddress')}
+            </span>
             <div className="relative">
               <input
                 type={reveal ? 'text' : 'password'}
@@ -175,7 +205,9 @@ export function ProxySettings() {
                 {reveal ? <EyeOff size={15} /> : <Eye size={15} />}
               </button>
             </div>
-            <p className="mt-1 text-[11px] leading-4 text-[var(--color-muted)]">{t('network.proxyAddressHint')}</p>
+            <p className="mt-1 text-[11px] leading-4 text-[var(--color-muted)]">
+              {t('network.proxyAddressHint')}
+            </p>
           </div>
         </div>
       )}
@@ -186,7 +218,8 @@ export function ProxySettings() {
           disabled={busy !== null}
           className="inline-flex items-center gap-2 rounded-md border border-[var(--color-border)] px-3 py-1.5 text-[12px] font-semibold hover:border-[var(--color-accent)] disabled:opacity-50"
         >
-          {busy === 'test' && <Loader2 size={13} className="animate-spin" />} {t('network.proxyTest')}
+          {busy === 'test' && <Loader2 size={13} className="animate-spin" />}{' '}
+          {t('network.proxyTest')}
         </button>
         <button
           type="button"
@@ -194,7 +227,11 @@ export function ProxySettings() {
           disabled={busy !== null}
           className="rounded-md bg-[var(--color-accent)] px-4 py-1.5 text-[12px] font-bold text-[var(--color-on-accent)] disabled:opacity-50"
         >
-          {busy === 'save' ? <Loader2 size={14} className="animate-spin" /> : t('network.proxySave')}
+          {busy === 'save' ? (
+            <Loader2 size={14} className="animate-spin" />
+          ) : (
+            t('network.proxySave')
+          )}
         </button>
         {saved && (
           <span className="flex items-center gap-1.5 text-[12px] text-[var(--color-accent)]">
@@ -210,11 +247,16 @@ export function ProxySettings() {
         </div>
       )}
       {error && (
-        <p role="alert" className="flex items-center gap-2 rounded-md bg-[color-mix(in_oklab,var(--color-warn)_12%,transparent)] px-3 py-2 text-[12px] text-[var(--color-warn)]">
+        <p
+          role="alert"
+          className="flex items-center gap-2 rounded-md bg-[color-mix(in_oklab,var(--color-warn)_12%,transparent)] px-3 py-2 text-[12px] text-[var(--color-warn)]"
+        >
           <AlertTriangle size={14} className="shrink-0" /> {error}
         </p>
       )}
-      <p className="text-[11px] leading-4 text-[var(--color-muted)]">{t('network.proxyWindowNote')}</p>
+      <p className="text-[11px] leading-4 text-[var(--color-muted)]">
+        {t('network.proxyWindowNote')}
+      </p>
     </section>
   )
 }

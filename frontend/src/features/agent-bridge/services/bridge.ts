@@ -163,13 +163,24 @@ function textOf(element: Element): string {
 function label(element: Element): string {
   const own = element.getAttribute('aria-label') || element.getAttribute('title') || ''
   if (own) return own.slice(0, 80)
+  const named = (element.getAttribute('aria-labelledby') ?? '')
+    .split(/\s+/)
+    .map((id) => (id ? document.getElementById(id)?.textContent : ''))
+    .join(' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+  if (named) return named.slice(0, 80)
+  const tied =
+    'labels' in element
+      ? (element as HTMLButtonElement).labels?.[0]?.textContent?.replace(/\s+/g, ' ').trim()
+      : ''
+  if (tied) return tied.slice(0, 80)
   if (
     element instanceof HTMLInputElement ||
     element instanceof HTMLTextAreaElement ||
     element instanceof HTMLSelectElement
   ) {
-    const tied = element.labels?.[0]?.textContent?.replace(/\s+/g, ' ').trim()
-    return (tied || nearbyText(element) || element.getAttribute('placeholder') || '').slice(0, 80)
+    return (nearbyText(element) || element.getAttribute('placeholder') || '').slice(0, 80)
   }
   return (textOf(element) || iconName(element) || nearbyText(element)).slice(0, 80)
 }
@@ -371,7 +382,23 @@ function setValue(element: HTMLElement, value: string): void {
   }
 }
 
-const settle = () => new Promise((resolve) => setTimeout(resolve, 250))
+const settle = () =>
+  new Promise<void>((resolve) => {
+    // a panel opened by the action may arrive as a lazy chunk: the page is read once its structure stops changing
+    let quiet = window.setTimeout(() => done(), 250)
+    const longest = window.setTimeout(() => done(), 3000)
+    const watcher = new MutationObserver(() => {
+      window.clearTimeout(quiet)
+      quiet = window.setTimeout(() => done(), 200)
+    })
+    const done = () => {
+      watcher.disconnect()
+      window.clearTimeout(quiet)
+      window.clearTimeout(longest)
+      resolve()
+    }
+    watcher.observe(document.body, { childList: true, subtree: true })
+  })
 
 // ---------------------------------------------------------------- what the page logged
 

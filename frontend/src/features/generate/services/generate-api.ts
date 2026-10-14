@@ -206,6 +206,8 @@ export interface KeyState {
 export interface AgentSettings {
   agent_daily_budget_usd: number | null
   agent_confirm_edits: boolean
+  /** Who answers the window's assistant questions: a paid model of OpenRouter, or the agent connected over MCP. */
+  assistant: '' | 'openrouter' | 'agent'
 }
 
 export interface Estimate {
@@ -299,6 +301,25 @@ export const generateApi = {
   spend: (projectId: string | null) =>
     request<Spend>(`/api/spend?${new URLSearchParams({ project: projectId ?? '' })}`),
   settings: () => request<AgentSettings>('/api/settings'),
+  /** Whether an agent is connected to the MCP server: it called within ten minutes. */
+  agentStatus: () =>
+    request<{
+      agent_connected: boolean
+      agent_last_call: string | null
+      agent_seconds_ago: number | null
+    }>('/api/agent/status'),
+  /** A question of the window's assistant put to the connected agent; answers with what it wrote. */
+  askAgent: (question: {
+    target: string
+    instructions: string
+    request: string
+    images: MediaRef[]
+    project_id: string | null
+  }) =>
+    request<{ answer: string }>('/api/assistant/ask', {
+      method: 'POST',
+      body: JSON.stringify(question),
+    }),
   /** Only the settings given change; the others stay as kept. */
   storeSettings: (settings: Partial<AgentSettings>) =>
     request<AgentSettings>('/api/settings', {

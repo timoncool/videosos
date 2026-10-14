@@ -83,7 +83,7 @@ export async function sendChat(
   language: string,
 ): Promise<void> {
   const state = useChatStore.getState()
-  if (state.busy || !text.trim() || !state.model) return
+  if (state.busy || !text.trim()) return
   const history = state.entries
     .filter((entry) => entry.text.trim())
     .map((entry) => ({ role: entry.role, content: entry.text }))

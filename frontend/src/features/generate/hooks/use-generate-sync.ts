@@ -9,10 +9,11 @@ function report(error: unknown): void {
 }
 
 async function loadKeys(): Promise<void> {
-  const { keys } = await generateApi.keys()
+  const [{ keys }, settings] = await Promise.all([generateApi.keys(), generateApi.settings()])
   const set: Partial<Record<Provider, boolean>> = {}
   for (const key of keys) set[key.provider] = key.set
   useGenerateStore.getState().setKeys(set)
+  useGenerateStore.getState().setAssistant(settings.assistant === 'agent' ? 'agent' : 'openrouter')
 }
 
 const LEGACY_KEY = 'videosos-generate'
@@ -74,7 +75,7 @@ export function useGenerateSync(projectId: string | null): void {
         }
       } else if (event.kind === 'job_removed') {
         useGenerateStore.getState().removeJob(event.data.id)
-      } else if (event.kind === 'keys') {
+      } else if (event.kind === 'keys' || event.kind === 'settings') {
         void loadKeys().catch(report)
       } else if (event.kind === 'resync') {
         void generateApi

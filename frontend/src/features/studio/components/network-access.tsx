@@ -21,16 +21,28 @@ export function NetworkAccess() {
 
   useEffect(() => {
     void fetch('/api/network')
-      .then((response) => (response.ok ? (response.json() as Promise<NetworkStatus>) : Promise.reject(new Error(String(response.status)))))
+      .then((response) =>
+        response.ok
+          ? (response.json() as Promise<NetworkStatus>)
+          : Promise.reject(new Error(String(response.status))),
+      )
       .then(setStatus)
-      .catch((reason: unknown) => setError(reason instanceof Error ? reason.message : String(reason)))
+      .catch((reason: unknown) =>
+        setError(reason instanceof Error ? reason.message : String(reason)),
+      )
   }, [])
 
   const change = async (body: { enabled?: boolean; new_key?: boolean }) => {
     setError(null)
     try {
-      const response = await fetch('/api/network', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
-      const answer = (await response.json().catch(() => null)) as (NetworkStatus & { error?: string }) | null
+      const response = await fetch('/api/network', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      })
+      const answer = (await response.json().catch(() => null)) as
+        | (NetworkStatus & { error?: string })
+        | null
       if (!response.ok) throw new Error(answer?.error || `HTTP ${response.status}`)
       setStatus(answer)
     } catch (reason) {
@@ -38,10 +50,19 @@ export function NetworkAccess() {
     }
   }
 
-  if (!status) return error ? <p role="alert" className="text-[12px] text-[var(--color-warn)]">{error}</p> : null
-  const links = status.key && status.port ? status.addresses.map((address) => `http://${address}:${status.port}/?key=${status.key}`) : []
+  if (!status)
+    return error ? (
+      <p role="alert" className="text-[12px] text-[var(--color-warn)]">
+        {error}
+      </p>
+    ) : null
+  const links =
+    status.key && status.port
+      ? status.addresses.map((address) => `http://${address}:${status.port}/?key=${status.key}`)
+      : []
   const restart = status.enabled !== status.listening
-  const button = 'shrink-0 rounded-md border border-[var(--color-border)] px-2 py-0.5 text-[11px] hover:border-[var(--color-accent)]'
+  const button =
+    'shrink-0 rounded-md border border-[var(--color-border)] px-2 py-0.5 text-[11px] hover:border-[var(--color-accent)]'
   return (
     <section className="space-y-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-2)]/40 p-3">
       <label className="flex items-center gap-2 text-[13px] font-semibold">
@@ -55,7 +76,9 @@ export function NetworkAccess() {
         {t('network.access')}
       </label>
       <p className="text-[12px] leading-5 text-[var(--color-muted)]">{t('network.accessHint')}</p>
-      {restart && <p className="text-[12px] text-[var(--color-warn)]">{t('network.accessRestart')}</p>}
+      {restart && (
+        <p className="text-[12px] text-[var(--color-warn)]">{t('network.accessRestart')}</p>
+      )}
       {status.enabled && status.key && (
         <div className="space-y-1.5 rounded-md border border-[var(--color-border)] p-2 text-[12px]">
           <div className="flex items-center gap-2">
@@ -68,7 +91,15 @@ export function NetworkAccess() {
           {links.map((link) => (
             <div key={link} className="flex items-center gap-2">
               <code className="mono min-w-0 flex-1 truncate text-[var(--color-muted)]">{link}</code>
-              <button type="button" onClick={() => void navigator.clipboard.writeText(link).catch((reason: unknown) => setError(String(reason)))} className={button}>
+              <button
+                type="button"
+                onClick={() =>
+                  void navigator.clipboard
+                    .writeText(link)
+                    .catch((reason: unknown) => setError(String(reason)))
+                }
+                className={button}
+              >
                 {t('agent.copy')}
               </button>
             </div>
@@ -76,7 +107,11 @@ export function NetworkAccess() {
           <p className="text-[var(--color-muted)]">{t('network.accessInternet')}</p>
         </div>
       )}
-      {error && <p role="alert" className="text-[12px] text-[var(--color-warn)]">{error}</p>}
+      {error && (
+        <p role="alert" className="text-[12px] text-[var(--color-warn)]">
+          {error}
+        </p>
+      )}
     </section>
   )
 }

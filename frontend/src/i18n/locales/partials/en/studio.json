@@ -252,6 +252,8 @@
     "stop": "Stop",
     "footnote": "Enter sends, Shift+Enter makes a new line. The assistant asks before costly generations.",
     "needsKey": "The chat needs an OpenRouter key: the assistant answers with an OpenRouter model and works with VideoSOS's tools.",
-    "openKeys": "Open keys"
+    "openKeys": "Open keys",
+    "byAgent": "The connected agent (MCP) answers",
+    "introAgent": "Your messages go to the agent connected over MCP: it works VideoSOS with its tools, reads the timeline, generates, edits and exports, and its steps show up here. Nothing is paid for its answers; generations count against the agents' daily limit."
   }
 }

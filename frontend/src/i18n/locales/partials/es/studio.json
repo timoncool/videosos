@@ -252,6 +252,8 @@
     "stop": "Detener",
     "footnote": "Intro envía, Mayús+Intro hace un salto de línea. Antes de las generaciones costosas el asistente pregunta.",
     "needsKey": "El chat necesita una clave de OpenRouter: el asistente responde con un modelo de OpenRouter y trabaja con las herramientas de VideoSOS.",
-    "openKeys": "Abrir claves"
+    "openKeys": "Abrir claves",
+    "byAgent": "Responde el agente conectado (MCP)",
+    "introAgent": "Tus mensajes van al agente conectado por MCP: trabaja en VideoSOS con sus herramientas, lee la línea de tiempo, genera, edita y exporta, y sus pasos aparecen aquí. Sus respuestas no cuestan nada; las generaciones cuentan para el límite diario de los agentes."
   }
 }

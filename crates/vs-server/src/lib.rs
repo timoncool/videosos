@@ -10,6 +10,7 @@ pub mod i18n;
 pub mod catalog;
 mod chat;
 mod checkpoints;
+mod assistant;
 mod choices;
 mod elements;
 pub use vs_providers;
@@ -179,6 +180,7 @@ pub fn app(state: AppState) -> Router {
         .merge(jobs::router())
         .merge(keys::router())
         .merge(settings::router())
+        .merge(assistant::router())
         .merge(choices::router())
         .merge(checkpoints::router())
         .merge(url_import::router())

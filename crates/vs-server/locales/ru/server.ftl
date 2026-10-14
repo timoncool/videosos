@@ -143,3 +143,5 @@ chat-too-many-turns = помощник сделал { $turns } { $turns ->
    *[many] шагов
 } и не закончил: попросите его продолжить
 chat-empty = выберите модель и напишите сообщение
+assistant-no-agent = К VideoSOS не подключён агент. Подключите его к MCP-серверу (Настройки, «Агенты») или выберите ассистентом OpenRouter.
+assistant-no-answer = Агент не ответил за { $minutes } мин.

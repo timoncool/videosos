@@ -252,6 +252,8 @@
     "stop": "중지",
     "footnote": "Enter는 보내기, Shift+Enter는 줄 바꿈입니다. 비용이 큰 생성 전에는 어시스턴트가 먼저 묻습니다.",
     "needsKey": "채팅에는 OpenRouter 키가 필요합니다: 어시스턴트는 OpenRouter 모델로 답하고 VideoSOS 도구로 작업합니다.",
-    "openKeys": "키 열기"
+    "openKeys": "키 열기",
+    "byAgent": "연결된 에이전트(MCP)가 답합니다",
+    "introAgent": "메시지는 MCP로 연결된 에이전트에게 전달됩니다. 에이전트는 자신의 도구로 VideoSOS에서 타임라인을 읽고 생성, 편집, 내보내기를 하며 그 단계가 여기에 표시됩니다. 답변은 무료이며, 생성은 에이전트 일일 한도에 포함됩니다."
   }
 }

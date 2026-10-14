@@ -252,6 +252,8 @@
     "stop": "Parar",
     "footnote": "Enter envia, Shift+Enter quebra a linha. Antes de gerações caras, o assistente pergunta.",
     "needsKey": "O chat precisa de uma chave do OpenRouter: o assistente responde com um modelo do OpenRouter e trabalha com as ferramentas do VideoSOS.",
-    "openKeys": "Abrir chaves"
+    "openKeys": "Abrir chaves",
+    "byAgent": "Responde o agente conectado (MCP)",
+    "introAgent": "Suas mensagens vão para o agente conectado por MCP: ele trabalha no VideoSOS com as ferramentas dele, lê a linha do tempo, gera, edita e exporta, e os passos aparecem aqui. As respostas não custam nada; as gerações contam no limite diário dos agentes."
   }
 }

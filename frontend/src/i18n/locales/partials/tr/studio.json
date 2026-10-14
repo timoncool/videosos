@@ -252,6 +252,8 @@
     "stop": "Durdur",
     "footnote": "Enter gönderir, Shift+Enter yeni satır açar. Pahalı üretimlerden önce asistan sorar.",
     "needsKey": "Sohbet için bir OpenRouter anahtarı gerekir: asistan bir OpenRouter modeliyle yanıt verir ve VideoSOS araçlarıyla çalışır.",
-    "openKeys": "Anahtarları aç"
+    "openKeys": "Anahtarları aç",
+    "byAgent": "Bağlı ajan (MCP) yanıtlıyor",
+    "introAgent": "Mesajlarınız MCP ile bağlı ajana gider: ajan kendi araçlarıyla VideoSOS'ta çalışır, zaman çizelgesini okur, üretir, kurgular ve dışa aktarır; adımları burada görünür. Yanıtları ücretsizdir; üretimler ajanların günlük sınırına sayılır."
   }
 }

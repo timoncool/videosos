@@ -18,7 +18,13 @@ const HEALTH_MS = 5000
  * What every studio of the family shows over its window: the hub's strips at the top, and the "service is not
  * answering" screen when the program's service stops answering (a network failure, never a slow answer).
  */
-export function StudioHost({ children, go }: { children: ReactNode; go: (place: TopBarPlace) => void }) {
+export function StudioHost({
+  children,
+  go,
+}: {
+  children: ReactNode
+  go: (place: TopBarPlace) => void
+}) {
   const { i18n } = useTranslation()
   const hub = useHubState(i18n.language.split('-')[0] ?? 'en')
   const [offline, setOffline] = useState(false)
@@ -27,9 +33,17 @@ export function StudioHost({ children, go }: { children: ReactNode; go: (place: 
   const noted = useRef(new Set<string | number>())
   useEffect(() => {
     for (const toast of toasts) {
-      if (noted.current.has(toast.id) || toast.type === 'loading' || typeof toast.title !== 'string') continue
+      if (
+        noted.current.has(toast.id) ||
+        toast.type === 'loading' ||
+        typeof toast.title !== 'string'
+      )
+        continue
       noted.current.add(toast.id)
-      noteMessage(typeof toast.description === 'string' ? `${toast.title} ${toast.description}` : toast.title, toast.type ?? '')
+      noteMessage(
+        typeof toast.description === 'string' ? `${toast.title} ${toast.description}` : toast.title,
+        toast.type ?? '',
+      )
     }
   }, [toasts])
   const [closed, setClosed] = useState<Set<string>>(() => new Set())
@@ -46,10 +60,19 @@ export function StudioHost({ children, go }: { children: ReactNode; go: (place: 
   }, [ready])
   // Popups stay in the hub's test channel (STUDIO_HUB_TEST=1) until they are released.
   const popups = ready && hub?.test ? hub.items.filter((item) => item.kind === 'popup') : []
-  const nextDelay = popups.reduce<number | null>((next, item) => (item.rules.delay_s > elapsed && (next === null || item.rules.delay_s < next) ? item.rules.delay_s : next), null)
+  const nextDelay = popups.reduce<number | null>(
+    (next, item) =>
+      item.rules.delay_s > elapsed && (next === null || item.rules.delay_s < next)
+        ? item.rules.delay_s
+        : next,
+    null,
+  )
   useEffect(() => {
     if (nextDelay === null) return
-    const timer = window.setTimeout(() => setElapsed(Math.floor((Date.now() - started.current) / 1000)), Math.max(0, started.current + nextDelay * 1000 - Date.now()) + 50)
+    const timer = window.setTimeout(
+      () => setElapsed(Math.floor((Date.now() - started.current) / 1000)),
+      Math.max(0, started.current + nextDelay * 1000 - Date.now()) + 50,
+    )
     return () => window.clearTimeout(timer)
   }, [nextDelay])
   useEffect(() => {

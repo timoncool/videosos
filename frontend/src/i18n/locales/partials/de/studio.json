@@ -252,6 +252,8 @@
     "stop": "Stoppen",
     "footnote": "Enter sendet, Umschalt+Enter macht eine neue Zeile. Vor kostspieligen Generierungen fragt der Assistent nach.",
     "needsKey": "Der Chat braucht einen OpenRouter-Schlüssel: Der Assistent antwortet mit einem OpenRouter-Modell und arbeitet mit den Werkzeugen von VideoSOS.",
-    "openKeys": "Schlüssel öffnen"
+    "openKeys": "Schlüssel öffnen",
+    "byAgent": "Es antwortet der verbundene Agent (MCP)",
+    "introAgent": "Ihre Nachrichten gehen an den über MCP verbundenen Agenten: Er arbeitet mit seinen Werkzeugen in VideoSOS, liest die Timeline, generiert, schneidet und exportiert, und seine Schritte erscheinen hier. Seine Antworten kosten nichts; Generierungen zählen zum Tageslimit der Agenten."
   }
 }

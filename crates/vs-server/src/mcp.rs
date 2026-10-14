@@ -477,9 +477,9 @@ fn tools() -> &'static [Tool] {
             },
             Tool {
                 name: "previs_render",
-                description: "Blocks a shot in 3D before a paid generation, as AIMovieStudio's previs: stand-in shapes and figures, their moves and the camera's path over the shot. Give either scene (the JSON below, written by you) or description (words; the prompt model builds the scene, a request of about two cents, changing the project's current blocking when there is one, unless fresh is true). The scene is {version: 1, title, seconds (1-30), easing: smooth|linear, sky: #rrggbb, floor: #rrggbb, objects: [{id, name, shape: box|sphere|cylinder|cone|plane|figure|seated, position: [x,y,z], rotation: [deg,deg,deg], size: [w,h,d], color: #rrggbb, opacity? (0.05-1, for glass and water), moves: [{time, position, rotation}]}], camera: [{time, position, target, lens (mm, 12-200)}]} in metres, Y up, the floor at 0; a figure is a standing person with its position at its feet, rotation [0,180,0] facing -Z; a seated is a person sitting, of the same standing size, its position the floor under its hips; shapes are solid, so nothing opaque between the camera and what it films; the camera's keys start at 0 and end at seconds. output: frame (the camera's picture at time_seconds into the library, to give a video model as its first frame or an image model as its reference), video (the whole shot through the camera as an MP4 into the library, for a video edit model's motion), or scene (only builds it and shows it in the Blocking tab). The answer carries the scene, to change and send again. Rendered in the window: nothing is sent anywhere but the description.",
+                description: "Blocks a shot in 3D before a paid generation, as AIMovieStudio's previs: stand-in shapes and figures, their moves and the camera's path over the shot. You write the scene yourself (you are the language model here; nothing else is paid for it): {version: 1, title, seconds (1-30), easing: smooth|linear, sky: #rrggbb, floor: #rrggbb, objects: [{id, name, shape: box|sphere|cylinder|cone|plane|figure|seated, position: [x,y,z], rotation: [deg,deg,deg], size: [w,h,d], color: #rrggbb, opacity? (0.05-1, for glass and water), moves: [{time, position, rotation}]}], camera: [{time, position, target, lens (mm, 12-200)}]} in metres, Y up, the floor at 0; a figure is a standing person with its position at its feet, rotation [0,180,0] facing -Z; a seated is a person sitting, of the same standing size, its position the floor under its hips; shapes are solid, so nothing opaque between the camera and what it films; the camera's keys start at 0 and end at seconds. output: frame (the camera's picture at time_seconds into the library, to give a video model as its first frame or an image model as its reference), video (the whole shot through the camera as an MP4 into the library, for a video edit model's motion), or scene (only shows it in the Blocking tab). Change the scene and send it again to adjust. Rendered in the window, free.",
                 looks: false,
-                schema: || object(json!({ "scene": { "type": "object" }, "description": { "type": "string" }, "fresh": { "type": "boolean" }, "output": { "type": "string", "enum": ["frame", "video", "scene"] }, "time_seconds": { "type": "number", "minimum": 0 }, "name": { "type": "string" } }), &[]),
+                schema: || object(json!({ "scene": { "type": "object" }, "output": { "type": "string", "enum": ["frame", "video", "scene"] }, "time_seconds": { "type": "number", "minimum": 0 }, "name": { "type": "string" } }), &["scene"]),
                 call: |args| window("previs_render", args, 300),
             },
             Tool {
@@ -712,6 +712,20 @@ fn tools() -> &'static [Tool] {
                 looks: false,
                 schema: nothing,
                 call: |args| window("export_fcpxml", args, 120),
+            },
+            Tool {
+                name: "assistant_requests_wait",
+                description: "When the person has made you VideoSOS's assistant (Settings, Agents: Assistant 'Agent (MCP)'), what the window would ask its own assistant waits here: Improve prompt, Prompt from the picture, splitting a script into shots, building a 3D blocking, and the Chat tab's messages. Returns the waiting requests - id, target, the instructions the window's assistant would get, the request, the pictures it would see (media or job references: look at them with media_frame or job_get), and the JSON form the answer must take when there is one - as soon as there is one, or after seconds (30 by default, at most 55). Answer each with assistant_request_answer; keep calling while the person works. A chat message is the person writing to you: do what it asks with the tools, then answer in words.",
+                looks: true,
+                schema: || object(json!({ "seconds": { "type": "integer", "minimum": 1, "maximum": 55 } }), &[]),
+                call: |_| composite("questions"),
+            },
+            Tool {
+                name: "assistant_request_answer",
+                description: "Answer a request from assistant_requests_wait: answer is what its instructions ask for (the JSON its answer_form describes, or plain text); the window goes on with it as with its own assistant's answer.",
+                looks: false,
+                schema: || object(json!({ "request_id": { "type": "string" }, "answer": {} }), &["request_id", "answer"]),
+                call: |_| composite("answer"),
             },
             Tool {
                 name: "checkpoint_list",
@@ -991,7 +1005,7 @@ const JOURNAL: &[(&str, &str, &str)] = &[
 
 /// Tools that change something yet leave no line: the window's own controls and the service's upkeep.
 #[cfg(test)]
-const UNJOURNALED: &[&str] = &["catalog_refresh", "ui_open_settings", "ui_navigate", "ui_click", "ui_type", "ui_press_key", "ui_scroll", "ui_notify", "url_tool_install", "url_tool_update", "project_open", "playhead_seek", "playback", "editor_tab"];
+const UNJOURNALED: &[&str] = &["catalog_refresh", "assistant_request_answer", "ui_open_settings", "ui_navigate", "ui_click", "ui_type", "ui_press_key", "ui_scroll", "ui_notify", "url_tool_install", "url_tool_update", "project_open", "playhead_seek", "playback", "editor_tab"];
 
 fn journal_facts(name: &str) -> Option<(&'static str, &'static str)> {
     JOURNAL.iter().find(|(tool, _, _)| *tool == name).map(|(_, verb, kind)| (*verb, *kind))
@@ -1056,6 +1070,105 @@ fn seen(what: &str) {
     *LAST_CALL.lock().unwrap_or_else(|p| p.into_inner()) = Some((std::time::Instant::now(), what.to_string()));
 }
 
+/// An agent that called within this long still counts as connected.
+const AGENT_PRESENT: Duration = Duration::from_secs(600);
+/// How long a question of the window waits for the agent's answer.
+const AGENT_ANSWER: Duration = Duration::from_secs(900);
+
+pub(crate) fn agent_present() -> bool {
+    LAST_CALL.lock().unwrap_or_else(|p| p.into_inner()).as_ref().is_some_and(|(at, _)| at.elapsed() < AGENT_PRESENT)
+}
+
+/// A question the window would put to its assistant, waiting for the connected agent when the person made it that
+/// assistant (Settings, Agents), as YuE2 Studio hands its writing assistant's questions to the agent.
+struct AgentQuestion {
+    question: Value,
+    answer: tokio::sync::oneshot::Sender<String>,
+}
+
+static QUESTIONS: Mutex<Vec<AgentQuestion>> = Mutex::new(Vec::new());
+static QUESTION_ID: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(1);
+/// The Chat tab waiting for the agent's answer: the agent's tool calls meanwhile are its steps, shown there.
+static CHAT_STEPS: Mutex<Option<tokio::sync::mpsc::Sender<Value>>> = Mutex::new(None);
+static STEP_ID: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(1);
+
+/// Shows the agent's tool calls in the Chat tab while `steps` is open; they stop showing when the guard drops.
+pub(crate) fn follow_agent_steps(steps: tokio::sync::mpsc::Sender<Value>) -> impl Drop {
+    struct Following;
+    impl Drop for Following {
+        fn drop(&mut self) {
+            *CHAT_STEPS.lock().unwrap_or_else(|p| p.into_inner()) = None;
+        }
+    }
+    *CHAT_STEPS.lock().unwrap_or_else(|p| p.into_inner()) = Some(steps);
+    Following
+}
+
+fn chat_step(event: Value) {
+    if let Some(steps) = CHAT_STEPS.lock().unwrap_or_else(|p| p.into_inner()).as_ref() {
+        let _ = steps.try_send(event);
+    }
+}
+
+fn open_questions() -> Vec<Value> {
+    let mut waiting = QUESTIONS.lock().unwrap_or_else(|p| p.into_inner());
+    waiting.retain(|question| !question.answer.is_closed());
+    waiting.iter().map(|question| question.question.clone()).collect()
+}
+
+/// Asks the connected agent what the window would ask its own assistant: the same instructions, the same request,
+/// the pictures it would send, and the form of the answer; answers with the agent's answer.
+pub(crate) async fn ask_agent(question: Value) -> Result<String, String> {
+    if !agent_present() {
+        return Err(t!("assistant-no-agent"));
+    }
+    let id = format!("q{}", QUESTION_ID.fetch_add(1, std::sync::atomic::Ordering::Relaxed));
+    let (sender, receiver) = tokio::sync::oneshot::channel();
+    let mut question = question;
+    question["id"] = json!(id);
+    QUESTIONS.lock().unwrap_or_else(|p| p.into_inner()).push(AgentQuestion { question, answer: sender });
+    match tokio::time::timeout(AGENT_ANSWER, receiver).await {
+        Ok(Ok(answer)) => Ok(answer),
+        _ => {
+            QUESTIONS.lock().unwrap_or_else(|p| p.into_inner()).retain(|question| question.question["id"] != id.as_str());
+            Err(t!("assistant-no-answer", minutes = AGENT_ANSWER.as_secs() / 60))
+        }
+    }
+}
+
+async fn wait_for_questions(args: &Value) -> Value {
+    let seconds = args.get("seconds").and_then(Value::as_u64).unwrap_or(30).clamp(1, 55);
+    let deadline = tokio::time::Instant::now() + Duration::from_secs(seconds);
+    loop {
+        let waiting = open_questions();
+        if !waiting.is_empty() {
+            return json!({ "requests": waiting });
+        }
+        if tokio::time::Instant::now() >= deadline {
+            return json!({ "requests": [], "note": "no request yet; call assistant_requests_wait again to keep listening" });
+        }
+        tokio::time::sleep(Duration::from_millis(500)).await;
+    }
+}
+
+fn answer_question(args: &Value) -> Result<Value, String> {
+    let id = text(args, "request_id")?;
+    let answer = match args.get("answer") {
+        Some(Value::String(text)) => text.clone(),
+        Some(value) if !value.is_null() => value.to_string(),
+        _ => return Err("'answer' is required".into()),
+    };
+    let found = {
+        let mut waiting = QUESTIONS.lock().unwrap_or_else(|p| p.into_inner());
+        waiting.iter().position(|question| question.question["id"] == id.as_str()).map(|at| waiting.remove(at))
+    };
+    let Some(question) = found else {
+        return Err(format!("No request {id} is waiting; assistant_requests_wait lists the open ones."));
+    };
+    question.answer.send(answer).map_err(|_| format!("Request {id} was given up by the window before the answer came."))?;
+    Ok(json!({ "answered": id, "note": "The window goes on with it." }))
+}
+
 async fn status_route() -> Json<Value> {
     let last = LAST_CALL.lock().unwrap_or_else(|p| p.into_inner()).clone();
     Json(json!({
@@ -1105,6 +1218,8 @@ async fn status_summary(state: &AppState) -> Value {
         "jobs_running": jobs,
         "spend": state.jobs.spend(None),
         "agent_daily_budget_usd": crate::settings::get().agent_daily_budget_usd,
+        "assistant": crate::settings::get().assistant,
+        "assistant_requests_waiting": open_questions().len(),
         "window_open": window_open(),
         "editor": editor,
     })
@@ -1215,7 +1330,7 @@ const MODERN: &[&str] = &["2026-07-28"];
 const LEGACY: &[&str] = &["2025-11-25", "2025-06-18", "2025-03-26"];
 const LIST_TTL_MS: u64 = 300_000;
 
-const INSTRUCTIONS: &str = "You drive VideoSOS, a video studio on this computer: it generates images, video, music, speech, sound effects and text through the person's own OpenRouter, fal and Runware keys, keeps the results in a project's media library and edits them on a multitrack timeline that renders to MP4. Start with studio_status. To make something: models_list for a task, model_form for its settings, price_estimate, then generate with project_id of the open project and job_wait. Results land in the project's library (media_list) and, with place_on_timeline, at the playhead; timeline_get and timeline_edit change the open project with undo while the person watches. Generations are paid: say the price before large runs. The whole guide is the resource videosos://skill (prompt 'videosos').";
+const INSTRUCTIONS: &str = "You drive VideoSOS, a video studio on this computer: it generates images, video, music, speech, sound effects and text through the person's own OpenRouter, fal and Runware keys, keeps the results in a project's media library and edits them on a multitrack timeline that renders to MP4. Every tool runs the same code as a control of the window, the person sees what you do there, and every change you make is written into its Activity journal. Start with studio_status. To make something: models_list for a task, model_form for its settings, price_estimate, then generate with project_id of the open project and job_wait. Results land in the project's library (media_list) and, with place_on_timeline, at the playhead; timeline_get and timeline_edit change the open project with undo while the person watches. Generations are paid: say the price before large runs. You are the language model here: write prompts, scripts, shot lists and 3D blockings yourself instead of paying a model for them. When the person has made you the window's assistant (Settings, Agents), answer its requests: assistant_requests_wait, then assistant_request_answer. The whole guide is the resource videosos://skill (prompt 'videosos').";
 
 /// The proxy as an agent may read it: the login and password the person typed stay with VideoSOS.
 fn proxy_without_login() -> Value {
@@ -1349,11 +1464,23 @@ async fn handle(State(state): State<AppState>, body: axum::body::Bytes) -> Respo
                 return rpc_error(StatusCode::OK, id, -32602, format!("Unknown tool: {name}; tools/list names them all."));
             };
             let before = job_name_before(&state, name, &args);
+            let step = (!name.starts_with("assistant_")).then(|| format!("agent-{}", STEP_ID.fetch_add(1, std::sync::atomic::Ordering::Relaxed)));
+            if let Some(step) = &step {
+                chat_step(json!({ "type": "tool", "id": step, "name": name, "args": args }));
+            }
             let answer = run_tool(&state, tool, &args).await;
             match &answer {
                 Ok(Answer::Json(value)) => journal_change(&state, name, &args, &before, value),
                 Ok(Answer::Text(text)) => journal_change(&state, name, &args, &before, &serde_json::from_str(text).unwrap_or(Value::Null)),
                 Ok(Answer::Image { .. }) | Err(_) => {}
+            }
+            if let Some(step) = step {
+                let (ok, summary) = match &answer {
+                    Ok(Answer::Json(value)) => (true, serde_json::to_string(value).unwrap_or_default()),
+                    Ok(Answer::Text(text)) | Ok(Answer::Image { text, .. }) => (true, text.clone()),
+                    Err(problem) => (false, problem.clone()),
+                };
+                chat_step(json!({ "type": "tool_done", "id": step, "ok": ok, "summary": summary.chars().take(240).collect::<String>() }));
             }
             match answer {
                 Ok(Answer::Json(value)) => tool_json(id, value),
@@ -1380,7 +1507,6 @@ pub(crate) struct ChatAnswer {
 /// Runs a tool for the chat in the window as `tools/call` runs one for an agent, journal line included.
 pub(crate) async fn chat_call(state: &AppState, name: &str, args: &Value) -> Result<ChatAnswer, String> {
     let tool = tools().iter().find(|tool| tool.name == name).ok_or_else(|| format!("Unknown tool: {name}"))?;
-    seen(name);
     let before = job_name_before(state, name, args);
     let answer = run_tool(state, tool, args).await?;
     match &answer {
@@ -1406,6 +1532,8 @@ async fn run_tool(state: &AppState, tool: &Tool, args: &Value) -> Result<Answer,
     match call.payload {
         Payload::Composite("status") => Ok(Answer::Json(status_summary(state).await)),
         Payload::Composite("wait") => wait_for(state, args).await.map(Answer::Json),
+        Payload::Composite("questions") => Ok(Answer::Json(wait_for_questions(args).await)),
+        Payload::Composite("answer") => answer_question(args).map(Answer::Json),
         Payload::Composite("projects") => Ok(Answer::Json(projects(state))),
         Payload::Composite("project") => project(state, args).map(Answer::Json),
         Payload::Composite("proxy") => Ok(Answer::Json(proxy_without_login())),

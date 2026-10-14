@@ -248,25 +248,12 @@ export function registerEditorCommands(showProject: ShowProject): void {
   })
 
   registerBridgeCommand('previs_render', async (args) => {
-    takeArgs('previs_render', args, [
-      'scene',
-      'description',
-      'fresh',
-      'output',
-      'time_seconds',
-      'name',
-    ])
+    takeArgs('previs_render', args, ['scene', 'output', 'time_seconds', 'name'])
     openProject()
-    const description = textArg('previs_render', args, 'description')
+    // the agent is the language model: it writes the scene itself, no other model is paid to build one
     const given = args.scene
-    if (given === undefined && !description?.trim())
-      throw bridgeError('missing', { command: 'previs_render', field: 'scene or description' })
-    if (given !== undefined && description !== undefined)
-      throw bridgeError('bad_value', {
-        command: 'previs_render',
-        field: 'scene',
-        expected: 'either scene or description, not both',
-      })
+    if (given === undefined)
+      throw bridgeError('missing', { command: 'previs_render', field: 'scene' })
     const output = textArg('previs_render', args, 'output') ?? 'frame'
     if (output !== 'frame' && output !== 'video' && output !== 'scene')
       throw bridgeError('bad_value', {
@@ -278,8 +265,6 @@ export function registerEditorCommands(showProject: ShowProject): void {
     try {
       const scene = await agentBlocking({
         scene: given,
-        description,
-        fresh: args.fresh === true,
         accept: (built) => {
           if (time < 0 || time > built.seconds)
             throw new Error(`time_seconds must be from 0 to ${built.seconds}`)

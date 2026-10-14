@@ -93,7 +93,10 @@
     "importFailed": "The result arrived but was not added to the library: {{reason}}",
     "improve": {
       "button": "Improve prompt",
-      "hint": "Rewrite the prompt for this model with an OpenRouter LLM (a fraction of a cent)",
+      "hint": {
+        "openrouter": "Rewrite the prompt for this model with an OpenRouter LLM (a fraction of a cent)",
+        "agent": "Rewrite the prompt for this model: the connected agent writes it, nothing is paid"
+      },
       "needsKey": "Needs an OpenRouter key",
       "undo": "Back to mine"
     },
@@ -236,7 +239,10 @@
     },
     "describe": {
       "button": "Prompt from the picture",
-      "hint": "A model looks at the form's first picture and writes the prompt that would make it. The OpenRouter key pays."
+      "hint": {
+        "openrouter": "A model looks at the form's first picture and writes the prompt that would make it. The OpenRouter key pays.",
+        "agent": "The connected agent looks at the form's first picture and writes the prompt that would make it; nothing is paid"
+      }
     },
     "presets": {
       "button": "Presets",
@@ -286,7 +292,10 @@
       "scriptHint": "What happens, scene by scene or in a sentence. @element names bring their pictures.",
       "count": "Shots",
       "split": "Split into shots",
-      "splitHint": "A language model of OpenRouter writes the shots; it is paid like Improve prompt",
+      "splitHint": {
+        "openrouter": "A language model of OpenRouter writes the shots; it is paid like Improve prompt",
+        "agent": "The connected agent writes the shots; nothing is paid"
+      },
       "frameModel": "Frames from",
       "clipModel": "Clips from",
       "shots": "Shots",
@@ -402,7 +411,10 @@
     },
     "previs": {
       "tabLabel": "3D blocking",
-      "hint": "Block the shot in 3D before paying for it: describe the place, who moves where and how the camera goes; the prompt model builds stand-in shapes and a camera path (about two cents). Look through the camera, from above or around, then give its frame to a video or picture model, or record the camera's move.",
+      "hint": {
+        "openrouter": "Block the shot in 3D before paying for it: describe the place, who moves where and how the camera goes; the prompt model builds stand-in shapes and a camera path (about two cents). Look through the camera, from above or around, then give its frame to a video or picture model, or record the camera's move.",
+        "agent": "Stage the scene in 3D before you pay for a generation: describe the place, who goes where and how the camera moves, and the connected agent builds stand-ins and the camera path for free. Look through the camera, from above or around, then hand the frame to a video or image model or record the camera move."
+      },
       "description": "The shot",
       "placeholder": "A woman walks down a narrow corridor toward a door; the camera follows behind her, then comes round to face her as she stops. 6 seconds, 35 mm, ending at 50 mm.",
       "build": "Build the blocking",

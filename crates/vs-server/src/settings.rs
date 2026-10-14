@@ -18,6 +18,10 @@ pub struct Settings {
     pub agent_daily_budget_usd: Option<f64>,
     /// An agent's timeline edit waits for the person to accept it, as OpenChatCut proposes its edits.
     pub agent_confirm_edits: bool,
+    /// Who answers the window's assistant questions (Improve prompt, the storyboard's split, the blocking, the
+    /// chat): `openrouter`, a model the person pays for, or `agent`, the agent connected to the MCP server.
+    #[serde(default)]
+    pub assistant: String,
     /// Access from another computer's browser, changed only through `/api/network`.
     pub network: Option<crate::remote::NetworkAccess>,
     /// Where requests to the providers go; changed only through `/api/network/proxy`.
@@ -79,6 +83,9 @@ async fn write(State(_): State<AppState>, Json(change): Json<serde_json::Value>)
         merged[key] = value;
     }
     let mut settings: Settings = serde_json::from_value(merged).map_err(|e| (StatusCode::BAD_REQUEST, e.to_string()))?;
+    if !matches!(settings.assistant.as_str(), "" | "openrouter" | "agent") {
+        return Err((StatusCode::BAD_REQUEST, format!("{} is not an assistant: openrouter or agent", settings.assistant)));
+    }
     if settings.agent_daily_budget_usd.is_some_and(|budget| !(0.0..=10_000.0).contains(&budget)) {
         return Err((StatusCode::BAD_REQUEST, t!("settings-bad-budget")));
     }

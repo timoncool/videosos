@@ -30,6 +30,10 @@ export function PrevisPanel() {
   const projectId = useProjectStore((state) => state.currentProject?.id ?? null)
   const metadata = useProjectStore((state) => state.currentProject?.metadata)
   const blocking = useGenerateStore((state) => (projectId ? state.blockings[projectId] : undefined))
+  const assistant = useGenerateStore((state) => state.assistant)
+  const canAssist = useGenerateStore(
+    (state) => state.assistant === 'agent' || state.keys.openrouter === true,
+  )
   const [description, setDescription] = useState(blocking?.description ?? '')
   const [json, setJson] = useState('')
   const [view, setView] = useState<PrevisView>('camera')
@@ -152,7 +156,9 @@ export function PrevisPanel() {
   return (
     <div className="min-h-0 flex-1 overflow-y-auto" data-testid="previs-panel">
       <div className="space-y-3 p-3">
-        <p className="text-[11px] text-muted-foreground">{t('generate.previs.hint')}</p>
+        <p className="text-[11px] text-muted-foreground">
+          {t(`generate.previs.hint.${assistant}`)}
+        </p>
         <div className="space-y-1">
           <Label htmlFor="previs-description" className="text-[11px] text-muted-foreground">
             {t('generate.previs.description')}
@@ -167,7 +173,8 @@ export function PrevisPanel() {
         </div>
         <Button
           className="bg-brand h-9 w-full gap-2"
-          disabled={busy !== null || !description.trim()}
+          disabled={busy !== null || !description.trim() || !canAssist}
+          title={canAssist ? undefined : t('generate.improve.needsKey')}
           onClick={() => void build(false)}
         >
           {busy === 'build' ? (
@@ -182,7 +189,7 @@ export function PrevisPanel() {
             variant="ghost"
             size="sm"
             className="h-7 w-full gap-1.5 text-[11px]"
-            disabled={busy !== null || !description.trim()}
+            disabled={busy !== null || !description.trim() || !canAssist}
             onClick={() => void build(true)}
           >
             {busy === 'change' && <Loader2 className="h-3 w-3 animate-spin" />}

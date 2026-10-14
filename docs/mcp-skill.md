@@ -10,6 +10,20 @@ through three providers the person pays with their own keys — OpenRouter, fal 
 listens on `http://127.0.0.1:8796/mcp` while the program runs. The person watches the window: every action
 you take in it is shown to them ("Agent: edits the timeline") and written to the Activity journal.
 
+## You are the language model
+
+You think, write and plan yourself: prompts, scripts, shot lists, 3D scenes, HTML graphics, captions' wording. Never
+start a paid `text` generation to do your own thinking, and never give `previs_render` words for another model to
+build a scene from — write the scene. What is paid is media: pictures, video, sound and voices from the providers.
+
+**When the person made you VideoSOS's assistant** (Settings, Agents, Assistant "Agent (MCP)"), the window asks you
+what it would ask a model: Improve prompt, Prompt from the picture, the storyboard's split, the 3D blocking and the
+Chat tab's messages. Keep `assistant_requests_wait` running while the person works; answer each request with
+`assistant_request_answer` in the form its `answer_form` or instructions ask; look at its pictures with `media_frame`
+or `job_get`. A chat message is the person writing to you: do what it asks with the tools, then answer in words; until you
+answer, the chat shows each tool you call as a step.
+`studio_status` shows `assistant` and `assistant_requests_waiting`.
+
 ## Start
 
 1. `studio_status` — version, which keys are set, catalogues, running jobs, money spent today, the agents'

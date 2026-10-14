@@ -160,6 +160,8 @@ export function GeneratePanel() {
   const task = useGenerateStore((state) => state.task)
   const model = useGenerateStore((state) => state.modelByTask[state.task])
   const keys = useGenerateStore((state) => state.keys)
+  const assistant = useGenerateStore((state) => state.assistant)
+  const canAssist = assistant === 'agent' || keys.openrouter === true
   const jobs = useGenerateStore((state) => state.jobs)
   const repeat = useGenerateStore((state) => state.repeat)
   const placeOnTimeline = useGenerateStore((state) => state.placeOnTimeline)
@@ -416,11 +418,11 @@ export function GeneratePanel() {
                         improving ||
                         typeof values[field.key] !== 'string' ||
                         !(values[field.key] as string).trim() ||
-                        !keys.openrouter
+                        !canAssist
                       }
                       title={
-                        keys.openrouter
-                          ? t('generate.improve.hint')
+                        canAssist
+                          ? t(`generate.improve.hint.${assistant}`)
                           : t('generate.improve.needsKey')
                       }
                       onClick={() => {
@@ -470,10 +472,10 @@ export function GeneratePanel() {
                     {firstImage && (
                       <button
                         type="button"
-                        disabled={improving || !keys.openrouter}
+                        disabled={improving || !canAssist}
                         title={
-                          keys.openrouter
-                            ? t('generate.describe.hint')
+                          canAssist
+                            ? t(`generate.describe.hint.${assistant}`)
                             : t('generate.improve.needsKey')
                         }
                         onClick={() => {

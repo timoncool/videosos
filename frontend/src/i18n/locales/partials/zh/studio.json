@@ -252,6 +252,8 @@
     "stop": "停止",
     "footnote": "Enter 发送，Shift+Enter 换行。进行费用较高的生成前，助手会先询问。",
     "needsKey": "聊天需要 OpenRouter 密钥：助手使用 OpenRouter 模型回答，并使用 VideoSOS 的工具工作。",
-    "openKeys": "打开密钥"
+    "openKeys": "打开密钥",
+    "byAgent": "由已连接的智能体（MCP）回答",
+    "introAgent": "你的消息会发给通过 MCP 连接的智能体：它用自己的工具操作 VideoSOS，读取时间线、生成、剪辑和导出，每一步都会显示在这里。它的回答不收费；生成计入智能体的每日限额。"
   }
 }

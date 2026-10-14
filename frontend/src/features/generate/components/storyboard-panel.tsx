@@ -84,6 +84,8 @@ export function StoryboardPanel() {
     useGenerateStore((state) => (projectId ? state.storyboards[projectId] : undefined)) ?? EMPTY
   const models = useGenerateStore((state) => state.storyboardModels)
   const keys = useGenerateStore((state) => state.keys)
+  const assistant = useGenerateStore((state) => state.assistant)
+  const canAssist = assistant === 'agent' || keys.openrouter === true
   const jobs = useGenerateStore((state) => state.jobs)
   const elements = useGenerateStore((state) => state.elements)
   const { form: imageForm, error: imageFormError } = useForm(models.image)
@@ -274,11 +276,11 @@ export function StoryboardPanel() {
             <Button
               size="sm"
               className="h-7 flex-1 gap-1 text-xs"
-              disabled={splitting || !board.script.trim() || !keys.openrouter}
+              disabled={splitting || !board.script.trim() || !canAssist}
               onClick={() => void split()}
               title={
-                keys.openrouter
-                  ? t('generate.storyboard.splitHint')
+                canAssist
+                  ? t(`generate.storyboard.splitHint.${assistant}`)
                   : t('generate.improve.needsKey')
               }
             >

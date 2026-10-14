@@ -92,7 +92,10 @@
     "importFailed": "O resultado chegou, mas não foi adicionado à biblioteca: {{reason}}",
     "improve": {
       "button": "Melhorar prompt",
-      "hint": "Reescrever o prompt para este modelo com um LLM da OpenRouter (uma fração de centavo)",
+      "hint": {
+        "openrouter": "Reescrever o prompt para este modelo com um LLM da OpenRouter (uma fração de centavo)",
+        "agent": "Reescrever o prompt para este modelo: o agente conectado escreve, sem custo"
+      },
       "needsKey": "Requer uma chave da OpenRouter",
       "undo": "Voltar ao meu"
     },
@@ -236,7 +239,10 @@
     },
     "describe": {
       "button": "Prompt a partir da imagem",
-      "hint": "Um modelo olha a primeira imagem do formulário e escreve o prompt que a geraria. Quem paga é a chave do OpenRouter."
+      "hint": {
+        "openrouter": "Um modelo olha a primeira imagem do formulário e escreve o prompt que a geraria. Quem paga é a chave do OpenRouter.",
+        "agent": "O agente conectado olha a primeira imagem do formulário e escreve o prompt que a geraria; sem custo"
+      }
     },
     "presets": {
       "button": "Predefinições",
@@ -286,7 +292,10 @@
       "scriptHint": "O que acontece, cena por cena ou em uma frase. Os nomes @elemento trazem as imagens deles.",
       "count": "Planos",
       "split": "Dividir em planos",
-      "splitHint": "Um modelo de linguagem do OpenRouter escreve os planos; é pago, como Melhorar prompt",
+      "splitHint": {
+        "openrouter": "Um modelo de linguagem do OpenRouter escreve os planos; é pago, como Melhorar prompt",
+        "agent": "Os planos são escritos pelo agente conectado; sem custo"
+      },
       "frameModel": "Quadros de",
       "clipModel": "Clipes de",
       "shots": "Planos",
@@ -402,7 +411,10 @@
     },
     "previs": {
       "tabLabel": "Blocking 3D",
-      "hint": "Faça o blocking do plano em 3D antes de pagar por ele: descreva o lugar, quem se move para onde e como a câmera anda; o modelo de prompts monta formas provisórias e um trajeto de câmera (cerca de dois centavos). Olhe pela câmera, de cima ou ao redor e depois passe o quadro dela para um modelo de vídeo ou de imagem, ou grave o movimento da câmera.",
+      "hint": {
+        "openrouter": "Faça o blocking do plano em 3D antes de pagar por ele: descreva o lugar, quem se move para onde e como a câmera anda; o modelo de prompts monta formas provisórias e um trajeto de câmera (cerca de dois centavos). Olhe pela câmera, de cima ou ao redor e depois passe o quadro dela para um modelo de vídeo ou de imagem, ou grave o movimento da câmera.",
+        "agent": "Monte a cena em 3D antes de pagar por uma geração: descreva o lugar, quem vai para onde e como a câmera se move, e o agente conectado monta de graça os volumes e o trajeto da câmera. Olhe pela câmera, de cima ou ao redor, e depois entregue o quadro a um modelo de vídeo ou imagem ou grave o movimento da câmera."
+      },
       "description": "O plano",
       "placeholder": "Uma mulher anda por um corredor estreito em direção a uma porta; a câmera a segue por trás e depois dá a volta para ficar de frente para ela quando ela para. 6 segundos, 35 mm, terminando em 50 mm.",
       "build": "Criar o blocking",

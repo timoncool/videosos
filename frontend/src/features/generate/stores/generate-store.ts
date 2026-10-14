@@ -129,6 +129,9 @@ interface GenerateState extends Persisted {
   useAs: (use: PendingUse | null) => void
   jobs: Job[]
   keys: Partial<Record<Provider, boolean>>
+  /** Who answers the window's assistant questions: the agent connected over MCP, or a paid model of OpenRouter. */
+  assistant: 'openrouter' | 'agent'
+  setAssistant: (assistant: 'openrouter' | 'agent') => void
   forms: Record<string, ModelForm>
   /** Why the panel could not reach the server, shown above everything else. */
   serverError: string | null
@@ -185,6 +188,7 @@ export const useGenerateStore = create<GenerateState>()((set, get) => ({
   readChoices: (choices) => set({ ...DEFAULTS, ...choices, choicesRead: true }),
   jobs: [],
   keys: {},
+  assistant: 'openrouter',
   forms: {},
   serverError: null,
   pendingUse: null,
@@ -319,5 +323,6 @@ export const useGenerateStore = create<GenerateState>()((set, get) => ({
   },
   removeJob: (id) => set({ jobs: get().jobs.filter((job) => job.id !== id) }),
   setKeys: (keys) => set({ keys }),
+  setAssistant: (assistant) => set({ assistant }),
   setForm: (form) => set({ forms: { ...get().forms, [modelKey(form.provider, form.id)]: form } }),
 }))
