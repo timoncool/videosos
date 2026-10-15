@@ -44,9 +44,18 @@ import {
   updateMarker,
   removeMarker,
   asOneStep,
+  rippleDeleteItems,
+  joinItems,
+  linkItems,
+  unlinkItems,
+  duplicateItems,
 } from '@/features/timeline/stores/timeline-actions'
 import { useMarkersStore } from '@/features/timeline/stores/markers-store'
-import { getLinkedAndAttachedItemIds } from '@/features/timeline/utils/linked-items'
+import {
+  canLinkSelection,
+  getLinkedAndAttachedItemIds,
+} from '@/features/timeline/utils/linked-items'
+import { canJoinMultipleItems } from '@/features/timeline/utils/clip-utils'
 import {
   canAddTransition,
   getMaxTransitionDurationForHandles,
@@ -133,6 +142,76 @@ function applyRemoveItems(op: EditOp): unknown {
   for (const id of ids) requireItem(id, 'ids')
   removeItems(ids)
   return { removed: ids }
+}
+
+/** The `ids` of an op, each an item on the timeline. */
+function itemIds(op: EditOp, least: number): string[] {
+  const ids = Array.isArray(op.ids) ? (op.ids.filter((x) => typeof x === 'string') as string[]) : []
+  if (ids.length < least)
+    throw new Error(`${op.op} requires \`ids\` of at least ${least} item${least === 1 ? '' : 's'}`)
+  for (const id of ids) requireItem(id, 'ids')
+  return ids
+}
+
+function applyRippleDelete(op: EditOp): unknown {
+  const ids = itemIds(op, 1)
+  rippleDeleteItems(ids)
+  return { removed: ids }
+}
+
+function applyJoin(op: EditOp): unknown {
+  const ids = itemIds(op, 2)
+  if (!canJoinMultipleItems(ids.map((id) => requireItem(id, 'ids'))))
+    throw new Error('join takes pieces of one clip that touch end to end, as a split left them')
+  joinItems(ids)
+  return { joined: ids[0] }
+}
+
+function applyLink(op: EditOp): unknown {
+  const ids = itemIds(op, 2)
+  if (!canLinkSelection(useItemsStore.getState().items, ids))
+    throw new Error('link takes a video clip and sound clips of the same media, not linked yet')
+  if (!linkItems(ids)) throw new Error('these clips were not linked')
+  return { linked: ids }
+}
+
+function applyUnlink(op: EditOp): unknown {
+  const ids = itemIds(op, 1)
+  unlinkItems(ids)
+  return { unlinked: ids }
+}
+
+/**
+ * Copies of items at `from` (frames; the first item there, the others at their distance from it), each on its own
+ * track or on `trackId`, moved past what is in the way as a paste in the window is; keyframes and transitions between
+ * them come along.
+ */
+function applyDuplicate(op: EditOp): unknown {
+  const ids = itemIds(op, 1)
+  const items = ids.map((id) => requireItem(id, 'ids'))
+  const from = asNumber(op.from)
+  if (from === undefined || from < 0) throw new Error('duplicate requires `from`, a frame')
+  const trackId = asString(op.trackId)
+  const start = Math.min(...items.map((item) => item.from))
+  const placed: Array<{ from: number; trackId: string; duration: number }> = []
+  const positions = items.map((item) => {
+    const track = trackId ?? item.trackId
+    let at = from + (item.from - start)
+    const taken = [
+      ...useItemsStore.getState().items.filter((other) => other.trackId === track),
+      ...placed
+        .filter((other) => other.trackId === track)
+        .map((other) => ({ from: other.from, durationInFrames: other.duration })),
+    ]
+    for (const other of taken.toSorted((a, b) => a.from - b.from)) {
+      if (at < other.from + other.durationInFrames && at + item.durationInFrames > other.from)
+        at = other.from + other.durationInFrames
+    }
+    placed.push({ from: at, trackId: track, duration: item.durationInFrames })
+    return { from: at, trackId: track }
+  })
+  const made = duplicateItems(ids, positions)
+  return { created: made.map((item) => ({ id: item.id, from: item.from, trackId: item.trackId })) }
 }
 
 function applySplit(op: EditOp): unknown {
@@ -285,7 +364,7 @@ function applyUpdateTrack(op: EditOp): unknown {
   const changes: Partial<typeof track> = {}
   const name = asString(op.name)
   if (name !== undefined) changes.name = name
-  for (const key of ['muted', 'solo', 'locked', 'visible'] as const) {
+  for (const key of ['muted', 'solo', 'locked', 'visible', 'syncLock'] as const) {
     if (op[key] === undefined) continue
     if (typeof op[key] !== 'boolean') throw new Error(`updateTrack: ${key} is true or false`)
     changes[key] = op[key]
@@ -297,7 +376,7 @@ function applyUpdateTrack(op: EditOp): unknown {
     changes.volume = volume
   }
   if (Object.keys(changes).length === 0)
-    throw new Error('updateTrack: nothing to change (name, muted, solo, locked, visible, volume)')
+    throw new Error('updateTrack: nothing to change (name, muted, solo, locked, visible, syncLock, volume)')
   setTracks(all.map((each) => (each.id === id ? { ...each, ...changes } : each)))
   return { trackId: id, ...changes }
 }
@@ -688,6 +767,11 @@ function applySetTransform(op: EditOp): unknown {
 }
 
 const OP_HANDLERS: Record<EditOperationName, (op: EditOp) => unknown> = {
+  rippleDelete: applyRippleDelete,
+  join: applyJoin,
+  link: applyLink,
+  unlink: applyUnlink,
+  duplicate: applyDuplicate,
   addText: applyAddText,
   addItem: applyAddItem,
   updateItem: applyUpdateItem,

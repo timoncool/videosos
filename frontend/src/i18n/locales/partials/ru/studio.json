@@ -161,7 +161,11 @@
       "preset": "пресет промпта",
       "storyboard": "раскадровка",
       "canvas": "холст",
-      "fcpxml": "FCPXML"
+      "fcpxml": "FCPXML",
+      "local device": "устройство генерации",
+      "local model": "локальная модель",
+      "recording": "запись",
+      "subtitles": "субтитры"
     }
   },
   "files": {

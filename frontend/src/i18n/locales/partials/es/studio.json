@@ -161,7 +161,11 @@
       "preset": "preajuste de prompt",
       "storyboard": "storyboard",
       "canvas": "lienzo",
-      "fcpxml": "FCPXML"
+      "fcpxml": "FCPXML",
+      "local device": "dispositivo local",
+      "local model": "modelo local",
+      "recording": "grabación",
+      "subtitles": "subtítulos"
     }
   },
   "files": {

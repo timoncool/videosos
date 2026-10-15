@@ -161,7 +161,11 @@
       "preset": "提示词预设",
       "storyboard": "故事板",
       "canvas": "画布",
-      "fcpxml": "FCPXML"
+      "fcpxml": "FCPXML",
+      "local device": "本地设备",
+      "local model": "本地模型",
+      "recording": "录音",
+      "subtitles": "字幕"
     }
   },
   "files": {

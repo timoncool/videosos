@@ -611,6 +611,7 @@ const LOOKING = new Set([
   'storyboard_get',
   'canvas_get',
   'blocking_get',
+  'mic_record_status',
 ])
 
 // ---------------------------------------------------------------- the connection

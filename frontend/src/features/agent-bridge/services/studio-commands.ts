@@ -11,6 +11,10 @@ import type { CaptionReveal } from '@/types/text'
 import { usePlaybackStore } from '@/shared/state/playback'
 import { usePreviewBridgeStore } from '@/shared/state/preview-bridge'
 import { useUiSoundStore } from '@/shared/state/ui-sound-store'
+import { useMicRecordingStore } from '@/shared/state/mic-recording-store'
+import { listAudioOutputs, useAudioOutputStore } from '@/shared/state/audio-output-store'
+import { CAPTION_STYLE_PRESETS } from '@/shared/typography/caption-style-presets'
+import { VOICE_OPTIONS, type VoiceName } from '@/infrastructure/audio/ui-sound'
 import { changeAppLanguage } from '@/i18n'
 import { SUPPORTED_LANGUAGE_CODES } from '@/i18n/languages'
 import { saveToDisk } from '@/infrastructure/desktop'
@@ -40,6 +44,11 @@ import {
   workflowFile,
   WORKFLOW_TEMPLATES,
   type ModelsFor,
+  cancelMicRecording,
+  refreshMicDevices,
+  startMicRecording,
+  stopMicRecording,
+  insertFreezeFrame,
 } from '../deps/editor'
 import {
   bridgeError,
@@ -579,16 +588,37 @@ export function registerStudioCommands(showProject: ShowProject, showPage: ShowP
     takeArgs('window_settings_get', args, [])
     const settings = useSettingsStore.getState()
     const sound = useUiSoundStore.getState()
+    const output = useAudioOutputStore.getState()
+    const outputs = await listAudioOutputs().then(
+      (devices) => ({ sound_outputs: devices }),
+      (problem: unknown) => ({
+        sound_outputs_error: problem instanceof Error ? problem.message : String(problem),
+      }),
+    )
     return {
       language: i18n.language,
       languages: SUPPORTED_LANGUAGE_CODES,
-      sounds: { enabled: sound.enabled, volume: sound.volume },
+      sounds: { enabled: sound.enabled, volume: sound.volume, voice: sound.voice },
+      sounds_voices: VOICE_OPTIONS.map((option) => option.value),
+      sound_output: { id: output.deviceId, label: output.label },
+      ...outputs,
+      caption_presets: CAPTION_STYLE_PRESETS.map((preset) => ({
+        id: preset.id,
+        label: preset.label,
+      })),
       ...Object.fromEntries(WINDOW_SETTINGS.map((key) => [key, settings[key]])),
     }
   })
 
   registerBridgeCommand('window_settings_set', async (args) => {
-    const known = [...WINDOW_SETTINGS, 'language', 'sounds_enabled', 'sounds_volume']
+    const known = [
+      ...WINDOW_SETTINGS,
+      'language',
+      'sounds_enabled',
+      'sounds_volume',
+      'sounds_voice',
+      'sound_output',
+    ]
     takeArgs('window_settings_set', args, known)
     const settings = useSettingsStore.getState()
     for (const key of WINDOW_SETTINGS) {
@@ -598,6 +628,15 @@ export function registerStudioCommands(showProject: ShowProject, showPage: ShowP
           command: 'window_settings_set',
           field: key,
           expected: `a ${typeof settings[key]}`,
+        })
+      if (
+        key === 'defaultCaptionStylePresetId' &&
+        !CAPTION_STYLE_PRESETS.some((preset) => preset.id === args[key])
+      )
+        throw bridgeError('bad_value', {
+          command: 'window_settings_set',
+          field: key,
+          expected: 'an id of caption_presets from window_settings_get',
         })
       settings.setSetting(key, args[key] as never)
     }
@@ -623,6 +662,31 @@ export function registerStudioCommands(showProject: ShowProject, showPage: ShowP
         })
       useUiSoundStore.getState().setVolume(volume)
     }
+    const voice = textArg('window_settings_set', args, 'sounds_voice')
+    if (voice !== undefined) {
+      if (!VOICE_OPTIONS.some((option) => option.value === voice))
+        throw bridgeError('bad_value', {
+          command: 'window_settings_set',
+          field: 'sounds_voice',
+          expected: VOICE_OPTIONS.map((option) => option.value).join(', '),
+        })
+      useUiSoundStore.getState().setVoice(voice as VoiceName)
+    }
+    const outputId = textArg('window_settings_set', args, 'sound_output')
+    if (outputId !== undefined) {
+      if (outputId === '') useAudioOutputStore.getState().choose('', '')
+      else {
+        const device = (await listAudioOutputs()).find((each) => each.id === outputId)
+        if (!device)
+          throw bridgeError('bad_value', {
+            command: 'window_settings_set',
+            field: 'sound_output',
+            expected:
+              'an id of sound_outputs from window_settings_get, or empty for the system default',
+          })
+        useAudioOutputStore.getState().choose(device.id, device.label)
+      }
+    }
     return { changed: Object.keys(args) }
   })
 
@@ -637,6 +701,102 @@ export function registerStudioCommands(showProject: ShowProject, showPage: ShowP
       })
     openSettings(section)
     return { opened: section }
+  })
+
+  registerBridgeCommand('freeze_frame', async (args) => {
+    takeArgs('freeze_frame', args, ['clip_id', 'seconds'])
+    const project = openProject()
+    const id = required('freeze_frame', 'clip_id', textArg('freeze_frame', args, 'clip_id'))
+    const seconds = required('freeze_frame', 'seconds', numberArg('freeze_frame', args, 'seconds'))
+    const clip = useItemsStore.getState().items.find((item) => item.id === id)
+    if (!clip || clip.type !== 'video')
+      throw bridgeError('bad_value', {
+        command: 'freeze_frame',
+        field: 'clip_id',
+        expected: 'a video clip on the timeline',
+      })
+    const frame = Math.round(seconds * (project.metadata?.fps ?? 30))
+    if (frame <= clip.from || frame >= clip.from + clip.durationInFrames)
+      throw bridgeError('bad_value', {
+        command: 'freeze_frame',
+        field: 'seconds',
+        expected: 'a moment inside the clip, not at its edges',
+      })
+    const before = new Set(useItemsStore.getState().items.map((item) => item.id))
+    if (!(await insertFreezeFrame(id, frame)))
+      throw failed('freeze_frame', new Error('the frame could not be held'))
+    await saveTimeline(project.id)
+    const added = useItemsStore.getState().items.filter((item) => !before.has(item.id))
+    return {
+      created: added.map((item) => ({
+        id: item.id,
+        type: item.type,
+        from: item.from,
+        duration: item.durationInFrames,
+      })),
+    }
+  })
+
+  // ------------------------------------------------------------ recording a voice-over from the microphone
+
+  const micState = () => {
+    const mic = useMicRecordingStore.getState()
+    return {
+      status: mic.status,
+      elapsed_seconds: Math.round(mic.elapsedMs / 100) / 10,
+      level: Math.round(mic.level * 100) / 100,
+      device_id: mic.selectedDeviceId,
+      devices: mic.devices.map((device) => ({ id: device.deviceId, label: device.label })),
+    }
+  }
+
+  registerBridgeCommand('mic_record_status', async (args) => {
+    takeArgs('mic_record_status', args, [])
+    await refreshMicDevices()
+    return micState()
+  })
+
+  registerBridgeCommand('mic_record_start', async (args) => {
+    takeArgs('mic_record_start', args, ['device_id'])
+    openProject()
+    const deviceId = textArg('mic_record_start', args, 'device_id')
+    if (deviceId !== undefined) {
+      await refreshMicDevices()
+      if (!useMicRecordingStore.getState().devices.some((device) => device.deviceId === deviceId))
+        throw bridgeError('bad_value', {
+          command: 'mic_record_start',
+          field: 'device_id',
+          expected: 'an id of devices from mic_record_status',
+        })
+      useMicRecordingStore.getState().setSelectedDeviceId(deviceId)
+    }
+    await startMicRecording()
+    const { status, error } = useMicRecordingStore.getState()
+    if (status !== 'recording')
+      throw failed('mic_record_start', new Error(error ?? `the recording is ${status}`))
+    return micState()
+  })
+
+  registerBridgeCommand('mic_record_stop', async (args) => {
+    takeArgs('mic_record_stop', args, [])
+    const before = new Set(useItemsStore.getState().items.map((item) => item.id))
+    await stopMicRecording()
+    const { error } = useMicRecordingStore.getState()
+    if (error) throw failed('mic_record_stop', new Error(error))
+    const added = useItemsStore.getState().items.filter((item) => !before.has(item.id))
+    return {
+      placed: added.map((item) => ({
+        id: item.id,
+        from: item.from,
+        duration: item.durationInFrames,
+      })),
+    }
+  })
+
+  registerBridgeCommand('mic_record_cancel', async (args) => {
+    takeArgs('mic_record_cancel', args, [])
+    cancelMicRecording()
+    return micState()
   })
 
   registerBridgeCommand('ui_navigate', async (args) => {

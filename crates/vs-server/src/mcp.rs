@@ -768,24 +768,59 @@ fn tools() -> &'static [Tool] {
             },
             Tool {
                 name: "captions_add",
-                description: "Puts the captions of a media item's speech on the timeline over its clips, as the clip menu's captions do (it transcribes first when needed); clip_ids limits them, replace (default true) replaces earlier ones. reveal sets how they show: whole lines, words as they are spoken, or karaoke with the spoken word lit in highlight (a CSS colour).",
+                description: "Puts the captions of a media item's speech on the timeline over its clips, as the clip menu's captions do (it transcribes first when needed); clip_ids limits them, replace (default true) replaces earlier ones. reveal sets how they show: whole lines, words as they are spoken, or karaoke with the spoken word lit in highlight (a CSS colour). Their look is the window's defaultCaptionStylePresetId (window_settings_set).",
                 looks: false,
                 schema: || object(json!({ "media_id": { "type": "string" }, "clip_ids": { "type": "array", "items": { "type": "string" } }, "replace": { "type": "boolean" }, "reveal": { "type": "string", "enum": ["whole", "words", "karaoke"] }, "highlight": { "type": "string" } }), &["media_id"]),
                 call: |args| window("captions_add", args, 600),
             },
             Tool {
                 name: "window_settings_get",
-                description: "The window's own settings: language, sounds, snapping, waveforms, filmstrips, density, undo history, autosave, the default transcription model and language, caption grouping.",
+                description: "The window's own settings: language, sounds and their voices, the sound output the preview plays through and the outputs of this computer, snapping, waveforms, filmstrips, density, undo history, autosave, the default transcription model and language, caption grouping, and the caption looks (caption_presets: the base ones and Dub Studio's 26) with the one new captions take (defaultCaptionStylePresetId).",
                 looks: true,
                 schema: nothing,
                 call: |args| window("window_settings_get", args, 15),
             },
             Tool {
                 name: "window_settings_set",
-                description: "Changes the window's own settings (the names window_settings_get gives, with values of the same type), language (a code it lists), sounds_enabled, sounds_volume (0..1). Keys and the person's guards for agents are not among them.",
+                description: "Changes the window's own settings (the names window_settings_get gives, with values of the same type), language (a code it lists), sounds_enabled, sounds_volume (0..1), sounds_voice (one of sounds_voices), sound_output (an id of sound_outputs, empty for the system default), defaultCaptionStylePresetId (an id of caption_presets: the look captions_add gives). Keys and the person's guards for agents are not among them.",
                 looks: false,
                 schema: || json!({ "type": "object" }),
                 call: |args| window("window_settings_set", args, 15),
+            },
+            Tool {
+                name: "freeze_frame",
+                description: "Holds a video clip's frame at seconds (a moment inside it): the clip is cut there and the frame stays on screen as a still for a while before the rest plays, as the clip menu's Freeze frame does. Answers the items it made.",
+                looks: false,
+                schema: || object(json!({ "clip_id": { "type": "string" }, "seconds": { "type": "number" } }), &["clip_id", "seconds"]),
+                call: |args| window("freeze_frame", args, 120),
+            },
+            Tool {
+                name: "mic_record_status",
+                description: "The voice-over recording from a microphone, as the timeline's record button has it: idle, recording, paused or finalizing, how long and how loud so far, the microphone chosen and the microphones of this computer.",
+                looks: true,
+                schema: nothing,
+                call: |args| window("mic_record_status", args, 15),
+            },
+            Tool {
+                name: "mic_record_start",
+                description: "Starts recording a voice-over from a microphone (device_id: one of mic_record_status's, else the one chosen in the window) at the playhead of the open project; the timeline plays while it records, as when the person presses record. The person speaks; mic_record_stop puts the take on the timeline.",
+                looks: false,
+                schema: || object(json!({ "device_id": { "type": "string" } }), &[]),
+                call: |args| window("mic_record_start", args, 60),
+            },
+            Tool {
+                name: "mic_record_stop",
+                description: "Stops the voice-over recording and puts the take on the timeline where it started, into the media library too; answers the clips placed.",
+                looks: false,
+                schema: nothing,
+                call: |args| window("mic_record_stop", args, 120),
+            },
+            Tool {
+                name: "mic_record_cancel",
+                description: "Drops the voice-over recording in progress without touching the timeline.",
+                looks: false,
+                schema: nothing,
+                call: |args| window("mic_record_cancel", args, 15),
             },
             Tool {
                 name: "ui_open_settings",
@@ -1180,6 +1215,10 @@ const JOURNAL: &[(&str, &str, &str)] = &[
     ("transcribe", "created", "transcript"),
     ("captions_add", "created", "captions"),
     ("window_settings_set", "updated", "settings"),
+    ("freeze_frame", "created", "timeline"),
+    ("mic_record_start", "started", "recording"),
+    ("mic_record_stop", "created", "recording"),
+    ("mic_record_cancel", "cancelled", "recording"),
     ("assistant_set", "updated", "settings"),
     ("element_save", "created", "element"),
     ("element_delete", "deleted", "element"),
@@ -2302,6 +2341,12 @@ mod tests {
         assert_eq!(body["result"]["resultType"], "complete");
         assert_eq!(body["result"]["cacheScope"], "public");
         assert_eq!(body["result"]["_meta"]["io.modelcontextprotocol/serverInfo"]["name"], "videosos");
+    }
+
+    #[test]
+    fn the_skill_names_every_tool() {
+        let unnamed: Vec<&str> = tools().iter().map(|tool| tool.name).filter(|name| !SKILL.contains(&format!("`{name}`"))).collect();
+        assert!(unnamed.is_empty(), "docs/mcp-skill.md says nothing of these tools; put each into its area under Tools by area: {unnamed:?}");
     }
 
     #[test]

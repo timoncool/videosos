@@ -18,6 +18,11 @@
     { "op": "updateItem", "about": "changes fields of an item: volume (dB), audioFadeIn/audioFadeOut and fadeIn/fadeOut (seconds), text, color, label...", "fields": {
       "id": { "type": "id", "required": true }, "updates": { "type": "object", "required": true } } },
     { "op": "removeItems", "about": "", "fields": { "ids": { "type": "ids", "required": true } } },
+    { "op": "rippleDelete", "about": "removes items and closes the gap they leave, as Ctrl+Delete does: the clips after them on their tracks move up, and every track with syncLock on (timeline_get) loses the same stretch of time", "fields": { "ids": { "type": "ids", "required": true } } },
+    { "op": "join", "about": "joins pieces of one clip that touch end to end back into one, as Shift+J does", "fields": { "ids": { "type": "ids", "required": true } } },
+    { "op": "link", "about": "links a video clip with sound clips of the same media, so they move and cut together", "fields": { "ids": { "type": "ids", "required": true } } },
+    { "op": "unlink", "about": "lets linked clips move and cut apart", "fields": { "ids": { "type": "ids", "required": true } } },
+    { "op": "duplicate", "about": "copies of items at from (the first there, the others at their distance), on their own tracks or on trackId, past what is in the way, with their keyframes and the transitions between them", "fields": { "ids": { "type": "ids", "required": true }, "from": { "type": "frame", "required": true }, "trackId": { "type": "string" } } },
     { "op": "split", "about": "cuts a clip in two at a frame", "fields": { "id": { "type": "id", "required": true }, "frame": { "type": "integer", "required": true } } },
     { "op": "trimStart", "about": "frames; positive cuts the start off, negative brings it back", "fields": { "id": { "type": "id", "required": true }, "amount": { "type": "integer", "required": true } } },
     { "op": "trimEnd", "about": "frames; negative cuts the end off, positive lengthens", "fields": { "id": { "type": "id", "required": true }, "amount": { "type": "integer", "required": true } } },
@@ -29,9 +34,9 @@
       "timing": { "type": "string" }, "alignment": { "type": "number" }, "properties": { "type": "object" } } },
     { "op": "removeTransition", "about": "", "fields": { "id": { "type": "id", "required": true } } },
     { "op": "addTrack", "about": "", "fields": { "kind": { "type": "string", "required": true, "enum": ["video", "audio"] }, "order": { "type": "number" } } },
-    { "op": "updateTrack", "about": "volume in dB, -60..12", "fields": {
+    { "op": "updateTrack", "about": "volume in dB, -60..12; syncLock false keeps the track still when a ripple edit takes time out of the others", "fields": {
       "id": { "type": "id", "required": true }, "name": { "type": "string" }, "muted": { "type": "boolean" }, "solo": { "type": "boolean" }, "locked": { "type": "boolean" },
-      "visible": { "type": "boolean" }, "volume": { "type": "number" } } },
+      "visible": { "type": "boolean" }, "syncLock": { "type": "boolean" }, "volume": { "type": "number" } } },
     { "op": "removeTrack", "about": "an empty track", "fields": { "id": { "type": "id", "required": true } } },
     { "op": "addKeyframe", "about": "animates a property of an item", "fields": {
       "itemId": { "type": "id", "required": true }, "property": { "type": "string", "required": true }, "frame": { "type": "integer", "required": true },

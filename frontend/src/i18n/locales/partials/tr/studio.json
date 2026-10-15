@@ -161,7 +161,11 @@
       "preset": "istem ön ayarı",
       "storyboard": "storyboard",
       "canvas": "tuval",
-      "fcpxml": "FCPXML"
+      "fcpxml": "FCPXML",
+      "local device": "yerel aygıt",
+      "local model": "yerel model",
+      "recording": "kayıt",
+      "subtitles": "altyazı"
     }
   },
   "files": {

@@ -161,7 +161,11 @@
       "preset": "prompt preset",
       "storyboard": "storyboard",
       "canvas": "canvas",
-      "fcpxml": "FCPXML"
+      "fcpxml": "FCPXML",
+      "local device": "local device",
+      "local model": "local model",
+      "recording": "recording",
+      "subtitles": "subtitles"
     }
   },
   "files": {

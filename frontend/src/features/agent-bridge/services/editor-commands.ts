@@ -166,6 +166,7 @@ function timeline() {
       locked: track.locked,
       solo: track.solo,
       volume: track.volume,
+      syncLock: track.syncLock !== false,
     })),
     items: items.map((item) => ({
       id: item.id,
@@ -180,6 +181,7 @@ function timeline() {
       text: 'text' in item ? item.text : undefined,
       shape: item.type === 'shape' ? item.shapeType : undefined,
       label: item.label,
+      linked: item.linkedGroupId,
       captions: captionsOf(item, fps),
     })),
     transitions: useTransitionsStore.getState().transitions,

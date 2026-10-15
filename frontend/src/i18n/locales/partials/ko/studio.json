@@ -161,7 +161,11 @@
       "preset": "프롬프트 프리셋",
       "storyboard": "스토리보드",
       "canvas": "캔버스",
-      "fcpxml": "FCPXML"
+      "fcpxml": "FCPXML",
+      "local device": "로컬 장치",
+      "local model": "로컬 모델",
+      "recording": "녹음",
+      "subtitles": "자막"
     }
   },
   "files": {

@@ -161,7 +161,11 @@
       "preset": "プロンプトのプリセット",
       "storyboard": "ストーリーボード",
       "canvas": "キャンバス",
-      "fcpxml": "FCPXML"
+      "fcpxml": "FCPXML",
+      "local device": "ローカルデバイス",
+      "local model": "ローカルモデル",
+      "recording": "録音",
+      "subtitles": "字幕"
     }
   },
   "files": {
