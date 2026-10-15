@@ -8,6 +8,7 @@ import {
   CircleAlert,
   Copy,
   Forward,
+  Heart,
   KeyRound,
   Loader2,
   RotateCcw,
@@ -465,7 +466,24 @@ export function JobCard({ job, onReuse, selected, onSelect }: JobCardProps) {
         )}
         {job.status === 'done' && job.outputs[0] && <UseAs job={job} output={job.outputs[0]} />}
         {job.status === 'done' && job.outputs.some((output) => output.kind !== 'text') && (
-          <ShareMenu compact title={job.title} file={() => resultFile(job)} />
+          <>
+            <Button
+              size="sm"
+              variant="ghost"
+              className={cn('h-6 px-1.5', job.liked ? 'text-[var(--color-accent)]' : 'text-muted-foreground')}
+              title={job.liked ? t('generate.actions.unlike') : t('generate.actions.like')}
+              aria-label={job.liked ? t('generate.actions.unlike') : t('generate.actions.like')}
+              aria-pressed={job.liked}
+              onClick={() =>
+                attempt(async () =>
+                  useGenerateStore.getState().upsertJob(await generateApi.like(job.id, !job.liked)),
+                )
+              }
+            >
+              <Heart className={cn('h-3 w-3', job.liked && 'fill-current')} />
+            </Button>
+            <ShareMenu compact title={job.title} file={() => resultFile(job)} />
+          </>
         )}
         {!running && (
           <>

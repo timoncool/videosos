@@ -71,6 +71,10 @@ a cut, a render) answers `{"done": false, "work_id": ...}`: call `studio_wait` w
 the command's own answer. `studio_wait` with `job_id` waits for a generation, and with neither for everything;
 `studio_status` lists `window_work` still running.
 
+**Takes.** Runs of one request (the same model and values, the seed aside) are takes of each other: `job_like` marks
+the best one, and the `timeline_edit` op `replaceMedia` puts another take's media item in a clip's place, keeping the
+clip's start and length.
+
 **On this computer, free.** Provider `local`: Qwen-Image 2.1 (task `image`), MiniMax-H3 and LTX-2.5 (task
 `video`, with sound) run on the person's graphics card through stable-diffusion.cpp, and the author's music studios
 (YuE2, MiniMax Music3, ACE-Step) appear in task `music` while they are open. `local_status` says which models and

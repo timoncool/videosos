@@ -25,7 +25,7 @@ import { JobCard } from './job-card'
 type StatusFilter = 'all' | 'done' | 'running' | 'failed'
 
 /** The orders the history can be read in, as Dub Studio's project list has them. */
-const ORDERS = ['newest', 'oldest', 'costliest', 'cheapest'] as const
+const ORDERS = ['newest', 'oldest', 'costliest', 'cheapest', 'liked'] as const
 type Order = (typeof ORDERS)[number]
 const ORDER_KEY = 'videosos-history-order'
 
@@ -44,6 +44,7 @@ const SORTERS: Record<Order, (a: Job, b: Job) => number> = {
   oldest: (a, b) => a.created - b.created,
   costliest: (a, b) => price(b) - price(a) || b.created - a.created,
   cheapest: (a, b) => price(a) - price(b) || b.created - a.created,
+  liked: (a, b) => Number(b.liked) - Number(a.liked) || b.created - a.created,
 }
 
 const RUNNING = new Set(['queued', 'sending', 'running'])

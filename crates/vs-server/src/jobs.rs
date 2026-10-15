@@ -61,6 +61,8 @@ pub struct Job {
     pub place: bool,
     /// Where on the timeline, in seconds, as it was when the run was asked for; none means the playhead at import.
     pub place_at: Option<f64>,
+    /// The person liked its result: the best take of its request, shown first when the history is sorted so.
+    pub liked: bool,
     pub origin: String,
     pub created: i64,
     pub updated: i64,
@@ -92,7 +94,7 @@ fn now_ms() -> i64 {
     chrono::Utc::now().timestamp_millis()
 }
 
-const COLUMNS: &str = "id, project_id, provider, model, model_name, task, values_json, status, progress, error, estimate, cost, cost_source, outputs, imported, origin, created, updated, handle, place, error_code, place_at";
+const COLUMNS: &str = "id, project_id, provider, model, model_name, task, values_json, status, progress, error, estimate, cost, cost_source, outputs, imported, origin, created, updated, handle, place, error_code, place_at, liked";
 
 fn row_to_job(row: &rusqlite::Row) -> rusqlite::Result<Job> {
     let parse = |text: Option<String>| text.and_then(|text| serde_json::from_str::<Value>(&text).ok());
@@ -120,6 +122,7 @@ fn row_to_job(row: &rusqlite::Row) -> rusqlite::Result<Job> {
         place: row.get::<_, i64>(19)? != 0,
         error_code: row.get(20)?,
         place_at: row.get(21)?,
+        liked: row.get::<_, i64>(22)? != 0,
     };
     job.title = crate::title::result_title(&job.values, &job.model_name);
     Ok(job)
@@ -147,7 +150,7 @@ impl Jobs {
                 id TEXT PRIMARY KEY, project_id TEXT, provider TEXT NOT NULL, model TEXT NOT NULL, model_name TEXT NOT NULL,
                 task TEXT NOT NULL, values_json TEXT NOT NULL, status TEXT NOT NULL, progress REAL, error TEXT,
                 estimate REAL, cost REAL, cost_source TEXT, outputs TEXT, imported TEXT, origin TEXT NOT NULL,
-                created INTEGER NOT NULL, updated INTEGER NOT NULL, handle TEXT, place INTEGER NOT NULL DEFAULT 0, error_code TEXT, place_at REAL);
+                created INTEGER NOT NULL, updated INTEGER NOT NULL, handle TEXT, place INTEGER NOT NULL DEFAULT 0, error_code TEXT, place_at REAL, liked INTEGER NOT NULL DEFAULT 0);
              CREATE INDEX IF NOT EXISTS jobs_project ON jobs(project_id, created);",
         )?;
         let columns: Vec<String> = db.prepare("PRAGMA table_info(jobs)")?.query_map([], |row| row.get::<_, String>(1))?.collect::<rusqlite::Result<_>>()?;
@@ -159,6 +162,9 @@ impl Jobs {
         }
         if !columns.iter().any(|column| column == "place_at") {
             db.execute_batch("ALTER TABLE jobs ADD COLUMN place_at REAL;")?;
+        }
+        if !columns.iter().any(|column| column == "liked") {
+            db.execute_batch("ALTER TABLE jobs ADD COLUMN liked INTEGER NOT NULL DEFAULT 0;")?;
         }
         let limits = HashMap::from([
             (Provider::Fal, Arc::new(Semaphore::new(2))),
@@ -199,7 +205,7 @@ impl Jobs {
         change(&mut job);
         job.updated = now_ms().max(before + 1);
         let saved = db.execute(
-            "UPDATE jobs SET status=?2, progress=?3, error=?4, estimate=?5, cost=?6, cost_source=?7, outputs=?8, imported=?9, updated=?10, handle=?11, error_code=?12 WHERE id=?1",
+            "UPDATE jobs SET status=?2, progress=?3, error=?4, estimate=?5, cost=?6, cost_source=?7, outputs=?8, imported=?9, updated=?10, handle=?11, error_code=?12, liked=?13 WHERE id=?1",
             params![
                 id,
                 job.status,
@@ -213,6 +219,7 @@ impl Jobs {
                 job.updated,
                 job.handle.as_ref().map(Value::to_string),
                 job.error_code,
+                i64::from(job.liked),
             ],
         );
         drop(db);
@@ -223,9 +230,14 @@ impl Jobs {
         Some(job)
     }
 
+    /// Likes or unlikes a job's result.
+    pub fn set_liked(&self, id: &str, liked: bool) -> Option<Job> {
+        self.update(id, |job| job.liked = liked)
+    }
+
     fn insert(&self, job: &Job) -> rusqlite::Result<()> {
         self.db().execute(
-            &format!("INSERT INTO jobs ({COLUMNS}) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22)"),
+            &format!("INSERT INTO jobs ({COLUMNS}) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23)"),
             params![
                 job.id,
                 job.project_id,
@@ -249,6 +261,7 @@ impl Jobs {
                 i64::from(job.place),
                 job.error_code,
                 job.place_at,
+                i64::from(job.liked),
             ],
         )?;
         Ok(())
@@ -320,6 +333,7 @@ impl Jobs {
                 imported: json!([]),
                 place: request.place,
                 place_at: request.place.then_some(request.place_at).flatten(),
+                liked: false,
                 origin: request.origin.clone().unwrap_or_else(|| "window".into()),
                 created: now,
                 updated: now,
@@ -825,6 +839,7 @@ impl Jobs {
             imported: json!([]),
             place: false,
             place_at: None,
+            liked: false,
             origin: "agent".into(),
             created: now,
             updated: now,
@@ -1097,6 +1112,18 @@ async fn imported(State(state): State<AppState>, UrlPath(id): UrlPath<String>, J
 }
 
 #[derive(Deserialize)]
+pub struct LikedBody {
+    liked: bool,
+}
+
+async fn liked(State(state): State<AppState>, UrlPath(id): UrlPath<String>, Json(body): Json<LikedBody>) -> Response {
+    match state.jobs.set_liked(&id, body.liked) {
+        Some(job) => Json(job).into_response(),
+        None => (StatusCode::NOT_FOUND, Json(json!({ "error": t!("jobs-not-found", job = id) }))).into_response(),
+    }
+}
+
+#[derive(Deserialize)]
 pub struct SpendQuery {
     #[serde(default)]
     project: Option<String>,
@@ -1113,6 +1140,7 @@ pub fn router() -> Router<AppState> {
         .route("/api/jobs/{id}/cancel", post(cancel))
         .route("/api/jobs/{id}/retry", post(retry))
         .route("/api/jobs/{id}/imported", post(imported))
+        .route("/api/jobs/{id}/liked", post(liked))
         .route("/api/jobs/{id}/files/{index}", get(file))
         .route("/api/spend", get(spend))
 }

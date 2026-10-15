@@ -89,7 +89,9 @@
       "reuse": "Düzenle",
       "reuseHint": "Bu çalıştırmanın modelini ve ayarlarını forma yükle",
       "again": "Yeniden",
-      "forgetHint": "Listeden kaldır ve dosyalarını sil (kitaplıkta zaten bulunan medya kalır)"
+      "forgetHint": "Listeden kaldır ve dosyalarını sil (kitaplıkta zaten bulunan medya kalır)",
+      "like": "Bu sonucu beğen: en iyi çekim, geçmiş böyle sıralanınca önce gösterilir",
+      "unlike": "Beğeniyi kaldır"
     },
     "importFailed": "Sonuç geldi ancak kitaplığa eklenemedi: {{reason}}",
     "improve": {
@@ -159,7 +161,8 @@
       "newest": "Önce yeni",
       "oldest": "Önce eski",
       "costliest": "Önce pahalı",
-      "cheapest": "Önce ucuz"
+      "cheapest": "Önce ucuz",
+      "liked": "Beğenilenler önce"
     },
     "fields": {
       "prompt": "İstem",
@@ -484,6 +487,13 @@
       "notDownloaded": "{{model}} henüz indirilmedi: {{size}}.",
       "engineToo": "Ekran kartınız için motor da birlikte iner.",
       "unsupported": "Yerel üretim şimdilik yalnızca Windows'ta kullanılabilir."
+    },
+    "takes": {
+      "title": "Çekimler ({{count}})",
+      "take": "Çekim {{n}}",
+      "inClip": "Klipte",
+      "use": "Kullan",
+      "useHint": "Bu çekimi klibin yerine koy"
     }
   }
 }

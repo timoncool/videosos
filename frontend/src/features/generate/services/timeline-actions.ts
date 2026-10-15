@@ -67,6 +67,12 @@ export function placeSpeechAt(mediaId: string, seconds: number | null, edges: Sp
   return result
 }
 
+/** Another take of a clip's request in its place, as an ordinary undoable edit. */
+export function replaceClipMedia(clipId: string, mediaId: string): unknown {
+  syncCanvas()
+  return applyOp({ op: 'replaceMedia', id: clipId, mediaId })
+}
+
 /** The playhead in seconds, where a run asked for now lands. */
 export function playheadSeconds(): number {
   const fps = useProjectStore.getState().currentProject?.metadata?.fps ?? 30

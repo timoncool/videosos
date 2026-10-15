@@ -89,7 +89,9 @@
       "reuse": "编辑",
       "reuseHint": "将此次运行的模型和设置载入表单",
       "again": "再次生成",
-      "forgetHint": "从列表中移除并删除其文件（已在媒体库中的媒体会保留）"
+      "forgetHint": "从列表中移除并删除其文件（已在媒体库中的媒体会保留）",
+      "like": "收藏这个结果：最好的一版，按此排序时排在最前",
+      "unlike": "取消收藏"
     },
     "importFailed": "结果已返回，但未能添加到媒体库：{{reason}}",
     "improve": {
@@ -159,7 +161,8 @@
       "newest": "最新优先",
       "oldest": "最早优先",
       "costliest": "最贵优先",
-      "cheapest": "最便宜优先"
+      "cheapest": "最便宜优先",
+      "liked": "收藏的在前"
     },
     "fields": {
       "prompt": "提示词",
@@ -484,6 +487,13 @@
       "notDownloaded": "{{model}} 尚未下载：{{size}}。",
       "engineToo": "会同时下载适用于你的显卡的引擎。",
       "unsupported": "本地生成目前仅支持 Windows。"
+    },
+    "takes": {
+      "title": "版本（{{count}}）",
+      "take": "版本 {{n}}",
+      "inClip": "正在使用",
+      "use": "使用",
+      "useHint": "用这个版本替换片段"
     }
   }
 }

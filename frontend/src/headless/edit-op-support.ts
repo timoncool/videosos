@@ -30,6 +30,7 @@ export type EditOperationName =
   | 'removeTransition'
   | 'addTrack'
   | 'addClip'
+  | 'replaceMedia'
   | 'addKeyframe'
   | 'removeKeyframes'
   | 'setTransformParent'

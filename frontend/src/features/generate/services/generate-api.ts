@@ -232,6 +232,8 @@ export interface Job {
   place: boolean
   /** Where on the timeline the results go, in seconds; null puts them at the playhead on arrival. */
   place_at: number | null
+  /** The person liked its result: the best take of its request. */
+  liked: boolean
   origin: string
   created: number
   updated: number
@@ -317,6 +319,8 @@ export const generateApi = {
   cancel: (id: string) => request<Job>(`/api/jobs/${id}/cancel`, { method: 'POST' }),
   retry: (id: string) => request<{ jobs: Job[] }>(`/api/jobs/${id}/retry`, { method: 'POST' }),
   remove: (id: string) => request<void>(`/api/jobs/${id}`, { method: 'DELETE' }),
+  like: (id: string, liked: boolean) =>
+    request<Job>(`/api/jobs/${id}/liked`, { method: 'POST', body: JSON.stringify({ liked }) }),
   markImported: (id: string, mediaIds: string[]) =>
     request<Job>(`/api/jobs/${id}/imported`, {
       method: 'POST',

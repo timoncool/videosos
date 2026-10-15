@@ -508,6 +508,49 @@ function applyAddClip(op: EditOp): unknown {
   throw new Error(`addClip: unsupported media mimeType ${media.mimeType}`)
 }
 
+/**
+ * Another media item of the library in a clip's place, as a take of the same request: the clip keeps its start, its
+ * in-point and its length as far as the new media reaches, and the clips linked to it on the same media (a video's
+ * sound) change with it.
+ */
+function applyReplaceMedia(op: EditOp): unknown {
+  const id = asString(op.id)
+  const mediaId = asString(op.mediaId)
+  if (!id || !mediaId) throw new Error('replaceMedia requires `id` and `mediaId`')
+  const clip = requireItem(id)
+  if (!clip.mediaId) throw new Error(`replaceMedia: ${id} is not a clip of a media item`)
+  const media = useMediaLibraryStore.getState().mediaById[mediaId]
+  if (!media) throw new Error(`replaceMedia: no media ${mediaId} in the library`)
+  const projectFps = useTimelineSettingsStore.getState().fps || 30
+  const { items } = useItemsStore.getState()
+  const group = clip.linkedGroupId
+    ? items.filter((item) => item.linkedGroupId === clip.linkedGroupId && item.mediaId === clip.mediaId)
+    : [clip]
+  const sf = sourceFieldsFor(media, projectFps)
+  for (const item of group) {
+    if (item.type === 'image') {
+      updateItem(item.id, { mediaId, label: media.fileName ?? mediaId, src: '', thumbnailUrl: undefined } as Partial<TimelineItem>)
+      continue
+    }
+    const speed = 'speed' in item && typeof item.speed === 'number' && item.speed > 0 ? item.speed : 1
+    const inPoint = Math.min(item.sourceStart ?? 0, Math.max(0, sf.sourceDuration - 1))
+    const reach = Math.floor(((sf.sourceDuration - inPoint) / sf.sourceFps / speed) * projectFps)
+    const durationInFrames = Math.max(1, Math.min(item.durationInFrames, reach))
+    updateItem(item.id, {
+      mediaId,
+      label: item.type === 'audio' && clip.type === 'video' ? `${media.fileName ?? mediaId} audio` : (media.fileName ?? mediaId),
+      src: '',
+      sourceFps: sf.sourceFps,
+      sourceStart: inPoint,
+      sourceEnd: inPoint + Math.round((durationInFrames / projectFps) * sf.sourceFps * speed),
+      sourceDuration: sf.sourceDuration,
+      durationInFrames,
+      ...(item.type === 'audio' ? { waveformData: undefined } : { thumbnailUrl: undefined }),
+    } as Partial<TimelineItem>)
+  }
+  return { id, replaced: group.map((item) => item.id) }
+}
+
 function applyAddKeyframe(op: EditOp): unknown {
   const itemId = asString(op.itemId)
   const property = asString(op.property)
@@ -635,6 +678,7 @@ const OP_HANDLERS: Record<EditOperationName, (op: EditOp) => unknown> = {
   removeTransition: applyRemoveTransition,
   addTrack: applyAddTrack,
   addClip: applyAddClip,
+  replaceMedia: applyReplaceMedia,
   addKeyframe: applyAddKeyframe,
   setTransformParent: applySetTransformParent,
   removeKeyframes: applyRemoveKeyframes,

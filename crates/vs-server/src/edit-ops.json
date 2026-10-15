@@ -2,6 +2,8 @@
   "ops": [
     { "op": "addClip", "about": "a media item of the library onto the timeline; keepFrom: true lands it at from on a track free there, a new one when none is, instead of after what is in the way; a video brings its sound on an audio track", "fields": {
       "mediaId": { "type": "id", "required": true }, "from": { "type": "integer", "about": "frame" }, "trackId": { "type": "id" }, "keepFrom": { "type": "boolean" }, "durationInFrames": { "type": "integer" } } },
+    { "op": "replaceMedia", "about": "another media item of the library in a clip's place, as a take of the same request: the clip keeps its start, in-point and length as far as the new media reaches, and its linked sound changes with it", "fields": {
+      "id": { "type": "id", "required": true }, "mediaId": { "type": "id", "required": true } } },
     { "op": "addText", "about": "a text clip", "fields": {
       "text": { "type": "string", "required": true }, "from": { "type": "integer", "required": true }, "durationInFrames": { "type": "integer", "required": true }, "trackId": { "type": "id" },
       "fontSize": { "type": "number" }, "fontFamily": { "type": "string" }, "fontWeight": { "type": "string" }, "color": { "type": "string", "about": "#rrggbb" },

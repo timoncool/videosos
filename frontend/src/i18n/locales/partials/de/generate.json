@@ -89,7 +89,9 @@
       "reuse": "Bearbeiten",
       "reuseHint": "Modell und Einstellungen dieses Laufs ins Formular laden",
       "again": "Erneut",
-      "forgetHint": "Aus der Liste entfernen und die zugehörigen Dateien löschen (Medien, die bereits in der Bibliothek sind, bleiben erhalten)"
+      "forgetHint": "Aus der Liste entfernen und die zugehörigen Dateien löschen (Medien, die bereits in der Bibliothek sind, bleiben erhalten)",
+      "like": "Dieses Ergebnis markieren: die beste Version, zuerst gezeigt, wenn der Verlauf so sortiert ist",
+      "unlike": "Markierung entfernen"
     },
     "importFailed": "Das Ergebnis ist eingetroffen, wurde aber nicht zur Bibliothek hinzugefügt: {{reason}}",
     "improve": {
@@ -159,7 +161,8 @@
       "newest": "Neueste zuerst",
       "oldest": "Älteste zuerst",
       "costliest": "Teuerste zuerst",
-      "cheapest": "Günstigste zuerst"
+      "cheapest": "Günstigste zuerst",
+      "liked": "Gemerkte zuerst"
     },
     "fields": {
       "prompt": "Prompt",
@@ -485,6 +488,13 @@
       "notDownloaded": "{{model}} ist noch nicht heruntergeladen: {{size}}.",
       "engineToo": "Die Engine für deine Grafikkarte kommt mit.",
       "unsupported": "Lokale Generierung gibt es vorerst nur unter Windows."
+    },
+    "takes": {
+      "title": "Versionen ({{count}})",
+      "take": "Version {{n}}",
+      "inClip": "Im Clip",
+      "use": "Verwenden",
+      "useHint": "Diese Version an die Stelle des Clips setzen"
     }
   }
 }

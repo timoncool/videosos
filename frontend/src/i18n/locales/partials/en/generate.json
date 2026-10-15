@@ -90,7 +90,9 @@
       "reuse": "Edit",
       "reuseHint": "Load this run's model and settings into the form",
       "again": "Again",
-      "forgetHint": "Remove from the list and delete its files (media already in the library stays)"
+      "forgetHint": "Remove from the list and delete its files (media already in the library stays)",
+      "like": "Like this result: the best take, shown first when the history is sorted so",
+      "unlike": "Unlike"
     },
     "importFailed": "The result arrived but was not added to the library: {{reason}}",
     "improve": {
@@ -160,7 +162,8 @@
       "newest": "Newest first",
       "oldest": "Oldest first",
       "costliest": "Most expensive",
-      "cheapest": "Cheapest"
+      "cheapest": "Cheapest",
+      "liked": "Liked first"
     },
     "fields": {
       "prompt": "Prompt",
@@ -485,6 +488,13 @@
       "notDownloaded": "{{model}} is not downloaded yet: {{size}}.",
       "engineToo": "The engine for your card comes with it.",
       "unsupported": "Local generation is available on Windows for now."
+    },
+    "takes": {
+      "title": "Takes ({{count}})",
+      "take": "Take {{n}}",
+      "inClip": "In the clip",
+      "use": "Use",
+      "useHint": "Put this take in the clip's place"
     }
   }
 }

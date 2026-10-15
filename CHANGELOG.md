@@ -76,6 +76,10 @@ makes it, and the release notes on GitHub are taken from the release's section.
   call, `studio_wait` for long work, `providers_log`, and the writing guides as MCP resources.
 - **Tablets, phones and Safari**: below 1024 px the library and properties open over the preview, the top bar
   takes two rows, clips and the playhead are dragged by finger and pen, and the editor opens in Safari.
+- **Takes of a generated clip**, as Dub Studio keeps takes of a phrase: a clip's properties list the other results of
+  its request (the same model and values, the seed aside), and Use puts one in the clip's place, keeping its start and
+  length. A heart marks the best result; the history sorts liked results first. Agents have `job_like` and the
+  `replaceMedia` edit.
 - **Dub Studio's 26 caption looks** among the caption presets: clean, viral (the spoken word lit in colour), karaoke,
   playful, neon and fresh ones, each with its reveal, plate, font and colours.
 - **A voice-over put on the timeline starts and ends with its speech**: the silence before and after it is trimmed

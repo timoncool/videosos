@@ -89,7 +89,9 @@
       "reuse": "Modifier",
       "reuseHint": "Charger le modèle et les paramètres de cette exécution dans le formulaire",
       "again": "Relancer",
-      "forgetHint": "Retirer de la liste et supprimer ses fichiers (les médias déjà dans la bibliothèque sont conservés)"
+      "forgetHint": "Retirer de la liste et supprimer ses fichiers (les médias déjà dans la bibliothèque sont conservés)",
+      "like": "Aimer ce résultat : la meilleure prise, montrée en premier quand l’historique est trié ainsi",
+      "unlike": "Ne plus aimer"
     },
     "importFailed": "Le résultat est arrivé mais n’a pas été ajouté à la bibliothèque : {{reason}}",
     "improve": {
@@ -159,7 +161,8 @@
       "newest": "Plus récents",
       "oldest": "Plus anciens",
       "costliest": "Plus chers",
-      "cheapest": "Moins chers"
+      "cheapest": "Moins chers",
+      "liked": "Favoris d’abord"
     },
     "fields": {
       "prompt": "Prompt",
@@ -485,6 +488,13 @@
       "notDownloaded": "{{model}} n'est pas encore téléchargé : {{size}}.",
       "engineToo": "Le moteur pour votre carte vient avec.",
       "unsupported": "La génération locale n'est disponible que sous Windows pour l'instant."
+    },
+    "takes": {
+      "title": "Prises ({{count}})",
+      "take": "Prise {{n}}",
+      "inClip": "Dans le clip",
+      "use": "Utiliser",
+      "useHint": "Mettre cette prise à la place du clip"
     }
   }
 }

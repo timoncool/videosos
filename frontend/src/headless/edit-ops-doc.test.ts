@@ -17,6 +17,7 @@ const HANDLED: Record<EditOperationName, true> = {
   removeTransition: true,
   addTrack: true,
   addClip: true,
+  replaceMedia: true,
   addKeyframe: true,
   removeKeyframes: true,
   setTransformParent: true,

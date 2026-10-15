@@ -318,6 +318,13 @@ fn tools() -> &'static [Tool] {
                 call: |args| send(Method::DELETE, format!("/api/jobs/{}", segment(&text(args, "job_id")?)), Value::Null),
             },
             Tool {
+                name: "job_like",
+                description: "Likes (or, with liked false, unlikes) a job's result: the best take of a request; the window shows liked results first when its history is sorted so, and a clip's takes mark it.",
+                looks: false,
+                schema: || object(json!({ "job_id": { "type": "string" }, "liked": { "type": "boolean" } }), &["job_id"]),
+                call: |args| send(Method::POST, format!("/api/jobs/{}/liked", segment(&text(args, "job_id")?)), json!({ "liked": args.get("liked").and_then(Value::as_bool).unwrap_or(true) })),
+            },
+            Tool {
                 name: "spend",
                 description: "Money spent on generations: in total, today, by provider; optionally for one project.",
                 looks: true,
@@ -1155,6 +1162,7 @@ const JOURNAL: &[(&str, &str, &str)] = &[
     ("generate_file", "started", "generation"),
     ("job_cancel", "cancelled", "generation"),
     ("job_delete", "deleted", "generation"),
+    ("job_like", "updated", "generation"),
     ("timeline_edit", "updated", "timeline"),
     ("timeline_undo", "undone", "timeline"),
     ("timeline_redo", "redone", "timeline"),

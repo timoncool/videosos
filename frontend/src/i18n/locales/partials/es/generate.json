@@ -89,7 +89,9 @@
       "reuse": "Editar",
       "reuseHint": "Cargar en el formulario el modelo y los ajustes de esta ejecución",
       "again": "Repetir",
-      "forgetHint": "Quitar de la lista y eliminar sus archivos (los medios que ya están en la biblioteca se conservan)"
+      "forgetHint": "Quitar de la lista y eliminar sus archivos (los medios que ya están en la biblioteca se conservan)",
+      "like": "Marcar este resultado como la mejor toma: aparece primero cuando el historial se ordena así",
+      "unlike": "Quitar marca"
     },
     "importFailed": "El resultado llegó pero no se añadió a la biblioteca: {{reason}}",
     "improve": {
@@ -159,7 +161,8 @@
       "newest": "Más recientes",
       "oldest": "Más antiguos",
       "costliest": "Más caros",
-      "cheapest": "Más baratos"
+      "cheapest": "Más baratos",
+      "liked": "Favoritos primero"
     },
     "fields": {
       "prompt": "Prompt",
@@ -485,6 +488,13 @@
       "notDownloaded": "{{model}} aún no está descargado: {{size}}.",
       "engineToo": "Con él se descarga el motor para tu tarjeta.",
       "unsupported": "Por ahora la generación local solo está disponible en Windows."
+    },
+    "takes": {
+      "title": "Tomas ({{count}})",
+      "take": "Toma {{n}}",
+      "inClip": "En el clip",
+      "use": "Usar",
+      "useHint": "Poner esta toma en lugar del clip"
     }
   }
 }
