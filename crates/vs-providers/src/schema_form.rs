@@ -192,7 +192,7 @@ pub fn fields_of_object(root: &Value, object: &Value, prefix: &str, skip: &Skip,
         let node = resolve(root, &properties[key]);
         let path = if prefix.is_empty() { key.clone() } else { format!("{prefix}.{key}") };
         let is_required = required.contains(&key.as_str());
-        if media_object || is_media_node(root, key, node) {
+        if (media_object && input_is_file(key, node)) || is_media_node(root, key, node) {
             if let Some(field) = media_field(root, key, &path, node, is_required, media_object) {
                 fields.push(field);
             }
@@ -221,6 +221,12 @@ fn is_media_node(root: &Value, key: &str, node: &Value) -> bool {
     let string_like = |n: &Value| n.get("format").and_then(Value::as_str) == Some("uri") || n.get("contentMediaType").is_some();
     let item = node.get("items").map(|items| resolve(root, items));
     media_of_name(&lower).is_some() && (string_like(node) || item.is_some_and(string_like))
+}
+
+/// Whether an entry of Runware's `inputs` takes a file: named for one, or a picture by its schema. A draft's cache,
+/// an id of the provider's own (`videoId`, `draftId`), fonts or a checkpoint are not files of the library.
+fn input_is_file(key: &str, node: &Value) -> bool {
+    !key.ends_with("Id") && (media_of_name(key).is_some() || node.to_string().contains("data:image"))
 }
 
 fn media_field(root: &Value, key: &str, path: &str, node: &Value, required: bool, inside_inputs: bool) -> Option<Field> {

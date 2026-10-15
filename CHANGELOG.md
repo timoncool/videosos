@@ -118,6 +118,8 @@ makes it, and the release notes on GitHub are taken from the release's section.
 
 ### Fixed
 
+- **Runware fields that take no file are no longer picture slots**: a draft's cache is a text field, and a provider's
+  own ids, fonts, checkpoints, datasets and documents no longer ask for a picture of the library.
 - **A model's length that is `auto` or a number of seconds can be chosen**: FLUX 3 Video's Duration listed only
   `auto`; it now lists `auto` and 5 to 20 seconds.
 - **A generated video is shown by its first frame** in a canvas node and in a form's file slot, instead of its number.

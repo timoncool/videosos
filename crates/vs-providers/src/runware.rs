@@ -538,6 +538,9 @@ mod tests {
         let form = form("bfl:flux@3-video", &schema).unwrap();
         let frames = form.fields.iter().find(|field| field.key == "inputs.frameImages").unwrap();
         assert!(matches!(frames.kind, FieldKind::Media { max: 10, at: Some(crate::model::FrameAt::Second { max }), .. } if max == 20.0), "{frames:?}");
+        let kind = |key: &str| form.fields.iter().find(|field| field.key == key).map(|field| field.kind.clone());
+        assert!(matches!(kind("inputs.video"), Some(FieldKind::Media { media: crate::model::MediaKind::Video, .. })));
+        assert!(matches!(kind("inputs.draftCache"), Some(FieldKind::Text { .. } | FieldKind::Textarea { .. })), "a draft's cache is no picture: {:?}", kind("inputs.draftCache"));
         let duration = form.fields.iter().find(|field| field.key == "duration").unwrap();
         let durations: Vec<Value> = choices_of(duration).into_iter().map(|choice| choice.value).collect();
         assert!(durations.contains(&json!("auto")) && durations.contains(&json!(5)) && durations.contains(&json!(20)), "{durations:?}");
