@@ -485,7 +485,7 @@
       "notInstalled": "未ダウンロード",
       "accelerators": "高速化: {{list}}",
       "studios": "このコンピューターのスタジオ",
-      "studiosHint": "YuE2・MiniMax Music3・ACE-Step Studio を開いていると、ここから「音楽」モデルとして曲を作れます。曲はスタジオのライブラリに残り、コピーがここに届きます。",
+      "studiosHint": "起動中のYuE2、MiniMax Music3、ACE-Step Studioは「音楽」モデルとしてここから曲を作り、Speech Studioはエンジンごとに「音声」モデルとしてテキストを読み上げます。作業はスタジオに残り、コピーがここに届きます。",
       "studioRunning": "起動中 — 「音楽」で使用可",
       "studioOff": "未起動",
       "download": "ダウンロード · {{size}}",

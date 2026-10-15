@@ -485,7 +485,7 @@
       "notInstalled": "다운로드 안 됨",
       "accelerators": "가속기: {{list}}",
       "studios": "이 컴퓨터의 스튜디오",
-      "studiosHint": "YuE2, MiniMax Music3, ACE-Step Studio가 열려 있으면 여기서 음악 모델로 곡을 만듭니다. 곡은 스튜디오 라이브러리에 남고 사본이 여기로 옵니다.",
+      "studiosHint": "열려 있는 YuE2, MiniMax Music3, ACE-Step Studio는 '음악' 모델로 여기서 곡을 만들고, Speech Studio는 엔진마다 '음성' 모델로 텍스트를 읽습니다. 작업은 스튜디오에 남고 사본이 여기로 옵니다.",
       "studioRunning": "실행 중 — 음악에서 사용",
       "studioOff": "실행 안 됨",
       "download": "다운로드 · {{size}}",

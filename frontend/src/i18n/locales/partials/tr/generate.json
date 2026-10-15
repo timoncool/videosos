@@ -485,7 +485,7 @@
       "notInstalled": "indirilmedi",
       "accelerators": "Hızlandırıcılar: {{list}}",
       "studios": "Bu bilgisayardaki stüdyolar",
-      "studiosHint": "Açık olduklarında YuE2, MiniMax Music3 ve ACE-Step Studio buradan Müzik modeli olarak şarkı yapar; şarkı stüdyonun kitaplığında kalır, bir kopyası buraya gelir.",
+      "studiosHint": "Açık YuE2, MiniMax Music3 ve ACE-Step Studio buradan Müzik modelleri olarak şarkı yapar; Speech Studio metinleri her motoru için bir Ses modeli olarak seslendirir. İş stüdyoda kalır, buraya bir kopyası gelir.",
       "studioRunning": "açık — Müzik'te",
       "studioOff": "çalışmıyor",
       "download": "İndir · {{size}}",

@@ -113,6 +113,9 @@ makes it, and the release notes on GitHub are taken from the release's section.
 - **Keyframes at chosen moments**, as VideoSOS 1's frame selector: a video model that takes several frames and a
   place for each (FLUX 3 Video and Aleph by the second, LTX 2.3, Ray 3.2 and SkyReels V4 by the frame number) has a
   box under each frame for where it stands; an empty box leaves it to the model. Agents pin a file with `at`.
+- **Speech Studio voices texts from here**, as the music studios make songs: when it is open, each of its engines on
+  this computer (Qwen3-TTS, Supertonic 3, Drama 3, Higgs Audio) is a Voice model with the engine's own voices, its
+  languages and how it should sound; the text is voiced and kept in Speech Studio, a copy comes here.
 - **Long lists in the generation form are searched by typing**, as VideoSOS 1's voice picker was: a model's voices
   (MiniMax Speech has hundreds) and any list longer than twelve open with a search box.
 

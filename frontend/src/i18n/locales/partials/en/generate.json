@@ -486,7 +486,7 @@
       "notInstalled": "not downloaded",
       "accelerators": "Accelerators: {{list}}",
       "studios": "Studios on this computer",
-      "studiosHint": "YuE2, MiniMax Music3 and ACE-Step Studio, when open, make songs from here as Music models; the song stays in the studio's library and a copy comes here.",
+      "studiosHint": "YuE2, MiniMax Music3 and ACE-Step Studio, when open, make songs from here as Music models; Speech Studio voices texts as Voice models, one for each of its engines. The work stays in the studio and a copy comes here.",
       "studioRunning": "open — in Music",
       "studioOff": "not running",
       "download": "Download · {{size}}",
