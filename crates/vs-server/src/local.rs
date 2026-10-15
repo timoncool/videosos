@@ -11,7 +11,7 @@ use std::time::{Duration, Instant};
 
 use serde::Serialize;
 use serde_json::{json, Map, Value};
-use vs_diffusion::{Canceller, Context, Engine, ImageParams, Lora, ModelConfig, RawImage, Sampler, Upscale, VideoParams};
+use vs_diffusion::{Canceller, Context, Engine, Lora, ModelConfig, RawImage, Sampler, Upscale, VideoParams};
 use vs_providers::model::{Choice, Field, FieldKind, MediaKind, ModelEntry, ModelForm, Output, PriceRule, Provider, Rate, Role, Task};
 
 /// One file to download, relative to the data folder.
@@ -103,17 +103,11 @@ struct ModelFile {
     download: Download,
 }
 
-#[derive(Clone, Copy, PartialEq, Eq)]
-enum Kind {
-    Image,
-    Video,
-}
 
 struct LocalModel {
     id: &'static str,
     name: &'static str,
     description: &'static str,
-    kind: Kind,
     files: &'static [ModelFile],
     /// Ways to sample the model, the default first; their files are downloaded with the model's own.
     presets: &'static [Preset],
@@ -149,93 +143,26 @@ enum Schedule {
     Engine,
     /// Sigmas a distilled model was trained on, the closing 0 included.
     Fixed(&'static [f32]),
-    /// An even grid shifted for the picture's token count the way Qwen-Image 2.1's scheduler does, with no terminal stretch.
-    QwenShifted(&'static [f32]),
 }
 
 impl Schedule {
-    fn sigmas(&self, width: u32, height: u32) -> Vec<f32> {
+    fn sigmas(&self) -> Vec<f32> {
         match self {
             Schedule::Engine => Vec::new(),
             Schedule::Fixed(sigmas) => sigmas.to_vec(),
-            Schedule::QwenShifted(grid) => {
-                let tokens = f64::from((width / 16) * (height / 16));
-                let slope = (0.9 - 0.5) / (8192.0 - 256.0);
-                let mu = (tokens * slope + 0.5 - slope * 256.0).exp();
-                grid.iter().map(|&t| (mu / (mu + (1.0 / f64::from(t) - 1.0))) as f32).chain([0.0]).collect()
-            }
         }
     }
 }
 
-const QWEN_IMAGE_2_1: ModelFile = ModelFile { slot: Slot::Diffusion, download: Download { url: "https://huggingface.co/unsloth/Qwen-Image-2.1-GGUF/resolve/2c31ccd392b367a6637841a143813320a02dff55/qwen-image-2.1-Q4_K_M.gguf", dest: "models/qwen-image-2.1/qwen-image-2.1-Q4_K_M.gguf", size: 4_199_565_024, sha256: "631d532e7ca71e8d90a87c71d3699761a812039d22e3370e87498d87754660fe", unzip_into: None } };
 
 /// Lightricks' schedule for the distilled checkpoint, the first pass of their DistilledPipeline.
 const LTX_DISTILLED_SIGMAS: &[f32] = &[1.0, 0.99375, 0.9875, 0.98125, 0.975, 0.909375, 0.725, 0.421875, 0.0];
 
 const MODELS: &[LocalModel] = &[
     LocalModel {
-        id: "qwen-image-2.1",
-        name: "Qwen-Image 2.1",
-        description: "Alibaba's picture model of September 2026, the first among open models; with its Qwen3-VL-8B text encoder. Three accelerators: Alibaba's own Turbo, LightX2V Lightning and Viggle Turbo.",
-        kind: Kind::Image,
-        files: &[
-            ModelFile { slot: Slot::Llm, download: Download { url: "https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct-GGUF/resolve/f982a07559d4a2f6c8744d840bf6fccab30eea96/Qwen3VL-8B-Instruct-Q4_K_M.gguf", dest: "models/qwen-image-2.1/Qwen3VL-8B-Instruct-Q4_K_M.gguf", size: 5_027_784_800, sha256: "67d1659bfe71b89d50b45a4ad1a9e5b997e5bb16ce5da66a6a6167abd569e9e2", unzip_into: None } },
-            ModelFile { slot: Slot::Vae, download: Download { url: "https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/a8342359c61979b06a8dafb1a47991fe1f30e994/vae/qwen_image_2.1_vae_bf16.safetensors", dest: "models/qwen-image-2.1/qwen_image_2.1_vae_bf16.safetensors", size: 675_509_688, sha256: "bb21f7473051e1ac368515dd3f2e15cd44d7a11748ee8823e1ddca3e4876b7c9", unzip_into: None } },
-        ],
-        presets: &[
-            Preset {
-                id: "turbo",
-                name: "Qwen-Image 2.1 Turbo",
-                files: &[ModelFile { slot: Slot::Diffusion, download: Download { url: "https://huggingface.co/unsloth/Qwen-Image-2.1-Turbo-GGUF/resolve/5d1f9f759ea877ae556cda88dbec958b62ad3809/qwen-image-2.1-turbo-Q4_K_M.gguf", dest: "models/qwen-image-2.1/qwen-image-2.1-turbo-Q4_K_M.gguf", size: 4_199_565_120, sha256: "8940e8b522af886e0c0f5afddf720e82dd223cb9a43580b5f61c4d740452ac20", unzip_into: None } }],
-                steps: 8,
-                cfg: 1.0,
-                flow_shift: 0.0,
-                schedule: Schedule::Fixed(&[1.0, 0.978453, 0.95418, 0.926626, 0.89508, 0.845148, 0.704534, 0.414568, 0.0]),
-                sampler: Sampler::Engine,
-                upscale_sigmas: &[],
-            },
-            Preset {
-                id: "lightning",
-                name: "LightX2V Lightning",
-                files: &[
-                    QWEN_IMAGE_2_1,
-                    ModelFile { slot: Slot::Lora, download: Download { url: "https://huggingface.co/lightx2v/Qwen-Image-2.1-Lightning/resolve/6b0a1176327c01522a44276c5da67331a025b6fc/pytorch_lora_weights.safetensors", dest: "models/qwen-image-2.1/loras/qwen-image-2.1-lightning-4step.safetensors", size: 67_144_280, sha256: "53c69320d4163da51032f90275074028cb098556039c72b45f8dce9f0f9e34a3", unzip_into: None } },
-                ],
-                steps: 4,
-                cfg: 1.0,
-                flow_shift: 0.0,
-                schedule: Schedule::QwenShifted(&[1.0, 0.75, 0.5, 0.25]),
-                sampler: Sampler::Engine,
-                upscale_sigmas: &[],
-            },
-            Preset {
-                id: "viggle",
-                name: "Viggle Turbo v0.3",
-                files: &[
-                    QWEN_IMAGE_2_1,
-                    ModelFile { slot: Slot::Lora, download: Download { url: "https://huggingface.co/Viggle/Qwen-Image-2.1-viggle-turbo/resolve/009a44a895ef85f7e643c80fdca9543795248867/Qwen-Image-2.1-viggle-turbo-v0.3-6step-lora-r256.safetensors", dest: "models/qwen-image-2.1/loras/qwen-image-2.1-viggle-turbo-v0.3-6step-lora-r256.safetensors", size: 1_359_147_904, sha256: "f06c266e04438b5272bdfb99410421d52a65d7a37f6f42aabc3cb1faf0142644", unzip_into: None } },
-                ],
-                steps: 6,
-                cfg: 1.0,
-                flow_shift: 0.0,
-                schedule: Schedule::QwenShifted(&[1.0, 0.9375, 0.875, 0.75, 0.5, 0.25]),
-                sampler: Sampler::Engine,
-                upscale_sigmas: &[],
-            },
-        ],
-        sizes: &[(1024, 1024), (1344, 768), (768, 1344), (1152, 896), (896, 1152), (1536, 640), (640, 1536)],
-        rng_cpu: false,
-        seconds: &[],
-        fps: 0,
-        frame_step: 1,
-        frame_offset: 0,
-    },
-    LocalModel {
         id: "minimax-h3",
         name: "MiniMax-H3",
         description: "MiniMax's video model of August 2026, the strongest open one: video with its own sound, from a prompt or a first frame, at 24 fps; with its Qwen3-VL-32B text encoder. Accelerators: LightX2V Turbo in 8 and 4 steps. The weights' license excludes the US, EU, UK and South Korea.",
-        kind: Kind::Video,
         files: &[
             ModelFile { slot: Slot::Diffusion, download: Download { url: "https://huggingface.co/unsloth/MiniMax-H3-GGUF/resolve/d629413c2e5b51b38c453668b75ca3b06ca92703/minimax_h3_fl2va_pruned-Q4_K.gguf", dest: "models/minimax-h3/minimax_h3_fl2va_pruned-Q4_K.gguf", size: 11_420_663_904, sha256: "dd948e08ad0ba3c71bd42f368e283dd82e790f5122a63b276e22a3e0283d0c10", unzip_into: None } },
             ModelFile { slot: Slot::Llm, download: Download { url: "https://huggingface.co/unsloth/MiniMax-H3-GGUF/resolve/d629413c2e5b51b38c453668b75ca3b06ca92703/qwen3vl_32b_minimax_h3-Q4_K_M.gguf", dest: "models/minimax-h3/qwen3vl_32b_minimax_h3-Q4_K_M.gguf", size: 18_218_065_024, sha256: "11e6efe70a57ce7f4838c47bdbd1a1c4b8ce10e2b7747f1b065990b70f4b05fc", unzip_into: None } },
@@ -278,7 +205,6 @@ const MODELS: &[LocalModel] = &[
         id: "ltx-2.5",
         name: "LTX-2.5",
         description: "Lightricks' video model of August 2026, distilled to 8 steps: video with its own sound, from a prompt or a first frame, at 24 fps; with Lightricks' own INT8 Gemma-4-12B text encoder. Sampled as Lightricks' DistilledPipeline: half the size first, then their ×2 latent upscaler and three refining steps.",
-        kind: Kind::Video,
         files: &[
             ModelFile { slot: Slot::Diffusion, download: Download { url: "https://huggingface.co/unsloth/LTX-2.5-GGUF/resolve/6eae90030f7f15460a0ecf9ab16445d676b2bbb6/distilled/ltx-2.5-22b-distilled-Q4_K_M.gguf", dest: "models/ltx-2.5/ltx-2.5-22b-distilled-Q4_K_M.gguf", size: 13_584_703_872, sha256: "ba40d53770314e69e88361661e55c6cc3b12a363646ba2ea53c8bcd459b66747", unzip_into: None } },
             ModelFile { slot: Slot::Llm, download: Download { url: "https://huggingface.co/PulpCut/LTX-2.5-INT8-ConvRot-safetensors/resolve/7597fb305b4cab9e7ff2c1d1e9551279c2932f0f/text_encoders/gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors", dest: "models/ltx-2.5/gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors", size: 15_372_969_374, sha256: "6ce688a0aa98a5fa36a9f1e6c3f42152a498cc2b53ee8c15674c64244f91487f", unzip_into: None } },
@@ -397,10 +323,7 @@ fn entry_of(model: &'static LocalModel) -> ModelEntry {
         id: model.id.into(),
         name: model.name.into(),
         description: model.description.into(),
-        tasks: match model.kind {
-            Kind::Image => vec![Task::Image],
-            Kind::Video => vec![Task::Video],
-        },
+        tasks: vec![Task::Video],
         created: None,
         status: "live".into(),
         price: Some(t!("local-price")),
@@ -434,19 +357,17 @@ pub fn form(id: &str) -> Result<ModelForm, String> {
             role: Some(Role::Size),
         },
     ];
-    if model.kind == Kind::Video {
-        fields.push(Field {
-            key: "duration".into(),
-            label: t!("local-field-duration"),
-            description: None,
-            kind: FieldKind::Select { options: model.seconds.iter().map(|s| Choice { value: json!(s.to_string()), label: format!("{s} s") }).collect() },
-            required: true,
-            default: model.seconds.first().map(|s| json!(s.to_string())),
-            advanced: false,
-            role: Some(Role::Duration),
-        });
-        fields.push(Field { key: "first_frame".into(), label: t!("local-field-first-frame"), description: None, kind: FieldKind::Media { media: MediaKind::Image, min: 0, max: 1, list: false, at: None }, required: false, default: None, advanced: false, role: Some(Role::FirstFrame) });
-    }
+    fields.push(Field {
+        key: "duration".into(),
+        label: t!("local-field-duration"),
+        description: None,
+        kind: FieldKind::Select { options: model.seconds.iter().map(|s| Choice { value: json!(s.to_string()), label: format!("{s} s") }).collect() },
+        required: true,
+        default: model.seconds.first().map(|s| json!(s.to_string())),
+        advanced: false,
+        role: Some(Role::Duration),
+    });
+    fields.push(Field { key: "first_frame".into(), label: t!("local-field-first-frame"), description: None, kind: FieldKind::Media { media: MediaKind::Image, min: 0, max: 1, list: false, at: None }, required: false, default: None, advanced: false, role: Some(Role::FirstFrame) });
     if model.presets.len() > 1 {
         fields.push(Field {
             key: "preset".into(),
@@ -571,7 +492,7 @@ pub fn start_install(data: &Path, what: &str) -> Result<bool, String> {
         removed().lock().unwrap_or_else(|p| p.into_inner()).remove(model.id);
     }
     let files = missing_for(data, what)?;
-    let needs_ffmpeg = model(what).is_some_and(|model| model.kind == Kind::Video) && !ffmpeg(data).is_file();
+    let needs_ffmpeg = model(what).is_some() && !ffmpeg(data).is_file();
     if files.is_empty() && !needs_ffmpeg {
         return Ok(false);
     }
@@ -802,7 +723,7 @@ pub fn status(data: &Path) -> Value {
         "models": MODELS.iter().map(|model| json!({
             "id": model.id,
             "name": model.name,
-            "task": if model.kind == Kind::Image { "image" } else { "video" },
+            "task": "video",
             "installed": model_installed(data, model),
             "download_bytes": all_files(model).iter().filter(|file| !file_there(data, &file.download)).map(|file| file.download.size).sum::<u64>(),
             "size_bytes": all_files(model).iter().map(|file| file.download.size).sum::<u64>(),
@@ -822,7 +743,7 @@ pub fn ready(data: &Path, id: &str) -> Result<(), String> {
         return Err(t!("local-model-missing", model = model.name));
     }
     chosen_device(data)?;
-    if model.kind == Kind::Video && !ffmpeg(data).is_file() {
+    if !ffmpeg(data).is_file() {
         return Err(t!("local-ffmpeg-missing"));
     }
     Ok(())
@@ -925,7 +846,7 @@ fn video_frames(model: &LocalModel, values: &Map<String, Value>) -> i32 {
 
 /// Seconds of video a run of `id` with these values makes; None for a picture model.
 pub fn video_seconds(id: &str, values: &Map<String, Value>) -> Option<f64> {
-    let model = model(id).filter(|model| model.kind == Kind::Video)?;
+    let model = model(id)?;
     Some(video_frames(model, values) as f64 / model.fps as f64)
 }
 
@@ -956,7 +877,7 @@ pub fn run(data: &Path, id: &str, values: &Map<String, Value>, out_dir: &Path, p
     let steps = number(values, "steps").map(|n| n.round() as i32).unwrap_or(preset.steps).clamp(0, 80);
     let cfg = number(values, "cfg").map(|n| n as f32).unwrap_or(preset.cfg);
     // a preset's schedule is the one its step count was distilled to; another count takes the engine's
-    let sigmas = if steps == preset.steps { preset.schedule.sigmas(width, height) } else { Vec::new() };
+    let sigmas = if steps == preset.steps { preset.schedule.sigmas() } else { Vec::new() };
     let loras: Vec<Lora> = preset.files.iter().filter(|file| file.slot == Slot::Lora).map(|file| Lora { path: data.join(file.download.dest), multiplier: 1.0 }).collect();
     let weights = weights(model, preset);
     let seed = number(values, "seed").map(|n| n as i64).filter(|seed| *seed >= 0).unwrap_or_else(|| (std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_nanos()).unwrap_or(0) % 2_147_483_647) as i64);
@@ -985,45 +906,38 @@ pub fn run(data: &Path, id: &str, values: &Map<String, Value>, out_dir: &Path, p
                 report(step, steps);
             }
         });
-        let made = match model.kind {
-            Kind::Image => current
+        let made = {
+            let frames = video_frames(model, values);
+            let first_frame = match values.get("first_frame").and_then(Value::as_str) {
+                Some(address) => Some(frame_from(data, address, width, height)?),
+                None => None,
+            };
+            let upscaler = preset.files.iter().find(|file| file.slot == Slot::Upscaler).filter(|_| !preset.upscale_sigmas.is_empty());
+            let upscale = upscaler.map(|file| Upscale { model: data.join(file.download.dest), scale: 2.0, sigmas: preset.upscale_sigmas.to_vec() });
+            let (pass_width, pass_height) = if upscale.is_some() { (width / 2, height / 2) } else { (width, height) };
+            current
                 .context
-                .image(&ImageParams { prompt: prompt.clone(), negative_prompt: negative.clone(), width: width as i32, height: height as i32, steps, cfg_scale: cfg, seed, sigmas, ref_images: Vec::new(), loras: loras.clone() }, Some(sink))
-                .map(Made::Image),
-            Kind::Video => {
-                let frames = video_frames(model, values);
-                let first_frame = match values.get("first_frame").and_then(Value::as_str) {
-                    Some(address) => Some(frame_from(data, address, width, height)?),
-                    None => None,
-                };
-                let upscaler = preset.files.iter().find(|file| file.slot == Slot::Upscaler).filter(|_| !preset.upscale_sigmas.is_empty());
-                let upscale = upscaler.map(|file| Upscale { model: data.join(file.download.dest), scale: 2.0, sigmas: preset.upscale_sigmas.to_vec() });
-                let (pass_width, pass_height) = if upscale.is_some() { (width / 2, height / 2) } else { (width, height) };
-                current
-                    .context
-                    .video(
-                        &VideoParams {
-                            prompt: prompt.clone(),
-                            negative_prompt: negative.clone(),
-                            width: pass_width as i32,
-                            height: pass_height as i32,
-                            frames,
-                            fps: model.fps,
-                            steps,
-                            cfg_scale: cfg,
-                            flow_shift: preset.flow_shift,
-                            sigmas: sigmas.clone(),
-                            sampler: preset.sampler,
-                            seed,
-                            first_frame,
-                            last_frame: None,
-                            loras: loras.clone(),
-                            upscale,
-                        },
-                        Some(sink),
-                    )
-                    .map(Made::Video)
-            }
+                .video(
+                    &VideoParams {
+                        prompt: prompt.clone(),
+                        negative_prompt: negative.clone(),
+                        width: pass_width as i32,
+                        height: pass_height as i32,
+                        frames,
+                        fps: model.fps,
+                        steps,
+                        cfg_scale: cfg,
+                        flow_shift: preset.flow_shift,
+                        sigmas: sigmas.clone(),
+                        sampler: preset.sampler,
+                        seed,
+                        first_frame,
+                        last_frame: None,
+                        loras: loras.clone(),
+                        upscale,
+                    },
+                    Some(sink),
+                )
         };
         let _ = reporter.join();
         Ok::<_, String>(made)
@@ -1032,32 +946,9 @@ pub fn run(data: &Path, id: &str, values: &Map<String, Value>, out_dir: &Path, p
     drop(loaded);
     let made = outcome?.map_err(|e| e.to_string())?;
     std::fs::create_dir_all(out_dir).map_err(|e| format!("{}: {e}", out_dir.display()))?;
-    match made {
-        Made::Image(image) => {
-            let path = out_dir.join("local.png");
-            write_png(&path, &image)?;
-            Ok(vec![Output::File { path, mime: "image/png".into() }])
-        }
-        Made::Video(video) => {
-            let path = out_dir.join("local.mp4");
-            encode_video(data, &path, &video)?;
-            Ok(vec![Output::File { path, mime: "video/mp4".into() }])
-        }
-    }
-}
-
-enum Made {
-    Image(RawImage),
-    Video(vs_diffusion::RawVideo),
-}
-
-fn write_png(path: &Path, image: &RawImage) -> Result<(), String> {
-    let file = std::fs::File::create(path).map_err(|e| format!("{}: {e}", path.display()))?;
-    let mut encoder = png::Encoder::new(std::io::BufWriter::new(file), image.width, image.height);
-    encoder.set_color(if image.channels == 4 { png::ColorType::Rgba } else { png::ColorType::Rgb });
-    encoder.set_depth(png::BitDepth::Eight);
-    let mut writer = encoder.write_header().map_err(|e| e.to_string())?;
-    writer.write_image_data(&image.data).map_err(|e| e.to_string())
+    let path = out_dir.join("local.mp4");
+    encode_video(data, &path, &made)?;
+    Ok(vec![Output::File { path, mime: "video/mp4".into() }])
 }
 
 /// The frames into an H.264 MP4 through the pinned ffmpeg, with the model's sound when it made some.
@@ -1134,7 +1025,7 @@ mod tests {
             let form = form(model.id).unwrap();
             assert!(form.fields.iter().any(|field| field.role == Some(Role::Prompt)));
             assert!(form.fields.iter().any(|field| matches!(&field.kind, FieldKind::Size { options, .. } if options.len() == model.sizes.len())));
-            assert_eq!(form.fields.iter().any(|field| field.role == Some(Role::Duration)), model.kind == Kind::Video);
+            assert!(form.fields.iter().any(|field| field.role == Some(Role::Duration)));
             assert_eq!(form.fields.iter().any(|field| field.key == "preset"), model.presets.len() > 1);
         }
     }
@@ -1165,23 +1056,12 @@ mod tests {
                     // both passes land on the 32-pixel latent grid
                     assert!(model.sizes.iter().all(|(w, h)| w % 64 == 0 && h % 64 == 0), "{} {}", model.id, preset.id);
                 }
-                if let Schedule::Fixed(sigmas) | Schedule::QwenShifted(sigmas) = &preset.schedule {
-                    let evaluations = if matches!(preset.schedule, Schedule::Fixed(_)) { sigmas.len() - 1 } else { sigmas.len() };
+                if let Schedule::Fixed(sigmas) = &preset.schedule {
+                    let evaluations = sigmas.len() - 1;
                     assert_eq!(evaluations as i32, preset.steps, "{} {}", model.id, preset.id);
                 }
             }
         }
-    }
-
-    #[test]
-    fn qwen_shift_follows_the_token_count_without_a_terminal_stretch() {
-        let sigmas = Schedule::QwenShifted(&[1.0, 0.75, 0.5, 0.25]).sigmas(1024, 1024);
-        let mu = (4096.0 * 0.4 / 7936.0 + 0.5 - 0.4 / 7936.0 * 256.0_f64).exp();
-        let expected: Vec<f32> = [1.0, 0.75, 0.5, 0.25].iter().map(|t: &f64| (mu / (mu + 1.0 / t - 1.0)) as f32).chain([0.0]).collect();
-        assert_eq!(sigmas.len(), expected.len());
-        assert!(sigmas.iter().zip(&expected).all(|(got, want)| (got - want).abs() < 1e-6), "{sigmas:?} {expected:?}");
-        assert!((sigmas[1] - 0.8572).abs() < 1e-3, "{sigmas:?}");
-        assert!(Schedule::QwenShifted(&[1.0, 0.5]).sigmas(1024, 1024)[1] < Schedule::QwenShifted(&[1.0, 0.5]).sigmas(1536, 1536)[1]);
     }
 }
 

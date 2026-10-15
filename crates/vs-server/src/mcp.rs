@@ -522,7 +522,7 @@ fn tools() -> &'static [Tool] {
             },
             Tool {
                 name: "local_status",
-                description: "Generation on this computer (stable-diffusion.cpp, no cost): the local models (Qwen-Image 2.1 Turbo pictures, MiniMax-H3 and LTX-2.5 videos with sound) - downloaded or not and how many bytes they take, the engine builds (cuda, vulkan, cpu) installed, the device chosen and in use, the model in memory, and a download running. A downloaded model is used through generate with provider local.",
+                description: "Generation on this computer (stable-diffusion.cpp, no cost): the local models (MiniMax-H3 and LTX-2.5, videos with sound) - downloaded or not and how many bytes they take, the engine builds (cuda, vulkan, cpu) installed, the device chosen and in use, the model in memory, and a download running. A downloaded model is used through generate with provider local.",
                 looks: true,
                 schema: nothing,
                 call: |_| get_call("/api/local".into()),

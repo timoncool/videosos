@@ -78,9 +78,10 @@ the command's own answer. `studio_wait` with `job_id` waits for a generation, an
 the best one, and the `timeline_edit` op `replaceMedia` puts another take's media item in a clip's place, keeping the
 clip's start and length.
 
-**On this computer, free.** Provider `local`: Qwen-Image 2.1 (task `image`), MiniMax-H3 and LTX-2.5 (task
-`video`, with sound) run on the person's graphics card through stable-diffusion.cpp, and the author's music studios
-(YuE2, MiniMax Music3, ACE-Step) appear in task `music` while they are open. `local_status` says which models and
+**On this computer, free.** Provider `local`: MiniMax-H3 and LTX-2.5 (task `video`, with sound) run on the person's graphics
+card through stable-diffusion.cpp; pictures come only from OpenRouter, fal and Runware. The author's music studios
+(YuE2, MiniMax Music3, ACE-Step) appear in task `music` and Speech Studio's engines in task `speech` while they are
+open. `local_status` says which models and
 engine builds are downloaded and the device in use; `local_install {what}` downloads a model (tens of GB — ask the
 person first) or an engine build, `local_remove {model}` deletes one, `local_device` picks auto, cuda, vulkan or cpu,
 and `local_unload` frees the card's memory when you are done. A model's `preset` field picks its accelerator (fewer

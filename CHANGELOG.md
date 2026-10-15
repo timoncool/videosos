@@ -50,10 +50,10 @@ makes it, and the release notes on GitHub are taken from the release's section.
 - **History sorting** by newest, oldest, most or least expensive, and sounds when a generation or an export ends.
 - **About**: the author's other programs, crypto addresses with copy buttons and the support tiers.
 - **Closing while a generation is unfinished asks first.**
-- **Generation on this computer, free**: a Local provider beside OpenRouter, fal and Runware runs Qwen-Image 2.1
-  (pictures), MiniMax-H3 and LTX-2.5 (video with sound) through stable-diffusion.cpp on CUDA, Vulkan or the
+- **Generation on this computer, free**: a Local provider beside OpenRouter, fal and Runware runs MiniMax-H3 and
+  LTX-2.5 (video with sound) through stable-diffusion.cpp on CUDA, Vulkan or the
   processor. Settings, Local models downloads each model and its engine once, pinned and checked by SHA-256, with
-  resume; each model has its accelerators as presets (4, 6 and 8 steps); a failed run is named by the engine's own
+  resume; each model has its accelerators as presets (4 and 8 steps); a failed run is named by the engine's own
   first error. Agents have the same through `local_*` tools and the `local` provider.
 - **The author's music studios on this computer** (YuE2, MiniMax Music3, ACE-Step) appear in Music while they are
   open: the form is the studio's own, the song is made by the studio and its file lands in the library with its
