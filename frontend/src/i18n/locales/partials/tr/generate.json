@@ -137,7 +137,8 @@
       "byTask": "Göreve göre",
       "byProvider": "Sağlayıcıya göre",
       "byModel": "Modele göre",
-      "other": "Diğer"
+      "other": "Diğer",
+      "files": "Projedeki dosyalar: {{count}} — {{generated}} üretilen, {{added}} eklenen"
     },
     "filter": {
       "search": "Kelimeye veya modele göre bul",

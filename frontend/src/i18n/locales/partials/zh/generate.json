@@ -137,7 +137,8 @@
       "byTask": "按任务",
       "byProvider": "按提供商",
       "byModel": "按模型",
-      "other": "其他"
+      "other": "其他",
+      "files": "项目中的文件：{{count}} — 生成 {{generated}}，添加 {{added}}"
     },
     "filter": {
       "search": "按关键词或模型查找",

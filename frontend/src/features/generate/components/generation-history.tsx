@@ -21,6 +21,7 @@ import {
   type Task,
 } from '../services/generate-api'
 import { JobCard } from './job-card'
+import { useMediaLibraryStore } from '../deps/editor'
 
 type StatusFilter = 'all' | 'done' | 'running' | 'failed'
 
@@ -54,9 +55,11 @@ function promptOf(job: Job): string {
   return typeof found === 'string' ? found : ''
 }
 
-/** What the project spent, by task, provider and model (as VideoSOS 1 showed it). */
+/** What the project spent, by task, provider and model, and its files (as VideoSOS 1 showed it). */
 function StatsDialog({ projectId, onClose }: { projectId: string; onClose: () => void }) {
   const { t } = useTranslation()
+  const media = useMediaLibraryStore((state) => state.mediaItems)
+  const generated = media.filter((item) => item.tags?.includes('generated')).length
   const [spend, setSpend] = useState<Spend | null>(null)
   const [error, setError] = useState<string | null>(null)
   useEffect(() => {
@@ -89,6 +92,13 @@ function StatsDialog({ projectId, onClose }: { projectId: string; onClose: () =>
               {t('generate.stats.total', {
                 total: formatUsd(spend.total),
                 today: formatUsd(spend.today),
+              })}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              {t('generate.stats.files', {
+                count: media.length,
+                generated,
+                added: media.length - generated,
               })}
             </p>
             {spend.total === 0 && (

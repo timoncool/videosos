@@ -137,7 +137,8 @@
       "byTask": "작업별",
       "byProvider": "공급자별",
       "byModel": "모델별",
-      "other": "기타"
+      "other": "기타",
+      "files": "프로젝트 파일: {{count}} — 생성 {{generated}}, 추가 {{added}}"
     },
     "filter": {
       "search": "단어 또는 모델로 찾기",

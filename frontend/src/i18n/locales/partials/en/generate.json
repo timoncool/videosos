@@ -138,7 +138,8 @@
       "byTask": "By task",
       "byProvider": "By provider",
       "byModel": "By model",
-      "other": "Other"
+      "other": "Other",
+      "files": "Files in the project: {{count}} — {{generated}} generated, {{added}} added"
     },
     "filter": {
       "search": "Find by words or model",

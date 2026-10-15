@@ -137,7 +137,8 @@
       "byTask": "Por tarea",
       "byProvider": "Por proveedor",
       "byModel": "Por modelo",
-      "other": "Otros"
+      "other": "Otros",
+      "files": "Archivos en el proyecto: {{count}} — {{generated}} generados, {{added}} añadidos"
     },
     "filter": {
       "search": "Buscar por palabras o modelo",

@@ -137,7 +137,8 @@
       "byTask": "Nach Aufgabe",
       "byProvider": "Nach Anbieter",
       "byModel": "Nach Modell",
-      "other": "Sonstiges"
+      "other": "Sonstiges",
+      "files": "Dateien im Projekt: {{count}} — {{generated}} generiert, {{added}} hinzugefügt"
     },
     "filter": {
       "search": "Nach Wörtern oder Modell suchen",
