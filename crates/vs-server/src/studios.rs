@@ -85,7 +85,7 @@ async fn offer(client: &reqwest::Client, studio: &Studio, last: Option<&Value>, 
                 return Some(last.clone());
             }
             let engines = tool(client, studio, "engines_list", json!({})).await.ok()?;
-            let voices = tool(client, studio, "voices_list", json!({})).await.ok()?;
+            let voices = tool(client, studio, "voices_list", json!({ "brief": true })).await.ok()?;
             let Some(library) = voices["voices"].as_array() else {
                 static WARNED: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
                 if !WARNED.swap(true, std::sync::atomic::Ordering::Relaxed) {
@@ -263,7 +263,8 @@ fn speech_fields(known: &Value, id: &str) -> Result<Vec<Field>, String> {
     let mut fields = vec![Field { required: true, ..field("text", t!("speech-field-text"), FieldKind::Textarea { max_length: None }, Some(Role::Prompt)) }];
     if !voices.is_empty() {
         let default = engine["presets"].as_array().and_then(|presets| presets.first()).map(|_| voices[0].value.clone());
-        fields.push(Field { default, description: Some(t!("speech-field-voice-hint")), ..field("voice", t!("speech-field-voice"), FieldKind::Select { options: voices }, Some(Role::Voice)) });
+        let required = engine["needs_voice"] == true;
+        fields.push(Field { default, required, description: Some(t!("speech-field-voice-hint")), ..field("voice", t!("speech-field-voice"), FieldKind::Select { options: voices }, Some(Role::Voice)) });
     }
     let languages: Vec<Choice> = engine["languages"].as_array().into_iter().flatten().filter_map(Value::as_str).map(|code| Choice { value: json!(code), label: code.to_string() }).collect();
     if !languages.is_empty() {
@@ -271,6 +272,7 @@ fn speech_fields(known: &Value, id: &str) -> Result<Vec<Field>, String> {
         fields.push(Field { default: Some(json!("auto")), ..field("lang", t!("speech-field-language"), FieldKind::Select { options }, None) });
     }
     fields.push(Field { description: Some(t!("speech-field-direction-hint")), advanced: true, ..field("direction", t!("speech-field-direction"), FieldKind::Text { max_length: None }, None) });
+    fields.push(Field { description: Some(t!("speech-field-seed-hint")), advanced: true, ..field("seed", t!("local-field-seed"), FieldKind::Integer { min: Some(0.0), max: Some(f64::from(u32::MAX)) }, Some(Role::Seed)) });
     Ok(fields)
 }
 
@@ -347,6 +349,10 @@ async fn make_song(studio: &'static Studio, arguments: Map<String, Value>, cance
 async fn speak(studio: &'static Studio, engine: &str, mut arguments: Map<String, Value>, cancelled: &(dyn Fn() -> bool + Sync)) -> Result<PathBuf, String> {
     let client = crate::tools::client(Duration::from_secs(SPEAK_WAIT + 30)).map_err(|e| e.detail)?;
     arguments.insert("engine".into(), json!(engine));
+    // the studio keeps a voicing by its arguments: without a seed of its own every run would be the same take
+    if !arguments.contains_key("seed") {
+        arguments.insert("seed".into(), json!(uuid::Uuid::new_v4().as_u128() as u32));
+    }
     arguments.insert("format".into(), json!("flac"));
     arguments.insert("seconds".into(), json!(SPEAK_WAIT));
     let answer = loop {

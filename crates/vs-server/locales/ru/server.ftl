@@ -190,6 +190,7 @@ speech-field-language = Язык
 speech-field-language-auto = Авто
 speech-field-direction = Как звучит
 speech-field-direction-hint = Тон и темп словами — для движков, которые это понимают
+speech-field-seed-hint = Пусто — каждый запуск новый дубль; число повторяет тот же дубль
 local-engine-missing = движок генерации для { $device } не установлен: установите его в Настройках, «Локальные модели»
 local-unsupported = локальная генерация пока недоступна на этой системе
 local-unknown = нет локальной модели или движка { $what }

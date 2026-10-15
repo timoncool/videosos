@@ -187,6 +187,7 @@ speech-field-language = Language
 speech-field-language-auto = Auto
 speech-field-direction = How it sounds
 speech-field-direction-hint = Tone and pace in words, for the engines that take it
+speech-field-seed-hint = Empty: a new take every run; a number repeats the same take
 local-engine-missing = the generation engine for { $device } is not installed: install it in Settings, Local models
 local-unsupported = local generation is not available on this system yet
 local-unknown = no local model or engine { $what }
