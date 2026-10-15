@@ -121,6 +121,10 @@ makes it, and the release notes on GitHub are taken from the release's section.
 
 ### Fixed
 
+- **One undo takes back one action**: an edit made of several steps (a take put in a clip's place with its sound, a
+  voice-over placed and trimmed) is one step of the history, not two to four.
+- **A voice-over whose silence cannot be read is still placed**, whole, with a word why, instead of the import failing
+  and repeating.
 - **Runware fields that take no file are no longer picture slots**: a draft's cache is a text field, and a provider's
   own ids, fonts, checkpoints, datasets and documents no longer ask for a picture of the library.
 - **A model's length that is `auto` or a number of seconds can be chosen**: FLUX 3 Video's Duration listed only

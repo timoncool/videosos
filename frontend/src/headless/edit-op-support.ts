@@ -16,6 +16,8 @@ import { createClassicTrack } from '@/features/timeline/utils/classic-tracks'
 import { createDefaultShapeItem } from '@/features/timeline/utils/generated-layer-items'
 import { setTracks, updateTransition } from '@/features/timeline/stores/timeline-actions'
 
+export { asOneStep } from '@/features/timeline/stores/timeline-actions'
+
 export type EditOperationName =
   | 'addText'
   | 'addItem'

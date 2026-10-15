@@ -15,7 +15,13 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { cn } from '@/shared/ui/cn'
-import { generateApi, type Field, type FrameAt, type MediaKind, type MediaRef } from '../services/generate-api'
+import {
+  generateApi,
+  type Field,
+  type FrameAt,
+  type MediaKind,
+  type MediaRef,
+} from '../services/generate-api'
 import { getMediaDragData, mediaLibraryService, useMediaLibraryStore } from '../deps/editor'
 import { fieldLabel, overLength, providerWords } from '../services/field-label'
 import { useGenerateStore } from '../stores/generate-store'
@@ -179,7 +185,10 @@ function MediaSlot({
         )}
       >
         {value.map((reference, index) => (
-          <div key={JSON.stringify(fileOf(reference))} className="flex flex-col items-center gap-0.5">
+          <div
+            key={JSON.stringify(fileOf(reference))}
+            className="flex flex-col items-center gap-0.5"
+          >
             <div className="group relative h-12 w-12 overflow-hidden rounded border border-border bg-background">
               <MediaThumb reference={reference} />
               <button
@@ -195,11 +204,18 @@ function MediaSlot({
               <FrameAtInput
                 at={field.at}
                 value={reference.at}
-                label={t(field.at.unit === 'second' ? 'generate.form.atSecond' : 'generate.form.atFrame', {
-                  n: index + 1,
-                })}
+                label={t(
+                  field.at.unit === 'second' ? 'generate.form.atSecond' : 'generate.form.atFrame',
+                  {
+                    n: index + 1,
+                  },
+                )}
                 onChange={(at) =>
-                  onChange(value.map((existing, position) => (position === index ? pinned(existing, at) : existing)))
+                  onChange(
+                    value.map((existing, position) =>
+                      position === index ? pinned(existing, at) : existing,
+                    ),
+                  )
                 }
               />
             )}
@@ -271,6 +287,10 @@ function FrameAtInput({
 }) {
   const { t } = useTranslation()
   const [text, setText] = useState(value === undefined ? '' : String(value))
+  const shown = text.trim() === '' ? undefined : Number(text)
+  if (shown !== value && !(Number.isNaN(shown) && value === undefined)) {
+    setText(value === undefined ? '' : String(value))
+  }
   return (
     <Input
       type="number"
@@ -286,7 +306,9 @@ function FrameAtInput({
       onChange={(event) => {
         setText(event.target.value)
         const number = event.target.valueAsNumber
-        onChange(Number.isFinite(number) ? (at.unit === 'frame' ? Math.round(number) : number) : undefined)
+        onChange(
+          Number.isFinite(number) ? (at.unit === 'frame' ? Math.round(number) : number) : undefined,
+        )
       }}
     />
   )

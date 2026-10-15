@@ -502,6 +502,7 @@
       "inClip": "正在使用",
       "use": "使用",
       "useHint": "用这个版本替换片段"
-    }
+    },
+    "speechTrimFailed": "配音已完整放置：无法读取其中的静音部分（{{reason}}）"
   }
 }

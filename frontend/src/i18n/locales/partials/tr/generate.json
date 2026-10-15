@@ -502,6 +502,7 @@
       "inClip": "Klipte",
       "use": "Kullan",
       "useHint": "Bu çekimi klibin yerine koy"
-    }
+    },
+    "speechTrimFailed": "Seslendirme olduğu gibi yerleştirildi: sessizliği okunamadı ({{reason}})"
   }
 }

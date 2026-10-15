@@ -45,7 +45,7 @@ fn schema_type(node: &Value) -> Option<&str> {
     }
 }
 
-/// `enum`, or `oneOf`/`anyOf` of `const`s with their descriptions as labels; a short integer range among them
+/// `enum`, or `oneOf`/`anyOf` of `const`s with their descriptions as labels; a short integer range beside them
 /// (`auto` or 5..20 seconds) is listed number by number, and a value open beyond that makes it no list at all.
 fn choices(root: &Value, node: &Value) -> Option<Vec<Choice>> {
     if let Some(values) = node.get("enum").and_then(Value::as_array) {
@@ -57,6 +57,7 @@ fn choices(root: &Value, node: &Value) -> Option<Vec<Choice>> {
         return (!options.is_empty()).then_some(options);
     }
     let mut options = Vec::new();
+    let mut ranges = Vec::new();
     for alternative in alternatives(root, node) {
         if let Some(constant) = alternative.get("const") {
             let label = alternative
@@ -70,14 +71,16 @@ fn choices(root: &Value, node: &Value) -> Option<Vec<Choice>> {
         } else if let Some(kind @ ("integer" | "number")) = schema_type(alternative) {
             let bounds = (alternative.get("minimum").and_then(Value::as_i64), alternative.get("maximum").and_then(Value::as_i64));
             match (kind, bounds) {
-                ("integer", (Some(min), Some(max))) if max >= min && max - min <= 60 => {
-                    options.extend((min..=max).map(|value| Choice { value: json!(value), label: value.to_string() }));
-                }
+                ("integer", (Some(min), Some(max))) if max >= min && max - min <= 60 => ranges.push(min..=max),
                 _ => return None,
             }
         }
     }
-    (!options.is_empty()).then_some(options)
+    if options.is_empty() {
+        return None;
+    }
+    options.extend(ranges.into_iter().flatten().map(|value| Choice { value: json!(value), label: value.to_string() }));
+    Some(options)
 }
 
 fn label_of_value(value: &Value) -> String {
@@ -258,14 +261,15 @@ fn media_field(root: &Value, key: &str, path: &str, node: &Value, required: bool
 }
 
 /// The position a list's item may carry beside its file (Runware's `{image, timestamp | frame}`): a second
-/// when the model takes one, else a frame number; named places alone (`first`, `last`) follow the order.
+/// when the model takes one up to a known end, else a frame number; named places alone (`first`, `last`) follow the
+/// order.
 fn frame_at(root: &Value, array: &Value) -> Option<FrameAt> {
     let items = resolve(root, array.get("items")?);
     let mut objects = alternatives(root, items);
     objects.push(items);
     let properties = objects.into_iter().filter(|alt| schema_type(alt) == Some("object")).find_map(|alt| alt.get("properties"))?;
-    if let Some(second) = properties.get("timestamp").map(|node| resolve(root, node)) {
-        return Some(FrameAt::Second { max: second.get("maximum").and_then(Value::as_f64).unwrap_or(f64::MAX) });
+    if let Some(max) = properties.get("timestamp").and_then(|node| resolve(root, node).get("maximum")).and_then(Value::as_f64) {
+        return Some(FrameAt::Second { max });
     }
     let frame = resolve(root, properties.get("frame")?);
     let mut kinds = alternatives(root, frame);
@@ -426,6 +430,15 @@ mod tests {
         assert_eq!(at(list(index.clone(), Some(json!({ "type": "number", "minimum": 0, "maximum": 20 })))), Some(FrameAt::Second { max: 20.0 }));
         assert_eq!(at(list(index, None)), Some(FrameAt::Frame));
         assert_eq!(at(list(json!({ "oneOf": [{ "const": "first" }, { "const": "last" }] }), None)), None);
+    }
+
+    #[test]
+    fn a_short_range_is_listed_only_beside_named_values() {
+        let range = json!({ "type": "integer", "minimum": 5, "maximum": 20 });
+        let listed = choices(&Value::Null, &json!({ "oneOf": [range, { "const": "auto" }] })).unwrap();
+        assert_eq!(listed.len(), 17);
+        assert_eq!(listed[0].value, json!("auto"));
+        assert!(choices(&Value::Null, &json!({ "anyOf": [range, { "type": "null" }] })).is_none(), "an optional number stays a number");
     }
 
     #[test]

@@ -182,6 +182,7 @@ speech-studio-description = { $engine } в { $studio } на этом компь�
 speech-studio-offline = { $studio } не запущена: откройте её, чтобы озвучивать отсюда
 speech-studio-cancelled = { $studio }: озвучка отменена
 speech-studio-no-file = { $studio } закончила без звукового файла
+speech-studio-engine-off = В { $studio } сейчас нет готового { $engine }: скачайте его там или выберите другой движок
 speech-field-text = Текст
 speech-field-voice = Голос
 speech-field-voice-hint = Сначала голоса самого движка, затем голоса библиотеки Speech Studio

@@ -503,6 +503,7 @@
       "inClip": "En el clip",
       "use": "Usar",
       "useHint": "Poner esta toma en lugar del clip"
-    }
+    },
+    "speechTrimFailed": "La locución se colocó entera: no se pudo leer su silencio ({{reason}})"
   }
 }

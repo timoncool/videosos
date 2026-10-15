@@ -179,6 +179,7 @@ speech-studio-description = { $engine } in { $studio }, running on this computer
 speech-studio-offline = { $studio } is not running: open it to voice texts from here
 speech-studio-cancelled = { $studio }: the voicing was cancelled
 speech-studio-no-file = { $studio } finished without a sound file
+speech-studio-engine-off = { $studio } has no { $engine } ready now: download it there or pick another engine
 speech-field-text = Text
 speech-field-voice = Voice
 speech-field-voice-hint = The engine's own voices first, then the voices of Speech Studio's library

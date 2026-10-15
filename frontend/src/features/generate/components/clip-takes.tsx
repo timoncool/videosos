@@ -8,14 +8,20 @@ import { generateApi, type Job } from '../services/generate-api'
 import { replaceClipMedia } from '../services/timeline-actions'
 import { relativeMoment } from '../deps/studio'
 
+const keys = new WeakMap<Job, string>()
+
 /** What makes two runs takes of one request: the same task and model asked with the same values, the seed aside. */
 function requestKey(job: Job): string {
+  const known = keys.get(job)
+  if (known !== undefined) return known
   const values = Object.fromEntries(
     Object.entries(job.values)
       .filter(([key]) => !/seed/i.test(key))
       .toSorted(([a], [b]) => a.localeCompare(b)),
   )
-  return JSON.stringify([job.task, job.provider, job.model, values])
+  const key = JSON.stringify([job.task, job.provider, job.model, values])
+  keys.set(job, key)
+  return key
 }
 
 function failed(error: unknown): void {
@@ -56,11 +62,16 @@ export function ClipTakes({ clipId, mediaId }: { clipId: string; mediaId: string
               )}
             >
               <span className="font-medium">{t('generate.takes.take', { n: index + 1 })}</span>
-              <span className="min-w-0 flex-1 truncate text-muted-foreground">{relativeMoment(new Date(job.created), i18n.language)}</span>
+              <span className="min-w-0 flex-1 truncate text-muted-foreground">
+                {relativeMoment(new Date(job.created), i18n.language)}
+              </span>
               <Button
                 size="sm"
                 variant="ghost"
-                className={cn('h-6 px-1.5', job.liked ? 'text-[var(--color-accent)]' : 'text-muted-foreground')}
+                className={cn(
+                  'h-6 px-1.5',
+                  job.liked ? 'text-[var(--color-accent)]' : 'text-muted-foreground',
+                )}
                 title={job.liked ? t('generate.actions.unlike') : t('generate.actions.like')}
                 aria-label={job.liked ? t('generate.actions.unlike') : t('generate.actions.like')}
                 aria-pressed={job.liked}

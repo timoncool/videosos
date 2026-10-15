@@ -43,6 +43,7 @@ import {
   addMarker,
   updateMarker,
   removeMarker,
+  asOneStep,
 } from '@/features/timeline/stores/timeline-actions'
 import { useMarkersStore } from '@/features/timeline/stores/markers-store'
 import { getLinkedAndAttachedItemIds } from '@/features/timeline/utils/linked-items'
@@ -118,7 +119,10 @@ function applyMoveItem(op: EditOp): unknown {
   const { itemById } = useItemsStore.getState()
   moveItems([
     { id, from, ...(destination && { trackId: destination }) },
-    ...companions.map((each) => ({ id: each, from: Math.max(0, itemById[each]!.from + shift) })),
+    ...companions.map((each) => ({
+      id: each,
+      from: Math.max(0, itemById[each]!.from + shift),
+    })),
   ])
   return { id, from, moved: [id, ...companions] }
 }
@@ -232,7 +236,9 @@ function applyUpdateTransition(op: EditOp): unknown {
       ? { durationInFrames: asNumber(op.durationInFrames) }
       : {}),
     ...(op.presentation !== undefined
-      ? { presentation: asString(op.presentation) as Transition['presentation'] }
+      ? {
+          presentation: asString(op.presentation) as Transition['presentation'],
+        }
       : {}),
     ...(op.direction !== undefined
       ? { direction: asString(op.direction) as Transition['direction'] }
@@ -524,30 +530,43 @@ function applyReplaceMedia(op: EditOp): unknown {
   const projectFps = useTimelineSettingsStore.getState().fps || 30
   const { items } = useItemsStore.getState()
   const group = clip.linkedGroupId
-    ? items.filter((item) => item.linkedGroupId === clip.linkedGroupId && item.mediaId === clip.mediaId)
+    ? items.filter(
+        (item) => item.linkedGroupId === clip.linkedGroupId && item.mediaId === clip.mediaId,
+      )
     : [clip]
   const sf = sourceFieldsFor(media, projectFps)
-  for (const item of group) {
-    if (item.type === 'image') {
-      updateItem(item.id, { mediaId, label: media.fileName ?? mediaId, src: '', thumbnailUrl: undefined } as Partial<TimelineItem>)
-      continue
+  asOneStep('REPLACE_MEDIA', () => {
+    for (const item of group) {
+      if (item.type === 'image') {
+        updateItem(item.id, {
+          mediaId,
+          label: media.fileName ?? mediaId,
+          src: '',
+          thumbnailUrl: undefined,
+        } as Partial<TimelineItem>)
+        continue
+      }
+      const speed =
+        'speed' in item && typeof item.speed === 'number' && item.speed > 0 ? item.speed : 1
+      const inPoint = Math.min(item.sourceStart ?? 0, Math.max(0, sf.sourceDuration - 1))
+      const reach = Math.floor(((sf.sourceDuration - inPoint) / sf.sourceFps / speed) * projectFps)
+      const durationInFrames = Math.max(1, Math.min(item.durationInFrames, reach))
+      updateItem(item.id, {
+        mediaId,
+        label:
+          item.type === 'audio' && clip.type === 'video'
+            ? `${media.fileName ?? mediaId} audio`
+            : (media.fileName ?? mediaId),
+        src: '',
+        sourceFps: sf.sourceFps,
+        sourceStart: inPoint,
+        sourceEnd: inPoint + Math.round((durationInFrames / projectFps) * sf.sourceFps * speed),
+        sourceDuration: sf.sourceDuration,
+        durationInFrames,
+        ...(item.type === 'audio' ? { waveformData: undefined } : { thumbnailUrl: undefined }),
+      } as Partial<TimelineItem>)
     }
-    const speed = 'speed' in item && typeof item.speed === 'number' && item.speed > 0 ? item.speed : 1
-    const inPoint = Math.min(item.sourceStart ?? 0, Math.max(0, sf.sourceDuration - 1))
-    const reach = Math.floor(((sf.sourceDuration - inPoint) / sf.sourceFps / speed) * projectFps)
-    const durationInFrames = Math.max(1, Math.min(item.durationInFrames, reach))
-    updateItem(item.id, {
-      mediaId,
-      label: item.type === 'audio' && clip.type === 'video' ? `${media.fileName ?? mediaId} audio` : (media.fileName ?? mediaId),
-      src: '',
-      sourceFps: sf.sourceFps,
-      sourceStart: inPoint,
-      sourceEnd: inPoint + Math.round((durationInFrames / projectFps) * sf.sourceFps * speed),
-      sourceDuration: sf.sourceDuration,
-      durationInFrames,
-      ...(item.type === 'audio' ? { waveformData: undefined } : { thumbnailUrl: undefined }),
-    } as Partial<TimelineItem>)
-  }
+  })
   return { id, replaced: group.map((item) => item.id) }
 }
 
@@ -631,7 +650,11 @@ function applyAddEffect(op: EditOp): unknown {
     op.effect && typeof op.effect === 'object'
       ? op.effect
       : op.gpuEffectType
-        ? { type: 'gpu-effect', gpuEffectType: op.gpuEffectType, params: op.params ?? {} }
+        ? {
+            type: 'gpu-effect',
+            gpuEffectType: op.gpuEffectType,
+            params: op.params ?? {},
+          }
         : null
   if (!effect) throw new Error('addEffect requires `effect` or `gpuEffectType`')
   const gpuEffectType = (effect as { gpuEffectType?: unknown }).gpuEffectType

@@ -7,6 +7,7 @@
  */
 
 import type { MediaMetadata } from '@/types/storage'
+import { toast } from 'sonner'
 import { createLogger } from '@/shared/logging/logger'
 import { i18n } from '@/i18n'
 import { generateApi, type Job } from './generate-api'
@@ -18,7 +19,7 @@ import {
 } from '../deps/editor'
 import { useGenerateStore } from '../stores/generate-store'
 import { placeMediaAt, placeSpeechAt } from './timeline-actions'
-import { speechEdgesOf, type SpeechEdges } from './speech-edges'
+import { speechEdgesOf } from './speech-edges'
 import { resultFileName } from './result-title'
 
 const logger = createLogger('GenerateImport')
@@ -40,7 +41,7 @@ function needsImport(job: Job, projectId: string | null): boolean {
 async function importJob(job: Job, projectId: string): Promise<void> {
   const mediaIds: string[] = []
   const importedItems: MediaMetadata[] = []
-  const edges = new Map<string, SpeechEdges>()
+  const voiceOvers = new Map<string, Blob>()
   const tags = ['generated', job.provider, job.model_name]
   const media = job.outputs.filter(
     (output) => output.kind === 'image' || output.kind === 'video' || output.kind === 'audio',
@@ -62,7 +63,7 @@ async function importJob(job: Job, projectId: string): Promise<void> {
     mediaIds.push(imported.id)
     importedItems.push(imported)
     if (job.place && job.task === 'speech' && output.kind === 'audio')
-      edges.set(imported.id, await speechEdgesOf(blob))
+      voiceOvers.set(imported.id, blob)
   }
   await useMediaLibraryStore.getState().loadMediaItems()
   // another import's load can still be running and end without these: they are put in before they are placed
@@ -72,9 +73,19 @@ async function importJob(job: Job, projectId: string): Promise<void> {
   useGenerateStore.getState().upsertJob(updated)
   if (job.place) {
     for (const mediaId of mediaIds) {
-      const speech = edges.get(mediaId)
-      if (speech) placeSpeechAt(mediaId, job.place_at, speech)
-      else placeMediaAt(mediaId, job.place_at)
+      const voiceOver = voiceOvers.get(mediaId)
+      if (!voiceOver) {
+        placeMediaAt(mediaId, job.place_at)
+        continue
+      }
+      try {
+        placeSpeechAt(mediaId, job.place_at, await speechEdgesOf(voiceOver))
+      } catch (error) {
+        const reason = error instanceof Error ? error.message : String(error)
+        logger.warn(`Silence of voice-over ${mediaId} not found`, error)
+        toast.warning(i18n.t('generate.speechTrimFailed', { reason }))
+        placeMediaAt(mediaId, job.place_at)
+      }
     }
     await saveTimeline(projectId)
   }

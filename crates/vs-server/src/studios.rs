@@ -39,8 +39,10 @@ const SPEECH_CLOUD: &[&str] = &["openrouter", "google", "fal", "runware"];
 
 const PROTOCOL: &str = "2026-07-28";
 const ORDER: &[&str] = &["style", "caption", "prompt", "tags", "lyrics", "title", "duration_seconds", "duration", "seed"];
-/// Seconds one `speak_text` call waits for its work, the most the studio allows.
-const SPEAK_WAIT: u64 = 55;
+/// Seconds one `speak_text` call waits for its work before VideoSOS looks whether the run was cancelled.
+const SPEAK_WAIT: u64 = 5;
+/// Rounds of the five-second look between two readings of Speech Studio's engines and voices.
+const REFRESH_ROUNDS: u64 = 12;
 
 /// The studios answering now: a music studio with the input schema of its `song_create`, Speech Studio with its
 /// `engines` and the names of its library's `voices`.
@@ -70,14 +72,18 @@ fn known(id: &str) -> Option<Value> {
     online().lock().unwrap_or_else(|p| p.into_inner()).iter().find(|(found, _)| *found == studio.id).map(|(_, known)| known.clone())
 }
 
-/// What a studio answering now offers: the schema of `song_create`, or Speech Studio's engines and voices.
-async fn offer(client: &reqwest::Client, studio: &Studio) -> Option<Value> {
+/// What a studio answering now offers: the schema of `song_create`, or Speech Studio's engines and voices. Speech
+/// Studio's lists are read again only on `refresh`; between refreshes the last ones stand while it answers.
+async fn offer(client: &reqwest::Client, studio: &Studio, last: Option<&Value>, refresh: bool) -> Option<Value> {
     let tools = call(client, studio, "tools/list", None, json!({})).await.ok()?;
     let has = |name: &str| tools["tools"].as_array().and_then(|tools| tools.iter().find(|tool| tool["name"] == name)).map(|tool| tool["inputSchema"].clone());
     match studio.kind {
         Kind::Music => has("song_create"),
         Kind::Speech => {
             has("speak_text")?;
+            if let (Some(last), false) = (last, refresh) {
+                return Some(last.clone());
+            }
             let engines = tool(client, studio, "engines_list", json!({})).await.ok()?;
             let voices = tool(client, studio, "voices_list", json!({})).await.ok()?;
             let Some(library) = voices["voices"].as_array() else {
@@ -93,14 +99,18 @@ async fn offer(client: &reqwest::Client, studio: &Studio) -> Option<Value> {
     }
 }
 
-/// Looks for the studios every few seconds, for as long as the server runs.
+/// Looks for the studios every few seconds, for as long as the server runs; Speech Studio's engines and voices are
+/// read when it appears and then once a minute.
 pub fn watch() {
     tokio::spawn(async move {
         let Ok(client) = crate::tools::client(Duration::from_secs(10)) else { return };
+        let mut round: u64 = 0;
         loop {
+            let last = online().lock().unwrap_or_else(|p| p.into_inner()).clone();
             let mut found = Vec::new();
             for studio in STUDIOS {
-                if let Some(offer) = offer(&client, studio).await {
+                let before = last.iter().find(|(id, _)| *id == studio.id).map(|(_, offer)| offer);
+                if let Some(offer) = offer(&client, studio, before, round.is_multiple_of(REFRESH_ROUNDS)).await {
                     found.push((studio.id, offer));
                 }
             }
@@ -113,6 +123,7 @@ pub fn watch() {
             if changed {
                 crate::local::changed();
             }
+            round += 1;
             tokio::time::sleep(Duration::from_secs(5)).await;
         }
     });
@@ -265,7 +276,13 @@ fn speech_fields(known: &Value, id: &str) -> Result<Vec<Field>, String> {
 
 pub fn ready(id: &str) -> Result<(), String> {
     let studio = studio(id).ok_or_else(|| t!("local-unknown", what = id.to_string()))?;
-    known(id).map(|_| ()).ok_or_else(|| offline(studio))
+    let known = known(id).ok_or_else(|| offline(studio))?;
+    match (studio.kind, engine_of(id)) {
+        (Kind::Speech, Some(engine)) if !speech_engines(&known).iter().any(|ready| ready["id"] == engine) => {
+            Err(t!("speech-studio-engine-off", studio = studio.name, engine = engine.to_string()))
+        }
+        _ => Ok(()),
+    }
 }
 
 /// Makes the work in the studio and copies its audio into `out_dir`.
@@ -341,9 +358,11 @@ async fn speak(studio: &'static Studio, engine: &str, mut arguments: Map<String,
             *running().lock().unwrap_or_else(|p| p.into_inner()) = Some((studio.id, job.to_string()));
         }
         if cancelled() {
+            cancel();
             *running().lock().unwrap_or_else(|p| p.into_inner()) = None;
             return Err(t!("speech-studio-cancelled", studio = studio.name));
         }
+        tokio::time::sleep(Duration::from_secs(1)).await;
     };
     *running().lock().unwrap_or_else(|p| p.into_inner()) = None;
     answer["file"].as_str().map(PathBuf::from).ok_or_else(|| t!("speech-studio-no-file", studio = studio.name))

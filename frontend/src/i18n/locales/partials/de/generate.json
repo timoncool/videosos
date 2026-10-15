@@ -503,6 +503,7 @@
       "inClip": "Im Clip",
       "use": "Verwenden",
       "useHint": "Diese Version an die Stelle des Clips setzen"
-    }
+    },
+    "speechTrimFailed": "Der Sprechertext wurde ganz platziert: seine Stille ließ sich nicht lesen ({{reason}})"
   }
 }

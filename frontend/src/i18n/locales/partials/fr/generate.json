@@ -503,6 +503,7 @@
       "inClip": "Dans le clip",
       "use": "Utiliser",
       "useHint": "Mettre cette prise à la place du clip"
-    }
+    },
+    "speechTrimFailed": "La voix off est placée entière : son silence n'a pas pu être lu ({{reason}})"
   }
 }

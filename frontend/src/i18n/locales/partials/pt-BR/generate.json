@@ -503,6 +503,7 @@
       "inClip": "No clipe",
       "use": "Usar",
       "useHint": "Pôr esta tomada no lugar do clipe"
-    }
+    },
+    "speechTrimFailed": "A narração foi colocada inteira: não foi possível ler o silêncio ({{reason}})"
   }
 }

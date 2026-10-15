@@ -302,7 +302,7 @@ pub async fn write_snapshot(dir: &std::path::Path) -> anyhow::Result<()> {
 }
 
 /// What a form read today knows; a form kept by an older VideoSOS is read again.
-const FORM_VERSION: u32 = 4;
+const FORM_VERSION: u32 = 5;
 
 #[derive(Serialize, Deserialize)]
 struct CachedForm {

@@ -503,6 +503,7 @@
       "inClip": "In the clip",
       "use": "Use",
       "useHint": "Put this take in the clip's place"
-    }
+    },
+    "speechTrimFailed": "The voice-over is placed whole: its silence could not be read ({{reason}})"
   }
 }
