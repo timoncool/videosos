@@ -64,7 +64,9 @@
       "atFrame": "Numéro de l'image {{n}}",
       "atAuto": "auto",
       "atSecondHint": "Sous chaque image : la seconde où elle se place, jusqu'à {{max}}. Vide : le modèle répartit les images lui-même.",
-      "atFrameHint": "Sous chaque image : son numéro dans la vidéo (-1 est la dernière). Vide : le modèle répartit les images lui-même."
+      "atFrameHint": "Sous chaque image : son numéro dans la vidéo (-1 est la dernière). Vide : le modèle répartit les images lui-même.",
+      "searchOptions": "Rechercher…",
+      "noOptions": "Aucun résultat"
     },
     "placeOnTimeline": "Placer sur la timeline",
     "repeat": "Exécutions",

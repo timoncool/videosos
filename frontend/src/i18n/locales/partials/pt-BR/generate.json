@@ -64,7 +64,9 @@
       "atFrame": "Número do quadro {{n}}",
       "atAuto": "auto",
       "atSecondHint": "Abaixo de cada quadro: o segundo em que ele fica, até {{max}}. Vazio — o modelo distribui os quadros.",
-      "atFrameHint": "Abaixo de cada quadro: seu número no vídeo (-1 é o último). Vazio — o modelo distribui os quadros."
+      "atFrameHint": "Abaixo de cada quadro: seu número no vídeo (-1 é o último). Vazio — o modelo distribui os quadros.",
+      "searchOptions": "Pesquisar…",
+      "noOptions": "Nada encontrado"
     },
     "placeOnTimeline": "Colocar na linha do tempo",
     "repeat": "Execuções",

@@ -113,6 +113,8 @@ makes it, and the release notes on GitHub are taken from the release's section.
 - **Keyframes at chosen moments**, as VideoSOS 1's frame selector: a video model that takes several frames and a
   place for each (FLUX 3 Video and Aleph by the second, LTX 2.3, Ray 3.2 and SkyReels V4 by the frame number) has a
   box under each frame for where it stands; an empty box leaves it to the model. Agents pin a file with `at`.
+- **Long lists in the generation form are searched by typing**, as VideoSOS 1's voice picker was: a model's voices
+  (MiniMax Speech has hundreds) and any list longer than twelve open with a search box.
 
 ### Fixed
 

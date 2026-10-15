@@ -64,7 +64,9 @@
       "atFrame": "Número del fotograma {{n}}",
       "atAuto": "auto",
       "atSecondHint": "Bajo cada fotograma: el segundo en que aparece, hasta {{max}}. Vacío: el modelo reparte los fotogramas.",
-      "atFrameHint": "Bajo cada fotograma: su número en el vídeo (-1 es el último). Vacío: el modelo reparte los fotogramas."
+      "atFrameHint": "Bajo cada fotograma: su número en el vídeo (-1 es el último). Vacío: el modelo reparte los fotogramas.",
+      "searchOptions": "Buscar…",
+      "noOptions": "No se encontró nada"
     },
     "placeOnTimeline": "Poner en la línea de tiempo",
     "repeat": "Ejecuciones",

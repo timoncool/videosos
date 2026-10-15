@@ -1,6 +1,7 @@
 import { useEffect, useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Plus, X } from 'lucide-react'
+import { Combobox } from '@/components/ui/combobox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
@@ -291,6 +292,9 @@ function FrameAtInput({
   )
 }
 
+/** A list longer than this (a model's voices) is searched by typing, as VideoSOS 1's voice picker was. */
+const SEARCHABLE_FROM = 12
+
 function optionIndex(options: Array<{ value: unknown }>, value: unknown): string {
   const index = options.findIndex((option) => sameValue(option.value, value))
   return index === -1 ? '' : String(index)
@@ -414,6 +418,27 @@ export function FieldControl({ field, value, onChange }: FieldControlProps) {
       )
     case 'select':
     case 'size':
+      if (field.options.length > SEARCHABLE_FROM) {
+        return (
+          <div className="space-y-1">
+            {label}
+            <Combobox
+              id={id}
+              value={optionIndex(field.options, effective)}
+              options={field.options.map((option, index) => ({
+                value: String(index),
+                label: option.label,
+                keywords: [String(option.value)],
+              }))}
+              onValueChange={(index) => onChange(field.options[Number(index)]?.value)}
+              placeholder={t('generate.form.default')}
+              searchPlaceholder={t('generate.form.searchOptions')}
+              emptyMessage={t('generate.form.noOptions')}
+              triggerClassName="h-7 px-2 text-xs"
+            />
+          </div>
+        )
+      }
       return (
         <div className="space-y-1">
           {label}

@@ -64,7 +64,9 @@
       "atFrame": "Bildnummer von Bild {{n}}",
       "atAuto": "auto",
       "atSecondHint": "Unter jedem Bild: die Sekunde, an der es steht, bis {{max}}. Leer — das Modell verteilt die Bilder selbst.",
-      "atFrameHint": "Unter jedem Bild: seine Bildnummer im Video (-1 ist das letzte). Leer — das Modell verteilt die Bilder selbst."
+      "atFrameHint": "Unter jedem Bild: seine Bildnummer im Video (-1 ist das letzte). Leer — das Modell verteilt die Bilder selbst.",
+      "searchOptions": "Suchen…",
+      "noOptions": "Nichts gefunden"
     },
     "placeOnTimeline": "Auf die Zeitleiste legen",
     "repeat": "Durchläufe",

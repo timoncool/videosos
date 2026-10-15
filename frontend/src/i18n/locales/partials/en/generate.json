@@ -64,7 +64,9 @@
       "atFrame": "Frame number of frame {{n}}",
       "atAuto": "auto",
       "atSecondHint": "Under each frame: the second it stands at, up to {{max}}. Empty — the model spaces the frames itself.",
-      "atFrameHint": "Under each frame: its frame number in the video (-1 is the last). Empty — the model spaces the frames itself."
+      "atFrameHint": "Under each frame: its frame number in the video (-1 is the last). Empty — the model spaces the frames itself.",
+      "searchOptions": "Search…",
+      "noOptions": "Nothing found"
     },
     "placeOnTimeline": "Put on the timeline",
     "placeholder": "Generating, {{model}}: {{state}}",

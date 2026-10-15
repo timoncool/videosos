@@ -64,7 +64,9 @@
       "atFrame": "{{n}}. karenin numarası",
       "atAuto": "otomatik",
       "atSecondHint": "Her karenin altında: durduğu saniye, en fazla {{max}}. Boş — kareleri model kendisi yerleştirir.",
-      "atFrameHint": "Her karenin altında: videodaki kare numarası (-1 sonuncusu). Boş — kareleri model kendisi yerleştirir."
+      "atFrameHint": "Her karenin altında: videodaki kare numarası (-1 sonuncusu). Boş — kareleri model kendisi yerleştirir.",
+      "searchOptions": "Ara…",
+      "noOptions": "Hiçbir şey bulunamadı"
     },
     "placeOnTimeline": "Zaman çizelgesine yerleştir",
     "repeat": "Çalıştırma sayısı",
