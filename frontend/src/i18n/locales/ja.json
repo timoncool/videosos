@@ -83,12 +83,12 @@
     "general": {
       "autoSave": "自動保存",
       "interval": "間隔",
-      "intervalMinutes": "{{count}} 分",
       "undoHistoryDepth": "元に戻す履歴の深さ",
       "uiSounds": "インターフェースサウンド",
       "uiSoundVolume": "サウンド音量",
       "uiSoundVoice": "サウンドテーマ",
-      "uiSoundPreview": "プレビュー"
+      "uiSoundPreview": "プレビュー",
+      "minutesUnit": "分"
     },
     "ai": {
       "captionSampleInterval": "字幕のサンプリング間隔",

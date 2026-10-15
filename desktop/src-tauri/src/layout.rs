@@ -11,7 +11,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 pub const DATA_DIRECTORY_NAME: &str = "VideoSOS";
-pub const PORTABLE_MARKER: &str = "portable.flag";
+pub const PORTABLE_MARKER: &str = vs_server::service::PORTABLE_MARKER;
 
 /// Ресурсы бандла (`bundle.resources` в tauri.bundle.conf.json): установщик кладёт их рядом с exe.
 /// Когда данные уезжают в запасной каталог, сервер ищет их там же, где и скачанные модели, поэтому

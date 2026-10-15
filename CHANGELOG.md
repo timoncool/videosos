@@ -119,9 +119,13 @@ makes it, and the release notes on GitHub are taken from the release's section.
   new take unless a seed is set.
 - **Long lists in the generation form are searched by typing**, as VideoSOS 1's voice picker was: a model's voices
   (MiniMax Speech has hundreds) and any list longer than twelve open with a search box.
+- **Settings' sliders take a typed number** (autosave interval, undo depth, sound volume), as the studios' do.
+- **The portable copy says so** in the window title and beside the version in the top bar.
 
 ### Fixed
 
+- **A download that breaks off or goes silent is taken up again**, a model from what is on disk, up to eight times;
+  a server that refuses fails at once (the link tools too).
 - **One undo takes back one action**: an edit made of several steps (a take put in a clip's place with its sound, a
   voice-over placed and trimmed) is one step of the history, not two to four.
 - **A voice-over whose silence cannot be read is still placed**, whole, with a word why, instead of the import failing

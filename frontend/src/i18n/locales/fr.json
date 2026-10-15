@@ -83,12 +83,12 @@
     "general": {
       "autoSave": "Enregistrement automatique",
       "interval": "Intervalle",
-      "intervalMinutes": "{{count}} min",
       "undoHistoryDepth": "Profondeur de l'historique d'annulation",
       "uiSounds": "Sons de l'interface",
       "uiSoundVolume": "Volume du son",
       "uiSoundVoice": "Thème sonore",
-      "uiSoundPreview": "Aperçu"
+      "uiSoundPreview": "Aperçu",
+      "minutesUnit": "min"
     },
     "ai": {
       "captionSampleInterval": "Intervalle d'échantillonnage des sous-titres",

@@ -83,12 +83,12 @@
     "general": {
       "autoSave": "Автосохранение",
       "interval": "Интервал",
-      "intervalMinutes": "{{count}} мин",
       "undoHistoryDepth": "Глубина истории отмены",
       "uiSounds": "Звуки интерфейса",
       "uiSoundVolume": "Громкость звуков",
       "uiSoundVoice": "Звуковая тема",
-      "uiSoundPreview": "Прослушать"
+      "uiSoundPreview": "Прослушать",
+      "minutesUnit": "мин"
     },
     "ai": {
       "captionSampleInterval": "Интервал выборки кадров для субтитров",

@@ -83,12 +83,12 @@
     "general": {
       "autoSave": "自动保存",
       "interval": "间隔",
-      "intervalMinutes": "{{count}} 分钟",
       "undoHistoryDepth": "撤销历史深度",
       "uiSounds": "界面音效",
       "uiSoundVolume": "音效音量",
       "uiSoundVoice": "音效主题",
-      "uiSoundPreview": "试听"
+      "uiSoundPreview": "试听",
+      "minutesUnit": "分钟"
     },
     "ai": {
       "captionSampleInterval": "字幕采样间隔",

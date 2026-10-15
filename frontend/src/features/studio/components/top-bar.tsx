@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ChevronDown, HelpCircle, Plus, Settings } from 'lucide-react'
 import { LanguageSwitcher } from '@/shared/ui/language-switcher'
@@ -6,6 +6,7 @@ import WhatsNew from './whats-new'
 import { JournalPanel } from './journal-panel'
 import { journalSentence, useJournal } from '../services/journal'
 import { openSettings } from '../services/settings-nav'
+import { api } from '../services/studio-api'
 
 /** The places the bar leads to; the app owns the router. */
 export type TopBarPlace = '/projects' | '/projects/new' | '/docs'
@@ -54,6 +55,13 @@ function StatusBar() {
  */
 export function TopBar({ go }: { go: (place: TopBarPlace) => void }) {
   const { t } = useTranslation()
+  const [portable, setPortable] = useState(false)
+  useEffect(() => {
+    void api.info().then(
+      (info) => setPortable(info.portable),
+      (error: unknown) => console.warn('VideoSOS info', error),
+    )
+  }, [])
   return (
     <header className="relative flex min-h-14 shrink-0 flex-wrap items-center gap-x-2 border-b border-[var(--color-border)] bg-[var(--color-surface)] px-3 sm:px-4 lg:h-14 lg:flex-nowrap min-[1440px]:px-5">
       <button
@@ -72,6 +80,7 @@ export function TopBar({ go }: { go: (place: TopBarPlace) => void }) {
         <span className="hidden sm:inline">{t('app.name')}</span>
         <span className="hidden text-[11px] font-normal tracking-normal text-[var(--color-muted)] min-[1440px]:inline">
           v{__APP_VERSION__}
+          {portable && ` · ${t('topbar.portable')}`}
         </span>
       </button>
       {/* Below lg the editor's modes and buttons move to a second row, under the app's own. */}

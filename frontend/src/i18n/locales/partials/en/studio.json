@@ -182,7 +182,8 @@
     "new": "New",
     "newSub": "project",
     "newTitle": "Start a new project",
-    "help": "Help"
+    "help": "Help",
+    "portable": "portable"
   },
   "status": {
     "idle": "Ready"

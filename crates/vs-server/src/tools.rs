@@ -106,27 +106,51 @@ pub fn client(timeout: Duration) -> Result<reqwest::Client, UrlError> {
 }
 
 /// Downloads `url` into `dest`, working out the SHA-256 as it comes; another hash or more than `limit` bytes is an
-/// error. Returns the size; `progress` hears every chunk's running total.
+/// error. A connection that breaks off or goes silent, or an overloaded server, is asked again from the start, a
+/// refusal is not. Returns the size; `progress` hears every chunk's running total.
 pub async fn fetch_verified(client: &reqwest::Client, url: &str, dest: &Path, want: &str, limit: u64, progress: &(dyn Fn(u64) + Sync)) -> Result<u64, UrlError> {
+    const ATTEMPTS: u32 = 8;
+    let mut attempt = 0;
+    loop {
+        attempt += 1;
+        match fetch_once(client, url, dest, want, limit, progress).await {
+            Err((true, error)) if attempt < ATTEMPTS => {
+                tracing::warn!("{url} broke off ({}), attempt {attempt} of {ATTEMPTS}", error.detail);
+                tokio::time::sleep(Duration::from_secs(u64::from(attempt) * 3)).await;
+            }
+            done => return done.map_err(|(_, error)| error),
+        }
+    }
+}
+
+/// One try of `fetch_verified`; an error says whether asking again could help.
+async fn fetch_once(client: &reqwest::Client, url: &str, dest: &Path, want: &str, limit: u64, progress: &(dyn Fn(u64) + Sync)) -> Result<u64, (bool, UrlError)> {
     use sha2::{Digest, Sha256};
     use tokio::io::AsyncWriteExt;
-    let mut resp = client.get(url).send().await.and_then(|r| r.error_for_status()).map_err(|e| UrlError::new("network", format!("{url}: {e}")))?;
-    let mut out = tokio::fs::File::create(dest).await.map_err(|e| UrlError::new("io", format!("{}: {e}", dest.display())))?;
+    let lost = |e: &dyn std::fmt::Display| (true, UrlError::new("network", format!("{url}: {e}")));
+    let disk = |e: std::io::Error| (false, UrlError::new("io", format!("{}: {e}", dest.display())));
+    let mut resp = client.get(url).send().await.map_err(|e| lost(&e))?;
+    let status = resp.status();
+    if !status.is_success() {
+        let again = !status.is_client_error() || status == reqwest::StatusCode::TOO_MANY_REQUESTS;
+        return Err((again, UrlError::new("network", format!("{url} answered {status}"))));
+    }
+    let mut out = tokio::fs::File::create(dest).await.map_err(disk)?;
     let mut digest = Sha256::new();
     let mut size = 0u64;
-    while let Some(chunk) = resp.chunk().await.map_err(|e| UrlError::new("network", format!("{url}: {e}")))? {
+    while let Some(chunk) = resp.chunk().await.map_err(|e| lost(&e))? {
         size += chunk.len() as u64;
         if size > limit {
-            return Err(UrlError::new("io", t!("ytdlp-too-large", url = url.to_string(), limit = limit)));
+            return Err((false, UrlError::new("io", t!("ytdlp-too-large", url = url.to_string(), limit = limit))));
         }
         digest.update(&chunk);
-        out.write_all(&chunk).await.map_err(|e| UrlError::new("io", format!("{}: {e}", dest.display())))?;
+        out.write_all(&chunk).await.map_err(disk)?;
         progress(size);
     }
-    out.flush().await.map_err(|e| UrlError::new("io", format!("{}: {e}", dest.display())))?;
+    out.flush().await.map_err(disk)?;
     let got = hex::encode(digest.finalize());
     if got != want {
-        return Err(UrlError::new("io", t!("ytdlp-sha-mismatch", url = url.to_string(), got = got.clone(), want = want.to_string())));
+        return Err((false, UrlError::new("io", t!("ytdlp-sha-mismatch", url = url.to_string(), got = got.clone(), want = want.to_string()))));
     }
     Ok(size)
 }
@@ -373,6 +397,46 @@ fn untar_xz(archive: &Path, folder: &Path, only: &[&str]) -> Result<(), String> 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// A server on loopback answering each connection in turn with the next of `answers`; `None` drops the connection.
+    async fn serve(answers: Vec<Option<&'static str>>) -> (String, std::sync::Arc<std::sync::atomic::AtomicUsize>) {
+        use tokio::io::{AsyncReadExt, AsyncWriteExt};
+        let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let url = format!("http://{}/file", listener.local_addr().unwrap());
+        let seen = std::sync::Arc::new(std::sync::atomic::AtomicUsize::new(0));
+        let counted = seen.clone();
+        tokio::spawn(async move {
+            for answer in answers {
+                let Ok((mut socket, _)) = listener.accept().await else { return };
+                counted.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+                let mut request = [0u8; 1024];
+                let _ = socket.read(&mut request).await;
+                if let Some(answer) = answer {
+                    let _ = socket.write_all(answer.as_bytes()).await;
+                }
+            }
+        });
+        (url, seen)
+    }
+
+    #[tokio::test]
+    async fn a_broken_download_is_asked_again_and_a_refusal_is_not() {
+        let dir = std::env::temp_dir().join(format!("vs-fetch-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let dest = dir.join("file");
+        let want = hex::encode(<sha2::Sha256 as sha2::Digest>::digest(b"hello"));
+        let client = client(Duration::from_secs(5)).unwrap();
+
+        let (url, seen) = serve(vec![None, Some("HTTP/1.1 200 OK\r\nContent-Length: 5\r\nConnection: close\r\n\r\nhello")]).await;
+        assert_eq!(fetch_verified(&client, &url, &dest, &want, 100, &|_| {}).await.unwrap(), 5);
+        assert_eq!(seen.load(std::sync::atomic::Ordering::SeqCst), 2);
+
+        let (url, seen) = serve(vec![Some("HTTP/1.1 404 Not Found\r\nContent-Length: 0\r\nConnection: close\r\n\r\n"), None]).await;
+        let refusal = fetch_verified(&client, &url, &dest, &want, 100, &|_| {}).await.expect_err("a refusal fails");
+        assert!(refusal.detail.contains("404"), "{}", refusal.detail);
+        assert_eq!(seen.load(std::sync::atomic::Ordering::SeqCst), 1);
+        let _ = std::fs::remove_dir_all(&dir);
+    }
 
     #[test]
     fn every_file_is_pinned_by_size_and_hash() {

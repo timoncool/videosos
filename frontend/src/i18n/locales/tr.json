@@ -83,12 +83,12 @@
     "general": {
       "autoSave": "Otomatik kaydet",
       "interval": "Aralık",
-      "intervalMinutes": "{{count}} dk",
       "undoHistoryDepth": "Geri Alma Geçmişi Derinliği",
       "uiSounds": "Arayüz sesleri",
       "uiSoundVolume": "Ses düzeyi",
       "uiSoundVoice": "Ses teması",
-      "uiSoundPreview": "Önizleme"
+      "uiSoundPreview": "Önizleme",
+      "minutesUnit": "dk"
     },
     "ai": {
       "captionSampleInterval": "Altyazı örnekleme aralığı",

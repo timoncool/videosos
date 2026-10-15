@@ -182,7 +182,8 @@
     "new": "新建",
     "newSub": "项目",
     "newTitle": "开始新项目",
-    "help": "帮助"
+    "help": "帮助",
+    "portable": "便携版"
   },
   "status": {
     "idle": "就绪"

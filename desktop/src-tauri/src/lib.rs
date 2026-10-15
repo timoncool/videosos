@@ -320,7 +320,7 @@ pub fn run() {
                 None => window,
             };
             let win = window
-                .title(format!("VideoSOS {}", app.package_info().version))
+                .title(format!("VideoSOS {}{}", app.package_info().version, if layout::is_portable() { " Portable" } else { "" }))
                 .inner_size(1600.0, 1000.0)
                 .min_inner_size(1200.0, 760.0)
                 .resizable(true)

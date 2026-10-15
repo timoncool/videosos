@@ -565,7 +565,18 @@ async fn download_all(data: &Path, files: &[&'static Download]) -> Result<(), (&
                 changed();
             }
         };
-        fetch_resumable(&client, file, &dest, &tell).await.map_err(|message| ("download", message))?;
+        let mut attempt = 0;
+        loop {
+            attempt += 1;
+            match fetch_resumable(&client, file, &dest, &tell).await {
+                Ok(()) => break,
+                Err(Fetch::Lost(message)) if attempt < DOWNLOAD_ATTEMPTS => {
+                    tracing::warn!("{} broke off ({message}), attempt {attempt} of {DOWNLOAD_ATTEMPTS}: going on from what is on disk", file.url);
+                    tokio::time::sleep(Duration::from_secs(u64::from(attempt) * 3)).await;
+                }
+                Err(Fetch::Lost(message) | Fetch::Final(message)) => return Err(("download", message)),
+            }
+        }
         done += file.size;
         if let Some(folder) = file.unzip_into {
             let (archive, folder) = (dest.clone(), data.join(folder));
@@ -623,7 +634,23 @@ fn sha256_of(path: &Path) -> Option<String> {
 
 /// Downloads into `<dest>.part`, going on from what an earlier download left, checks size and SHA-256 over the
 /// whole file and only then gives it its name.
-async fn fetch_resumable(client: &reqwest::Client, file: &Download, dest: &Path, progress: &(dyn Fn(u64) + Sync)) -> Result<(), String> {
+/// How often a download that broke off is taken up again from what is on disk.
+const DOWNLOAD_ATTEMPTS: u32 = 8;
+
+/// Why a file did not come: a connection that broke off or went silent, or a server overloaded (taken up again), or an
+/// answer that will not change (a refusal, a wrong file, the disk).
+enum Fetch {
+    Lost(String),
+    Final(String),
+}
+
+impl From<String> for Fetch {
+    fn from(message: String) -> Self {
+        Fetch::Final(message)
+    }
+}
+
+async fn fetch_resumable(client: &reqwest::Client, file: &Download, dest: &Path, progress: &(dyn Fn(u64) + Sync)) -> Result<(), Fetch> {
     use sha2::{Digest, Sha256};
     use tokio::io::{AsyncReadExt, AsyncWriteExt};
     if let Some(folder) = dest.parent() {
@@ -651,7 +678,14 @@ async fn fetch_resumable(client: &reqwest::Client, file: &Download, dest: &Path,
     if have > 0 {
         request = request.header(reqwest::header::RANGE, format!("bytes={have}-"));
     }
-    let mut response = request.send().await.and_then(|r| r.error_for_status()).map_err(|e| format!("{}: {e}", file.url))?;
+    let mut response = request.send().await.map_err(|e| Fetch::Lost(format!("{}: {e}", file.url)))?;
+    let status = response.status();
+    if status.is_client_error() && status != reqwest::StatusCode::TOO_MANY_REQUESTS {
+        return Err(Fetch::Final(format!("{} answered {status}", file.url)));
+    }
+    if !status.is_success() {
+        return Err(Fetch::Lost(format!("{} answered {status}", file.url)));
+    }
     if have > 0 && response.status() != reqwest::StatusCode::PARTIAL_CONTENT {
         // the server sends the whole file again: start over
         digest = Sha256::new();
@@ -660,12 +694,12 @@ async fn fetch_resumable(client: &reqwest::Client, file: &Download, dest: &Path,
     let mut out = tokio::fs::OpenOptions::new().create(true).write(true).append(have > 0).truncate(have == 0).open(&part).await.map_err(|e| format!("{}: {e}", part.display()))?;
     let mut size = have;
     progress(size);
-    while let Some(chunk) = response.chunk().await.map_err(|e| format!("{}: {e}", file.url))? {
+    while let Some(chunk) = response.chunk().await.map_err(|e| Fetch::Lost(format!("{}: {e}", file.url)))? {
         size += chunk.len() as u64;
         if size > file.size {
             drop(out);
             let _ = std::fs::remove_file(&part);
-            return Err(t!("local-too-large", url = file.url.to_string(), size = file.size));
+            return Err(Fetch::Final(t!("local-too-large", url = file.url.to_string(), size = file.size)));
         }
         digest.update(&chunk);
         out.write_all(&chunk).await.map_err(|e| format!("{}: {e}", part.display()))?;
@@ -676,9 +710,9 @@ async fn fetch_resumable(client: &reqwest::Client, file: &Download, dest: &Path,
     let got = hex::encode(digest.finalize());
     if size != file.size || got != file.sha256 {
         let _ = std::fs::remove_file(&part);
-        return Err(t!("local-sha-mismatch", url = file.url.to_string(), got = got, want = file.sha256.to_string()));
+        return Err(Fetch::Final(t!("local-sha-mismatch", url = file.url.to_string(), got = got, want = file.sha256.to_string())));
     }
-    std::fs::rename(&part, dest).map_err(|e| format!("{}: {e}", dest.display()))
+    std::fs::rename(&part, dest).map_err(|e| Fetch::Final(format!("{}: {e}", dest.display())))
 }
 
 /// Removes a model's files; the engine stays.

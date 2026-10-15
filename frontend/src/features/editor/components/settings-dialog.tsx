@@ -86,6 +86,7 @@ import { VOICE_OPTIONS, type VoiceName } from '@/infrastructure/audio/ui-sound'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { createLogger } from '@/shared/logging/logger'
 import { cn } from '@/shared/ui/cn'
+import { NumberInput } from '@/shared/ui/property-controls/number-input'
 import { LanguageSwitcher } from '@/shared/ui/language-switcher'
 import { SettingRow, SettingsTable } from '../deps/studio'
 import { AudioOutputSetting } from './audio-output-setting'
@@ -783,9 +784,18 @@ export function SettingsDialog({ open, onOpenChange, target }: SettingsDialogPro
                           max={30}
                           step={5}
                         />
-                        <span className="tabnum w-14 text-right text-[12px] text-[var(--color-muted)]">
-                          {t('settings.general.intervalMinutes', { count: autoSaveInterval })}
-                        </span>
+                        <NumberInput
+                          className="w-20"
+                          label=""
+                          value={autoSaveInterval}
+                          min={5}
+                          max={30}
+                          step={5}
+                          unit={t('settings.general.minutesUnit')}
+                          unitWidth={28}
+                          scrubEnabled={false}
+                          onChange={(v) => setSetting('autoSaveInterval', Math.round(v))}
+                        />
                       </SettingRow>
                     )}
                     <SettingRow
@@ -802,9 +812,16 @@ export function SettingsDialog({ open, onOpenChange, target }: SettingsDialogPro
                         max={200}
                         step={10}
                       />
-                      <span className="tabnum w-14 text-right text-[12px] text-[var(--color-muted)]">
-                        {maxUndoHistory}
-                      </span>
+                      <NumberInput
+                        className="w-20"
+                        label=""
+                        value={maxUndoHistory}
+                        min={10}
+                        max={200}
+                        step={10}
+                        scrubEnabled={false}
+                        onChange={(v) => setSetting('maxUndoHistory', Math.round(v))}
+                      />
                     </SettingRow>
                     <SettingRow
                       icon={Volume2}
@@ -834,9 +851,17 @@ export function SettingsDialog({ open, onOpenChange, target }: SettingsDialogPro
                           max={1}
                           step={0.05}
                         />
-                        <span className="tabnum w-14 text-right text-[12px] text-[var(--color-muted)]">
-                          {Math.round(uiSoundVolume * 100)}%
-                        </span>
+                        <NumberInput
+                          className="w-20"
+                          label=""
+                          value={Math.round(uiSoundVolume * 100)}
+                          min={0}
+                          max={100}
+                          step={5}
+                          unit="%"
+                          scrubEnabled={false}
+                          onChange={(v) => setUiSoundVolume(v / 100)}
+                        />
                       </SettingRow>
                     )}
                     {uiSoundsEnabled && (

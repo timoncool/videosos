@@ -182,7 +182,8 @@
     "new": "새",
     "newSub": "프로젝트",
     "newTitle": "새 프로젝트 시작",
-    "help": "도움말"
+    "help": "도움말",
+    "portable": "포터블"
   },
   "status": {
     "idle": "준비됨"

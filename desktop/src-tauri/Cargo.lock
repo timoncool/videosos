@@ -6065,7 +6065,6 @@ dependencies = [
  "mime_guess",
  "nvml-wrapper",
  "percent-encoding",
- "png 0.18.1",
  "regex",
  "reqwest",
  "rfd 0.17.2",

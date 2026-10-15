@@ -143,6 +143,7 @@ async fn info(State(state): State<AppState>) -> Json<Value> {
     Json(json!({
         "app": service::APP_ID,
         "version": service::app_version(),
+        "portable": service::is_portable(),
         "workspace": state.workspace.display().to_string(),
         "data": state.data.display().to_string(),
         "os": std::env::consts::OS,

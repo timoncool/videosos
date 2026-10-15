@@ -83,6 +83,14 @@ pub fn health_json(repo_root: &Path) -> Result<Value, String> {
     }))
 }
 
+/// The file beside the program that makes a copy portable; the release script puts it into the zip.
+pub const PORTABLE_MARKER: &str = "portable.flag";
+
+/// Whether this is the portable copy: the marker beside the running program.
+pub fn is_portable() -> bool {
+    std::env::current_exe().ok().and_then(|exe| exe.parent().map(|dir| dir.join(PORTABLE_MARKER))).is_some_and(|marker| marker.is_file())
+}
+
 /// GET /health
 pub async fn health(State(st): State<AppState>) -> Response {
     match health_json(&st.repo_root) {

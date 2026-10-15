@@ -182,7 +182,8 @@
     "new": "Yeni",
     "newSub": "proje",
     "newTitle": "Yeni bir proje başlat",
-    "help": "Yardım"
+    "help": "Yardım",
+    "portable": "taşınabilir"
   },
   "status": {
     "idle": "Hazır"

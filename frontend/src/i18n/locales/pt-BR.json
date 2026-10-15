@@ -83,12 +83,12 @@
     "general": {
       "autoSave": "Salvamento automático",
       "interval": "Intervalo",
-      "intervalMinutes": "{{count}} min",
       "undoHistoryDepth": "Profundidade do histórico de desfazer",
       "uiSounds": "Sons da interface",
       "uiSoundVolume": "Volume do som",
       "uiSoundVoice": "Tema de som",
-      "uiSoundPreview": "Prévia"
+      "uiSoundPreview": "Prévia",
+      "minutesUnit": "min"
     },
     "ai": {
       "captionSampleInterval": "Intervalo de amostragem de legendas",
