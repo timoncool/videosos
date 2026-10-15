@@ -53,6 +53,9 @@ the exported file, and they watch it happen.
    - `{"job": "<job id>", "index": 0}` — a result of an earlier generation;
    - `{"file": "C:\\path\\to\\file.png"}` — a file on this computer;
    - an `https://` URL.
+   A keyframe list (a media field with `at`) pins each file where it should stand: `{"media": "<id>", "at": 3.5}`
+   — the second when `at.unit` is `second` (up to `at.max`), the frame number when it is `frame` (-1 the last).
+   Files without `at` are spaced by the model: one is the first frame, two the first and the last.
    An element the person kept (`elements_list`) is named in a prompt as `@name`: its pictures go into the
    model's reference pictures by themselves. `element_save {name, media_ids}` keeps a new one — a character's
    face from a generated picture — so it stays the same in every later shot.

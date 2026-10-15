@@ -137,7 +137,7 @@ mod tests {
             fields: vec![
                 Field { key: "resolution".into(), label: "R".into(), description: None, kind: FieldKind::Text { max_length: None }, required: false, default: Some(json!("480p")), advanced: false, role: Some(Role::Resolution) },
                 Field { key: "duration".into(), label: "D".into(), description: None, kind: FieldKind::Integer { min: None, max: None }, required: false, default: Some(json!(6)), advanced: false, role: Some(Role::Duration) },
-                Field { key: "inputs.frameImages".into(), label: "F".into(), description: None, kind: FieldKind::Media { media: crate::model::MediaKind::Image, min: 0, max: 1, list: true }, required: false, default: None, advanced: false, role: Some(Role::FirstFrame) },
+                Field { key: "inputs.frameImages".into(), label: "F".into(), description: None, kind: FieldKind::Media { media: crate::model::MediaKind::Image, min: 0, max: 1, list: true, at: None }, required: false, default: None, advanced: false, role: Some(Role::FirstFrame) },
             ],
             price: PriceRule {
                 rates: vec![

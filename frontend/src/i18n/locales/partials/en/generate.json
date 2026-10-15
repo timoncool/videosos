@@ -59,7 +59,12 @@
       "missing": "Fill in: {{fields}}",
       "length": "{{count}} / {{max}}",
       "tooLong": "{{count}} / {{max}} - longer than the model takes",
-      "shorten": "Shorten {{field}}: {{count}} characters, the model takes at most {{max}}"
+      "shorten": "Shorten {{field}}: {{count}} characters, the model takes at most {{max}}",
+      "atSecond": "Second of frame {{n}}",
+      "atFrame": "Frame number of frame {{n}}",
+      "atAuto": "auto",
+      "atSecondHint": "Under each frame: the second it stands at, up to {{max}}. Empty — the model spaces the frames itself.",
+      "atFrameHint": "Under each frame: its frame number in the video (-1 is the last). Empty — the model spaces the frames itself."
     },
     "placeOnTimeline": "Put on the timeline",
     "placeholder": "Generating, {{model}}: {{state}}",

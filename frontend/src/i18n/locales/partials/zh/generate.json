@@ -59,7 +59,12 @@
       "missing": "请填写：{{fields}}",
       "length": "{{count}} / {{max}}",
       "tooLong": "{{count}} / {{max}}，超出模型可接受的长度",
-      "shorten": "请缩短“{{field}}”：{{count}} 个字符，模型最多接受 {{max}} 个"
+      "shorten": "请缩短“{{field}}”：{{count}} 个字符，模型最多接受 {{max}} 个",
+      "atSecond": "第 {{n}} 帧的秒数",
+      "atFrame": "第 {{n}} 帧的帧号",
+      "atAuto": "自动",
+      "atSecondHint": "每帧下方：它所在的秒数，最多 {{max}}。留空则由模型自行排布。",
+      "atFrameHint": "每帧下方：它在视频中的帧号（-1 为最后一帧）。留空则由模型自行排布。"
     },
     "placeOnTimeline": "放到时间轴上",
     "repeat": "运行次数",

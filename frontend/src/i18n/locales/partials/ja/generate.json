@@ -59,7 +59,12 @@
       "missing": "入力してください: {{fields}}",
       "length": "{{count}} / {{max}}",
       "tooLong": "{{count}} / {{max}} ― モデルが受け付ける長さを超えています",
-      "shorten": "「{{field}}」を短くしてください：{{count}}文字（モデルが受け付けるのは最大{{max}}文字）"
+      "shorten": "「{{field}}」を短くしてください：{{count}}文字（モデルが受け付けるのは最大{{max}}文字）",
+      "atSecond": "フレーム{{n}}の秒",
+      "atFrame": "フレーム{{n}}の番号",
+      "atAuto": "自動",
+      "atSecondHint": "各フレームの下に配置する秒（{{max}}まで）。空欄ならモデルが自動で配置します。",
+      "atFrameHint": "各フレームの下に動画内のフレーム番号（-1は最後）。空欄ならモデルが自動で配置します。"
     },
     "placeOnTimeline": "タイムラインに配置",
     "repeat": "実行回数",

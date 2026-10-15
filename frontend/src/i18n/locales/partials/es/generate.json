@@ -59,7 +59,12 @@
       "missing": "Rellena: {{fields}}",
       "length": "{{count}} / {{max}}",
       "tooLong": "{{count}} / {{max}}: más largo de lo que admite el modelo",
-      "shorten": "Acorta «{{field}}»: {{count}} caracteres, el modelo admite como máximo {{max}}"
+      "shorten": "Acorta «{{field}}»: {{count}} caracteres, el modelo admite como máximo {{max}}",
+      "atSecond": "Segundo del fotograma {{n}}",
+      "atFrame": "Número del fotograma {{n}}",
+      "atAuto": "auto",
+      "atSecondHint": "Bajo cada fotograma: el segundo en que aparece, hasta {{max}}. Vacío: el modelo reparte los fotogramas.",
+      "atFrameHint": "Bajo cada fotograma: su número en el vídeo (-1 es el último). Vacío: el modelo reparte los fotogramas."
     },
     "placeOnTimeline": "Poner en la línea de tiempo",
     "repeat": "Ejecuciones",

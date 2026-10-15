@@ -533,6 +533,33 @@ mod tests {
     }
 
     #[test]
+    fn keyframes_pinned_at_seconds_pass_the_models_schema() {
+        let schema = fixture("rw-schema-bfl-flux-3-video.json");
+        let form = form("bfl:flux@3-video", &schema).unwrap();
+        let frames = form.fields.iter().find(|field| field.key == "inputs.frameImages").unwrap();
+        assert!(matches!(frames.kind, FieldKind::Media { max: 10, at: Some(crate::model::FrameAt::Second { max }), .. } if max == 20.0), "{frames:?}");
+        let duration = form.fields.iter().find(|field| field.key == "duration").unwrap();
+        let durations: Vec<Value> = choices_of(duration).into_iter().map(|choice| choice.value).collect();
+        assert!(durations.contains(&json!("auto")) && durations.contains(&json!(5)) && durations.contains(&json!(20)), "{durations:?}");
+
+        let mut values = Map::new();
+        values.insert("positivePrompt".into(), json!("a paper boat drifts down a rainy street"));
+        values.insert("duration".into(), json!(5));
+        values.insert("inputs.frameImages".into(), json!([
+            { "image": "https://example.com/a.png", "timestamp": 0.0 },
+            "https://example.com/b.png",
+            { "image": "https://example.com/c.png", "timestamp": 4.5 },
+        ]));
+        let task = build_task(&form.id, &form, &values, "3f0c2a7e-0000-4000-8000-000000000005");
+        let chosen = pick_valid(&schema, task, default_size(&form).as_deref()).unwrap();
+        assert_eq!(chosen["inputs"]["frameImages"][2]["timestamp"], 4.5);
+
+        values.insert("inputs.frameImages".into(), json!([{ "image": "https://example.com/a.png", "timestamp": 25.0 }]));
+        let task = build_task(&form.id, &form, &values, "3f0c2a7e-0000-4000-8000-000000000006");
+        assert!(pick_valid(&schema, task, default_size(&form).as_deref()).is_err(), "a second past the video is refused before sending");
+    }
+
+    #[test]
     fn image_form_and_sync_delivery() {
         let schema = fixture("rw-schema-bytedance-seedream-5-0-flash.json");
         let form = form("bytedance:seedream@5.0-flash", &schema).unwrap();

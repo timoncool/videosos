@@ -17,7 +17,7 @@ use rusqlite::{params, Connection, OptionalExtension};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Map, Value};
 use tokio::sync::Semaphore;
-use vs_providers::{fal, openrouter, price, runware, FieldKind, MediaKind, MediaPayload, ModelForm, Output, Polled, Provider, ProviderError, Submitted};
+use vs_providers::{fal, openrouter, price, runware, FieldKind, FrameAt, MediaKind, MediaPayload, ModelForm, Output, Polled, Provider, ProviderError, Submitted};
 
 use crate::catalog::{bad, Catalog};
 use crate::{credentials, events, AppState};
@@ -569,7 +569,7 @@ impl Jobs {
     /// Files of the request read from disk and handed to the provider the way it reads them.
     async fn prepare(&self, key: &str, form: &ModelForm, mut values: Map<String, Value>) -> Result<Map<String, Value>, String> {
         for field in &form.fields {
-            let FieldKind::Media { list, max, .. } = &field.kind else { continue };
+            let FieldKind::Media { list, max, at, .. } = &field.kind else { continue };
             let Some(raw) = values.remove(&field.key) else { continue };
             let refs: Vec<Value> = match raw {
                 Value::Array(items) => items,
@@ -580,7 +580,23 @@ impl Jobs {
                 return Err(t!("jobs-too-many-files", field = field.label.clone(), max = *max as i64));
             }
             let mut sent = Vec::new();
-            for item in refs {
+            for mut item in refs {
+                let position = item.as_object_mut().and_then(|object| object.remove("at")).filter(|at| !at.is_null());
+                if let Some(link) = item.as_object_mut().and_then(|object| object.remove("image")) {
+                    item = link;
+                }
+                let place = match (position, at) {
+                    (None, _) => None,
+                    (Some(position), Some(FrameAt::Second { max })) => match position.as_f64() {
+                        Some(second) if (0.0..=*max).contains(&second) => Some(("timestamp", json!((second * 100.0).round() / 100.0))),
+                        _ => return Err(t!("jobs-bad-frame-at", field = field.label.clone(), at = position.to_string())),
+                    },
+                    (Some(position), Some(FrameAt::Frame)) => match position.as_i64() {
+                        Some(frame) if frame >= -1 => Some(("frame", json!(frame))),
+                        _ => return Err(t!("jobs-bad-frame-at", field = field.label.clone(), at = position.to_string())),
+                    },
+                    (Some(_), None) => return Err(t!("jobs-no-frame-at", field = field.label.clone())),
+                };
                 let reference: MediaRef = serde_json::from_value(item).map_err(|e| e.to_string())?;
                 let address = match reference {
                     MediaRef::Link(link) if link.starts_with("http") || link.starts_with("data:") => link,
@@ -593,7 +609,10 @@ impl Jobs {
                         }
                     }
                 };
-                sent.push(Value::String(address));
+                sent.push(match place {
+                    Some((name, position)) => json!({ "image": address, (name): position }),
+                    None => Value::String(address),
+                });
             }
             if sent.is_empty() {
                 continue;

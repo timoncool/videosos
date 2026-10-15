@@ -59,7 +59,12 @@
       "missing": "À renseigner : {{fields}}",
       "length": "{{count}} / {{max}}",
       "tooLong": "{{count}} / {{max}} – plus long que ce que le modèle accepte",
-      "shorten": "Raccourcissez « {{field}} » : {{count}} caractères, le modèle en accepte {{max}} au maximum"
+      "shorten": "Raccourcissez « {{field}} » : {{count}} caractères, le modèle en accepte {{max}} au maximum",
+      "atSecond": "Seconde de l'image {{n}}",
+      "atFrame": "Numéro de l'image {{n}}",
+      "atAuto": "auto",
+      "atSecondHint": "Sous chaque image : la seconde où elle se place, jusqu'à {{max}}. Vide : le modèle répartit les images lui-même.",
+      "atFrameHint": "Sous chaque image : son numéro dans la vidéo (-1 est la dernière). Vide : le modèle répartit les images lui-même."
     },
     "placeOnTimeline": "Placer sur la timeline",
     "repeat": "Exécutions",

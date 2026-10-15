@@ -106,7 +106,7 @@ mod tests {
     fn a_named_element_sends_its_pictures_as_the_window_does() {
         let fields = vec![
             field("prompt", FieldKind::Textarea { max_length: None }, Role::Prompt),
-            field("refs", FieldKind::Media { media: MediaKind::Image, min: 0, max: 3, list: true }, Role::Reference),
+            field("refs", FieldKind::Media { media: MediaKind::Image, min: 0, max: 3, list: true, at: None }, Role::Reference),
         ];
         let elements = from_choices(&json!({ "elements": [{ "name": "Kite", "refs": [{ "media": "m1" }] }, { "name": "Fox", "refs": [{ "media": "m2" }, { "media": "m3" }] }] }));
         let mut values = json!({ "prompt": "@kite flies over @Nobody", "refs": [{ "media": "m0" }] }).as_object().unwrap().clone();

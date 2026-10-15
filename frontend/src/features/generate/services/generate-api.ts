@@ -145,7 +145,7 @@ export type Field = FieldBase &
     | { type: 'number'; min: number | null; max: number | null }
     | { type: 'boolean' }
     | { type: 'select'; options: Choice[] }
-    | { type: 'media'; media: MediaKind; min: number; max: number; list: boolean }
+    | { type: 'media'; media: MediaKind; min: number; max: number; list: boolean; at?: FrameAt }
     | { type: 'size'; options: Choice[]; width_key: string; height_key: string }
   )
 
@@ -176,11 +176,14 @@ export interface CatalogAnswer {
   keys: Record<Provider, boolean>
 }
 
-/** A file named in a job's request. */
+/** How a model pins a keyframe in its video: at a second up to `max`, or at a frame number. */
+export type FrameAt = { unit: 'second'; max: number } | { unit: 'frame' }
+
+/** A file named in a job's request; `at` pins it in the video when its field takes a position. */
 export type MediaRef =
-  | { media: string }
-  | { job: string; index: number }
-  | { file: string }
+  | { media: string; at?: number }
+  | { job: string; index: number; at?: number }
+  | { file: string; at?: number }
   | string
 
 /** What was spent on finished generations, in total and broken down. */

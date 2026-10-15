@@ -59,7 +59,12 @@
       "missing": "Doldurun: {{fields}}",
       "length": "{{count}} / {{max}}",
       "tooLong": "{{count}} / {{max}} – modelin kabul ettiğinden uzun",
-      "shorten": "“{{field}}” alanını kısalt: {{count}} karakter, model en fazla {{max}} kabul eder"
+      "shorten": "“{{field}}” alanını kısalt: {{count}} karakter, model en fazla {{max}} kabul eder",
+      "atSecond": "{{n}}. karenin saniyesi",
+      "atFrame": "{{n}}. karenin numarası",
+      "atAuto": "otomatik",
+      "atSecondHint": "Her karenin altında: durduğu saniye, en fazla {{max}}. Boş — kareleri model kendisi yerleştirir.",
+      "atFrameHint": "Her karenin altında: videodaki kare numarası (-1 sonuncusu). Boş — kareleri model kendisi yerleştirir."
     },
     "placeOnTimeline": "Zaman çizelgesine yerleştir",
     "repeat": "Çalıştırma sayısı",

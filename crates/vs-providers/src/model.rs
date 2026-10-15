@@ -125,6 +125,14 @@ pub enum MediaKind {
     Audio,
 }
 
+/// How a model pins a keyframe in its video: at a second (up to `max`) or at a frame number.
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+#[serde(tag = "unit", rename_all = "snake_case")]
+pub enum FrameAt {
+    Second { max: f64 },
+    Frame,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Choice {
     pub value: Value,
@@ -149,7 +157,16 @@ pub enum FieldKind {
     Select { options: Vec<Choice> },
     /// Files from the media library: `min`..`max` of them.
     /// `list` when the request takes an array, even of one.
-    Media { media: MediaKind, min: u32, max: u32, list: bool },
+    /// `at`: where in the video each file of the list may be pinned, when the model takes a position; a file
+    /// of the value is then `{.., "at": <second or frame>}` and one without stays where the model puts it.
+    Media {
+        media: MediaKind,
+        min: u32,
+        max: u32,
+        list: bool,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        at: Option<FrameAt>,
+    },
     /// A width and height pair from the model's closed list; the value is `"<w>x<h>"`.
     Size { options: Vec<Choice>, width_key: String, height_key: String },
 }

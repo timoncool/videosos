@@ -175,7 +175,7 @@ fn prompt(key: &str, label: &str, required: bool) -> Field {
 }
 
 fn media(key: &str, label: &str, kind: MediaKind, min: u32, max: u32, role: Role) -> Field {
-    Field { key: key.into(), label: label.into(), description: None, kind: FieldKind::Media { media: kind, min, max, list: matches!(key, "input_references" | "input_images") }, required: min > 0, default: None, advanced: false, role: Some(role) }
+    Field { key: key.into(), label: label.into(), description: None, kind: FieldKind::Media { media: kind, min, max, list: matches!(key, "input_references" | "input_images"), at: None }, required: min > 0, default: None, advanced: false, role: Some(role) }
 }
 
 pub fn form(entry: &ModelEntry) -> Result<ModelForm, ProviderError> {

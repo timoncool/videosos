@@ -59,7 +59,12 @@
       "missing": "입력하세요: {{fields}}",
       "length": "{{count}} / {{max}}",
       "tooLong": "{{count}} / {{max}} - 모델이 받는 길이를 초과합니다",
-      "shorten": "“{{field}}” 줄이기: {{count}}자, 모델은 최대 {{max}}자까지 받습니다"
+      "shorten": "“{{field}}” 줄이기: {{count}}자, 모델은 최대 {{max}}자까지 받습니다",
+      "atSecond": "프레임 {{n}}의 초",
+      "atFrame": "프레임 {{n}}의 번호",
+      "atAuto": "자동",
+      "atSecondHint": "각 프레임 아래: 배치할 초({{max}}까지). 비워 두면 모델이 직접 배치합니다.",
+      "atFrameHint": "각 프레임 아래: 영상 속 프레임 번호(-1은 마지막). 비워 두면 모델이 직접 배치합니다."
     },
     "placeOnTimeline": "타임라인에 배치",
     "repeat": "실행 횟수",

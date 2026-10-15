@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { cn } from '@/shared/ui/cn'
-import { generateApi, type Field, type MediaKind, type MediaRef } from '../services/generate-api'
+import { generateApi, type Field, type FrameAt, type MediaKind, type MediaRef } from '../services/generate-api'
 import { getMediaDragData, mediaLibraryService, useMediaLibraryStore } from '../deps/editor'
 import { fieldLabel, overLength, providerWords } from '../services/field-label'
 import { useGenerateStore } from '../stores/generate-store'
@@ -24,6 +24,18 @@ export const OUTPUT_DRAG_TYPE = 'application/x-videosos-output'
 
 function sameValue(a: unknown, b: unknown): boolean {
   return JSON.stringify(a) === JSON.stringify(b)
+}
+
+/** A file without its place in the video: the same file twice is one, wherever each was pinned. */
+function fileOf(reference: MediaRef): MediaRef {
+  if (typeof reference !== 'object' || reference.at === undefined) return reference
+  const { at: _at, ...file } = reference
+  return file
+}
+
+function pinned(reference: MediaRef, at: number | undefined): MediaRef {
+  const file = fileOf(reference)
+  return typeof file === 'string' || at === undefined ? file : { ...file, at }
 }
 
 function kindOfMime(mime: string): MediaKind | null {
@@ -104,7 +116,7 @@ function MediaSlot({
     setError(null)
     const next = [...value]
     for (const reference of references) {
-      if (next.some((existing) => sameValue(existing, reference))) continue
+      if (next.some((existing) => sameValue(fileOf(existing), fileOf(reference)))) continue
       if (next.length >= field.max) {
         if (field.max === 1) next.splice(0, 1)
         else {
@@ -166,19 +178,30 @@ function MediaSlot({
         )}
       >
         {value.map((reference, index) => (
-          <div
-            key={JSON.stringify(reference)}
-            className="group relative h-12 w-12 overflow-hidden rounded border border-border bg-background"
-          >
-            <MediaThumb reference={reference} />
-            <button
-              type="button"
-              onClick={() => onChange(value.filter((_, at) => at !== index))}
-              className="absolute right-0 top-0 hidden rounded-bl bg-black/70 p-0.5 group-hover:block"
-              aria-label={t('generate.form.remove')}
-            >
-              <X className="h-3 w-3" />
-            </button>
+          <div key={JSON.stringify(fileOf(reference))} className="flex flex-col items-center gap-0.5">
+            <div className="group relative h-12 w-12 overflow-hidden rounded border border-border bg-background">
+              <MediaThumb reference={reference} />
+              <button
+                type="button"
+                onClick={() => onChange(value.filter((_, at) => at !== index))}
+                className="absolute right-0 top-0 hidden rounded-bl bg-black/70 p-0.5 group-hover:block"
+                aria-label={t('generate.form.remove')}
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </div>
+            {field.at && typeof reference === 'object' && (
+              <FrameAtInput
+                at={field.at}
+                value={reference.at}
+                label={t(field.at.unit === 'second' ? 'generate.form.atSecond' : 'generate.form.atFrame', {
+                  n: index + 1,
+                })}
+                onChange={(at) =>
+                  onChange(value.map((existing, position) => (position === index ? pinned(existing, at) : existing)))
+                }
+              />
+            )}
           </div>
         ))}
         {!full && (
@@ -221,8 +244,50 @@ function MediaSlot({
           </span>
         )}
       </div>
+      {field.at && value.length > 0 && (
+        <p className="text-[11px] text-muted-foreground">
+          {field.at.unit === 'second'
+            ? t('generate.form.atSecondHint', { max: field.at.max })
+            : t('generate.form.atFrameHint')}
+        </p>
+      )}
       {error && <p className="text-[11px] text-destructive">{error}</p>}
     </div>
+  )
+}
+
+/** Where one keyframe stands in the video; empty leaves it where the model puts it. */
+function FrameAtInput({
+  at,
+  value,
+  label,
+  onChange,
+}: {
+  at: FrameAt
+  value: number | undefined
+  label: string
+  onChange: (value: number | undefined) => void
+}) {
+  const { t } = useTranslation()
+  const [text, setText] = useState(value === undefined ? '' : String(value))
+  return (
+    <Input
+      type="number"
+      inputMode="decimal"
+      min={at.unit === 'second' ? 0 : -1}
+      max={at.unit === 'second' ? at.max : undefined}
+      step={at.unit === 'second' ? 0.1 : 1}
+      value={text}
+      placeholder={t('generate.form.atAuto')}
+      aria-label={label}
+      title={label}
+      className="h-6 w-12 px-1 text-center text-[11px] tabular-nums"
+      onChange={(event) => {
+        setText(event.target.value)
+        const number = event.target.valueAsNumber
+        onChange(Number.isFinite(number) ? (at.unit === 'frame' ? Math.round(number) : number) : undefined)
+      }}
+    />
   )
 }
 

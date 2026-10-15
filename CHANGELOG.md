@@ -110,9 +110,14 @@ makes it, and the release notes on GitHub are taken from the release's section.
 - **Anonymous statistics as the author's programs count them**: the features used by name, model downloads ready
   or failed, the seconds of video made on this computer's card and the card's class; Privacy lists all of it.
 - **No web version on Vercel**: VideoSOS 2 is a desktop program; the old web version stays in the legacy-v1 branch.
+- **Keyframes at chosen moments**, as VideoSOS 1's frame selector: a video model that takes several frames and a
+  place for each (FLUX 3 Video and Aleph by the second, LTX 2.3, Ray 3.2 and SkyReels V4 by the frame number) has a
+  box under each frame for where it stands; an empty box leaves it to the model. Agents pin a file with `at`.
 
 ### Fixed
 
+- **A model's length that is `auto` or a number of seconds can be chosen**: FLUX 3 Video's Duration listed only
+  `auto`; it now lists `auto` and 5 to 20 seconds.
 - **A generated video is shown by its first frame** in a canvas node and in a form's file slot, instead of its number.
 - **Several results finishing together all land on the timeline**: a library load that ends after a newer one no longer overwrites it, and an import puts its own files into the library before placing them.
 - **A result put on a new track is in view**: the timeline scrolls its tracks to it.

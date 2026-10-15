@@ -445,7 +445,7 @@ pub fn form(id: &str) -> Result<ModelForm, String> {
             advanced: false,
             role: Some(Role::Duration),
         });
-        fields.push(Field { key: "first_frame".into(), label: t!("local-field-first-frame"), description: None, kind: FieldKind::Media { media: MediaKind::Image, min: 0, max: 1, list: false }, required: false, default: None, advanced: false, role: Some(Role::FirstFrame) });
+        fields.push(Field { key: "first_frame".into(), label: t!("local-field-first-frame"), description: None, kind: FieldKind::Media { media: MediaKind::Image, min: 0, max: 1, list: false, at: None }, required: false, default: None, advanced: false, role: Some(Role::FirstFrame) });
     }
     if model.presets.len() > 1 {
         fields.push(Field {
