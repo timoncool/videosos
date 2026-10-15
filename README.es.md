@@ -91,6 +91,7 @@ Sin clave y sin factura: el proveedor **Local** está junto a los de la nube (po
   lugar de descargarse, y la fila del modelo dice de dónde vino.
 - **Los estudios de música del autor.** Mientras [YuE2 Studio](https://github.com/timoncool/YuE2-Studio), [MiniMax Music3 Studio](https://github.com/timoncool/MiniMax-Music3-Studio) o [ACE-Step Studio](https://github.com/timoncool/ACE-Step-Studio) está abierto, aparece en Música con su propio
   formulario; el estudio hace la canción y su archivo llega a la biblioteca con sus etiquetas.
+- **Speech Studio.** Mientras Speech Studio está abierto, cada uno de sus motores en este ordenador (Qwen3-TTS, Supertonic 3, Drama 3, Higgs Audio) aparece en Voz con sus voces e idiomas; el estudio pone voz al texto y su archivo llega a la biblioteca.
 - **Los modelos propios de la ventana** funcionan en la ventana: Parakeet Ultra (int8) y Whisper Large v3 Turbo (Q8)
   para transcripciones, Gemma 4 E4B para describir escenas y comprobar cortes.
 

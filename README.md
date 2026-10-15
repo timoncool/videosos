@@ -94,6 +94,9 @@ No key and no bill: the **Local** provider sits beside the cloud ones (Windows f
   [MiniMax Music3 Studio](https://github.com/timoncool/MiniMax-Music3-Studio) or
   [ACE-Step Studio](https://github.com/timoncool/ACE-Step-Studio) is open, it appears in Music with its own form; the
   studio makes the song, and its file lands in the library with its tags.
+- **Speech Studio.** While Speech Studio is open, each of its engines on this computer (Qwen3-TTS, Supertonic 3,
+  Drama 3, Higgs Audio) appears in Voice with the engine's voices and languages; the studio voices the text, and its
+  file lands in the library.
 - **The window's own models** run in the window: Parakeet Ultra (int8) and Whisper Large v3 Turbo (Q8) for
   transcripts, Gemma 4 E4B for scene captions and cut checks.
 

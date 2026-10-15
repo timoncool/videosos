@@ -91,6 +91,8 @@ VideoSOS 1 был веб-приложением в браузере. **Втор�
   диске), а не скачивается, и в строке модели написано, откуда она взята.
 - **Музыкальные студии автора.** Пока открыта [YuE2 Studio](https://github.com/timoncool/YuE2-Studio), [MiniMax Music3 Studio](https://github.com/timoncool/MiniMax-Music3-Studio) или [ACE-Step Studio](https://github.com/timoncool/ACE-Step-Studio), она появляется в «Музыке» со своей формой;
   песню делает сама студия, а её файл попадает в медиатеку со своими тегами.
+- **Speech Studio.** Пока открыта Speech Studio, каждый её движок на этом компьютере (Qwen3-TTS, Supertonic 3, Drama 3,
+  Higgs Audio) появляется в «Озвучке» с голосами и языками движка; текст озвучивает сама студия, файл попадает в медиатеку.
 - **Свои модели окна** работают в самом окне: Parakeet Ultra (int8) и Whisper Large v3 Turbo (Q8) для расшифровки,
   Gemma 4 E4B для описания сцен и проверки склеек.
 

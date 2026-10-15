@@ -91,6 +91,7 @@ Sans clé et sans facture : le fournisseur **Local** se tient à côté de ceux 
   sur le même disque) au lieu d’être téléchargé, et la ligne du modèle indique d’où il vient.
 - **Les studios de musique de l’auteur.** Tant que [YuE2 Studio](https://github.com/timoncool/YuE2-Studio), [MiniMax Music3 Studio](https://github.com/timoncool/MiniMax-Music3-Studio) ou [ACE-Step Studio](https://github.com/timoncool/ACE-Step-Studio) est ouvert, il apparaît dans Musique avec son
   propre formulaire ; le studio fait la chanson, et son fichier arrive dans la médiathèque avec ses tags.
+- **Speech Studio.** Tant que Speech Studio est ouvert, chacun de ses moteurs sur cet ordinateur (Qwen3-TTS, Supertonic 3, Drama 3, Higgs Audio) apparaît dans Voix avec ses voix et ses langues ; le studio dit le texte et son fichier arrive dans la médiathèque.
 - **Les modèles propres de la fenêtre** tournent dans la fenêtre : Parakeet Ultra (int8) et Whisper Large v3 Turbo
   (Q8) pour les transcriptions, Gemma 4 E4B pour décrire les scènes et vérifier les coupes.
 

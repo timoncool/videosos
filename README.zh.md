@@ -69,6 +69,7 @@ VideoSOS 1 是运行在浏览器中的网页应用。**第 2 版是原生桌面�
 - **stable-diffusion.cpp** 在 CUDA、Vulkan 或处理器上运行它们；「自动」会选择显卡。只使用量化权重（GGUF Q4、int8）。
 - **设置 → 本地模型** 会把每个模型及其引擎只下载一次，版本固定、校验 SHA-256，并支持断点续传。作者其他程序已有的文件会直接从那里获取（同一磁盘上用硬链接），不再下载，模型那一行会写明来源。
 - **作者的音乐工作室。** 当 [YuE2 Studio](https://github.com/timoncool/YuE2-Studio)、[MiniMax Music3 Studio](https://github.com/timoncool/MiniMax-Music3-Studio) 或 [ACE-Step Studio](https://github.com/timoncool/ACE-Step-Studio) 打开时，它会以自己的表单出现在「音乐」中；歌曲由工作室本身生成，文件连同标签进入媒体库。
+- **Speech Studio。** 当 Speech Studio 打开时，它在本机的每个引擎（Qwen3-TTS、Supertonic 3、Drama 3、Higgs Audio）都会带着各自的声音和语言出现在「语音」中；文本由工作室朗读，文件进入媒体库。
 - **窗口自带的模型** 在窗口内运行：Parakeet Ultra（int8）和 Whisper Large v3 Turbo（Q8）用于转录，Gemma 4 E4B 用于场景描述和剪辑点检查。
 
 ## 规划影片
