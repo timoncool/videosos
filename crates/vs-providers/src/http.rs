@@ -67,13 +67,26 @@ impl Http {
         }
     }
 
-    /// POSTs JSON; the status and the body come back whatever the status, the caller reads both.
+    /// POSTs JSON; the status and the body come back whatever the status, the caller reads both. A 429 means the
+    /// provider took nothing, so it is sent again after 1, 2 and 4 seconds (or the Retry-After given); a 5xx is not,
+    /// since the job may have been taken and paid for.
     pub async fn post_json(&self, url: &str, auth: Auth, body: &Value) -> Result<(StatusCode, Value), ProviderError> {
-        let response = Self::with_auth(self.client.post(url), auth).json(body).send().await?;
-        let status = response.status();
-        let text = response.text().await?;
-        let value = serde_json::from_str(&text).unwrap_or_else(|_| Value::String(text.chars().take(2000).collect()));
-        Ok((status, value))
+        let mut pause = Duration::from_secs(1);
+        let mut attempt = 0;
+        loop {
+            let response = Self::with_auth(self.client.post(url), auth.clone()).json(body).send().await?;
+            let status = response.status();
+            let asked = retry_after(response.headers());
+            let text = response.text().await?;
+            if status == StatusCode::TOO_MANY_REQUESTS && attempt < 3 {
+                tokio::time::sleep(asked.unwrap_or(pause).min(Duration::from_secs(30))).await;
+                pause *= 2;
+                attempt += 1;
+                continue;
+            }
+            let value = serde_json::from_str(&text).unwrap_or_else(|_| Value::String(text.chars().take(2000).collect()));
+            return Ok((status, value));
+        }
     }
 
     pub async fn get_bytes(&self, url: &str, auth: Auth) -> Result<(Vec<u8>, Option<String>), ProviderError> {
@@ -121,4 +134,46 @@ pub fn provider_message(body: &str) -> Option<String> {
         });
     }
     value.pointer("/errors/0/message").and_then(Value::as_str).map(str::to_string)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::sync::atomic::{AtomicUsize, Ordering};
+    use std::sync::Arc;
+    use tokio::io::{AsyncReadExt, AsyncWriteExt};
+
+    /// A provider that refuses with 429 `busy` times, then takes the job; the answer counts the requests.
+    async fn provider(busy: usize) -> (String, Arc<AtomicUsize>) {
+        let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let url = format!("http://{}/submit", listener.local_addr().unwrap());
+        let seen = Arc::new(AtomicUsize::new(0));
+        let count = seen.clone();
+        tokio::spawn(async move {
+            loop {
+                let Ok((mut socket, _)) = listener.accept().await else { return };
+                let mut buf = vec![0u8; 8192];
+                let _ = socket.read(&mut buf).await;
+                let n = count.fetch_add(1, Ordering::SeqCst);
+                let answer = if n < busy {
+                    "HTTP/1.1 429 Too Many Requests\r\nRetry-After: 0\r\nContent-Length: 0\r\nConnection: close\r\n\r\n".to_string()
+                } else {
+                    "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: 11\r\nConnection: close\r\n\r\n{\"id\":\"j1\"}".to_string()
+                };
+                let _ = socket.write_all(answer.as_bytes()).await;
+            }
+        });
+        (url, seen)
+    }
+
+    #[tokio::test]
+    async fn a_post_refused_with_429_is_sent_again_and_a_lasting_one_comes_back() {
+        let http = Http::new(reqwest::Client::builder()).unwrap();
+        let (url, seen) = provider(2).await;
+        let (status, body) = http.post_json(&url, None, &serde_json::json!({})).await.unwrap();
+        assert_eq!((status, body["id"].as_str(), seen.load(Ordering::SeqCst)), (StatusCode::OK, Some("j1"), 3));
+        let (url, seen) = provider(10).await;
+        let (status, _) = http.post_json(&url, None, &serde_json::json!({})).await.unwrap();
+        assert_eq!((status, seen.load(Ordering::SeqCst)), (StatusCode::TOO_MANY_REQUESTS, 4));
+    }
 }
