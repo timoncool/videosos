@@ -57,7 +57,6 @@ function extensionOf(mimeType: string): string {
   return 'mp4'
 }
 
-
 const log = createLogger('Export')
 
 export type ClientRenderStatus =
@@ -85,6 +84,8 @@ interface UseClientRenderReturn {
   startExport: (settings: ExportSettings | ExtendedExportSettings) => Promise<void>
   cancelExport: () => void
   downloadVideo: () => void
+  /** The finished render as a file named after the project, for sharing. */
+  resultFile: () => File | null
   resetState: () => void
 
   // Utilities
@@ -380,6 +381,15 @@ export function useClientRender(): UseClientRenderReturn {
   /**
    * Download the rendered video/audio
    */
+  const resultFile = useCallback(() => {
+    if (!result) return null
+    const project = useProjectStore.getState().currentProject?.name ?? 'videosos'
+    const baseName = project.replace(/[<>:"/\\|?*]+/g, '_').trim() || 'videosos'
+    return new File([result.blob], `${baseName}.${extensionOf(result.mimeType)}`, {
+      type: result.mimeType,
+    })
+  }, [result])
+
   const downloadVideo = useCallback(() => {
     if (!result) return
     void (async () => {
@@ -393,59 +403,67 @@ export function useClientRender(): UseClientRenderReturn {
         const sidecar = result.subtitleSidecar
         if (sidecar) {
           const sidecarExt = sidecar.filename.split('.').pop() ?? 'srt'
-          await saveToDisk(new Blob([sidecar.content], { type: 'text/plain;charset=utf-8' }), `${baseName}.${sidecarExt}`, {
-            dialog: false,
-            beside: saved.path,
-          })
+          await saveToDisk(
+            new Blob([sidecar.content], { type: 'text/plain;charset=utf-8' }),
+            `${baseName}.${sidecarExt}`,
+            {
+              dialog: false,
+              beside: saved.path,
+            },
+          )
         }
         const path = saved.path
         toast.success(i18n.t('desktop.saved', { path }), {
           action: { label: i18n.t('desktop.reveal'), onClick: () => void revealOnDisk(path) },
         })
       } catch (error) {
-        toast.error(i18n.t('desktop.saveFailed', { reason: error instanceof Error ? error.message : String(error) }))
+        toast.error(
+          i18n.t('desktop.saveFailed', {
+            reason: error instanceof Error ? error.message : String(error),
+          }),
+        )
       }
     })()
 
     function downloadInBrowser() {
-    if (!result) return
-    const url = URL.createObjectURL(result.blob)
-    const a = document.createElement('a')
-    a.href = url
+      if (!result) return
+      const url = URL.createObjectURL(result.blob)
+      const a = document.createElement('a')
+      a.href = url
 
-    // Determine file extension from MIME type
-    let extension = 'mp4'
-    const mime = result.mimeType.toLowerCase()
-    if (mime.includes('webm')) extension = 'webm'
-    else if (mime.includes('matroska')) extension = 'mkv'
-    else if (mime.includes('quicktime') || mime.includes('mov')) extension = 'mov'
-    else if (mime.includes('audio/mpeg') || mime.includes('mp3')) extension = 'mp3'
-    else if (mime.includes('audio/wav') || mime.includes('wave')) extension = 'wav'
-    else if (mime.includes('audio/aac') || mime.includes('adts')) extension = 'aac'
+      // Determine file extension from MIME type
+      let extension = 'mp4'
+      const mime = result.mimeType.toLowerCase()
+      if (mime.includes('webm')) extension = 'webm'
+      else if (mime.includes('matroska')) extension = 'mkv'
+      else if (mime.includes('quicktime') || mime.includes('mov')) extension = 'mov'
+      else if (mime.includes('audio/mpeg') || mime.includes('mp3')) extension = 'mp3'
+      else if (mime.includes('audio/wav') || mime.includes('wave')) extension = 'wav'
+      else if (mime.includes('audio/aac') || mime.includes('adts')) extension = 'aac'
 
-    const baseName = `export-${Date.now()}`
-    a.download = `${baseName}.${extension}`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
+      const baseName = `export-${Date.now()}`
+      a.download = `${baseName}.${extension}`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
 
-    // Revoke during idle — download has already started by then
-    requestIdleCallback(() => URL.revokeObjectURL(url))
+      // Revoke during idle — download has already started by then
+      requestIdleCallback(() => URL.revokeObjectURL(url))
 
-    // Sidecar mode: download the .srt alongside, sharing the video's base name.
-    const sidecar = result.subtitleSidecar
-    if (sidecar) {
-      const sidecarExt = sidecar.filename.split('.').pop() ?? 'srt'
-      const sidecarBlob = new Blob([sidecar.content], { type: 'text/plain;charset=utf-8' })
-      const sidecarUrl = URL.createObjectURL(sidecarBlob)
-      const sidecarLink = document.createElement('a')
-      sidecarLink.href = sidecarUrl
-      sidecarLink.download = `${baseName}.${sidecarExt}`
-      document.body.appendChild(sidecarLink)
-      sidecarLink.click()
-      document.body.removeChild(sidecarLink)
-      requestIdleCallback(() => URL.revokeObjectURL(sidecarUrl))
-    }
+      // Sidecar mode: download the .srt alongside, sharing the video's base name.
+      const sidecar = result.subtitleSidecar
+      if (sidecar) {
+        const sidecarExt = sidecar.filename.split('.').pop() ?? 'srt'
+        const sidecarBlob = new Blob([sidecar.content], { type: 'text/plain;charset=utf-8' })
+        const sidecarUrl = URL.createObjectURL(sidecarBlob)
+        const sidecarLink = document.createElement('a')
+        sidecarLink.href = sidecarUrl
+        sidecarLink.download = `${baseName}.${sidecarExt}`
+        document.body.appendChild(sidecarLink)
+        sidecarLink.click()
+        document.body.removeChild(sidecarLink)
+        requestIdleCallback(() => URL.revokeObjectURL(sidecarUrl))
+      }
     }
   }, [result])
 
@@ -525,6 +543,7 @@ export function useClientRender(): UseClientRenderReturn {
     startExport,
     cancelExport,
     downloadVideo,
+    resultFile,
     resetState,
     getSupportedCodecs: getSupportedCodecsForResolution,
     estimateFileSize: estimateFileSizeForSettings,

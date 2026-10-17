@@ -1,7 +1,7 @@
 {
   "desktop": {
-    "saved": "Saved: {{path}}",
-    "reveal": "Show in folder",
-    "saveFailed": "The file was not saved: {{reason}}"
+    "saved": "저장됨: {{path}}",
+    "reveal": "폴더에서 보기",
+    "saveFailed": "파일을 저장하지 못했습니다: {{reason}}"
   }
 }

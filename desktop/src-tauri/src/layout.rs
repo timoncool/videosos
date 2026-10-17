@@ -11,7 +11,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 pub const DATA_DIRECTORY_NAME: &str = "VideoSOS";
-pub const PORTABLE_MARKER: &str = "portable.flag";
+pub const PORTABLE_MARKER: &str = vs_server::service::PORTABLE_MARKER;
 
 /// Ресурсы бандла (`bundle.resources` в tauri.bundle.conf.json): установщик кладёт их рядом с exe.
 /// Когда данные уезжают в запасной каталог, сервер ищет их там же, где и скачанные модели, поэтому
@@ -155,6 +155,23 @@ fn linux_data_directory() -> Result<PathBuf, String> {
         .ok_or_else(|| "Neither XDG_DATA_HOME nor HOME is set: there is nowhere to keep the projects.\n\nНе заданы ни XDG_DATA_HOME, ни HOME: проектам негде лежать.".to_string())
 }
 
+/// Пакет macOS (.app): exe в Contents/MacOS, ресурсы бандла в Contents/Resources; подписанный бандл менять нельзя.
+fn macos_bundle_resources(executable_dir: &Path) -> Option<PathBuf> {
+    if !cfg!(target_os = "macos") {
+        return None;
+    }
+    let resources = executable_dir.parent()?.join("Resources");
+    installed_layout(&resources).then_some(resources)
+}
+
+/// Данные пакета macOS: ~/Library/Application Support/VideoSOS, как у студий.
+fn macos_data_directory() -> Result<PathBuf, String> {
+    std::env::var_os("HOME")
+        .filter(|v| !v.is_empty())
+        .map(|home| PathBuf::from(home).join("Library").join("Application Support").join(DATA_DIRECTORY_NAME))
+        .ok_or_else(|| "HOME is not set: there is nowhere to keep the projects.\n\nНе задан HOME: проектам негде лежать.".to_string())
+}
+
 pub fn resolve() -> Result<Layout, String> {
     let exe_dir = executable_directory();
 
@@ -179,8 +196,12 @@ pub fn resolve() -> Result<Layout, String> {
         });
     }
 
-    if let Some(resources) = linux_package_resources(&exe_dir) {
-        let data = linux_data_directory()?;
+    let package = match (linux_package_resources(&exe_dir), macos_bundle_resources(&exe_dir)) {
+        (Some(resources), _) => Some((resources, linux_data_directory()?)),
+        (None, Some(resources)) => Some((resources, macos_data_directory()?)),
+        (None, None) => None,
+    };
+    if let Some((resources, data)) = package {
         if !directory_is_writable(&data) {
             return Err(format!("Cannot write to {}\n\nНельзя писать в {}", data.display(), data.display()));
         }

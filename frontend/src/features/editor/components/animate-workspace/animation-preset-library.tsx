@@ -977,7 +977,7 @@ export const AnimationPresetLibrary = memo(function AnimationPresetLibrary({
 
             {/* ── Start: presets (declarative). Picking one fills the dopesheet
                 with editable keyframes — the cue points users at the graph. ── */}
-            <p className="rounded-md bg-secondary/30 px-2 py-1.5 text-[10px] leading-snug text-muted-foreground">
+            <p className="rounded-md bg-secondary/30 px-2 py-1.5 text-[11px] leading-snug text-muted-foreground">
               {t('editor.animateStages.presetsHint')}
             </p>
 

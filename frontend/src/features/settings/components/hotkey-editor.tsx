@@ -247,7 +247,7 @@ function HotkeyBindingPill({
           </kbd>
         ))}
         {isCustom ? (
-          <span className="rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.18em] text-primary">
+          <span className="rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[11px] font-medium uppercase tracking-[0.18em] text-primary">
             {t('projects.settings.hotkeys.custom')}
           </span>
         ) : null}
@@ -456,7 +456,7 @@ function KeyboardPreview({
         {KEYBOARD_ROWS.map((pair, i) => renderRowPair(pair, i))}
       </div>
       {!isNativeLayout ? (
-        <p className="mx-auto mt-2 max-w-[1060px] text-center text-[10px] text-muted-foreground">
+        <p className="mx-auto mt-2 max-w-[1060px] text-center text-[11px] text-muted-foreground">
           {layoutFallbackNote}
         </p>
       ) : null}
@@ -1052,7 +1052,7 @@ export function HotkeyEditor() {
                       setFilterMode(filterMode === mode ? 'all' : mode)
                     }}
                     className={cn(
-                      'rounded-md border px-2 py-1 text-[10px] font-medium uppercase tracking-[0.1em] transition-colors duration-150 ease-out motion-reduce:transition-none',
+                      'rounded-md border px-2 py-1 text-[11px] font-medium uppercase tracking-[0.1em] transition-colors duration-150 ease-out motion-reduce:transition-none',
                       filterMode === mode
                         ? 'border-primary/45 bg-primary/15 text-primary'
                         : 'border-white/8 bg-white/4 text-muted-foreground hover:text-foreground/80',
@@ -1065,7 +1065,7 @@ export function HotkeyEditor() {
             ) : null}
             {showResultList ? (
               <div className="min-h-0 flex-1 space-y-1 overflow-y-auto pr-1">
-                <div className="px-1 text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                <div className="px-1 text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
                   {t('projects.settings.hotkeys.searchResultCount', {
                     count: activeResults.length,
                   })}
@@ -1091,7 +1091,7 @@ export function HotkeyEditor() {
                             <div className="text-[11px] font-medium leading-4 text-foreground">
                               {t(item.labelKey)}
                             </div>
-                            <div className="mt-0.5 truncate text-[10px] uppercase tracking-[0.14em]">
+                            <div className="mt-0.5 truncate text-[11px] uppercase tracking-[0.14em]">
                               {t(section.titleKey)} ·{' '}
                               {item.keys
                                 .map((key) =>
@@ -1182,7 +1182,7 @@ export function HotkeyEditor() {
             <div className="border-b border-white/6 pb-3">
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                  <div className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
                     {t('projects.settings.hotkeys.selectedCommand')}
                   </div>
                   <div className="mt-1 text-base font-semibold tracking-tight text-foreground">
@@ -1190,13 +1190,13 @@ export function HotkeyEditor() {
                   </div>
                 </div>
                 {isSelectedCustom ? (
-                  <span className="mt-1 shrink-0 rounded-full border border-primary/20 bg-primary/10 px-2 py-0.5 text-[9px] font-medium uppercase tracking-[0.18em] text-primary">
+                  <span className="mt-1 shrink-0 rounded-full border border-primary/20 bg-primary/10 px-2 py-0.5 text-[11px] font-medium uppercase tracking-[0.18em] text-primary">
                     {t('projects.settings.hotkeys.custom')}
                   </span>
                 ) : null}
               </div>
               {selectedSection?.scopeKey ? (
-                <div className="mt-2 flex items-center gap-1.5 rounded-md border border-white/8 bg-white/4 px-2 py-1 text-[10px] leading-4 text-muted-foreground">
+                <div className="mt-2 flex items-center gap-1.5 rounded-md border border-white/8 bg-white/4 px-2 py-1 text-[11px] leading-4 text-muted-foreground">
                   <span className="shrink-0 rounded-sm bg-primary/15 px-1.5 py-0.5 font-medium uppercase tracking-[0.12em] text-primary">
                     {t('projects.settings.hotkeys.scopedBadge')}
                   </span>
@@ -1207,7 +1207,7 @@ export function HotkeyEditor() {
 
             <div className="grid grid-cols-2 gap-2 text-xs">
               <div>
-                <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                <div className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
                   {t('projects.settings.hotkeys.current')}
                 </div>
                 <div className="mt-1 font-medium text-foreground">
@@ -1218,7 +1218,7 @@ export function HotkeyEditor() {
                 </div>
               </div>
               <div>
-                <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                <div className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
                   {t('projects.settings.hotkeys.default')}
                 </div>
                 <div className="mt-1 text-muted-foreground">
@@ -1245,7 +1245,7 @@ export function HotkeyEditor() {
                     )}
                   >
                     <div className="mb-1.5 flex items-center justify-between">
-                      <span className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                      <span className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
                         {t(getSlotLabelKey(selectedItem, key))}
                       </span>
                       {isAlternateSlot && !isSlotUnassigned ? (
@@ -1378,7 +1378,7 @@ export function HotkeyEditor() {
               {isCapturingSelectedKey ? (
                 <CollapseBlock reduce={reduceMotion}>
                   <div className="rounded-lg border border-primary/20 bg-primary/8 p-3">
-                    <div className="text-[10px] uppercase tracking-[0.18em] text-primary">
+                    <div className="text-[11px] uppercase tracking-[0.18em] text-primary">
                       {t('projects.settings.hotkeys.listening')}
                     </div>
                     <p className="mt-1 text-xs leading-4 text-foreground/88">
@@ -1408,7 +1408,7 @@ export function HotkeyEditor() {
                                   <Button
                                     size="sm"
                                     variant="destructive"
-                                    className="h-6 shrink-0 px-2 text-[10px]"
+                                    className="h-6 shrink-0 px-2 text-[11px]"
                                     onClick={() => overwriteConflictingHotkey(key)}
                                   >
                                     {t('projects.settings.hotkeys.overwrite')}
@@ -1507,7 +1507,7 @@ export function HotkeyEditor() {
             {(activeLayer ? [activeLayer] : HOTKEY_EDITOR_SECTIONS).map((section) => (
               <div key={section.titleKey} className="break-inside-avoid">
                 {!activeLayer ? (
-                  <div className="mb-0.5 mt-1.5 first:mt-0 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                  <div className="mb-0.5 mt-1.5 first:mt-0 text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                     {t(section.titleKey)}
                   </div>
                 ) : null}

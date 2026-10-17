@@ -186,8 +186,8 @@ function SidebarWheelReadout({
   if (dock) return null
   return (
     <>
-      <div className="text-[10px] text-muted-foreground">{label}</div>
-      <div className="text-[10px] font-mono text-muted-foreground">
+      <div className="text-[11px] text-muted-foreground">{label}</div>
+      <div className="text-[11px] font-mono text-muted-foreground">
         {Math.round(hue)} deg | {Math.round(amount * 100)}%
       </div>
     </>
@@ -990,7 +990,7 @@ export const GpuWheelsPanel = memo(function GpuWheelsPanel({
         className="grid min-w-0 grid-cols-[minmax(3.75rem,1fr)_3.75rem_1rem] items-center gap-x-0.5"
       >
         <span
-          className="min-w-0 whitespace-nowrap text-right text-[10px] text-muted-foreground"
+          className="min-w-0 whitespace-nowrap text-right text-[11px] text-muted-foreground"
           title={label}
         >
           {label}
@@ -1052,7 +1052,7 @@ export const GpuWheelsPanel = memo(function GpuWheelsPanel({
     const chipMin = displayMin - display.scale
     const chipMax = displayMax + display.scale
     const chipClass =
-      'h-5 w-full rounded-[2px] border border-black/80 bg-black/75 px-1 text-center font-mono text-[10px] leading-5 tabular-nums text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring'
+      'h-5 w-full rounded-[2px] border border-black/80 bg-black/75 px-1 text-center font-mono text-[11px] leading-5 tabular-nums text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring'
 
     const updateLevelFromDisplay = (rawValue: string, mode: 'live' | 'commit') => {
       const next = Number(rawValue)
@@ -1361,12 +1361,12 @@ export const GpuWheelsPanel = memo(function GpuWheelsPanel({
 
       {showBody && !isDock && (
         <>
-          <div className="px-2 pb-1 pt-1 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+          <div className="px-2 pb-1 pt-1 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
             {t('effects.wheels.primaries', { defaultValue: 'Primaries' })}
           </div>
           {renderParamRows(PRIMARY_PARAMS)}
 
-          <div className="px-2 pb-1 pt-2 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+          <div className="px-2 pb-1 pt-2 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
             {t('effects.wheels.balance', { defaultValue: 'Balance' })}
           </div>
           {renderParamRows(TONAL_PARAMS)}

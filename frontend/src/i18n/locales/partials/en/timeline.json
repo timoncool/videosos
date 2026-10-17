@@ -74,6 +74,7 @@
       "generateAudioFromText": "Generate Audio From Text",
       "generateCaptions": "Generate Captions",
       "insertFreezeFrame": "Insert Freeze Frame",
+      "regenerateSegment": "Regenerate this part",
       "joinSelected": "Join Selected",
       "joinWithNext": "Join With Next",
       "joinWithPrevious": "Join With Previous",
@@ -337,6 +338,22 @@
       "adjustClipVolume": "Adjust clip volume"
     },
     "emptyTitle": "Drag media here to start editing",
-    "emptyDescription": "Drop clips on tracks, then press Space to preview."
+    "emptyDescription": "Drop clips on tracks, then press Space to preview.",
+    "checkpoints": {
+      "title": "Checkpoints",
+      "hint": "The timeline as it was before each agent's edit and wherever you kept it. Going back keeps the present one too, and undo takes it back.",
+      "empty": "No checkpoints yet: one is kept before every agent's edit, or keep one here.",
+      "reason": {
+        "agent_one": "Before the agent's {{count}} edit",
+        "agent_other": "Before the agent's {{count}} edits",
+        "restore": "Before going back",
+        "asked": "Kept here"
+      },
+      "restore": "Back",
+      "restored": "The timeline is back to {{time}}",
+      "label": "What it is, if you like",
+      "keep": "Keep",
+      "kept": "Checkpoint kept"
+    }
   }
 }

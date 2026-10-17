@@ -1,5 +1,5 @@
 /**
- * Web Worker for Gemma-4 scene cut verification.
+ * Web Worker for Gemma-4 scene cut verification and frame captions.
  *
  * Loads Gemma-4-E4B-it-ONNX via @huggingface/transformers (bundled by Vite).
  * Runs inside a Worker so that model loading and inference don't block the
@@ -8,9 +8,11 @@
  * Messages:
  *   → { type: 'init' }                         — preload model
  *   → { type: 'verify', id, before, after }     — verify a candidate cut
+ *   → { type: 'describe', id, image }           — describe an image with tags
  *   ← { type: 'ready' }                         — model loaded
  *   ← { type: 'progress', stage, percent }       — loading progress
  *   ← { type: 'result', id, isSceneCut, reason } — verification result
+ *   ← { type: 'caption', id, caption }             — image caption
  *   ← { type: 'error', message }                 — error
  */
 
@@ -21,8 +23,18 @@ import {
   env,
 } from '@huggingface/transformers'
 import { createModelLoadProgressCallback } from './model-load-progress'
+import { SCENE_CAPTION_PROMPT, parseSceneCaptionResponse } from './captioning/scene-caption-format'
 
 const MODEL_ID = 'onnx-community/gemma-4-E4B-it-ONNX'
+const DESCRIBE_MAX_NEW_TOKENS = 160
+const COMPILE_HEARTBEAT_MS = 10_000
+// The model card recommends 70–140 image tokens for classification and 280 for describing a picture.
+const VERIFY_IMAGE_TOKENS = 140
+const DESCRIBE_IMAGE_TOKENS = 280
+
+function setImageTokens(count: number): void {
+  if (processor?.image_processor) processor.image_processor.max_soft_tokens = count
+}
 
 // Configure transformers.js for browser worker context
 env.useBrowserCache = true
@@ -58,18 +70,20 @@ async function loadModel(): Promise<void> {
 
     if (disposed || thisGen !== loadGeneration) return
 
-    // Model card recommends 70–140 tokens for classification/video understanding.
-    // Default 280 is more than needed; 140 halves the image tokens while keeping
-    // enough visual detail to distinguish different scenes.
-    if (loadedProcessor.image_processor) {
-      ;(loadedProcessor.image_processor as { max_soft_tokens?: number }).max_soft_tokens = 140
+    // building the sessions reports nothing, and the callers give up on a silent worker
+    let percent = 5
+    const report = (message: Record<string, unknown>) => {
+      if (typeof message.percent === 'number') percent = message.percent
+      post(message)
     }
-
+    const compiling = setInterval(() => {
+      if (!disposed) post({ type: 'progress', stage: 'loading-model', percent })
+    }, COMPILE_HEARTBEAT_MS)
     const loadedModel = await Gemma4ForConditionalGeneration.from_pretrained(MODEL_ID, {
       dtype: 'q4f16',
       device: 'webgpu',
-      progress_callback: disposed ? undefined : createModelLoadProgressCallback(post),
-    })
+      progress_callback: disposed ? undefined : createModelLoadProgressCallback(report),
+    }).finally(() => clearInterval(compiling))
 
     if (disposed || thisGen !== loadGeneration) {
       if (typeof loadedModel.dispose === 'function') loadedModel.dispose()
@@ -139,6 +153,7 @@ async function verifyCandidate(id: number, beforeBlob: Blob, afterBlob: Blob): P
       prompt: typeof prompt === 'string' ? prompt.slice(0, 500) : 'non-string prompt',
     })
 
+    setImageTokens(VERIFY_IMAGE_TOKENS)
     const inputs = await processor(prompt, [beforeImg, afterImg], null, {
       add_special_tokens: false,
     })
@@ -174,6 +189,43 @@ async function verifyCandidate(id: number, beforeBlob: Blob, afterBlob: Blob): P
   }
 }
 
+async function describeImage(id: number, imageBlob: Blob): Promise<void> {
+  if (!model || !processor) {
+    post({ type: 'error', message: 'Model not loaded' })
+    return
+  }
+
+  try {
+    const image = await RawImage.fromBlob(imageBlob)
+    const messages = [
+      {
+        role: 'user',
+        content: [{ type: 'image' }, { type: 'text', text: SCENE_CAPTION_PROMPT }],
+      },
+    ]
+    const prompt = processor.apply_chat_template(messages, {
+      enable_thinking: false,
+      add_generation_prompt: true,
+    })
+    setImageTokens(DESCRIBE_IMAGE_TOKENS)
+    const inputs = await processor(prompt, [image], null, { add_special_tokens: false })
+    const outputs = await model.generate({
+      ...inputs,
+      max_new_tokens: DESCRIBE_MAX_NEW_TOKENS,
+      do_sample: false,
+      repetition_penalty: 1.05,
+    })
+    const decoded = processor.batch_decode(
+      outputs.slice(null, [inputs.input_ids.dims.at(-1), null]),
+      { skip_special_tokens: true },
+    )
+    const parsed = parseSceneCaptionResponse(decoded[0] ?? '')
+    post({ type: 'caption', id, caption: parsed.text, sceneData: parsed.sceneData })
+  } catch (err) {
+    post({ type: 'caption', id, caption: '', error: (err as Error).message })
+  }
+}
+
 /** Release model and processor to free VRAM. */
 function dispose(): void {
   disposed = true
@@ -195,6 +247,8 @@ self.addEventListener('message', (event: MessageEvent) => {
     void loadModel()
   } else if (msg.type === 'verify') {
     void verifyCandidate(msg.id, msg.before, msg.after)
+  } else if (msg.type === 'describe') {
+    void describeImage(msg.id, msg.image)
   } else if (msg.type === 'dispose') {
     dispose()
   }

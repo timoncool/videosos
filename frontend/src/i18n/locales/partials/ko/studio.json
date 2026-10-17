@@ -1,0 +1,264 @@
+{
+  "agent": {
+    "address": "주소",
+    "config": "Claude Desktop, Cursor 및 기타 클라이언트",
+    "copied": "복사됨",
+    "copy": "복사",
+    "failed": "에이전트 상태를 읽지 못했습니다",
+    "intro": "여기에 연결된 에이전트(Claude Code, Cursor, Codex 등)는 사용자처럼 VideoSOS를 조작합니다. 모델을 고르고 가격을 추정하며, 사용자의 키로 이미지, 동영상, 음악, 음성을 생성하고, 열려 있는 프로젝트의 타임라인을 실행 취소 가능한 방식으로 편집하며, 미디어를 가져오고 동영상을 내보냅니다. 모든 과정은 이 창에서 직접 확인할 수 있습니다. 공급자 키는 에이전트에 표시되지 않습니다.",
+    "lastCall": "에이전트의 마지막 호출: {{call}} · {{seconds}}초 전",
+    "none": "아직 연결된 에이전트가 없습니다",
+    "windowOff": "창이 연결되지 않았습니다",
+    "windowOn": "창이 연결되었습니다. 에이전트가 볼 수 있습니다"
+  },
+  "float": {
+    "dock": "헤더로 되돌리기"
+  },
+  "help": {
+    "boostySub": "Boosty 구독",
+    "card": "카드 / PayPal",
+    "donateTitle": "제작자 후원하기",
+    "founder": "창립자:",
+    "madeBy": "제작:",
+    "crypto": "암호화폐",
+    "copy": "복사",
+    "tier5": "CI/CD와 도메인 1주일",
+    "tier25": "호스팅 1개월",
+    "tier100": "개발 하루",
+    "tier500": "기능 하나 전체",
+    "thanks": "오픈 소스를 지켜 주셔서 감사합니다!"
+  },
+  "hub": {
+    "byEnv": "환경 변수 DO_NOT_TRACK 또는 STUDIO_TELEMETRY로 꺼져 있습니다.",
+    "checkbox": "익명 사용 통계 보내기",
+    "close": "닫기",
+    "feedNever": "아직 서버에서 뉴스를 가져오지 않았습니다. VideoSOS는 해당 릴리스에 포함된 뉴스를 표시합니다.",
+    "feedSource": "뉴스 출처:",
+    "nothing": "오늘 전송을 기다리는 항목이 없습니다.",
+    "notices": "알림",
+    "refresh": "지금 확인",
+    "reset": "새 설치 ID",
+    "what": "전송되는 내용",
+    "why": "VideoSOS를 몇 명이 무엇에 쓰는지 알면 다음에 할 일을 정하는 데 도움이 됩니다. 개인적인 것은 없습니다. 프롬프트, 파일, 키는 보내지 않고 작업과 제공자별 생성 횟수와 그 실패(이름, 경로, 따옴표 안의 내용은 이 컴퓨터에서 제거), 사용한 모델, 사용한 VideoSOS 기능(이름만, 내용 없음), 모델 다운로드 성공과 실패, 이 컴퓨터의 그래픽 카드로 만든 동영상 초, 버전, 시스템, 그래픽 카드 등급, 창 언어, 우리 프로그램들이 함께 쓰는 컴퓨터 번호(되돌릴 수 없는 해시이며 시스템 번호 자체가 아님)만 보냅니다.",
+    "ad": "광고"
+  },
+  "monitor": {
+    "popOut": "리소스 모니터 분리",
+    "power": "전력",
+    "process": "프로세스",
+    "title": "리소스"
+  },
+  "news": {
+    "changelogNote": "변경 내역은 영어로 관리됩니다.",
+    "close": "닫기",
+    "empty": "아직 아무것도 없습니다.",
+    "releaseNotes": "릴리스 노트",
+    "sections": {
+      "added": "추가됨",
+      "changed": "변경됨",
+      "fixed": "수정됨"
+    },
+    "tabChangelog": "변경 내역",
+    "tabNews": "뉴스",
+    "title": "새로운 기능",
+    "unreleased": "출시 전"
+  },
+  "offline": {
+    "body": "이 창이 이 컴퓨터의 VideoSOS 서비스에 연결할 수 없습니다. 앱을 닫았다면 다시 시작하고, 저절로 중지되었다면 재시작하세요. 서비스가 응답하면 페이지가 자동으로 복구됩니다.",
+    "retry": "지금 확인",
+    "retrying": "2초마다 확인 중 · {{seconds}}초",
+    "title": "스튜디오 서비스가 응답하지 않습니다"
+  },
+  "prefs": {
+    "copied": "복사됨",
+    "copyPath": "경로 복사",
+    "dataDir": "데이터 폴더",
+    "dataHint": "프로젝트, 생성 결과와 그 기록, VideoSOS 설정이 여기에 저장됩니다",
+    "dataTitle": "데이터 폴더",
+    "issues": "문제 신고",
+    "license": "라이선스(MIT)",
+    "links": "유용한 링크",
+    "pathsFailed": "데이터 폴더를 가져오지 못했습니다: {{error}}",
+    "projectsDir": "프로젝트",
+    "releases": "릴리스",
+    "repo": "소스 코드",
+    "generationsDir": "생성 결과",
+    "exportsDir": "내보내기",
+    "logsDir": "로그",
+    "openFolder": "파일 관리자에서 보기"
+  },
+  "units": {
+    "gb": "GB",
+    "watt": "W"
+  },
+  "app": {
+    "name": "VideoSOS",
+    "tagline": "AI 동영상 스튜디오: 생성과 편집을 하나의 창에서"
+  },
+  "network": {
+    "proxyTitle": "프록시",
+    "proxyIntro": "VideoSOS가 인터넷에서 가져오는 모든 것(OpenRouter, fal, Runware에서의 생성, 모델 목록, 뉴스, 업데이트)은 프록시를 거칩니다. 이 컴퓨터와 로컬 네트워크는 거치지 않습니다.",
+    "proxyModeSystem": "시스템 설정 따르기",
+    "proxyModeCustom": "내 프록시",
+    "proxyModeOff": "프록시 사용 안 함",
+    "proxyKind": "프로토콜",
+    "proxyKindHint": "프로토콜 없이 입력한 주소에 적용됩니다. SOCKS5는 사이트 이름을 프록시에서 확인합니다.",
+    "proxyAddress": "주소",
+    "proxyAddressPlaceholder": "127.0.0.1:1080 또는 호스트:포트:로그인:비밀번호",
+    "proxyAddressHint": "일반적인 형식은 모두 사용할 수 있습니다: 호스트:포트, 호스트:포트:로그인:비밀번호, 로그인:비밀번호@호스트:포트, socks5://로그인:비밀번호@호스트:포트.",
+    "proxyTest": "테스트",
+    "proxySave": "저장",
+    "proxySaved": "프록시가 저장되어 사용 중입니다",
+    "proxyReachable": "응답함",
+    "proxyUnreachable": "응답 없음",
+    "proxyWindowNote": "창 자체(모델 이미지, 뉴스)는 다음 시작 시 프록시를 적용하며 로그인 정보는 사용하지 않습니다. 브라우저는 SOCKS에 로그인 정보를 전달할 수 없기 때문입니다.",
+    "show": "표시",
+    "hide": "숨기기",
+    "access": "네트워크에서 접속",
+    "accessHint": "다른 컴퓨터나 휴대폰의 브라우저에서 VideoSOS를 엽니다. 모든 작업은 이 컴퓨터에서 실행되며, 브라우저에는 접속 키가 필요합니다. 이 컴퓨터의 에이전트와 창 자체에는 키가 필요하지 않습니다.",
+    "accessRestart": "적용하려면 VideoSOS를 닫았다가 다시 여세요. 주소는 시작할 때 설정됩니다.",
+    "accessKey": "키",
+    "accessNewKey": "새 키",
+    "accessInternet": "인터넷에서 접속: 라우터에서 이 포트를 이 컴퓨터로 포워딩한 다음 http://<사용자 주소>:<포트>/?key=<키> 를 여세요. 키를 가진 사람은 누구나 VideoSOS를 제어할 수 있고 사용자의 키로 비용이 발생합니다."
+  },
+  "journal": {
+    "title": "활동",
+    "empty": "에이전트가 한 변경과 VideoSOS 메시지가 여기에 표시됩니다.",
+    "unreadable": "활동 기록을 읽지 못했습니다: {{error}}",
+    "clear": "지우기",
+    "remove": "이 줄 삭제",
+    "agent": "에이전트",
+    "app": "VideoSOS",
+    "line": "{{verb}}: {{kind}} ‘{{name}}’",
+    "lineNoName": "{{verb}}: {{kind}}",
+    "verb": {
+      "started": "시작됨",
+      "cancelled": "중지됨",
+      "deleted": "삭제됨",
+      "updated": "변경됨",
+      "imported": "가져옴",
+      "exported": "내보냄",
+      "undone": "실행 취소됨",
+      "redone": "다시 실행됨",
+      "created": "생성됨",
+      "restored": "복원됨"
+    },
+    "kind": {
+      "generation": "생성",
+      "timeline": "타임라인",
+      "media": "미디어",
+      "video": "동영상",
+      "download": "링크 다운로드",
+      "checkpoint": "복원 지점",
+      "blocking": "3D 블로킹",
+      "key": "키",
+      "proxy": "프록시",
+      "project": "프로젝트",
+      "transcript": "전사",
+      "captions": "자막",
+      "settings": "설정",
+      "element": "요소",
+      "preset": "프롬프트 프리셋",
+      "storyboard": "스토리보드",
+      "canvas": "캔버스",
+      "fcpxml": "FCPXML",
+      "local device": "로컬 장치",
+      "local model": "로컬 모델",
+      "recording": "녹음",
+      "subtitles": "자막"
+    }
+  },
+  "files": {
+    "title": "파일",
+    "showInFolder": "폴더에서 보기"
+  },
+  "family": {
+    "title": "작성자의 다른 프로그램",
+    "dub": "복제한 목소리로 오프라인 영상 더빙",
+    "yue2": "악보를 편집할 수 있는 AI 노래",
+    "minimax": "로컬·클라우드 AI 음악 스튜디오",
+    "ace": "AI 음악 스튜디오: 노래, 보컬, 커버, 클립",
+    "bulka": "AI 에이전트와 라이브 코딩 음악",
+    "dungeon": "로컬 AI 롤플레잉 게임"
+  },
+  "topbar": {
+    "projects": "프로젝트",
+    "new": "새",
+    "newSub": "프로젝트",
+    "newTitle": "새 프로젝트 시작",
+    "help": "도움말",
+    "portable": "포터블"
+  },
+  "status": {
+    "idle": "준비됨"
+  },
+  "start": {
+    "eyebrow": "OpenRouter · fal · Runware · MCP",
+    "title": "한 창에서 영상 생성과 편집을.",
+    "lead": "내 키로 최고의 모델을 써서 이미지, 영상, 음악, 목소리, 효과음을 만들고 멀티트랙 타임라인에서 완성된 영상으로 편집하세요.",
+    "cardTitle": "프로젝트 시작",
+    "cardText": "프로젝트는 미디어, 생성 결과, 타임라인을 이 컴퓨터에 함께 보관합니다.",
+    "projects": "프로젝트",
+    "features": {
+      "generate": {
+        "title": "모든 모달리티",
+        "text": "이미지, 영상, 립싱크, 음악, 목소리, 효과음, 텍스트"
+      },
+      "edit": {
+        "title": "멀티트랙 편집기",
+        "text": "타임라인, 키프레임, 효과, 자막, MP4 내보내기"
+      },
+      "agent": {
+        "title": "MCP를 통한 AI 에이전트",
+        "text": "Claude 등이 당신과 같은 버튼을 누릅니다"
+      },
+      "yours": {
+        "title": "내 키, 내 파일",
+        "text": "제공자에게 직접 결제하며 우리를 거치지 않습니다"
+      }
+    }
+  },
+  "share": {
+    "title": "공유",
+    "text": "“{{title}}” - VideoSOS로 제작",
+    "file": "파일 보내기…",
+    "fileUnavailable": "여기서는 파일을 보낼 수 없습니다",
+    "fileRefused": "시스템이 이 파일의 전송을 받지 않습니다 - 저장한 뒤 직접 보내세요",
+    "failed": "공유하지 못했습니다: {{reason}}",
+    "copyText": "링크가 포함된 텍스트 복사",
+    "copied": "링크가 포함된 텍스트를 복사했습니다",
+    "places": {
+      "telegram": "Telegram",
+      "x": "X (Twitter)",
+      "vk": "VK",
+      "whatsapp": "WhatsApp",
+      "reddit": "Reddit"
+    }
+  },
+  "chat": {
+    "tabLabel": "채팅",
+    "model": "모델",
+    "costHint": "OpenRouter 계정 기준 이 대화의 비용",
+    "clear": "대화 지우기",
+    "intro": "어시스턴트는 연결된 에이전트와 같은 도구로 VideoSOS를 다룹니다. 타임라인을 읽고, 생성하고, 편집하고, 내보내며, 모든 단계를 볼 수 있습니다. 사용자의 OpenRouter 키로 결제되며, 생성은 에이전트의 일일 한도에 포함됩니다.",
+    "suggestions": {
+      "what": "지금 타임라인에 무엇이 있나요?",
+      "picture": "바다 위 석양 이미지를 생성해서 타임라인에 올려 줘",
+      "cut": "첫 번째 클립을 반으로 나누고 두 부분 사이에 부드러운 전환을 추가해 줘",
+      "captions": "시작 부분에 프로젝트 이름으로 된 제목을 추가해 줘"
+    },
+    "tools": "어시스턴트의 단계",
+    "toolRunning": "실행 중",
+    "toolDone": "완료",
+    "toolFailed": "실패",
+    "thinking": "생각 중",
+    "placeholder": "할 일을 입력하세요…",
+    "send": "보내기",
+    "stop": "중지",
+    "footnote": "Enter는 보내기, Shift+Enter는 줄 바꿈입니다. 비용이 큰 생성 전에는 어시스턴트가 먼저 묻습니다.",
+    "needsKey": "채팅에는 OpenRouter 키가 필요합니다: 어시스턴트는 OpenRouter 모델로 답하고 VideoSOS 도구로 작업합니다.",
+    "openKeys": "키 열기",
+    "byAgent": "연결된 에이전트(MCP)가 답합니다",
+    "introAgent": "메시지는 MCP로 연결된 에이전트에게 전달됩니다. 에이전트는 자신의 도구로 VideoSOS에서 타임라인을 읽고 생성, 편집, 내보내기를 하며 그 단계가 여기에 표시됩니다. 답변은 무료이며, 생성은 에이전트 일일 한도에 포함됩니다."
+  }
+}

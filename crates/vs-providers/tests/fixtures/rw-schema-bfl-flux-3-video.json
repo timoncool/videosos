@@ -1,0 +1,1044 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Runware API - FLUX 3 Video",
+    "summary": "Multimodal video generation with native synchronized audio across styles and modes",
+    "description": "FLUX 3 Video is Black Forest Labs' multimodal foundation model for video generation with synchronized audio. It generates clips from 5 to 20 seconds across text-to-video, image-to-video, and video-to-video modes on one architecture, with keyframe control to pin an opening image or interpolate motion across pinned frames, chained continuations for arcs beyond 20 seconds, multi-shot sequences with hard cuts inside one generation, and native multilingual dialogue. A draft mode returns a fast low-resolution preview and a cache that a follow-up call enhances at full quality, tightening iteration loops. Style range spans candid camcorder footage, animation, motion design, and cinematic photoreal, character consistency holds across scenes within one generation, and in-video typography renders cleanly for titles and animated designs.",
+    "version": "1.0.0",
+    "x-model-id": "bfl-flux-3-video",
+    "x-air-id": "bfl:flux@3-video",
+    "x-status": "live",
+    "x-creator": {
+      "id": "black-forest-labs",
+      "name": "Black Forest Labs",
+      "logo": "https://assets.runware.ai/07bfd96d-d2df-4d52-aba5-636fb27874be.png"
+    },
+    "x-capabilities": [
+      "text-to-video",
+      "image-to-video",
+      "video-to-video",
+      "checkpoint"
+    ],
+    "x-released-at": "2026-08-04T00:00:00Z",
+    "x-cover-image": "https://assets.runware.ai/covers/bfl-flux-3-video.jpg",
+    "x-pricing": {
+      "examples": [
+        {
+          "configuration": "draft-preview · 720p · 5s",
+          "price": "$0.202",
+          "latencyMs": 155516,
+          "exampleId": "urban-bat-nonprofit-logo-ident"
+        },
+        {
+          "configuration": "first-frame · 720p · 7s",
+          "price": "$1.20",
+          "latencyMs": 87042,
+          "exampleId": "field-water-photometer-demo"
+        },
+        {
+          "configuration": "text-to-video · 720p · 8s · audio",
+          "price": "$1.37",
+          "latencyMs": 142139,
+          "exampleId": "autonomous-pipe-crawler-product-demo"
+        },
+        {
+          "configuration": "multiple-keyframes · 1088×800 · 12s",
+          "price": "$2.05",
+          "latencyMs": 249224,
+          "exampleId": "inflatable-marine-beacon-deployment-demo"
+        },
+        {
+          "configuration": "video-extend · 720p · 6s",
+          "price": "$2.58",
+          "latencyMs": 179536,
+          "exampleId": "mycelium-packaging-social-launch-reel"
+        },
+        {
+          "configuration": "first-last-frame · 1080p · 10s",
+          "price": "$2.91",
+          "latencyMs": 226914,
+          "exampleId": "observatory-chart-lyric-video"
+        }
+      ]
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.runware.ai/v1",
+      "description": "Runware REST API"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "apiKeyAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Runware API Key (e.g., Bearer <your-key>)"
+      }
+    },
+    "schemas": {
+      "AuthenticationTask": {
+        "title": "Authentication",
+        "description": "Authenticates a connection using an API key. Can be sent as the first element of the request array as an alternative to using the Authorization header.",
+        "type": "object",
+        "x-response-schema": "https://schemas.runware.ai/responses/utilities/authentication.json",
+        "properties": {
+          "taskType": {
+            "$id": "https://schemas.runware.ai/requests/parameters/api/task-type.json",
+            "title": "Task Type",
+            "description": "Identifier for the type of task being performed",
+            "type": "string",
+            "const": "authentication"
+          },
+          "apiKey": {
+            "$id": "https://schemas.runware.ai/requests/parameters/authentication/api-key.json",
+            "title": "API Key",
+            "description": "Your Runware API key.",
+            "type": "string"
+          },
+          "connectionSessionUUID": {
+            "$id": "https://schemas.runware.ai/requests/parameters/authentication/connection-session-uuid.json",
+            "title": "Connection Session UUID",
+            "description": "Optional session UUID to resume a previous connection and receive any buffered results.",
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "taskType",
+          "apiKey"
+        ],
+        "additionalProperties": false
+      },
+      "RequestBody": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "model": {
+              "title": "Model",
+              "description": "Identifier of the model to use for generation.",
+              "type": "string",
+              "const": "bfl:flux@3-video"
+            },
+            "inputs": {
+              "title": "Inputs",
+              "description": "The unified payload wrapper for complex media assets dictating image, video or audio inference constraints.",
+              "type": "object",
+              "properties": {
+                "frameImages": {
+                  "title": "Frame Images",
+                  "description": "An array of frame-specific image inputs to guide video generation. Each item can be either a plain image input (UUID, URL, Data URI, or Base64) or an object that pairs an image with a target position in the video.\n\nThe `frameImages` parameter allows you to constrain specific frames within the video sequence, ensuring that particular visual content appears at designated points. Position can be specified using `frame` (named positions or frame indices) or `timestamp` (seconds), depending on model support. This is different from `referenceImages`, which provide overall visual guidance without constraining specific timeline positions.\n\nWhen the `frame` parameter is omitted, automatic distribution rules apply:\n\n- **1 image**: Used as the first frame.\n- **2 images**: First and last frames.\n- **3+ images**: First and last frames, with intermediate images evenly spaced between.\n\n**Examples**:\n\n**Shorthand format:** When you don't need to specify a frame position, you can pass a plain image input directly.\n\n```json\n\"frameImages\": [\n  \"aac49721-1964-481a-ae78-8a4e29b91402\"\n]\n```\n\n**Object format:** When you need to specify a position, use an object with `image` and either `frame` or `timestamp` (model-dependent).\n\n```json\n\"frameImages\": [\n  {\n    \"image\": \"aac49721-1964-481a-ae78-8a4e29b91402\",\n    \"frame\": \"first\"\n  }\n]\n```\n\n**First and last frames:** With two images, they automatically become the first and last frames of the video sequence. You can mix shorthand and object formats.\n\n```json\n\"frameImages\": [\n  \"aac49721-1964-481a-ae78-8a4e29b91402\",\n  {\n    \"image\": \"3ad204c3-a9de-4963-8a1a-c3911e3afafe\",\n    \"frame\": \"last\"\n  }\n]\n```\n\n**Multiple frames:** With three or more images, the first and last are anchored while intermediate frames are evenly distributed across the timeline.\n\n```json\n\"frameImages\": [\n  {\n    \"image\": \"aac49721-1964-481a-ae78-8a4e29b91402\",\n    \"frame\": \"first\"\n  },\n  \"c00abf5f-6cdb-4642-a01d-1bfff7bc3cf7\",\n  {\n    \"image\": \"3ad204c3-a9de-4963-8a1a-c3911e3afafe\",\n    \"frame\": \"last\"\n  }\n]\n```\n\n[Read full documentation](https://runware.ai/docs/models/bfl-flux-3-video#frameImages)",
+                  "type": "array",
+                  "minItems": 1,
+                  "contains": {
+                    "not": {
+                      "type": "object",
+                      "properties": {
+                        "frame": {
+                          "enum": [
+                            "last",
+                            -1
+                          ]
+                        }
+                      },
+                      "required": [
+                        "frame"
+                      ],
+                      "additionalProperties": true
+                    }
+                  },
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$id": "https://schemas.runware.ai/requests/parameters/inputs/image.json",
+                        "title": "Image",
+                        "description": "Image input (UUID, URL, Data URI, or Base64).",
+                        "type": "string",
+                        "anyOf": [
+                          {
+                            "format": "uuid"
+                          },
+                          {
+                            "format": "uri"
+                          },
+                          {
+                            "pattern": "^data:image\\/[a-zA-Z]+;base64,[a-zA-Z0-9+/=]+$"
+                          },
+                          {
+                            "pattern": "^[a-zA-Z0-9+/=]+$"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "image": {
+                            "$id": "https://schemas.runware.ai/requests/parameters/inputs/image.json",
+                            "title": "Image",
+                            "description": "Image input (UUID, URL, Data URI, or Base64).",
+                            "type": "string",
+                            "anyOf": [
+                              {
+                                "format": "uuid"
+                              },
+                              {
+                                "format": "uri"
+                              },
+                              {
+                                "pattern": "^data:image\\/[a-zA-Z]+;base64,[a-zA-Z0-9+/=]+$"
+                              },
+                              {
+                                "pattern": "^[a-zA-Z0-9+/=]+$"
+                              }
+                            ]
+                          },
+                          "frame": {
+                            "title": "Frame",
+                            "description": "Target frame position for the image. Accepts a named position like `first` or `last`, or a zero-based frame index (-1 for the last frame).",
+                            "oneOf": [
+                              {
+                                "title": "Position",
+                                "description": "Named position in the video.",
+                                "type": "string"
+                              },
+                              {
+                                "title": "Index",
+                                "description": "Zero-based frame index. Use -1 for the last frame.",
+                                "type": "integer",
+                                "minimum": -1
+                              }
+                            ]
+                          },
+                          "timestamp": {
+                            "$id": "https://schemas.runware.ai/requests/parameters/inputs/frame-images/timestamp.json",
+                            "title": "Timestamp",
+                            "description": "Timestamp in seconds indicating where the reference image is applied in the video. Hundredths-of-a-second precision.",
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 20,
+                            "multipleOf": 0.01
+                          }
+                        },
+                        "required": [
+                          "image"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ],
+                    "dependentSchemas": {
+                      "frame": {
+                        "not": {
+                          "required": [
+                            "timestamp"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "maxItems": 10
+                },
+                "video": {
+                  "title": "Video",
+                  "description": "Video input (UUID or URL). Source video for extension.",
+                  "type": "string",
+                  "anyOf": [
+                    {
+                      "format": "uuid"
+                    },
+                    {
+                      "format": "uri"
+                    }
+                  ]
+                },
+                "draftCache": {
+                  "type": "string",
+                  "title": "Draft Cache",
+                  "description": "Draft cache bundle from a previous draft mode generation (URL or Base64). Provide this to produce full quality output from an approved draft preview."
+                }
+              },
+              "additionalProperties": false
+            },
+            "positivePrompt": {
+              "title": "Positive Prompt",
+              "description": "Text prompt describing elements to include in the generated output.",
+              "type": "string"
+            },
+            "width": {
+              "title": "Width",
+              "description": "Width of the generated media in pixels.",
+              "type": "integer"
+            },
+            "height": {
+              "title": "Height",
+              "description": "Height of the generated media in pixels.",
+              "type": "integer"
+            },
+            "resolution": {
+              "title": "Resolution",
+              "description": "Resolution preset for the output. When used with input media, automatically matches the aspect ratio from the input.",
+              "type": "string",
+              "enum": [
+                "720p",
+                "1080p"
+              ],
+              "default": "720p"
+            },
+            "duration": {
+              "title": "Duration",
+              "description": "Length of the generated video in seconds. The total number of frames produced is determined by duration multiplied by the model's frame rate (fps).",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "default": "auto",
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "minimum": 5,
+                  "maximum": 20
+                },
+                {
+                  "const": "auto"
+                }
+              ]
+            },
+            "settings": {
+              "title": "Settings",
+              "description": "Global inference settings.",
+              "type": "object",
+              "properties": {
+                "audio": {
+                  "title": "Audio",
+                  "description": "Generate synchronized audio.",
+                  "type": "boolean",
+                  "default": true
+                },
+                "draft": {
+                  "title": "Draft Mode",
+                  "description": "Enable draft mode for rapid iteration. Generates a fast preview. Use the returned draft cache with `inputs.draftCache` to produce full quality output from an approved draft.",
+                  "type": "boolean"
+                },
+                "safetyTolerance": {
+                  "title": "Safety Tolerance",
+                  "description": "Tolerance level for content moderation. Lower values are stricter; higher values are more permissive.",
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4,
+                  "default": 2
+                }
+              },
+              "additionalProperties": false
+            },
+            "taskType": {
+              "title": "Task Type",
+              "description": "Identifier for the type of task being performed",
+              "type": "string",
+              "const": "videoInference"
+            },
+            "taskUUID": {
+              "title": "Task UUID",
+              "description": "UUID v4 identifier for tracking tasks and matching async responses. Must be unique per task.",
+              "type": "string",
+              "format": "uuid"
+            },
+            "webhookURL": {
+              "title": "Webhook URL",
+              "description": "Specifies a webhook URL where JSON responses will be sent via HTTP POST when generation tasks complete. For batch requests with multiple results, each completed item triggers a separate webhook call as it becomes available.",
+              "type": "string",
+              "format": "uri"
+            },
+            "includeCost": {
+              "title": "Include Cost",
+              "description": "Include task cost in the response.",
+              "type": "boolean"
+            },
+            "numberResults": {
+              "title": "Number of Results",
+              "description": "Number of results to generate. Each result uses a different seed, producing variations of the same parameters.",
+              "type": "integer",
+              "minimum": 1,
+              "default": 1,
+              "maximum": 4
+            },
+            "uploadEndpoint": {
+              "title": "Upload Endpoint",
+              "description": "Specifies a URL where the generated content will be automatically uploaded using the HTTP PUT method. The raw binary data of the media file is sent directly as the request body. For secure uploads to cloud storage, use presigned URLs that include temporary authentication credentials.\n\n**Common use cases:**\n\n- **Cloud storage**: Upload directly to S3 buckets, Google Cloud Storage, or Azure Blob Storage using presigned URLs.\n- **CDN integration**: Upload to content delivery networks for immediate distribution.\n\n```text\n// S3 presigned URL for secure upload\nhttps://your-bucket.s3.amazonaws.com/generated/content.mp4?X-Amz-Signature=abc123&X-Amz-Expires=3600\n\n// Google Cloud Storage presigned URL\nhttps://storage.googleapis.com/your-bucket/content.jpg?X-Goog-Signature=xyz789\n\n// Custom storage endpoint\nhttps://storage.example.com/uploads/generated-image.jpg\n```\n\nThe content data will be sent as the request body to the specified URL when generation is complete.\n\n[Read full documentation](https://runware.ai/docs/models/bfl-flux-3-video#uploadEndpoint)",
+              "type": "string",
+              "format": "uri"
+            },
+            "ttl": {
+              "title": "TTL",
+              "description": "Time-to-live (TTL) in seconds for generated content. Only applies when `outputType` is `URL`.",
+              "type": "integer",
+              "minimum": 60
+            },
+            "outputType": {
+              "title": "Output Type",
+              "description": "Video output type.",
+              "type": "string",
+              "enum": [
+                "URL"
+              ],
+              "default": "URL"
+            },
+            "outputFormat": {
+              "title": "Output Format",
+              "description": "Specifies the file format of the generated output. The available values depend on the task type and the specific model's capabilities.\n\n- \\`JPG\\`: Best for photorealistic images with smaller file sizes (no transparency).\n- \\`PNG\\`: Lossless compression, supports high quality and transparency (alpha channel).\n- \\`WEBP\\`: Modern format providing superior compression and transparency support.\n- \\`MP4\\`: Widely supported video container (H.264), recommended for general use.\n- \\`WEBM\\`: Optimized for web delivery.\n- \\`MOV\\`: QuickTime format, common in professional workflows (Apple ecosystem).\n- \\`GIF\\`: Animated image format (no audio), suitable for short loops or previews.\n- \\`MP3\\`: Compressed audio, smaller file size.\n- \\`WAV\\`: Uncompressed, high-quality audio.\n- \\`FLAC\\`: Lossless compression.\n- \\`OGG\\`: Open-source compressed audio format (Vorbis codec).\n- \\`SVG\\`: Scalable Vector Graphics.\n- \\`TIFF\\`: High-quality output supporting layers.\n- \\`GLB\\`: Binary glTF format for 3D models, including geometry, textures, and PBR materials.\n\n> [!NOTE]\n> \\*\\*Transparency\\*\\*: If you are using features like background removal or LayerDiffuse that require transparency, you must select a format that supports an alpha channel (e.g., \\`PNG\\`, \\`WEBP\\`, \\`TIFF\\`). \\`JPG\\` does not support transparency.\n\n[Read full documentation](https://runware.ai/docs/models/bfl-flux-3-video#outputFormat)",
+              "type": "string",
+              "enum": [
+                "MP4",
+                "WEBM",
+                "MOV"
+              ],
+              "default": "MP4"
+            },
+            "outputQuality": {
+              "title": "Output Quality",
+              "description": "Compression quality of the output. Higher values preserve quality but increase file size.",
+              "type": "integer",
+              "minimum": 20,
+              "maximum": 99,
+              "default": 95
+            },
+            "deliveryMethod": {
+              "title": "Delivery Method",
+              "description": "Determines how the API delivers task results.",
+              "type": "string",
+              "oneOf": [
+                {
+                  "const": "async",
+                  "description": "Returns an immediate acknowledgment with the task UUID. Poll for results using getResponse. Required for long-running tasks like video generation."
+                }
+              ],
+              "default": "async"
+            },
+            "safety": {
+              "type": "object",
+              "title": "Safety Settings",
+              "description": "Content safety checking configuration for video generation.",
+              "properties": {
+                "checkContent": {
+                  "title": "Check Content",
+                  "description": "Enable or disable content safety checking. Increases total generation time.",
+                  "type": "boolean"
+                },
+                "mode": {
+                  "title": "Safety Mode",
+                  "description": "Safety checking mode for video generation.",
+                  "type": "string",
+                  "oneOf": [
+                    {
+                      "const": "fast",
+                      "title": "Fast",
+                      "description": "Checks key frames."
+                    },
+                    {
+                      "const": "full",
+                      "title": "Full",
+                      "description": "Checks all frames."
+                    }
+                  ],
+                  "default": "fast"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "allOf": [
+            {
+              "dependentRequired": {
+                "width": [
+                  "height"
+                ],
+                "height": [
+                  "width"
+                ]
+              }
+            },
+            {
+              "not": {
+                "allOf": [
+                  {
+                    "properties": {
+                      "inputs": {
+                        "required": [
+                          "frameImages"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "inputs"
+                    ]
+                  },
+                  {
+                    "properties": {
+                      "inputs": {
+                        "required": [
+                          "video"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "inputs"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "not": {
+                "allOf": [
+                  {
+                    "required": [
+                      "resolution"
+                    ]
+                  },
+                  {
+                    "anyOf": [
+                      {
+                        "required": [
+                          "width"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "height"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "inputs": {
+                    "required": [
+                      "draftCache"
+                    ]
+                  }
+                },
+                "required": [
+                  "inputs"
+                ]
+              },
+              "then": {
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "positivePrompt"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "duration"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "resolution"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "width"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "height"
+                      ]
+                    },
+                    {
+                      "properties": {
+                        "inputs": {
+                          "anyOf": [
+                            {
+                              "required": [
+                                "frameImages"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "video"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "inputs"
+                      ]
+                    },
+                    {
+                      "properties": {
+                        "settings": {
+                          "anyOf": [
+                            {
+                              "required": [
+                                "audio"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "draft"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "settings"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "if": {
+                "not": {
+                  "properties": {
+                    "inputs": {
+                      "required": [
+                        "draftCache"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "inputs"
+                  ]
+                }
+              },
+              "then": {
+                "required": [
+                  "positivePrompt"
+                ]
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "inputs": {
+                    "properties": {
+                      "frameImages": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "minItems": 3
+                      }
+                    },
+                    "required": [
+                      "frameImages"
+                    ]
+                  }
+                },
+                "required": [
+                  "inputs"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "duration": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "duration"
+                ]
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "inputs": {
+                    "anyOf": [
+                      {
+                        "required": [
+                          "frameImages"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "video"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "inputs"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "settings": {
+                    "properties": {
+                      "safetyTolerance": {
+                        "maximum": 2
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "width"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "height"
+                    ]
+                  }
+                ]
+              },
+              "then": {
+                "required": [
+                  "width",
+                  "height"
+                ],
+                "oneOf": [
+                  {
+                    "title": "720p (~21:9)",
+                    "properties": {
+                      "width": {
+                        "const": 1440
+                      },
+                      "height": {
+                        "const": 608
+                      }
+                    }
+                  },
+                  {
+                    "title": "720p (2:1)",
+                    "properties": {
+                      "width": {
+                        "const": 1344
+                      },
+                      "height": {
+                        "const": 672
+                      }
+                    }
+                  },
+                  {
+                    "title": "720p (~16:9)",
+                    "properties": {
+                      "width": {
+                        "const": 1280
+                      },
+                      "height": {
+                        "const": 704
+                      }
+                    }
+                  },
+                  {
+                    "title": "720p (~4:3)",
+                    "properties": {
+                      "width": {
+                        "const": 1088
+                      },
+                      "height": {
+                        "const": 800
+                      }
+                    }
+                  },
+                  {
+                    "title": "720p (1:1)",
+                    "properties": {
+                      "width": {
+                        "const": 960
+                      },
+                      "height": {
+                        "const": 960
+                      }
+                    }
+                  },
+                  {
+                    "title": "720p (~3:4)",
+                    "properties": {
+                      "width": {
+                        "const": 800
+                      },
+                      "height": {
+                        "const": 1088
+                      }
+                    }
+                  },
+                  {
+                    "title": "720p (~9:16)",
+                    "properties": {
+                      "width": {
+                        "const": 704
+                      },
+                      "height": {
+                        "const": 1280
+                      }
+                    }
+                  },
+                  {
+                    "title": "1080p (~21:9)",
+                    "properties": {
+                      "width": {
+                        "const": 2176
+                      },
+                      "height": {
+                        "const": 928
+                      }
+                    }
+                  },
+                  {
+                    "title": "1080p (~2:1)",
+                    "properties": {
+                      "width": {
+                        "const": 2016
+                      },
+                      "height": {
+                        "const": 1024
+                      }
+                    }
+                  },
+                  {
+                    "title": "1080p (~16:9)",
+                    "properties": {
+                      "width": {
+                        "const": 1920
+                      },
+                      "height": {
+                        "const": 1088
+                      }
+                    }
+                  },
+                  {
+                    "title": "1080p (~4:3)",
+                    "properties": {
+                      "width": {
+                        "const": 1632
+                      },
+                      "height": {
+                        "const": 1216
+                      }
+                    }
+                  },
+                  {
+                    "title": "1080p (1:1)",
+                    "properties": {
+                      "width": {
+                        "const": 1440
+                      },
+                      "height": {
+                        "const": 1440
+                      }
+                    }
+                  },
+                  {
+                    "title": "1080p (~3:4)",
+                    "properties": {
+                      "width": {
+                        "const": 1216
+                      },
+                      "height": {
+                        "const": 1632
+                      }
+                    }
+                  },
+                  {
+                    "title": "1080p (~9:16)",
+                    "properties": {
+                      "width": {
+                        "const": 1088
+                      },
+                      "height": {
+                        "const": 1920
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "additionalProperties": false,
+          "required": [
+            "taskType",
+            "taskUUID",
+            "model"
+          ]
+        },
+        "description": "You must always POST an array of task objects."
+      },
+      "ResponseBody": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "description": "Unknown response structure"
+            }
+          }
+        }
+      },
+      "ErrorResponse": {
+        "title": "Error Response",
+        "description": "Standard error response returned by the Runware API.",
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "code",
+                "message"
+              ],
+              "additionalProperties": true,
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "description": "A short identifier for the error (e.g., invalidApiKey, timeoutProvider)."
+                },
+                "message": {
+                  "type": "string",
+                  "description": "A human-readable explanation of what went wrong."
+                },
+                "parameter": {
+                  "type": "string",
+                  "description": "The request parameter related to the error, if applicable."
+                },
+                "taskType": {
+                  "type": "string",
+                  "description": "The task type of the request that failed."
+                },
+                "taskUUID": {
+                  "type": "string",
+                  "description": "The unique identifier of the failed request."
+                },
+                "documentation": {
+                  "type": "string",
+                  "description": "A link to relevant documentation."
+                }
+              }
+            }
+          }
+        },
+        "required": [
+          "errors"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "paths": {
+    "/": {
+      "post": {
+        "summary": "Run FLUX 3 Video",
+        "description": "FLUX 3 Video is Black Forest Labs' multimodal foundation model for video generation with synchronized audio. It generates clips from 5 to 20 seconds across text-to-video, image-to-video, and video-to-video modes on one architecture, with keyframe control to pin an opening image or interpolate motion across pinned frames, chained continuations for arcs beyond 20 seconds, multi-shot sequences with hard cuts inside one generation, and native multilingual dialogue. A draft mode returns a fast low-resolution preview and a cache that a follow-up call enhances at full quality, tightening iteration loops. Style range spans candid camcorder footage, animation, motion design, and cinematic photoreal, character consistency holds across scenes within one generation, and in-video typography renders cleanly for titles and animated designs.",
+        "operationId": "run_bfl_flux_3_video",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request — Missing or invalid parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized — No valid API key provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required — Insufficient account balance.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden — The API key lacks permissions for this request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests — Rate limit exceeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error — Something went wrong on Runware's end.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable — Temporarily unavailable (maintenance or capacity).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "apiKeyAuth": []
+    }
+  ]
+}

@@ -68,7 +68,11 @@
       "loadingMedia": "Chargement des médias…",
       "videoPreview": "Prévisualisation vidéo",
       "emptyTitle": "Rien sur la timeline pour l’instant",
-      "emptyDescription": "Importez des médias, faites glisser un clip sur la timeline, puis appuyez sur Espace pour prévisualiser."
+      "emptyDescription": "Importez des médias, faites glisser un clip sur la timeline, puis appuyez sur Espace pour prévisualiser.",
+      "gradeComparisonSplit": "Comparaison d’étalonnage partagée",
+      "gradeComparisonBefore": "Avant",
+      "gradeComparisonAfter": "Après",
+      "gradeComparisonWipe": "Ajuster la comparaison partagée"
     },
     "zoom": {
       "ariaLabel": "Niveau de zoom : {{label}}",

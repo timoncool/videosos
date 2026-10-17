@@ -96,7 +96,41 @@
         "embeddedDescription": "Uma faixa de legendas alternável (WebM/MKV)."
       },
       "subtitles": "Legendas",
-      "video": "Vídeo"
+      "video": "Vídeo",
+      "rateControl": "Controle de taxa",
+      "rateControlAuto": "Automático (conforme a origem)",
+      "rateControlCbr": "CBR (taxa de bits constante)",
+      "rateControlVbr": "VBR (taxa de bits variável)",
+      "targetBitrate": "Taxa de bits alvo",
+      "useSourceBitrate": "Usar a origem",
+      "smartCopy": "Cópia inteligente quando possível",
+      "smartCopyPath": "Cópia inteligente · sem recodificação",
+      "estimatedSize": "Estimado: {{size}}",
+      "sourceBitrate": "Origem: {{bitrate}}",
+      "smartCopyStatus": {
+        "eligible": "Disponível: a mídia original será copiada byte a byte.",
+        "disabled": "Desativada. A linha do tempo será renderizada e codificada.",
+        "not-video": "Disponível apenas para exportações de vídeo.",
+        "range": "Indisponível ao exportar um intervalo de entrada/saída.",
+        "timeline-layout": "Requer um único clipe de origem completo, sem camadas adicionais.",
+        "source-unavailable": "O arquivo de origem original ou seus metadados não estão disponíveis.",
+        "trimmed-or-retimed": "Indisponível porque a origem foi cortada, dividida, invertida ou teve a velocidade alterada.",
+        "visual-processing": "Indisponível porque edições visuais, legendas, transições ou quadros-chave precisam ser renderizados.",
+        "audio-processing": "Indisponível porque o áudio ou a mixagem das faixas foi alterado.",
+        "project-mismatch": "A resolução ou a taxa de quadros do projeto não corresponde à origem.",
+        "format-mismatch": "O formato ou o codec selecionado não corresponde à origem."
+      },
+      "loudness": "Loudness",
+      "loudnessOption": {
+        "off": "Deixar como está",
+        "stream": "−14 LUFS — YouTube, redes sociais",
+        "podcast": "−16 LUFS — podcasts, Apple",
+        "broadcast": "−23 LUFS — TV (EBU R128)"
+      },
+      "loudnessDescription": {
+        "off": "O áudio é exportado exatamente como foi mixado, sem processamento.",
+        "on": "Toda a mixagem é levada a {{lufs}} LUFS pelo EBU R128 e um limitador mantém os picos abaixo de −1 dBTP. O áudio é recodificado e a cópia inteligente é desativada."
+      }
     },
     "videoContainer": {
       "mp4": "Amplo suporte, ideal para compartilhar",
@@ -123,6 +157,8 @@
           "title": "O formato selecionado não pode ser codificado",
           "detail": "Este navegador não consegue codificar as configurações de exportação selecionadas.",
           "detailWithError": "{{error}}",
+          "containerUnsupported": "Este navegador não consegue codificar vídeo {{container}}.",
+          "noCodecs": "Este navegador não tem um codificador de vídeo para exportar.",
           "fix": "Escolha outro formato/codec ou tente um navegador Chromium recente."
         },
         "audio-export-ready": {
@@ -182,8 +218,30 @@
         "worker-export-ready": {
           "title": "Caminho de exportação por worker pronto",
           "detail": "O worker de exportação pode renderizar esta composição sem fallback conhecido para a thread principal."
+        },
+        "smart-copy-ready": {
+          "title": "Cópia inteligente pronta",
+          "detail": "A mídia original será copiada sem renderização nem recodificação."
         }
+      },
+      "smartCopyPath": "Caminho da cópia inteligente"
+    },
+    "fcpxml": {
+      "noProject": "Abra um projeto primeiro.",
+      "failed": "O FCPXML não foi criado: {{reason}}",
+      "left": {
+        "kind": "Fora do FCPXML (sem equivalente): {{items}}",
+        "file": "Fora do FCPXML (sem arquivo no espaço de trabalho): {{items}}",
+        "speed": "Fora do FCPXML (velocidade alterada): {{items}}",
+        "transition": "Fora do FCPXML (uma transição entre clipes conectados não tem equivalente lá; adicione-a no editor): {{items}}"
       }
+    },
+    "validation": {
+      "resolution": "O tamanho de exportação não é válido.",
+      "frameRate": "A taxa de quadros deve ser de 1 a 120.",
+      "audioContainer": "A exportação de áudio precisa de um formato só de áudio.",
+      "videoContainer": "A exportação de vídeo precisa de um formato de vídeo.",
+      "codecContainer": "O codec {{codec}} não é compatível com {{container}}."
     }
   }
 }

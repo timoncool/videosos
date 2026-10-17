@@ -72,7 +72,7 @@ export const AudioVolumeControl = memo(function AudioVolumeControl({
           e.preventDefault()
           e.stopPropagation()
         }}
-        onMouseDown={(e) => {
+        onPointerDown={(e) => {
           if (!isDragEnabled) {
             return
           }

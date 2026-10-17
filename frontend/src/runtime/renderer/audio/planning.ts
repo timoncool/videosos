@@ -459,7 +459,12 @@ export function getAudioPacketPassthroughPlan(
   composition: CompositionInputProps,
 ): AudioPacketPassthroughPlan | null {
   const durationInFrames = composition.durationInFrames ?? 0
-  if (durationInFrames <= 0 || composition.fps <= 0 || (composition.masterBusDb ?? 0) !== 0) {
+  if (
+    durationInFrames <= 0 ||
+    composition.fps <= 0 ||
+    (composition.masterBusDb ?? 0) !== 0 ||
+    composition.loudnessLufs !== undefined
+  ) {
     return null
   }
 

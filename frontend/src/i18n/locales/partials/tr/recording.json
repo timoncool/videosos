@@ -21,7 +21,7 @@
     "syncOffsetEarlier": "Çekimi öne kaydır",
     "syncOffsetLater": "Çekimi geriye kaydır",
     "headphonesHint": "Zaman çizelgesi sesinin mikrofon tarafından yakalanmaması için kulaklık kullanın.",
-    "fileNamePrefix": "voiceover",
+    "fileNamePrefix": "seslendirme",
     "errors": {
       "unsupported": "Mikrofonla kayıt bu tarayıcıda desteklenmiyor.",
       "noProject": "Kayıt yapmadan önce bir proje açın.",

@@ -1,0 +1,264 @@
+{
+  "agent": {
+    "address": "アドレス",
+    "config": "Claude Desktop、Cursor、その他のクライアント",
+    "copied": "コピーしました",
+    "copy": "コピー",
+    "failed": "エージェントの状態を取得できませんでした",
+    "intro": "ここに接続されたエージェント(Claude Code、Cursor、Codexなど)は、ユーザーと同じようにVideoSOSを操作します。モデルの選択と価格の見積もり、ご自身のキーを使った画像・動画・音楽・音声の生成、開いているプロジェクトのタイムライン編集(元に戻す対応)、メディアの読み込み、動画の書き出しを行い、その全工程をこのウィンドウで確認できます。プロバイダーのキーがエージェントに表示されることはありません。",
+    "lastCall": "エージェントの最終呼び出し: {{call}} · {{seconds}}秒前",
+    "none": "接続されたエージェントはまだありません",
+    "windowOff": "ウィンドウは接続されていません",
+    "windowOn": "ウィンドウは接続されています。エージェントから見えます"
+  },
+  "float": {
+    "dock": "ヘッダーに戻す"
+  },
+  "help": {
+    "boostySub": "Boostyのサブスクリプション",
+    "card": "カード / PayPal",
+    "donateTitle": "作者を支援する",
+    "founder": "創設者:",
+    "madeBy": "開発:",
+    "crypto": "暗号資産",
+    "copy": "コピー",
+    "tier5": "CI/CD とドメイン 1 週間分",
+    "tier25": "ホスティング 1 か月分",
+    "tier100": "開発 1 日分",
+    "tier500": "機能まるごと 1 つ",
+    "thanks": "オープンソースを支えてくれてありがとう！"
+  },
+  "hub": {
+    "byEnv": "環境変数DO_NOT_TRACKまたはSTUDIO_TELEMETRYによりオフになっています。",
+    "checkbox": "匿名の利用統計を送信",
+    "close": "閉じる",
+    "feedNever": "ニュースはまだサーバーから取得されていません。VideoSOSはリリースに含まれるニュースを表示します。",
+    "feedSource": "ニュースの提供元:",
+    "nothing": "本日送信待ちのデータはありません。",
+    "notices": "お知らせ",
+    "refresh": "今すぐ確認",
+    "reset": "新しいインストールID",
+    "what": "送信される内容",
+    "why": "VideoSOSを何人が何に使っているかが分かると、次に取り組むことを決めやすくなります。個人的な情報は送りません。プロンプト、ファイル、キーは送らず、送るのはタスクとプロバイダー別の生成回数とその失敗（名前、パス、引用符内のものはこのコンピューター上で削除）、使ったモデル、使ったVideoSOSの機能（名前のみ、内容なし）、モデルのダウンロードの成功と失敗、このコンピューターのグラフィックカードで作った動画の秒数、バージョン、システム、グラフィックカードのクラス、ウィンドウの言語、当社プログラム共通のコンピューター番号（元に戻せないハッシュで、システムの番号そのものではありません）だけです。",
+    "ad": "広告"
+  },
+  "monitor": {
+    "popOut": "リソースモニターを分離",
+    "power": "電力",
+    "process": "プロセス",
+    "title": "リソース"
+  },
+  "news": {
+    "changelogNote": "変更履歴は英語で管理されています。",
+    "close": "閉じる",
+    "empty": "まだ何もありません。",
+    "releaseNotes": "リリースノート",
+    "sections": {
+      "added": "追加",
+      "changed": "変更",
+      "fixed": "修正"
+    },
+    "tabChangelog": "変更履歴",
+    "tabNews": "ニュース",
+    "title": "新機能",
+    "unreleased": "未リリース"
+  },
+  "offline": {
+    "body": "このウィンドウは、このコンピューター上のVideoSOSサービスに接続できません。アプリを閉じた場合は再度起動してください。自動的に停止した場合は再起動してください。サービスが応答すると、ページは自動的に復帰します。",
+    "retry": "今すぐ確認",
+    "retrying": "2秒ごとに確認中 · {{seconds}}秒",
+    "title": "スタジオサービスが応答していません"
+  },
+  "prefs": {
+    "copied": "コピーしました",
+    "copyPath": "パスをコピー",
+    "dataDir": "データフォルダー",
+    "dataHint": "プロジェクト、生成結果、その履歴、VideoSOSの設定がここに保存されます",
+    "dataTitle": "データフォルダー",
+    "issues": "問題を報告",
+    "license": "ライセンス(MIT)",
+    "links": "便利なリンク",
+    "pathsFailed": "データフォルダーを取得できませんでした: {{error}}",
+    "projectsDir": "プロジェクト",
+    "releases": "リリース",
+    "repo": "ソースコード",
+    "generationsDir": "生成結果",
+    "exportsDir": "書き出し",
+    "logsDir": "ログ",
+    "openFolder": "ファイルマネージャーで表示"
+  },
+  "units": {
+    "gb": "GB",
+    "watt": "W"
+  },
+  "app": {
+    "name": "VideoSOS",
+    "tagline": "AI動画スタジオ: 生成と編集をひとつのウィンドウで"
+  },
+  "network": {
+    "proxyTitle": "プロキシ",
+    "proxyIntro": "VideoSOSがインターネットから取得するもの(OpenRouter、fal、Runwareでの生成、モデル一覧、ニュース、アップデート)はすべてここを経由します。このコンピューターとローカルネットワークは経由しません。",
+    "proxyModeSystem": "システムの設定に従う",
+    "proxyModeCustom": "独自のプロキシ",
+    "proxyModeOff": "プロキシを使用しない",
+    "proxyKind": "プロトコル",
+    "proxyKindHint": "プロトコルなしで入力したアドレスに適用されます。SOCKS5ではサイト名の名前解決がプロキシ側で行われます。",
+    "proxyAddress": "アドレス",
+    "proxyAddressPlaceholder": "127.0.0.1:1080 またはホスト:ポート:ログイン:パスワード",
+    "proxyAddressHint": "一般的な形式をご利用いただけます: ホスト:ポート、ホスト:ポート:ログイン:パスワード、ログイン:パスワード@ホスト:ポート、socks5://ログイン:パスワード@ホスト:ポート。",
+    "proxyTest": "テスト",
+    "proxySave": "保存",
+    "proxySaved": "プロキシを保存し、使用中です",
+    "proxyReachable": "応答あり",
+    "proxyUnreachable": "応答なし",
+    "proxyWindowNote": "ウィンドウ自体(モデル画像、ニュース)は次回起動時にプロキシを使用します。ログイン情報は使用されません。ブラウザーはSOCKSにログイン情報を渡せないためです。",
+    "show": "表示",
+    "hide": "非表示",
+    "access": "ネットワークからのアクセス",
+    "accessHint": "別のコンピューターやスマートフォンのブラウザーでVideoSOSを開けるようにします。処理はすべてこのコンピューター上で実行され、ブラウザーにはアクセスキーが必要です。このコンピューター上のエージェントとウィンドウ自体にはキーは不要です。",
+    "accessRestart": "反映するには、VideoSOSを閉じてから開き直してください。アドレスは起動時に設定されます。",
+    "accessKey": "キー",
+    "accessNewKey": "新しいキー",
+    "accessInternet": "インターネットから: ルーターでこのポートをこのコンピューターに転送し、http://<お使いのアドレス>:<ポート>/?key=<キー> を開きます。キーを持つ人は誰でもVideoSOSを操作でき、お使いのキーで料金が発生します。"
+  },
+  "journal": {
+    "title": "アクティビティ",
+    "empty": "エージェントによる変更と VideoSOS のメッセージがここに表示されます。",
+    "unreadable": "アクティビティを読み込めませんでした：{{error}}",
+    "clear": "クリア",
+    "remove": "この行を削除",
+    "agent": "エージェント",
+    "app": "VideoSOS",
+    "line": "{{verb}}：{{kind}}「{{name}}」",
+    "lineNoName": "{{verb}}：{{kind}}",
+    "verb": {
+      "started": "開始",
+      "cancelled": "停止",
+      "deleted": "削除",
+      "updated": "変更",
+      "imported": "インポート",
+      "exported": "エクスポート",
+      "undone": "元に戻す",
+      "redone": "やり直し",
+      "created": "作成",
+      "restored": "復元"
+    },
+    "kind": {
+      "generation": "生成",
+      "timeline": "タイムライン",
+      "media": "メディア",
+      "video": "動画",
+      "download": "リンクからのダウンロード",
+      "checkpoint": "復元ポイント",
+      "blocking": "3Dブロッキング",
+      "key": "キー",
+      "proxy": "プロキシ",
+      "project": "プロジェクト",
+      "transcript": "文字起こし",
+      "captions": "キャプション",
+      "settings": "設定",
+      "element": "エレメント",
+      "preset": "プロンプトのプリセット",
+      "storyboard": "ストーリーボード",
+      "canvas": "キャンバス",
+      "fcpxml": "FCPXML",
+      "local device": "ローカルデバイス",
+      "local model": "ローカルモデル",
+      "recording": "録音",
+      "subtitles": "字幕"
+    }
+  },
+  "files": {
+    "title": "ファイル",
+    "showInFolder": "フォルダーで表示"
+  },
+  "family": {
+    "title": "作者のほかのプログラム",
+    "dub": "クローン音声でオフライン動画吹き替え",
+    "yue2": "編集できる楽譜付き AI ソング",
+    "minimax": "ローカルとクラウドの AI 音楽スタジオ",
+    "ace": "AI 音楽スタジオ：曲、ボーカル、カバー、クリップ",
+    "bulka": "AI エージェントとライブコーディング音楽",
+    "dungeon": "ローカル AI ロールプレイングゲーム"
+  },
+  "topbar": {
+    "projects": "プロジェクト",
+    "new": "新規",
+    "newSub": "プロジェクト",
+    "newTitle": "新しいプロジェクトを始める",
+    "help": "ヘルプ",
+    "portable": "ポータブル版"
+  },
+  "status": {
+    "idle": "準備完了"
+  },
+  "start": {
+    "eyebrow": "OpenRouter · fal · Runware · MCP",
+    "title": "ひとつのウィンドウで動画を生成して編集。",
+    "lead": "自分のキーで最高のモデルを使い、画像・動画・音楽・音声・効果音を作り、マルチトラックのタイムラインで完成した動画に仕上げます。",
+    "cardTitle": "プロジェクトを始める",
+    "cardText": "プロジェクトはメディア、生成結果、タイムラインをこのコンピューターにまとめて保存します。",
+    "projects": "プロジェクト",
+    "features": {
+      "generate": {
+        "title": "すべてのモダリティ",
+        "text": "画像、動画、リップシンク、音楽、音声、効果音、テキスト"
+      },
+      "edit": {
+        "title": "マルチトラック編集",
+        "text": "タイムライン、キーフレーム、エフェクト、字幕、MP4 書き出し"
+      },
+      "agent": {
+        "title": "MCP 経由の AI エージェント",
+        "text": "Claude などがあなたと同じボタンを押します"
+      },
+      "yours": {
+        "title": "あなたのキー、あなたのファイル",
+        "text": "プロバイダーに直接支払い、私たちを経由しません"
+      }
+    }
+  },
+  "share": {
+    "title": "共有",
+    "text": "「{{title}}」― VideoSOSで作成",
+    "file": "ファイルを送信…",
+    "fileUnavailable": "ここではファイルを送信できません",
+    "fileRefused": "システムがこのファイルの送信を受け付けません。保存して自分で送信してください",
+    "failed": "共有できませんでした：{{reason}}",
+    "copyText": "リンク付きテキストをコピー",
+    "copied": "リンク付きテキストをコピーしました",
+    "places": {
+      "telegram": "Telegram",
+      "x": "X (Twitter)",
+      "vk": "VK",
+      "whatsapp": "WhatsApp",
+      "reddit": "Reddit"
+    }
+  },
+  "chat": {
+    "tabLabel": "チャット",
+    "model": "モデル",
+    "costHint": "OpenRouterの請求でのこの会話の費用",
+    "clear": "会話をクリア",
+    "intro": "アシスタントは、接続されたエージェントと同じツールでVideoSOSを操作します。タイムラインの確認、生成、編集、書き出しを行い、すべての手順が表示されます。料金はあなたのOpenRouterキーで支払われ、生成はエージェントの1日の上限に含まれます。",
+    "suggestions": {
+      "what": "今タイムラインには何がありますか？",
+      "picture": "海に沈む夕日の画像を生成して、タイムラインに置いて",
+      "cut": "最初のクリップを半分に分割して、間になめらかなトランジションを追加して",
+      "captions": "最初にプロジェクト名のタイトルを追加して"
+    },
+    "tools": "アシスタントの手順",
+    "toolRunning": "実行中",
+    "toolDone": "完了",
+    "toolFailed": "失敗",
+    "thinking": "考え中",
+    "placeholder": "やりたいことを書いてください…",
+    "send": "送信",
+    "stop": "停止",
+    "footnote": "Enterで送信、Shift+Enterで改行。費用のかかる生成の前にアシスタントが確認します。",
+    "needsKey": "チャットにはOpenRouterキーが必要です：アシスタントはOpenRouterのモデルで応答し、VideoSOSのツールで作業します。",
+    "openKeys": "キーを開く",
+    "byAgent": "接続中のエージェント（MCP）が回答します",
+    "introAgent": "メッセージは MCP で接続されたエージェントに届きます。エージェントは自分のツールで VideoSOS を操作し、タイムラインを読み、生成・編集・書き出しを行い、その手順はここに表示されます。回答は無料です。生成はエージェントの1日の上限に含まれます。"
+  }
+}

@@ -44,6 +44,19 @@ fn bad(status: StatusCode, message: String) -> Response {
     (status, Json(json!({ "error": message }))).into_response()
 }
 
+/// "Save as" for what the window saves: the desktop shell's own dialog, over the program's window (as in the music
+/// studios), asked for off the UI thread.
+pub type SaveDialog = std::sync::Arc<dyn Fn(&str, Option<PathBuf>) -> Option<PathBuf> + Send + Sync>;
+
+fn save_dialog() -> &'static std::sync::OnceLock<SaveDialog> {
+    static DIALOG: std::sync::OnceLock<SaveDialog> = std::sync::OnceLock::new();
+    &DIALOG
+}
+
+pub fn set_save_dialog(dialog: SaveDialog) {
+    let _ = save_dialog().set(dialog);
+}
+
 #[derive(Deserialize)]
 pub struct SaveQuery {
     name: String,
@@ -84,9 +97,18 @@ async fn save(State(state): State<AppState>, Query(query): Query<SaveQuery>, bod
         free_path(dir, &name)
     } else if query.dialog {
         let start = dirs::video_dir().filter(|dir| dir.is_dir()).unwrap_or_else(|| exports.clone());
-        let chosen = rfd::AsyncFileDialog::new().set_directory(&start).set_file_name(&name).set_title(t!("exports-dialog-title")).save_file().await;
+        let chosen = match save_dialog().get() {
+            // the desktop shell's dialog, over the program's window
+            Some(dialog) => {
+                let (name, start) = (name.clone(), start.clone());
+                let dialog = dialog.clone();
+                tokio::task::spawn_blocking(move || dialog(&name, Some(start))).await.unwrap_or(None)
+            }
+            // the server on its own has no window to put a dialog over
+            None => rfd::AsyncFileDialog::new().set_directory(&start).set_file_name(&name).set_title(t!("exports-dialog-title")).save_file().await.map(|handle| handle.path().to_path_buf()),
+        };
         match chosen {
-            Some(handle) => handle.path().to_path_buf(),
+            Some(path) => path,
             None => {
                 let _ = tokio::fs::remove_file(&partial).await;
                 return Json(json!({ "cancelled": true })).into_response();
@@ -121,7 +143,10 @@ async fn reveal(Json(body): Json<RevealBody>) -> Response {
     }
     let mut command = if cfg!(windows) {
         let mut command = std::process::Command::new("explorer");
-        command.arg(format!("/select,{}", path.display()));
+        // Explorer reads /select, and the path apart: the path is quoted on its own, or one with a space opens
+        // the Documents folder instead
+        #[cfg(windows)]
+        std::os::windows::process::CommandExt::raw_arg(&mut command, format!("/select,\"{}\"", path.display()));
         command
     } else if cfg!(target_os = "macos") {
         let mut command = std::process::Command::new("open");

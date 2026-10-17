@@ -340,7 +340,7 @@ function TextSectionComposer({ items, canvas, slots }: TextSectionComposerProps)
           defaultOpen={true}
         >
           <div className="flex flex-col gap-2 py-1">
-            <p className="text-[10px] leading-snug text-muted-foreground/70">
+            <p className="text-[11px] leading-snug text-muted-foreground/70">
               {t('textMotion.hint')}
             </p>
             <TextMotionSlotRows items={textItems} />

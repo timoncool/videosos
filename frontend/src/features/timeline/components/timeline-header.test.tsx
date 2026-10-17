@@ -63,8 +63,8 @@ vi.mock('@/components/ui/slider', async () => {
               type="button"
               role="slider"
               aria-valuenow={value?.[0]}
-              onMouseDown={() => onValueChange?.([sliderInput.value])}
-              onMouseUp={() => onValueCommit?.([sliderInput.value])}
+              onPointerDown={() => onValueChange?.([sliderInput.value])}
+              onPointerUp={() => onValueCommit?.([sliderInput.value])}
               onKeyDown={(event) => {
                 if (event.key === 'ArrowRight') {
                   onValueChange?.([keyboardValue])
@@ -108,7 +108,7 @@ describe('TimelineHeader zoom slider', () => {
     render(<TimelineHeader onZoomChange={onZoomChange} />)
     expect(micRenderSpy).toHaveBeenCalledTimes(1)
 
-    fireEvent.mouseDown(screen.getByRole('slider'))
+    fireEvent.pointerDown(screen.getByRole('slider'))
 
     expect(screen.getByTestId('zoom-slider-thumb-positioner').style.left).toBe('calc(75% - 4px)')
     expect(screen.getByTestId('zoom-slider-range').style.right).toBe('25%')
@@ -117,7 +117,7 @@ describe('TimelineHeader zoom slider', () => {
     expect(micRenderSpy).toHaveBeenCalledTimes(1)
     expect(useZoomStore.getState().level).toBe(1)
 
-    fireEvent.mouseUp(screen.getByRole('slider'))
+    fireEvent.pointerUp(screen.getByRole('slider'))
 
     expect(onZoomChange).toHaveBeenCalledTimes(1)
     expect(onZoomChange).toHaveBeenLastCalledWith(targetZoom)
@@ -137,8 +137,8 @@ describe('TimelineHeader zoom slider', () => {
     render(<TimelineHeader onZoomChange={onZoomChange} />)
     const slider = screen.getByTestId('zoom-slider')
 
-    fireEvent.mouseDown(screen.getByRole('slider'))
-    fireEvent.mouseUp(screen.getByRole('slider'))
+    fireEvent.pointerDown(screen.getByRole('slider'))
+    fireEvent.pointerUp(screen.getByRole('slider'))
     expect(onZoomChange).toHaveBeenLastCalledWith(ZOOM_MAX)
 
     act(() => useZoomStore.getState().setZoomLevelSynchronized(ZOOM_MIN))
@@ -197,7 +197,7 @@ describe('TimelineHeader zoom slider', () => {
       const thumb = screen.getByRole('slider')
 
       fireEvent.pointerDown(thumb)
-      fireEvent.mouseDown(thumb)
+      fireEvent.pointerDown(thumb)
       act(() => vi.advanceTimersByTime(1_000))
 
       expect(useZoomStore.getState()).toMatchObject({
@@ -206,7 +206,7 @@ describe('TimelineHeader zoom slider', () => {
         isZoomInteracting: true,
       })
 
-      fireEvent.mouseUp(thumb)
+      fireEvent.pointerUp(thumb)
       expect(useZoomStore.getState()).toMatchObject({
         contentLevel: targetZoom,
         isZoomInteracting: false,
@@ -224,7 +224,7 @@ describe('TimelineHeader zoom slider', () => {
       render(<TimelineHeader />)
 
       fireEvent.pointerDown(screen.getByRole('slider'))
-      fireEvent.mouseDown(screen.getByRole('slider'))
+      fireEvent.pointerDown(screen.getByRole('slider'))
       act(() => vi.advanceTimersByTime(1_000))
       expect(useZoomStore.getState()).toMatchObject({
         level: targetZoom,
@@ -265,8 +265,8 @@ describe('TimelineHeader zoom slider', () => {
     expect(thumb).toHaveFocus()
 
     fireEvent.pointerDown(thumb)
-    fireEvent.mouseDown(thumb)
-    fireEvent.mouseUp(thumb)
+    fireEvent.pointerDown(thumb)
+    fireEvent.pointerUp(thumb)
     await act(async () => {})
 
     expect(thumb).not.toHaveFocus()

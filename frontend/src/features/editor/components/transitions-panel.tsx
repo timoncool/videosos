@@ -63,6 +63,7 @@ const TransitionCard = memo(function TransitionCard({
   onDragStart,
   onDragEnd,
 }: TransitionCardProps) {
+  const { t } = useTranslation()
   const { Icon, showPreview, previewDirection } = resolveTransitionCardVisuals(config)
   const [hovered, setHovered] = useState(false)
 
@@ -101,8 +102,8 @@ const TransitionCard = memo(function TransitionCard({
           <Icon className="w-4 h-4 text-muted-foreground group-hover:text-foreground" />
         </div>
       )}
-      <span className="text-[10px] text-muted-foreground group-hover:text-foreground truncate w-full">
-        {config.label}
+      <span className="line-clamp-2 w-full text-center text-[11px] leading-tight text-muted-foreground group-hover:text-foreground" title={t(`names.transitionNames.${config.id}`, { defaultValue: config.label })}>
+        {t(`names.transitionNames.${config.id}`, { defaultValue: config.label })}
       </span>
     </button>
   )
@@ -138,7 +139,7 @@ const CategorySection = memo(function CategorySection({
 
   return (
     <div className="space-y-2">
-      <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+      <div className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
         {title}
       </div>
       <div className="grid grid-cols-3 gap-1.5">

@@ -70,7 +70,8 @@
       "alsoDeleteLocalFiles": "Também excluir os arquivos locais do disco",
       "removeFilesFromFolder": "Remover os arquivos da pasta vinculada. Isso não pode ser desfeito.",
       "removeFilesFromNamedFolder": "Remover os arquivos da pasta vinculada \"{{folder}}\". Isso não pode ser desfeito.",
-      "openProject": "Abrir projeto"
+      "openProject": "Abrir projeto",
+      "actions": "Ações do projeto"
     },
     "form": {
       "createTitle": "Criar novo projeto",

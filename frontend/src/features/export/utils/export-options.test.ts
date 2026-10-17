@@ -157,7 +157,12 @@ describe('findActivePresetId', () => {
       findActivePresetId('mp4', settings({ resolution: { width: 1000, height: 800 } }), 1920, 1080),
     ).toBeNull()
     expect(
-      findActivePresetId('mp4', settings({ resolution: { width: 1920, height: 1080 } }), 3840, 2160),
+      findActivePresetId(
+        'mp4',
+        settings({ resolution: { width: 1920, height: 1080 } }),
+        3840,
+        2160,
+      ),
     ).toBeNull()
   })
 

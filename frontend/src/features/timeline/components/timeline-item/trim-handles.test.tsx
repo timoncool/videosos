@@ -36,7 +36,7 @@ describe('TrimHandles', () => {
       (el) => !el.classList.contains('pointer-events-none'),
     )
     expect(leftHandle).toBeTruthy()
-    fireEvent.mouseDown(leftHandle!)
+    fireEvent.pointerDown(leftHandle!)
     expect(onTrimStart).toHaveBeenCalledWith(expect.any(Object), 'start')
   })
 
@@ -49,7 +49,7 @@ describe('TrimHandles', () => {
       (el) => !el.classList.contains('pointer-events-none'),
     )
     expect(rightHandle).toBeTruthy()
-    fireEvent.mouseDown(rightHandle!)
+    fireEvent.pointerDown(rightHandle!)
     expect(onTrimStart).toHaveBeenCalledWith(expect.any(Object), 'end')
   })
 })
@@ -205,7 +205,7 @@ describe('overlay containers must not block trim handle events', () => {
       (el) => !el.classList.contains('pointer-events-none') && !el.classList.contains('opacity-0'),
     )
     expect(leftHandle).toBeTruthy()
-    fireEvent.mouseDown(leftHandle!)
+    fireEvent.pointerDown(leftHandle!)
     expect(onTrimStart).toHaveBeenCalledWith(expect.any(Object), 'start')
   })
 })

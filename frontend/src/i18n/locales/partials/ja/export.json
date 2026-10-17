@@ -96,7 +96,41 @@
         "embeddedDescription": "オン/オフ切り替え可能な字幕トラック（WebM/MKV）。"
       },
       "subtitles": "字幕",
-      "video": "動画"
+      "video": "動画",
+      "rateControl": "レート制御",
+      "rateControlAuto": "自動(ソースに応じて)",
+      "rateControlCbr": "CBR(固定ビットレート)",
+      "rateControlVbr": "VBR(可変ビットレート)",
+      "targetBitrate": "目標ビットレート",
+      "useSourceBitrate": "ソースを使用",
+      "smartCopy": "可能な場合はスマートコピー",
+      "smartCopyPath": "スマートコピー · 再エンコードなし",
+      "estimatedSize": "推定{{size}}",
+      "sourceBitrate": "ソース{{bitrate}}",
+      "smartCopyStatus": {
+        "eligible": "利用可能: 元のメディアをバイト単位でそのままコピーします。",
+        "disabled": "無効です。タイムラインをレンダリングしてエンコードします。",
+        "not-video": "動画の書き出しでのみ利用できます。",
+        "range": "イン/アウト範囲の書き出しでは利用できません。",
+        "timeline-layout": "追加のレイヤーがない、完全なソースクリップ1つが必要です。",
+        "source-unavailable": "元のソースファイルまたはメタデータが利用できません。",
+        "trimmed-or-retimed": "ソースがトリミング、分割、逆再生、またはリタイムされているため利用できません。",
+        "visual-processing": "ビジュアル編集、キャプション、トランジション、キーフレームをレンダリングする必要があるため利用できません。",
+        "audio-processing": "オーディオまたはトラックミックスが変更されているため利用できません。",
+        "project-mismatch": "プロジェクトの解像度またはフレームレートがソースと一致しません。",
+        "format-mismatch": "選択したフォーマットまたはコーデックがソースと一致しません。"
+      },
+      "loudness": "ラウドネス",
+      "loudnessOption": {
+        "off": "変更しない",
+        "stream": "−14 LUFS — YouTube、SNS",
+        "podcast": "−16 LUFS — ポッドキャスト、Apple",
+        "broadcast": "−23 LUFS — 放送 (EBU R128)"
+      },
+      "loudnessDescription": {
+        "off": "音声はミックスしたとおり、処理せずに書き出されます。",
+        "on": "ミックス全体を EBU R128 に従って {{lufs}} LUFS に揃え、リミッターでピークを −1 dBTP 以下に抑えます。音声は再エンコードされ、スマートコピーは無効になります。"
+      }
     },
     "videoContainer": {
       "mp4": "対応プレーヤーが多く、共有に最適",
@@ -123,6 +157,8 @@
           "title": "選択した形式をエンコードできません",
           "detail": "このブラウザーでは選択した書き出し設定をエンコードできません。",
           "detailWithError": "{{error}}",
+          "containerUnsupported": "このブラウザーは {{container}} 動画をエンコードできません。",
+          "noCodecs": "このブラウザーには書き出し用の動画エンコーダーがありません。",
           "fix": "別の形式/コーデックを選ぶか、最近の Chromium ブラウザーを試してください。"
         },
         "audio-export-ready": {
@@ -182,8 +218,30 @@
         "worker-export-ready": {
           "title": "ワーカー書き出しパスの準備完了",
           "detail": "書き出しワーカーは、既知のメインスレッドフォールバックなしでこのコンポジションをレンダリングできます。"
+        },
+        "smart-copy-ready": {
+          "title": "スマートコピーの準備完了",
+          "detail": "元のメディアをレンダリングや再エンコードなしでコピーします。"
         }
+      },
+      "smartCopyPath": "スマートコピーの経路"
+    },
+    "fcpxml": {
+      "noProject": "先にプロジェクトを開いてください。",
+      "failed": "FCPXMLを作成できませんでした：{{reason}}",
+      "left": {
+        "kind": "FCPXMLに含まれません（対応するものがありません）：{{items}}",
+        "file": "FCPXMLに含まれません（ワークスペースにファイルがありません）：{{items}}",
+        "speed": "FCPXMLに含まれません（速度が変更されています）：{{items}}",
+        "transition": "FCPXML に含まれません（接続クリップ間のトランジションには対応する要素がありません。編集ソフトで追加してください）：{{items}}"
       }
+    },
+    "validation": {
+      "resolution": "書き出しサイズが正しくありません。",
+      "frameRate": "フレームレートは 1〜120 にしてください。",
+      "audioContainer": "音声の書き出しには音声専用の形式が必要です。",
+      "videoContainer": "動画の書き出しには動画形式が必要です。",
+      "codecContainer": "{{codec}} コーデックは {{container}} では使えません。"
     }
   }
 }

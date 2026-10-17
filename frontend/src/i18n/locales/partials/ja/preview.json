@@ -68,7 +68,11 @@
       "loadingMedia": "メディアを読み込み中…",
       "videoPreview": "動画プレビュー",
       "emptyTitle": "タイムラインにはまだ何もありません",
-      "emptyDescription": "メディアをインポートし、クリップをタイムラインにドラッグしてから、Space キーでプレビューします。"
+      "emptyDescription": "メディアをインポートし、クリップをタイムラインにドラッグしてから、Space キーでプレビューします。",
+      "gradeComparisonSplit": "グレード分割比較",
+      "gradeComparisonBefore": "適用前",
+      "gradeComparisonAfter": "適用後",
+      "gradeComparisonWipe": "分割比較を調整"
     },
     "zoom": {
       "ariaLabel": "ズーム倍率: {{label}}",

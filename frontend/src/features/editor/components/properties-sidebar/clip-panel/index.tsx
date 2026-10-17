@@ -41,6 +41,7 @@ import type { TimelineItem, VideoItem, CompositionItem } from '@/types/timeline'
 import { getLinkedAudioCompanion } from '@/shared/utils/linked-media'
 import { useGizmoStore } from '@/features/editor/deps/preview'
 
+import { ClipTakes } from '@/features/editor/deps/generate-contract'
 import { LayoutSection } from './layout-section'
 import { FillSection } from './fill-section'
 import { VideoSection } from './video-section'
@@ -439,6 +440,7 @@ const ClipPanelCore = memo(function ClipPanelCore({
 
   // CONSOLIDATED: Single pass for all item type checks
   const itemTypeInfo = useMemo(() => computeItemTypeInfo(selectedItems), [selectedItems])
+  const takeClip = selectedItems.length === 1 ? selectedItems[0] : undefined
 
   // Destructure for cleaner usage
   const {
@@ -642,6 +644,7 @@ const ClipPanelCore = memo(function ClipPanelCore({
         <TabsContent value="video" className="mt-3">
           {showVideoTab && (
             <div className="divide-y divide-border [&>*]:py-4 [&>*:first-child]:pt-0 [&>*:last-child]:pb-0">
+              {takeClip?.mediaId && <ClipTakes clipId={takeClip.id} mediaId={takeClip.mediaId} />}
               {showVideoTab && (
                 <LayoutSection
                   items={layoutFillItems}
@@ -713,6 +716,9 @@ const ClipPanelCore = memo(function ClipPanelCore({
 
         {/* Audio stays media-specific; text animation lives in Animation. */}
         <TabsContent value="audio" className="space-y-4 mt-3">
+          {takeClip?.type === 'audio' && takeClip.mediaId && (
+            <ClipTakes clipId={takeClip.id} mediaId={takeClip.mediaId} />
+          )}
           {hasAudioItems && activeTab === 'audio' && (
             <Suspense fallback={null}>
               <LazyAudioSection items={audioPanelItems} />

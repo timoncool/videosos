@@ -4,6 +4,7 @@
 pub mod fal;
 pub mod http;
 pub mod model;
+pub mod net;
 pub mod openrouter;
 pub mod price;
 pub mod runware;

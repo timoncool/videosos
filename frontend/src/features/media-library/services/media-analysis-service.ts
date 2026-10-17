@@ -13,6 +13,7 @@ import type { MediaMetadata } from '@/types/storage'
 import {
   captionVideo,
   captionImage,
+  captioningSource,
   type MediaCaption,
   embeddingsProvider,
   EMBEDDING_MODEL_ID,
@@ -307,6 +308,7 @@ class MediaAnalysisService {
         }
 
         await mediaLibraryService.updateMediaCaptions(media.id, captionsWithEmbeddings, {
+          ...captioningSource(),
           sampleIntervalSec,
           embeddingModel,
           embeddingDim,
@@ -323,6 +325,7 @@ class MediaAnalysisService {
         })
       } else {
         await mediaLibraryService.updateMediaCaptions(media.id, [], {
+          ...captioningSource(),
           sampleIntervalSec,
           contentHash,
         })

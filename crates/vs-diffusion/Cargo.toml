@@ -1,0 +1,11 @@
+[package]
+name = "vs-diffusion"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Local image and video generation over stable-diffusion.cpp, loaded as a library"
+
+[dependencies]
+thiserror = { workspace = true }
+tracing = { workspace = true }
+libloading = "0.9"

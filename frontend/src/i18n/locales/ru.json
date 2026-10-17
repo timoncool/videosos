@@ -41,7 +41,8 @@
       "label": "Рабочие пространства",
       "edit": "Монтаж",
       "color": "Цвет",
-      "animate": "Анимация"
+      "animate": "Анимация",
+      "canvas": "Холст"
     },
     "backToProjects": "Ко всем проектам",
     "backToProjectsAria": "Назад к проектам",
@@ -60,7 +61,8 @@
     "saveAria": "Сохранить проект",
     "export": "Экспорт",
     "exportVideo": "Экспортировать видео",
-    "downloadProjectZip": "Скачать проект (.zip)"
+    "downloadProjectZip": "Скачать проект (.zip)",
+    "exportFcpxml": "FCPXML для Final Cut, DaVinci, Premiere"
   },
   "unsavedChanges": {
     "title": "Несохранённые изменения",
@@ -71,7 +73,7 @@
     "saving": "Сохранение..."
   },
   "settings": {
-    "title": "Настройки редактора",
+    "title": "Настройки",
     "sections": {
       "general": "Общие",
       "timeline": "Таймлайн",
@@ -81,12 +83,12 @@
     "general": {
       "autoSave": "Автосохранение",
       "interval": "Интервал",
-      "intervalMinutes": "{{count}} мин",
       "undoHistoryDepth": "Глубина истории отмены",
       "uiSounds": "Звуки интерфейса",
       "uiSoundVolume": "Громкость звуков",
       "uiSoundVoice": "Звуковая тема",
-      "uiSoundPreview": "Прослушать"
+      "uiSoundPreview": "Прослушать",
+      "minutesUnit": "мин"
     },
     "ai": {
       "captionSampleInterval": "Интервал выборки кадров для субтитров",

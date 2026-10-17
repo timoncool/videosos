@@ -101,7 +101,14 @@
         "frameRate": "프레임 속도",
         "durationSeconds": "길이(초)",
         "create": "만들기"
-      }
+      },
+      "controllerLayer": "널 오브젝트",
+      "parentColumn": "부모",
+      "shiftToggleAllLayers": "Shift 키를 누른 채 클릭하면 모든 레이어를 펼치거나 접습니다",
+      "parentPickWhipForLayer": "{{name}}의 부모 픽 휩",
+      "parentPickWhipHelp": "부모 레이어로 드래그하세요. Shift: 위치 스냅. Alt: 로컬 포즈 사용. Ctrl/Cmd+클릭: 연결 해제.",
+      "parentForLayer": "{{name}}의 부모",
+      "nullObjectNonRendering": "널 오브젝트(렌더링되지 않음)"
     },
     "miniTimeline": {
       "inPoint": "인 포인트",
@@ -357,7 +364,38 @@
       "directionTop": "위",
       "directionBottom": "아래",
       "resetParam": "{{label}} 재설정",
-      "paramColorAria": "{{label}} 색상"
+      "paramColorAria": "{{label}} 색상",
+      "params": {
+        "warp": "워프",
+        "color": "색상",
+        "size": "크기",
+        "intensity": "강도",
+        "density": "밀도",
+        "glow": "글로우",
+        "blocks": "블록",
+        "rgb_split": "RGB 분리",
+        "block_size": "블록 크기",
+        "spread": "확산",
+        "blur": "흐림",
+        "spin": "회전 효과",
+        "scale": "배율",
+        "turbulence": "난류",
+        "chroma": "크로마",
+        "swirl": "소용돌이",
+        "shine": "광택",
+        "zoom": "확대/축소",
+        "vignette": "비네팅",
+        "warmth": "따뜻함",
+        "burn": "번 효과",
+        "grain": "입자",
+        "slip": "밀림",
+        "shake": "흔들림",
+        "exposure": "노출",
+        "gate_width": "게이트 너비",
+        "roll": "롤",
+        "dim": "어둡게",
+        "softness": "부드러움"
+      }
     },
     "propertiesSidebar": {
       "title": "속성",
@@ -366,7 +404,9 @@
       "dockToPreview": "미리보기에 도킹",
       "expandFullColumn": "전체 열로 확장",
       "showPanel": "속성 패널 표시",
-      "clipsSelected": "{{count}}개 클립 선택됨"
+      "clipsSelected": "{{count}}개 클립 선택됨",
+      "layer": "레이어",
+      "composition": "컴포지션"
     },
     "markerPanel": {
       "notFound": "마커를 찾을 수 없습니다",
@@ -398,7 +438,10 @@
       "switchToFrames": "프레임 단위로 전환",
       "timecode": "타임코드",
       "frameRate": "프레임 레이트",
-      "totalFrames": "총 프레임 수"
+      "totalFrames": "총 프레임 수",
+      "composition": "컴포지션",
+      "matchProject": "프로젝트에 맞춤",
+      "matchProjectBackground": "배경을 프로젝트에 맞춤"
     },
     "clipPanel": {
       "tabVideo": "비디오",
@@ -407,7 +450,10 @@
       "adjustmentLayerHint": "조정 레이어의 효과는 위쪽 트랙의 모든 항목에 적용됩니다.",
       "tabText": "텍스트",
       "tabAnimation": "애니메이션",
-      "tabShape": "도형"
+      "tabShape": "도형",
+      "tabProperties": "속성",
+      "tabController": "널 오브젝트",
+      "tabAnimate": "애니메이션"
     },
     "gifSection": {
       "animation": "애니메이션",
@@ -602,14 +648,32 @@
       "background": "배경",
       "on": "켜짐",
       "off": "꺼짐",
-      "padding": "여백"
+      "padding": "여백",
+      "reveal": "나타내기",
+      "revealMode": {
+        "whole": "한 번에",
+        "words": "단어별",
+        "karaoke": "가라오케"
+      },
+      "revealHint": {
+        "whole": "줄 전체를 한 번에",
+        "words": "말하는 대로 단어가 나타남",
+        "karaoke": "줄 전체, 말하는 단어 강조"
+      },
+      "highlight": "강조 색"
     },
     "captionPresets": {
       "netflixHint": "둥근 어두운 박스 위 Inter, 하단 3분의 1 — 방송 품질의 중립적인 스타일.",
       "youtubeHint": "부드러운 그림자가 있는 Roboto, 박스 없음 — 자동 자막 느낌.",
       "boldYellowHint": "검은 그림자가 있는 시네마 옐로의 Roboto Slab — DVD 시대의 클래식.",
       "outlinedHint": "가는 외곽선의 Manrope — 깔끔하고 현대적, 그림자 없음.",
-      "tiktokHint": "Anton 디스플레이, 큼직하고 가운데 정렬 — 세로 영상의 바이럴 스타일."
+      "tiktokHint": "Anton 디스플레이, 큼직하고 가운데 정렬 — 세로 영상의 바이럴 스타일.",
+      "lookMinimalHint": "Dub Studio의 깔끔한 룩: 어두운 판 위의 단정한 글자.",
+      "lookViralHint": "Dub Studio의 바이럴 룩: 굵은 글자, 말하는 단어를 색으로 강조.",
+      "lookKaraokeHint": "Dub Studio의 가라오케: 말하는 단어가 목소리에 맞춰 빛납니다.",
+      "lookPlayfulHint": "Dub Studio의 발랄한 룩: 밝은 말풍선 위 손글씨.",
+      "lookNeonHint": "Dub Studio의 네온 룩: 판 없이 빛나는 글자.",
+      "lookFreshHint": "Dub Studio의 프레시 룩: 판 없이 외곽선 글자."
     },
     "alignment": {
       "left": "왼쪽 정렬",
@@ -682,7 +746,6 @@
       "shapes": "도형",
       "effects": "효과",
       "transitions": "전환",
-      "ai": "AI",
       "collapsePanel": "패널 접기",
       "expandPanel": "패널 펼치기",
       "keyframeEditor": "키프레임 편집기",
@@ -783,104 +846,31 @@
         "swing": "스윙"
       }
     },
-    "tts": {
-      "seek": "탐색",
-      "dialogTitle": "텍스트에서 오디오 생성",
-      "dialogDescription": "음성을 생성하고 텍스트 클립 위치에 삽입합니다.",
-      "kokoroUnsupported": "이 브라우저에서는 WebGPU를 사용할 수 없습니다. Kokoro TTS에는 Chrome 113+, Edge 113+ 또는 Safari 26+가 필요합니다.",
-      "mossUnsupported": "이 브라우저에서는 브라우저 관리 저장소를 사용할 수 없습니다. MOSS 다국어 TTS는 최신 Chromium 브라우저에서 가장 잘 작동합니다.",
-      "engine": "엔진",
-      "engineSupportDetails": "TTS 엔진 지원 정보",
-      "kokoroDescription": "WebGPU 기반 영어 음성입니다.",
-      "supportedLanguages": "지원 언어: {{languages}}.",
-      "kokoroOption": "Kokoro (영어, WebGPU)",
-      "mossOption": "MOSS Nano (20개 언어, CPU)",
-      "voice": "음성",
-      "text": "텍스트",
-      "textPlaceholder": "읽어 줄 텍스트를 입력하세요...",
-      "speed": "속도",
-      "progressPreparing": "로컬 TTS 준비 중...",
-      "insertedAndLinked": "삽입 및 연결됨",
-      "generate": "생성",
-      "generating": "생성 중...",
-      "regenerate": "다시 생성",
-      "insertAndLink": "삽입 및 연결",
-      "inserting": "삽입 중...",
-      "errors": {
-        "openProject": "오디오를 생성하기 전에 프로젝트를 여세요.",
-        "enterText": "합성할 텍스트를 입력하세요.",
-        "kokoroUnsupported": "Kokoro TTS에는 WebGPU가 필요합니다. Chrome 113+, Edge 113+ 또는 Safari 26+를 사용해 보세요.",
-        "mossUnsupported": "MOSS 다국어 TTS에는 브라우저 관리 저장소가 필요합니다. 최신 Chromium 브라우저를 사용해 보세요.",
-        "generateFailed": "음성을 생성하지 못했습니다.",
-        "insertFailed": "오디오를 저장하고 삽입하지 못했습니다.",
-        "supertonicUnsupported": "이 브라우저에서는 로컬 Supertonic TTS 런타임을 실행할 수 없습니다. 최신 Chrome 또는 Edge를 사용해 보세요."
-      },
-      "notifications": {
-        "addedAndLinked": "\"{{fileName}}\"을(를) 타임라인에 추가하고 텍스트와 연결했습니다.",
-        "savedNoTrack": "\"{{fileName}}\"을(를) 저장했지만 사용 가능한 오디오 트랙이 없습니다."
-      },
-      "supertonicUnsupported": "이 브라우저에서는 로컬 Supertonic TTS 런타임을 실행할 수 없습니다. 최신 Chrome 또는 Edge를 사용해 보세요.",
-      "supertonicDescription": "WebGPU 또는 WASM에서 실행되는 31개 언어 로컬 ONNX 음성입니다.",
-      "supertonicOption": "Supertonic 3 (31개 언어, 로컬 ONNX)",
-      "language": "언어",
-      "autoDetectLanguage": "자동 감지",
-      "expressiveTags": "표현 태그"
-    },
-    "aiPanel": {
-      "textToSpeech": "텍스트 음성 변환",
-      "collapseTextToSpeech": "텍스트 음성 변환 접기",
-      "expandTextToSpeech": "텍스트 음성 변환 펼치기",
-      "runsLocally": "{{runtime}}은(는) 브라우저에서 {{backend}}로 로컬 실행됩니다.",
-      "history": "기록 ({{count}}) - {{size}}",
-      "clearAll": "모두 지우기",
-      "musicGeneration": "음악 생성",
-      "collapseMusicGeneration": "음악 생성 접기",
-      "expandMusicGeneration": "음악 생성 펼치기",
-      "musicGenerationInfo": "음악 생성 정보",
-      "musicgenDescription": "Transformers.js를 통해 Xenova의 브라우저용 MusicGen 모델을 사용합니다. 첫 다운로드는 크지만 이후에는 로컬에 캐시됩니다.",
-      "musicgenPromptHint": "장르, 분위기, 템포, 악기 구성을 입력하세요. 짧은 클립일수록 훨씬 빠르게 끝납니다.",
-      "musicgenUnsupported": "이 브라우저에서는 WebGPU를 사용할 수 없습니다. MusicGen에는 Chrome 113+, Edge 113+ 또는 Safari 26+가 필요합니다.",
-      "prompt": "프롬프트",
-      "presets": "프리셋",
-      "musicPromptPlaceholder": "생성할 음악의 종류를 설명하세요...",
-      "length": "길이",
-      "generateMusic": "음악 생성",
-      "musicHistory": "음악 기록 ({{count}}) - {{size}}",
-      "remove": "제거",
-      "saved": "저장됨",
-      "saving": "저장 중...",
-      "saveAndInsert": "저장 및 삽입",
-      "saveToLibrary": "라이브러리에 저장",
-      "progressPreparingMusic": "로컬 음악 생성을 준비 중...",
-      "errors": {
-        "describeMusic": "생성할 음악을 설명하세요.",
-        "musicgenUnsupported": "MusicGen에는 WebGPU가 필요합니다. Chrome 113+, Edge 113+ 또는 Safari 26+를 사용해 보세요.",
-        "generateMusicFailed": "음악을 생성하지 못했습니다.",
-        "saveAudioFailed": "오디오를 미디어 라이브러리에 저장하지 못했습니다."
-      },
-      "notifications": {
-        "savedToLibrary": "\"{{fileName}}\"이(가) 미디어 라이브러리에 저장되었습니다.",
-        "savedAndAdded": "\"{{fileName}}\"이(가) 저장되어 타임라인에 추가되었습니다."
-      },
-      "defaultTtsPrompt": "Welcome to freecut. This voice was generated locally in the browser.",
-      "musicPresets": {
-        "lofiChillLabel": "Lo-fi 칠",
-        "lofiChillPrompt": "따뜻한 lo-fi 비트, 먼지 느낌의 드럼, 부드러운 베이스, 꿈같은 신스 리드",
-        "pop80sLabel": "80년대 팝",
-        "pop80sPrompt": "묵직한 드럼과 신스가 있는 80년대 팝 트랙",
-        "rock90sLabel": "90년대 록",
-        "rock90sPrompt": "큰 기타와 묵직한 드럼이 있는 90년대 록 노래",
-        "upbeatEdmLabel": "신나는 EDM",
-        "upbeatEdmPrompt": "밝고 경쾌한 EDM 트랙, 싱코페이트 드럼, 포근한 패드, 강한 감정 bpm: 130",
-        "countryLabel": "컨트리",
-        "countryPrompt": "어쿠스틱 기타가 있는 밝은 컨트리 노래",
-        "lofiElectroLabel": "Lo-fi 일렉트로",
-        "lofiElectroPrompt": "오가닉 샘플이 있는 느린 BPM의 lo-fi 일렉트로 칠"
-      }
-    },
     "colorPanel": {
       "emptyState": "색 보정할 클립을 선택하세요",
-      "adjustmentLayerLabel": "색 보정"
+      "adjustmentLayerLabel": "색 보정",
+      "dockLabel": "색보정 작업 영역",
+      "dockTitle": "색상"
+    },
+    "transformHierarchy": {
+      "controllerOption": "널: {{name}}",
+      "none": "없음"
+    },
+    "compositionControls": {
+      "authoringTitle": "게시된 컨트롤({{v0}})",
+      "authoringHint": "이 컴포지션을 재사용할 때 계속 편집할 수 있게 둘 텍스트와 색상을 선택하세요.",
+      "addAnother": "다른 속성 노출",
+      "add": "속성 노출",
+      "allExposed": "지원되는 모든 속성이 노출되어 있습니다.",
+      "noCandidates": "편집 가능한 속성을 노출하려면 텍스트 또는 도형 레이어를 추가하세요.",
+      "resetOverride": "{{name}} 재정의 초기화",
+      "overridden": "{{name}}이(가) 재정의되었습니다",
+      "instanceTitle": "템플릿 재정의",
+      "instanceHint": "변경 사항은 이 인스턴스에만 적용됩니다. 파란 점은 원본과 다른 값을 나타냅니다.",
+      "resetAll": "모든 재정의 초기화"
+    },
+    "textProperties": {
+      "scale": "배율"
     }
   }
 }

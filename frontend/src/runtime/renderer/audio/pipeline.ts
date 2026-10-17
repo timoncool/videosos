@@ -22,6 +22,7 @@ import {
 import { applyDucking, collectDuckingSources } from './ducking'
 import { createAudioMixBuffer, mixAudioSegmentInto, softClipAudioMix } from './mixdown'
 import { resolveSubCompMediaUrls } from './media-urls'
+import { applyGain, normaliseMix } from './loudness'
 import { extractAudioSegments } from './planning'
 
 const log = createLogger('CanvasAudio/pipeline')
@@ -252,18 +253,20 @@ export async function processAudio(
     return null
   }
 
-  softClipAudioMix(mixedSamples)
-
-  // Apply project-scoped master bus gain to the final mix. Monitor volume
-  // (per-device) is intentionally NOT applied during export — it's a
-  // preview-only setting.
   const masterBusDb = composition.masterBusDb
-  if (typeof masterBusDb === 'number' && masterBusDb !== 0) {
-    const masterBusGain = dbToGain(masterBusDb)
-    for (const channel of mixedSamples) {
-      for (let i = 0; i < channel.length; i++) {
-        channel[i] = channel[i]! * masterBusGain
-      }
+  const loudnessLufs = composition.loudnessLufs
+  let loudness: Awaited<ReturnType<typeof normaliseMix>> | undefined
+  if (loudnessLufs !== undefined) {
+    // the master bus gain would be undone by the normalisation, so it is not applied
+    loudness = await normaliseMix(mixedSamples, config.sampleRate, loudnessLufs)
+  } else {
+    softClipAudioMix(mixedSamples)
+
+    // Apply project-scoped master bus gain to the final mix. Monitor volume
+    // (per-device) is intentionally NOT applied during export — it's a
+    // preview-only setting.
+    if (typeof masterBusDb === 'number' && masterBusDb !== 0) {
+      applyGain(mixedSamples, dbToGain(masterBusDb))
     }
   }
 
@@ -272,6 +275,8 @@ export async function processAudio(
     channels: mixedSamples.length,
     durationSeconds: (mixedSamples[0]?.length ?? 0) / config.sampleRate,
     masterBusDb: masterBusDb ?? 0,
+    loudnessLufs,
+    loudness,
   })
 
   return {

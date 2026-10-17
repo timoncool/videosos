@@ -1,0 +1,264 @@
+{
+  "agent": {
+    "address": "地址",
+    "config": "Claude Desktop、Cursor 及其他客户端",
+    "copied": "已复制",
+    "copy": "复制",
+    "failed": "无法读取智能体状态",
+    "intro": "连接到此处的智能体（Claude Code、Cursor、Codex 等）像您一样操控 VideoSOS：选择模型并估算价格，使用您的密钥生成图像、视频、音乐和语音，编辑当前打开项目的时间轴（支持撤销），导入媒体并导出视频，而您可以在此窗口中查看每一步。您的提供商密钥绝不会向它显示。",
+    "lastCall": "智能体最近一次调用：{{call}} · {{seconds}} 秒前",
+    "none": "尚无智能体连接",
+    "windowOff": "窗口未连接",
+    "windowOn": "窗口已连接：智能体可以看到它"
+  },
+  "float": {
+    "dock": "放回顶栏"
+  },
+  "help": {
+    "boostySub": "Boosty 订阅",
+    "card": "银行卡 / PayPal",
+    "donateTitle": "支持作者",
+    "founder": "创始人",
+    "madeBy": "作者",
+    "crypto": "加密货币",
+    "copy": "复制",
+    "tier5": "一周的 CI/CD 和域名",
+    "tier25": "一个月的托管",
+    "tier100": "一天的开发",
+    "tier500": "一整个功能",
+    "thanks": "感谢你让开源继续下去！"
+  },
+  "hub": {
+    "byEnv": "已被环境变量 DO_NOT_TRACK 或 STUDIO_TELEMETRY 关闭。",
+    "checkbox": "发送匿名使用统计",
+    "close": "关闭",
+    "feedNever": "尚未从服务器获取新闻：VideoSOS 将显示其发行版自带的新闻。",
+    "feedSource": "新闻来源",
+    "nothing": "今天还没有需要发送的内容。",
+    "notices": "通知",
+    "refresh": "立即检查",
+    "reset": "新的安装 ID",
+    "what": "发送的内容",
+    "why": "了解有多少人使用 VideoSOS、用来做什么，有助于决定接下来做什么。不含任何个人信息：不发送提示词、文件或密钥，只发送按任务和提供方统计的生成次数及其失败情况（名称、路径和引号中的内容在本机删除）、用过的模型、用过 VideoSOS 的哪些功能（仅功能名，不含内容）、模型下载的成功与失败、在本机显卡上生成的视频秒数、版本、系统、显卡级别、窗口语言，以及我们各程序共用的电脑编号（不可逆哈希，不是系统编号本身）。",
+    "ad": "广告"
+  },
+  "monitor": {
+    "popOut": "分离资源监视器",
+    "power": "功率",
+    "process": "进程",
+    "title": "资源"
+  },
+  "news": {
+    "changelogNote": "更新日志仅提供英文版本。",
+    "close": "关闭",
+    "empty": "这里还没有内容。",
+    "releaseNotes": "发布说明",
+    "sections": {
+      "added": "新增",
+      "changed": "变更",
+      "fixed": "修复"
+    },
+    "tabChangelog": "更新日志",
+    "tabNews": "动态",
+    "title": "新功能",
+    "unreleased": "未发布"
+  },
+  "offline": {
+    "body": "此窗口无法连接到本机上的 VideoSOS 服务。如果你关闭了应用，请重新启动；如果它自行停止，请重启它。服务一有响应，页面就会自动恢复。",
+    "retry": "立即检查",
+    "retrying": "每 2 秒检查一次 · {{seconds}} 秒",
+    "title": "工作室服务没有响应"
+  },
+  "prefs": {
+    "copied": "已复制",
+    "copyPath": "复制路径",
+    "dataDir": "数据文件夹",
+    "dataHint": "项目、生成结果、其历史记录以及 VideoSOS 的设置都保存在此处",
+    "dataTitle": "数据文件夹",
+    "issues": "报告问题",
+    "license": "许可证 (MIT)",
+    "links": "常用链接",
+    "pathsFailed": "无法获取数据文件夹：{{error}}",
+    "projectsDir": "项目",
+    "releases": "版本发布",
+    "repo": "源代码",
+    "generationsDir": "生成结果",
+    "exportsDir": "导出",
+    "logsDir": "日志",
+    "openFolder": "在文件管理器中显示"
+  },
+  "units": {
+    "gb": "GB",
+    "watt": "瓦"
+  },
+  "app": {
+    "name": "VideoSOS",
+    "tagline": "AI 视频工作室：生成与剪辑集于一个窗口"
+  },
+  "network": {
+    "proxyTitle": "代理",
+    "proxyIntro": "VideoSOS 从互联网获取的所有内容都会经过它：在 OpenRouter、fal 和 Runware 上的生成、它们的模型列表、新闻和更新。本机和本地网络则不会经过它。",
+    "proxyModeSystem": "与系统一致",
+    "proxyModeCustom": "我的代理",
+    "proxyModeOff": "不使用代理",
+    "proxyKind": "协议",
+    "proxyKindHint": "适用于未带协议书写的地址。SOCKS5 会在代理端解析网站域名。",
+    "proxyAddress": "地址",
+    "proxyAddressPlaceholder": "127.0.0.1:1080 或 主机:端口:用户名:密码",
+    "proxyAddressHint": "任何常见形式均可：主机:端口、主机:端口:用户名:密码、用户名:密码@主机:端口、socks5://用户名:密码@主机:端口。",
+    "proxyTest": "检测",
+    "proxySave": "保存",
+    "proxySaved": "代理已保存并正在使用",
+    "proxyReachable": "有响应",
+    "proxyUnreachable": "无响应",
+    "proxyWindowNote": "窗口本身（模型图片、新闻）会在下次启动时使用代理，且不带用户名密码：浏览器无法向 SOCKS 传递这些信息。",
+    "show": "显示",
+    "hide": "隐藏",
+    "access": "从网络访问",
+    "accessHint": "在另一台电脑或手机的浏览器中打开 VideoSOS。所有运算都在本机运行；浏览器需要访问密钥。本机上的智能体和窗口本身无需密钥。",
+    "accessRestart": "请关闭并重新打开 VideoSOS 使其生效：地址在启动时确定。",
+    "accessKey": "密钥",
+    "accessNewKey": "新密钥",
+    "accessInternet": "从互联网访问：在路由器上将此端口转发到本机，然后打开 http://<您的地址>:<端口>/?key=<密钥>。任何持有该密钥的人都可以操控 VideoSOS，并使用您的密钥产生费用。"
+  },
+  "journal": {
+    "title": "动态",
+    "empty": "代理所做的更改和 VideoSOS 的消息会显示在这里。",
+    "unreadable": "无法读取动态：{{error}}",
+    "clear": "清空",
+    "remove": "移除此条",
+    "agent": "代理",
+    "app": "VideoSOS",
+    "line": "{{verb}}：{{kind}}「{{name}}」",
+    "lineNoName": "{{verb}}：{{kind}}",
+    "verb": {
+      "started": "已开始",
+      "cancelled": "已停止",
+      "deleted": "已删除",
+      "updated": "已更改",
+      "imported": "已导入",
+      "exported": "已导出",
+      "undone": "已撤销",
+      "redone": "已重做",
+      "created": "已创建",
+      "restored": "已还原"
+    },
+    "kind": {
+      "generation": "生成",
+      "timeline": "时间线",
+      "media": "媒体",
+      "video": "视频",
+      "download": "链接下载",
+      "checkpoint": "还原点",
+      "blocking": "3D 走位预演",
+      "key": "密钥",
+      "proxy": "代理",
+      "project": "项目",
+      "transcript": "转录",
+      "captions": "字幕",
+      "settings": "设置",
+      "element": "元素",
+      "preset": "提示词预设",
+      "storyboard": "故事板",
+      "canvas": "画布",
+      "fcpxml": "FCPXML",
+      "local device": "本地设备",
+      "local model": "本地模型",
+      "recording": "录音",
+      "subtitles": "字幕"
+    }
+  },
+  "files": {
+    "title": "文件",
+    "showInFolder": "在文件夹中显示"
+  },
+  "family": {
+    "title": "作者的其他程序",
+    "dub": "用克隆声音离线配音视频",
+    "yue2": "可编辑乐谱的 AI 歌曲",
+    "minimax": "本地与云端 AI 音乐工作室",
+    "ace": "AI 音乐工作室：歌曲、人声、翻唱、短片",
+    "bulka": "与 AI 助手实时编码音乐",
+    "dungeon": "本地 AI 角色扮演游戏"
+  },
+  "topbar": {
+    "projects": "项目",
+    "new": "新建",
+    "newSub": "项目",
+    "newTitle": "开始新项目",
+    "help": "帮助",
+    "portable": "便携版"
+  },
+  "status": {
+    "idle": "就绪"
+  },
+  "start": {
+    "eyebrow": "OpenRouter · fal · Runware · MCP",
+    "title": "在一个窗口中生成并剪辑视频。",
+    "lead": "用你自己的密钥调用最好的模型生成图片、视频、音乐、人声和音效，再在多轨时间线上剪成成片。",
+    "cardTitle": "开始一个项目",
+    "cardText": "项目把媒体、生成结果和时间线一起保存在这台电脑上。",
+    "projects": "项目",
+    "features": {
+      "generate": {
+        "title": "全部模态",
+        "text": "图片、视频、口型同步、音乐、人声、音效和文本"
+      },
+      "edit": {
+        "title": "多轨编辑器",
+        "text": "时间线、关键帧、特效、字幕、导出 MP4"
+      },
+      "agent": {
+        "title": "通过 MCP 的 AI 代理",
+        "text": "Claude 等代理按的就是你按的那些按钮"
+      },
+      "yours": {
+        "title": "你的密钥，你的文件",
+        "text": "直接付费给服务商，不经过我们"
+      }
+    }
+  },
+  "share": {
+    "title": "分享",
+    "text": "“{{title}}”——用 VideoSOS 制作",
+    "file": "发送文件…",
+    "fileUnavailable": "此处无法发送文件",
+    "fileRefused": "系统不接受发送此文件——请保存后自行发送",
+    "failed": "无法分享：{{reason}}",
+    "copyText": "复制带链接的文字",
+    "copied": "已复制带链接的文字",
+    "places": {
+      "telegram": "Telegram",
+      "x": "X (Twitter)",
+      "vk": "VK",
+      "whatsapp": "WhatsApp",
+      "reddit": "Reddit"
+    }
+  },
+  "chat": {
+    "tabLabel": "聊天",
+    "model": "模型",
+    "costHint": "按 OpenRouter 账单计算，这次对话的费用",
+    "clear": "清空对话",
+    "intro": "助手使用与已连接智能体相同的工具来操作 VideoSOS：读取时间线、生成、剪辑和导出，每一步你都看得到。费用由你的 OpenRouter 密钥支付；生成次数计入智能体的每日限额。",
+    "suggestions": {
+      "what": "时间线上现在有什么？",
+      "picture": "生成一张海上日落的图片并放到时间线上",
+      "cut": "把第一个片段从中间分成两段，并在两段之间加一个平滑过渡",
+      "captions": "在开头加一个标题，内容为项目名称"
+    },
+    "tools": "助手的步骤",
+    "toolRunning": "运行中",
+    "toolDone": "已完成",
+    "toolFailed": "失败",
+    "thinking": "思考中",
+    "placeholder": "写下要做什么…",
+    "send": "发送",
+    "stop": "停止",
+    "footnote": "Enter 发送，Shift+Enter 换行。进行费用较高的生成前，助手会先询问。",
+    "needsKey": "聊天需要 OpenRouter 密钥：助手使用 OpenRouter 模型回答，并使用 VideoSOS 的工具工作。",
+    "openKeys": "打开密钥",
+    "byAgent": "由已连接的智能体（MCP）回答",
+    "introAgent": "你的消息会发给通过 MCP 连接的智能体：它用自己的工具操作 VideoSOS，读取时间线、生成、剪辑和导出，每一步都会显示在这里。它的回答不收费；生成计入智能体的每日限额。"
+  }
+}

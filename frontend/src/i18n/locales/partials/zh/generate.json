@@ -1,94 +1,508 @@
 {
   "generate": {
-    "tabLabel": "Generate",
-    "serverError": "The VideoSOS server did not answer: {{reason}}",
+    "tabLabel": "生成",
+    "serverError": "VideoSOS 服务器没有响应：{{reason}}",
     "tasks": {
-      "image": "Image",
-      "image_edit": "Edit image",
-      "video": "Video",
-      "video_edit": "Edit video",
-      "lip_sync": "Lip sync",
-      "upscale": "Upscale",
-      "remove_background": "Remove background",
-      "music": "Music",
-      "speech": "Voice",
-      "sound": "Sound effects",
-      "transcribe": "Transcribe",
-      "text": "Text"
+      "image": "图像",
+      "image_edit": "编辑图像",
+      "video": "视频",
+      "video_edit": "编辑视频",
+      "lip_sync": "口型同步",
+      "upscale": "放大",
+      "remove_background": "移除背景",
+      "music": "音乐",
+      "speech": "语音",
+      "sound": "音效",
+      "transcribe": "转写",
+      "text": "文本"
     },
     "media": {
-      "image": "an image",
-      "video": "a video",
-      "audio": "audio"
+      "image": "一张图像",
+      "video": "一段视频",
+      "audio": "音频"
     },
     "model": {
-      "choose": "Choose a model",
-      "loading": "Reading the models…",
-      "search": "Search models",
-      "all": "All",
-      "refresh": "Read the catalogues again",
-      "none": "No model fits this search.",
-      "new": "new",
-      "deprecated": "retiring"
+      "choose": "选择模型",
+      "loading": "正在读取模型…",
+      "search": "搜索模型",
+      "all": "全部",
+      "refresh": "重新读取目录",
+      "none": "没有符合此搜索的模型。",
+      "new": "新",
+      "deprecated": "即将停用",
+      "typicalTime": "≈ {{time}}（按你的运行）",
+      "pin": "置顶",
+      "unpin": "取消置顶"
     },
     "keys": {
-      "missing": "No key for this provider",
-      "needed": "Add your {{provider}} key to run this model.",
-      "placeholder": "Paste the API key",
-      "save": "Save",
-      "ok": "The key works.",
-      "okBalance": "The key works. Balance: {{balance}}",
-      "failed": "The provider did not accept the key.",
-      "getOne": "Get a {{provider}} key"
+      "missing": "此提供商没有密钥",
+      "needed": "添加您的 {{provider}} 密钥以运行此模型。",
+      "placeholder": "粘贴 API 密钥",
+      "save": "保存",
+      "ok": "密钥有效。",
+      "okBalance": "密钥有效。余额：{{balance}}",
+      "failed": "提供商未接受该密钥。",
+      "getOne": "获取 {{provider}} 密钥",
+      "spent": "此密钥已花费：{{spent}}。",
+      "balanceAdminOnly": "fal 仅向管理员密钥显示余额。"
     },
     "form": {
-      "loading": "Reading the model's settings…",
-      "more": "More settings ({{count}})",
-      "default": "Model default",
-      "dropHere": "Drop {{kind}} from the library or a result here",
-      "pick": "Pick from the library",
-      "remove": "Remove",
-      "noMedia": "The library has no {{kind}} yet.",
-      "tooMany": "At most {{max}} files here.",
-      "wrongKind": "This slot takes {{kind}}.",
-      "missing": "Fill in: {{fields}}"
+      "loading": "正在读取模型设置…",
+      "more": "更多设置（{{count}}）",
+      "default": "模型默认值",
+      "dropHere": "将媒体库中的{{kind}}或结果拖放到此处",
+      "pick": "从媒体库选择",
+      "remove": "移除",
+      "noMedia": "媒体库中还没有{{kind}}。",
+      "tooMany": "此处最多 {{max}} 个文件。",
+      "wrongKind": "此插槽接受{{kind}}。",
+      "missing": "请填写：{{fields}}",
+      "length": "{{count}} / {{max}}",
+      "tooLong": "{{count}} / {{max}}，超出模型可接受的长度",
+      "shorten": "请缩短“{{field}}”：{{count}} 个字符，模型最多接受 {{max}} 个",
+      "atSecond": "第 {{n}} 帧的秒数",
+      "atFrame": "第 {{n}} 帧的帧号",
+      "atAuto": "自动",
+      "atSecondHint": "每帧下方：它所在的秒数，最多 {{max}}。留空则由模型自行排布。",
+      "atFrameHint": "每帧下方：它在视频中的帧号（-1 为最后一帧）。留空则由模型自行排布。",
+      "searchOptions": "搜索…",
+      "noOptions": "未找到"
     },
-    "placeOnTimeline": "Put on the timeline",
-    "repeat": "Runs",
-    "repeatHint": "How many times to run it; each run is a separate result and is paid separately",
-    "submit": "Generate",
+    "placeOnTimeline": "放到时间轴上",
+    "repeat": "运行次数",
+    "repeatHint": "运行多少次；每次运行都是独立的结果，并单独计费",
+    "submit": "生成",
     "cost": {
-      "unknown": "price after the run",
-      "estimated": "Worked out before the run",
-      "billed": "As the provider billed it",
-      "failed": "Price unknown: {{reason}}"
+      "unknown": "运行后显示价格",
+      "estimated": "运行前估算",
+      "billed": "按提供商实际计费",
+      "failed": "价格未知：{{reason}}"
     },
-    "history": "Generations ({{count}})",
+    "history": "生成记录（{{count}}）",
     "status": {
-      "queued": "waiting",
-      "sending": "sending",
-      "running": "working",
-      "done": "done",
-      "failed": "failed",
-      "cancelled": "cancelled"
+      "queued": "等待中",
+      "sending": "发送中",
+      "running": "处理中",
+      "done": "完成",
+      "failed": "失败",
+      "cancelled": "已取消"
     },
     "actions": {
-      "cancel": "Cancel",
-      "place": "To timeline",
-      "placeHint": "Put the result at the playhead",
-      "copy": "Copy",
-      "placeText": "As text",
-      "reuse": "Edit",
-      "reuseHint": "Load this run's model and settings into the form",
-      "again": "Again",
-      "forgetHint": "Remove from the list and delete its files (media already in the library stays)"
+      "cancel": "取消",
+      "place": "到时间轴",
+      "placeHint": "将结果放在播放头位置",
+      "copy": "复制",
+      "placeText": "作为文本",
+      "reuse": "编辑",
+      "reuseHint": "将此次运行的模型和设置载入表单",
+      "again": "再次生成",
+      "forgetHint": "从列表中移除并删除其文件（已在媒体库中的媒体会保留）",
+      "like": "收藏这个结果：最好的一版，按此排序时排在最前",
+      "unlike": "取消收藏"
     },
-    "importFailed": "The result arrived but was not added to the library: {{reason}}",
+    "importFailed": "结果已返回，但未能添加到媒体库：{{reason}}",
     "improve": {
-      "button": "Improve prompt",
-      "hint": "Rewrite the prompt for this model with an OpenRouter LLM (a fraction of a cent)",
-      "needsKey": "Needs an OpenRouter key",
-      "undo": "Back to mine"
-    }
+      "button": "优化提示词",
+      "hint": {
+        "openrouter": "使用 OpenRouter LLM 为此模型改写提示词（花费不到一美分）",
+        "agent": "为此模型改写提示词：由已连接的智能体撰写，免费"
+      },
+      "needsKey": "需要 OpenRouter 密钥",
+      "undo": "恢复我的原文",
+      "noAgent": "智能体未连接：请通过 VideoSOS 的 MCP 启动它（设置 > 智能体），或在那里选择 OpenRouter"
+    },
+    "use": {
+      "button": "用作…",
+      "videoFromFrame": "以此帧生成视频",
+      "edit": "编辑图片",
+      "upscale": "放大",
+      "removeBackground": "移除背景",
+      "lipSync": "为此人脸对口型",
+      "continue": "从最后一帧继续",
+      "editVideo": "编辑视频",
+      "sound": "为此视频生成声音",
+      "lipSyncVoice": "用此语音对口型",
+      "transcribe": "转写",
+      "needsProject": "请先打开项目：该帧将放入项目的媒体库。",
+      "noSlot": "{{model}} 不接受此类文件：请为此任务选择其他模型。",
+      "noPrompt": "{{model}} 没有文本栏：请选择此任务的其他模型。",
+      "placed": "已放入「{{field}}」",
+      "lastFrameName": "{{title}}，尾帧"
+    },
+    "compare": {
+      "pick": "对比",
+      "button": "对比（{{count}}）",
+      "title": "并排对比",
+      "play": "同时播放",
+      "pause": "暂停"
+    },
+    "stats": {
+      "button": "项目花费",
+      "title": "此项目的花费明细",
+      "total": "总计 {{total}}，今日 {{today}}",
+      "empty": "此项目还没有生成任何内容。",
+      "byTask": "按任务",
+      "byProvider": "按提供商",
+      "byModel": "按模型",
+      "other": "其他",
+      "files": "项目中的文件：{{count}} — 生成 {{generated}}，添加 {{added}}"
+    },
+    "filter": {
+      "search": "按关键词或模型查找",
+      "task": "任务",
+      "status": "状态",
+      "allTasks": "所有任务",
+      "allStates": "任意状态",
+      "nothing": "没有符合条件的生成记录。"
+    },
+    "zoom": {
+      "title": "图片",
+      "open": "以原始尺寸打开",
+      "in": "放大",
+      "out": "缩小",
+      "fit": "适应窗口",
+      "close": "关闭"
+    },
+    "sort": {
+      "label": "排序：{{order}}",
+      "title": "排序",
+      "newest": "最新优先",
+      "oldest": "最早优先",
+      "costliest": "最贵优先",
+      "cheapest": "最便宜优先",
+      "liked": "收藏的在前"
+    },
+    "fields": {
+      "prompt": "提示词",
+      "positive_prompt": "提示词",
+      "negative_prompt": "反向提示词",
+      "aspect_ratio": "画面比例",
+      "resolution": "分辨率",
+      "input_references": "参考图",
+      "seed": "种子",
+      "output_format": "输出格式",
+      "output_quality": "输出质量",
+      "duration": "时长（秒）",
+      "number_results": "结果数量",
+      "num_images": "图片数量",
+      "size": "尺寸",
+      "image_size": "图片尺寸",
+      "num_inference_steps": "步数",
+      "steps": "步数",
+      "guidance_scale": "提示词引导 (CFG)",
+      "cfg_scale": "提示词引导 (CFG)",
+      "strength": "强度",
+      "acceleration": "加速",
+      "system": "指令",
+      "temperature": "温度",
+      "frame_first": "首帧",
+      "frame_last": "尾帧",
+      "background": "背景",
+      "input_audio": "音频",
+      "language": "语言",
+      "input": "文本",
+      "text": "文本",
+      "voice": "声音",
+      "instructions": "朗读方式",
+      "speed": "语速",
+      "image": "图片",
+      "frame_images": "帧",
+      "seed_image": "源图片",
+      "mask_image": "蒙版",
+      "generate_audio": "生成声音",
+      "enable_audio": "生成声音"
+    },
+    "historyTitle": "生成记录",
+    "details": {
+      "title": "详情",
+      "model": "模型",
+      "took": "用时",
+      "seconds": "{{count}} 秒",
+      "job": "任务",
+      "media": "项目媒体",
+      "result": "之前的结果"
+    },
+    "providerWords": {
+      "billed_by_video_tokens_the_price_is_known_after_the_run": "按视频 token 计费；运行后才能确定价格",
+      "billed_by_tokens_the_price_is_known_after_the_run": "按 token 计费；运行后才能确定价格",
+      "billed_by_the_length_of_the_recording": "按录音时长计费",
+      "how_the_model_should_answer": "模型应如何回答",
+      "iso_code_for_example_ru_or_en_empty_to_detect": "ISO 代码，例如 ru 或 en；留空则自动检测",
+      "tone_pace_and_emotion_in_words": "用文字描述语气、节奏和情绪。"
+    },
+    "jobError": {
+      "no_key": "没有 {{provider}} 密钥",
+      "catalog": "无法读取提供商的模型",
+      "invalid": "表单中的值与模型不匹配",
+      "refused": "提供商拒绝了请求",
+      "busy": "提供商繁忙——任务未发送，请重新发送",
+      "network": "无法连接到提供商",
+      "provider_failed": "提供商未能完成任务",
+      "lost_contact": "与提供商的连接已中断",
+      "too_long": "任务运行时间过长",
+      "download_failed": "结果下载失败",
+      "storage": "结果未能写入磁盘",
+      "interrupted": "任务发送过程中 VideoSOS 已关闭",
+      "details": "错误信息",
+      "openKeys": "打开密钥"
+    },
+    "placeholder": "正在生成，{{model}}：{{state}}",
+    "rate": {
+      "second": "每秒 {{price}}",
+      "characters": "每 1000 字符 {{price}}",
+      "tokens": "每百万 token {{input}} / {{output}}"
+    },
+    "describe": {
+      "button": "根据图片生成提示词",
+      "hint": {
+        "openrouter": "模型会查看表单中的第一张图片，并写出能生成它的提示词。费用由 OpenRouter 密钥支付。",
+        "agent": "已连接的智能体会查看表单中的第一张图片，并写出能生成它的提示词；免费"
+      }
+    },
+    "presets": {
+      "button": "预设",
+      "hint": "已保存的提示词：放入输入框，或保存当前提示词",
+      "empty": "还没有已保存的提示词。为当前提示词起个名字并保存。",
+      "name": "预设名称",
+      "keep": "保存",
+      "keepHint": "以此名称保存输入框中的文字",
+      "remove": "移除预设“{{name}}”"
+    },
+    "elements": {
+      "button": "元素",
+      "hint": "带图片的角色、物体和场所：提示词中的“@名称”会把图片发送给模型",
+      "empty": "保存一个角色、物体或场所：把它的图片放进表单的图片栏并起个名字。在提示词中以 @名称 调用。",
+      "use": "把 @{{name}} 放入提示词",
+      "pictures_one": "{{count}} 张图片",
+      "pictures_other": "{{count}} 张图片",
+      "remove": "移除 @{{name}}",
+      "name": "名称，一个词",
+      "keep": "保存",
+      "keepHint": "表单中的图片：{{count}} 张；将以此名称保存",
+      "noPictures": "请先把它的图片放入表单",
+      "badName": "一个词：字母、数字、_ 和 -",
+      "left": "{{names}}：此模型没有放置它们图片的位置，将以文字形式发送"
+    },
+    "variables": {
+      "title": "提示词变量",
+      "missing": "请填写变量：{{names}}"
+    },
+    "batch": {
+      "add": "与另一个模型对比",
+      "remove": "从批量中移除该模型",
+      "lacks": "缺少：{{fields}}",
+      "noKey": "没有 {{provider}} 密钥"
+    },
+    "segment": {
+      "cutting": "正在截取片段的 {{from}}–{{to}} 秒…",
+      "ready": "该区间已作为源放入“编辑视频”：请说明要修改什么",
+      "failed": "区间未能截取：{{reason}}",
+      "noFile": "{{name}} 的文件不在媒体库中",
+      "name": "{{title}}，{{from}}–{{to}} 秒"
+    },
+    "storyboard": {
+      "tabLabel": "故事板",
+      "noProject": "请先打开一个项目：故事板随项目一起保存。",
+      "script": "剧本或创意",
+      "scriptHint": "发生了什么，按场景描述或用一句话。@元素名称 会带上它们的图片。",
+      "count": "镜头数",
+      "split": "拆分为镜头",
+      "splitHint": {
+        "openrouter": "镜头由 OpenRouter 的语言模型撰写；与“优化提示词”一样收费",
+        "agent": "镜头由已连接的智能体撰写；免费"
+      },
+      "frameModel": "帧来源",
+      "clipModel": "片段来源",
+      "shots": "镜头",
+      "shot": "镜头 {{number}}",
+      "seconds": "秒",
+      "remove": "移除镜头 {{number}}",
+      "frame": "帧",
+      "frameAgain": "重新生成帧",
+      "clip": "片段",
+      "clipNeedsFrame": "该模型以一帧作为片段的起点：请先生成帧",
+      "frameDone": "帧已完成",
+      "clipDone": "片段已在时间线上",
+      "frameFailed": "帧生成失败：{{reason}}",
+      "clipFailed": "片段生成失败：{{reason}}",
+      "add": "添加镜头",
+      "allFrames_one": "为 {{count}} 个镜头生成帧",
+      "allFrames_other": "为 {{count}} 个镜头生成帧",
+      "allClips_one": "为 {{count}} 个镜头生成片段并放到时间线",
+      "allClips_other": "为 {{count}} 个镜头生成片段并放到时间线",
+      "allClipsHint": "片段从播放头处依次排列"
+    },
+    "canvas": {
+      "prompt": "文本",
+      "media": "图片或视频",
+      "generate": "生成",
+      "promptHint": "要做什么；它会进入所连接生成的提示词。",
+      "mediaHint": "把媒体库中的文件或某个结果拖放到这里。",
+      "remove": "移除节点",
+      "task": "任务",
+      "run": "运行",
+      "runAgain": "重新运行",
+      "waiting_one": "正在等待前面的 {{count}} 个节点",
+      "waiting_other": "正在等待前面的 {{count}} 个节点",
+      "noRoom_one": "{{count}} 个文件在此模型中没有可用的位置",
+      "noRoom_other": "{{count}} 个文件在此模型中没有可用的位置",
+      "empty": "添加文本、图片和生成并把它们连起来：文本连到提示词，文件连到模型的输入位。可把媒体库中的文件拖到画布上。",
+      "input": {
+        "prompt": "提示词",
+        "media": "文件"
+      },
+      "workflow": {
+        "templates": "模板",
+        "save": "保存 工作流",
+        "open": "打开 工作流",
+        "failed": "工作流 未能打开：{{reason}}",
+        "template": {
+          "frameToVideo": {
+            "name": "画面转视频",
+            "about": "用提示词生成一张图片，再用这张图片和它自己的运动提示词开始生成视频。",
+            "prompts": {
+              "idea": "黄昏时悬崖上的灯塔，脚下海浪拍岸，窗里透出温暖的灯光",
+              "motion": "镜头缓缓推进，灯塔的光束扫过海面"
+            }
+          },
+          "compareImages": {
+            "name": "对比图片模型",
+            "about": "同一条提示词并排送入三个图片模型；面板的模型和用于对比的模型已设置好。",
+            "prompts": {
+              "idea": "一位身穿黄色雨衣的老渔夫的肖像，阴天的柔和光线，85 毫米"
+            }
+          },
+          "promptWriter": {
+            "name": "提示词撰写",
+            "about": "语言模型根据一个想法写出提示词，图片模型把它画出来。",
+            "prompts": {
+              "idea": "为图片模型写一条生动的提示词：雨夜东京一家温馨的拉面店。只回复提示词。"
+            }
+          },
+          "productShot": {
+            "name": "产品镜头",
+            "about": "产品照片：去除背景，由编辑模型放进新场景，再放大。",
+            "prompts": {
+              "scene": "把产品放在晨光下的大理石桌面上，柔和的阴影，浅景深"
+            }
+          },
+          "talkingHead": {
+            "name": "口播头像",
+            "about": "由声音朗读的文字，再让媒体库中的一张脸把它说出来。",
+            "prompts": {
+              "words": "大家好！今天我来教你三个更快剪辑视频的小技巧。"
+            }
+          },
+          "soundtrack": {
+            "name": "音乐与音效",
+            "about": "用两条提示词生成一段音乐和一个音效。",
+            "prompts": {
+              "mood": "平静的氛围钢琴搭配柔和的弦乐，节奏缓慢，充满希望",
+              "effect": "卵石海滩上的海浪，远处传来海鸥的叫声"
+            }
+          }
+        }
+      }
+    },
+    "motion": {
+      "tabLabel": "HTML 图形",
+      "hint": "用 HTML 和 CSS 编写的标题、字幕条、计数器和徽章：动画自动播放，片段在下方视频之上保持透明。",
+      "templates": {
+        "title": "标题",
+        "lowerThird": "字幕条",
+        "counter": "计数器",
+        "badge": "徽章"
+      },
+      "preview": "预览",
+      "code": "HTML 和 CSS",
+      "seconds": "秒",
+      "make": "在播放头位置制作片段",
+      "rendering": "正在绘制帧… {{percent}}%",
+      "done": "“{{name}}”已在媒体库和播放头位置",
+      "failed": "片段未能制作：{{reason}}",
+      "made": "已制作",
+      "edit": "打开其代码",
+      "defaultName": "HTML 图形"
+    },
+    "previs": {
+      "tabLabel": "3D 走位预演",
+      "hint": {
+        "openrouter": "付费之前先用 3D 为镜头做 走位预演：描述场景地点、谁往哪里移动以及镜头如何运动；提示词模型会搭建占位形状和镜头路径（约两美分）。可以透过镜头、从上方或绕着场景查看，然后把它的画面交给视频或图片模型，或录制镜头的运动。",
+        "agent": "在为生成付费之前，先在 3D 中排布场景：描述地点、谁往哪里走以及镜头如何移动，已连接的智能体会免费搭出替身形体和镜头路径。通过镜头、从上方或环绕查看，然后把画面交给视频或图像模型，或录下镜头运动。"
+      },
+      "description": "镜头",
+      "placeholder": "一个女人沿着狭窄的走廊走向一扇门；镜头从身后跟随她，她停下时绕到她的正面。6 秒，35 毫米，结尾为 50 毫米。",
+      "build": "生成 走位预演",
+      "change": "按文字修改当前 走位预演",
+      "building": "正在生成 走位预演…",
+      "example": "从示例开始",
+      "failed": "未完成：{{reason}}",
+      "views": "视角",
+      "view": {
+        "camera": "镜头",
+        "top": "俯视",
+        "orbit": "环绕"
+      },
+      "play": "播放",
+      "pause": "暂停",
+      "time": "镜头的时刻",
+      "toVideo": "画面 → 视频的首帧",
+      "toPicture": "画面 → 图片的参考",
+      "video": "录制镜头运动",
+      "recording": "正在录制… {{percent}}%",
+      "videoDone": "“{{name}}”已在媒体库中。",
+      "frameName": "{{title}}，走位预演 画面",
+      "videoName": "{{title}}，走位预演",
+      "json": "JSON 场景",
+      "apply": "应用",
+      "badJson": "文本不是 JSON：{{reason}}",
+      "noView": "3D 视图未能启动：此窗口未能从显卡获得 WebGL。"
+    },
+    "forever": {
+      "slide": "滑动以无限生成",
+      "hint": "当进行中的任务少于两个时，用新的种子重复发送同样的运行，直到你停止或某次失败。每次运行都会计费。",
+      "stop": "停止",
+      "counter_other": " · {{count}} 次 · {{spent}}"
+    },
+    "local": {
+      "intro": "这些模型通过 stable-diffusion.cpp 在本机运行：无需密钥，也不收费。每个模型只需下载一次；文件固定到某个版本并用 SHA-256 校验。",
+      "device": "设备",
+      "devices": {
+        "auto": "自动",
+        "cuda": "CUDA（NVIDIA）",
+        "vulkan": "Vulkan",
+        "cpu": "处理器"
+      },
+      "inUse": "正在使用：{{device}} · {{gpu}}",
+      "noEngine": "未下载引擎 — 需要 {{device}}",
+      "engine": "{{device}} 引擎 · {{size}}",
+      "unload": "从内存中释放 {{model}}",
+      "task": {
+        "image": "图片",
+        "video": "有声视频"
+      },
+      "installed": "已下载",
+      "notInstalled": "未下载",
+      "accelerators": "加速器：{{list}}",
+      "studios": "本机上的工作室",
+      "studiosHint": "打开的 YuE2、MiniMax Music3 和 ACE-Step Studio 作为“音乐”模型在此生成歌曲；Speech Studio 作为“语音”模型朗读文本，每个引擎一个。作品留在工作室，副本会传到这里。",
+      "studioRunning": "已打开 — 在“音乐”中",
+      "studioOff": "未运行",
+      "download": "下载 · {{size}}",
+      "remove": "删除",
+      "downloading": "{{done}} / {{total}} · {{file}}",
+      "takenFrom": "取自 {{app}}",
+      "notDownloaded": "{{model}} 尚未下载：{{size}}。",
+      "engineToo": "会同时下载适用于你的显卡的引擎。",
+      "unsupported": "本地生成目前仅支持 Windows。"
+    },
+    "takes": {
+      "title": "版本（{{count}}）",
+      "take": "版本 {{n}}",
+      "inClip": "正在使用",
+      "use": "使用",
+      "useHint": "用这个版本替换片段"
+    },
+    "speechTrimFailed": "配音已完整放置：无法读取其中的静音部分（{{reason}}）"
   }
 }

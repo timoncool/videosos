@@ -1,30 +1,34 @@
 import { useCallback, useMemo, useRef, useEffect, memo, lazy, Suspense, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
+  Blend,
+  Captions,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
   ChevronUp,
-  Film,
-  Layers,
-  Type,
-  Square,
   Circle,
-  Triangle,
-  Star,
-  Hexagon,
+  Clapperboard,
+  Box,
+  CodeXml,
+  Film,
   Heart,
-  Pentagon,
-  Blend,
+  Hexagon,
+  Layers,
+  MessagesSquare,
   Pen,
-  Captions,
-  Sticker,
-  WandSparkles,
+  Pentagon,
   Sparkles,
+  Square,
+  Star,
+  Sticker,
+  Triangle,
+  Type,
 } from 'lucide-react'
 import { motion, useReducedMotion } from 'motion/react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/shared/ui/cn'
+import { useHtmlDragActive } from '@/shared/hooks/use-html-drag-active'
 import { useEditorStore } from '@/shared/state/editor'
 import {
   addEffect,
@@ -64,9 +68,18 @@ import { EffectThumbnail, useGpuEffectPreviewData } from '@/features/editor/deps
 import { createLogger } from '@/shared/logging/logger'
 import { useSettingsStore } from '@/features/editor/deps/settings'
 import { resolveGeneratedLayerCanvasSize } from '../utils/generated-layer-canvas-size'
-const LazyAiPanel = lazy(() => import('./ai-tab').then((m) => ({ default: m.AiTab })))
+const LazyChatTab = lazy(() => import('./chat-tab').then((m) => ({ default: m.ChatTab })))
 const LazyGeneratePanel = lazy(() =>
   import('../deps/generate').then((m) => ({ default: m.GeneratePanel })),
+)
+const LazyStoryboardPanel = lazy(() =>
+  import('../deps/generate').then((m) => ({ default: m.StoryboardPanel })),
+)
+const LazyMotionPanel = lazy(() =>
+  import('../deps/generate').then((m) => ({ default: m.MotionPanel })),
+)
+const LazyPrevisPanel = lazy(() =>
+  import('../deps/generate').then((m) => ({ default: m.PrevisPanel })),
 )
 const LazyTranscriptEditorPanel = lazy(() =>
   importTranscriptEditorPanel().then(({ TranscriptEditorPanel }) => ({
@@ -95,7 +108,7 @@ function renderTextTemplatePreview(preset?: TextStylePreset) {
         className={`${TEXT_TEMPLATE_PREVIEW_SHELL} flex flex-col items-center justify-center gap-1`}
       >
         <Type className="w-3.5 h-3.5 text-muted-foreground/80" />
-        <div className="text-[9px] leading-none tracking-wide text-muted-foreground/80 uppercase">
+        <div className="text-[11px] leading-none tracking-wide text-muted-foreground/80 uppercase">
           Text
         </div>
       </div>
@@ -107,7 +120,7 @@ function renderTextTemplatePreview(preset?: TextStylePreset) {
   if (preset.previewKind === 'clean') {
     return (
       <div className={`${TEXT_TEMPLATE_PREVIEW_SHELL} flex items-center justify-center px-1.5`}>
-        <div className="text-[10px] font-bold tracking-[-0.05em] text-white uppercase leading-none">
+        <div className="text-[11px] font-bold tracking-[-0.05em] text-white uppercase leading-none">
           {copy.title}
         </div>
       </div>
@@ -185,7 +198,7 @@ function renderTextTemplatePreview(preset?: TextStylePreset) {
     return (
       <div className={`${TEXT_TEMPLATE_PREVIEW_SHELL} p-1.5 flex items-center justify-center`}>
         <div className="w-full rounded-sm bg-cyan-950 px-1.5 py-1.5 text-center">
-          <div className="text-[10px] font-semibold tracking-[0.16em] text-cyan-300 drop-shadow-[0_0_6px_rgba(34,211,238,0.85)] uppercase">
+          <div className="text-[11px] font-semibold tracking-[0.16em] text-cyan-300 drop-shadow-[0_0_6px_rgba(34,211,238,0.85)] uppercase">
             {copy.title}
           </div>
         </div>
@@ -201,7 +214,7 @@ function renderTextTemplatePreview(preset?: TextStylePreset) {
         <div className="text-[6px] font-semibold tracking-[0.2em] text-amber-300 uppercase">
           {copy.eyebrow}
         </div>
-        <div className="mt-1 text-[10px] font-bold tracking-[-0.04em] text-white leading-none">
+        <div className="mt-1 text-[11px] font-bold tracking-[-0.04em] text-white leading-none">
           {copy.title}
         </div>
         <div className="mt-0.5 text-[7px] leading-none text-slate-300">{copy.subtitle}</div>
@@ -216,7 +229,7 @@ function renderTextTemplatePreview(preset?: TextStylePreset) {
           <div className="text-[6px] font-bold tracking-[0.18em] text-red-300 uppercase leading-none">
             {copy.eyebrow}
           </div>
-          <div className="mt-1 text-[9px] font-bold tracking-[-0.04em] text-slate-50 leading-none">
+          <div className="mt-1 text-[11px] font-bold tracking-[-0.04em] text-slate-50 leading-none">
             {copy.title}
           </div>
           <div className="mt-0.5 text-[7px] font-semibold leading-none text-amber-200">
@@ -234,7 +247,7 @@ function renderTextTemplatePreview(preset?: TextStylePreset) {
           <div className="text-[6px] font-bold tracking-[0.22em] text-cyan-300 uppercase">
             {copy.eyebrow}
           </div>
-          <div className="mt-1 text-[9px] font-bold tracking-[-0.04em] text-slate-50 leading-tight">
+          <div className="mt-1 text-[11px] font-bold tracking-[-0.04em] text-slate-50 leading-tight">
             {copy.title}
           </div>
           <div className="mt-0.5 text-[7px] leading-none text-blue-200">{copy.subtitle}</div>
@@ -250,7 +263,7 @@ function renderTextTemplatePreview(preset?: TextStylePreset) {
           <div className="text-[6px] font-bold tracking-[0.22em] text-rose-300 uppercase">
             {copy.eyebrow}
           </div>
-          <div className="mt-1 text-[9px] font-bold text-slate-50 leading-tight">{copy.title}</div>
+          <div className="mt-1 text-[11px] font-bold text-slate-50 leading-tight">{copy.title}</div>
           <div className="mt-0.5 text-[7px] text-blue-200 leading-none uppercase">
             {copy.subtitle}
           </div>
@@ -273,7 +286,7 @@ function renderTextTemplatePreview(preset?: TextStylePreset) {
     <div
       className={`${TEXT_TEMPLATE_PREVIEW_SHELL} flex flex-col items-center justify-center px-1.5`}
     >
-      <div className="text-[10px] font-bold tracking-[-0.04em] text-white uppercase leading-none">
+      <div className="text-[11px] font-bold tracking-[-0.04em] text-white uppercase leading-none">
         {copy.title}
       </div>
       <div className="mt-0.5 text-[7px] leading-none text-slate-300 uppercase">{copy.subtitle}</div>
@@ -291,7 +304,6 @@ const TEXT_TEMPLATE_GROUPS: ReadonlyArray<{
 ]
 
 const DEFAULT_TEXT_TEMPLATE_LABEL = 'Text'
-const ADD_TEXT_TEMPLATE_LABEL = 'Add Text'
 
 export const MediaSidebar = memo(function MediaSidebar() {
   const { t } = useTranslation()
@@ -299,6 +311,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
   const editorLayout = getEditorLayout(editorDensity)
   // Use granular selectors - Zustand v5 best practice
   const leftSidebarOpen = useEditorStore((s) => s.leftSidebarOpen)
+  const htmlDragActive = useHtmlDragActive()
   const toggleLeftSidebar = useEditorStore((s) => s.toggleLeftSidebar)
   const mediaFullColumn = useEditorStore((s) => s.mediaFullColumn)
   const toggleMediaFullColumn = useEditorStore((s) => s.toggleMediaFullColumn)
@@ -308,14 +321,20 @@ export const MediaSidebar = memo(function MediaSidebar() {
   const setSidebarWidth = useEditorStore((s) => s.setSidebarWidth)
   const prefersReducedMotion = useReducedMotion()
 
-  const [aiTabActivated, setAiTabActivated] = useState(activeTab === 'ai')
+  const [chatTabActivated, setChatTabActivated] = useState(activeTab === 'chat')
   const [generateTabActivated, setGenerateTabActivated] = useState(activeTab === 'generate')
+  const [storyboardTabActivated, setStoryboardTabActivated] = useState(activeTab === 'storyboard')
+  const [graphicsTabActivated, setGraphicsTabActivated] = useState(activeTab === 'graphics')
+  const [blockingTabActivated, setBlockingTabActivated] = useState(activeTab === 'blocking')
   // The Lottie panel hits an external API on mount, so keep it unmounted until
   // the tab is first opened; it then stays mounted (state preserved).
   const [lottieTabActivated, setLottieTabActivated] = useState(activeTab === 'lottie')
   useEffect(() => {
-    if (activeTab === 'ai') setAiTabActivated(true)
+    if (activeTab === 'chat') setChatTabActivated(true)
     if (activeTab === 'generate') setGenerateTabActivated(true)
+    if (activeTab === 'storyboard') setStoryboardTabActivated(true)
+    if (activeTab === 'graphics') setGraphicsTabActivated(true)
+    if (activeTab === 'blocking') setBlockingTabActivated(true)
     if (activeTab === 'lottie') setLottieTabActivated(true)
   }, [activeTab])
 
@@ -442,8 +461,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
     const { fps } = useTimelineSettingsStore.getState()
     const { activeTrackId, selectItems, setActiveTrack } = useSelectionStore.getState()
     const currentProject = useProjectStore.getState().currentProject
-    const activeCompositionId =
-      useCompositionNavigationStore.getState().activeCompositionId
+    const activeCompositionId = useCompositionNavigationStore.getState().activeCompositionId
     const activeComposition = activeCompositionId
       ? useCompositionsStore.getState().getComposition(activeCompositionId)
       : undefined
@@ -547,14 +565,17 @@ export const MediaSidebar = memo(function MediaSidebar() {
   // Category items for the vertical nav
   const categories = [
     { id: 'generate' as const, icon: Sparkles, label: t('generate.tabLabel') },
+    { id: 'storyboard' as const, icon: Clapperboard, label: t('generate.storyboard.tabLabel') },
+    { id: 'blocking' as const, icon: Box, label: t('generate.previs.tabLabel') },
     { id: 'media' as const, icon: Film, label: t('editor.mediaSidebar.media') },
     { id: 'text' as const, icon: Type, label: t('editor.mediaSidebar.text') },
+    { id: 'graphics' as const, icon: CodeXml, label: t('generate.motion.tabLabel') },
     { id: 'shapes' as const, icon: Pentagon, label: t('editor.mediaSidebar.shapes') },
     { id: 'effects' as const, icon: Layers, label: t('editor.mediaSidebar.effects') },
     { id: 'transitions' as const, icon: Blend, label: t('editor.mediaSidebar.transitions') },
     { id: 'lottie' as const, icon: Sticker, label: t('lottieBrowser.tabLabel') },
     { id: 'transcript' as const, icon: Captions, label: t('transcript.tabLabel') },
-    { id: 'ai' as const, icon: WandSparkles, label: t('editor.mediaSidebar.ai') },
+    { id: 'chat' as const, icon: MessagesSquare, label: t('chat.tabLabel') },
   ]
 
   const shouldSuppressGeneratedItemClick = useCallback(() => {
@@ -597,10 +618,23 @@ export const MediaSidebar = memo(function MediaSidebar() {
   }, [])
 
   return (
-    <div className="flex h-full flex-shrink-0">
+    <div className="relative flex h-full flex-shrink-0">
+      {/* On a compact screen the open panel lies over the preview; a tap beside it closes it. */}
+      {leftSidebarOpen && (
+        <button
+          type="button"
+          tabIndex={-1}
+          aria-label={t('editor.mediaSidebar.collapsePanel')}
+          onClick={toggleLeftSidebar}
+          className={cn(
+            'fixed inset-0 z-20 bg-black/40 lg:hidden',
+            htmlDragActive && 'pointer-events-none',
+          )}
+        />
+      )}
       {/* Vertical Category Bar */}
       <div
-        className="panel-header border-r border-border flex flex-col items-center flex-shrink-0"
+        className="panel-header relative z-30 border-r border-border flex flex-col items-center flex-shrink-0"
         style={{ width: EDITOR_LAYOUT_CSS_VALUES.sidebarRailWidth }}
       >
         {/* Header row - aligned with content panel header */}
@@ -615,6 +649,11 @@ export const MediaSidebar = memo(function MediaSidebar() {
               width: EDITOR_LAYOUT_CSS_VALUES.sidebarHeaderButtonSize,
               height: EDITOR_LAYOUT_CSS_VALUES.sidebarHeaderButtonSize,
             }}
+            aria-label={
+              leftSidebarOpen
+                ? t('editor.mediaSidebar.collapsePanel')
+                : t('editor.mediaSidebar.expandPanel')
+            }
             data-tooltip={
               leftSidebarOpen
                 ? t('editor.mediaSidebar.collapsePanel')
@@ -648,10 +687,12 @@ export const MediaSidebar = memo(function MediaSidebar() {
                 w-9 h-9 rounded-lg flex items-center justify-center transition-[transform,background-color,color] duration-150 active:scale-95
                 ${
                   activeTab === id && leftSidebarOpen
-                    ? 'bg-primary text-primary-foreground hover:bg-primary/90'
+                    ? 'bg-[var(--color-accent)]/15 text-[var(--color-accent)] hover:bg-[var(--color-accent)]/25'
                     : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
                 }
               `}
+              aria-label={label}
+              aria-pressed={activeTab === id && leftSidebarOpen}
               data-tooltip={label}
               data-tooltip-side="right"
             >
@@ -670,7 +711,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
           a touch faster than open (exit < entrance). During a resize-drag we snap
           (duration 0) so width tracks the pointer instead of easing behind it. */}
       <motion.div
-        className="panel-bg border-r border-border overflow-hidden relative"
+        className="panel-bg border-r border-border overflow-hidden relative max-lg:absolute max-lg:left-full max-lg:top-0 max-lg:z-30 max-lg:h-full max-lg:max-w-[calc(100vw-3.5rem)] max-lg:shadow-2xl"
         initial={false}
         animate={{ width: leftSidebarOpen ? sidebarWidth : 0 }}
         transition={
@@ -742,7 +783,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
             >
               <div className="space-y-3">
                 <div className="space-y-3">
-                  <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+                  <div className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
                     {t('editor.mediaSidebar.templates')}
                   </div>
                   {TEXT_TEMPLATE_GROUPS.map((group) => {
@@ -755,7 +796,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
 
                     return (
                       <div key={group.key} className="space-y-1.5">
-                        <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+                        <div className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
                           {t(group.labelKey)}
                         </div>
                         <div className="grid grid-cols-3 gap-1.5">
@@ -774,8 +815,8 @@ export const MediaSidebar = memo(function MediaSidebar() {
                               className="flex flex-col items-center gap-1 p-1.5 rounded-md border border-border bg-secondary/30 hover:bg-secondary/50 hover:border-primary/50 transition-[transform,background-color,border-color,color] duration-150 active:scale-[0.98] group"
                             >
                               {renderTextTemplatePreview()}
-                              <span className="text-[9px] text-muted-foreground group-hover:text-foreground text-center leading-tight w-full">
-                                {ADD_TEXT_TEMPLATE_LABEL}
+                              <span className="text-[11px] text-muted-foreground group-hover:text-foreground text-center leading-tight w-full">
+                                {t('names.addText')}
                               </span>
                             </button>
                           ) : null}
@@ -800,8 +841,10 @@ export const MediaSidebar = memo(function MediaSidebar() {
                               )}
                             >
                               {renderTextTemplatePreview(preset)}
-                              <span className="text-[9px] text-muted-foreground group-hover:text-foreground text-center leading-tight w-full">
-                                {preset.label}
+                              <span className="text-[11px] text-muted-foreground group-hover:text-foreground text-center leading-tight w-full">
+                                {t(`names.textPresets.${preset.id}`, {
+                                  defaultValue: preset.label,
+                                })}
                               </span>
                             </button>
                           ))}
@@ -834,7 +877,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                   className="flex flex-col items-center justify-center gap-1 p-2 rounded-lg border border-border bg-secondary/30 hover:bg-secondary/50 hover:border-primary/50 transition-[transform,background-color,border-color,color] duration-150 active:scale-[0.98] group"
                 >
                   <div className="w-7 h-7 rounded border border-border bg-[#2d2d2d] shadow-inner group-hover:border-primary/50" />
-                  <span className="text-[9px] text-muted-foreground group-hover:text-foreground">
+                  <span className="text-[11px] text-muted-foreground group-hover:text-foreground">
                     {t('editor.shapeSection.solidColor')}
                   </span>
                 </button>
@@ -855,7 +898,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                   className="flex flex-col items-center justify-center gap-1 p-2 rounded-lg border border-border bg-secondary/30 hover:bg-secondary/50 hover:border-primary/50 transition-[transform,background-color,border-color,color] duration-150 active:scale-[0.98] group"
                 >
                   <div className="w-7 h-7 rounded border border-border bg-gradient-to-r from-blue-500 to-violet-500 shadow-inner group-hover:border-primary/50" />
-                  <span className="text-[9px] text-muted-foreground group-hover:text-foreground">
+                  <span className="text-[11px] text-muted-foreground group-hover:text-foreground">
                     {t('editor.shapeSection.gradient')}
                   </span>
                 </button>
@@ -877,7 +920,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                   <div className="w-7 h-7 rounded border border-border bg-secondary/50 flex items-center justify-center group-hover:bg-secondary/70">
                     <Square className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground" />
                   </div>
-                  <span className="text-[9px] text-muted-foreground group-hover:text-foreground">
+                  <span className="text-[11px] text-muted-foreground group-hover:text-foreground">
                     {t('editor.shapeSection.typeRectangle')}
                   </span>
                 </button>
@@ -899,7 +942,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                   <div className="w-7 h-7 rounded border border-border bg-secondary/50 flex items-center justify-center group-hover:bg-secondary/70">
                     <Circle className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground" />
                   </div>
-                  <span className="text-[9px] text-muted-foreground group-hover:text-foreground">
+                  <span className="text-[11px] text-muted-foreground group-hover:text-foreground">
                     {t('editor.shapeSection.typeCircle')}
                   </span>
                 </button>
@@ -921,7 +964,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                   <div className="w-7 h-7 rounded border border-border bg-secondary/50 flex items-center justify-center group-hover:bg-secondary/70">
                     <Triangle className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground" />
                   </div>
-                  <span className="text-[9px] text-muted-foreground group-hover:text-foreground">
+                  <span className="text-[11px] text-muted-foreground group-hover:text-foreground">
                     {t('editor.shapeSection.typeTriangle')}
                   </span>
                 </button>
@@ -943,7 +986,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                   <div className="w-7 h-7 rounded border border-border bg-secondary/50 flex items-center justify-center group-hover:bg-secondary/70">
                     <Circle className="w-3.5 h-2.5 text-muted-foreground group-hover:text-foreground" />
                   </div>
-                  <span className="text-[9px] text-muted-foreground group-hover:text-foreground">
+                  <span className="text-[11px] text-muted-foreground group-hover:text-foreground">
                     {t('editor.shapeSection.typeEllipse')}
                   </span>
                 </button>
@@ -965,7 +1008,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                   <div className="w-7 h-7 rounded border border-border bg-secondary/50 flex items-center justify-center group-hover:bg-secondary/70">
                     <Star className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground" />
                   </div>
-                  <span className="text-[9px] text-muted-foreground group-hover:text-foreground">
+                  <span className="text-[11px] text-muted-foreground group-hover:text-foreground">
                     {t('editor.shapeSection.typeStar')}
                   </span>
                 </button>
@@ -987,7 +1030,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                   <div className="w-7 h-7 rounded border border-border bg-secondary/50 flex items-center justify-center group-hover:bg-secondary/70">
                     <Hexagon className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground" />
                   </div>
-                  <span className="text-[9px] text-muted-foreground group-hover:text-foreground">
+                  <span className="text-[11px] text-muted-foreground group-hover:text-foreground">
                     {t('editor.shapeSection.typePolygon')}
                   </span>
                 </button>
@@ -1009,7 +1052,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                   <div className="w-7 h-7 rounded border border-border bg-secondary/50 flex items-center justify-center group-hover:bg-secondary/70">
                     <Heart className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground" />
                   </div>
-                  <span className="text-[9px] text-muted-foreground group-hover:text-foreground">
+                  <span className="text-[11px] text-muted-foreground group-hover:text-foreground">
                     {t('editor.shapeSection.typeHeart')}
                   </span>
                 </button>
@@ -1022,7 +1065,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                   <div className="w-7 h-7 rounded border border-border bg-secondary/50 flex items-center justify-center group-hover:bg-secondary/70">
                     <Pen className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground" />
                   </div>
-                  <span className="text-[9px] text-muted-foreground group-hover:text-foreground">
+                  <span className="text-[11px] text-muted-foreground group-hover:text-foreground">
                     {t('editor.mediaSidebar.pen')}
                   </span>
                 </button>
@@ -1060,7 +1103,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
 
                 {/* Presets */}
                 <div>
-                  <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5">
+                  <div className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5">
                     {t('editor.mediaSidebar.presets')}
                   </div>
                   <div className="grid grid-cols-3 gap-1.5">
@@ -1070,7 +1113,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                         draggable={true}
                         onDragStart={handleTemplateDragStart({
                           itemType: 'adjustment',
-                          label: preset.name,
+                          label: t(`names.presetNames.${preset.id}`, { defaultValue: preset.name }),
                           effects: preset.effects,
                         })}
                         onDragEnd={handleTemplateDragEnd}
@@ -1089,8 +1132,8 @@ export const MediaSidebar = memo(function MediaSidebar() {
                           active={hoveredEffectKey === `preset:${preset.id}`}
                           className="w-full aspect-video rounded-sm"
                         />
-                        <span className="text-[9px] text-muted-foreground group-hover:text-foreground text-center leading-tight">
-                          {preset.name}
+                        <span className="text-[11px] text-muted-foreground group-hover:text-foreground text-center leading-tight">
+                          {t(`names.presetNames.${preset.id}`, { defaultValue: preset.name })}
                         </span>
                       </button>
                     ))}
@@ -1100,8 +1143,8 @@ export const MediaSidebar = memo(function MediaSidebar() {
                 {/* GPU Effects by Category */}
                 {gpuCategories.map(({ category, effects: catEffects }) => (
                   <div key={category}>
-                    <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5">
-                      {category}
+                    <div className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5">
+                      {t(`names.gpuCategories.${category}`, { defaultValue: category })}
                     </div>
                     <div className="grid grid-cols-3 gap-1.5">
                       {catEffects.map((def) => (
@@ -1110,7 +1153,7 @@ export const MediaSidebar = memo(function MediaSidebar() {
                           draggable={true}
                           onDragStart={handleTemplateDragStart({
                             itemType: 'adjustment',
-                            label: def.name,
+                            label: t(`names.gpuNames.${def.id}`, { defaultValue: def.name }),
                             effects: [
                               {
                                 type: 'gpu-effect',
@@ -1133,8 +1176,8 @@ export const MediaSidebar = memo(function MediaSidebar() {
                             active={hoveredEffectKey === def.id}
                             className="w-full aspect-video rounded-sm"
                           />
-                          <span className="text-[9px] text-muted-foreground group-hover:text-foreground text-center leading-tight truncate w-full">
-                            {def.name}
+                          <span className="text-[11px] text-muted-foreground group-hover:text-foreground text-center leading-tight truncate w-full">
+                            {t(`names.gpuNames.${def.id}`, { defaultValue: def.name })}
                           </span>
                         </button>
                       ))}
@@ -1180,13 +1223,46 @@ export const MediaSidebar = memo(function MediaSidebar() {
               )}
             </div>
 
-            {/* AI Tab */}
+            {/* Graphics Tab */}
             <div
-              className={`min-h-0 flex-1 overflow-hidden ${activeTab === 'ai' ? 'block' : 'hidden'}`}
+              className={`min-h-0 flex-1 overflow-hidden ${activeTab === 'graphics' ? 'flex flex-col' : 'hidden'}`}
             >
-              {aiTabActivated && (
+              {graphicsTabActivated && (
                 <Suspense fallback={null}>
-                  <LazyAiPanel />
+                  <LazyMotionPanel />
+                </Suspense>
+              )}
+            </div>
+
+            {/* Blocking Tab */}
+            <div
+              className={`min-h-0 flex-1 overflow-hidden ${activeTab === 'blocking' ? 'flex flex-col' : 'hidden'}`}
+            >
+              {blockingTabActivated && (
+                <Suspense fallback={null}>
+                  <LazyPrevisPanel />
+                </Suspense>
+              )}
+            </div>
+
+            {/* Storyboard Tab */}
+            <div
+              className={`min-h-0 flex-1 overflow-hidden ${activeTab === 'storyboard' ? 'flex flex-col' : 'hidden'}`}
+            >
+              {storyboardTabActivated && (
+                <Suspense fallback={null}>
+                  <LazyStoryboardPanel />
+                </Suspense>
+              )}
+            </div>
+
+            {/* Chat Tab */}
+            <div
+              className={`min-h-0 flex-1 overflow-hidden ${activeTab === 'chat' ? 'flex flex-col' : 'hidden'}`}
+            >
+              {chatTabActivated && (
+                <Suspense fallback={null}>
+                  <LazyChatTab />
                 </Suspense>
               )}
             </div>

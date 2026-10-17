@@ -1,7 +1,7 @@
 {
   "desktop": {
-    "saved": "Saved: {{path}}",
-    "reveal": "Show in folder",
-    "saveFailed": "The file was not saved: {{reason}}"
+    "saved": "Enregistré : {{path}}",
+    "reveal": "Afficher dans le dossier",
+    "saveFailed": "Le fichier n’a pas été enregistré : {{reason}}"
   }
 }

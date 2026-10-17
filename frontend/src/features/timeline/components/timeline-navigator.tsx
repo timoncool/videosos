@@ -536,7 +536,7 @@ export function TimelineNavigator({ actualDuration, scrollContainerRef }: Timeli
         <div
           ref={thumbRef}
           className={cn(
-            'absolute top-0 flex h-full items-center justify-between rounded-sm bg-muted-foreground/55 transition-colors',
+            'absolute top-0 flex h-full touch-none items-center justify-between rounded-sm bg-muted-foreground/55 transition-colors',
             dragTarget
               ? 'cursor-grabbing bg-muted-foreground/75'
               : 'cursor-grab hover:bg-muted-foreground/70',
@@ -545,14 +545,14 @@ export function TimelineNavigator({ actualDuration, scrollContainerRef }: Timeli
             left: thumbLeft,
             width: thumbWidth,
           }}
-          onMouseDown={(event) => handleMouseDown(event, 'thumb')}
+          onPointerDown={(event) => handleMouseDown(event, 'thumb')}
           onClick={(event) => event.stopPropagation()}
           data-testid="timeline-navigator-thumb"
         >
           <div
             data-testid="timeline-navigator-left-handle"
             className="flex h-full w-3 items-center justify-center cursor-ew-resize"
-            onMouseDown={(event) => handleMouseDown(event, 'left')}
+            onPointerDown={(event) => handleMouseDown(event, 'left')}
           >
             <div className="h-1.5 w-1.5 rounded-full bg-background/90" />
           </div>
@@ -560,7 +560,7 @@ export function TimelineNavigator({ actualDuration, scrollContainerRef }: Timeli
           <div
             data-testid="timeline-navigator-right-handle"
             className="flex h-full w-3 items-center justify-center cursor-ew-resize"
-            onMouseDown={(event) => handleMouseDown(event, 'right')}
+            onPointerDown={(event) => handleMouseDown(event, 'right')}
           >
             <div className="h-1.5 w-1.5 rounded-full bg-background/90" />
           </div>

@@ -550,7 +550,7 @@ describe('TimelineContent playback selection behavior', () => {
       usePlaybackStore.getState().setPreviewFrame(12)
     })
 
-    fireEvent.mouseMove(scrollContainer, { clientX: 180, clientY: 48 })
+    fireEvent.pointerMove(scrollContainer, { clientX: 180, clientY: 48 })
 
     expect(usePlaybackStore.getState().previewFrame).toBeNull()
   })
@@ -593,7 +593,7 @@ describe('TimelineContent playback selection behavior', () => {
     })
     scheduledFrames.clear()
 
-    fireEvent.mouseMove(scrollContainer, { clientX: 180, clientY: 48 })
+    fireEvent.pointerMove(scrollContainer, { clientX: 180, clientY: 48 })
     const previewFrameId = [...scheduledFrames.keys()].at(-1)
     expect(previewFrameId).toBeDefined()
 
@@ -670,7 +670,7 @@ describe('TimelineContent playback selection behavior', () => {
     })
     scheduledFrames.clear()
 
-    fireEvent.mouseMove(scrollContainer, { clientX: 180, clientY: 48 })
+    fireEvent.pointerMove(scrollContainer, { clientX: 180, clientY: 48 })
     expect(scheduledFrames.size).toBe(0)
 
     fireEvent.wheel(scrollContainer, {
@@ -955,7 +955,7 @@ describe('TimelineContent playback selection behavior', () => {
     const ruler = container.querySelector('.timeline-ruler') as HTMLDivElement | null
     expect(ruler).toBeTruthy()
 
-    fireEvent.mouseDown(ruler!, { button: 0 })
+    fireEvent.pointerDown(ruler!, { button: 0 })
 
     expect(usePlaybackStore.getState().previewFrame).toBe(24)
   })
@@ -993,9 +993,9 @@ describe('TimelineContent playback selection behavior', () => {
       toJSON: () => ({}),
     } as DOMRect)
 
-    fireEvent.mouseDown(track!, { button: 0, clientX: 80, clientY: 100 })
+    fireEvent.pointerDown(track!, { button: 0, clientX: 80, clientY: 100 })
     document.body.style.userSelect = 'none'
-    fireEvent.mouseMove(track!, { clientX: 180, clientY: 100 })
+    fireEvent.pointerMove(track!, { clientX: 180, clientY: 100 })
     fireEvent.mouseLeave(scrollContainer!)
 
     act(() => {
@@ -1008,7 +1008,7 @@ describe('TimelineContent playback selection behavior', () => {
     document.body.style.userSelect = ''
     act(() => {
       marqueeMocks.onGestureEnd?.(
-        new MouseEvent('mouseup', { button: 0, clientX: 180, clientY: 100 }),
+        new MouseEvent('pointerup', { button: 0, clientX: 180, clientY: 100 }),
         true,
       )
     })
@@ -1019,7 +1019,7 @@ describe('TimelineContent playback selection behavior', () => {
 
     const releaseFrame = usePlaybackStore.getState().previewFrame
     frameCallbacks.length = 0
-    fireEvent.mouseMove(track!, { clientX: 220, clientY: 100 })
+    fireEvent.pointerMove(track!, { clientX: 220, clientY: 100 })
     expect(frameCallbacks.length).toBeGreaterThan(0)
 
     act(() => {

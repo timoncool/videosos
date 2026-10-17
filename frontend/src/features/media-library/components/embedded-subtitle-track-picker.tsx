@@ -269,7 +269,7 @@ function TrackRow({ track, selected, isDefault, onSelect }: TrackRowProps) {
 
 function Badge({ children }: { children: import('react').ReactNode }) {
   return (
-    <span className="inline-flex items-center rounded bg-secondary px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-secondary-foreground">
+    <span className="inline-flex items-center rounded bg-secondary px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-wide text-secondary-foreground">
       {children}
     </span>
   )

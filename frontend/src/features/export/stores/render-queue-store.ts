@@ -15,6 +15,7 @@ import type { ItemKeyframes } from '@/types/keyframe'
 import type { AudioEqSettings } from '@/types/audio'
 import type { ClientExportSettings, RenderProgress } from '../deps/renderer'
 import { abortJob } from '../utils/render-queue-control'
+import { emitUiSound } from '@/shared/ui/ui-sound'
 
 export type RenderJobStatus = 'queued' | 'rendering' | 'completed' | 'failed' | 'cancelled'
 
@@ -213,7 +214,8 @@ export const useRenderQueueStore = create<RenderQueueState & RenderQueueActions>
       ),
     })),
 
-  markCompleted: (id, info) =>
+  markCompleted: (id, info) => {
+    emitUiSound('confirm')
     set((state) => ({
       activeJobId: state.activeJobId === id ? null : state.activeJobId,
       jobs: patchJob(state.jobs, id, (job) => ({
@@ -224,9 +226,11 @@ export const useRenderQueueStore = create<RenderQueueState & RenderQueueActions>
         fileSize: info.fileSize,
         finishedAt: Date.now(),
       })),
-    })),
+    }))
+  },
 
-  markFailed: (id, error) =>
+  markFailed: (id, error) => {
+    emitUiSound('error')
     set((state) => ({
       activeJobId: state.activeJobId === id ? null : state.activeJobId,
       jobs: patchJob(state.jobs, id, (job) => ({
@@ -235,7 +239,8 @@ export const useRenderQueueStore = create<RenderQueueState & RenderQueueActions>
         error,
         finishedAt: Date.now(),
       })),
-    })),
+    }))
+  },
 
   markCancelled: (id) =>
     set((state) => ({

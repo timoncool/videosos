@@ -1,11 +1,9 @@
 import type {
   MainThreadMessage,
   PCMChunk,
-  QuantizationType,
   TranscriptWord,
   WhisperWorkerMessage,
 } from '../types'
-import { createLogger } from '@/shared/logging/logger'
 import { getChunkStartProgress, transcribingProgressEvent } from '../lib/chunk-progress'
 import {
   updateDownloadProgress,
@@ -13,9 +11,6 @@ import {
 } from '@/shared/utils/download-progress'
 import { joinTranscriptWords } from '@/shared/utils/transcript-text'
 import { resolveWhisperWordTimings, type RawWhisperWord } from '../lib/whisper-word-timings'
-import { getWhisperWebGpuBatchSize } from '../lib/whisper-runtime-options'
-
-const logger = createLogger('TranscriptionWorker')
 
 const TRANSFORMERS_CDN_URL = 'https://esm.sh/@huggingface/transformers@3.8.1?bundle'
 const WASM_CDN_URL = 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1/dist/'
@@ -43,6 +38,7 @@ interface TransformersModule {
       onnx: {
         wasm: {
           wasmPaths?: string
+          numThreads?: number
         }
       }
     }
@@ -60,7 +56,6 @@ interface TransformersModule {
 
 let asrPipeline: ASRPipeline | null = null
 let currentModelId: string | null = null
-let activeDevice: 'webgpu' | 'wasm' = 'wasm'
 let port: MessagePort | null = null
 let language: string | undefined
 let pipelineReady = false
@@ -110,7 +105,7 @@ self.onmessage = async (event: MessageEvent) => {
     processing = false
     paused = false
     initChain = initChain
-      .then(() => initPipeline(message.modelId, message.quantization ?? 'hybrid'))
+      .then(() => initPipeline(message.modelId))
       .catch(() => {})
     await initChain
     return
@@ -138,7 +133,7 @@ function enqueue(chunk: PCMChunk): void {
   }
 }
 
-async function initPipeline(modelId: string, quantization: QuantizationType): Promise<void> {
+async function initPipeline(modelId: string): Promise<void> {
   postMain({ type: 'progress', event: { stage: 'downloading', progress: 0 } })
   reportedEstimatedBytes = 0
 
@@ -150,6 +145,7 @@ async function initPipeline(modelId: string, quantization: QuantizationType): Pr
     env.useBrowserCache = true
     env.allowLocalModels = false
     env.backends.onnx.wasm.wasmPaths = WASM_CDN_URL
+    env.backends.onnx.wasm.numThreads = Math.min(8, Math.max(1, Math.floor((navigator.hardwareConcurrency || 2) / 2)))
 
     if (asrPipeline && currentModelId !== modelId) {
       const disposable = asrPipeline as ASRPipeline & { dispose?: () => Promise<void> | void }
@@ -160,10 +156,6 @@ async function initPipeline(modelId: string, quantization: QuantizationType): Pr
     if (!asrPipeline || currentModelId !== modelId) {
       currentModelId = modelId
       const downloadCache: DownloadProgressCache = new Map()
-      const dtype =
-        quantization === 'hybrid'
-          ? { encoder_model: 'fp32', decoder_model_merged: 'q4' }
-          : quantization
 
       const progressCallback = (progress: ProgressInfo) => {
         if (progress.status !== 'progress') {
@@ -189,27 +181,13 @@ async function initPipeline(modelId: string, quantization: QuantizationType): Pr
         })
       }
 
-      const loadPipeline = async (device: 'webgpu' | 'wasm') =>
-        pipeline('automatic-speech-recognition', modelId, {
-          device,
-          dtype,
-          progress_callback: progressCallback,
-        })
-
-      try {
-        asrPipeline = await loadPipeline('webgpu')
-        activeDevice = 'webgpu'
-        postMain({ type: 'runtime', info: { backend: 'webgpu' } })
-      } catch (error) {
-        logger.warn(
-          `[FreeCut transcription] WebGPU initialization failed: ${
-            error instanceof Error ? error.message : String(error)
-          }. Falling back to WASM.`,
-        )
-        asrPipeline = await loadPipeline('wasm')
-        activeDevice = 'wasm'
-        postMain({ type: 'runtime', info: { backend: 'wasm' } })
-      }
+      // int8 graphs stay on WASM: ORT-web's WebGPU computes them wrong
+      asrPipeline = await pipeline('automatic-speech-recognition', modelId, {
+        device: 'wasm',
+        dtype: 'q8',
+        progress_callback: progressCallback,
+      })
+      postMain({ type: 'runtime', info: { backend: 'wasm' } })
 
       // Weights are down; what remains is graph compile + the pre-warm inference below,
       // neither of which reports progress.
@@ -300,7 +278,7 @@ async function transcribeChunk(chunk: PCMChunk): Promise<void> {
     return_timestamps: 'word',
     chunk_length_s: WHISPER_CHUNK_SECONDS,
     stride_length_s: WHISPER_STRIDE_SECONDS,
-    batch_size: activeDevice === 'webgpu' ? getWhisperWebGpuBatchSize(currentModelId ?? '') : 1,
+    batch_size: 1,
     force_full_sequences: false,
     top_k: 0,
     do_sample: false,

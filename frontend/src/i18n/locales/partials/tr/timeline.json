@@ -88,7 +88,8 @@
       "unreverse": "Tersi kaldır",
       "updatingCaptions": "Altyazılar güncelleniyor",
       "copyGrade": "Renk düzenlemeyi kopyala",
-      "pasteGrade": "Renk düzenlemeyi yapıştır"
+      "pasteGrade": "Renk düzenlemeyi yapıştır",
+      "regenerateSegment": "Bu bölümü yeniden üret"
     },
     "fadeHandles": {
       "adjustAudioFadeIn": "Ses giriş yumuşatmasını ayarla",
@@ -190,7 +191,11 @@
       "zoomOutTooltip": "Uzaklaştır",
       "zoomSlider": "Yakınlaştırma kaydırıcısı",
       "zoomToFit": "Sığdır",
-      "zoomToFitTooltip": "Sığdır"
+      "zoomToFitTooltip": "Sığdır",
+      "disableAudioSkimming": "Ses Taramasını Kapat",
+      "enableAudioSkimming": "Ses Taramasını Aç",
+      "audioSkimmingDisabled": "Ses Taraması Kapalı",
+      "audioSkimmingEnabled": "Ses Taraması Açık"
     },
     "itemActions": {
       "appliedEffectToClips": "Efekt kliplere uygulandı",
@@ -208,7 +213,7 @@
         "easeIn": "Hızlanarak",
         "easeInOut": "Yavaş/Hızlı",
         "overshoot": "Aşma",
-        "snap": "Snap",
+        "snap": "Yapış",
         "outCubic": "Çıkış Cubic",
         "outQuart": "Çıkış Quart",
         "outQuint": "Çıkış Quint",
@@ -333,6 +338,22 @@
       "adjustClipVolume": "Klip ses düzeyini ayarla"
     },
     "emptyTitle": "Düzenlemeye başlamak için medyayı buraya sürükleyin",
-    "emptyDescription": "Klipleri parçalara bırakın, ardından önizlemek için Boşluk tuşuna basın."
+    "emptyDescription": "Klipleri parçalara bırakın, ardından önizlemek için Boşluk tuşuna basın.",
+    "checkpoints": {
+      "title": "Geri yükleme noktaları",
+      "hint": "Ajanın her düzenlemesinden önce ve senin kaydettiğin yerlerde zaman çizelgesinin hâli. Geri dönerken mevcut hâl de saklanır ve Geri al onu geri getirir.",
+      "empty": "Henüz geri yükleme noktası yok: ajanın her düzenlemesinden önce biri saklanır, ya da buraya sen bir tane kaydet.",
+      "reason": {
+        "agent_one": "Ajanın {{count}} düzenlemesinden önce",
+        "agent_other": "Ajanın {{count}} düzenlemesinden önce",
+        "restore": "Geri dönmeden önce",
+        "asked": "Burada kaydedildi"
+      },
+      "restore": "Geri dön",
+      "restored": "Zaman çizelgesi {{time}} hâline döndü",
+      "label": "Ne olduğu, istersen",
+      "keep": "Kaydet",
+      "kept": "Geri yükleme noktası kaydedildi"
+    }
   }
 }

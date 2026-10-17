@@ -10,9 +10,12 @@ pub enum Provider {
     Openrouter,
     Fal,
     Runware,
+    /// This computer: models VideoSOS runs itself, no key and no cost.
+    Local,
 }
 
 impl Provider {
+    /// The cloud providers, each with its key and catalogue.
     pub const ALL: [Provider; 3] = [Provider::Openrouter, Provider::Fal, Provider::Runware];
 
     pub fn as_str(self) -> &'static str {
@@ -20,11 +23,12 @@ impl Provider {
             Provider::Openrouter => "openrouter",
             Provider::Fal => "fal",
             Provider::Runware => "runware",
+            Provider::Local => "local",
         }
     }
 
     pub fn parse(value: &str) -> Option<Self> {
-        Self::ALL.into_iter().find(|provider| provider.as_str() == value)
+        Self::ALL.into_iter().chain([Provider::Local]).find(|provider| provider.as_str() == value)
     }
 }
 
@@ -99,9 +103,13 @@ pub struct ModelEntry {
     pub created: Option<i64>,
     /// `live` or `deprecated`.
     pub status: String,
-    /// The provider's own price line ("$0.03 per second 720p"), shown as is.
+    /// The provider's own price line, shown as is.
     #[serde(default)]
     pub price: Option<String>,
+    /// The rates VideoSOS works out itself (the lowest per second; per character; per input and output token),
+    /// for the window to word in its language.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub rates: Vec<Rate>,
     #[serde(default)]
     pub thumbnail: Option<String>,
     /// What the provider needs later to build the form: OpenRouter typed parameters, a schema URL, a category.
@@ -117,6 +125,14 @@ pub enum MediaKind {
     Audio,
 }
 
+/// How a model pins a keyframe in its video: at a second (up to `max`) or at a frame number.
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+#[serde(tag = "unit", rename_all = "snake_case")]
+pub enum FrameAt {
+    Second { max: f64 },
+    Frame,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Choice {
     pub value: Value,
@@ -126,15 +142,31 @@ pub struct Choice {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum FieldKind {
-    Text,
-    Textarea,
+    /// `max_length`: the most characters the model takes, when its schema says.
+    Text {
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        max_length: Option<u64>,
+    },
+    Textarea {
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        max_length: Option<u64>,
+    },
     Integer { min: Option<f64>, max: Option<f64> },
     Number { min: Option<f64>, max: Option<f64> },
     Boolean,
     Select { options: Vec<Choice> },
     /// Files from the media library: `min`..`max` of them.
     /// `list` when the request takes an array, even of one.
-    Media { media: MediaKind, min: u32, max: u32, list: bool },
+    /// `at`: where in the video each file of the list may be pinned, when the model takes a position; a file
+    /// of the value is then `{.., "at": <second or frame>}` and one without stays where the model puts it.
+    Media {
+        media: MediaKind,
+        min: u32,
+        max: u32,
+        list: bool,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        at: Option<FrameAt>,
+    },
     /// A width and height pair from the model's closed list; the value is `"<w>x<h>"`.
     Size { options: Vec<Choice>, width_key: String, height_key: String },
 }
@@ -237,6 +269,8 @@ pub enum Output {
     /// Bytes the provider answered with, base64 in the job record until saved.
     Data { data_base64: String, mime: String },
     Text { text: String },
+    /// A file made on this computer, moved into the job's folder when saved.
+    File { path: std::path::PathBuf, mime: String },
 }
 
 /// What submitting a job gave back.

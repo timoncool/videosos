@@ -99,7 +99,7 @@ export function ClipFloatingLayer({
         isActive={isTrackPushActive}
         clipLeftStyle={trackPushClipLeftStyle}
         zoneStyle={trackPushZoneStyle}
-        onMouseDown={onTrackPushStart}
+        onPointerDown={onTrackPushStart}
       />
 
       <ToolOperationOverlay visual={toolOperationOverlay} />
