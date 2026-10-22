@@ -121,14 +121,21 @@ pub fn worked(kind: &str, result_seconds: f64, work: std::time::Duration) {
     }
 }
 
-/// A generation that ended: `<task>_done` or `<task>_failed`, the model as `<provider>:<model>`.
+/// A generation that ended: `<task>_done` or `<task>_failed`, the model as a set named by its provider.
 pub fn job_ended(job: &Job) {
-    let Some(hub) = hub() else { return };
+    if let Some(hub) = hub() {
+        record_job_end(hub, job);
+    }
+}
+
+/// The model goes as a model set: `used_model` takes only `[A-Za-z0-9 ._+-]` up to 40 characters, which no
+/// provider's model id fits (`google/…`, `fal-ai/…`, `runware:100@1`).
+pub fn record_job_end(hub: &studio_hub_client::Hub, job: &Job) {
     let task = if job.task.is_empty() { "generation" } else { job.task.as_str() };
     match job.status.as_str() {
         "done" => {
             hub.count(&format!("{task}_done"), 1);
-            hub.used_model(&format!("{}:{}", job.provider.as_str(), job.model));
+            hub.used_models(Some(job.provider.as_str()), std::slice::from_ref(&job.model), 1);
         }
         "failed" => {
             hub.count(&format!("{task}_failed"), 1);
