@@ -140,6 +140,9 @@ makes it, and the release notes on GitHub are taken from the release's section.
 - **A download or a request that cannot start says why**: a model, a program or a provider's answer that failed
   before it began showed only "error sending request"; the cause under it (a name not found, a refused connection,
   a timeout, a proxy that turned the login down) now follows it, as in the music studios.
+- **The Chat says why a model answered nothing**: a turn that brought neither text nor a step (the model only
+  thought, its provider's filter held the answer back, or it ran out of length) ended in silence; it now says which,
+  as Dungeon Ultimate's narrator does.
 - **Journal lines name every change in every language**: a local device, a local model, a recording and subtitles
   were shown as English keys.
 - **A download that breaks off or goes silent is taken up again**, a model from what is on disk, up to eight times;

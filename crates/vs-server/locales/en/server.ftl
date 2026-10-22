@@ -147,6 +147,10 @@ tools-unsupported-os = links are downloaded on Windows and Linux
 tools-incomplete = the { $tool } tool is not whole after its download: { $files }
 chat-too-many-turns = the assistant took { $turns } steps without finishing; ask it to go on
 chat-empty = choose a model and write a message
+chat-no-answer-filtered = the model's answer was held back by its provider's filter; rephrase the message or choose another model
+chat-no-answer-cut = the model ran out of length before it wrote anything; choose a model with more room or ask for less
+chat-no-answer-reasoned = the model only thought and wrote no answer; ask it again or choose another model
+chat-no-answer = the model ended without an answer (it stopped with { $reason }); ask it again or choose another model
 assistant-no-agent = No agent is connected to VideoSOS. Connect one to its MCP server (Settings, Agents) or choose OpenRouter as the assistant.
 assistant-no-answer = The agent did not answer within { $minutes } minutes.
 

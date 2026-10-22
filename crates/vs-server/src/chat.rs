@@ -69,13 +69,30 @@ struct Turn {
     text: String,
     calls: Vec<(String, String, String)>,
     cost: f64,
+    /// Why the model stopped (`stop`, `length`, `content_filter`...), as its last piece said.
+    finish: Option<String>,
+    /// It sent reasoning, which the window does not show.
+    reasoned: bool,
+}
+
+/// What the person is told of a turn that brought neither text nor a tool call, so it does not end in silence.
+fn silence(turn: &Turn) -> Option<String> {
+    if !turn.text.trim().is_empty() || !turn.calls.is_empty() {
+        return None;
+    }
+    Some(match turn.finish.as_deref() {
+        Some("content_filter") => t!("chat-no-answer-filtered"),
+        Some("length") => t!("chat-no-answer-cut"),
+        _ if turn.reasoned => t!("chat-no-answer-reasoned"),
+        finish => t!("chat-no-answer", reason = finish.unwrap_or("none").to_string()),
+    })
 }
 
 async fn turn(http: &reqwest::Client, key: &str, model: &str, messages: &[Value], events: &mpsc::Sender<Value>) -> Result<Turn, String> {
     // the guide and the tools are the same every step: cached, they cost a tenth from the second step on (Claude);
     // models that cache on their own ignore it
     let body = json!({ "model": model, "messages": messages, "tools": crate::mcp::chat_tools(), "stream": true, "usage": { "include": true }, "cache_control": { "type": "ephemeral" } });
-    let response = http.post(API).bearer_auth(key).header("X-Title", "VideoSOS").json(&body).send().await.map_err(|e| e.to_string())?;
+    let response = http.post(API).bearer_auth(key).header("X-Title", "VideoSOS").json(&body).send().await.map_err(|e| vs_providers::net::why(&e))?;
     if !response.status().is_success() {
         let status = response.status();
         let text = response.text().await.unwrap_or_default();
@@ -83,7 +100,7 @@ async fn turn(http: &reqwest::Client, key: &str, model: &str, messages: &[Value]
     }
     let mut stream = response.bytes_stream();
     let mut buffer = String::new();
-    let mut turn = Turn { text: String::new(), calls: Vec::new(), cost: 0.0 };
+    let mut turn = Turn { text: String::new(), calls: Vec::new(), cost: 0.0, finish: None, reasoned: false };
     // a tool call comes in pieces by its index: its id and name first, then its arguments bit by bit
     let mut partial: Vec<(String, String, String)> = Vec::new();
     while let Some(chunk) = stream.next().await {
@@ -102,7 +119,13 @@ async fn turn(http: &reqwest::Client, key: &str, model: &str, messages: &[Value]
             if let Some(cost) = event.pointer("/usage/cost").and_then(Value::as_f64) {
                 turn.cost += cost;
             }
+            if let Some(finish) = event.pointer("/choices/0/finish_reason").and_then(Value::as_str) {
+                turn.finish = Some(finish.to_string());
+            }
             let Some(delta) = event.pointer("/choices/0/delta") else { continue };
+            if delta.get("reasoning").and_then(Value::as_str).is_some_and(|text| !text.is_empty()) {
+                turn.reasoned = true;
+            }
             if let Some(text) = delta.get("content").and_then(Value::as_str).filter(|text| !text.is_empty()) {
                 turn.text.push_str(text);
                 if !send(events, json!({ "type": "text", "text": text })).await {
@@ -192,6 +215,10 @@ async fn converse(state: &AppState, body: &ChatBody, key: &str, events: &mpsc::S
             }
         };
         cost += turn.cost;
+        if let Some(why) = silence(&turn) {
+            send(events, json!({ "type": "error", "message": why, "cost": cost })).await;
+            return cost;
+        }
         if turn.calls.is_empty() {
             send(events, json!({ "type": "done", "cost": cost })).await;
             return cost;
@@ -293,5 +320,18 @@ mod tests {
         let tools = crate::mcp::chat_tools();
         assert!(tools.iter().all(|tool| tool["type"] == "function" && tool["function"]["parameters"]["type"] == "object"));
         assert!(tools.iter().any(|tool| tool["function"]["name"] == "timeline_edit"));
+    }
+
+    #[test]
+    fn a_turn_without_an_answer_says_why() {
+        let turn = |text: &str, finish: Option<&str>, reasoned: bool| Turn { text: text.into(), calls: Vec::new(), cost: 0.0, finish: finish.map(str::to_string), reasoned };
+        assert_eq!(silence(&turn("Done.", Some("stop"), false)), None);
+        let mut calling = turn("", Some("tool_calls"), false);
+        calling.calls.push(("c1".into(), "timeline_get".into(), "{}".into()));
+        assert_eq!(silence(&calling), None);
+        assert_eq!(silence(&turn("", Some("content_filter"), false)), Some(t!("chat-no-answer-filtered")));
+        assert_eq!(silence(&turn(" ", Some("length"), true)), Some(t!("chat-no-answer-cut")));
+        assert_eq!(silence(&turn("", Some("stop"), true)), Some(t!("chat-no-answer-reasoned")));
+        assert!(silence(&turn("", Some("stop"), false)).unwrap().contains("stop"));
     }
 }
