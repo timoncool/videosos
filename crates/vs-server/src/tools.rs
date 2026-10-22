@@ -127,7 +127,7 @@ pub async fn fetch_verified(client: &reqwest::Client, url: &str, dest: &Path, wa
 async fn fetch_once(client: &reqwest::Client, url: &str, dest: &Path, want: &str, limit: u64, progress: &(dyn Fn(u64) + Sync)) -> Result<u64, (bool, UrlError)> {
     use sha2::{Digest, Sha256};
     use tokio::io::AsyncWriteExt;
-    let lost = |e: &dyn std::fmt::Display| (true, UrlError::new("network", format!("{url}: {e}")));
+    let lost = |e: &reqwest::Error| (true, UrlError::new("network", format!("{url}: {}", vs_providers::net::why(e))));
     let disk = |e: std::io::Error| (false, UrlError::new("io", format!("{}: {e}", dest.display())));
     let mut resp = client.get(url).send().await.map_err(|e| lost(&e))?;
     let status = resp.status();

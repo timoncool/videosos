@@ -137,6 +137,9 @@ makes it, and the release notes on GitHub are taken from the release's section.
   blocking scene's JSON) read as open or closed and open with a click, a field is named by its label's own words
   rather than the options inside it, and a field an agent fills while the window is in the background saves as
   after your own click.
+- **A download or a request that cannot start says why**: a model, a program or a provider's answer that failed
+  before it began showed only "error sending request"; the cause under it (a name not found, a refused connection,
+  a timeout, a proxy that turned the login down) now follows it, as in the music studios.
 - **Journal lines name every change in every language**: a local device, a local model, a recording and subtitles
   were shown as English keys.
 - **A download that breaks off or goes silent is taken up again**, a model from what is on disk, up to eight times;

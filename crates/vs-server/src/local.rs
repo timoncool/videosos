@@ -678,7 +678,7 @@ async fn fetch_resumable(client: &reqwest::Client, file: &Download, dest: &Path,
     if have > 0 {
         request = request.header(reqwest::header::RANGE, format!("bytes={have}-"));
     }
-    let mut response = request.send().await.map_err(|e| Fetch::Lost(format!("{}: {e}", file.url)))?;
+    let mut response = request.send().await.map_err(|e| Fetch::Lost(format!("{}: {}", file.url, vs_providers::net::why(&e))))?;
     let status = response.status();
     if status.is_client_error() && status != reqwest::StatusCode::TOO_MANY_REQUESTS {
         return Err(Fetch::Final(format!("{} answered {status}", file.url)));
@@ -694,7 +694,7 @@ async fn fetch_resumable(client: &reqwest::Client, file: &Download, dest: &Path,
     let mut out = tokio::fs::OpenOptions::new().create(true).write(true).append(have > 0).truncate(have == 0).open(&part).await.map_err(|e| format!("{}: {e}", part.display()))?;
     let mut size = have;
     progress(size);
-    while let Some(chunk) = response.chunk().await.map_err(|e| Fetch::Lost(format!("{}: {e}", file.url)))? {
+    while let Some(chunk) = response.chunk().await.map_err(|e| Fetch::Lost(format!("{}: {}", file.url, vs_providers::net::why(&e))))? {
         size += chunk.len() as u64;
         if size > file.size {
             drop(out);

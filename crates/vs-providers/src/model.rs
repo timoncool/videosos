@@ -303,6 +303,6 @@ pub enum ProviderError {
 
 impl From<reqwest::Error> for ProviderError {
     fn from(error: reqwest::Error) -> Self {
-        ProviderError::Network(error.to_string())
+        ProviderError::Network(crate::net::why(&error))
     }
 }

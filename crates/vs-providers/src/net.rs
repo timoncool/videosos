@@ -285,7 +285,7 @@ pub async fn test(settings: ProxySettings) -> Result<serde_json::Value> {
 
 /// The error with the causes under it: "error sending request" alone does
 /// not say that the proxy turned the login down or could not be reached.
-fn why(error: &reqwest::Error) -> String {
+pub fn why(error: &reqwest::Error) -> String {
     let mut text = error.to_string();
     let mut cause = std::error::Error::source(error);
     while let Some(inner) = cause {
@@ -361,5 +361,13 @@ mod tests {
         assert_eq!(masked("socks5://me:secret@host:1080"), "socks5://me:***@host:1080");
         assert_eq!(masked("1.2.3.4:8000:user:secret"), "1.2.3.4:8000:user:***");
         assert_eq!(masked("user:secret:1.2.3.4:8000"), "user:***:1.2.3.4:8000");
+    }
+
+    #[tokio::test]
+    async fn a_request_that_cannot_start_names_its_cause() {
+        let port = std::net::TcpListener::bind("127.0.0.1:0").unwrap().local_addr().unwrap().port();
+        let error = reqwest::Client::new().get(format!("http://127.0.0.1:{port}/")).send().await.unwrap_err();
+        let said = why(&error);
+        assert!(said.len() > error.to_string().len(), "only the top line: {said}");
     }
 }

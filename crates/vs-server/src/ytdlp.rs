@@ -743,7 +743,7 @@ fn pick_thumbnail(info: &Value) -> Option<String> {
 pub async fn thumbnail_data(url: &str) -> Result<String, String> {
     use base64::Engine;
     let client = crate::tools::client(Duration::from_secs(20)).map_err(|e| e.detail)?;
-    let resp = client.get(url).send().await.and_then(|r| r.error_for_status()).map_err(|e| e.to_string())?;
+    let resp = client.get(url).send().await.and_then(|r| r.error_for_status()).map_err(|e| vs_providers::net::why(&e))?;
     let mime = resp
         .headers()
         .get("content-type")

@@ -140,8 +140,8 @@ async fn call(client: &reqwest::Client, studio: &Studio, method: &str, name: Opt
     if let Some(name) = name {
         request = request.header("Mcp-Name", name);
     }
-    let response = request.json(&json!({ "jsonrpc": "2.0", "id": 1, "method": method, "params": params })).send().await.map_err(|e| e.to_string())?;
-    let text = response.text().await.map_err(|e| e.to_string())?;
+    let response = request.json(&json!({ "jsonrpc": "2.0", "id": 1, "method": method, "params": params })).send().await.map_err(|e| vs_providers::net::why(&e))?;
+    let text = response.text().await.map_err(|e| vs_providers::net::why(&e))?;
     let body = text.lines().find_map(|line| line.strip_prefix("data:")).map(str::trim).unwrap_or(text.trim());
     let answer: Value = serde_json::from_str(body).map_err(|e| format!("{}: {e}", studio.name))?;
     if let Some(error) = answer.get("error") {
