@@ -4,7 +4,7 @@
 #   scripts/build-linux-docker.sh <output folder> [cache folder]
 # The AppImage is signed for the updater with ~/.tauri/videosos-updater.key and its .password beside it
 # (VIDEOSOS_KEY_FILE overrides the path), mounted read-only; they never go into the output folder.
-# The cache keeps Rust, Node and the cargo target between runs. With VIDEOSOS_SOURCE_READY=1 the committed tree is
+# The cache keeps Rust, Node and the cargo target between runs; CARGO_BUILD_JOBS, when set, caps the compile jobs. With VIDEOSOS_SOURCE_READY=1 the committed tree is
 # taken from <output folder>/.source.tar and .source-commit, made beforehand (on Windows: git archive HEAD -o ...),
 # for a worktree whose git folder WSL cannot read.
 set -euo pipefail
@@ -37,8 +37,11 @@ if [ "${1:-}" = "--inside" ]; then
   TAURI_SIGNING_PRIVATE_KEY="$(cat /keys/updater.key)" TAURI_SIGNING_PRIVATE_KEY_PASSWORD="$(cat /keys/updater.key.password)" \
     bash scripts/build-release-linux.sh > /out/build.log 2>&1 || { echo "[ERROR] build failed"; tail -40 /out/build.log; exit 1; }
   version="$(node -p "require('./desktop/src-tauri/tauri.conf.json').version")"
-  cp "$(find /cache/target/release/bundle/deb -name '*.deb' | head -n 1)" "/out/VideoSOS-${version}-linux-amd64.deb"
-  appimage="$(find /cache/target/release/bundle/appimage -name '*.AppImage' | head -n 1)"
+  # the cache keeps the packages of earlier versions: take this version's by name
+  deb="$(find /cache/target/release/bundle/deb -name "*_${version}_amd64.deb" | head -n 1)"
+  appimage="$(find /cache/target/release/bundle/appimage -name "*_${version}_amd64.AppImage" | head -n 1)"
+  [ -f "$deb" ] && [ -f "$appimage" ] || { echo "[ERROR] no ${version} package in the bundle folder"; exit 1; }
+  cp "$deb" "/out/VideoSOS-${version}-linux-amd64.deb"
   [ -f "$appimage.sig" ] || { echo "[ERROR] the AppImage was not signed for the updater"; exit 1; }
   cp "$appimage" "/out/VideoSOS-${version}-linux-x86_64.AppImage"
   cp "$appimage.sig" "/out/VideoSOS-${version}-linux-x86_64.AppImage.sig"
@@ -60,5 +63,5 @@ fi
 [ -s "$out/.source.tar" ] || { echo "[ERROR] no committed tree in $out/.source.tar"; exit 1; }
 key="${VIDEOSOS_KEY_FILE:-$HOME/.tauri/videosos-updater.key}"
 [ -f "$key" ] && [ -f "$key.password" ] || { echo "[ERROR] no updater key: $key and $key.password"; exit 1; }
-docker run --rm -v "$(cd "$out" && pwd):/out" -v "$cache:/cache" -v "$key:/keys/updater.key:ro" -v "$key.password:/keys/updater.key.password:ro" \
+docker run --rm ${CARGO_BUILD_JOBS:+-e CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS} -v "$(cd "$out" && pwd):/out" -v "$cache:/cache" -v "$key:/keys/updater.key:ro" -v "$key.password:/keys/updater.key.password:ro" \
   ubuntu:22.04 bash /out/.build-linux-docker.sh --inside
