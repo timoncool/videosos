@@ -181,7 +181,9 @@ You cannot hear or watch the window, so look at results before you use them:
   `mic_record_cancel` drops it.
 - `project_update {name?, width?, height?, fps?, background?}` changes the open project; `project_get` reads one.
 - `ui_screenshot` to see the result; `ui_read_page`, `ui_click`, `ui_type`, `ui_select`, `ui_press_key`, `ui_scroll`
-  for any control of the window.
+  for any control of the window. They work in the window the person turned to last; with several open (a browser
+  tab on VideoSOS's address is one too) `windows_watch` lists them and what they are sent, `window_focus {window}`
+  picks one, and `window_command_drop {id}` gives up a command a window does not answer.
 - `ui_notify` to tell the person what you did or what you need from them; it stays in the journal.
 
 ## Plan the film where the person sees it
@@ -285,4 +287,5 @@ person sees. Report what you found; never retry a paid job blindly.
 - **the assistant**: `assistant_set`, `assistant_requests_wait`, `assistant_request_answer`.
 - **settings**: `settings_get`, `window_settings_get`, `window_settings_set`.
 - **the window**: `editor_tab`, `ui_screenshot`, `ui_read_page`, `ui_click`, `ui_type`, `ui_select`, `ui_press_key`,
-  `ui_scroll`, `ui_navigate`, `ui_open_settings`, `ui_notify`, `ui_console`.
+  `ui_scroll`, `ui_navigate`, `ui_open_settings`, `ui_notify`, `ui_console`, `windows_watch`, `window_focus`,
+  `window_command_drop`.

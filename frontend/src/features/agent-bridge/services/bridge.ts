@@ -111,9 +111,12 @@ function flash(element: Element | null | undefined): void {
 // ---------------------------------------------------------------- what is on screen
 
 const INTERACTIVE =
-  'button, a[href], input, textarea, select, [role="button"], [role="tab"], [role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"], [role="option"], [role="checkbox"], [role="switch"], [role="slider"], [contenteditable="true"], [data-mcp-context]'
+  'button, a[href], input, textarea, select, summary, [role="button"], [role="tab"], [role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"], [role="option"], [role="checkbox"], [role="switch"], [role="slider"], [contenteditable="true"], [data-mcp-context]'
 
 function visible(element: Element): boolean {
+  // a closed <details> keeps a box for its content, though nothing but its summary is drawn
+  const folded = element.closest('details:not([open])')
+  if (folded && !element.closest('summary')) return false
   const box = element.getBoundingClientRect()
   if (box.width === 0 || box.height === 0) return false
   const style = getComputedStyle(element)
@@ -162,6 +165,15 @@ function textOf(element: Element): string {
   return parts.join(' ')
 }
 
+/** A <label>'s own words, without the text of the fields it wraps (a list's options, a field's value). */
+function labelText(tag: HTMLLabelElement): string {
+  const copy = tag.cloneNode(true) as HTMLElement
+  copy
+    .querySelectorAll("select, textarea, input, button, [role='listbox']")
+    .forEach((field) => field.remove())
+  return textOf(copy)
+}
+
 function label(element: Element): string {
   const own = element.getAttribute('aria-label') || element.getAttribute('title') || ''
   if (own) return own.slice(0, 80)
@@ -172,10 +184,8 @@ function label(element: Element): string {
     .replace(/\s+/g, ' ')
     .trim()
   if (named) return named.slice(0, 80)
-  const tied =
-    'labels' in element
-      ? (element as HTMLButtonElement).labels?.[0]?.textContent?.replace(/\s+/g, ' ').trim()
-      : ''
+  const tag = 'labels' in element ? (element as HTMLButtonElement).labels?.[0] : undefined
+  const tied = tag ? labelText(tag) : ''
   if (tied) return tied.slice(0, 80)
   if (
     element instanceof HTMLInputElement ||
@@ -287,7 +297,12 @@ function readPage(): string {
       const tag = element.tagName.toLowerCase()
       const kind =
         element.getAttribute('role') ||
-        (tag === 'input' ? `input ${(element as HTMLInputElement).type}` : tag)
+        (tag === 'input'
+          ? `input ${(element as HTMLInputElement).type}`
+          : tag === 'summary'
+            ? 'section'
+            : tag)
+      const folding = tag === 'summary' ? element.closest('details') : null
       const context = element.closest('[data-mcp-context]')?.getAttribute('data-mcp-context')
       // a list's option is aria-selected only while focused; its data-state says whether it is the chosen one
       const chosen = element.getAttribute('data-state')
@@ -296,7 +311,15 @@ function readPage(): string {
         element.getAttribute('aria-pressed') ??
         (chosen === 'checked' || chosen === 'unchecked' ? String(chosen === 'checked') : null) ??
         element.getAttribute('aria-selected')
-      const state = pressed ? (pressed === 'true' ? ' on' : ' off') : ''
+      const state = pressed
+        ? pressed === 'true'
+          ? ' on'
+          : ' off'
+        : folding
+          ? folding.open
+            ? ' open'
+            : ' closed'
+          : ''
       const disabled = (element as HTMLButtonElement).disabled ? ' (disabled)' : ''
       if (context) {
         const row = rows.get(context) ?? { at: lines.length, parts: [] }
@@ -388,6 +411,20 @@ function press(element: HTMLElement): void {
   element.dispatchEvent(new PointerEvent('pointerup', pointer))
   element.dispatchEvent(new MouseEvent('mouseup', at))
   element.click()
+}
+
+/**
+ * A window in the background gets no focus events from focus() and blur(), so the bridge sends them: a field that
+ * saves on blur saves, and a list that opens on focus opens, as with the person's own click.
+ */
+function focusIn(element: HTMLElement): void {
+  element.focus()
+  if (!document.hasFocus()) element.dispatchEvent(new FocusEvent('focusin', { bubbles: true }))
+}
+
+function focusOut(element: HTMLElement): void {
+  element.blur()
+  if (!document.hasFocus()) element.dispatchEvent(new FocusEvent('focusout', { bubbles: true }))
 }
 
 /** Sets a value the way typing does, so React sees it. */
@@ -505,7 +542,7 @@ const builtIn: Record<string, Handler> = {
     flash(element)
     // an input opens its list on focus (the language pickers), as the user's click does
     if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement)
-      element.focus()
+      focusIn(element)
     press(element)
     await settle()
     return { text: `Clicked ${label(element) || element.tagName.toLowerCase()}.` }
@@ -517,11 +554,11 @@ const builtIn: Record<string, Handler> = {
     const element = find(args)
     element.scrollIntoView({ block: 'center' })
     flash(element)
-    element.focus()
+    focusIn(element)
     setValue(element, args.value)
     if (args.submit)
       element.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }))
-    element.blur()
+    focusOut(element)
     await settle()
     return { text: 'Typed.' }
   },

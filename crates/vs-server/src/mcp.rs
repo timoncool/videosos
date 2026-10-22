@@ -479,6 +479,27 @@ fn tools() -> &'static [Tool] {
                 call: |args| send(Method::DELETE, format!("/api/journal/{}", args.get("id").and_then(Value::as_i64).ok_or("'id' is required")?), json!({})),
             },
             Tool {
+                name: "windows_watch",
+                description: "VideoSOS's open windows by number (the last is the one the ui_* and window tools work in: the one the person turned to last) and, for seconds (5 by default, up to 55), what VideoSOS sends them: the commands of the ui_* and window tools, with the commands still waiting for an answer. A browser tab on VideoSOS's address is a window too.",
+                looks: true,
+                schema: || object(json!({ "seconds": { "type": "integer", "minimum": 1, "maximum": 55 } }), &[]),
+                call: |_| composite("windows"),
+            },
+            Tool {
+                name: "window_focus",
+                description: "Makes an open window (its number from windows_watch) the one the ui_* and window tools work in, as when the person turns to it.",
+                looks: false,
+                schema: || object(json!({ "window": { "type": "integer", "minimum": 0 } }), &["window"]),
+                call: |_| composite("window_focus"),
+            },
+            Tool {
+                name: "window_command_drop",
+                description: "Gives up a command a window has not answered (its id from windows_watch): the call waiting for it ends now with reason as its error.",
+                looks: false,
+                schema: || object(json!({ "id": { "type": "string" }, "reason": { "type": "string" } }), &["id"]),
+                call: |_| composite("window_drop"),
+            },
+            Tool {
                 name: "ui_screenshot",
                 description: "A picture of the VideoSOS window as the person sees it.",
                 looks: true,
@@ -1166,11 +1187,53 @@ struct WindowFocus {
 }
 
 async fn window_focus(Json(focus): Json<WindowFocus>) -> StatusCode {
+    if focus_window(focus.window) { StatusCode::NO_CONTENT } else { StatusCode::NOT_FOUND }
+}
+
+/// The last of the open windows gets the agent's commands.
+fn focus_window(window: u64) -> bool {
     let mut windows = open_windows();
-    let Some(place) = windows.iter().position(|open| *open == focus.window) else { return StatusCode::NOT_FOUND };
+    let Some(place) = windows.iter().position(|open| *open == window) else { return false };
     windows.remove(place);
-    windows.push(focus.window);
-    StatusCode::NO_CONTENT
+    windows.push(window);
+    true
+}
+
+/// The open windows (the last gets the agent's commands), the commands waiting for an answer, and what VideoSOS sends
+/// the windows for the seconds asked; the agent listens without becoming a window.
+async fn watch_windows(args: &Value) -> Value {
+    let seconds = args.get("seconds").and_then(Value::as_u64).unwrap_or(5).clamp(1, 55);
+    let mut receiver = bridge().commands.subscribe();
+    let until = tokio::time::Instant::now() + Duration::from_secs(seconds);
+    let mut sent = Vec::new();
+    loop {
+        match tokio::time::timeout_at(until, receiver.recv()).await {
+            Err(_) | Ok(Err(tokio::sync::broadcast::error::RecvError::Closed)) => break,
+            Ok(Ok(text)) => sent.push(serde_json::from_str(&text).unwrap_or(Value::String(text))),
+            Ok(Err(tokio::sync::broadcast::error::RecvError::Lagged(missed))) => sent.push(json!({ "missed": missed })),
+        }
+    }
+    let waiting: Vec<Value> = bridge().pending.lock().unwrap_or_else(|p| p.into_inner()).iter().map(|(id, (window, _))| json!({ "id": id, "window": window })).collect();
+    json!({ "windows": open_windows().clone(), "waiting": waiting, "sent": sent })
+}
+
+fn focus_tool(args: &Value) -> Result<Value, String> {
+    let window = args.get("window").and_then(Value::as_u64).ok_or("'window' is required")?;
+    if !focus_window(window) {
+        return Err(format!("No window {window} is open; windows_watch lists the open ones."));
+    }
+    Ok(json!({ "windows": open_windows().clone() }))
+}
+
+/// Ends a command no window answered: the call waiting for it gets the reason as its error.
+fn drop_command(args: &Value) -> Result<Value, String> {
+    let id = args.get("id").and_then(Value::as_str).ok_or("'id' is required")?;
+    let Some((_, sender)) = bridge().pending.lock().unwrap_or_else(|p| p.into_inner()).remove(id) else {
+        return Err(format!("No command {id} is waiting for a window; windows_watch lists the waiting ones."));
+    };
+    let reason = args.get("reason").and_then(Value::as_str).map(str::trim).filter(|reason| !reason.is_empty()).unwrap_or("The agent gave this command up.");
+    let _ = sender.send(Err(reason.to_string()));
+    Ok(json!({ "dropped": id }))
 }
 
 fn window_open() -> bool {
@@ -1253,7 +1316,7 @@ const JOURNAL: &[(&str, &str, &str)] = &[
 
 /// Tools that change something yet leave no line: the window's own controls and the service's upkeep.
 #[cfg(test)]
-const UNJOURNALED: &[&str] = &["local_install", "local_unload", "catalog_refresh", "assistant_request_answer", "ui_open_settings", "ui_navigate", "ui_click", "ui_type", "ui_press_key", "ui_scroll", "ui_notify", "ui_select", "studio_open_data_folder", "url_tool_install", "url_tool_update", "project_open", "playhead_seek", "playback", "editor_tab", "journal_clear", "journal_delete"];
+const UNJOURNALED: &[&str] = &["local_install", "local_unload", "catalog_refresh", "assistant_request_answer", "ui_open_settings", "ui_navigate", "ui_click", "ui_type", "ui_press_key", "ui_scroll", "ui_notify", "ui_select", "studio_open_data_folder", "url_tool_install", "url_tool_update", "project_open", "playhead_seek", "playback", "editor_tab", "journal_clear", "journal_delete", "window_focus", "window_command_drop"];
 
 fn journal_facts(name: &str) -> Option<(&'static str, &'static str)> {
     JOURNAL.iter().find(|(tool, _, _)| *tool == name).map(|(_, verb, kind)| (*verb, *kind))
@@ -2063,6 +2126,9 @@ async fn run_tool(state: &AppState, tool: &Tool, args: &Value, before: &str) -> 
         Payload::Composite("proxy") => Ok(Answer::Json(proxy_without_login())),
         Payload::Composite("activity") => state.journal.read(crate::journal::KEPT).map(|lines| Answer::Json(json!({ "lines": lines }))).map_err(|error| error.to_string()),
         Payload::Composite("import") => import_media(state, args).await.map(Answer::Json),
+        Payload::Composite("windows") => Ok(Answer::Json(watch_windows(args).await)),
+        Payload::Composite("window_focus") => focus_tool(args).map(Answer::Json),
+        Payload::Composite("window_drop") => drop_command(args).map(Answer::Json),
         Payload::Composite(other) => Err(format!("unknown composite {other}")),
         Payload::Window { command, args: sent, seconds } if seconds > WINDOW_CALL => {
             let id = format!("w{}", WORK_ID.fetch_add(1, Ordering::Relaxed));
@@ -2248,8 +2314,12 @@ mod tests {
         assert_eq!(host_and_port("127.0.0.1:9000"), "127.0.0.1:9000");
     }
 
+    /// The window bridge is one for the process: its tests take turns.
+    static BRIDGE_TEST: tokio::sync::Mutex<()> = tokio::sync::Mutex::const_new(());
+
     #[tokio::test]
     async fn a_command_to_a_window_that_closed_fails_at_once() {
+        let _turn = BRIDGE_TEST.lock().await;
         let window = bridge().sequence.fetch_add(1, Ordering::Relaxed);
         open_windows().push(window);
         let listening = Listening(window);
@@ -2260,6 +2330,31 @@ mod tests {
         drop(listening);
         let answer = tokio::time::timeout(Duration::from_secs(5), asked).await.expect("an answer before the timeout").unwrap();
         assert!(answer.unwrap_err().contains("closed"));
+    }
+
+    #[tokio::test]
+    async fn the_agent_picks_the_window_and_gives_up_a_command_it_waits_for() {
+        let _turn = BRIDGE_TEST.lock().await;
+        let (first, second) = (bridge().sequence.fetch_add(1, Ordering::Relaxed), bridge().sequence.fetch_add(1, Ordering::Relaxed));
+        open_windows().extend([first, second]);
+        let _listening = (Listening(first), Listening(second));
+        let windows = focus_tool(&json!({ "window": first })).unwrap();
+        assert_eq!(windows["windows"].as_array().unwrap().last(), Some(&json!(first)), "the focused window is the last");
+        assert!(focus_tool(&json!({ "window": u64::MAX })).unwrap_err().contains("No window"));
+
+        let asked = tokio::spawn(ask_window("read_page", json!({}), 300));
+        let id = loop {
+            let found = bridge().pending.lock().unwrap().iter().find(|(_, (to, _))| *to == first).map(|(id, _)| id.clone());
+            match found {
+                Some(id) => break id,
+                None => tokio::task::yield_now().await,
+            }
+        };
+        assert!(watch_windows(&json!({ "seconds": 1 })).await["waiting"].as_array().unwrap().iter().any(|waiting| waiting["id"] == id.as_str()));
+        drop_command(&json!({ "id": id, "reason": "stuck" })).unwrap();
+        let answer = tokio::time::timeout(Duration::from_secs(5), asked).await.expect("an answer before the timeout").unwrap();
+        assert_eq!(answer.unwrap_err(), "stuck");
+        assert!(drop_command(&json!({ "id": id })).unwrap_err().contains("No command"));
     }
 
     #[tokio::test]

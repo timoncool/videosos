@@ -124,7 +124,7 @@ makes it, and the release notes on GitHub are taken from the release's section.
 - **An agent does everything the window does, and more**: timeline ops for ripple delete, joining pieces, linking and
   unlinking a video with its sound, duplicating with keyframes; `freeze_frame`; stopping or dropping a voice-over
   you record (`mic_record_*`); the captions' look (Dub Studio's 26 among them), the sounds' voice and the sound output through
-  `window_settings_*`; `timeline_get` shows which clips are linked and which tracks keep sync lock; the journal's Clear and a line's remove (`journal_clear`, `journal_delete`); whether the copy is portable in `studio_status`. A test holds every route of the server to a tool or a written reason. The agent's skill
+  `window_settings_*`; `timeline_get` shows which clips are linked and which tracks keep sync lock; the journal's Clear and a line's remove (`journal_clear`, `journal_delete`); whether the copy is portable in `studio_status`; with several windows open (a browser tab on the program's address among them) the agent lists them, picks the one it works in and gives up a command a window does not answer (`windows_watch`, `window_focus`, `window_command_drop`), as in Speech Studio. A test holds every route of the server to a tool or a written reason. The agent's skill
   names every tool by area, with how to start and connect, as the studios' skills do.
 - **Only you turn the microphone on**, as in Speech Studio: the record button and the microphone picker answer your
   own click only, an agent's click on them is refused with a request to ask you, and no agent tool starts a recording.
@@ -133,6 +133,10 @@ makes it, and the release notes on GitHub are taken from the release's section.
 
 ### Fixed
 
+- **An agent sees the window as you do**, as in the music studios: folded sections (a generation's details, the
+  blocking scene's JSON) read as open or closed and open with a click, a field is named by its label's own words
+  rather than the options inside it, and a field an agent fills while the window is in the background saves as
+  after your own click.
 - **Journal lines name every change in every language**: a local device, a local model, a recording and subtitles
   were shown as English keys.
 - **A download that breaks off or goes silent is taken up again**, a model from what is on disk, up to eight times;
