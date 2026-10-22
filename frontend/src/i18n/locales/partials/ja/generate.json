@@ -489,6 +489,8 @@
       "studioRunning": "起動中 — 「音楽」で使用可",
       "studioOff": "未起動",
       "download": "ダウンロード · {{size}}",
+      "downloadNamed": "{{model}} をダウンロード · {{size}}",
+      "removeNamed": "{{model}} を削除",
       "remove": "削除",
       "downloading": "{{done}} / {{total}} · {{file}}",
       "takenFrom": "{{app}} から取得",

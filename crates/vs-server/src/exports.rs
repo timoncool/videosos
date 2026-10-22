@@ -141,26 +141,62 @@ async fn reveal(Json(body): Json<RevealBody>) -> Response {
     if !path.exists() {
         return bad(StatusCode::NOT_FOUND, t!("exports-no-file", path = body.path.clone()));
     }
-    let mut command = if cfg!(windows) {
-        let mut command = std::process::Command::new("explorer");
-        // Explorer reads /select, and the path apart: the path is quoted on its own, or one with a space opens
-        // the Documents folder instead
-        #[cfg(windows)]
-        std::os::windows::process::CommandExt::raw_arg(&mut command, format!("/select,\"{}\"", path.display()));
-        command
-    } else if cfg!(target_os = "macos") {
-        let mut command = std::process::Command::new("open");
-        command.arg("-R").arg(&path);
-        command
-    } else {
-        let mut command = std::process::Command::new("xdg-open");
-        command.arg(path.parent().unwrap_or(&path));
-        command
-    };
-    match crate::process_group::detach_from_group(&mut command).spawn() {
-        Ok(_) => StatusCode::NO_CONTENT.into_response(),
+    match tokio::task::spawn_blocking(move || show_in_file_manager(&path)).await {
+        Ok(Ok(())) => StatusCode::NO_CONTENT.into_response(),
+        Ok(Err(error)) => bad(StatusCode::INTERNAL_SERVER_ERROR, error.to_string()),
         Err(error) => bad(StatusCode::INTERNAL_SERVER_ERROR, error.to_string()),
     }
+}
+
+#[cfg(windows)]
+fn show_in_file_manager(path: &std::path::Path) -> std::io::Result<()> {
+    let mut command = std::process::Command::new("explorer");
+    // Explorer reads /select, and the path apart: the path is quoted on its own, or one with a space opens
+    // the Documents folder instead
+    std::os::windows::process::CommandExt::raw_arg(&mut command, format!("/select,\"{}\"", path.display()));
+    crate::process_group::detach_from_group(&mut command).spawn().map(drop)
+}
+
+#[cfg(target_os = "macos")]
+fn show_in_file_manager(path: &std::path::Path) -> std::io::Result<()> {
+    let mut command = std::process::Command::new("open");
+    command.arg("-R").arg(path);
+    crate::process_group::detach_from_group(&mut command).spawn().map(drop)
+}
+
+/// The freedesktop file manager interface selects the file, as Explorer does; where no file manager offers it,
+/// the folder opens without the selection.
+#[cfg(all(not(windows), not(target_os = "macos")))]
+fn show_in_file_manager(path: &std::path::Path) -> std::io::Result<()> {
+    let shown = std::process::Command::new("dbus-send")
+        .args(["--session", "--print-reply", "--reply-timeout=3000", "--dest=org.freedesktop.FileManager1", "/org/freedesktop/FileManager1", "org.freedesktop.FileManager1.ShowItems"])
+        .arg(format!("array:string:{}", file_uri(path)))
+        .arg("string:")
+        .stdout(std::process::Stdio::null())
+        .stderr(std::process::Stdio::null())
+        .status()
+        .is_ok_and(|status| status.success());
+    if shown {
+        return Ok(());
+    }
+    let mut command = std::process::Command::new("xdg-open");
+    command.arg(path.parent().unwrap_or(path));
+    crate::process_group::detach_from_group(&mut command).spawn().map(drop)
+}
+
+/// `file://` and the path with every byte outside the unreserved set escaped.
+#[cfg(all(not(windows), not(target_os = "macos")))]
+fn file_uri(path: &std::path::Path) -> String {
+    use std::os::unix::ffi::OsStrExt;
+    let mut uri = String::from("file://");
+    for &byte in path.as_os_str().as_bytes() {
+        if byte.is_ascii_alphanumeric() || b"/-._~".contains(&byte) {
+            uri.push(byte as char);
+        } else {
+            uri.push_str(&format!("%{byte:02X}"));
+        }
+    }
+    uri
 }
 
 pub fn router() -> Router<AppState> {

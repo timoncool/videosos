@@ -490,6 +490,8 @@
       "studioRunning": "aberto — em Música",
       "studioOff": "não iniciado",
       "download": "Baixar · {{size}}",
+      "downloadNamed": "Baixar {{model}} · {{size}}",
+      "removeNamed": "Remover {{model}}",
       "remove": "Remover",
       "downloading": "{{done}} de {{total}} · {{file}}",
       "takenFrom": "obtido de {{app}}",

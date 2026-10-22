@@ -102,6 +102,15 @@ impl AppState {
         let jobs = jobs::Jobs::open(&data, &workspace, http.clone(), catalog.clone())?;
         spend::init(jobs.clone());
         hub::start(&data, http.client.clone());
+        // the language the window last showed, so what VideoSOS says before a window opens is in it too
+        match std::fs::read_to_string(data.join(UI_LANGUAGE_FILE)) {
+            Ok(code) => match i18n::set_language(code.trim()) {
+                Ok(()) => hub::set_language(code.trim()),
+                Err(error) => tracing::error!("[ERROR] {UI_LANGUAGE_FILE}: {error}"),
+            },
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
+            Err(error) => tracing::error!("[ERROR] {UI_LANGUAGE_FILE}: {error}"),
+        }
         let journal = journal::Journal::open(&data)?;
         let fetches = url_import::Fetches::open(&data);
         Ok(Self { inner: Arc::new(Inner { repo_root: repo_root.to_path_buf(), workspace, data, http, catalog, jobs, journal, fetches }) })
@@ -121,10 +130,15 @@ struct LanguageBody {
     language: String,
 }
 
-/// The window says which language it shows: the server's own messages follow it.
-async fn set_language(Json(body): Json<LanguageBody>) -> Result<StatusCode, (StatusCode, String)> {
+/// Where the window's language is kept between runs, in the data folder.
+const UI_LANGUAGE_FILE: &str = "ui-language.txt";
+
+/// The window says which language it shows: the server's own messages follow it, now and after a restart.
+async fn set_language(State(state): State<AppState>, Json(body): Json<LanguageBody>) -> Result<StatusCode, (StatusCode, String)> {
     i18n::set_language(&body.language).map_err(|e| (StatusCode::BAD_REQUEST, e))?;
     hub::set_language(&body.language);
+    let file = state.data.join(UI_LANGUAGE_FILE);
+    std::fs::write(&file, &body.language).map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, format!("{}: {e}", file.display())))?;
     Ok(StatusCode::NO_CONTENT)
 }
 

@@ -143,6 +143,11 @@ makes it, and the release notes on GitHub are taken from the release's section.
 - **The Chat says why a model answered nothing**: a turn that brought neither text nor a step (the model only
   thought, its provider's filter held the answer back, or it ran out of length) ended in silence; it now says which,
   as Dungeon Ultimate's narrator does.
+- **Show in folder selects the file on Linux** too, through the freedesktop file manager interface (the folder opens
+  without the selection only where no file manager offers it), as the studios do; Windows and macOS already did.
+- **VideoSOS keeps the window's language across restarts**: its messages to agents and its statistics' language
+  were English until a window opened again.
+- **Each local model's Download and Remove buttons carry its name**, so an agent and a screen reader tell them apart.
 - **Journal lines name every change in every language**: a local device, a local model, a recording and subtitles
   were shown as English keys.
 - **A download that breaks off or goes silent is taken up again**, a model from what is on disk, up to eight times;

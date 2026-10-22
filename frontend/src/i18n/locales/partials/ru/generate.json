@@ -502,6 +502,8 @@
       "studioRunning": "открыта — в «Музыке»",
       "studioOff": "не запущена",
       "download": "Скачать · {{size}}",
+      "downloadNamed": "Скачать {{model}} · {{size}}",
+      "removeNamed": "Удалить {{model}}",
       "remove": "Удалить",
       "downloading": "{{done}} из {{total}} · {{file}}",
       "takenFrom": "взята из {{app}}",

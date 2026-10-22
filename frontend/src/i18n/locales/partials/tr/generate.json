@@ -489,6 +489,8 @@
       "studioRunning": "açık — Müzik'te",
       "studioOff": "çalışmıyor",
       "download": "İndir · {{size}}",
+      "downloadNamed": "{{model}} indir · {{size}}",
+      "removeNamed": "{{model}} kaldır",
       "remove": "Kaldır",
       "downloading": "{{done}} / {{total}} · {{file}}",
       "takenFrom": "{{app}} uygulamasından alındı",

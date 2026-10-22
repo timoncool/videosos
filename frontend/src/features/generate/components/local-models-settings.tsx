@@ -82,6 +82,10 @@ export function LocalModelPrompt({ modelId }: { modelId: string }) {
           className="h-8"
           onClick={() => install(model.id)}
           disabled={status.install.installing}
+          aria-label={t('generate.local.downloadNamed', {
+            model: model.name,
+            size: formatBytes(model.download_bytes),
+          })}
         >
           <Download className="mr-1.5 h-3.5 w-3.5" />
           {t('generate.local.download', { size: formatBytes(model.download_bytes) })}
@@ -134,7 +138,9 @@ function ModelRow({
       </div>
       {model.taken_from && (
         <p className="text-[11px] text-muted-foreground">
-          {t('generate.local.takenFrom', { app: PROGRAM_NAMES[model.taken_from] ?? model.taken_from })}
+          {t('generate.local.takenFrom', {
+            app: PROGRAM_NAMES[model.taken_from] ?? model.taken_from,
+          })}
         </p>
       )}
       {model.presets.length > 1 && (
@@ -152,6 +158,10 @@ function ModelRow({
             className="h-8"
             onClick={() => install(model.id)}
             disabled={status.install.installing}
+            aria-label={t('generate.local.downloadNamed', {
+              model: model.name,
+              size: formatBytes(model.download_bytes),
+            })}
           >
             <Download className="mr-1.5 h-3.5 w-3.5" />
             {t('generate.local.download', { size: formatBytes(model.download_bytes) })}
@@ -164,6 +174,7 @@ function ModelRow({
             className="h-8 text-muted-foreground"
             onClick={remove}
             disabled={removing}
+            aria-label={t('generate.local.removeNamed', { model: model.name })}
           >
             <Trash2 className="mr-1.5 h-3.5 w-3.5" />
             {t('generate.local.remove')}

@@ -489,6 +489,8 @@
       "studioRunning": "已打开 — 在“音乐”中",
       "studioOff": "未运行",
       "download": "下载 · {{size}}",
+      "downloadNamed": "下载 {{model}} · {{size}}",
+      "removeNamed": "删除 {{model}}",
       "remove": "删除",
       "downloading": "{{done}} / {{total}} · {{file}}",
       "takenFrom": "取自 {{app}}",
