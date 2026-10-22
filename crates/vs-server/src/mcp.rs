@@ -796,17 +796,10 @@ fn tools() -> &'static [Tool] {
             },
             Tool {
                 name: "mic_record_status",
-                description: "The voice-over recording from a microphone, as the timeline's record button has it: idle, recording, paused or finalizing, how long and how loud so far, the microphone chosen and the microphones of this computer.",
+                description: "The voice-over recording from a microphone, as the timeline's record button has it: idle, recording, paused or finalizing, how long and how loud so far, the microphone chosen and the microphones of this computer. Only the person starts a recording, with their own click on the record button; an agent stops or drops one.",
                 looks: true,
                 schema: nothing,
                 call: |args| window("mic_record_status", args, 15),
-            },
-            Tool {
-                name: "mic_record_start",
-                description: "Starts recording a voice-over from a microphone (device_id: one of mic_record_status's, else the one chosen in the window) at the playhead of the open project; the timeline plays while it records, as when the person presses record. The person speaks; mic_record_stop puts the take on the timeline.",
-                looks: false,
-                schema: || object(json!({ "device_id": { "type": "string" } }), &[]),
-                call: |args| window("mic_record_start", args, 60),
             },
             Tool {
                 name: "mic_record_stop",
@@ -1216,7 +1209,6 @@ const JOURNAL: &[(&str, &str, &str)] = &[
     ("captions_add", "created", "captions"),
     ("window_settings_set", "updated", "settings"),
     ("freeze_frame", "created", "timeline"),
-    ("mic_record_start", "started", "recording"),
     ("mic_record_stop", "created", "recording"),
     ("mic_record_cancel", "cancelled", "recording"),
     ("assistant_set", "updated", "settings"),

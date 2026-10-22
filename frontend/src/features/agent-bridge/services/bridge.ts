@@ -30,6 +30,8 @@ const MESSAGES = {
   no_target: () => 'Name the control by ref (from ui_read_page) or by its label in text.',
   not_text: () => 'That element does not take text.',
   not_list: () => 'That element is not a list; use ui_click on its options.',
+  person_only: () =>
+    'Only the person turns the microphone on, with their own click in the window; ask them to.',
   no_option: (a: BridgeArgs) =>
     `The list has no option ${JSON.stringify(a.value)}; it has ${a.options}.`,
   hidden: () =>
@@ -498,6 +500,7 @@ const builtIn: Record<string, Handler> = {
   async click(args) {
     takeArgs('ui_click', args, ['ref', 'text'])
     const element = find(args)
+    if (element.closest('[data-person-only]')) throw bridgeError('person_only')
     element.scrollIntoView({ block: 'center' })
     flash(element)
     // an input opens its list on focus (the language pickers), as the user's click does

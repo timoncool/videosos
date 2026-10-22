@@ -46,7 +46,6 @@ import {
   type ModelsFor,
   cancelMicRecording,
   refreshMicDevices,
-  startMicRecording,
   stopMicRecording,
   insertFreezeFrame,
 } from '../deps/editor'
@@ -589,8 +588,15 @@ export function registerStudioCommands(showProject: ShowProject, showPage: ShowP
     const settings = useSettingsStore.getState()
     const sound = useUiSoundStore.getState()
     const output = useAudioOutputStore.getState()
-    const outputs = await listAudioOutputs().then(
-      (devices) => ({ sound_outputs: devices }),
+    const outputs = await listAudioOutputs({ names: false }).then(
+      (devices) =>
+        devices.length
+          ? { sound_outputs: devices.map(({ id, label }) => ({ id, label })) }
+          : {
+              sound_outputs: [],
+              sound_outputs_hidden:
+                'The browser lists the sound outputs only to a page allowed the microphone, and only the person allows it: ask them to open Settings, General, Sound output once.',
+            },
       (problem: unknown) => ({
         sound_outputs_error: problem instanceof Error ? problem.message : String(problem),
       }),
@@ -676,7 +682,9 @@ export function registerStudioCommands(showProject: ShowProject, showPage: ShowP
     if (outputId !== undefined) {
       if (outputId === '') useAudioOutputStore.getState().choose('', '')
       else {
-        const device = (await listAudioOutputs()).find((each) => each.id === outputId)
+        const device = (await listAudioOutputs({ names: false })).find(
+          (each) => each.id === outputId,
+        )
         if (!device)
           throw bridgeError('bad_value', {
             command: 'window_settings_set',
@@ -753,27 +761,6 @@ export function registerStudioCommands(showProject: ShowProject, showPage: ShowP
   registerBridgeCommand('mic_record_status', async (args) => {
     takeArgs('mic_record_status', args, [])
     await refreshMicDevices()
-    return micState()
-  })
-
-  registerBridgeCommand('mic_record_start', async (args) => {
-    takeArgs('mic_record_start', args, ['device_id'])
-    openProject()
-    const deviceId = textArg('mic_record_start', args, 'device_id')
-    if (deviceId !== undefined) {
-      await refreshMicDevices()
-      if (!useMicRecordingStore.getState().devices.some((device) => device.deviceId === deviceId))
-        throw bridgeError('bad_value', {
-          command: 'mic_record_start',
-          field: 'device_id',
-          expected: 'an id of devices from mic_record_status',
-        })
-      useMicRecordingStore.getState().setSelectedDeviceId(deviceId)
-    }
-    await startMicRecording()
-    const { status, error } = useMicRecordingStore.getState()
-    if (status !== 'recording')
-      throw failed('mic_record_start', new Error(error ?? `the recording is ${status}`))
     return micState()
   })
 

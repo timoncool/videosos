@@ -23,21 +23,42 @@ export const useAudioOutputStore = create<AudioOutputState>()(
       choose: (deviceId, label) => set({ deviceId, label, error: null }),
       setError: (error) => set({ error }),
     }),
-    { name: 'videosos-audio-output', partialize: (state) => ({ deviceId: state.deviceId, label: state.label }) },
+    {
+      name: 'videosos-audio-output',
+      partialize: (state) => ({ deviceId: state.deviceId, label: state.label }),
+    },
   ),
 )
 
 export interface AudioOutputDevice {
   id: string
   label: string
+  /** The browser told its name; without the microphone allowed it tells only the id. */
+  named: boolean
 }
 
-/** The sound outputs of this computer. Their names are told only to a page allowed the microphone once, as Bulka asks. */
-export async function listAudioOutputs(): Promise<AudioOutputDevice[]> {
-  const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-  for (const track of stream.getTracks()) track.stop()
+/**
+ * The sound outputs of this computer. The browser names them only to a page that has been allowed the microphone,
+ * so `names` opens it for a moment, as Bulka asks; only the person's own action may pass it.
+ */
+export async function listAudioOutputs({
+  names,
+}: {
+  names: boolean
+}): Promise<AudioOutputDevice[]> {
+  if (names) {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+    for (const track of stream.getTracks()) track.stop()
+  }
   const devices = await navigator.mediaDevices.enumerateDevices()
   return devices
-    .filter((device) => device.kind === 'audiooutput' && device.deviceId !== 'default' && device.deviceId !== '')
-    .map((device) => ({ id: device.deviceId, label: device.label || device.deviceId }))
+    .filter(
+      (device) =>
+        device.kind === 'audiooutput' && device.deviceId !== 'default' && device.deviceId !== '',
+    )
+    .map((device) => ({
+      id: device.deviceId,
+      label: device.label || device.deviceId,
+      named: device.label !== '',
+    }))
 }

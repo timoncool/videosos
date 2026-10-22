@@ -46,7 +46,6 @@ export { openSettings } from '@/features/studio/services/settings-nav'
 export {
   cancelMicRecording,
   refreshMicDevices,
-  startMicRecording,
   stopMicRecording,
 } from '@/features/timeline/services/mic-recording-controller'
 export { insertFreezeFrame } from '@/features/timeline/stores/actions/item-actions'

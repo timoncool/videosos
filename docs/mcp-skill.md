@@ -175,9 +175,10 @@ You cannot hear or watch the window, so look at results before you use them:
 - Captions: `captions_add {media_id, reveal?, highlight?}` puts captions of a clip's speech on the timeline, in the
   look `window_settings_set` `defaultCaptionStylePresetId` names (`window_settings_get` lists `caption_presets`: the
   editor's own and Dub Studio's 26 looks); `subtitles_export` writes them as SRT, VTT, TXT or JSON.
-- A voice-over from the person's microphone: `mic_record_status` (microphones, what is recording),
-  `mic_record_start {device_id?}` at the playhead while the person speaks, `mic_record_stop` puts the take on the
-  timeline, `mic_record_cancel` drops it. Say to the person when to start speaking.
+- A voice-over from the person's microphone: only the person turns the microphone on, with their own click on the
+  timeline's record button (an agent's `ui_click` on it, or on the microphone picker, is refused). Ask them to press
+  it; `mic_record_status` shows what is recording, `mic_record_stop` puts the take on the timeline,
+  `mic_record_cancel` drops it.
 - `project_update {name?, width?, height?, fps?, background?}` changes the open project; `project_get` reads one.
 - `ui_screenshot` to see the result; `ui_read_page`, `ui_click`, `ui_type`, `ui_select`, `ui_press_key`, `ui_scroll`
   for any control of the window.
@@ -241,7 +242,7 @@ frames — or fade with `addKeyframe` on `opacity`.
 moves up on every track with sync lock. Changed your mind: `timeline_undo`, or `join` the pieces back.
 
 **Voice-over.** task `speech`, the text in the `prompt`-role field, a voice from the `voice` field's options,
-`place_on_timeline: true` — or the person's own voice with `mic_record_start` / `mic_record_stop`.
+`place_on_timeline: true` — or the person's own voice: they press record, `mic_record_stop` puts the take down.
 
 **Captions in a look.** `window_settings_set {"defaultCaptionStylePresetId": "dub-hormozi"}` (any id of
 `caption_presets`), then `captions_add {media_id, reveal: "karaoke"}`.
@@ -276,7 +277,7 @@ person sees. Report what you found; never retry a paid job blindly.
 - **timeline**: `timeline_get`, `timeline_edit`, `timeline_undo`, `timeline_redo`, `freeze_frame`, `playhead_seek`,
   `playback`, `frame_get`, `frame_save`, `checkpoint_list`, `checkpoint_create`, `checkpoint_restore`.
 - **speech and captions**: `transcribe`, `transcript_get`, `captions_add`, `subtitles_export`, `mic_record_status`,
-  `mic_record_start`, `mic_record_stop`, `mic_record_cancel`.
+  `mic_record_stop`, `mic_record_cancel`.
 - **planning**: `storyboard_get`, `storyboard_set`, `canvas_get`, `canvas_set`, `canvas_template`, `previs_render`,
   `blocking_get`, `motion_render`, `elements_list`, `element_save`, `element_delete`, `presets_list`, `preset_save`,
   `preset_delete`, `variables_set`.

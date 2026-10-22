@@ -24,6 +24,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { EDITOR_LAYOUT_CSS_VALUES } from '@/config/editor-layout'
+import { PERSON_ONLY, byPerson, refuseUntrusted } from '@/shared/utils/person'
 import { useMicRecordingStore, isMicRecordingActive } from '@/shared/state/mic-recording-store'
 import {
   startMicRecording,
@@ -129,8 +130,9 @@ const MicDevicePicker = memo(function MicDevicePicker({ disabled }: { disabled?:
         }
       }}
     >
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger asChild onPointerDown={refuseUntrusted} onKeyDown={refuseUntrusted}>
         <Button
+          {...PERSON_ONLY}
           variant="ghost"
           size="icon"
           style={{ width: 20, height: EDITOR_LAYOUT_CSS_VALUES.toolbarButtonSize }}
@@ -283,8 +285,11 @@ export const MicRecordControl = memo(function MicRecordControl() {
           variant="ghost"
           size="icon"
           style={btnSize}
+          {...PERSON_ONLY}
           disabled={isRequesting}
-          onClick={() => void startMicRecording()}
+          onClick={(event) => {
+            if (byPerson(event)) void startMicRecording()
+          }}
           aria-label={t('recording.record')}
           data-tooltip={t('recording.recordTooltip')}
         >
