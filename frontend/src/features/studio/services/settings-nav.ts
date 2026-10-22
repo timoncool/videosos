@@ -3,8 +3,9 @@
 export const OPEN_SETTINGS_EVENT = 'videosos:open-settings'
 export const OPEN_NEWS_EVENT = 'videosos:open-news'
 
-const SETTINGS_SECTIONS = [
+export const SETTINGS_SECTIONS = [
   'providers',
+  'local',
   'agents',
   'general',
   'timeline',

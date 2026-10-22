@@ -32,6 +32,7 @@ import {
   mediaLibraryService,
   mediaTranscriptionService,
   openSettings,
+  SETTINGS_SECTIONS,
   readWorkflowFile,
   runMediaTranscriptionJob,
   saveTimeline,
@@ -61,18 +62,6 @@ import {
 
 export type ShowPage = (page: 'projects' | 'new_project' | 'docs' | 'changelog') => Promise<void>
 type ShowProject = (projectId: string | null) => Promise<void>
-
-const SETTINGS_SECTIONS = [
-  'providers',
-  'agents',
-  'general',
-  'timeline',
-  'ai',
-  'storage',
-  'network',
-  'privacy',
-  'about',
-]
 
 /** The editor's settings an agent may read and change; the person's guards and keys stay in their hands. */
 const WINDOW_SETTINGS = [
@@ -701,7 +690,7 @@ export function registerStudioCommands(showProject: ShowProject, showPage: ShowP
   registerBridgeCommand('ui_open_settings', async (args) => {
     takeArgs('ui_open_settings', args, ['section'])
     const section = textArg('ui_open_settings', args, 'section') ?? 'general'
-    if (!SETTINGS_SECTIONS.includes(section))
+    if (!(SETTINGS_SECTIONS as readonly string[]).includes(section))
       throw bridgeError('bad_value', {
         command: 'ui_open_settings',
         field: 'section',

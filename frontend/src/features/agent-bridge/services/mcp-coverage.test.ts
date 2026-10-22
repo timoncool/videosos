@@ -46,7 +46,9 @@ const builtInBlock = BRIDGE.slice(
   BRIDGE.indexOf('const builtIn: Record<string, Handler> = {'),
   BRIDGE.indexOf('\n}\n', BRIDGE.indexOf('const builtIn')),
 )
-const builtIn = new Set([...builtInBlock.matchAll(/^ {2}(?:async )?(\w+)(?:\(|: \()/gm)].map((m) => m[1]!))
+const builtIn = new Set(
+  [...builtInBlock.matchAll(/^ {2}(?:async )?(\w+)(?:\(|: \()/gm)].map((m) => m[1]!),
+)
 const looking = new Set(
   [
     ...BRIDGE.slice(BRIDGE.indexOf('const LOOKING'))
@@ -166,6 +168,29 @@ describe('the journal in every language', () => {
 })
 
 describe("the window's settings", () => {
+  it('every section of the Settings window can be opened by an agent', () => {
+    const dialog = readFileSync(
+      join(ROOT, 'src', 'features', 'editor', 'components', 'settings-dialog.tsx'),
+      'utf8',
+    )
+    const listed = dialog.slice(
+      dialog.indexOf('const SETTINGS_SECTIONS = ['),
+      dialog.indexOf('] as const', dialog.indexOf('const SETTINGS_SECTIONS')),
+    )
+    const sections = [...listed.matchAll(/id: '(\w+)'/g)].map((m) => m[1]!)
+    const nav = readFileSync(
+      join(ROOT, 'src', 'features', 'studio', 'services', 'settings-nav.ts'),
+      'utf8',
+    )
+    const agents = nav.slice(
+      nav.indexOf('export const SETTINGS_SECTIONS = ['),
+      nav.indexOf(']', nav.indexOf('export const SETTINGS_SECTIONS')),
+    )
+    const opened = new Set([...agents.matchAll(/'(\w+)'/g)].map((m) => m[1]!))
+    expect(sections.length).toBeGreaterThan(5)
+    expect(sections.filter((section) => !opened.has(section))).toEqual([])
+  })
+
   it("each one an agent can change, or it is the person's with a reason", () => {
     const store = readFileSync(
       join(ROOT, 'src', 'features', 'settings', 'stores', 'settings-store.ts'),

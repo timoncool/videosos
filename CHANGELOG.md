@@ -148,6 +148,7 @@ makes it, and the release notes on GitHub are taken from the release's section.
 - **VideoSOS keeps the window's language across restarts**: its messages to agents and its statistics' language
   were English until a window opened again.
 - **Each local model's Download and Remove buttons carry its name**, so an agent and a screen reader tell them apart.
+- **Agents open Settings at Local models**: `ui_open_settings` did not know the section and the window ignored it while the tool said it was opened; the window and the agent now read one list of sections, held to the Settings window's by a test.
 - **Journal lines name every change in every language**: a local device, a local model, a recording and subtitles
   were shown as English keys.
 - **A download that breaks off or goes silent is taken up again**, a model from what is on disk, up to eight times;

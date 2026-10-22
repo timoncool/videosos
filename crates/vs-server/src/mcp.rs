@@ -852,7 +852,7 @@ fn tools() -> &'static [Tool] {
             },
             Tool {
                 name: "ui_open_settings",
-                description: "Opens the Settings window at a section, to show the person something there: providers, agents, general, timeline, ai, storage, network, privacy, about.",
+                description: "Opens the Settings window at a section, to show the person something there: providers, local (the local models and their engine), agents, general, timeline, ai, storage, network, privacy, about.",
                 looks: false,
                 schema: || object(json!({ "section": { "type": "string" } }), &[]),
                 call: |args| window("ui_open_settings", args, 15),

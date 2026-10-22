@@ -42,7 +42,7 @@ export { fcpxmlFile } from '@/features/export/services/fcpxml-export'
 export { runMediaTranscriptionJob } from '@/features/media-library/services/media-transcription-runner'
 export { mediaTranscriptionService } from '@/features/media-library/services/media-transcription-service'
 export { useSettingsStore } from '@/features/settings/stores/settings-store'
-export { openSettings } from '@/features/studio/services/settings-nav'
+export { openSettings, SETTINGS_SECTIONS } from '@/features/studio/services/settings-nav'
 export {
   cancelMicRecording,
   refreshMicDevices,
