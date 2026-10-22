@@ -192,7 +192,7 @@ fn tools() -> &'static [Tool] {
         vec![
             Tool {
                 name: "studio_status",
-                description: "What VideoSOS is doing now: its version, which provider keys are set, the model catalogues, jobs running, the window's work still running (exports, captions, renders), money spent today, whether the window is open and which project it shows. Start here, and wait with studio_wait.",
+                description: "What VideoSOS is doing now: its version and whether it is a portable copy, which provider keys are set, the model catalogues, jobs running, the window's work still running (exports, captions, renders), money spent today, whether the window is open and which project it shows. Start here, and wait with studio_wait.",
                 looks: true,
                 schema: nothing,
                 call: |_| composite("status"),
@@ -463,6 +463,20 @@ fn tools() -> &'static [Tool] {
                 looks: true,
                 schema: nothing,
                 call: |_| composite("activity"),
+            },
+            Tool {
+                name: "journal_clear",
+                description: "Empties the Activity journal, as its Clear button does.",
+                looks: false,
+                schema: nothing,
+                call: |_| send(Method::DELETE, "/api/journal".into(), json!({})),
+            },
+            Tool {
+                name: "journal_delete",
+                description: "Removes one line of the Activity journal by its id (from activity_list), as its remove button does.",
+                looks: false,
+                schema: || object(json!({ "id": { "type": "integer", "minimum": 1 } }), &["id"]),
+                call: |args| send(Method::DELETE, format!("/api/journal/{}", args.get("id").and_then(Value::as_i64).ok_or("'id' is required")?), json!({})),
             },
             Tool {
                 name: "ui_screenshot",
@@ -1239,7 +1253,7 @@ const JOURNAL: &[(&str, &str, &str)] = &[
 
 /// Tools that change something yet leave no line: the window's own controls and the service's upkeep.
 #[cfg(test)]
-const UNJOURNALED: &[&str] = &["local_install", "local_unload", "catalog_refresh", "assistant_request_answer", "ui_open_settings", "ui_navigate", "ui_click", "ui_type", "ui_press_key", "ui_scroll", "ui_notify", "ui_select", "studio_open_data_folder", "url_tool_install", "url_tool_update", "project_open", "playhead_seek", "playback", "editor_tab"];
+const UNJOURNALED: &[&str] = &["local_install", "local_unload", "catalog_refresh", "assistant_request_answer", "ui_open_settings", "ui_navigate", "ui_click", "ui_type", "ui_press_key", "ui_scroll", "ui_notify", "ui_select", "studio_open_data_folder", "url_tool_install", "url_tool_update", "project_open", "playhead_seek", "playback", "editor_tab", "journal_clear", "journal_delete"];
 
 fn journal_facts(name: &str) -> Option<(&'static str, &'static str)> {
     JOURNAL.iter().find(|(tool, _, _)| *tool == name).map(|(_, verb, kind)| (*verb, *kind))
@@ -1487,6 +1501,7 @@ async fn status_summary(state: &AppState) -> Value {
     json!({
         "studio": STUDIO,
         "version": crate::service::app_version(),
+        "portable": crate::service::is_portable(),
         "keys": catalog["keys"],
         "catalogues": catalog["providers"],
         "jobs_running": jobs,
@@ -2376,5 +2391,200 @@ mod tests {
         assert!(local_origin(&headers));
         headers.insert(header::ORIGIN, "https://evil.example".parse().unwrap());
         assert!(!local_origin(&headers));
+    }
+
+    // ---------------------------------------------------------------- the router, read from its source
+
+    /// The modules whose `router()` the app merges, by the file they are in.
+    const ROUTER_FILES: &[(&str, &str)] = &[
+        ("fs_api", include_str!("fs_api.rs")),
+        ("catalog", include_str!("catalog.rs")),
+        ("jobs", include_str!("jobs.rs")),
+        ("local", include_str!("local.rs")),
+        ("keys", include_str!("keys.rs")),
+        ("settings", include_str!("settings.rs")),
+        ("assistant", include_str!("assistant.rs")),
+        ("choices", include_str!("choices.rs")),
+        ("checkpoints", include_str!("checkpoints.rs")),
+        ("url_import", include_str!("url_import.rs")),
+        ("chat", include_str!("chat.rs")),
+        ("exports", include_str!("exports.rs")),
+        ("hw", include_str!("hw.rs")),
+        ("journal", include_str!("journal.rs")),
+    ];
+
+    /// The `.route(...)` calls of a piece of router code: (METHOD, path pattern).
+    fn routes_in(code: &str) -> Vec<(String, String)> {
+        let code: String = code.lines().map(|line| line.split("//").next().unwrap_or_default()).collect::<Vec<_>>().join("\n");
+        let mut routes = Vec::new();
+        for chunk in code.split(".route(").skip(1) {
+            let path = chunk.trim_start().strip_prefix('"').and_then(|rest| rest.split('"').next()).expect("a route's path").to_string();
+            let handlers = chunk.split(".merge(").next().unwrap().split(".with_state(").next().unwrap();
+            for method in ["get", "post", "patch", "put", "delete"] {
+                let call = format!("{method}(");
+                let called = handlers.match_indices(&call).any(|(at, _)| !handlers[..at].chars().last().is_some_and(|c| c.is_alphanumeric() || c == '_'));
+                if called {
+                    routes.push((method.to_uppercase(), path.clone()));
+                }
+            }
+        }
+        routes
+    }
+
+    /// VideoSOS's API routes: the app's own and every merged module's, the hub's and the MCP server's aside.
+    fn router_routes() -> Vec<(String, String)> {
+        let lib = include_str!("lib.rs").replace("\r\n", "\n");
+        let app = lib.split("pub fn app(").nth(1).expect("the app").split("mcp::install").next().unwrap();
+        let mut routes = routes_in(app);
+        let mut merged = 0;
+        for (module, source) in ROUTER_FILES {
+            if !app.contains(&format!(".merge({module}::router())")) {
+                continue;
+            }
+            merged += 1;
+            let source = source.replace("\r\n", "\n");
+            let body = source.split("pub fn router()").nth(1).unwrap_or_else(|| panic!("{module}.rs has no router()")).split("\n}").next().unwrap();
+            routes.extend(routes_in(body));
+        }
+        assert_eq!(merged, app.matches("::router())").count() - usize::from(app.contains(".merge(hub::router())")), "a module the app merges is missing from ROUTER_FILES");
+        routes
+    }
+
+    fn route_of(pattern: &str, path: &str) -> bool {
+        let path = path.split('?').next().unwrap_or_default();
+        let (wanted, given): (Vec<&str>, Vec<&str>) = (pattern.split('/').collect(), path.split('/').collect());
+        wanted.len() == given.len() && wanted.iter().zip(&given).all(|(part, value)| part.starts_with('{') && !value.is_empty() || part == value)
+    }
+
+    /// Routes an agent is not given, and why.
+    const NOT_TOOLS: &[(&str, &str, &str)] = &[
+        ("GET", "/health", "the service's identity for the desktop shell: initialize names the server and its version"),
+        ("GET", "/api/info", "the top bar's line: studio_status gives the version and whether the copy is portable, studio_paths the folders"),
+        ("PUT", "/api/network", "access from the network is the person's guard: network_status reads it"),
+        ("POST", "/api/ui-language", "the window says the language it shows; window_settings_set language changes it"),
+        ("GET", "/api/events", "the window's stream of changes: studio_wait follows the work"),
+        ("GET", "/api/fs/list", "the window's own storage of projects: the project_* and media_* tools change them"),
+        ("GET", "/api/fs/stat", "the window's own storage of projects: the project_* and media_* tools change them"),
+        ("POST", "/api/fs/mkdir", "the window's own storage of projects: the project_* and media_* tools change them"),
+        ("POST", "/api/fs/touch", "the window's own storage of projects: the project_* and media_* tools change them"),
+        ("GET", "/api/fs/read", "the window's own storage of projects: the project_* and media_* tools change them"),
+        ("PUT", "/api/fs/write", "the window's own storage of projects: the project_* and media_* tools change them"),
+        ("DELETE", "/api/fs/remove", "the window's own storage of projects: the project_* and media_* tools change them"),
+        ("POST", "/api/fs/move", "the window's own storage of projects: the project_* and media_* tools change them"),
+        ("POST", "/api/jobs/{id}/imported", "the window marks a result it put into the library; it imports the agent's too"),
+        ("GET", "/api/jobs/{id}/files/{index}", "a result's file for the window: job_get names its path"),
+        ("GET", "/api/network/proxy", "the window's proxy form with its login: proxy_get gives it without the login"),
+        ("POST", "/api/assistant/ask", "the window asks its assistant, which is the agent: assistant_requests_wait"),
+        ("GET", "/api/generate/choices", "the generation panel's remembered task and models, the window's own: generate names the model"),
+        ("PUT", "/api/generate/choices", "the generation panel's remembered task and models, the window's own: generate names the model"),
+        ("POST", "/api/checkpoints/{project}", "the window keeps the timeline it holds: checkpoint_create asks it to"),
+        ("GET", "/api/checkpoints/{project}/{id}", "the timeline the window brings back: checkpoint_restore asks it to"),
+        ("GET", "/api/url/fetches/{id}", "one download of url_fetches_list, which lists each"),
+        ("POST", "/api/url/fetches/{id}/imported", "the window marks a download it put into the library; it imports the agent's too"),
+        ("GET", "/api/url/fetches/{id}/file", "a download's file for the window: url_fetches_list names its path"),
+        ("POST", "/api/chat", "the window's chat with a paid model; the agent is a language model itself and works the tools"),
+        ("GET", "/api/chat/models", "the models of the window's chat"),
+        ("PUT", "/api/exports", "the window saves the file it encoded: export_video asks it to"),
+        ("POST", "/api/journal", "the window's own messages; the lines of an agent's changes are written by the MCP server itself"),
+    ];
+
+    /// What the composite tools reach through the API, or read as a route does; the rest read VideoSOS's state.
+    const COMPOSITE_ROUTES: &[(&str, &[(&str, &str)])] = &[
+        ("status", &[("GET", "/api/catalog")]),
+        ("activity", &[("GET", "/api/journal")]),
+        ("open_folder", &[("POST", "/api/reveal")]),
+        ("generate_file", &[("POST", "/api/jobs")]),
+    ];
+
+    /// Arguments for every property of a tool, and one set more for each other choice of an enum.
+    fn samples(tool: &Tool, file: &Path) -> Vec<Value> {
+        let schema = (tool.schema)();
+        let properties = schema["properties"].as_object().cloned().unwrap_or_default();
+        let sample = |name: &str, property: &Value| -> Value {
+            if let Some(first) = property["enum"].as_array().and_then(|choices| choices.first()) {
+                return first.clone();
+            }
+            let kind = match &property["type"] {
+                Value::Array(kinds) => kinds[0].as_str().unwrap_or("string").to_string(),
+                other => other.as_str().unwrap_or("string").to_string(),
+            };
+            match (kind.as_str(), name) {
+                ("integer", _) => json!(1),
+                ("number", _) => json!(1.5),
+                ("boolean", _) => json!(true),
+                ("array", _) if property["items"]["type"] == "integer" => json!([1]),
+                ("array", _) => json!(["x1"]),
+                ("object", _) => json!({}),
+                (_, name) if name.contains("path") || name == "file" || name == "folder" => json!(file.to_string_lossy()),
+                _ => json!("x1"),
+            }
+        };
+        let base: serde_json::Map<String, Value> = properties.iter().map(|(name, property)| (name.clone(), sample(name, property))).collect();
+        let mut all = vec![Value::Object(base.clone())];
+        for (name, property) in &properties {
+            for choice in property["enum"].as_array().into_iter().flatten().skip(1) {
+                let mut other = base.clone();
+                other.insert(name.clone(), choice.clone());
+                all.push(Value::Object(other));
+            }
+        }
+        all
+    }
+
+    /// The routes a tool reaches: (METHOD, path); the window's commands reach none.
+    fn reached_by(tool: &Tool, file: &Path, refused: &mut Vec<String>) -> Vec<(String, String)> {
+        let mut reached = Vec::new();
+        for args in samples(tool, file) {
+            let call = match (tool.call)(&args) {
+                Ok(call) => call,
+                Err(problem) => {
+                    refused.push(format!("{} refused {args}: {problem}", tool.name));
+                    continue;
+                }
+            };
+            match call.payload {
+                Payload::Window { .. } => {}
+                Payload::Composite(kind) => {
+                    if let Some((_, reads)) = COMPOSITE_ROUTES.iter().find(|(name, _)| *name == kind) {
+                        reached.extend(reads.iter().map(|(method, path)| (method.to_string(), path.to_string())));
+                    }
+                }
+                Payload::None | Payload::Json(_) => reached.push((call.method.to_string(), call.path.clone())),
+            }
+        }
+        reached
+    }
+
+    #[test]
+    fn every_route_is_a_tool() {
+        let folder = tempfile::tempdir().unwrap();
+        let file = folder.path().join("clip.mp4");
+        std::fs::write(&file, b"x").unwrap();
+        let mut refused = Vec::new();
+        let routes = router_routes();
+        assert!(routes.len() > 50, "the router read: {routes:?}");
+        let mut covered = vec![false; routes.len()];
+        for tool in tools() {
+            for (method, path) in reached_by(tool, &file, &mut refused) {
+                let found: Vec<usize> = routes.iter().enumerate().filter(|(_, (m, p))| *m == method && route_of(p, &path)).map(|(at, _)| at).collect();
+                assert!(!found.is_empty(), "{} calls {method} {path}, a route VideoSOS does not have", tool.name);
+                for at in found {
+                    covered[at] = true;
+                }
+            }
+        }
+        assert!(refused.is_empty(), "tools that refused the test's arguments, so their routes are not seen: {refused:#?}");
+        let by_tool = covered.clone();
+        let mut stale = Vec::new();
+        for (method, path) in NOT_TOOLS.iter().map(|(method, path, _)| (method, path)) {
+            let at = routes.iter().position(|(m, p)| m == method && p == path).unwrap_or_else(|| panic!("{method} {path} of NOT_TOOLS is not a route of VideoSOS"));
+            if by_tool[at] {
+                stale.push(format!("{method} {path}"));
+            }
+            covered[at] = true;
+        }
+        assert!(stale.is_empty(), "these routes of NOT_TOOLS are reached by a tool: drop them from NOT_TOOLS: {stale:?}");
+        let missing: Vec<String> = routes.iter().zip(&covered).filter(|(_, done)| !**done).map(|((method, path), _)| format!("{method} {path}")).collect();
+        assert!(missing.is_empty(), "these routes have no tool: give each one, or put it into NOT_TOOLS with why: {missing:#?}");
     }
 }

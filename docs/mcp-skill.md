@@ -216,7 +216,7 @@ through, snapping, autosave, undo depth, transcription defaults, the captions' l
 `ui_navigate {page}`, `projects_trash`, `project_restore`, `project_duplicate`, `project_delete` (to the trash).
 `studio_capabilities` says what can be made now and with which keys, `studio_system` shows the graphics card and
 memory, `studio_open_data_folder {folder}` opens a folder for the person, `assistant_set` makes you (or OpenRouter)
-the window's assistant, `activity_list` reads the journal, `key_delete` removes a key. The daily limit for agents and
+the window's assistant, `activity_list` reads the journal (`journal_delete {id}` removes a line, `journal_clear` empties it), `key_delete` removes a key. The daily limit for agents and
 whether your edits wait for the person's Accept are theirs alone: `settings_get` reads them.
 
 ## Recipes
@@ -263,7 +263,7 @@ person sees. Report what you found; never retry a paid job blindly.
 ## Tools by area
 
 - **studio**: `studio_status`, `studio_wait`, `studio_system`, `studio_capabilities`, `studio_paths`,
-  `studio_open_data_folder`, `editor_state`, `activity_list`.
+  `studio_open_data_folder`, `editor_state`, `activity_list`, `journal_delete`, `journal_clear`.
 - **keys and providers**: `keys_status`, `key_set`, `key_check`, `key_delete`, `catalog_refresh`, `providers_log`,
   `proxy_get`, `proxy_set`, `proxy_test`, `network_status`.
 - **models and generation**: `models_list`, `model_form`, `price_estimate`, `generate`, `generate_file`,

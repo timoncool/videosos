@@ -124,7 +124,7 @@ makes it, and the release notes on GitHub are taken from the release's section.
 - **An agent does everything the window does, and more**: timeline ops for ripple delete, joining pieces, linking and
   unlinking a video with its sound, duplicating with keyframes; `freeze_frame`; stopping or dropping a voice-over
   you record (`mic_record_*`); the captions' look (Dub Studio's 26 among them), the sounds' voice and the sound output through
-  `window_settings_*`; `timeline_get` shows which clips are linked and which tracks keep sync lock. The agent's skill
+  `window_settings_*`; `timeline_get` shows which clips are linked and which tracks keep sync lock; the journal's Clear and a line's remove (`journal_clear`, `journal_delete`); whether the copy is portable in `studio_status`. A test holds every route of the server to a tool or a written reason. The agent's skill
   names every tool by area, with how to start and connect, as the studios' skills do.
 - **Only you turn the microphone on**, as in Speech Studio: the record button and the microphone picker answer your
   own click only, an agent's click on them is refused with a request to ask you, and no agent tool starts a recording.
