@@ -96,7 +96,41 @@
         "embeddedDescription": "Une piste de sous-titres activable (WebM/MKV)."
       },
       "subtitles": "Sous-titres",
-      "video": "Vidéo"
+      "video": "Vidéo",
+      "rateControl": "Contrôle du débit",
+      "rateControlAuto": "Auto (selon la source)",
+      "rateControlCbr": "CBR (débit constant)",
+      "rateControlVbr": "VBR (débit variable)",
+      "targetBitrate": "Débit cible",
+      "useSourceBitrate": "Utiliser la source",
+      "smartCopy": "Copie intelligente si possible",
+      "smartCopyPath": "Copie intelligente · sans réencodage",
+      "estimatedSize": "Estimation : {{size}}",
+      "sourceBitrate": "Source : {{bitrate}}",
+      "smartCopyStatus": {
+        "eligible": "Disponible : les médias d’origine seront copiés octet par octet.",
+        "disabled": "Désactivée. La timeline sera rendue et encodée.",
+        "not-video": "Disponible uniquement pour les exports vidéo.",
+        "range": "Indisponible lors de l’export d’une plage d’entrée/sortie.",
+        "timeline-layout": "Nécessite un seul clip source complet, sans calque supplémentaire.",
+        "source-unavailable": "Le fichier source d’origine ou ses métadonnées sont indisponibles.",
+        "trimmed-or-retimed": "Indisponible car la source est rognée, coupée, inversée ou a une vitesse modifiée.",
+        "visual-processing": "Indisponible car des modifications visuelles, des sous-titres, des transitions ou des images clés doivent être rendus.",
+        "audio-processing": "Indisponible car l’audio ou le mixage des pistes a été modifié.",
+        "project-mismatch": "La résolution ou la fréquence d’images du projet ne correspond pas à la source.",
+        "format-mismatch": "Le format ou le codec sélectionné ne correspond pas à la source."
+      },
+      "loudness": "Sonie",
+      "loudnessOption": {
+        "off": "Laisser tel quel",
+        "stream": "−14 LUFS — YouTube, réseaux sociaux",
+        "podcast": "−16 LUFS — podcasts, Apple",
+        "broadcast": "−23 LUFS — diffusion (EBU R128)"
+      },
+      "loudnessDescription": {
+        "off": "Le son est exporté exactement tel qu'il est mixé, sans traitement.",
+        "on": "Tout le mixage est amené à {{lufs}} LUFS selon EBU R128 et un limiteur maintient les crêtes sous −1 dBTP. Le son est réencodé et la copie intelligente est désactivée."
+      }
     },
     "videoContainer": {
       "mp4": "Très large compatibilité, idéal pour le partage",
@@ -123,6 +157,8 @@
           "title": "Le format sélectionné ne peut pas être encodé",
           "detail": "Ce navigateur ne peut pas encoder les paramètres d’exportation sélectionnés.",
           "detailWithError": "{{error}}",
+          "containerUnsupported": "Ce navigateur ne sait pas encoder de vidéo {{container}}.",
+          "noCodecs": "Ce navigateur n’a aucun encodeur vidéo pour l’export.",
           "fix": "Choisissez un autre format/codec ou essayez un navigateur Chromium récent."
         },
         "audio-export-ready": {
@@ -182,8 +218,30 @@
         "worker-export-ready": {
           "title": "Chemin d’exportation par worker prêt",
           "detail": "Le worker d’exportation peut rendre cette composition sans repli connu sur le thread principal."
+        },
+        "smart-copy-ready": {
+          "title": "Copie intelligente prête",
+          "detail": "Les médias d’origine seront copiés sans rendu ni réencodage."
         }
+      },
+      "smartCopyPath": "Chemin de copie intelligente"
+    },
+    "fcpxml": {
+      "noProject": "Ouvrez d’abord un projet.",
+      "failed": "Le FCPXML n’a pas été créé : {{reason}}",
+      "left": {
+        "kind": "Absent du FCPXML (sans équivalent) : {{items}}",
+        "file": "Absent du FCPXML (aucun fichier dans l’espace de travail) : {{items}}",
+        "speed": "Absent du FCPXML (vitesse modifiée) : {{items}}",
+        "transition": "Absent du FCPXML (une transition entre clips connectés n'y a pas d'équivalent ; ajoutez-la dans le logiciel de montage) : {{items}}"
       }
+    },
+    "validation": {
+      "resolution": "La taille d’export n’est pas valide.",
+      "frameRate": "La fréquence d’images doit être comprise entre 1 et 120.",
+      "audioContainer": "L’export audio demande un format audio seul.",
+      "videoContainer": "L’export vidéo demande un format vidéo.",
+      "codecContainer": "Le codec {{codec}} n’est pas pris en charge dans {{container}}."
     }
   }
 }

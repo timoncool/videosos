@@ -1,0 +1,264 @@
+{
+  "agent": {
+    "address": "Adres",
+    "config": "Claude Desktop, Cursor ve diğer istemciler",
+    "copied": "Kopyalandı",
+    "copy": "Kopyala",
+    "failed": "Ajanın durumu okunamadı",
+    "intro": "Buraya bağlanan bir ajan (Claude Code, Cursor, Codex ve diğerleri) VideoSOS'u sizin gibi yönetir: modelleri seçer ve fiyatları tahmin eder, anahtarlarınızla görsel, video, müzik ve ses üretir, açık projenin zaman çizelgesini geri alma desteğiyle düzenler, medya içe aktarır ve videoyu dışa aktarır; siz de her adımı bu pencerede izlersiniz. Sağlayıcı anahtarlarınız ajana hiçbir zaman gösterilmez.",
+    "lastCall": "Ajanın son çağrısı: {{call}} · {{seconds}} sn önce",
+    "none": "Henüz bağlanan bir ajan yok",
+    "windowOff": "Pencere bağlı değil",
+    "windowOn": "Pencere bağlı: ajan onu görüyor"
+  },
+  "float": {
+    "dock": "Başlığa geri dön"
+  },
+  "help": {
+    "boostySub": "Boosty aboneliği",
+    "card": "Kart / PayPal",
+    "donateTitle": "Yazarı destekleyin",
+    "founder": "kurucusu:",
+    "madeBy": "Geliştiren:",
+    "crypto": "Kripto",
+    "copy": "Kopyala",
+    "tier5": "bir haftalık CI/CD ve alan adları",
+    "tier25": "bir aylık barındırma",
+    "tier100": "bir günlük geliştirme",
+    "tier500": "koca bir özellik",
+    "thanks": "Açık kaynağı yaşattığın için teşekkürler!"
+  },
+  "hub": {
+    "byEnv": "Ortamdaki DO_NOT_TRACK veya STUDIO_TELEMETRY ile kapatıldı.",
+    "checkbox": "Anonim kullanım istatistikleri gönder",
+    "close": "Kapat",
+    "feedNever": "Haberler henüz sunucudan alınmadı: VideoSOS, sürümüyle gelen haberleri gösterir.",
+    "feedSource": "Haber kaynağı:",
+    "nothing": "Bugün gönderilmeyi bekleyen bir şey yok.",
+    "notices": "Bildirimler",
+    "refresh": "Şimdi denetle",
+    "reset": "Yeni kurulum kimliği",
+    "what": "Neler gönderilir",
+    "why": "VideoSOS'u kaç kişinin ve ne için kullandığını bilmek, sırada ne üzerinde çalışılacağına karar vermeye yardımcı olur. Kişisel bir şey yok: istem, dosya ya da anahtar gönderilmez; yalnızca görev ve sağlayıcıya göre üretim sayıları ve hataları (adlar, yollar ve tırnak içindeki her şey bu bilgisayarda çıkarılır), kullanılan modeller, VideoSOS'un hangi işlevlerinin kullanıldığı (yalnızca adıyla, içeriği olmadan), başarılı ya da başarısız model indirmeleri, bu bilgisayarın ekran kartında yapılan videonun saniyeleri, sürüm, sistem, ekran kartı sınıfı, pencere dili ve programlarımızın ortak bilgisayar numarası (geri döndürülemez bir özet, sistem numarasının kendisi değil).",
+    "ad": "Reklam"
+  },
+  "monitor": {
+    "popOut": "Kaynak izleyiciyi ayır",
+    "power": "Güç",
+    "process": "İşlem",
+    "title": "Kaynaklar"
+  },
+  "news": {
+    "changelogNote": "Değişiklik günlüğü İngilizce tutulur.",
+    "close": "Kapat",
+    "empty": "Henüz burada bir şey yok.",
+    "releaseNotes": "Sürüm notları",
+    "sections": {
+      "added": "Eklendi",
+      "changed": "Değiştirildi",
+      "fixed": "Düzeltildi"
+    },
+    "tabChangelog": "Değişiklik günlüğü",
+    "tabNews": "Haberler",
+    "title": "Yenilikler",
+    "unreleased": "Yayımlanmadı"
+  },
+  "offline": {
+    "body": "Bu pencere, bu bilgisayardaki VideoSOS hizmetine ulaşamıyor. Uygulamayı kapattıysanız yeniden başlatın; kendiliğinden durduysa yeniden başlatın. Hizmet yanıt verir vermez sayfa kendiliğinden geri gelir.",
+    "retry": "Şimdi denetle",
+    "retrying": "Her 2 sn'de bir denetleniyor · {{seconds}} sn",
+    "title": "Stüdyo hizmeti yanıt vermiyor"
+  },
+  "prefs": {
+    "copied": "Kopyalandı",
+    "copyPath": "Yolu kopyala",
+    "dataDir": "Veri klasörü",
+    "dataHint": "Projeler, üretimler, geçmişleri ve VideoSOS ayarları burada saklanır",
+    "dataTitle": "Veri klasörü",
+    "issues": "Sorun bildir",
+    "license": "Lisans (MIT)",
+    "links": "Yararlı bağlantılar",
+    "pathsFailed": "Veri klasörü alınamadı: {{error}}",
+    "projectsDir": "Projeler",
+    "releases": "Sürümler",
+    "repo": "Kaynak kodu",
+    "generationsDir": "Üretimler",
+    "exportsDir": "Dışa aktarımlar",
+    "logsDir": "Günlükler",
+    "openFolder": "Dosya yöneticisinde göster"
+  },
+  "units": {
+    "gb": "GB",
+    "watt": "W"
+  },
+  "app": {
+    "name": "VideoSOS",
+    "tagline": "Yapay zeka video stüdyosu: üretim ve düzenleme tek pencerede"
+  },
+  "network": {
+    "proxyTitle": "Proxy",
+    "proxyIntro": "VideoSOS'un internetten getirdiği her şey buradan geçer: OpenRouter, fal ve Runware'deki üretimler, model listeleri, haberler ve güncellemeler. Bu bilgisayar ve yerel ağ asla geçmez.",
+    "proxyModeSystem": "Sistemdeki gibi",
+    "proxyModeCustom": "Benim proxy'm",
+    "proxyModeOff": "Proxy yok",
+    "proxyKind": "Protokol",
+    "proxyKindHint": "Protokolsüz yazılmış bir adres için. SOCKS5, site adlarını proxy üzerinde çözümler.",
+    "proxyAddress": "Adres",
+    "proxyAddressPlaceholder": "127.0.0.1:1080 veya ana makine:bağlantı noktası:oturum adı:parola",
+    "proxyAddressHint": "Her olağan biçim: ana makine:bağlantı noktası, ana makine:bağlantı noktası:oturum adı:parola, oturum adı:parola@ana makine:bağlantı noktası, socks5://oturum adı:parola@ana makine:bağlantı noktası.",
+    "proxyTest": "Denetle",
+    "proxySave": "Kaydet",
+    "proxySaved": "Proxy kaydedildi ve kullanılıyor",
+    "proxyReachable": "yanıt veriyor",
+    "proxyUnreachable": "yanıt yok",
+    "proxyWindowNote": "Pencerenin kendisi (model görselleri, haberler) proxy'yi bir sonraki başlatmada ve oturum bilgisi olmadan kullanır: tarayıcı SOCKS'a oturum bilgisi aktaramaz.",
+    "show": "Göster",
+    "hide": "Gizle",
+    "access": "Ağdan erişim",
+    "accessHint": "VideoSOS'u başka bir bilgisayardaki veya telefondaki tarayıcıda açar. Her şey burada çalışır; tarayıcının erişim anahtarına ihtiyacı vardır. Bu bilgisayardaki ajanların ve pencerenin kendisinin anahtara ihtiyacı yoktur.",
+    "accessRestart": "Bunun etkili olması için VideoSOS'u kapatıp yeniden açın: adres başlangıçta belirlenir.",
+    "accessKey": "Anahtar",
+    "accessNewKey": "Yeni anahtar",
+    "accessInternet": "İnternetten: yönlendiricinizde bu bağlantı noktasını bu bilgisayara yönlendirin ve http://<adresiniz>:<bağlantı noktası>/?key=<anahtar> adresini açın. Anahtara sahip olan herkes VideoSOS'u yönetir ve anahtarlarınızdan harcama yapar."
+  },
+  "journal": {
+    "title": "Etkinlik",
+    "empty": "Bir ajanın yaptığı değişiklikler ve VideoSOS mesajları burada görünür.",
+    "unreadable": "Etkinlik okunamadı: {{error}}",
+    "clear": "Temizle",
+    "remove": "Bu satırı kaldır",
+    "agent": "Ajan",
+    "app": "VideoSOS",
+    "line": "{{verb}}: {{kind}} “{{name}}”",
+    "lineNoName": "{{verb}}: {{kind}}",
+    "verb": {
+      "started": "Başlatıldı",
+      "cancelled": "Durduruldu",
+      "deleted": "Silindi",
+      "updated": "Değiştirildi",
+      "imported": "İçe aktarıldı",
+      "exported": "Dışa aktarıldı",
+      "undone": "Geri alındı",
+      "redone": "Yinelendi",
+      "created": "Oluşturuldu",
+      "restored": "Geri yüklendi"
+    },
+    "kind": {
+      "generation": "üretim",
+      "timeline": "zaman çizelgesi",
+      "media": "medya",
+      "video": "video",
+      "download": "bağlantıdan indirme",
+      "checkpoint": "geri yükleme noktası",
+      "blocking": "3D blocking",
+      "key": "anahtar",
+      "proxy": "proxy",
+      "project": "proje",
+      "transcript": "döküm",
+      "captions": "altyazılar",
+      "settings": "ayarlar",
+      "element": "öğe",
+      "preset": "istem ön ayarı",
+      "storyboard": "storyboard",
+      "canvas": "tuval",
+      "fcpxml": "FCPXML",
+      "local device": "yerel aygıt",
+      "local model": "yerel model",
+      "recording": "kayıt",
+      "subtitles": "altyazı"
+    }
+  },
+  "files": {
+    "title": "Dosyalar",
+    "showInFolder": "Klasörde göster"
+  },
+  "family": {
+    "title": "Yazarın diğer programları",
+    "dub": "Klonlanmış sesle çevrimdışı video dublajı",
+    "yue2": "Düzenlenebilir notalı yapay zekâ şarkıları",
+    "minimax": "Yerel ve bulut yapay zekâ müzik stüdyosu",
+    "ace": "Yapay zekâ müzik stüdyosu: şarkı, vokal, cover, klip",
+    "bulka": "Yapay zekâ ajanıyla canlı kodlama müzik",
+    "dungeon": "Yerel bir yapay zekâ rol yapma oyunu"
+  },
+  "topbar": {
+    "projects": "Projeler",
+    "new": "Yeni",
+    "newSub": "proje",
+    "newTitle": "Yeni bir proje başlat",
+    "help": "Yardım",
+    "portable": "taşınabilir"
+  },
+  "status": {
+    "idle": "Hazır"
+  },
+  "start": {
+    "eyebrow": "OpenRouter · fal · Runware · MCP",
+    "title": "Videoyu tek pencerede üret ve kurgula.",
+    "lead": "Kendi anahtarlarınla en iyi modelleri kullanarak görsel, video, müzik, ses ve efekt üret, sonra bunları çok kanallı zaman çizelgesinde bitmiş bir videoya dönüştür.",
+    "cardTitle": "Bir proje başlat",
+    "cardText": "Proje; medyayı, üretimleri ve zaman çizelgesini bu bilgisayarda bir arada tutar.",
+    "projects": "Projeler",
+    "features": {
+      "generate": {
+        "title": "Tüm modaliteler",
+        "text": "Görsel, video, dudak senkronu, müzik, ses ve metin"
+      },
+      "edit": {
+        "title": "Çok kanallı editör",
+        "text": "Zaman çizelgesi, anahtar kareler, efektler, altyazı, MP4 dışa aktarım"
+      },
+      "agent": {
+        "title": "MCP üzerinden yapay zekâ ajanı",
+        "text": "Claude ve diğerleri senin bastığın düğmelere basar"
+      },
+      "yours": {
+        "title": "Senin anahtarların, senin dosyaların",
+        "text": "Sağlayıcılara doğrudan ödersin; hiçbir şey bizden geçmez"
+      }
+    }
+  },
+  "share": {
+    "title": "Paylaş",
+    "text": "“{{title}}” – VideoSOS’ta yapıldı",
+    "file": "Dosyayı gönder…",
+    "fileUnavailable": "Burada dosya gönderilemiyor",
+    "fileRefused": "Sistem bu dosyayı gönderim için kabul etmiyor – kaydet ve kendin gönder",
+    "failed": "Paylaşılamadı: {{reason}}",
+    "copyText": "Bağlantılı metni kopyala",
+    "copied": "Bağlantılı metin kopyalandı",
+    "places": {
+      "telegram": "Telegram",
+      "x": "X (Twitter)",
+      "vk": "VK",
+      "whatsapp": "WhatsApp",
+      "reddit": "Reddit"
+    }
+  },
+  "chat": {
+    "tabLabel": "Sohbet",
+    "model": "Model",
+    "costHint": "OpenRouter hesabına göre bu görüşmenin maliyeti",
+    "clear": "Görüşmeyi temizle",
+    "intro": "Asistan, bağlı bir ajanın sahip olduğu araçlarla VideoSOS’u kullanır: zaman çizelgesini okur, üretir, düzenler ve dışa aktarır; sen de her adımı görürsün. Ücreti senin OpenRouter anahtarın öder; üretimler ajanların günlük sınırına sayılır.",
+    "suggestions": {
+      "what": "Şu an zaman çizelgesinde ne var?",
+      "picture": "Deniz üzerinde gün batımı görseli üret ve zaman çizelgesine koy",
+      "cut": "İlk klibi ortadan böl ve parçaların arasına yumuşak bir geçiş ekle",
+      "captions": "Başa projenin adıyla bir başlık ekle"
+    },
+    "tools": "Asistanın adımları",
+    "toolRunning": "Çalışıyor",
+    "toolDone": "Bitti",
+    "toolFailed": "Başarısız",
+    "thinking": "Düşünüyor",
+    "placeholder": "Ne yapılacağını yaz…",
+    "send": "Gönder",
+    "stop": "Durdur",
+    "footnote": "Enter gönderir, Shift+Enter yeni satır açar. Pahalı üretimlerden önce asistan sorar.",
+    "needsKey": "Sohbet için bir OpenRouter anahtarı gerekir: asistan bir OpenRouter modeliyle yanıt verir ve VideoSOS araçlarıyla çalışır.",
+    "openKeys": "Anahtarları aç",
+    "byAgent": "Bağlı ajan (MCP) yanıtlıyor",
+    "introAgent": "Mesajlarınız MCP ile bağlı ajana gider: ajan kendi araçlarıyla VideoSOS'ta çalışır, zaman çizelgesini okur, üretir, kurgular ve dışa aktarır; adımları burada görünür. Yanıtları ücretsizdir; üretimler ajanların günlük sınırına sayılır."
+  }
+}

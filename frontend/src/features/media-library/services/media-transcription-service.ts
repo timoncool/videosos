@@ -12,6 +12,7 @@ import { DEFAULT_PROJECT_HEIGHT, DEFAULT_PROJECT_WIDTH } from '@/shared/projects
 import type { MediaTranscript, MediaTranscriptModel, MediaTranscriptSegment } from '@/types/storage'
 import type {
   AudioItem,
+  CaptionWord,
   SubtitleSegmentItem,
   TimelineTranscriptCaptionCue,
   TimelineItem,
@@ -54,7 +55,8 @@ import {
 } from '@/features/media-library/deps/composition-runtime-contract'
 import {
   DEFAULT_WHISPER_MODEL,
-  DEFAULT_WHISPER_QUANTIZATION,
+  WHISPER_QUANTIZATION,
+  normalizeSelectableWhisperModel,
   normalizeWhisperLanguage,
 } from '@/shared/utils/whisper-settings'
 import { TRANSCRIPTION_CANCELLED_MESSAGE } from '@/shared/utils/transcription-cancellation'
@@ -68,9 +70,8 @@ const PREFERRED_TRANSCRIPT_CAPTION_SECONDS = 1.4
 const MIN_TRANSCRIPT_CAPTION_WORDS = 2
 // A short but audible pause is a better phrase boundary than a blanket timing offset.
 const TRANSCRIPT_CAPTION_BREAK_GAP_SECONDS = 0.18
-const TRANSCRIPT_CAPTION_TIMING_VERSION = 4
+const TRANSCRIPT_CAPTION_TIMING_VERSION = 5
 const SENTENCE_END_PATTERN = /[.!?。！？]$/
-const DEFAULT_QUANTIZATION = DEFAULT_WHISPER_QUANTIZATION
 
 type CaptionableClip = AudioItem | VideoItem
 interface InsertTranscriptAsCaptionsOptions {
@@ -108,7 +109,6 @@ type QueueState = 'queued' | 'running'
 interface TranscriptionRequestOptions {
   language?: string
   model?: MediaTranscriptModel
-  quantization?: TranscribeOptions['quantization']
   onProgress?: TranscribeOptions['onProgress']
   onQueueStatusChange?: (state: QueueState) => void
 }
@@ -122,7 +122,6 @@ interface QueuedTranscriptionJob {
   mediaId: string
   requestKey: string
   model: MediaTranscriptModel
-  quantization: NonNullable<TranscribeOptions['quantization']>
   language?: string
   listeners: QueuedTranscriptionListener[]
   promise: Promise<MediaTranscript>
@@ -280,6 +279,25 @@ function segmentTranscriptForCaptions(segments: TranscriptSegment[]): MediaTrans
   return captionSegments.toSorted((left, right) => left.start - right.start)
 }
 
+/** The words of a caption as pieces whose joining is its text, each with the space the joining puts before it. */
+function captionWords(segment: MediaTranscriptSegment): CaptionWord[] | undefined {
+  const words = segment.words
+  if (!words || words.length === 0) return undefined
+  const pieces: CaptionWord[] = []
+  let joined = ''
+  for (let index = 0; index < words.length; index++) {
+    const next = joinTranscriptWords(words.slice(0, index + 1).map((word) => word.text))
+    if (!next.startsWith(joined)) return undefined
+    pieces.push({
+      text: next.slice(joined.length),
+      startSeconds: words[index]!.start,
+      endSeconds: words[index]!.end,
+    })
+    joined = next
+  }
+  return joined === segment.text ? pieces : undefined
+}
+
 function buildTimelineTranscriptCaptionCues(
   mediaId: string,
   segments: readonly MediaTranscriptSegment[],
@@ -289,6 +307,7 @@ function buildTimelineTranscriptCaptionCues(
     startSeconds: segment.start,
     endSeconds: segment.end,
     text: segment.text,
+    words: captionWords(segment),
   }))
 }
 
@@ -345,7 +364,6 @@ class MediaTranscriptionService {
   private readonly adapter = getDefaultMediaTranscriptionAdapter()
   private readonly transcriber = this.adapter.createTranscriber({
     model: DEFAULT_MODEL,
-    quantization: DEFAULT_QUANTIZATION,
   })
   private activeJob: QueuedTranscriptionJob | null = null
   private queue: QueuedTranscriptionJob[] = []
@@ -378,11 +396,11 @@ class MediaTranscriptionService {
     options: TranscriptionRequestOptions = {},
   ): Promise<MediaTranscript> {
     const settings = useSettingsStore.getState()
-    const model = options.model ?? settings.defaultWhisperModel ?? DEFAULT_MODEL
-    const quantization =
-      options.quantization ?? settings.defaultWhisperQuantization ?? DEFAULT_QUANTIZATION
+    const model = normalizeSelectableWhisperModel(
+      options.model ?? settings.defaultWhisperModel ?? DEFAULT_MODEL,
+    )
     const language = normalizeWhisperLanguage(options.language ?? settings.defaultWhisperLanguage)
-    const requestKey = `${mediaId}:${model}:${quantization}:${language ?? 'auto'}`
+    const requestKey = `${mediaId}:${model}:${language ?? 'auto'}`
     const listener: QueuedTranscriptionListener = {
       onProgress: options.onProgress,
       onQueueStatusChange: options.onQueueStatusChange,
@@ -398,7 +416,6 @@ class MediaTranscriptionService {
       mediaId,
       requestKey,
       model,
-      quantization,
       language,
       listener,
     })
@@ -446,14 +463,12 @@ class MediaTranscriptionService {
     mediaId,
     requestKey,
     model,
-    quantization,
     language,
     listener,
   }: {
     mediaId: string
     requestKey: string
     model: MediaTranscriptModel
-    quantization: NonNullable<TranscribeOptions['quantization']>
     language?: string
     listener: QueuedTranscriptionListener
   }): QueuedTranscriptionJob {
@@ -468,7 +483,6 @@ class MediaTranscriptionService {
       mediaId,
       requestKey,
       model,
-      quantization,
       language,
       listeners: [listener],
       promise,
@@ -574,7 +588,6 @@ class MediaTranscriptionService {
     const stream = this.transcriber.transcribe(file, {
       model: job.model,
       language: job.language,
-      quantization: job.quantization,
       onProgress: (progress) => {
         for (const listener of job.listeners) {
           listener.onProgress?.(progress)
@@ -590,7 +603,7 @@ class MediaTranscriptionService {
       mediaId,
       model: job.model,
       language: job.language,
-      quantization: job.quantization,
+      quantization: WHISPER_QUANTIZATION,
       text: joinTranscriptWords(segments.map((segment) => segment.text)),
       segments: segmentTranscriptForCaptions(segments),
       createdAt: Date.now(),
@@ -631,12 +644,7 @@ class MediaTranscriptionService {
     // an older transcript snapshot.
     const compositionsState = useCompositionsStore.getState()
     for (const composition of compositionsState.compositions) {
-      const synced = syncTranscriptCaptionItems(
-        composition.items,
-        mediaId,
-        transcript,
-        sourceCues,
-      )
+      const synced = syncTranscriptCaptionItems(composition.items, mediaId, transcript, sourceCues)
       if (synced.updatedClipCount === 0) continue
       compositionsState.updateComposition(composition.id, { items: synced.items })
       updatedClipCount += synced.updatedClipCount
@@ -653,9 +661,7 @@ class MediaTranscriptionService {
       return synced.updatedClipCount > 0 ? { ...stash, items: synced.items } : stash
     }
     const nextStashStack = navigationState.stashStack.map(syncStash)
-    const nextMainHolder = navigationState.mainHolder
-      ? syncStash(navigationState.mainHolder)
-      : null
+    const nextMainHolder = navigationState.mainHolder ? syncStash(navigationState.mainHolder) : null
     if (updatedStashedClipCount > 0) {
       useCompositionNavigationStore.setState({
         stashStack: nextStashStack,
@@ -725,9 +731,7 @@ class MediaTranscriptionService {
     const generatedCaptionIdsToRemove = options.replaceExisting
       ? new Set(
           targetClips.flatMap((clip) =>
-            findReplaceableCaptionItemsForClip(items, clip, 'transcript').map(
-              (item) => item.id,
-            ),
+            findReplaceableCaptionItemsForClip(items, clip, 'transcript').map((item) => item.id),
           ),
         )
       : new Set<string>()
@@ -845,9 +849,7 @@ class MediaTranscriptionService {
     const generatedCaptionIdsToRemove = options.replaceExisting
       ? new Set(
           targetClips.flatMap((clip) =>
-            findReplaceableCaptionItemsForClip(items, clip, 'transcript').map(
-              (item) => item.id,
-            ),
+            findReplaceableCaptionItemsForClip(items, clip, 'transcript').map((item) => item.id),
           ),
         )
       : new Set<string>()

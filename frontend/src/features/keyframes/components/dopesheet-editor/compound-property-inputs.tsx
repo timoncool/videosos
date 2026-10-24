@@ -65,7 +65,7 @@ function AxisInput({
 
   return (
     <label
-      className={`flex h-5 min-w-0 flex-1 items-center bg-background/85 px-1 text-[9px] ${
+      className={`flex h-5 min-w-0 flex-1 items-center bg-background/85 px-1 text-[10px] ${
         axis === 'y' ? 'border-l border-border/70' : ''
       }`}
     >
@@ -78,7 +78,7 @@ function AxisInput({
         // Timeline parameter fields are never credentials. Keep password-manager
         // overlays from rescanning this dense surface on every playback mutation.
         autoComplete="off"
-        className="min-w-0 flex-1 cursor-ew-resize select-none bg-transparent text-right font-mono text-[9px] tabular-nums outline-none disabled:cursor-default disabled:opacity-50"
+        className="min-w-0 flex-1 cursor-ew-resize select-none bg-transparent text-right font-mono text-[10px] tabular-nums outline-none disabled:cursor-default disabled:opacity-50"
         data-bwignore="true"
         disabled={disabled}
         inputMode="decimal"

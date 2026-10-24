@@ -435,11 +435,13 @@ export function useFadeEditors({
         finishEdit()
       }
 
-      window.addEventListener('mousemove', handleWindowMouseMove)
-      window.addEventListener('mouseup', handleWindowMouseUp, { once: true })
+      window.addEventListener('pointermove', handleWindowMouseMove)
+      window.addEventListener('pointerup', handleWindowMouseUp, { once: true })
+      window.addEventListener('pointercancel', handleWindowMouseUp, { once: true })
       videoFadeCleanupRef.current = () => {
-        window.removeEventListener('mousemove', handleWindowMouseMove)
-        window.removeEventListener('mouseup', handleWindowMouseUp)
+        window.removeEventListener('pointermove', handleWindowMouseMove)
+        window.removeEventListener('pointerup', handleWindowMouseUp)
+        window.removeEventListener('pointercancel', handleWindowMouseUp)
       }
     },
     [
@@ -534,11 +536,13 @@ export function useFadeEditors({
         finishEdit()
       }
 
-      window.addEventListener('mousemove', handleWindowMouseMove)
-      window.addEventListener('mouseup', handleWindowMouseUp, { once: true })
+      window.addEventListener('pointermove', handleWindowMouseMove)
+      window.addEventListener('pointerup', handleWindowMouseUp, { once: true })
+      window.addEventListener('pointercancel', handleWindowMouseUp, { once: true })
       audioFadeCleanupRef.current = () => {
-        window.removeEventListener('mousemove', handleWindowMouseMove)
-        window.removeEventListener('mouseup', handleWindowMouseUp)
+        window.removeEventListener('pointermove', handleWindowMouseMove)
+        window.removeEventListener('pointerup', handleWindowMouseUp)
+        window.removeEventListener('pointercancel', handleWindowMouseUp)
       }
     },
     [
@@ -671,11 +675,13 @@ export function useFadeEditors({
         finishEdit()
       }
 
-      window.addEventListener('mousemove', handleWindowMouseMove)
-      window.addEventListener('mouseup', handleWindowMouseUp, { once: true })
+      window.addEventListener('pointermove', handleWindowMouseMove)
+      window.addEventListener('pointerup', handleWindowMouseUp, { once: true })
+      window.addEventListener('pointercancel', handleWindowMouseUp, { once: true })
       audioFadeCurveCleanupRef.current = () => {
-        window.removeEventListener('mousemove', handleWindowMouseMove)
-        window.removeEventListener('mouseup', handleWindowMouseUp)
+        window.removeEventListener('pointermove', handleWindowMouseMove)
+        window.removeEventListener('pointerup', handleWindowMouseUp)
+        window.removeEventListener('pointercancel', handleWindowMouseUp)
       }
     },
     [
@@ -788,16 +794,18 @@ export function useFadeEditors({
         finishEdit()
       }
 
-      window.addEventListener('mousemove', handleWindowMouseMove)
-      window.addEventListener('mouseup', handleWindowMouseUp, { once: true })
+      window.addEventListener('pointermove', handleWindowMouseMove)
+      window.addEventListener('pointerup', handleWindowMouseUp, { once: true })
+      window.addEventListener('pointercancel', handleWindowMouseUp, { once: true })
       activationTimeoutId = window.setTimeout(() => {
         clearActivationTimeout()
         activateDrag()
       }, AUDIO_VOLUME_DRAG_ACTIVATION_DELAY_MS)
       audioVolumeCleanupRef.current = () => {
         clearActivationTimeout()
-        window.removeEventListener('mousemove', handleWindowMouseMove)
-        window.removeEventListener('mouseup', handleWindowMouseUp)
+        window.removeEventListener('pointermove', handleWindowMouseMove)
+        window.removeEventListener('pointerup', handleWindowMouseUp)
+        window.removeEventListener('pointercancel', handleWindowMouseUp)
       }
     },
     [

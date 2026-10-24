@@ -61,7 +61,7 @@ export function DopesheetRulerHeader({
                   key={filter}
                   type="button"
                   aria-pressed={selected}
-                  className={`h-4 rounded px-1.5 text-[9px] leading-none transition-colors ${
+                  className={`h-4 rounded px-1.5 text-[10px] leading-none transition-colors ${
                     selected
                       ? 'bg-accent text-foreground'
                       : 'text-muted-foreground hover:text-foreground'

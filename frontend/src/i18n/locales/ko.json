@@ -37,11 +37,12 @@
   "toolbar": {
     "ariaLabel": "편집기 도구 모음",
     "workspaces": {
-      "motion": "Motion",
+      "motion": "모션",
       "label": "작업 영역",
       "edit": "편집",
       "color": "컬러",
-      "animate": "애니메이트"
+      "animate": "애니메이트",
+      "canvas": "캔버스"
     },
     "backToProjects": "프로젝트로 돌아가기",
     "backToProjectsAria": "프로젝트로 돌아가기",
@@ -60,7 +61,8 @@
     "saveAria": "프로젝트 저장",
     "export": "내보내기",
     "exportVideo": "동영상 내보내기",
-    "downloadProjectZip": "프로젝트 다운로드 (.zip)"
+    "downloadProjectZip": "프로젝트 다운로드 (.zip)",
+    "exportFcpxml": "Final Cut, DaVinci, Premiere용 FCPXML"
   },
   "unsavedChanges": {
     "title": "저장하지 않은 변경 사항",
@@ -81,12 +83,12 @@
     "general": {
       "autoSave": "자동 저장",
       "interval": "간격",
-      "intervalMinutes": "{{count}}분",
       "undoHistoryDepth": "실행 취소 기록 깊이",
       "uiSounds": "인터페이스 사운드",
       "uiSoundVolume": "사운드 볼륨",
       "uiSoundVoice": "사운드 테마",
-      "uiSoundPreview": "미리듣기"
+      "uiSoundPreview": "미리듣기",
+      "minutesUnit": "분"
     },
     "ai": {
       "captionSampleInterval": "자막 샘플링 간격",

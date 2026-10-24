@@ -3,6 +3,7 @@ import type { Project, ProjectTimeline } from '@/types/project'
 import type { MediaMetadata } from '@/types/storage'
 import { editProject } from './edit'
 import type { EditOp } from './edit-op-support'
+import { useMarkersStore } from '@/features/timeline/stores/markers-store'
 
 /**
  * Integration tests through the REAL timeline stores/actions (the module
@@ -101,6 +102,52 @@ describe('editProject', () => {
     // New video track goes above the existing one (order 0 → min-1 = -1).
     expect(Math.min(...video)).toBe(-1)
     expect(orders['audio']).toBe(1)
+  })
+
+  it('addShape, updateTrack, removeTrack and markers work as the timeline does', async () => {
+    const result = await editProject({
+      project: baseProject(),
+      ops: [
+        {
+          op: 'addShape',
+          shape: 'circle',
+          from: 10,
+          durationInFrames: 50,
+          color: '#ff0000',
+          callerId: 'shape',
+        } as EditOp,
+        { op: 'addTrack', kind: 'audio', callerId: 'music' } as EditOp,
+        { op: 'updateTrack', id: 't_v', name: 'Titles', locked: true, volume: -6 } as EditOp,
+        { op: 'removeTrack', id: { $ref: 'music#/detail/trackId' } } as EditOp,
+        { op: 'addMarker', frame: 25, label: 'Beat', callerId: 'mark' } as EditOp,
+        { op: 'updateMarker', id: { $ref: 'mark#/detail/id' }, label: 'Drop' } as EditOp,
+      ],
+    })
+    const shape = result.project.timeline!.items[0]!
+    expect(shape).toMatchObject({
+      type: 'shape',
+      shapeType: 'circle',
+      from: 10,
+      durationInFrames: 50,
+      fillColor: '#ff0000',
+      trackId: 't_v',
+    })
+    const tracks = result.project.timeline!.tracks
+    expect(tracks).toHaveLength(1)
+    expect(tracks[0]).toMatchObject({ name: 'Titles', locked: true, volume: -6 })
+    const markerId = (result.results[4]!.detail as { id: string }).id
+    expect(
+      useMarkersStore.getState().markers.find((marker) => marker.id === markerId),
+    ).toMatchObject({ frame: 25, label: 'Drop' })
+    await expect(
+      editProject({ project: baseProject(), ops: [{ op: 'addShape', shape: 'blob' } as EditOp] }),
+    ).rejects.toThrow('shape: one of')
+    await expect(
+      editProject({
+        project: baseProject(),
+        ops: [{ op: 'addText', text: 'x' } as EditOp, { op: 'removeTrack', id: 't_v' } as EditOp],
+      }),
+    ).rejects.toThrow('still holds 1 clip')
   })
 
   it('resolves $ref chains between operations (track from a prior op)', async () => {
@@ -224,7 +271,12 @@ describe('editProject', () => {
       media: [
         {
           mediaId: 'm-img',
-          metadata: { ...videoMedia, id: 'm-img', mimeType: 'image/png', audioCodec: undefined } as MediaMetadata,
+          metadata: {
+            ...videoMedia,
+            id: 'm-img',
+            mimeType: 'image/png',
+            audioCodec: undefined,
+          } as MediaMetadata,
         },
         { mediaId: 'm-vid', metadata: videoMedia },
       ],
@@ -234,6 +286,165 @@ describe('editProject', () => {
     const audio = items.find((i) => i.type === 'audio')!
     expect(video.from).toBe(150)
     expect(audio.from).toBe(video.from)
+  })
+
+  it('a refused transition says why and what makes it possible', async () => {
+    const media = [{ mediaId: 'm-vid', metadata: videoMedia }]
+    await expect(
+      editProject({
+        project: baseProject(),
+        media,
+        ops: [
+          { op: 'addClip', mediaId: 'm-vid', from: 0, callerId: 'a' } as EditOp,
+          { op: 'addClip', mediaId: 'm-vid', from: 100, callerId: 'b' } as EditOp,
+          {
+            op: 'addTransition',
+            leftClipId: { $ref: 'a#/detail/created/0/id' },
+            rightClipId: { $ref: 'b#/detail/created/0/id' },
+          } as EditOp,
+        ],
+      }),
+    ).rejects.toThrow('no spare frames beyond the cut')
+  })
+
+  it('moveItem takes the linked sound of a clip along, unless asked to move it alone', async () => {
+    const result = await editProject({
+      project: baseProject(),
+      media: [{ mediaId: 'm-vid', metadata: videoMedia }],
+      ops: [
+        { op: 'addClip', mediaId: 'm-vid', from: 0, callerId: 'clip' } as EditOp,
+        { op: 'moveItem', id: { $ref: 'clip#/detail/created/0/id' }, from: 50 } as EditOp,
+      ],
+    })
+    const froms = result.project.timeline!.items.map((item) => [item.type, item.from])
+    expect(froms).toEqual([
+      ['video', 50],
+      ['audio', 50],
+    ])
+    const alone = await editProject({
+      project: baseProject(),
+      media: [{ mediaId: 'm-vid', metadata: videoMedia }],
+      ops: [
+        { op: 'addClip', mediaId: 'm-vid', from: 0, callerId: 'clip' } as EditOp,
+        {
+          op: 'moveItem',
+          id: { $ref: 'clip#/detail/created/0/id' },
+          from: 50,
+          alone: true,
+        } as EditOp,
+      ],
+    })
+    expect(alone.project.timeline!.items.map((item) => item.from).sort()).toEqual([0, 50])
+  })
+
+  it('addClip with keepFrom lands at its moment on a track free there, the pair together', async () => {
+    const result = await editProject({
+      project: baseProject(),
+      ops: [
+        { op: 'addClip', mediaId: 'm-img', from: 0 } as EditOp,
+        { op: 'addClip', mediaId: 'm-vid', from: 30, keepFrom: true } as EditOp,
+      ],
+      media: [
+        {
+          mediaId: 'm-img',
+          metadata: {
+            ...videoMedia,
+            id: 'm-img',
+            mimeType: 'image/png',
+            audioCodec: undefined,
+          } as MediaMetadata,
+        },
+        { mediaId: 'm-vid', metadata: videoMedia },
+      ],
+    })
+    const items = result.project.timeline!.items
+    const still = items.find((i) => i.type === 'image')!
+    const video = items.find((i) => i.type === 'video')!
+    const audio = items.find((i) => i.type === 'audio')!
+    expect(video.from).toBe(30)
+    expect(audio.from).toBe(30)
+    expect(video.trackId).not.toBe(still.trackId)
+    const tracks = result.project.timeline!.tracks
+    expect(tracks.find((t) => t.id === video.trackId)!.order).toBeLessThan(
+      tracks.find((t) => t.id === still.trackId)!.order,
+    )
+  })
+
+  it('addClip with keepFrom goes above what is there, not onto a free track under it', async () => {
+    const track = (id: string, order: number) => ({
+      id,
+      name: id,
+      kind: 'video' as const,
+      height: 80,
+      locked: false,
+      visible: true,
+      muted: false,
+      solo: false,
+      order,
+    })
+    const still = {
+      ...videoMedia,
+      id: 'm-img',
+      mimeType: 'image/png',
+      audioCodec: undefined,
+    } as MediaMetadata
+    const result = await editProject({
+      project: baseProject({ tracks: [track('t_top', -1), track('t_low', 0)] }),
+      ops: [
+        { op: 'addClip', mediaId: 'm-img', from: 0, trackId: 't_top' } as EditOp,
+        { op: 'addClip', mediaId: 'm-img', from: 30, keepFrom: true } as EditOp,
+      ],
+      media: [{ mediaId: 'm-img', metadata: still }],
+    })
+    const tracks = result.project.timeline!.tracks
+    const placed = result.project.timeline!.items.find((i) => i.from === 30)!
+    expect(placed.trackId).not.toBe('t_low')
+    expect(tracks.find((t) => t.id === placed.trackId)!.order).toBeLessThan(-1)
+  })
+
+  it("addClip with keepFrom after a shot goes on its track, its sound beside the shot's", async () => {
+    const track = (id: string, kind: 'video' | 'audio', order: number) => ({
+      id,
+      name: id,
+      kind,
+      height: 80,
+      locked: false,
+      visible: true,
+      muted: false,
+      solo: false,
+      order,
+    })
+    const music = { ...videoMedia, id: 'm-aud', mimeType: 'audio/mpeg' } as MediaMetadata
+    const result = await editProject({
+      project: baseProject({
+        tracks: [
+          track('v_title', 'video', -2),
+          track('v_main', 'video', 0),
+          track('a_sound', 'audio', 1),
+          track('a_music', 'audio', 2),
+        ],
+      }),
+      ops: [
+        {
+          op: 'addText',
+          text: 'Title',
+          from: 0,
+          durationInFrames: 30,
+          trackId: 'v_title',
+        } as EditOp,
+        { op: 'addClip', mediaId: 'm-vid', from: 0, trackId: 'v_main' } as EditOp,
+        { op: 'addClip', mediaId: 'm-aud', from: 0, trackId: 'a_music' } as EditOp,
+        { op: 'addClip', mediaId: 'm-vid', from: 100, keepFrom: true } as EditOp,
+      ],
+      media: [
+        { mediaId: 'm-vid', metadata: videoMedia },
+        { mediaId: 'm-aud', metadata: music },
+      ],
+    })
+    const items = result.project.timeline!.items
+    const next = items.filter((item) => item.from === 100)
+    expect(next.find((item) => item.type === 'video')!.trackId).toBe('v_main')
+    expect(next.find((item) => item.type === 'audio')!.trackId).toBe('a_sound')
   })
 
   it('addClip image defaults to a 150-frame still', async () => {

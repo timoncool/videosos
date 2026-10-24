@@ -1,10 +1,9 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import type { MediaTranscriptModel, MediaTranscriptQuantization } from '@/types/storage'
+import type { MediaTranscriptModel } from '@/types/storage'
 import {
   DEFAULT_WHISPER_LANGUAGE,
   DEFAULT_WHISPER_MODEL,
-  DEFAULT_WHISPER_QUANTIZATION,
   normalizeSelectableWhisperModel,
 } from '@/shared/utils/whisper-settings'
 import type { EditorDensityPresetName } from '@/config/editor-layout'
@@ -42,7 +41,6 @@ interface AppSettings {
 
   // Whisper defaults
   defaultWhisperModel: MediaTranscriptModel
-  defaultWhisperQuantization: MediaTranscriptQuantization
   defaultWhisperLanguage: string
 
   // AI captioning — interval between sampled frames when running LFM captions.
@@ -153,7 +151,6 @@ const DEFAULT_SETTINGS: AppSettings = {
 
   // Whisper defaults
   defaultWhisperModel: DEFAULT_WHISPER_MODEL,
-  defaultWhisperQuantization: DEFAULT_WHISPER_QUANTIZATION,
   defaultWhisperLanguage: DEFAULT_WHISPER_LANGUAGE,
 
   // AI captioning defaults

@@ -396,7 +396,7 @@ export function ProjectList({ onEditProject, onImportProject }: ProjectListProps
           {/* Sort Menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="icon">
+              <Button variant="outline" size="icon" aria-label={t('projects.list.sortBy')} data-tooltip={t('projects.list.sortBy')}>
                 <ArrowUpDown className="w-4 h-4" />
               </Button>
             </DropdownMenuTrigger>

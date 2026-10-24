@@ -287,7 +287,7 @@ function ProjectFormBase({
             <Button
               type="submit"
               size="lg"
-              className="min-w-[160px]"
+              className="bg-brand min-w-[160px]"
               disabled={!isValid || isSubmitting}
             >
               {isSubmitting

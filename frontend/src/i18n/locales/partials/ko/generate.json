@@ -1,94 +1,510 @@
 {
   "generate": {
-    "tabLabel": "Generate",
-    "serverError": "The VideoSOS server did not answer: {{reason}}",
+    "tabLabel": "생성",
+    "serverError": "VideoSOS 서버가 응답하지 않았습니다: {{reason}}",
     "tasks": {
-      "image": "Image",
-      "image_edit": "Edit image",
-      "video": "Video",
-      "video_edit": "Edit video",
-      "lip_sync": "Lip sync",
-      "upscale": "Upscale",
-      "remove_background": "Remove background",
-      "music": "Music",
-      "speech": "Voice",
-      "sound": "Sound effects",
-      "transcribe": "Transcribe",
-      "text": "Text"
+      "image": "이미지",
+      "image_edit": "이미지 편집",
+      "video": "동영상",
+      "video_edit": "동영상 편집",
+      "lip_sync": "립싱크",
+      "upscale": "업스케일",
+      "remove_background": "배경 제거",
+      "music": "음악",
+      "speech": "음성",
+      "sound": "효과음",
+      "transcribe": "받아쓰기",
+      "text": "텍스트"
     },
     "media": {
-      "image": "an image",
-      "video": "a video",
-      "audio": "audio"
+      "image": "이미지",
+      "video": "동영상",
+      "audio": "오디오"
     },
     "model": {
-      "choose": "Choose a model",
-      "loading": "Reading the models…",
-      "search": "Search models",
-      "all": "All",
-      "refresh": "Read the catalogues again",
-      "none": "No model fits this search.",
-      "new": "new",
-      "deprecated": "retiring"
+      "choose": "모델 선택",
+      "loading": "모델을 불러오는 중…",
+      "search": "모델 검색",
+      "all": "전체",
+      "refresh": "카탈로그 다시 불러오기",
+      "none": "이 검색과 일치하는 모델이 없습니다.",
+      "new": "신규",
+      "deprecated": "종료 예정",
+      "typicalTime": "≈ {{time}} (내 실행 기준)",
+      "pin": "위에 고정",
+      "unpin": "고정 해제"
     },
     "keys": {
-      "missing": "No key for this provider",
-      "needed": "Add your {{provider}} key to run this model.",
-      "placeholder": "Paste the API key",
-      "save": "Save",
-      "ok": "The key works.",
-      "okBalance": "The key works. Balance: {{balance}}",
-      "failed": "The provider did not accept the key.",
-      "getOne": "Get a {{provider}} key"
+      "missing": "이 공급자의 키가 없습니다",
+      "needed": "이 모델을 실행하려면 {{provider}} 키를 추가하세요.",
+      "placeholder": "API 키를 붙여넣으세요",
+      "save": "저장",
+      "ok": "키가 정상 작동합니다.",
+      "okBalance": "키가 정상 작동합니다. 잔액: {{balance}}",
+      "failed": "공급자가 키를 수락하지 않았습니다.",
+      "getOne": "{{provider}} 키 받기",
+      "spent": "이 키로 사용한 금액: {{spent}}.",
+      "balanceAdminOnly": "fal 잔액은 관리자 키에서만 표시됩니다."
     },
     "form": {
-      "loading": "Reading the model's settings…",
-      "more": "More settings ({{count}})",
-      "default": "Model default",
-      "dropHere": "Drop {{kind}} from the library or a result here",
-      "pick": "Pick from the library",
-      "remove": "Remove",
-      "noMedia": "The library has no {{kind}} yet.",
-      "tooMany": "At most {{max}} files here.",
-      "wrongKind": "This slot takes {{kind}}.",
-      "missing": "Fill in: {{fields}}"
+      "loading": "모델 설정을 불러오는 중…",
+      "more": "설정 더 보기({{count}})",
+      "default": "모델 기본값",
+      "dropHere": "라이브러리의 {{kind}} 또는 결과를 여기에 놓으세요",
+      "pick": "라이브러리에서 선택",
+      "remove": "제거",
+      "noMedia": "라이브러리에 아직 {{kind}}이(가) 없습니다.",
+      "tooMany": "여기에는 최대 {{max}}개 파일까지 넣을 수 있습니다.",
+      "wrongKind": "이 슬롯은 {{kind}}을(를) 받습니다.",
+      "missing": "입력하세요: {{fields}}",
+      "length": "{{count}} / {{max}}",
+      "tooLong": "{{count}} / {{max}} - 모델이 받는 길이를 초과합니다",
+      "shorten": "“{{field}}” 줄이기: {{count}}자, 모델은 최대 {{max}}자까지 받습니다",
+      "atSecond": "프레임 {{n}}의 초",
+      "atFrame": "프레임 {{n}}의 번호",
+      "atAuto": "자동",
+      "atSecondHint": "각 프레임 아래: 배치할 초({{max}}까지). 비워 두면 모델이 직접 배치합니다.",
+      "atFrameHint": "각 프레임 아래: 영상 속 프레임 번호(-1은 마지막). 비워 두면 모델이 직접 배치합니다.",
+      "searchOptions": "검색…",
+      "noOptions": "결과 없음"
     },
-    "placeOnTimeline": "Put on the timeline",
-    "repeat": "Runs",
-    "repeatHint": "How many times to run it; each run is a separate result and is paid separately",
-    "submit": "Generate",
+    "placeOnTimeline": "타임라인에 배치",
+    "repeat": "실행 횟수",
+    "repeatHint": "실행할 횟수입니다. 각 실행은 별도의 결과이며 요금도 따로 청구됩니다",
+    "submit": "생성",
     "cost": {
-      "unknown": "price after the run",
-      "estimated": "Worked out before the run",
-      "billed": "As the provider billed it",
-      "failed": "Price unknown: {{reason}}"
+      "unknown": "가격은 실행 후 확정",
+      "estimated": "실행 전에 계산됨",
+      "billed": "공급자가 청구한 금액",
+      "failed": "가격을 알 수 없음: {{reason}}"
     },
-    "history": "Generations ({{count}})",
+    "history": "생성 내역({{count}})",
     "status": {
-      "queued": "waiting",
-      "sending": "sending",
-      "running": "working",
-      "done": "done",
-      "failed": "failed",
-      "cancelled": "cancelled"
+      "queued": "대기 중",
+      "sending": "전송 중",
+      "running": "작업 중",
+      "done": "완료",
+      "failed": "실패",
+      "cancelled": "취소됨"
     },
     "actions": {
-      "cancel": "Cancel",
-      "place": "To timeline",
-      "placeHint": "Put the result at the playhead",
-      "copy": "Copy",
-      "placeText": "As text",
-      "reuse": "Edit",
-      "reuseHint": "Load this run's model and settings into the form",
-      "again": "Again",
-      "forgetHint": "Remove from the list and delete its files (media already in the library stays)"
+      "cancel": "취소",
+      "place": "타임라인으로",
+      "placeHint": "결과를 재생 헤드 위치에 배치합니다",
+      "copy": "복사",
+      "placeText": "텍스트로",
+      "reuse": "편집",
+      "reuseHint": "이 실행의 모델과 설정을 양식에 불러옵니다",
+      "again": "다시",
+      "forgetHint": "목록에서 제거하고 파일도 삭제합니다(이미 라이브러리에 있는 미디어는 유지됩니다)",
+      "like": "이 결과에 좋아요: 가장 좋은 테이크로, 이렇게 정렬하면 맨 앞에 나옵니다",
+      "unlike": "좋아요 취소"
     },
-    "importFailed": "The result arrived but was not added to the library: {{reason}}",
+    "importFailed": "결과는 도착했지만 라이브러리에 추가되지 않았습니다: {{reason}}",
     "improve": {
-      "button": "Improve prompt",
-      "hint": "Rewrite the prompt for this model with an OpenRouter LLM (a fraction of a cent)",
-      "needsKey": "Needs an OpenRouter key",
-      "undo": "Back to mine"
-    }
+      "button": "프롬프트 개선",
+      "hint": {
+        "openrouter": "OpenRouter LLM으로 이 모델에 맞게 프롬프트를 다시 작성합니다(1센트도 되지 않는 비용)",
+        "agent": "이 모델에 맞게 프롬프트 다시 쓰기: 연결된 에이전트가 작성하며 무료입니다"
+      },
+      "needsKey": "OpenRouter 키가 필요합니다",
+      "undo": "내 프롬프트로 되돌리기",
+      "noAgent": "에이전트가 연결되지 않았습니다. VideoSOS의 MCP로 실행하거나(설정, 에이전트) 그곳에서 OpenRouter를 선택하세요"
+    },
+    "use": {
+      "button": "다음으로 사용…",
+      "videoFromFrame": "이 프레임으로 동영상 만들기",
+      "edit": "이미지 편집",
+      "upscale": "업스케일",
+      "removeBackground": "배경 제거",
+      "lipSync": "이 얼굴 립싱크",
+      "continue": "마지막 프레임부터 이어서 만들기",
+      "editVideo": "동영상 편집",
+      "sound": "이 동영상에 사운드 추가",
+      "lipSyncVoice": "이 음성으로 립싱크",
+      "transcribe": "받아쓰기",
+      "needsProject": "먼저 프로젝트를 여세요. 프레임이 해당 프로젝트의 미디어 라이브러리에 추가됩니다.",
+      "noSlot": "{{model}}은(는) 이 종류의 파일을 받지 않습니다. 이 작업에 맞는 다른 모델을 선택하세요.",
+      "noPrompt": "{{model}}에는 텍스트 칸이 없습니다. 이 작업의 다른 모델을 고르세요.",
+      "placed": "\"{{field}}\"에 배치했습니다",
+      "lastFrameName": "{{title}}, 마지막 프레임"
+    },
+    "compare": {
+      "pick": "비교",
+      "button": "비교({{count}})",
+      "title": "나란히 보기",
+      "play": "함께 재생",
+      "pause": "일시 정지"
+    },
+    "stats": {
+      "button": "프로젝트 지출",
+      "title": "이 프로젝트에서 사용한 금액",
+      "total": "총 {{total}}, 오늘 {{today}}",
+      "empty": "이 프로젝트에서는 아직 생성된 항목이 없습니다.",
+      "byTask": "작업별",
+      "byProvider": "공급자별",
+      "byModel": "모델별",
+      "other": "기타",
+      "files": "프로젝트 파일: {{count}} — 생성 {{generated}}, 추가 {{added}}"
+    },
+    "filter": {
+      "search": "단어 또는 모델로 찾기",
+      "task": "작업",
+      "status": "상태",
+      "allTasks": "모든 작업",
+      "allStates": "모든 상태",
+      "nothing": "일치하는 생성 항목이 없습니다."
+    },
+    "zoom": {
+      "title": "이미지",
+      "open": "원래 크기로 열기",
+      "in": "확대",
+      "out": "축소",
+      "fit": "창에 맞추기",
+      "close": "닫기"
+    },
+    "sort": {
+      "label": "정렬: {{order}}",
+      "title": "정렬",
+      "newest": "최신순",
+      "oldest": "오래된순",
+      "costliest": "비싼순",
+      "cheapest": "저렴한순",
+      "liked": "좋아요 먼저"
+    },
+    "fields": {
+      "prompt": "프롬프트",
+      "positive_prompt": "프롬프트",
+      "negative_prompt": "네거티브 프롬프트",
+      "aspect_ratio": "화면 비율",
+      "resolution": "해상도",
+      "input_references": "참조 이미지",
+      "seed": "시드",
+      "output_format": "출력 형식",
+      "output_quality": "출력 품질",
+      "duration": "길이(초)",
+      "number_results": "결과 수",
+      "num_images": "이미지 수",
+      "size": "크기",
+      "image_size": "이미지 크기",
+      "num_inference_steps": "스텝",
+      "steps": "스텝",
+      "guidance_scale": "프롬프트 충실도 (CFG)",
+      "cfg_scale": "프롬프트 충실도 (CFG)",
+      "strength": "강도",
+      "acceleration": "가속",
+      "system": "지시",
+      "temperature": "온도",
+      "frame_first": "첫 프레임",
+      "frame_last": "마지막 프레임",
+      "background": "배경",
+      "input_audio": "오디오",
+      "language": "언어",
+      "input": "텍스트",
+      "text": "텍스트",
+      "voice": "목소리",
+      "instructions": "읽는 방식",
+      "speed": "속도",
+      "image": "이미지",
+      "frame_images": "프레임",
+      "seed_image": "원본 이미지",
+      "mask_image": "마스크",
+      "generate_audio": "소리 생성",
+      "enable_audio": "소리 생성"
+    },
+    "historyTitle": "생성 기록",
+    "details": {
+      "title": "자세히",
+      "model": "모델",
+      "took": "소요 시간",
+      "seconds": "{{count}}초",
+      "job": "작업",
+      "media": "프로젝트 미디어",
+      "result": "이전 결과"
+    },
+    "providerWords": {
+      "billed_by_video_tokens_the_price_is_known_after_the_run": "동영상 토큰 단위로 청구되며, 가격은 실행 후 확정됩니다",
+      "billed_by_tokens_the_price_is_known_after_the_run": "토큰 단위로 청구되며, 가격은 실행 후 확정됩니다",
+      "billed_by_the_length_of_the_recording": "녹음 길이에 따라 청구됩니다",
+      "how_the_model_should_answer": "모델이 응답하는 방식",
+      "iso_code_for_example_ru_or_en_empty_to_detect": "ISO 코드(예: ru 또는 en). 비워 두면 자동 감지합니다",
+      "tone_pace_and_emotion_in_words": "말투, 속도, 감정을 말로 설명하세요."
+    },
+    "jobError": {
+      "no_key": "{{provider}} 키가 없습니다",
+      "catalog": "공급자의 모델을 읽을 수 없습니다",
+      "invalid": "양식의 값이 모델과 맞지 않습니다",
+      "refused": "공급자가 요청을 거부했습니다",
+      "busy": "공급자가 바쁩니다. 작업이 전송되지 않았으니 다시 전송하세요",
+      "network": "공급자에 연결할 수 없습니다",
+      "provider_failed": "공급자가 작업을 수행하지 못했습니다",
+      "lost_contact": "공급자와의 연결이 끊어졌습니다",
+      "too_long": "작업이 너무 오래 걸렸습니다",
+      "download_failed": "결과를 다운로드하지 못했습니다",
+      "storage": "결과를 디스크에 쓰지 못했습니다",
+      "interrupted": "작업을 전송하는 중에 VideoSOS가 종료되었습니다",
+      "details": "오류 내용",
+      "openKeys": "키 열기"
+    },
+    "placeholder": "생성 중, {{model}}: {{state}}",
+    "rate": {
+      "second": "초당 {{price}}",
+      "characters": "1000자당 {{price}}",
+      "tokens": "100만 토큰당 {{input}} / {{output}}"
+    },
+    "describe": {
+      "button": "이미지로 프롬프트 만들기",
+      "hint": {
+        "openrouter": "모델이 폼의 첫 이미지를 보고, 그 이미지를 만들어 낼 프롬프트를 작성합니다. OpenRouter 키로 결제됩니다.",
+        "agent": "연결된 에이전트가 양식의 첫 이미지를 보고 그 이미지를 만들 프롬프트를 씁니다. 무료입니다"
+      }
+    },
+    "presets": {
+      "button": "프리셋",
+      "hint": "저장된 프롬프트: 필드에 넣거나 현재 프롬프트를 저장하세요",
+      "empty": "저장된 프롬프트가 아직 없습니다. 현재 프롬프트에 이름을 붙여 저장하세요.",
+      "name": "프리셋 이름",
+      "keep": "저장",
+      "keepHint": "필드의 텍스트를 이 이름으로 저장",
+      "remove": "프리셋 “{{name}}” 제거"
+    },
+    "elements": {
+      "button": "요소",
+      "hint": "이미지가 있는 캐릭터, 사물, 장소: 프롬프트의 “@이름”이 이미지를 모델에 보냅니다",
+      "empty": "캐릭터, 사물 또는 장소를 저장하세요: 폼의 이미지 필드에 이미지를 넣고 이름을 지정합니다. 프롬프트에서는 @이름으로 부릅니다.",
+      "use": "프롬프트에 @{{name}} 넣기",
+      "pictures_one": "이미지 {{count}}개",
+      "pictures_other": "이미지 {{count}}개",
+      "remove": "@{{name}} 제거",
+      "name": "이름, 한 단어",
+      "keep": "저장",
+      "keepHint": "폼의 이미지: {{count}}개. 이 이름으로 저장됩니다",
+      "noPictures": "먼저 이미지를 폼에 넣으세요",
+      "badName": "한 단어만: 글자, 숫자, _ 및 -",
+      "left": "{{names}}: 이 모델에는 이미지를 넣을 자리가 없어 글로 전달됩니다"
+    },
+    "variables": {
+      "title": "프롬프트 변수",
+      "missing": "변수를 채우세요: {{names}}"
+    },
+    "batch": {
+      "add": "다른 모델과 비교",
+      "remove": "일괄 작업에서 모델 제거",
+      "lacks": "부족: {{fields}}",
+      "noKey": "{{provider}} 키 없음"
+    },
+    "segment": {
+      "cutting": "클립의 {{from}}–{{to}}초를 잘라내는 중…",
+      "ready": "구간이 소스로 “동영상 편집”에 들어갔습니다: 무엇을 바꿀지 설명하세요",
+      "failed": "구간을 잘라내지 못했습니다: {{reason}}",
+      "noFile": "{{name}}의 파일이 미디어 라이브러리에 없습니다",
+      "name": "{{title}}, {{from}}–{{to}}초"
+    },
+    "storyboard": {
+      "tabLabel": "스토리보드",
+      "noProject": "프로젝트를 여세요: 스토리보드는 프로젝트와 함께 저장됩니다.",
+      "script": "시나리오 또는 아이디어",
+      "scriptHint": "무슨 일이 일어나는지 장면별로 또는 한 문장으로 적으세요. @요소 이름은 해당 이미지를 가져옵니다.",
+      "count": "샷 수",
+      "split": "샷으로 나누기",
+      "splitHint": {
+        "openrouter": "샷은 OpenRouter 언어 모델이 작성하며, “프롬프트 개선”처럼 유료입니다",
+        "agent": "샷은 연결된 에이전트가 작성합니다. 무료입니다"
+      },
+      "frameModel": "프레임 생성 모델",
+      "clipModel": "클립 생성 모델",
+      "shots": "샷",
+      "shot": "샷 {{number}}",
+      "seconds": "초",
+      "remove": "샷 {{number}} 제거",
+      "frame": "프레임",
+      "frameAgain": "프레임 다시 만들기",
+      "clip": "클립",
+      "clipNeedsFrame": "이 모델은 프레임에서 클립을 시작합니다: 먼저 프레임을 만드세요",
+      "frameDone": "프레임 완료",
+      "clipDone": "타임라인의 클립",
+      "frameFailed": "프레임 생성 실패: {{reason}}",
+      "clipFailed": "클립 생성 실패: {{reason}}",
+      "add": "샷 추가",
+      "allFrames_one": "샷 {{count}}개의 프레임",
+      "allFrames_other": "샷 {{count}}개의 프레임",
+      "allClips_one": "샷 {{count}}개의 클립을 타임라인에",
+      "allClips_other": "샷 {{count}}개의 클립을 타임라인에",
+      "allClipsHint": "클립이 재생 헤드부터 차례로 놓입니다"
+    },
+    "canvas": {
+      "prompt": "텍스트",
+      "media": "이미지 또는 영상",
+      "generate": "생성",
+      "promptHint": "만들 내용입니다. 연결된 생성의 프롬프트에 들어갑니다.",
+      "mediaHint": "라이브러리의 파일이나 결과를 여기에 놓으세요.",
+      "remove": "노드 삭제",
+      "task": "작업",
+      "run": "실행",
+      "runAgain": "다시 실행",
+      "waiting_one": "앞의 노드 {{count}}개를 기다리는 중",
+      "waiting_other": "앞의 노드 {{count}}개를 기다리는 중",
+      "noRoom_one": "파일 {{count}}개는 이 모델에 들어갈 슬롯이 없습니다",
+      "noRoom_other": "파일 {{count}}개는 이 모델에 들어갈 슬롯이 없습니다",
+      "empty": "텍스트, 이미지, 생성을 추가하고 연결하세요. 텍스트는 프롬프트로, 파일은 모델의 슬롯으로 연결합니다. 라이브러리의 파일을 캔버스로 끌어다 놓을 수 있습니다.",
+      "input": {
+        "prompt": "프롬프트",
+        "media": "파일"
+      },
+      "workflow": {
+        "templates": "템플릿",
+        "save": "워크플로 저장",
+        "open": "워크플로 열기",
+        "failed": "워크플로를 열지 못했습니다: {{reason}}",
+        "template": {
+          "frameToVideo": {
+            "name": "프레임에서 영상으로",
+            "about": "프롬프트로 이미지를 만들고, 그 이미지에서 별도의 모션 프롬프트로 영상을 시작합니다.",
+            "prompts": {
+              "idea": "해 질 녘 절벽 위의 등대, 아래에서 부서지는 파도, 창가의 따뜻한 불빛",
+              "motion": "천천히 다가가는 카메라, 등대의 빛줄기가 바다를 가로질러 훑는다"
+            }
+          },
+          "compareImages": {
+            "name": "이미지 모델 비교",
+            "about": "하나의 프롬프트를 이미지 모델 세 개에 나란히 넣습니다. 패널의 모델과 비교할 모델이 이미 설정되어 있습니다.",
+            "prompts": {
+              "idea": "노란 우비를 입은 늙은 어부의 초상, 흐린 날의 부드러운 빛, 85mm"
+            }
+          },
+          "promptWriter": {
+            "name": "프롬프트 작성기",
+            "about": "언어 모델이 아이디어로 프롬프트를 쓰고, 이미지 모델이 그것을 그립니다.",
+            "prompts": {
+              "idea": "이미지 모델용으로 생생한 프롬프트 하나를 쓰세요: 비 오는 밤 도쿄의 아늑한 라멘 가게. 프롬프트만 답하세요."
+            }
+          },
+          "productShot": {
+            "name": "제품 샷",
+            "about": "제품 사진: 배경을 제거하고, 편집 모델로 새로운 장면에 배치한 뒤 업스케일합니다.",
+            "prompts": {
+              "scene": "제품을 아침 햇살이 드는 대리석 테이블 위에 놓는다, 부드러운 그림자, 얕은 피사계 심도"
+            }
+          },
+          "talkingHead": {
+            "name": "토킹 헤드",
+            "about": "음성이 읽어 주는 대사를 라이브러리의 얼굴이 말하게 합니다.",
+            "prompts": {
+              "words": "안녕하세요! 오늘은 영상을 더 빠르게 편집하는 요령 세 가지를 보여 드리겠습니다."
+            }
+          },
+          "soundtrack": {
+            "name": "음악과 사운드",
+            "about": "두 개의 프롬프트로 음악 한 곡과 효과음 하나를 만듭니다.",
+            "prompts": {
+              "mood": "부드러운 현악이 곁들여진 잔잔한 앰비언트 피아노, 느린 템포, 희망적인 분위기",
+              "effect": "자갈 해변에 밀려오는 파도, 멀리서 들리는 갈매기 소리"
+            }
+          }
+        }
+      }
+    },
+    "motion": {
+      "tabLabel": "HTML 그래픽",
+      "hint": "HTML과 CSS로 작성한 타이틀, 하단 자막, 카운터, 배지입니다. 애니메이션은 저절로 재생되고, 클립은 아래 영상 위에서 투명도를 유지합니다.",
+      "templates": {
+        "title": "타이틀",
+        "lowerThird": "하단 자막",
+        "counter": "카운터",
+        "badge": "배지"
+      },
+      "preview": "미리보기",
+      "code": "HTML 및 CSS",
+      "seconds": "초",
+      "make": "재생 헤드 위치에 클립 만들기",
+      "rendering": "프레임을 그리는 중… {{percent}}%",
+      "done": "\"{{name}}\"이(가) 라이브러리와 재생 헤드 위치에 추가되었습니다",
+      "failed": "클립을 만들지 못했습니다: {{reason}}",
+      "made": "생성됨",
+      "edit": "코드 열기",
+      "defaultName": "HTML 그래픽"
+    },
+    "previs": {
+      "tabLabel": "3D 블로킹",
+      "hint": {
+        "openrouter": "비용을 쓰기 전에 샷을 3D로 블로킹하세요. 장소, 누가 어디로 움직이는지, 카메라가 어떻게 움직이는지 적으면 프롬프트 모델이 임시 형태와 카메라 경로를 만듭니다(약 2센트). 카메라 시점, 위, 주변에서 살펴본 뒤 그 프레임을 영상 또는 이미지 모델에 넘기거나 카메라의 움직임을 녹화하세요.",
+        "agent": "생성에 돈을 쓰기 전에 장면을 3D로 배치하세요. 장소, 누가 어디로 가는지, 카메라가 어떻게 움직이는지 설명하면 연결된 에이전트가 무료로 대역 도형과 카메라 경로를 만듭니다. 카메라로, 위에서, 주위에서 본 뒤 프레임을 영상·이미지 모델에 넘기거나 카메라 움직임을 녹화하세요."
+      },
+      "description": "샷",
+      "placeholder": "한 여자가 좁은 복도를 걸어 문 쪽으로 간다. 카메라는 뒤에서 따라가다가 그녀가 멈추면 돌아서 정면을 향한다. 6초, 35mm, 마지막은 50mm.",
+      "build": "블로킹 만들기",
+      "change": "현재 블로킹을 설명대로 수정",
+      "building": "블로킹을 만드는 중…",
+      "example": "예시로 시작",
+      "failed": "실패했습니다: {{reason}}",
+      "views": "보기",
+      "view": {
+        "camera": "카메라",
+        "top": "위",
+        "orbit": "주변"
+      },
+      "play": "재생",
+      "pause": "일시정지",
+      "time": "샷의 시점",
+      "toVideo": "프레임 → 영상의 첫 프레임",
+      "toPicture": "프레임 → 이미지의 참조",
+      "video": "카메라 움직임 녹화",
+      "recording": "녹화 중… {{percent}}%",
+      "videoDone": "\"{{name}}\"이(가) 미디어 라이브러리에 추가되었습니다.",
+      "frameName": "{{title}}, 블로킹 프레임",
+      "videoName": "{{title}}, 블로킹",
+      "json": "JSON으로 보는 장면",
+      "apply": "적용",
+      "badJson": "텍스트가 JSON이 아닙니다: {{reason}}",
+      "noView": "3D 보기를 시작하지 못했습니다. 이 창이 그래픽 카드에서 WebGL을 얻지 못했습니다."
+    },
+    "forever": {
+      "slide": "밀어서 끝없이 생성",
+      "hint": "진행 중인 작업이 2개 미만이면 같은 실행을 새 시드로 다시 보냅니다. 멈추거나 실패할 때까지 계속됩니다. 실행마다 비용이 듭니다.",
+      "stop": "중지",
+      "counter_other": " · {{count}}회 · {{spent}}"
+    },
+    "local": {
+      "intro": "이 모델들은 stable-diffusion.cpp로 이 컴퓨터에서 실행됩니다. 키도 비용도 없습니다. 각 모델은 한 번만 다운로드하며 파일은 리비전에 고정되고 SHA-256으로 확인합니다.",
+      "device": "장치",
+      "devices": {
+        "auto": "자동",
+        "cuda": "CUDA (NVIDIA)",
+        "vulkan": "Vulkan",
+        "cpu": "프로세서"
+      },
+      "inUse": "사용 중: {{device}} · {{gpu}}",
+      "noEngine": "엔진이 없습니다 — {{device}}이(가) 필요합니다",
+      "engine": "{{device}} 엔진 · {{size}}",
+      "unload": "{{model}}을(를) 메모리에서 해제",
+      "task": {
+        "image": "이미지",
+        "video": "소리 있는 영상"
+      },
+      "installed": "다운로드됨",
+      "notInstalled": "다운로드 안 됨",
+      "accelerators": "가속기: {{list}}",
+      "studios": "이 컴퓨터의 스튜디오",
+      "studiosHint": "열려 있는 YuE2, MiniMax Music3, ACE-Step Studio는 '음악' 모델로 여기서 곡을 만들고, Speech Studio는 엔진마다 '음성' 모델로 텍스트를 읽습니다. 작업은 스튜디오에 남고 사본이 여기로 옵니다.",
+      "studioRunning": "실행 중 — 음악에서 사용",
+      "studioOff": "실행 안 됨",
+      "download": "다운로드 · {{size}}",
+      "downloadNamed": "{{model}} 다운로드 · {{size}}",
+      "removeNamed": "{{model}} 삭제",
+      "remove": "삭제",
+      "downloading": "{{done}} / {{total}} · {{file}}",
+      "takenFrom": "{{app}}에서 가져옴",
+      "notDownloaded": "{{model}}이(가) 아직 다운로드되지 않았습니다: {{size}}.",
+      "engineToo": "그래픽카드용 엔진도 함께 다운로드됩니다.",
+      "unsupported": "로컬 생성은 현재 Windows에서만 사용할 수 있습니다."
+    },
+    "takes": {
+      "title": "테이크 ({{count}})",
+      "take": "테이크 {{n}}",
+      "inClip": "클립에 사용 중",
+      "use": "사용",
+      "useHint": "이 테이크를 클립 자리에 넣기"
+    },
+    "speechTrimFailed": "내레이션을 그대로 배치했습니다: 무음 구간을 읽지 못했습니다 ({{reason}})"
   }
 }

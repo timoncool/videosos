@@ -26,7 +26,7 @@ export const StageSection = memo(function StageSection({
   return (
     <Collapsible open={open} onOpenChange={setOpen} className="flex flex-col gap-2">
       <CollapsibleTrigger className="group flex items-center justify-between gap-2 text-left">
-        <span className="text-[10px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
           {title}
         </span>
         <ChevronDown
@@ -37,7 +37,7 @@ export const StageSection = memo(function StageSection({
         />
       </CollapsibleTrigger>
       <CollapsibleContent className="flex flex-col gap-2">
-        {hint && <p className="text-[10px] leading-snug text-muted-foreground/70">{hint}</p>}
+        {hint && <p className="text-[11px] leading-snug text-muted-foreground/70">{hint}</p>}
         {children}
       </CollapsibleContent>
     </Collapsible>

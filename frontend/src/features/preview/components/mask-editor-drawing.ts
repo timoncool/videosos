@@ -46,7 +46,7 @@ export function drawMaskSelectionMarquee(
   ctx.save()
   ctx.beginPath()
   ctx.rect(marquee.left, marquee.top, marquee.width, marquee.height)
-  ctx.fillStyle = 'rgba(34, 211, 238, 0.12)'
+  ctx.fillStyle = 'rgba(251, 191, 36, 0.12)'
   ctx.fill()
   ctx.strokeStyle = 'rgba(103, 232, 249, 0.95)'
   ctx.lineWidth = 1
@@ -93,14 +93,14 @@ export function drawMaskVertexWithHandles({
     ctx.beginPath()
     ctx.moveTo(vertexX, vertexY)
     ctx.lineTo(handleX, handleY)
-    ctx.strokeStyle = 'rgba(34, 211, 238, 0.5)'
+    ctx.strokeStyle = 'rgba(251, 191, 36, 0.5)'
     ctx.lineWidth = 1
     ctx.stroke()
 
     ctx.beginPath()
     ctx.arc(handleX, handleY, handleRadius, 0, Math.PI * 2)
     const isHoveredIn = hoveredVertexIndex === index && hoveredHandle === 'in'
-    ctx.fillStyle = isHoveredIn ? '#22d3ee' : 'rgba(34, 211, 238, 0.6)'
+    ctx.fillStyle = isHoveredIn ? '#fbbf24' : 'rgba(251, 191, 36, 0.6)'
     ctx.fill()
     ctx.strokeStyle = '#fff'
     ctx.lineWidth = 1
@@ -112,14 +112,14 @@ export function drawMaskVertexWithHandles({
     ctx.beginPath()
     ctx.moveTo(vertexX, vertexY)
     ctx.lineTo(handleX, handleY)
-    ctx.strokeStyle = 'rgba(34, 211, 238, 0.5)'
+    ctx.strokeStyle = 'rgba(251, 191, 36, 0.5)'
     ctx.lineWidth = 1
     ctx.stroke()
 
     ctx.beginPath()
     ctx.arc(handleX, handleY, handleRadius, 0, Math.PI * 2)
     const isHoveredOut = hoveredVertexIndex === index && hoveredHandle === 'out'
-    ctx.fillStyle = isHoveredOut ? '#22d3ee' : 'rgba(34, 211, 238, 0.6)'
+    ctx.fillStyle = isHoveredOut ? '#fbbf24' : 'rgba(251, 191, 36, 0.6)'
     ctx.fill()
     ctx.strokeStyle = '#fff'
     ctx.lineWidth = 1
@@ -142,10 +142,10 @@ export function drawMaskVertexWithHandles({
     : isActive
       ? '#fff'
       : isHovered
-        ? '#22d3ee'
+        ? '#fbbf24'
         : '#0e7490'
   ctx.fill()
-  ctx.strokeStyle = isSelected ? '#f59e0b' : '#22d3ee'
+  ctx.strokeStyle = isSelected ? '#a78bfa' : '#fbbf24'
   ctx.lineWidth = isSelected ? 2.5 : 1.5
   ctx.stroke()
 }

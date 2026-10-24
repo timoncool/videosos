@@ -41,7 +41,8 @@
       "label": "Workspaces",
       "edit": "Edit",
       "color": "Color",
-      "animate": "Animate"
+      "animate": "Animate",
+      "canvas": "Canvas"
     },
     "backToProjects": "Back to Projects",
     "backToProjectsAria": "Back to projects",
@@ -60,7 +61,8 @@
     "saveAria": "Save project",
     "export": "Export",
     "exportVideo": "Export Video",
-    "downloadProjectZip": "Download Project (.zip)"
+    "downloadProjectZip": "Download Project (.zip)",
+    "exportFcpxml": "FCPXML for Final Cut, DaVinci, Premiere"
   },
   "unsavedChanges": {
     "title": "Unsaved Changes",
@@ -71,7 +73,7 @@
     "saving": "Saving..."
   },
   "settings": {
-    "title": "Editor Settings",
+    "title": "Settings",
     "sections": {
       "general": "General",
       "timeline": "Timeline",
@@ -81,12 +83,12 @@
     "general": {
       "autoSave": "Auto-save",
       "interval": "Interval",
-      "intervalMinutes": "{{count}}m",
       "undoHistoryDepth": "Undo History Depth",
       "uiSounds": "Interface sounds",
       "uiSoundVolume": "Sound volume",
       "uiSoundVoice": "Sound theme",
-      "uiSoundPreview": "Preview"
+      "uiSoundPreview": "Preview",
+      "minutesUnit": "min"
     },
     "ai": {
       "captionSampleInterval": "Caption sample interval",

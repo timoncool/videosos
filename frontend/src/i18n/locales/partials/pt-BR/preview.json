@@ -68,7 +68,11 @@
       "loadingMedia": "Carregando midia",
       "videoPreview": "Pre-visualizacao de video",
       "emptyTitle": "Ainda não há nada na linha do tempo",
-      "emptyDescription": "Importe mídia, arraste um clipe para a linha do tempo e pressione Espaço para visualizar."
+      "emptyDescription": "Importe mídia, arraste um clipe para a linha do tempo e pressione Espaço para visualizar.",
+      "gradeComparisonSplit": "Comparação de correção dividida",
+      "gradeComparisonBefore": "Antes",
+      "gradeComparisonAfter": "Depois",
+      "gradeComparisonWipe": "Ajustar a comparação dividida"
     },
     "zoom": {
       "ariaLabel": "Nível de zoom: {{label}}",

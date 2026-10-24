@@ -10,7 +10,7 @@ const CANONICAL_SHOT_SIZES = [
   'extreme close-up',
 ] as const
 
-export const LFM_SCENE_CAPTION_PROMPT =
+export const SCENE_CAPTION_PROMPT =
   'Analyze this single video frame and return a valid JSON object only.\n\n' +
   'Use this exact schema:\n' +
   '{' +

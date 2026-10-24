@@ -4,7 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import type { TFunction } from 'i18next'
 import type { MediaMetadata } from '@/types/storage'
 import { toast } from 'sonner'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,11 +16,8 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
-import { Label } from '@/components/ui/label'
-import { Separator } from '@/components/ui/separator'
 import { Switch } from '@/components/ui/switch'
 import { Slider } from '@/components/ui/slider'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { Input } from '@/components/ui/input'
 import {
   RotateCcw,
@@ -36,6 +33,27 @@ import {
   Sparkles,
   Play,
   KeyRound,
+  Cpu,
+  Bot,
+  Globe,
+  ShieldCheck,
+  Info,
+  X,
+  Languages,
+  Save,
+  Timer,
+  Undo2,
+  Volume2,
+  Volume1,
+  Music,
+  ScanText,
+  Captions,
+  Magnet,
+  AudioWaveform,
+  Images,
+  Eraser,
+  Link2,
+  Speaker,
 } from 'lucide-react'
 import {
   LocalInferenceUnloadControl,
@@ -52,6 +70,7 @@ import {
   importProxyService,
   importMediaLibraryService,
   importThumbnailGenerator,
+  UrlToolSetting,
 } from '@/features/editor/deps/media-library'
 import {
   importGifFrameCache,
@@ -67,25 +86,41 @@ import { VOICE_OPTIONS, type VoiceName } from '@/infrastructure/audio/ui-sound'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { createLogger } from '@/shared/logging/logger'
 import { cn } from '@/shared/ui/cn'
-import { useNaturalHeight } from '@/shared/ui/use-natural-height'
+import { NumberInput } from '@/shared/ui/property-controls/number-input'
+import { LanguageSwitcher } from '@/shared/ui/language-switcher'
+import { SettingRow, SettingsTable } from '../deps/studio'
+import { AudioOutputSetting } from './audio-output-setting'
 
 const log = createLogger('SettingsDialog')
-
-/** Minimum content height so short sections don't collapse the dialog. */
-const MIN_SECTION_HEIGHT = 360
-/** Fraction of the viewport a section may occupy before it scrolls instead. */
-const MAX_SECTION_HEIGHT_VH = 0.7
 
 const LazyProvidersSettings = lazy(() =>
   import('../deps/generate').then((m) => ({ default: m.ProvidersSettings })),
 )
+const LazyLocalModelsSettings = lazy(() =>
+  import('../deps/generate').then((m) => ({ default: m.LocalModelsSettings })),
+)
+const LazyAgentsSection = lazy(() => import('./agents-settings'))
+const LazyNetworkSection = lazy(() =>
+  import('../deps/studio').then((m) => ({ default: m.NetworkSection })),
+)
+const LazyPrivacySection = lazy(() =>
+  import('../deps/studio').then((m) => ({ default: m.PrivacySection })),
+)
+const LazyAboutSection = lazy(() =>
+  import('../deps/studio').then((m) => ({ default: m.AboutSection })),
+)
 
 const SETTINGS_SECTIONS = [
   { id: 'providers', labelKey: 'settings.sections.providers', icon: KeyRound },
+  { id: 'local', labelKey: 'settings.sections.local', icon: Cpu },
+  { id: 'agents', labelKey: 'settings.sections.agents', icon: Bot },
   { id: 'general', labelKey: 'settings.sections.general', icon: Settings2 },
   { id: 'timeline', labelKey: 'settings.sections.timeline', icon: Rows3 },
   { id: 'ai', labelKey: 'settings.sections.ai', icon: Sparkles },
   { id: 'storage', labelKey: 'settings.sections.storage', icon: HardDrive },
+  { id: 'network', labelKey: 'settings.sections.network', icon: Globe },
+  { id: 'privacy', labelKey: 'settings.sections.privacy', icon: ShieldCheck },
+  { id: 'about', labelKey: 'settings.sections.about', icon: Info },
 ] as const
 
 const ESTIMATE_REFERENCE_DURATION_SEC = 60
@@ -106,9 +141,18 @@ function formatCaptionEstimate(t: TFunction, unit: CaptioningIntervalUnit, value
 
 type SettingsSectionId = (typeof SETTINGS_SECTIONS)[number]['id']
 
+const SECTION_LABEL = Object.fromEntries(
+  SETTINGS_SECTIONS.map((section) => [section.id, section.labelKey]),
+) as Record<SettingsSectionId, string>
+
+/** The sections whose settings are the editor's own and go back to their defaults with Reset. */
+const RESETTABLE = new Set<SettingsSectionId>(['general', 'timeline', 'ai', 'storage'])
+
 interface SettingsDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  /** The section to show on opening, and the block of it to scroll to. */
+  target?: { section: SettingsSectionId; part: string | null } | null
 }
 
 interface BatchActionResult {
@@ -371,7 +415,7 @@ async function regenerateProjectThumbnails(
   return result
 }
 
-export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
+export function SettingsDialog({ open, onOpenChange, target }: SettingsDialogProps) {
   const { t } = useTranslation()
   const snapEnabled = useSettingsStore((s) => s.snapEnabled)
   const showWaveforms = useSettingsStore((s) => s.showWaveforms)
@@ -400,30 +444,21 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const proxyStatus = useMediaLibraryStore((s) => s.proxyStatus)
 
   const [activeSection, setActiveSection] = useState<SettingsSectionId>('providers')
+  useEffect(() => {
+    if (!open || !target) return
+    setActiveSection(target.section)
+    if (!target.part) return
+    const part = target.part
+    const frame = window.requestAnimationFrame(() => {
+      document
+        .querySelector(`[data-settings-part="${CSS.escape(part)}"]`)
+        ?.scrollIntoView({ block: 'start' })
+    })
+    return () => window.cancelAnimationFrame(frame)
+  }, [open, target])
 
-  // Animate the content area's height as sections change (width is fixed, so a
-  // pure vertical morph). Measure the active section's natural height and spring
-  // the wrapper to it, clamped to [min, 70vh]; taller sections cap and scroll.
   const reduceMotion = useReducedMotion()
   const contentRef = useRef<HTMLDivElement>(null)
-  const naturalHeight = useNaturalHeight(contentRef, open)
-  const [heightReady, setHeightReady] = useState(false)
-  // First measured height applies instantly; later section switches animate.
-  useEffect(() => {
-    if (naturalHeight > 0 && !heightReady) setHeightReady(true)
-  }, [naturalHeight, heightReady])
-  // Reset the instant-apply gate on close so reopening doesn't animate from a
-  // stale height.
-  useEffect(() => {
-    if (!open) setHeightReady(false)
-  }, [open])
-  const maxSectionHeight = Math.round(
-    (typeof window === 'undefined' ? 900 : window.innerHeight) * MAX_SECTION_HEIGHT_VH,
-  )
-  const targetSectionHeight =
-    naturalHeight > 0
-      ? Math.min(Math.max(naturalHeight, MIN_SECTION_HEIGHT), maxSectionHeight)
-      : undefined
 
   const [clearState, setClearState] = useState<'idle' | 'clearing' | 'done' | 'partial'>('idle')
   const [showClearConfirm, setShowClearConfirm] = useState(false)
@@ -580,225 +615,325 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   ).length
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl gap-0 overflow-hidden p-0 sm:top-16 sm:max-h-[calc(100vh-4rem)] sm:translate-y-0 sm:origin-top">
-        <DialogHeader className="flex flex-row items-center justify-between border-b px-6 py-4 pr-14">
-          <DialogTitle>{t('settings.title')}</DialogTitle>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={resetToDefaults}
-            className="h-8 shrink-0 gap-1.5"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-            {t('common.reset')}
-          </Button>
-        </DialogHeader>
-        <div className="flex min-h-0">
-          {/* Sidebar */}
-          <nav className="flex w-44 shrink-0 flex-col gap-0.5 border-r border-white/6 p-2">
-            {SETTINGS_SECTIONS.map((section) => {
-              const Icon = section.icon
-              return (
-                <button
-                  key={section.id}
-                  type="button"
-                  onClick={() => setActiveSection(section.id)}
+      {/* The studios' settings window (Dub Studio's SettingsModal): sections with a hint on the left, the open
+          section's title and hint on top, its content scrolling between them, Done at the bottom. */}
+      <DialogContent
+        hideCloseButton
+        className="flex h-[min(90dvh,960px)] w-[min(94vw,1280px)] max-w-none gap-0 overflow-hidden rounded-xl p-0 glass-panel"
+      >
+        <nav
+          aria-label={t('settings.title')}
+          className="hidden w-60 shrink-0 flex-col gap-1 overflow-y-auto border-r border-[var(--color-border)] p-3 sm:flex lg:w-72"
+        >
+          <h2 className="px-2 pb-2 pt-1 text-[15px] font-semibold">{t('settings.title')}</h2>
+          {SETTINGS_SECTIONS.map((section) => {
+            const Icon = section.icon
+            const current = activeSection === section.id
+            return (
+              <button
+                key={section.id}
+                type="button"
+                onClick={() => setActiveSection(section.id)}
+                aria-current={current ? 'page' : undefined}
+                className={cn(
+                  'flex w-full items-start gap-2.5 rounded-lg px-2.5 py-2 text-left transition-colors duration-150 motion-reduce:transition-none',
+                  current
+                    ? 'bg-[var(--color-surface-2)] text-[var(--color-text)] shadow-[inset_2px_0_0_var(--color-accent)]'
+                    : 'text-[var(--color-muted)] hover:bg-[var(--color-surface-2)]/60 hover:text-[var(--color-text)]',
+                )}
+              >
+                <Icon
                   className={cn(
-                    'flex items-center gap-2 rounded-lg px-3 py-2 text-left text-[13px] transition-colors duration-150 ease-out motion-reduce:transition-none',
-                    activeSection === section.id
-                      ? 'bg-primary/15 text-primary'
-                      : 'text-muted-foreground hover:bg-white/5 hover:text-foreground/80',
+                    'mt-0.5 h-[15px] w-[15px] shrink-0',
+                    current && 'text-[var(--color-accent)]',
                   )}
-                >
-                  <Icon className="h-3.5 w-3.5 shrink-0" />
-                  {t(section.labelKey)}
-                </button>
-              )
-            })}
-          </nav>
+                />
+                <span className="min-w-0">
+                  <span className="block text-[13px] font-medium leading-snug">
+                    {t(section.labelKey)}
+                  </span>
+                  <span className="block text-[11px] leading-snug text-[var(--color-muted)]">
+                    {t(`${section.labelKey}Hint`)}
+                  </span>
+                </span>
+              </button>
+            )
+          })}
+        </nav>
 
-          {/* Content — height animates between sections (fixed width, so a clean
-              vertical morph); tall sections cap at 70vh and scroll. */}
-          <motion.div
-            className="min-h-0 flex-1 overflow-hidden"
-            initial={false}
-            animate={{ height: targetSectionHeight ?? 'auto' }}
-            transition={
-              reduceMotion || !heightReady
-                ? { duration: 0 }
-                : { type: 'spring', stiffness: 460, damping: 40, mass: 0.9 }
-            }
-          >
-            <ScrollArea className="h-full">
-              <div ref={contentRef} className="relative space-y-3 px-6 py-5 pr-7">
-                <AnimatePresence mode="popLayout" initial={false}>
-                  <motion.div
-                    key={activeSection}
-                    initial={reduceMotion ? false : { opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: reduceMotion ? 0 : 0.12 }}
-                  >
-                    {activeSection === 'providers' && (
-                      <Suspense fallback={null}>
-                        <LazyProvidersSettings />
-                      </Suspense>
+        <div className="flex min-w-0 flex-1 flex-col">
+          <div className="flex items-center justify-between gap-3 border-b border-[var(--color-border)] px-5 py-3.5">
+            <div className="min-w-0">
+              <DialogTitle className="truncate text-[15px] font-semibold">
+                {t(SECTION_LABEL[activeSection])}
+              </DialogTitle>
+              <DialogDescription className="text-[12px] leading-snug text-[var(--color-muted)]">
+                {t(`${SECTION_LABEL[activeSection]}Hint`)}
+              </DialogDescription>
+            </div>
+            <button
+              type="button"
+              onClick={() => onOpenChange(false)}
+              aria-label={t('common.close')}
+              title={t('common.close')}
+              className="shrink-0 rounded-md p-1.5 text-[var(--color-muted)] transition-colors hover:bg-[var(--color-surface-2)] hover:text-[var(--color-text)]"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+
+          <div className="flex gap-1 overflow-x-auto border-b border-[var(--color-border)] px-3 py-2 sm:hidden">
+            {SETTINGS_SECTIONS.map((section) => (
+              <button
+                key={section.id}
+                type="button"
+                onClick={() => setActiveSection(section.id)}
+                aria-current={activeSection === section.id ? 'page' : undefined}
+                className={cn(
+                  'shrink-0 rounded-full border px-3 py-1 text-[11px] font-medium',
+                  activeSection === section.id
+                    ? 'border-[var(--color-accent)] bg-[var(--color-surface-2)] text-[var(--color-text)]'
+                    : 'border-[var(--color-border)] text-[var(--color-muted)]',
+                )}
+              >
+                {t(section.labelKey)}
+              </button>
+            ))}
+          </div>
+
+          <div ref={contentRef} className="min-h-0 flex-1 space-y-3 overflow-y-auto px-5 py-4">
+            <AnimatePresence mode="popLayout" initial={false}>
+              <motion.div
+                key={activeSection}
+                initial={reduceMotion ? false : { opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: reduceMotion ? 0 : 0.12 }}
+              >
+                {activeSection === 'providers' && (
+                  <Suspense fallback={null}>
+                    <LazyProvidersSettings />
+                  </Suspense>
+                )}
+
+                {activeSection === 'local' && (
+                  <Suspense fallback={null}>
+                    <LazyLocalModelsSettings />
+                  </Suspense>
+                )}
+
+                {activeSection === 'agents' && (
+                  <Suspense fallback={null}>
+                    <LazyAgentsSection />
+                  </Suspense>
+                )}
+
+                {activeSection === 'network' && (
+                  <Suspense fallback={null}>
+                    <LazyNetworkSection />
+                  </Suspense>
+                )}
+
+                {activeSection === 'privacy' && (
+                  <Suspense fallback={null}>
+                    <LazyPrivacySection />
+                  </Suspense>
+                )}
+
+                {activeSection === 'about' && (
+                  <Suspense fallback={null}>
+                    <LazyAboutSection />
+                  </Suspense>
+                )}
+
+                {activeSection === 'general' && (
+                  <SettingsTable>
+                    <SettingRow
+                      icon={Languages}
+                      label={t('settings.general.language')}
+                      hint={t('settings.general.languageHint')}
+                    >
+                      <LanguageSwitcher size="sm" align="end" side="left" />
+                    </SettingRow>
+                    <SettingRow
+                      icon={Speaker}
+                      label={t('settings.general.audioOutput')}
+                      hint={t('settings.general.audioOutputHint')}
+                    >
+                      <AudioOutputSetting />
+                    </SettingRow>
+                    <SettingRow
+                      icon={Save}
+                      label={t('settings.general.autoSave')}
+                      hint={t('settings.general.autoSaveHint')}
+                    >
+                      <Switch
+                        aria-label={t('settings.general.autoSave')}
+                        checked={autoSaveInterval > 0}
+                        onCheckedChange={(v) => setSetting('autoSaveInterval', v ? 5 : 0)}
+                      />
+                    </SettingRow>
+                    {autoSaveInterval > 0 && (
+                      <SettingRow icon={Timer} label={t('settings.general.interval')}>
+                        <Slider
+                          aria-label={t('settings.general.interval')}
+                          className="w-32"
+                          value={[autoSaveInterval]}
+                          onValueChange={([v]) => setSetting('autoSaveInterval', v || 5)}
+                          min={5}
+                          max={30}
+                          step={5}
+                        />
+                        <NumberInput
+                          className="w-20"
+                          label=""
+                          value={autoSaveInterval}
+                          min={5}
+                          max={30}
+                          step={5}
+                          unit={t('settings.general.minutesUnit')}
+                          unitWidth={28}
+                          scrubEnabled={false}
+                          onChange={(v) => setSetting('autoSaveInterval', Math.round(v))}
+                        />
+                      </SettingRow>
                     )}
-
-                    {activeSection === 'general' && (
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <Label className="text-sm">{t('settings.general.autoSave')}</Label>
-                          <Switch
-                            checked={autoSaveInterval > 0}
-                            onCheckedChange={(v) => setSetting('autoSaveInterval', v ? 5 : 0)}
-                          />
-                        </div>
-                        {autoSaveInterval > 0 && (
-                          <div className="flex items-center justify-between">
-                            <Label className="text-sm text-muted-foreground">
-                              {t('settings.general.interval')}
-                            </Label>
-                            <div className="w-32 flex items-center gap-2">
-                              <Slider
-                                value={[autoSaveInterval]}
-                                onValueChange={([v]) => setSetting('autoSaveInterval', v || 5)}
-                                min={5}
-                                max={30}
-                                step={5}
-                              />
-                              <span className="text-xs text-muted-foreground w-6">
-                                {t('settings.general.intervalMinutes', { count: autoSaveInterval })}
-                              </span>
-                            </div>
-                          </div>
-                        )}
-                        <div className="flex items-center justify-between">
-                          <Label className="text-sm">
-                            {t('settings.general.undoHistoryDepth')}
-                          </Label>
-                          <div className="w-32 flex items-center gap-2">
-                            <Slider
-                              value={[maxUndoHistory]}
-                              onValueChange={([v]) => setSetting('maxUndoHistory', v || 10)}
-                              min={10}
-                              max={200}
-                              step={10}
-                            />
-                            <span className="text-xs text-muted-foreground w-6">
-                              {maxUndoHistory}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <Label className="text-sm">{t('settings.general.uiSounds')}</Label>
-                          <Switch
-                            checked={uiSoundsEnabled}
-                            onCheckedChange={(v) => {
-                              setUiSoundEnabled(v)
-                              // Give immediate audible confirmation when turning sounds on.
-                              if (v) emitUiSound('confirm')
-                            }}
-                          />
-                        </div>
-                        {uiSoundsEnabled && (
-                          <div className="flex items-center justify-between">
-                            <Label className="text-sm text-muted-foreground">
-                              {t('settings.general.uiSoundVolume')}
-                            </Label>
-                            <div className="w-32 flex items-center gap-2">
-                              <Slider
-                                value={[uiSoundVolume]}
-                                onValueChange={([v]) => {
-                                  setUiSoundVolume(v ?? 0.6)
-                                  // Preview the new level as the user drags.
-                                  emitUiSound('select')
-                                }}
-                                min={0}
-                                max={1}
-                                step={0.05}
-                              />
-                              <span className="text-xs text-muted-foreground w-8">
-                                {Math.round(uiSoundVolume * 100)}%
-                              </span>
-                            </div>
-                          </div>
-                        )}
-                        {uiSoundsEnabled && (
-                          <div className="flex items-center justify-between">
-                            <Label className="text-sm text-muted-foreground">
-                              {t('settings.general.uiSoundVoice')}
-                            </Label>
-                            <div className="flex items-center gap-1.5">
-                              <Select
-                                value={uiSoundVoice}
-                                onValueChange={(value) => {
-                                  setUiSoundVoice(value as VoiceName)
-                                  // Preview the newly selected voice.
-                                  emitUiSound('confirm')
-                                }}
-                              >
-                                <SelectTrigger className="w-32">
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {VOICE_OPTIONS.map((option) => (
-                                    <SelectPrimitive.Item
-                                      key={option.value}
-                                      value={option.value}
-                                      className="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
-                                    >
-                                      <SelectPrimitive.ItemText>
-                                        <span
-                                          className={
-                                            option.value === uiSoundVoice
-                                              ? 'font-medium text-primary'
-                                              : undefined
-                                          }
-                                        >
-                                          {option.label}
-                                        </span>
-                                      </SelectPrimitive.ItemText>
-                                    </SelectPrimitive.Item>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                              {/* Audition the selected voice — a real, keyboard-reachable
-                            button beside the Select rather than a control nested
-                            inside each (non-focusable) option row. */}
-                              <button
-                                type="button"
-                                aria-label={t('settings.general.uiSoundPreview')}
-                                onClick={() => previewUiSound(uiSoundVoice)}
-                                className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-white/10 bg-white/5 text-muted-foreground transition-colors hover:bg-white/10 hover:text-foreground"
-                              >
-                                <Play className="h-3.5 w-3.5" />
-                              </button>
-                            </div>
-                          </div>
-                        )}
-                      </div>
+                    <SettingRow
+                      icon={Undo2}
+                      label={t('settings.general.undoHistoryDepth')}
+                      hint={t('settings.general.undoHistoryDepthHint')}
+                    >
+                      <Slider
+                        aria-label={t('settings.general.undoHistoryDepth')}
+                        className="w-32"
+                        value={[maxUndoHistory]}
+                        onValueChange={([v]) => setSetting('maxUndoHistory', v || 10)}
+                        min={10}
+                        max={200}
+                        step={10}
+                      />
+                      <NumberInput
+                        className="w-20"
+                        label=""
+                        value={maxUndoHistory}
+                        min={10}
+                        max={200}
+                        step={10}
+                        scrubEnabled={false}
+                        onChange={(v) => setSetting('maxUndoHistory', Math.round(v))}
+                      />
+                    </SettingRow>
+                    <SettingRow
+                      icon={Volume2}
+                      label={t('settings.general.uiSounds')}
+                      hint={t('settings.general.uiSoundsHint')}
+                    >
+                      <Switch
+                        aria-label={t('settings.general.uiSounds')}
+                        checked={uiSoundsEnabled}
+                        onCheckedChange={(v) => {
+                          setUiSoundEnabled(v)
+                          if (v) emitUiSound('confirm')
+                        }}
+                      />
+                    </SettingRow>
+                    {uiSoundsEnabled && (
+                      <SettingRow icon={Volume1} label={t('settings.general.uiSoundVolume')}>
+                        <Slider
+                          aria-label={t('settings.general.uiSoundVolume')}
+                          className="w-32"
+                          value={[uiSoundVolume]}
+                          onValueChange={([v]) => {
+                            setUiSoundVolume(v ?? 0.6)
+                            emitUiSound('select')
+                          }}
+                          min={0}
+                          max={1}
+                          step={0.05}
+                        />
+                        <NumberInput
+                          className="w-20"
+                          label=""
+                          value={Math.round(uiSoundVolume * 100)}
+                          min={0}
+                          max={100}
+                          step={5}
+                          unit="%"
+                          scrubEnabled={false}
+                          onChange={(v) => setUiSoundVolume(v / 100)}
+                        />
+                      </SettingRow>
                     )}
+                    {uiSoundsEnabled && (
+                      <SettingRow icon={Music} label={t('settings.general.uiSoundVoice')}>
+                        <Select
+                          value={uiSoundVoice}
+                          onValueChange={(value) => {
+                            setUiSoundVoice(value as VoiceName)
+                            emitUiSound('confirm')
+                          }}
+                        >
+                          <SelectTrigger
+                            className="h-8 w-32"
+                            aria-label={t('settings.general.uiSoundVoice')}
+                          >
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {VOICE_OPTIONS.map((option) => (
+                              <SelectPrimitive.Item
+                                key={option.value}
+                                value={option.value}
+                                className="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+                              >
+                                <SelectPrimitive.ItemText>
+                                  <span
+                                    className={
+                                      option.value === uiSoundVoice
+                                        ? 'font-medium text-primary'
+                                        : undefined
+                                    }
+                                  >
+                                    {option.label}
+                                  </span>
+                                </SelectPrimitive.ItemText>
+                              </SelectPrimitive.Item>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <button
+                          type="button"
+                          aria-label={t('settings.general.uiSoundPreview')}
+                          title={t('settings.general.uiSoundPreview')}
+                          onClick={() => previewUiSound(uiSoundVoice)}
+                          className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-muted)] transition-colors hover:text-[var(--color-text)]"
+                        >
+                          <Play className="h-3.5 w-3.5" />
+                        </button>
+                      </SettingRow>
+                    )}
+                  </SettingsTable>
+                )}
 
-                    {activeSection === 'ai' && (
-                      <div className="space-y-3">
+                {activeSection === 'ai' && (
+                  <SettingsTable>
+                    <SettingRow
+                      icon={ScanText}
+                      label={t('settings.ai.captionSampleInterval')}
+                      hint={t('settings.ai.captionSampleIntervalDescription')}
+                      below={
                         <div className="space-y-2">
-                          <div className="flex items-center justify-between">
-                            <div className="space-y-0.5">
-                              <Label className="text-sm">
-                                {t('settings.ai.captionSampleInterval')}
-                              </Label>
-                              <p className="text-xs text-muted-foreground">
-                                {t('settings.ai.captionSampleIntervalDescription')}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <div className="flex items-center rounded-md border border-border bg-secondary p-0.5">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <div
+                              className="flex items-center rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-0.5"
+                              role="group"
+                              aria-label={t('settings.ai.captionSampleInterval')}
+                            >
                               {(['seconds', 'frames'] as const).map((unit) => (
                                 <button
                                   key={unit}
                                   type="button"
+                                  aria-pressed={captioningIntervalUnit === unit}
                                   onClick={() => setSetting('captioningIntervalUnit', unit)}
                                   className={cn(
                                     'rounded px-2.5 py-1 text-xs transition-colors',
@@ -814,6 +949,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                               ))}
                             </div>
                             <Input
+                              aria-label={t('settings.ai.captionSampleInterval')}
                               type="number"
                               inputMode="decimal"
                               className="h-8 w-24"
@@ -834,7 +970,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="h-7 px-2 text-xs text-muted-foreground"
+                              className="h-8 px-2 text-xs text-muted-foreground"
                               onClick={() => {
                                 setSetting('captioningIntervalUnit', 'seconds')
                                 setSetting(
@@ -850,7 +986,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                               {t('common.reset')}
                             </Button>
                           </div>
-                          <p className="text-xs text-muted-foreground">
+                          <p className="text-[11px] leading-snug text-[var(--color-muted)]">
                             {t('settings.ai.captionIntervalHint', {
                               estimate: formatCaptionEstimate(
                                 t,
@@ -860,267 +996,288 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                             })}
                           </p>
                         </div>
+                      }
+                    />
+                    <SettingRow
+                      icon={Captions}
+                      label={t('settings.ai.defaultCaptionStyle')}
+                      hint={t('settings.ai.defaultCaptionStyleDescription')}
+                      below={
+                        <div className="flex flex-wrap gap-1.5">
+                          {CAPTION_STYLE_PRESETS.map((preset) => (
+                            <button
+                              key={preset.id}
+                              type="button"
+                              title={`${preset.label} — ${t(preset.hintKey)}`}
+                              aria-pressed={defaultCaptionStylePresetId === preset.id}
+                              onClick={() => setSetting('defaultCaptionStylePresetId', preset.id)}
+                              className={cn(
+                                'rounded-md border px-2.5 py-1 text-xs transition-colors',
+                                defaultCaptionStylePresetId === preset.id
+                                  ? 'border-primary bg-primary/15 text-primary'
+                                  : 'border-[var(--color-border)] text-muted-foreground hover:text-foreground',
+                              )}
+                            >
+                              {preset.label}
+                            </button>
+                          ))}
+                        </div>
+                      }
+                    />
+                  </SettingsTable>
+                )}
 
-                        <div className="space-y-2">
-                          <div className="space-y-0.5">
-                            <Label className="text-sm">
-                              {t('settings.ai.defaultCaptionStyle')}
-                            </Label>
-                            <p className="text-xs text-muted-foreground">
-                              {t('settings.ai.defaultCaptionStyleDescription')}
-                            </p>
-                          </div>
-                          <div className="flex flex-wrap gap-1.5">
-                            {CAPTION_STYLE_PRESETS.map((preset) => (
-                              <button
-                                key={preset.id}
-                                type="button"
-                                title={t(preset.hintKey)}
-                                onClick={() => setSetting('defaultCaptionStylePresetId', preset.id)}
-                                className={cn(
-                                  'rounded-md border px-2.5 py-1 text-xs transition-colors',
-                                  defaultCaptionStylePresetId === preset.id
-                                    ? 'border-primary bg-primary/15 text-primary'
-                                    : 'border-border text-muted-foreground hover:text-foreground',
-                                )}
-                              >
-                                {preset.label}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    )}
+                {activeSection === 'timeline' && (
+                  <SettingsTable>
+                    <SettingRow
+                      icon={Magnet}
+                      label={t('settings.timeline.snapByDefault')}
+                      hint={t('settings.timeline.snapByDefaultDescription')}
+                    >
+                      <Switch
+                        aria-label={t('settings.timeline.snapByDefault')}
+                        checked={snapEnabled}
+                        onCheckedChange={(v) => setSetting('snapEnabled', v)}
+                      />
+                    </SettingRow>
+                    <SettingRow
+                      icon={AudioWaveform}
+                      label={t('settings.timeline.showWaveforms')}
+                      hint={t('settings.timeline.showWaveformsHint')}
+                    >
+                      <Switch
+                        aria-label={t('settings.timeline.showWaveforms')}
+                        checked={showWaveforms}
+                        onCheckedChange={(v) => setSetting('showWaveforms', v)}
+                      />
+                    </SettingRow>
+                    <SettingRow
+                      icon={Film}
+                      label={t('settings.timeline.showFilmstrips')}
+                      hint={t('settings.timeline.showFilmstripsHint')}
+                    >
+                      <Switch
+                        aria-label={t('settings.timeline.showFilmstrips')}
+                        checked={showFilmstrips}
+                        onCheckedChange={(v) => setSetting('showFilmstrips', v)}
+                      />
+                    </SettingRow>
+                    <SettingRow
+                      icon={Images}
+                      label={t('settings.timeline.enableFilmstripExtraction')}
+                      hint={t('settings.timeline.enableFilmstripExtractionDescription')}
+                    >
+                      <Switch
+                        aria-label={t('settings.timeline.enableFilmstripExtraction')}
+                        checked={enableFilmstripExtraction}
+                        onCheckedChange={(v) => setSetting('enableFilmstripExtraction', v)}
+                      />
+                    </SettingRow>
+                  </SettingsTable>
+                )}
 
-                    {activeSection === 'timeline' && (
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <Label className="text-sm">
-                              {t('settings.timeline.snapByDefault')}
-                            </Label>
-                            <p className="text-xs text-muted-foreground">
-                              {t('settings.timeline.snapByDefaultDescription')}
+                {activeSection === 'storage' && (
+                  <div className="space-y-4">
+                    <SettingsTable>
+                      <SettingRow
+                        icon={Link2}
+                        label={t('media.url.tool.label')}
+                        hint={t('media.url.tool.hint')}
+                      >
+                        <UrlToolSetting />
+                      </SettingRow>
+                      <SettingRow
+                        icon={Film}
+                        label={t('settings.storage.generateMissingProxies')}
+                        hint={t('settings.storage.generateMissingProxiesDescription')}
+                      >
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-8 min-w-28 gap-1.5"
+                          onClick={handleGenerateMissingProxies}
+                          disabled={proxyGenerateState !== 'idle' || missingProjectProxyCount === 0}
+                        >
+                          {proxyGenerateState === 'queueing' && (
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          )}
+                          {proxyGenerateState === 'done' && <Check className="w-3.5 h-3.5" />}
+                          {proxyGenerateState === 'queueing'
+                            ? t('common.queueing')
+                            : proxyGenerateState === 'done'
+                              ? t('settings.storage.queued')
+                              : missingProjectProxyCount > 0
+                                ? t('settings.storage.generateWithCount', {
+                                    count: missingProjectProxyCount,
+                                  })
+                                : t('settings.storage.upToDate')}
+                        </Button>
+                      </SettingRow>
+                      <SettingRow
+                        icon={Eraser}
+                        label={t('settings.storage.clearProjectCache')}
+                        hint={t('settings.storage.clearProjectCacheDescription')}
+                        below={
+                          clearFeedback && (
+                            <p
+                              className={cn(
+                                'text-[11px]',
+                                clearFeedback.tone === 'error'
+                                  ? 'text-[var(--color-warn)]'
+                                  : 'text-[var(--color-muted)]',
+                              )}
+                            >
+                              {clearFeedback.message}
                             </p>
-                          </div>
-                          <Switch
-                            checked={snapEnabled}
-                            onCheckedChange={(v) => setSetting('snapEnabled', v)}
-                          />
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <Label className="text-sm">{t('settings.timeline.showWaveforms')}</Label>
-                          <Switch
-                            checked={showWaveforms}
-                            onCheckedChange={(v) => setSetting('showWaveforms', v)}
-                          />
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <Label className="text-sm">{t('settings.timeline.showFilmstrips')}</Label>
-                          <Switch
-                            checked={showFilmstrips}
-                            onCheckedChange={(v) => setSetting('showFilmstrips', v)}
-                          />
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <Label className="text-sm">
-                              {t('settings.timeline.enableFilmstripExtraction')}
-                            </Label>
-                            <p className="text-xs text-muted-foreground">
-                              {t('settings.timeline.enableFilmstripExtractionDescription')}
+                          )
+                        }
+                      >
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-8 min-w-28 gap-1.5"
+                          onClick={() => setShowClearConfirm(true)}
+                          disabled={clearState !== 'idle'}
+                        >
+                          {clearState === 'clearing' && (
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          )}
+                          {clearState === 'done' && <Check className="w-3.5 h-3.5" />}
+                          {clearState === 'partial' && <TriangleAlert className="w-3.5 h-3.5" />}
+                          {clearState === 'clearing'
+                            ? t('common.clearing')
+                            : clearState === 'done'
+                              ? t('settings.storage.cleared')
+                              : clearState === 'partial'
+                                ? t('common.partial')
+                                : t('settings.storage.clear')}
+                        </Button>
+                      </SettingRow>
+                      <SettingRow
+                        icon={ImagePlus}
+                        label={t('settings.storage.regenerateThumbnails')}
+                        hint={t('settings.storage.regenerateThumbnailsDescription')}
+                        below={
+                          regenFeedback && (
+                            <p
+                              className={cn(
+                                'text-[11px]',
+                                regenFeedback.tone === 'error'
+                                  ? 'text-[var(--color-warn)]'
+                                  : 'text-[var(--color-muted)]',
+                              )}
+                            >
+                              {regenFeedback.message}
                             </p>
-                          </div>
-                          <Switch
-                            checked={enableFilmstripExtraction}
-                            onCheckedChange={(v) => setSetting('enableFilmstripExtraction', v)}
-                          />
-                        </div>
-                      </div>
-                    )}
+                          )
+                        }
+                      >
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-8 min-w-28 gap-1.5"
+                          onClick={handleRegenThumbnails}
+                          disabled={regenState !== 'idle'}
+                        >
+                          {regenState === 'working' && (
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          )}
+                          {regenState === 'done' && <Check className="w-3.5 h-3.5" />}
+                          {regenState === 'partial' && <TriangleAlert className="w-3.5 h-3.5" />}
+                          {regenState === 'working'
+                            ? regenProgress
+                            : regenState === 'done'
+                              ? t('common.done')
+                              : regenState === 'partial'
+                                ? t('common.partial')
+                                : t('settings.storage.regenerate')}
+                        </Button>
+                      </SettingRow>
+                      <SettingRow
+                        icon={Trash2}
+                        label={t('settings.storage.deleteProxies')}
+                        hint={t('settings.storage.deleteProxiesDescription')}
+                        below={
+                          proxyFeedback && (
+                            <p
+                              className={cn(
+                                'text-[11px]',
+                                proxyFeedback.tone === 'error'
+                                  ? 'text-[var(--color-warn)]'
+                                  : 'text-[var(--color-muted)]',
+                              )}
+                            >
+                              {proxyFeedback.message}
+                            </p>
+                          )
+                        }
+                      >
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-8 min-w-28 gap-1.5"
+                          onClick={handleClearProxies}
+                          disabled={proxyState !== 'idle'}
+                        >
+                          {proxyState === 'clearing' && (
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          )}
+                          {proxyState === 'done' && <Check className="w-3.5 h-3.5" />}
+                          {proxyState === 'partial' && <TriangleAlert className="w-3.5 h-3.5" />}
+                          {proxyState === 'clearing'
+                            ? t('common.deleting')
+                            : proxyState === 'done'
+                              ? t('settings.storage.deleted')
+                              : proxyState === 'partial'
+                                ? t('common.partial')
+                                : t('common.delete')}
+                        </Button>
+                      </SettingRow>
+                    </SettingsTable>
+                    <section className="space-y-2">
+                      <h4 className="text-[11px] font-semibold uppercase tracking-wide text-[var(--color-muted)]">
+                        {t('settings.storage.localAi')}
+                      </h4>
+                      <p className="text-[12px] text-[var(--color-muted)]">
+                        {t('settings.storage.localAiDescription')}
+                      </p>
+                      <SettingsTable>
+                        <LocalInferenceUnloadControl
+                          className="px-3 py-2.5"
+                          labelClassName="text-[13px] font-medium"
+                          descriptionClassName="text-[11px] leading-snug"
+                        />
+                      </SettingsTable>
+                      <LocalModelCacheControl />
+                    </section>
+                  </div>
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </div>
 
-                    {activeSection === 'storage' && (
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <Label className="text-sm">
-                              {t('settings.storage.generateMissingProxies')}
-                            </Label>
-                            <p className="text-xs text-muted-foreground mt-0.5">
-                              {t('settings.storage.generateMissingProxiesDescription')}
-                            </p>
-                          </div>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="h-8 w-28 gap-1.5"
-                            onClick={handleGenerateMissingProxies}
-                            disabled={
-                              proxyGenerateState !== 'idle' || missingProjectProxyCount === 0
-                            }
-                          >
-                            {proxyGenerateState === 'queueing' && (
-                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                            )}
-                            {proxyGenerateState === 'done' && <Check className="w-3.5 h-3.5" />}
-                            {proxyGenerateState === 'idle' && <Film className="w-3.5 h-3.5" />}
-                            {proxyGenerateState === 'queueing'
-                              ? t('common.queueing')
-                              : proxyGenerateState === 'done'
-                                ? t('settings.storage.queued')
-                                : missingProjectProxyCount > 0
-                                  ? t('settings.storage.generateWithCount', {
-                                      count: missingProjectProxyCount,
-                                    })
-                                  : t('settings.storage.upToDate')}
-                          </Button>
-                        </div>
-                        <Separator className="bg-white/8" />
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <Label className="text-sm">
-                              {t('settings.storage.clearProjectCache')}
-                            </Label>
-                            <p className="text-xs text-muted-foreground mt-0.5">
-                              {t('settings.storage.clearProjectCacheDescription')}
-                            </p>
-                            {clearFeedback && (
-                              <p
-                                className={cn(
-                                  'mt-1 text-xs',
-                                  clearFeedback.tone === 'error'
-                                    ? 'text-amber-400'
-                                    : 'text-muted-foreground',
-                                )}
-                              >
-                                {clearFeedback.message}
-                              </p>
-                            )}
-                          </div>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="h-8 w-28 gap-1.5"
-                            onClick={() => setShowClearConfirm(true)}
-                            disabled={clearState !== 'idle'}
-                          >
-                            {clearState === 'clearing' && (
-                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                            )}
-                            {clearState === 'done' && <Check className="w-3.5 h-3.5" />}
-                            {clearState === 'partial' && <TriangleAlert className="w-3.5 h-3.5" />}
-                            {clearState === 'idle' && <Trash2 className="w-3.5 h-3.5" />}
-                            {clearState === 'clearing'
-                              ? t('common.clearing')
-                              : clearState === 'done'
-                                ? t('settings.storage.cleared')
-                                : clearState === 'partial'
-                                  ? t('common.partial')
-                                  : t('settings.storage.clear')}
-                          </Button>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <Label className="text-sm">
-                              {t('settings.storage.regenerateThumbnails')}
-                            </Label>
-                            <p className="text-xs text-muted-foreground mt-0.5">
-                              {t('settings.storage.regenerateThumbnailsDescription')}
-                            </p>
-                            {regenFeedback && (
-                              <p
-                                className={cn(
-                                  'mt-1 text-xs',
-                                  regenFeedback.tone === 'error'
-                                    ? 'text-amber-400'
-                                    : 'text-muted-foreground',
-                                )}
-                              >
-                                {regenFeedback.message}
-                              </p>
-                            )}
-                          </div>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="h-8 w-28 gap-1.5"
-                            onClick={handleRegenThumbnails}
-                            disabled={regenState !== 'idle'}
-                          >
-                            {regenState === 'working' && (
-                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                            )}
-                            {regenState === 'done' && <Check className="w-3.5 h-3.5" />}
-                            {regenState === 'partial' && <TriangleAlert className="w-3.5 h-3.5" />}
-                            {regenState === 'idle' && <ImagePlus className="w-3.5 h-3.5" />}
-                            {regenState === 'working'
-                              ? regenProgress
-                              : regenState === 'done'
-                                ? t('common.done')
-                                : regenState === 'partial'
-                                  ? t('common.partial')
-                                  : t('settings.storage.regenerate')}
-                          </Button>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <Label className="text-sm">{t('settings.storage.deleteProxies')}</Label>
-                            <p className="text-xs text-muted-foreground mt-0.5">
-                              {t('settings.storage.deleteProxiesDescription')}
-                            </p>
-                            {proxyFeedback && (
-                              <p
-                                className={cn(
-                                  'mt-1 text-xs',
-                                  proxyFeedback.tone === 'error'
-                                    ? 'text-amber-400'
-                                    : 'text-muted-foreground',
-                                )}
-                              >
-                                {proxyFeedback.message}
-                              </p>
-                            )}
-                          </div>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="h-8 w-28 gap-1.5"
-                            onClick={handleClearProxies}
-                            disabled={proxyState !== 'idle'}
-                          >
-                            {proxyState === 'clearing' && (
-                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                            )}
-                            {proxyState === 'done' && <Check className="w-3.5 h-3.5" />}
-                            {proxyState === 'partial' && <TriangleAlert className="w-3.5 h-3.5" />}
-                            {proxyState === 'idle' && <Film className="w-3.5 h-3.5" />}
-                            {proxyState === 'clearing'
-                              ? t('common.deleting')
-                              : proxyState === 'done'
-                                ? t('settings.storage.deleted')
-                                : proxyState === 'partial'
-                                  ? t('common.partial')
-                                  : t('common.delete')}
-                          </Button>
-                        </div>
-                        <Separator className="bg-white/8" />
-                        <div className="space-y-3">
-                          <div className="space-y-1">
-                            <Label className="text-sm">{t('settings.storage.localAi')}</Label>
-                            <p className="text-xs text-muted-foreground">
-                              {t('settings.storage.localAiDescription')}
-                            </p>
-                          </div>
-                          <LocalInferenceUnloadControl />
-                          <LocalModelCacheControl />
-                        </div>
-                      </div>
-                    )}
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-            </ScrollArea>
-          </motion.div>
+          <div className="flex items-center justify-between gap-3 border-t border-[var(--color-border)] px-5 py-3">
+            {RESETTABLE.has(activeSection) ? (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={resetToDefaults}
+                className="h-8 gap-1.5 text-[var(--color-muted)]"
+              >
+                <RotateCcw className="h-3.5 w-3.5" />
+                {t('common.reset')}
+              </Button>
+            ) : (
+              <span />
+            )}
+            <Button
+              size="sm"
+              onClick={() => onOpenChange(false)}
+              className="h-8 px-5 font-semibold"
+            >
+              {t('settings.done')}
+            </Button>
+          </div>
         </div>
       </DialogContent>
 

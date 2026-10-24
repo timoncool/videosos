@@ -7,7 +7,6 @@ import { ItemContextMenu } from './item-context-menu'
 const { mockGetSceneVerificationModelOptions } = vi.hoisted(() => ({
   mockGetSceneVerificationModelOptions: vi.fn(() => [
     { value: 'gemma', label: 'Gemma Turbo' },
-    { value: 'lfm', label: 'Liquid Vision' },
   ]),
 }))
 
@@ -118,15 +117,14 @@ describe('ItemContextMenu scene detection', () => {
     expect(screen.getByText('Detect Scenes & Split')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Fast (Histogram)' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'AI (Gemma Turbo)' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'AI (Liquid Vision)' })).toBeInTheDocument()
   })
 
   it('dispatches the selected verification model when a scene detection option is clicked', () => {
     const { onDetectScenes } = renderContextMenu()
 
-    fireEvent.click(screen.getByRole('button', { name: 'AI (Liquid Vision)' }))
+    fireEvent.click(screen.getByRole('button', { name: 'AI (Gemma Turbo)' }))
 
-    expect(onDetectScenes).toHaveBeenCalledWith('adaptive', 'lfm')
+    expect(onDetectScenes).toHaveBeenCalledWith('adaptive', 'gemma')
   })
 })
 

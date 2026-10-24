@@ -70,7 +70,8 @@
       "alsoDeleteLocalFiles": "ディスク上のローカルファイルも削除する",
       "removeFilesFromFolder": "リンクされたフォルダからファイルを削除します。この操作は元に戻せません。",
       "removeFilesFromNamedFolder": "リンクされたフォルダ「{{folder}}」からファイルを削除します。この操作は元に戻せません。",
-      "openProject": "プロジェクトを開く"
+      "openProject": "プロジェクトを開く",
+      "actions": "プロジェクトの操作"
     },
     "form": {
       "createTitle": "新規プロジェクトを作成",

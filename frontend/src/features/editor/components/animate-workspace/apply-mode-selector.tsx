@@ -19,7 +19,7 @@ export const ApplyModeSelector = memo(function ApplyModeSelector({
 }: ApplyModeSelectorProps) {
   return (
     <div className="flex items-center justify-between gap-2">
-      <span className="text-[10px] text-muted-foreground">{t('editor.animateStages.onApply')}</span>
+      <span className="text-[11px] text-muted-foreground">{t('editor.animateStages.onApply')}</span>
       <div className="inline-flex overflow-hidden rounded-md border border-border/60">
         {APPLY_MODES.map((candidate) => (
           <button
@@ -28,7 +28,7 @@ export const ApplyModeSelector = memo(function ApplyModeSelector({
             aria-pressed={mode === candidate}
             onClick={() => onChange(candidate)}
             className={cn(
-              'px-2 py-0.5 text-[10px] font-medium',
+              'px-2 py-0.5 text-[11px] font-medium',
               mode === candidate
                 ? 'bg-secondary text-foreground'
                 : 'text-muted-foreground hover:bg-secondary/40',

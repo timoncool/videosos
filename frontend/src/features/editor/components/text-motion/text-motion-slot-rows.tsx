@@ -98,7 +98,7 @@ const TextMotionSlotRow = memo(function TextMotionSlotRow({
               title={label}
               onClick={() => (isActive ? onRemove(slot) : onApply(slot, preset))}
               className={cn(
-                'relative truncate rounded-md border px-1 py-1.5 text-[10px] leading-tight',
+                'relative truncate rounded-md border px-1 py-1.5 text-[11px] leading-tight',
                 isActive
                   ? 'border-primary/60 bg-secondary/40 pr-4 text-foreground'
                   : 'border-border/60 text-muted-foreground hover:border-border hover:bg-secondary/40 hover:text-foreground',
@@ -146,12 +146,12 @@ const TextMotionSlotRow = memo(function TextMotionSlotRow({
             onLiveChange={(v) => onLiveEdit(slot, { intensity: v })}
           />
           <div className="flex items-center justify-between gap-2">
-            <span className="text-[10px] text-muted-foreground">{t('textMotion.unit')}</span>
+            <span className="text-[11px] text-muted-foreground">{t('textMotion.unit')}</span>
             <Select
               value={effect.unit ?? getTextMotionPreset(effect.presetId).unit}
               onValueChange={(value) => onCommitEdit(slot, { unit: value as TextMotionUnit })}
             >
-              <SelectTrigger className="h-6 w-32 text-[10px]">
+              <SelectTrigger className="h-6 w-32 text-[11px]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -164,12 +164,12 @@ const TextMotionSlotRow = memo(function TextMotionSlotRow({
             </Select>
           </div>
           <div className="flex items-center justify-between gap-2">
-            <span className="text-[10px] text-muted-foreground">{t('textMotion.order')}</span>
+            <span className="text-[11px] text-muted-foreground">{t('textMotion.order')}</span>
             <Select
               value={effect.order}
               onValueChange={(value) => onCommitEdit(slot, { order: value as TextMotionOrder })}
             >
-              <SelectTrigger className="h-6 w-32 text-[10px]">
+              <SelectTrigger className="h-6 w-32 text-[11px]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>

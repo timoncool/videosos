@@ -89,7 +89,7 @@ const LayerFrameInput = memo(function LayerFrameInput({
         onKeyDown={(event) => {
           if (event.key === 'Enter') event.currentTarget.blur()
         }}
-        className="h-5 w-14 rounded border border-input bg-background px-1.5 text-[9px] tabular-nums text-muted-foreground outline-none focus:border-primary/60"
+        className="h-5 w-14 rounded border border-input bg-background px-1.5 text-[11px] tabular-nums text-muted-foreground outline-none focus:border-primary/60"
         aria-label={ariaLabel}
       />
     </label>
@@ -287,7 +287,7 @@ function MotionLayerSoloToggle({ item, track, t, updateLayerTrack }: MotionLayer
       type="button"
       onClick={() => track && updateLayerTrack(track.id, { solo: !track.solo })}
       className={cn(
-        'h-5 w-5 rounded text-[9px] font-bold',
+        'h-5 w-5 rounded text-[11px] font-bold',
         track?.solo
           ? 'bg-primary/15 text-primary'
           : 'text-muted-foreground hover:bg-accent hover:text-foreground',
@@ -354,7 +354,7 @@ function LayerNameLabel({
         nullObjectNonRenderingLabel ? `${index + 1}. ${nullObjectNonRenderingLabel}` : undefined
       }
     >
-      <span className="mr-0.5 inline-block w-3 shrink-0 text-right text-[9px] tabular-nums text-muted-foreground/70">
+      <span className="mr-0.5 inline-block w-3 shrink-0 text-right text-[11px] tabular-nums text-muted-foreground/70">
         {index + 1}
       </span>
       <LayerTypeIcon
@@ -599,16 +599,16 @@ export function MotionLayerParentCell({
             defaultValue: 'Parent for {{name}}',
             name: item.label || item.type,
           })}
-          className="h-6 min-w-0 flex-1 gap-1 border-transparent bg-transparent px-1.5 py-0 text-[9px] shadow-none hover:border-input hover:bg-background data-[state=open]:border-primary/50 data-[state=open]:bg-background [&>svg]:h-3 [&>svg]:w-3"
+          className="h-6 min-w-0 flex-1 gap-1 border-transparent bg-transparent px-1.5 py-0 text-[11px] shadow-none hover:border-input hover:bg-background data-[state=open]:border-primary/50 data-[state=open]:bg-background [&>svg]:h-3 [&>svg]:w-3"
         >
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value={NO_TRANSFORM_PARENT} className="text-[10px]">
+          <SelectItem value={NO_TRANSFORM_PARENT} className="text-[11px]">
             {t('editor.transformHierarchy.none', { defaultValue: 'None' })}
           </SelectItem>
           {parentCandidates.map(({ item: candidate, layerNumber }) => (
-            <SelectItem key={candidate.id} value={candidate.id} className="text-[10px]">
+            <SelectItem key={candidate.id} value={candidate.id} className="text-[11px]">
               <span className="mr-1 text-muted-foreground">{layerNumber}.</span>
               {getParentCandidateLabel(candidate, t)}
             </SelectItem>
@@ -697,14 +697,14 @@ export function MotionLayerModeCell({
         onValueChange={(value) => updateItem(item.id, { blendMode: value as BlendMode })}
       >
         <SelectTrigger
-          className="h-5 w-full gap-1 bg-background px-2 text-[9px] text-muted-foreground"
+          className="h-5 w-full gap-1 bg-background px-2 text-[11px] text-muted-foreground"
           aria-label={t('editor.compose.blendMode')}
         >
           <SelectValue />
         </SelectTrigger>
         <SelectContent className="max-h-72">
           {ALL_BLEND_MODES.map((mode) => (
-            <SelectItem key={mode} value={mode} className="text-[10px]">
+            <SelectItem key={mode} value={mode} className="text-[11px]">
               {BLEND_MODE_LABELS[mode]}
             </SelectItem>
           ))}

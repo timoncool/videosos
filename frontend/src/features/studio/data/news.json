@@ -1,0 +1,15 @@
+[
+  {
+    "id": "videosos-2-0-0",
+    "date": "2026-10-12",
+    "release": "https://github.com/timoncool/videosos/releases/tag/v2.0.0",
+    "title": {
+      "en": "VideoSOS 2.0.0",
+      "ru": "VideoSOS 2.0.0"
+    },
+    "body": {
+      "en": "VideoSOS is now a desktop program: generation and editing in one window.\n\n- **Generate everything**: images, image edits, video, video edits, lip sync, upscale, background removal, music, voice, sound effects, transcripts and text through OpenRouter, fal and Runware with your own keys.\n- **Price before the run** and the provider's bill after it; jobs survive a restart and are never sent twice.\n- **A full multitrack editor** with transitions, keyframes, color and a fast export on the graphics card.\n- **MCP server** for agents: they generate, edit the timeline with undo and export, while you watch.",
+      "ru": "VideoSOS теперь десктопная программа: генерация и монтаж в одном окне.\n\n- **Генерируйте всё**: картинки, правка картинок, видео, правка видео, липсинк, апскейл, удаление фона, музыка, озвучка, звуки, расшифровка и тексты через OpenRouter, fal и Runware своими ключами.\n- **Цена до запуска** и счёт провайдера после; задачи переживают перезапуск и никогда не отправляются дважды.\n- **Полноценный многодорожечный редактор** с переходами, ключевыми кадрами, цветом и быстрым экспортом на видеокарте.\n- **MCP-сервер** для агентов: они генерируют, правят таймлайн с отменой и экспортируют, а вы видите каждое действие."
+    }
+  }
+]

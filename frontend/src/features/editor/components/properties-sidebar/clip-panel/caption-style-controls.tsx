@@ -5,6 +5,7 @@ import { Separator } from '@/components/ui/separator'
 import { cn } from '@/shared/ui/cn'
 import { updateItem } from '@/features/editor/deps/timeline-store'
 import type { SubtitleSegmentItem, TextItem } from '@/types/timeline'
+import type { CaptionReveal } from '@/types/text'
 
 import { ColorPicker, PropertyRow, SliderInput } from '../components'
 import {
@@ -15,6 +16,9 @@ import {
 } from '@/shared/typography/caption-style-presets'
 
 type CaptionStylableItem = SubtitleSegmentItem | TextItem
+
+const REVEALS: CaptionReveal[] = ['whole', 'words', 'karaoke']
+const DEFAULT_HIGHLIGHT = '#ffd400'
 
 interface CaptionStyleControlsProps {
   /**
@@ -100,15 +104,15 @@ export const CaptionStyleControls = memo(function CaptionStyleControls({
   return (
     <div className="space-y-1">
       <div>
-        <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground pb-1.5">
+        <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground pb-1.5">
           {t('editor.captionStyleControls.stylePreset')}
         </p>
-        <div className="grid grid-cols-3 gap-1.5">
+        <div className="grid grid-cols-3 gap-1.5 max-h-52 overflow-y-auto pr-1">
           {CAPTION_STYLE_PRESETS.map((preset) => (
             <button
               key={preset.id}
               type="button"
-              title={t(preset.hintKey)}
+              title={`${preset.label} — ${t(preset.hintKey)}`}
               onClick={() => applyPreset(preset)}
               className={cn(
                 'rounded border px-2 py-1.5 text-[11px] text-center transition-colors',
@@ -182,6 +186,40 @@ export const CaptionStyleControls = memo(function CaptionStyleControls({
           </button>
         </div>
       </PropertyRow>
+
+      {sample.type === 'subtitle' && (
+        <PropertyRow label={t('editor.captionStyleControls.reveal')}>
+          <div className="grid flex-1 min-w-0 grid-cols-3 gap-1">
+            {REVEALS.map((reveal) => (
+              <button
+                key={reveal}
+                type="button"
+                title={t(`editor.captionStyleControls.revealHint.${reveal}`)}
+                onClick={() => applyPatch({ captionReveal: reveal })}
+                className={cn(
+                  'h-7 rounded border px-1 text-[11px] transition-colors',
+                  (sample.captionReveal ?? 'whole') === reveal
+                    ? 'border-border/70 bg-secondary/60 text-foreground'
+                    : 'border-border hover:bg-secondary/40 text-muted-foreground',
+                )}
+              >
+                {t(`editor.captionStyleControls.revealMode.${reveal}`)}
+              </button>
+            ))}
+          </div>
+        </PropertyRow>
+      )}
+
+      {sample.type === 'subtitle' && sample.captionReveal === 'karaoke' && (
+        <ColorPicker
+          label={t('editor.captionStyleControls.highlight')}
+          color={sample.captionHighlight ?? DEFAULT_HIGHLIGHT}
+          onChange={(captionHighlight) => applyPatch({ captionHighlight })}
+          onLiveChange={(captionHighlight) => applyPatch({ captionHighlight })}
+          onReset={() => applyPatch({ captionHighlight: DEFAULT_HIGHLIGHT })}
+          defaultColor={DEFAULT_HIGHLIGHT}
+        />
+      )}
 
       {hasBackground && (
         <PropertyRow label={t('editor.captionStyleControls.padding')}>

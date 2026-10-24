@@ -68,7 +68,7 @@ export const ContinuousMotionRow = memo(function ContinuousMotionRow({
         disabled={reason !== null}
         onClick={onApply}
         className={cn(
-          'group flex h-full w-full flex-col items-center gap-1 rounded-md border border-border/60 p-1.5 text-[10px]',
+          'group flex h-full w-full flex-col items-center gap-1 rounded-md border border-border/60 p-1.5 text-[11px]',
           reason !== null
             ? 'cursor-not-allowed text-muted-foreground/50'
             : 'text-muted-foreground hover:border-border hover:bg-secondary/40 hover:text-foreground',
@@ -98,7 +98,7 @@ export const ContinuousMotionRow = memo(function ContinuousMotionRow({
         <button
           type="button"
           aria-label={t('editor.animateStages.liveBadge') + ' — ' + label}
-          className="group relative flex h-full w-full flex-col items-center gap-1 rounded-md border border-primary/60 bg-secondary/30 p-1.5 text-[10px] text-foreground hover:bg-secondary/50"
+          className="group relative flex h-full w-full flex-col items-center gap-1 rounded-md border border-primary/60 bg-secondary/30 p-1.5 text-[11px] text-foreground hover:bg-secondary/50"
         >
           {/* Active dot — the tile is "live"; the flyout holds the controls. */}
           <span className="absolute right-1 top-1 h-1.5 w-1.5 rounded-full bg-primary shadow ring-1 ring-background" />
@@ -131,7 +131,7 @@ export const ContinuousMotionRow = memo(function ContinuousMotionRow({
         </div>
         <Separator />
         <div className="space-y-1.5">
-          <div className="text-[10px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
             {t('timeline.keyframeEditor.parameters')}
           </div>
           {modulator.properties.map((property) => (

@@ -2,9 +2,9 @@
 //! JSON Schema (fal through OpenAPI); one reader turns either into typed fields with a meaning (`Role`),
 //! so the window draws one form for hundreds of models and the agent reads the same list.
 
-use serde_json::{Map, Value};
+use serde_json::{json, Map, Value};
 
-use crate::model::{Choice, Field, FieldKind, MediaKind, Role};
+use crate::model::{Choice, Field, FieldKind, FrameAt, MediaKind, Role};
 
 /// Follows `$ref` (`#/components/schemas/X`, `#/$defs/X`) inside the same document.
 pub fn resolve<'a>(root: &'a Value, node: &'a Value) -> &'a Value {
@@ -45,7 +45,8 @@ fn schema_type(node: &Value) -> Option<&str> {
     }
 }
 
-/// `enum`, or `oneOf`/`anyOf` of `const`s with their descriptions as labels.
+/// `enum`, or `oneOf`/`anyOf` of `const`s with their descriptions as labels; a short integer range beside them
+/// (`auto` or 5..20 seconds) is listed number by number, and a value open beyond that makes it no list at all.
 fn choices(root: &Value, node: &Value) -> Option<Vec<Choice>> {
     if let Some(values) = node.get("enum").and_then(Value::as_array) {
         let options: Vec<Choice> = values
@@ -56,6 +57,7 @@ fn choices(root: &Value, node: &Value) -> Option<Vec<Choice>> {
         return (!options.is_empty()).then_some(options);
     }
     let mut options = Vec::new();
+    let mut ranges = Vec::new();
     for alternative in alternatives(root, node) {
         if let Some(constant) = alternative.get("const") {
             let label = alternative
@@ -66,9 +68,19 @@ fn choices(root: &Value, node: &Value) -> Option<Vec<Choice>> {
             options.push(Choice { value: constant.clone(), label });
         } else if let Some(values) = alternative.get("enum").and_then(Value::as_array) {
             options.extend(values.iter().filter(|v| !v.is_null()).map(|value| Choice { value: value.clone(), label: label_of_value(value) }));
+        } else if let Some(kind @ ("integer" | "number")) = schema_type(alternative) {
+            let bounds = (alternative.get("minimum").and_then(Value::as_i64), alternative.get("maximum").and_then(Value::as_i64));
+            match (kind, bounds) {
+                ("integer", (Some(min), Some(max))) if max >= min && max - min <= 60 => ranges.push(min..=max),
+                _ => return None,
+            }
         }
     }
-    (!options.is_empty()).then_some(options)
+    if options.is_empty() {
+        return None;
+    }
+    options.extend(ranges.into_iter().flatten().map(|value| Choice { value: json!(value), label: value.to_string() }));
+    Some(options)
 }
 
 fn label_of_value(value: &Value) -> String {
@@ -183,7 +195,7 @@ pub fn fields_of_object(root: &Value, object: &Value, prefix: &str, skip: &Skip,
         let node = resolve(root, &properties[key]);
         let path = if prefix.is_empty() { key.clone() } else { format!("{prefix}.{key}") };
         let is_required = required.contains(&key.as_str());
-        if media_object || is_media_node(root, key, node) {
+        if (media_object && input_is_file(key, node)) || is_media_node(root, key, node) {
             if let Some(field) = media_field(root, key, &path, node, is_required, media_object) {
                 fields.push(field);
             }
@@ -214,6 +226,12 @@ fn is_media_node(root: &Value, key: &str, node: &Value) -> bool {
     media_of_name(&lower).is_some() && (string_like(node) || item.is_some_and(string_like))
 }
 
+/// Whether an entry of Runware's `inputs` takes a file: named for one, or a picture by its schema. A draft's cache,
+/// an id of the provider's own (`videoId`, `draftId`), fonts or a checkpoint are not files of the library.
+fn input_is_file(key: &str, node: &Value) -> bool {
+    !key.ends_with("Id") && (media_of_name(key).is_some() || node.to_string().contains("data:image"))
+}
+
 fn media_field(root: &Value, key: &str, path: &str, node: &Value, required: bool, inside_inputs: bool) -> Option<Field> {
     let media = media_of_name(key).or(if inside_inputs { Some(MediaKind::Image) } else { None })?;
     let is_array = schema_type(node) == Some("array") || alternatives(root, node).iter().any(|alt| schema_type(alt) == Some("array"));
@@ -234,12 +252,29 @@ fn media_field(root: &Value, key: &str, path: &str, node: &Value, required: bool
         key: path.to_string(),
         label: title(node, key),
         description: description(node),
-        kind: FieldKind::Media { media, min: if required { min.max(1) } else { min }, max: max.max(1), list: is_array },
+        kind: FieldKind::Media { media, min: if required { min.max(1) } else { min }, max: max.max(1), list: is_array, at: if is_array { frame_at(root, array_node) } else { None } },
         required,
         default: None,
         advanced: false,
         role: role_of(path, Some(media)),
     })
+}
+
+/// The position a list's item may carry beside its file (Runware's `{image, timestamp | frame}`): a second
+/// when the model takes one up to a known end, else a frame number; named places alone (`first`, `last`) follow the
+/// order.
+fn frame_at(root: &Value, array: &Value) -> Option<FrameAt> {
+    let items = resolve(root, array.get("items")?);
+    let mut objects = alternatives(root, items);
+    objects.push(items);
+    let properties = objects.into_iter().filter(|alt| schema_type(alt) == Some("object")).find_map(|alt| alt.get("properties"))?;
+    if let Some(max) = properties.get("timestamp").and_then(|node| resolve(root, node).get("maximum")).and_then(Value::as_f64) {
+        return Some(FrameAt::Second { max });
+    }
+    let frame = resolve(root, properties.get("frame")?);
+    let mut kinds = alternatives(root, frame);
+    kinds.push(frame);
+    kinds.iter().any(|alt| schema_type(alt) == Some("integer")).then_some(FrameAt::Frame)
 }
 
 fn title(node: &Value, key: &str) -> String {
@@ -272,9 +307,9 @@ fn plain_field(root: &Value, key: &str, path: &str, node: &Value, required: bool
         let (kind, typed) = effective?;
         match kind {
             "string" => {
-                let long = matches!(role, Some(Role::Prompt) | Some(Role::NegativePrompt))
-                    || typed.get("maxLength").and_then(Value::as_u64).is_some_and(|max| max > 300);
-                if long { FieldKind::Textarea } else { FieldKind::Text }
+                let max_length = typed.get("maxLength").and_then(Value::as_u64);
+                let long = matches!(role, Some(Role::Prompt) | Some(Role::NegativePrompt)) || max_length.is_some_and(|max| max > 300);
+                if long { FieldKind::Textarea { max_length } } else { FieldKind::Text { max_length } }
             }
             "integer" => FieldKind::Integer { min: typed.get("minimum").and_then(Value::as_f64), max: typed.get("maximum").and_then(Value::as_f64) },
             "number" => FieldKind::Number { min: typed.get("minimum").and_then(Value::as_f64), max: typed.get("maximum").and_then(Value::as_f64) },
@@ -373,6 +408,37 @@ mod tests {
         assert_eq!(humanize("positivePrompt"), "Positive prompt");
         assert_eq!(humanize("image_size"), "Image size");
         assert_eq!(humanize("CFGScale"), "Cfgscale");
+    }
+
+    #[test]
+    fn a_keyframe_list_says_how_a_frame_is_pinned() {
+        let list = |frame: Value, timestamp: Option<Value>| {
+            let mut properties = json!({ "image": { "type": "string" }, "frame": frame });
+            if let Some(timestamp) = timestamp {
+                properties["timestamp"] = timestamp;
+            }
+            json!({ "type": "object", "properties": { "frameImages": {
+                "type": "array", "maxItems": 10,
+                "items": { "anyOf": [{ "type": "string", "format": "uri" }, { "type": "object", "properties": properties, "required": ["image"] }] }
+            } } })
+        };
+        let at = |object: Value| match fields_of_object(&object, &object, "inputs", &Skip { keys: &[] }, true, None).remove(0).kind {
+            FieldKind::Media { at, .. } => at,
+            other => panic!("{other:?}"),
+        };
+        let index = json!({ "oneOf": [{ "type": "string", "enum": ["first", "last"] }, { "type": "integer", "minimum": -1 }] });
+        assert_eq!(at(list(index.clone(), Some(json!({ "type": "number", "minimum": 0, "maximum": 20 })))), Some(FrameAt::Second { max: 20.0 }));
+        assert_eq!(at(list(index, None)), Some(FrameAt::Frame));
+        assert_eq!(at(list(json!({ "oneOf": [{ "const": "first" }, { "const": "last" }] }), None)), None);
+    }
+
+    #[test]
+    fn a_short_range_is_listed_only_beside_named_values() {
+        let range = json!({ "type": "integer", "minimum": 5, "maximum": 20 });
+        let listed = choices(&Value::Null, &json!({ "oneOf": [range, { "const": "auto" }] })).unwrap();
+        assert_eq!(listed.len(), 17);
+        assert_eq!(listed[0].value, json!("auto"));
+        assert!(choices(&Value::Null, &json!({ "anyOf": [range, { "type": "null" }] })).is_none(), "an optional number stays a number");
     }
 
     #[test]

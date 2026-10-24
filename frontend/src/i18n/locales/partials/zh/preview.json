@@ -68,7 +68,11 @@
       "loadingMedia": "正在加载媒体…",
       "videoPreview": "视频预览",
       "emptyTitle": "时间线上还没有内容",
-      "emptyDescription": "导入媒体，将片段拖到时间线，然后按空格键预览。"
+      "emptyDescription": "导入媒体，将片段拖到时间线，然后按空格键预览。",
+      "gradeComparisonSplit": "分屏调色对比",
+      "gradeComparisonBefore": "调色前",
+      "gradeComparisonAfter": "调色后",
+      "gradeComparisonWipe": "调整分屏对比"
     },
     "zoom": {
       "ariaLabel": "缩放级别：{{label}}",

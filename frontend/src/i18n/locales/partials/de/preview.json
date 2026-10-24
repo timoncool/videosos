@@ -68,7 +68,11 @@
       "loadingMedia": "Medien werden geladen…",
       "videoPreview": "Videovorschau",
       "emptyTitle": "Noch nichts in der Timeline",
-      "emptyDescription": "Importiere Medien, ziehe einen Clip in die Timeline und drücke die Leertaste für die Vorschau."
+      "emptyDescription": "Importiere Medien, ziehe einen Clip in die Timeline und drücke die Leertaste für die Vorschau.",
+      "gradeComparisonSplit": "Geteilter Look-Vergleich",
+      "gradeComparisonBefore": "Vorher",
+      "gradeComparisonAfter": "Nachher",
+      "gradeComparisonWipe": "Geteilten Vergleich anpassen"
     },
     "zoom": {
       "ariaLabel": "Zoomstufe: {{label}}",

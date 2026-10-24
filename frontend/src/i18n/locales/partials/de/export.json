@@ -96,7 +96,41 @@
         "embeddedDescription": "Eine umschaltbare Untertitelspur (WebM/MKV)."
       },
       "subtitles": "Untertitel",
-      "video": "Video"
+      "video": "Video",
+      "rateControl": "Bitratensteuerung",
+      "rateControlAuto": "Auto (quellenabhängig)",
+      "rateControlCbr": "CBR (konstante Bitrate)",
+      "rateControlVbr": "VBR (variable Bitrate)",
+      "targetBitrate": "Ziel-Bitrate",
+      "useSourceBitrate": "Quelle verwenden",
+      "smartCopy": "Smart Copy, wenn möglich",
+      "smartCopyPath": "Smart Copy · ohne Neukodierung",
+      "estimatedSize": "Geschätzt: {{size}}",
+      "sourceBitrate": "Quelle: {{bitrate}}",
+      "smartCopyStatus": {
+        "eligible": "Verfügbar: Die Originalmedien werden Byte für Byte kopiert.",
+        "disabled": "Deaktiviert. Die Zeitleiste wird gerendert und kodiert.",
+        "not-video": "Nur für Videoexporte verfügbar.",
+        "range": "Beim Export eines In/Out-Bereichs nicht verfügbar.",
+        "timeline-layout": "Erfordert einen vollständigen Quellclip ohne zusätzliche Ebenen.",
+        "source-unavailable": "Die Originaldatei oder ihre Metadaten sind nicht verfügbar.",
+        "trimmed-or-retimed": "Nicht verfügbar, da die Quelle gekürzt, geteilt, umgekehrt oder zeitlich verändert wurde.",
+        "visual-processing": "Nicht verfügbar, da visuelle Bearbeitungen, Untertitel, Übergänge oder Keyframes gerendert werden müssen.",
+        "audio-processing": "Nicht verfügbar, da Audio oder Spurmischung geändert wurde.",
+        "project-mismatch": "Auflösung oder Bildrate des Projekts stimmt nicht mit der Quelle überein.",
+        "format-mismatch": "Das gewählte Format oder der Codec stimmt nicht mit der Quelle überein."
+      },
+      "loudness": "Lautheit",
+      "loudnessOption": {
+        "off": "Unverändert lassen",
+        "stream": "−14 LUFS — YouTube, soziale Netzwerke",
+        "podcast": "−16 LUFS — Podcasts, Apple",
+        "broadcast": "−23 LUFS — Rundfunk (EBU R128)"
+      },
+      "loudnessDescription": {
+        "off": "Der Ton wird genau so exportiert, wie er gemischt ist, ohne Bearbeitung.",
+        "on": "Der gesamte Mix wird nach EBU R128 auf {{lufs}} LUFS gebracht, ein Limiter hält die Spitzen unter −1 dBTP. Der Ton wird neu kodiert, Smart Copy wird deaktiviert."
+      }
     },
     "videoContainer": {
       "mp4": "Breite Unterstützung, ideal zum Teilen",
@@ -123,6 +157,8 @@
           "title": "Ausgewähltes Format kann nicht kodiert werden",
           "detail": "Dieser Browser kann die ausgewählten Exporteinstellungen nicht kodieren.",
           "detailWithError": "{{error}}",
+          "containerUnsupported": "Dieser Browser kann kein {{container}}-Video kodieren.",
+          "noCodecs": "Dieser Browser hat keinen Video-Encoder für den Export.",
           "fix": "Wähle ein anderes Format/einen anderen Codec oder verwende einen aktuellen Chromium-Browser."
         },
         "audio-export-ready": {
@@ -182,8 +218,30 @@
         "worker-export-ready": {
           "title": "Worker-Exportpfad bereit",
           "detail": "Der Export-Worker kann diese Komposition ohne bekannten Fallback zum Hauptthread rendern."
+        },
+        "smart-copy-ready": {
+          "title": "Smart Copy bereit",
+          "detail": "Die Originalmedien werden ohne Rendern und Neukodierung kopiert."
         }
+      },
+      "smartCopyPath": "Smart-Copy-Pfad"
+    },
+    "fcpxml": {
+      "noProject": "Zuerst ein Projekt öffnen.",
+      "failed": "FCPXML wurde nicht erstellt: {{reason}}",
+      "left": {
+        "kind": "Nicht in FCPXML (keine Entsprechung dort): {{items}}",
+        "file": "Nicht in FCPXML (keine Datei im Arbeitsbereich): {{items}}",
+        "speed": "Nicht in FCPXML (Geschwindigkeit geändert): {{items}}",
+        "transition": "Nicht in FCPXML (ein Übergang zwischen verbundenen Clips hat dort kein Gegenstück; im Schnittprogramm hinzufügen): {{items}}"
       }
+    },
+    "validation": {
+      "resolution": "Die Exportgröße ist ungültig.",
+      "frameRate": "Die Bildrate muss zwischen 1 und 120 liegen.",
+      "audioContainer": "Der Audioexport braucht ein reines Audioformat.",
+      "videoContainer": "Der Videoexport braucht ein Videoformat.",
+      "codecContainer": "Der Codec {{codec}} wird in {{container}} nicht unterstützt."
     }
   }
 }

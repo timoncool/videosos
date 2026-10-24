@@ -53,7 +53,7 @@ export function ShapeTrimTaperControls({
         <>
           <div className="border-t border-border my-3" />
 
-          <div className="px-1 pb-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+          <div className="px-1 pb-1 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
             {t('editor.shapeSection.trimPaths')}
           </div>
           <PropertyRow label={t('editor.shapeSection.trimStart')}>
@@ -118,7 +118,7 @@ export function ShapeTrimTaperControls({
         <>
           <div className="border-t border-border my-3" />
 
-          <div className="px-1 pb-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+          <div className="px-1 pb-1 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
             {t('editor.shapeSection.taper')}
           </div>
           <PropertyRow label={t('editor.shapeSection.taperStartWidth')}>

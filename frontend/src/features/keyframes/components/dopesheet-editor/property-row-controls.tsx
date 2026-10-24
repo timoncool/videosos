@@ -250,7 +250,7 @@ export function PropertyRowAutoKeyButton({
         MINI_ICON_BUTTON_CLASS,
         'self-center text-muted-foreground hover:text-foreground',
         autoKeyEnabled &&
-          'bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground',
+          'bg-[var(--color-accent)]/15 text-[var(--color-accent)] hover:bg-[var(--color-accent)]/25 hover:text-primary-foreground',
       )}
       onClick={() => onToggleAutoKey(property)}
       disabled={disabled || rowLocked || !canCommit}

@@ -17,11 +17,20 @@ export interface TimelineItemCornerPin {
   referenceHeight?: number
 }
 
+/** A word of a caption with when it is spoken; `text` carries the space before it, so the words joined are the caption. */
+export interface CaptionWord {
+  text: string
+  startSeconds: number
+  endSeconds: number
+}
+
 export interface TimelineTranscriptCaptionCue {
   id: string
   startSeconds: number
   endSeconds: number
   text: string
+  /** The words with their times, in the cue's own clock; none for captions read from a file. */
+  words?: CaptionWord[]
 }
 
 type TimelineTranscriptCaptionStyle = TextStyleFields & {
@@ -411,6 +420,7 @@ export interface SubtitleSegmentCue {
   startSeconds: number
   endSeconds: number
   text: string
+  words?: CaptionWord[]
 }
 
 /**
