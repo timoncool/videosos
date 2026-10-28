@@ -1,10 +1,8 @@
 name: Star History
 
 on:
-  watch:
-    types: [started]       # every new star redraws the chart at once
   schedule:
-    - cron: "17 3 * * *"   # daily, in case a star event was missed
+    - cron: "17 3 * * *"   # once a day — not on every star, to spare Actions runs
   workflow_dispatch:
 
 concurrency:
