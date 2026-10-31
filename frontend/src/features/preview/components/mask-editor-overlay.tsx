@@ -186,7 +186,7 @@ function drawPenHandleMark(
   ctx.beginPath()
   ctx.moveTo(anchor.x, anchor.y)
   ctx.lineTo(mark.stemEnd.x, mark.stemEnd.y)
-  ctx.strokeStyle = 'rgba(34, 211, 238, 0.5)'
+  ctx.strokeStyle = 'rgba(251, 191, 36, 0.5)'
   ctx.lineWidth = 1
   ctx.stroke()
 
@@ -496,11 +496,11 @@ export const MaskEditorOverlay = memo(function MaskEditorOverlay({
       }
 
       if (editingPathClosed) ctx.closePath()
-      ctx.strokeStyle = '#22d3ee'
+      ctx.strokeStyle = '#fbbf24'
       ctx.lineWidth = 1.5
       ctx.stroke()
       if (editingPathClosed) {
-        ctx.fillStyle = 'rgba(34, 211, 238, 0.08)'
+        ctx.fillStyle = 'rgba(251, 191, 36, 0.08)'
         ctx.fill()
       }
 
@@ -537,7 +537,7 @@ export const MaskEditorOverlay = memo(function MaskEditorOverlay({
           ctx.arc(insertX, insertY, 4, 0, Math.PI * 2)
           ctx.fillStyle = '#ffffff'
           ctx.fill()
-          ctx.strokeStyle = '#22d3ee'
+          ctx.strokeStyle = '#fbbf24'
           ctx.lineWidth = 1.5
           ctx.stroke()
         }

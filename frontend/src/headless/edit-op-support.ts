@@ -6,14 +6,17 @@
  * edit.ts so that module can dispatch ops through a handler table; every body
  * below is unchanged.
  */
-import type { TimelineItem, TimelineTrack, TextItem } from '@/types/timeline'
+import type { TimelineItem, TimelineTrack, TextItem, ShapeItem, ShapeType } from '@/types/timeline'
 import type { MediaMetadata } from '@/types/storage'
 import type { Transition } from '@/types/transition'
 
 import { useItemsStore } from '@/features/timeline/stores/items-store'
 import { useTransitionsStore } from '@/features/timeline/stores/transitions-store'
 import { createClassicTrack } from '@/features/timeline/utils/classic-tracks'
+import { createDefaultShapeItem } from '@/features/timeline/utils/generated-layer-items'
 import { setTracks, updateTransition } from '@/features/timeline/stores/timeline-actions'
+
+export { asOneStep } from '@/features/timeline/stores/timeline-actions'
 
 export type EditOperationName =
   | 'addText'
@@ -29,12 +32,24 @@ export type EditOperationName =
   | 'removeTransition'
   | 'addTrack'
   | 'addClip'
+  | 'replaceMedia'
+  | 'rippleDelete'
+  | 'join'
+  | 'link'
+  | 'unlink'
+  | 'duplicate'
   | 'addKeyframe'
   | 'removeKeyframes'
   | 'setTransformParent'
   | 'addEffect'
   | 'removeEffect'
   | 'setTransform'
+  | 'addShape'
+  | 'updateTrack'
+  | 'removeTrack'
+  | 'addMarker'
+  | 'updateMarker'
+  | 'removeMarker'
 
 /** A wire operation. Runtime dispatch validates its discriminator before invoking a handler. */
 export type EditOp = Record<string, unknown> & { op: EditOperationName }
@@ -133,7 +148,7 @@ export function getOrCreateTrack(kind: 'video' | 'audio'): string {
 }
 
 /** The requested track if it exists, else find-or-create one of the given kind. */
-export function resolveOrCreateTrack(preferred: unknown, kind: 'video' | 'audio'): string {
+function resolveOrCreateTrack(preferred: unknown, kind: 'video' | 'audio'): string {
   const requested = asString(preferred)
   if (requested) {
     const track = requireTrack(requested)
@@ -142,6 +157,73 @@ export function resolveOrCreateTrack(preferred: unknown, kind: 'video' | 'audio'
     return requested
   }
   return getOrCreateTrack(kind)
+}
+
+/**
+ * A track where a clip lands at exactly [from, from + durationInFrames) and is seen: when nothing of the kind is
+ * there, the track a clip goes to by default; otherwise a free track above everything there (a lower order
+ * draws on top), the nearest one, or a new track at the top. Sound mixes, so a free audio track is enough.
+ */
+/** The unlocked track whose last clip before `from` ends nearest to it: where a sequence goes on, as a person cuts. */
+function continuedTrack(
+  candidates: readonly { id: string; locked?: boolean }[],
+  from: number,
+): string | undefined {
+  const items = useItemsStore.getState().items
+  let best: { id: string; end: number } | undefined
+  for (const track of candidates) {
+    if (track.locked) continue
+    const end = Math.max(
+      -1,
+      ...items
+        .filter((item) => item.trackId === track.id && item.from + item.durationInFrames <= from)
+        .map((item) => item.from + item.durationInFrames),
+    )
+    if (end >= 0 && (!best || end > best.end)) best = { id: track.id, end }
+  }
+  return best?.id
+}
+
+export function freeTrackAt(
+  kind: 'video' | 'audio',
+  from: number,
+  durationInFrames: number,
+): string {
+  const items = useItemsStore.getState().items
+  const busy = (trackId: string) =>
+    items.some(
+      (item) =>
+        item.trackId === trackId &&
+        item.from < from + durationInFrames &&
+        from < item.from + item.durationInFrames,
+    )
+  const all = tracks()
+  const ofKind = all
+    .filter((t) => !t.isGroup && (t.kind ?? 'video') === kind)
+    .sort((a, b) => a.order - b.order)
+  const taken = ofKind.filter((t) => busy(t.id))
+  if (taken.length === 0) return continuedTrack(ofKind, from) ?? getOrCreateTrack(kind)
+  const free = ofKind.filter((t) => !t.locked && !busy(t.id))
+  const top = Math.min(...taken.map((t) => t.order))
+  const chosen = kind === 'video' ? free.filter((t) => t.order < top).at(-1) : free[0]
+  if (chosen) return chosen.id
+  const orders = all.map((t) => t.order)
+  const order = kind === 'video' ? Math.min(0, ...orders) - 1 : Math.max(0, ...orders) + 1
+  const track = createClassicTrack({ tracks: all, kind, order })
+  setTracks([...all, track])
+  return track.id
+}
+
+/** The track a clip op asked for; with `keepFrom` and no track named, one that is free where the clip lands. */
+export function placementTrack(
+  op: EditOp,
+  kind: 'video' | 'audio',
+  from: number,
+  durationInFrames: number,
+): string {
+  if (op.keepFrom === true && !asString(op.trackId))
+    return freeTrackAt(kind, from, durationInFrames)
+  return resolveOrCreateTrack(op.trackId, kind)
 }
 
 /** Source-frame fields for a media clip (source* are in source-native fps). */
@@ -174,6 +256,33 @@ export function buildTextItem(op: EditOp): TextItem {
       ? { verticalAlign: op.verticalAlign }
       : {}),
   }
+}
+
+const SHAPES: readonly ShapeType[] = [
+  'rectangle',
+  'circle',
+  'triangle',
+  'ellipse',
+  'star',
+  'polygon',
+  'heart',
+]
+
+/** A shape as the Shapes tab makes one, at the size the window gives it, on the track asked or the first video track. */
+export function buildShapeItem(op: EditOp): ShapeItem {
+  const shapeType = asString(op.shape) ?? 'rectangle'
+  if (!SHAPES.includes(shapeType as ShapeType))
+    throw new Error(`shape: one of ${SHAPES.join(', ')}`)
+  const item = createDefaultShapeItem({
+    trackId: resolveTrackId(op.trackId, 'video'),
+    from: asNumber(op.from, 0)!,
+    durationInFrames: asNumber(op.durationInFrames, 90)!,
+    canvasWidth: editCanvas.width,
+    canvasHeight: editCanvas.height,
+    shapeType: shapeType as ShapeType,
+  })
+  const color = asString(op.color)
+  return color ? { ...item, fillColor: color } : item
 }
 
 /** Canvas of the project currently being edited (see editProject). */

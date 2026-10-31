@@ -397,7 +397,7 @@ export const ColorTimelineNavigator = memo(function ColorTimelineNavigator() {
               />
             ))
           ) : (
-            <div className="flex h-full items-center px-2 text-[10px] font-medium text-zinc-500">
+            <div className="flex h-full items-center px-2 text-[11px] font-medium text-zinc-500">
               {t('editor.colorTimeline.noClip')}
             </div>
           )}

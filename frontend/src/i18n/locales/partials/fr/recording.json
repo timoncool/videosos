@@ -21,7 +21,7 @@
     "syncOffsetEarlier": "Avancer la prise",
     "syncOffsetLater": "Retarder la prise",
     "headphonesHint": "Utilisez un casque pour que l’audio de la chronologie ne soit pas capté par le micro.",
-    "fileNamePrefix": "voiceover",
+    "fileNamePrefix": "voix-off",
     "errors": {
       "unsupported": "L’enregistrement au microphone n’est pas pris en charge par ce navigateur.",
       "noProject": "Ouvrez un projet avant d’enregistrer.",

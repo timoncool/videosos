@@ -1,3 +1,4 @@
+import { i18n } from '@/i18n'
 import {
   Fragment,
   memo,
@@ -35,7 +36,6 @@ import { createLogger } from '@/shared/logging/logger'
 import { needsTranscriptWordSeparator } from '@/shared/utils/transcript-text'
 import {
   isTranscriptionOutOfMemoryError,
-  TRANSCRIPTION_OOM_HINT,
 } from '@/shared/utils/transcription-cancellation'
 import { useSelectionStore } from '@/shared/state/selection'
 import { usePlaybackStore } from '@/shared/state/playback'
@@ -232,7 +232,7 @@ const TranscriptSegmentRow = memo(function TranscriptSegmentRow({
                 className={cn(
                   'cursor-text rounded px-0.5',
                   isSelected
-                    ? 'bg-primary text-primary-foreground'
+                    ? 'bg-[var(--color-overlay)] text-[var(--color-text)] shadow-sm'
                     : isActive
                       ? 'bg-yellow-300 text-neutral-900 shadow-sm'
                       : isMatch
@@ -492,6 +492,7 @@ export function TranscriptEditorPanel({ active }: TranscriptEditorPanelProps) {
       isSelectingRef.current = false
     }
     window.addEventListener('pointerup', stop)
+    window.addEventListener('pointercancel', stop)
     return () => window.removeEventListener('pointerup', stop)
   }, [])
 
@@ -733,9 +734,6 @@ export function TranscriptEditorPanel({ active }: TranscriptEditorPanelProps) {
         try {
           const result = await runMediaTranscriptionJob(mediaId, {
             ...values,
-            onModelFallback: () => {
-              toast.info(t('transcript.largeTurboFallback'))
-            },
           })
           if (!mountedRef.current) return
           if (result.status === 'cancelled') {
@@ -752,7 +750,7 @@ export function TranscriptEditorPanel({ active }: TranscriptEditorPanelProps) {
         } catch (error) {
           logger.warn('Transcription failed', { mediaId, error })
           const errorMessage = isTranscriptionOutOfMemoryError(error)
-            ? TRANSCRIPTION_OOM_HINT
+            ? i18n.t('transcript.outOfMemory')
             : error instanceof Error && error.message.trim().length > 0
               ? error.message
               : t('transcript.toastTranscribeFailed')
@@ -1127,7 +1125,7 @@ function ScopeToggle({
           className={cn(
             'flex-1 rounded-md px-2 py-1 text-xs font-medium transition-colors',
             scope === option.value
-              ? 'bg-primary text-primary-foreground'
+              ? 'bg-[var(--color-overlay)] text-[var(--color-text)] shadow-sm'
               : 'bg-secondary/30 text-muted-foreground hover:bg-secondary/60 hover:text-foreground',
           )}
         >

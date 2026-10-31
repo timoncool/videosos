@@ -268,6 +268,8 @@ mod tests {
         let _language = test_language("ru");
         assert_eq!(t!("jobs-variants", count = 2), "2 варианта");
         assert_eq!(t!("jobs-variants", count = 5), "5 вариантов");
+        assert!(t!("chat-too-many-turns", turns = 60).contains("60 шагов"));
+        assert!(t!("chat-too-many-turns", turns = 24).contains("24 шага"));
         set_language("en").unwrap();
         assert_eq!(t!("jobs-variants", count = 1), "1 variant");
         assert!(set_language("xx").is_err());

@@ -293,7 +293,7 @@ export function CompactNavigator({
             left: metrics.thumbLeft,
             width: metrics.thumbWidth,
           }}
-          onMouseDown={disabled ? undefined : (event) => handleMouseDown(event, 'thumb')}
+          onPointerDown={disabled ? undefined : (event) => handleMouseDown(event, 'thumb')}
           onClick={(event) => event.stopPropagation()}
           data-testid="keyframe-navigator-thumb"
         >
@@ -303,7 +303,7 @@ export function CompactNavigator({
               'flex h-full w-2 items-center justify-center',
               disabled ? 'cursor-default' : 'cursor-ew-resize',
             )}
-            onMouseDown={disabled ? undefined : (event) => handleMouseDown(event, 'left')}
+            onPointerDown={disabled ? undefined : (event) => handleMouseDown(event, 'left')}
           >
             <div className="h-1.5 w-0.5 rounded-full bg-background/90" />
           </div>
@@ -314,7 +314,7 @@ export function CompactNavigator({
               'flex h-full w-2 items-center justify-center',
               disabled ? 'cursor-default' : 'cursor-ew-resize',
             )}
-            onMouseDown={disabled ? undefined : (event) => handleMouseDown(event, 'right')}
+            onPointerDown={disabled ? undefined : (event) => handleMouseDown(event, 'right')}
           >
             <div className="h-1.5 w-0.5 rounded-full bg-background/90" />
           </div>

@@ -688,7 +688,7 @@ export const TransitionItem = memo(function TransitionItem({
               }}
               onMouseEnter={() => setIsBridgeHovered(true)}
               onMouseLeave={() => setIsBridgeHovered(false)}
-              onMouseDown={handleMouseDown}
+              onPointerDown={handleMouseDown}
               onClick={handleClick}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
@@ -706,7 +706,7 @@ export const TransitionItem = memo(function TransitionItem({
               }}
               onMouseEnter={() => setIsBridgeHovered(true)}
               onMouseLeave={() => setIsBridgeHovered(false)}
-              onMouseDown={handleMouseDown}
+              onPointerDown={handleMouseDown}
               onClick={handleClick}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
@@ -739,8 +739,8 @@ export const TransitionItem = memo(function TransitionItem({
                 if (!isResizing) setHoveredEdge(null)
                 setIsBridgeHovered(false)
               }}
-              onMouseDown={(e) => handleResizeMouseDown(e, 'left')}
-              onMouseUp={stopEvent}
+              onPointerDown={(e) => handleResizeMouseDown(e, 'left')}
+              onPointerUp={stopEvent}
               onClick={stopEvent}
             />
           )}
@@ -757,8 +757,8 @@ export const TransitionItem = memo(function TransitionItem({
                 if (!isResizing) setHoveredEdge(null)
                 setIsBridgeHovered(false)
               }}
-              onMouseDown={(e) => handleResizeMouseDown(e, 'right')}
-              onMouseUp={stopEvent}
+              onPointerDown={(e) => handleResizeMouseDown(e, 'right')}
+              onPointerUp={stopEvent}
               onClick={stopEvent}
             />
           )}

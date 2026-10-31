@@ -5,7 +5,8 @@ import {
 } from './browser-whisper-models'
 
 export const DEFAULT_WHISPER_MODEL: MediaTranscriptModel = DEFAULT_BROWSER_WHISPER_MODEL
-export const DEFAULT_WHISPER_QUANTIZATION: MediaTranscriptQuantization = 'hybrid'
+/** The one precision the window's Whisper runs at: the int8 files, as Dub Studio's; a transcript records it. */
+export const WHISPER_QUANTIZATION: MediaTranscriptQuantization = 'q8'
 export const DEFAULT_WHISPER_LANGUAGE = ''
 export const WHISPER_AUTO_LANGUAGE_VALUE = 'auto'
 
@@ -13,45 +14,6 @@ export function normalizeSelectableWhisperModel(
   model: MediaTranscriptModel | undefined,
 ): MediaTranscriptModel {
   return normalizeSelectableBrowserWhisperModel(model)
-}
-
-export const WHISPER_QUANTIZATION_OPTIONS: ReadonlyArray<{
-  value: MediaTranscriptQuantization
-  label: string
-  description: string
-}> = [
-  {
-    value: 'hybrid',
-    label: 'Hybrid (Recommended)',
-    description: 'Best default. Balanced memory use with the safest Whisper behavior.',
-  },
-  {
-    value: 'fp32',
-    label: 'FP32 (Highest Memory)',
-    description: 'Use when memory is not a concern and you want the safest full-precision path.',
-  },
-  {
-    value: 'fp16',
-    label: 'FP16 (Lower Memory on WebGPU)',
-    description: 'Use on capable WebGPU systems when you want lower memory than FP32.',
-  },
-  {
-    value: 'q8',
-    label: 'Q8 (Tight Memory)',
-    description: 'Use only when memory is tighter. Often less reliable than Hybrid for Whisper.',
-  },
-  {
-    value: 'q4',
-    label: 'Q4 (Lowest Memory)',
-    description: 'Last-resort low-memory mode. Expect rougher captions and slower tuning.',
-  },
-]
-
-export function getWhisperQuantizationOption(
-  value: MediaTranscriptQuantization | undefined,
-): (typeof WHISPER_QUANTIZATION_OPTIONS)[number] {
-  const fallback = WHISPER_QUANTIZATION_OPTIONS[0]!
-  return WHISPER_QUANTIZATION_OPTIONS.find((option) => option.value === value) ?? fallback
 }
 
 const WHISPER_LANGUAGE_NAMES = {

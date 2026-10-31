@@ -37,7 +37,7 @@ export function AudioEqPanelGraph({
   return (
     <div className={cn('relative', !compact && 'border-b border-border')}>
       {!trackMode && !compact ? (
-        <div className="pointer-events-none absolute right-3 top-1 z-10 text-[10px] uppercase tracking-[0.16em] text-zinc-500">
+        <div className="pointer-events-none absolute right-3 top-1 z-10 text-[11px] uppercase tracking-[0.16em] text-zinc-500">
           {clipCount} {clipCount === 1 ? 'clip' : 'clips'}
         </div>
       ) : null}

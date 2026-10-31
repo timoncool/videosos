@@ -214,7 +214,7 @@ export const CornerPinOverlay = memo(function CornerPinOverlay({
     ctx.lineTo(corners[2]![0], corners[2]![1])
     ctx.lineTo(corners[3]![0], corners[3]![1])
     ctx.closePath()
-    ctx.strokeStyle = '#22d3ee'
+    ctx.strokeStyle = '#fbbf24'
     ctx.lineWidth = 1.5
     ctx.setLineDash([4, 4])
     ctx.stroke()
@@ -226,7 +226,7 @@ export const CornerPinOverlay = memo(function CornerPinOverlay({
     ctx.lineTo(corners[2]![0], corners[2]![1])
     ctx.moveTo(corners[1]![0], corners[1]![1])
     ctx.lineTo(corners[3]![0], corners[3]![1])
-    ctx.strokeStyle = 'rgba(34, 211, 238, 0.3)'
+    ctx.strokeStyle = 'rgba(251, 191, 36, 0.3)'
     ctx.lineWidth = 1
     ctx.stroke()
 
@@ -241,13 +241,13 @@ export const CornerPinOverlay = memo(function CornerPinOverlay({
 
       ctx.beginPath()
       ctx.arc(cx, cy, radius, 0, Math.PI * 2)
-      ctx.fillStyle = isActive ? '#22d3ee' : isHov ? 'rgba(34, 211, 238, 0.8)' : 'white'
+      ctx.fillStyle = isActive ? '#fbbf24' : isHov ? 'rgba(251, 191, 36, 0.8)' : 'white'
       ctx.fill()
-      ctx.strokeStyle = '#22d3ee'
+      ctx.strokeStyle = '#fbbf24'
       ctx.lineWidth = 2
       ctx.stroke()
 
-      ctx.fillStyle = isActive ? 'white' : '#22d3ee'
+      ctx.fillStyle = isActive ? 'white' : '#fbbf24'
       ctx.font = '9px monospace'
       ctx.textAlign = 'center'
       ctx.fillText(labels[i]!, cx, cy - radius - 4)

@@ -93,7 +93,7 @@ describe('TrackRowFrame', () => {
   })
 
   it('makes the full section divider row draggable when resizing is enabled', () => {
-    render(<TrackSectionDivider onMouseDown={() => undefined} />)
+    render(<TrackSectionDivider onPointerDown={() => undefined} />)
 
     const handle = screen.getByRole('button', { name: 'Resize video and audio track sections' })
 

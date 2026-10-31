@@ -70,7 +70,6 @@ export {
 } from '@/features/timeline/stores/actions/composition-actions'
 export {
   addEffect,
-  addItem,
   addItemOnNewTrack,
   addTransition,
   applyAutoKeyframeOperations,

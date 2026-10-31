@@ -1,6 +1,6 @@
 {
   "agent": {
-    "action": "Агент: {{action}}",
+    "name": "Агент",
     "commands": {
       "click": "нажимает",
       "type": "печатает",
@@ -15,7 +15,62 @@
       "playback": "запускает или ставит на паузу",
       "editor_tab": "открывает вкладку",
       "project_open": "открывает проект",
-      "export_video": "экспортирует видео"
+      "export_video": "экспортирует видео",
+      "checkpoint_create": "сохраняет точку отката",
+      "checkpoint_restore": "возвращает таймлайн к точке отката",
+      "motion_render": "делает клип из HTML-графики",
+      "previs_render": "разводит шот в 3D",
+      "project_create": "создаёт новый проект",
+      "project_update": "меняет проект",
+      "project_delete": "убирает проект в корзину",
+      "project_restore": "возвращает проект из корзины",
+      "project_duplicate": "копирует проект",
+      "media_delete": "убирает медиа из медиатеки",
+      "frame_save": "сохраняет кадр таймлайна",
+      "media_last_frame": "берёт последний кадр видео",
+      "media_cut": "вырезает отрезок видео",
+      "transcribe": "расшифровывает речь",
+      "captions_add": "ставит субтитры на таймлайн",
+      "window_settings_set": "меняет настройки окна",
+      "ui_open_settings": "открывает настройки",
+      "ui_navigate": "открывает страницу",
+      "element_save": "сохраняет элемент",
+      "element_delete": "забывает элемент",
+      "preset_save": "сохраняет пресет промпта",
+      "preset_delete": "забывает пресет промпта",
+      "variables_set": "задаёт переменные промптов",
+      "storyboard_set": "записывает раскадровку",
+      "canvas_set": "записывает холст",
+      "canvas_template": "ставит workflow на холст",
+      "export_fcpxml": "экспортирует FCPXML"
+    },
+    "proposal": {
+      "title": "Агент предлагает правку",
+      "hint": "Перед применением сохранится точка отката.",
+      "accept": "Принять",
+      "decline": "Отклонить",
+      "problem_one": "Пройдёт только {{count}} правка: {{reason}}",
+      "problem_few": "Пройдут только {{count}} правки: {{reason}}",
+      "problem_many": "Пройдут только {{count}} правок: {{reason}}",
+      "problem_other": "Пройдут только {{count}} правки: {{reason}}",
+      "op": {
+        "addClip": "Добавить {{name}} на {{at}} с",
+        "addText": "Добавить текст «{{text}}» на {{at}} с",
+        "moveItem": "Переместить {{name}} на {{at}} с",
+        "removeItems": "Убрать {{names}}",
+        "split": "Разрезать {{name}} на {{at}} с",
+        "trimStartCut": "Отрезать {{seconds}} с от начала {{name}}",
+        "trimStartExtend": "Удлинить начало {{name}} на {{seconds}} с",
+        "trimEndCut": "Отрезать {{seconds}} с от конца {{name}}",
+        "trimEndExtend": "Удлинить конец {{name}} на {{seconds}} с",
+        "other": "{{op}}: {{name}}",
+        "addShape": "Добавить фигуру {{shape}} на {{at}} с",
+        "updateTrack": "Изменить дорожку {{name}}",
+        "removeTrack": "Убрать пустую дорожку {{name}}",
+        "addMarker": "Поставить маркер «{{label}}» на {{at}} с",
+        "updateMarker": "Изменить маркер",
+        "removeMarker": "Убрать маркер"
+      }
     }
   }
 }

@@ -1,94 +1,510 @@
 {
   "generate": {
-    "tabLabel": "Generate",
-    "serverError": "The VideoSOS server did not answer: {{reason}}",
+    "tabLabel": "生成",
+    "serverError": "VideoSOSサーバーが応答しませんでした: {{reason}}",
     "tasks": {
-      "image": "Image",
-      "image_edit": "Edit image",
-      "video": "Video",
-      "video_edit": "Edit video",
-      "lip_sync": "Lip sync",
-      "upscale": "Upscale",
-      "remove_background": "Remove background",
-      "music": "Music",
-      "speech": "Voice",
-      "sound": "Sound effects",
-      "transcribe": "Transcribe",
-      "text": "Text"
+      "image": "画像",
+      "image_edit": "画像を編集",
+      "video": "動画",
+      "video_edit": "動画を編集",
+      "lip_sync": "リップシンク",
+      "upscale": "アップスケール",
+      "remove_background": "背景を削除",
+      "music": "音楽",
+      "speech": "音声",
+      "sound": "効果音",
+      "transcribe": "文字起こし",
+      "text": "テキスト"
     },
     "media": {
-      "image": "an image",
-      "video": "a video",
-      "audio": "audio"
+      "image": "画像",
+      "video": "動画",
+      "audio": "オーディオ"
     },
     "model": {
-      "choose": "Choose a model",
-      "loading": "Reading the models…",
-      "search": "Search models",
-      "all": "All",
-      "refresh": "Read the catalogues again",
-      "none": "No model fits this search.",
-      "new": "new",
-      "deprecated": "retiring"
+      "choose": "モデルを選択",
+      "loading": "モデルを読み込み中…",
+      "search": "モデルを検索",
+      "all": "すべて",
+      "refresh": "カタログを再読み込み",
+      "none": "この検索に合うモデルはありません。",
+      "new": "新着",
+      "deprecated": "終了予定",
+      "typicalTime": "≈ {{time}}（あなたの実行より）",
+      "pin": "上に固定",
+      "unpin": "固定を解除"
     },
     "keys": {
-      "missing": "No key for this provider",
-      "needed": "Add your {{provider}} key to run this model.",
-      "placeholder": "Paste the API key",
-      "save": "Save",
-      "ok": "The key works.",
-      "okBalance": "The key works. Balance: {{balance}}",
-      "failed": "The provider did not accept the key.",
-      "getOne": "Get a {{provider}} key"
+      "missing": "このプロバイダーのキーがありません",
+      "needed": "このモデルを実行するには、{{provider}}のキーを追加してください。",
+      "placeholder": "APIキーを貼り付け",
+      "save": "保存",
+      "ok": "キーは有効です。",
+      "okBalance": "キーは有効です。残高: {{balance}}",
+      "failed": "プロバイダーがキーを受け付けませんでした。",
+      "getOne": "{{provider}}のキーを取得",
+      "spent": "このキーの利用額: {{spent}}。",
+      "balanceAdminOnly": "fal の残高は管理者キーでのみ表示されます。"
     },
     "form": {
-      "loading": "Reading the model's settings…",
-      "more": "More settings ({{count}})",
-      "default": "Model default",
-      "dropHere": "Drop {{kind}} from the library or a result here",
-      "pick": "Pick from the library",
-      "remove": "Remove",
-      "noMedia": "The library has no {{kind}} yet.",
-      "tooMany": "At most {{max}} files here.",
-      "wrongKind": "This slot takes {{kind}}.",
-      "missing": "Fill in: {{fields}}"
+      "loading": "モデルの設定を読み込み中…",
+      "more": "その他の設定({{count}})",
+      "default": "モデルの初期値",
+      "dropHere": "ライブラリまたは生成結果から{{kind}}をここにドロップ",
+      "pick": "ライブラリから選択",
+      "remove": "削除",
+      "noMedia": "ライブラリにはまだ{{kind}}がありません。",
+      "tooMany": "ここには最大{{max}}ファイルまで追加できます。",
+      "wrongKind": "このスロットには{{kind}}を指定します。",
+      "missing": "入力してください: {{fields}}",
+      "length": "{{count}} / {{max}}",
+      "tooLong": "{{count}} / {{max}} ― モデルが受け付ける長さを超えています",
+      "shorten": "「{{field}}」を短くしてください：{{count}}文字（モデルが受け付けるのは最大{{max}}文字）",
+      "atSecond": "フレーム{{n}}の秒",
+      "atFrame": "フレーム{{n}}の番号",
+      "atAuto": "自動",
+      "atSecondHint": "各フレームの下に配置する秒（{{max}}まで）。空欄ならモデルが自動で配置します。",
+      "atFrameHint": "各フレームの下に動画内のフレーム番号（-1は最後）。空欄ならモデルが自動で配置します。",
+      "searchOptions": "検索…",
+      "noOptions": "見つかりません"
     },
-    "placeOnTimeline": "Put on the timeline",
-    "repeat": "Runs",
-    "repeatHint": "How many times to run it; each run is a separate result and is paid separately",
-    "submit": "Generate",
+    "placeOnTimeline": "タイムラインに配置",
+    "repeat": "実行回数",
+    "repeatHint": "実行する回数です。各実行は別々の結果になり、料金も別々に発生します",
+    "submit": "生成",
     "cost": {
-      "unknown": "price after the run",
-      "estimated": "Worked out before the run",
-      "billed": "As the provider billed it",
-      "failed": "Price unknown: {{reason}}"
+      "unknown": "価格は実行後に確定",
+      "estimated": "実行前に算出",
+      "billed": "プロバイダーの請求額",
+      "failed": "価格不明: {{reason}}"
     },
-    "history": "Generations ({{count}})",
+    "history": "生成履歴({{count}})",
     "status": {
-      "queued": "waiting",
-      "sending": "sending",
-      "running": "working",
-      "done": "done",
-      "failed": "failed",
-      "cancelled": "cancelled"
+      "queued": "待機中",
+      "sending": "送信中",
+      "running": "処理中",
+      "done": "完了",
+      "failed": "失敗",
+      "cancelled": "キャンセル済み"
     },
     "actions": {
-      "cancel": "Cancel",
-      "place": "To timeline",
-      "placeHint": "Put the result at the playhead",
-      "copy": "Copy",
-      "placeText": "As text",
-      "reuse": "Edit",
-      "reuseHint": "Load this run's model and settings into the form",
-      "again": "Again",
-      "forgetHint": "Remove from the list and delete its files (media already in the library stays)"
+      "cancel": "キャンセル",
+      "place": "タイムラインへ",
+      "placeHint": "結果を再生ヘッドの位置に配置します",
+      "copy": "コピー",
+      "placeText": "テキストとして",
+      "reuse": "編集",
+      "reuseHint": "この実行のモデルと設定をフォームに読み込みます",
+      "again": "もう一度",
+      "forgetHint": "リストから削除し、ファイルも削除します(ライブラリにすでにあるメディアは残ります)",
+      "like": "この結果をお気に入りに：最良のテイクとして、この並び順で先頭に表示されます",
+      "unlike": "お気に入りを外す"
     },
-    "importFailed": "The result arrived but was not added to the library: {{reason}}",
+    "importFailed": "結果は届きましたが、ライブラリに追加できませんでした: {{reason}}",
     "improve": {
-      "button": "Improve prompt",
-      "hint": "Rewrite the prompt for this model with an OpenRouter LLM (a fraction of a cent)",
-      "needsKey": "Needs an OpenRouter key",
-      "undo": "Back to mine"
-    }
+      "button": "プロンプトを改善",
+      "hint": {
+        "openrouter": "OpenRouterのLLMでこのモデル向けにプロンプトを書き直します(1セントにも満たない料金)",
+        "agent": "このモデル向けにプロンプトを書き直す：接続中のエージェントが書きます（無料）"
+      },
+      "needsKey": "OpenRouterのキーが必要です",
+      "undo": "自分の入力に戻す",
+      "noAgent": "エージェントが接続されていません：VideoSOS の MCP で起動するか（設定 > エージェント）、そこで OpenRouter を選んでください"
+    },
+    "use": {
+      "button": "次として使用…",
+      "videoFromFrame": "このフレームから動画を作成",
+      "edit": "画像を編集",
+      "upscale": "アップスケール",
+      "removeBackground": "背景を削除",
+      "lipSync": "この顔をリップシンク",
+      "continue": "最後のフレームから続ける",
+      "editVideo": "動画を編集",
+      "sound": "この動画にサウンドを追加",
+      "lipSyncVoice": "この音声でリップシンク",
+      "transcribe": "文字起こし",
+      "needsProject": "先にプロジェクトを開いてください。フレームはそのメディアライブラリに追加されます。",
+      "noSlot": "{{model}}はこの種類のファイルを受け付けません。このタスクの別のモデルを選択してください。",
+      "noPrompt": "{{model}} にはテキスト欄がありません。このタスクの別のモデルを選んでください。",
+      "placed": "「{{field}}」に配置しました",
+      "lastFrameName": "{{title}}、最後のフレーム"
+    },
+    "compare": {
+      "pick": "比較",
+      "button": "比較({{count}})",
+      "title": "並べて表示",
+      "play": "同時再生",
+      "pause": "一時停止"
+    },
+    "stats": {
+      "button": "プロジェクトの支出",
+      "title": "このプロジェクトの支出内訳",
+      "total": "合計{{total}}、本日{{today}}",
+      "empty": "このプロジェクトではまだ何も生成されていません。",
+      "byTask": "タスク別",
+      "byProvider": "プロバイダー別",
+      "byModel": "モデル別",
+      "other": "その他",
+      "files": "プロジェクトのファイル: {{count}} — 生成 {{generated}}、追加 {{added}}"
+    },
+    "filter": {
+      "search": "キーワードまたはモデルで検索",
+      "task": "タスク",
+      "status": "状態",
+      "allTasks": "すべてのタスク",
+      "allStates": "すべての状態",
+      "nothing": "一致する生成はありません。"
+    },
+    "zoom": {
+      "title": "画像",
+      "open": "原寸で開く",
+      "in": "拡大",
+      "out": "縮小",
+      "fit": "ウィンドウに合わせる",
+      "close": "閉じる"
+    },
+    "sort": {
+      "label": "並べ替え：{{order}}",
+      "title": "並べ替え",
+      "newest": "新しい順",
+      "oldest": "古い順",
+      "costliest": "高い順",
+      "cheapest": "安い順",
+      "liked": "お気に入りを先に"
+    },
+    "fields": {
+      "prompt": "プロンプト",
+      "positive_prompt": "プロンプト",
+      "negative_prompt": "ネガティブプロンプト",
+      "aspect_ratio": "アスペクト比",
+      "resolution": "解像度",
+      "input_references": "参照画像",
+      "seed": "シード",
+      "output_format": "出力形式",
+      "output_quality": "出力品質",
+      "duration": "長さ（秒）",
+      "number_results": "結果の数",
+      "num_images": "画像の数",
+      "size": "サイズ",
+      "image_size": "画像サイズ",
+      "num_inference_steps": "ステップ数",
+      "steps": "ステップ数",
+      "guidance_scale": "プロンプトへの忠実度 (CFG)",
+      "cfg_scale": "プロンプトへの忠実度 (CFG)",
+      "strength": "強さ",
+      "acceleration": "高速化",
+      "system": "指示",
+      "temperature": "温度",
+      "frame_first": "最初のフレーム",
+      "frame_last": "最後のフレーム",
+      "background": "背景",
+      "input_audio": "音声",
+      "language": "言語",
+      "input": "テキスト",
+      "text": "テキスト",
+      "voice": "声",
+      "instructions": "読み方",
+      "speed": "速さ",
+      "image": "画像",
+      "frame_images": "フレーム",
+      "seed_image": "元画像",
+      "mask_image": "マスク",
+      "generate_audio": "音を生成",
+      "enable_audio": "音を生成"
+    },
+    "historyTitle": "生成履歴",
+    "details": {
+      "title": "詳細",
+      "model": "モデル",
+      "took": "所要時間",
+      "seconds": "{{count}} 秒",
+      "job": "ジョブ",
+      "media": "プロジェクトのメディア",
+      "result": "以前の結果"
+    },
+    "providerWords": {
+      "billed_by_video_tokens_the_price_is_known_after_the_run": "動画トークン単位で課金。価格は実行後に確定します",
+      "billed_by_tokens_the_price_is_known_after_the_run": "トークン単位で課金。価格は実行後に確定します",
+      "billed_by_the_length_of_the_recording": "録音の長さに応じて課金",
+      "how_the_model_should_answer": "モデルの応答のしかた",
+      "iso_code_for_example_ru_or_en_empty_to_detect": "ISOコード(例: ruまたはen)。空欄の場合は自動検出",
+      "tone_pace_and_emotion_in_words": "トーン、テンポ、感情を言葉で指定します。"
+    },
+    "jobError": {
+      "no_key": "{{provider}}のキーがありません",
+      "catalog": "プロバイダーのモデルを読み込めませんでした",
+      "invalid": "フォームの値がモデルに適合しません",
+      "refused": "プロバイダーがリクエストを拒否しました",
+      "busy": "プロバイダーがビジー状態です。ジョブは送信されていません。もう一度送信してください",
+      "network": "プロバイダーに接続できません",
+      "provider_failed": "プロバイダーがジョブを実行できませんでした",
+      "lost_contact": "プロバイダーとの接続が失われました",
+      "too_long": "ジョブの実行時間が長すぎました",
+      "download_failed": "結果をダウンロードできませんでした",
+      "storage": "結果をディスクに書き込めませんでした",
+      "interrupted": "ジョブの送信中にVideoSOSが終了しました",
+      "details": "エラーの内容",
+      "openKeys": "キーを開く"
+    },
+    "placeholder": "生成中、{{model}}：{{state}}",
+    "rate": {
+      "second": "1秒あたり{{price}}",
+      "characters": "1000文字あたり{{price}}",
+      "tokens": "100万トークンあたり{{input}} / {{output}}"
+    },
+    "describe": {
+      "button": "画像からプロンプト",
+      "hint": {
+        "openrouter": "モデルがフォームの最初の画像を見て、それを生成できるプロンプトを書きます。料金はOpenRouterキーで支払われます。",
+        "agent": "接続中のエージェントがフォームの最初の画像を見て、それを生み出すプロンプトを書きます（無料）"
+      }
+    },
+    "presets": {
+      "button": "プリセット",
+      "hint": "保存したプロンプト：フィールドに入れるか、現在のものを保存します",
+      "empty": "保存したプロンプトはまだありません。現在のものに名前を付けて保存してください。",
+      "name": "プリセット名",
+      "keep": "保存",
+      "keepHint": "フィールドのテキストをこの名前で保存",
+      "remove": "プリセット「{{name}}」を削除"
+    },
+    "elements": {
+      "button": "エレメント",
+      "hint": "画像付きのキャラクター・オブジェクト・場所：プロンプト内の「@名前」で画像がモデルに送られます",
+      "empty": "キャラクター、オブジェクト、場所を保存します：画像をフォームの画像フィールドに入れて、名前を付けてください。プロンプトでは @名前 で呼び出します。",
+      "use": "@{{name}}をプロンプトに入れる",
+      "pictures_one": "画像{{count}}枚",
+      "pictures_other": "画像{{count}}枚",
+      "remove": "@{{name}}を削除",
+      "name": "名前（1語）",
+      "keep": "保存",
+      "keepHint": "フォーム内の画像：{{count}}枚。この名前で保存されます",
+      "noPictures": "先に画像をフォームに入れてください",
+      "badName": "1語のみ：文字、数字、_ と -",
+      "left": "{{names}}：このモデルには画像を入れる場所がないため、言葉で送られます"
+    },
+    "variables": {
+      "title": "プロンプト変数",
+      "missing": "変数を入力してください：{{names}}"
+    },
+    "batch": {
+      "add": "別のモデルと比較",
+      "remove": "バッチからモデルを外す",
+      "lacks": "不足：{{fields}}",
+      "noKey": "{{provider}}のキーがありません"
+    },
+    "segment": {
+      "cutting": "クリップの{{from}}–{{to}}秒を切り出し中…",
+      "ready": "区間を「動画を編集」にソースとして入れました：変更したい内容を指示してください",
+      "failed": "区間を切り出せませんでした：{{reason}}",
+      "noFile": "{{name}}のファイルがメディアライブラリにありません",
+      "name": "{{title}}、{{from}}–{{to}}秒"
+    },
+    "storyboard": {
+      "tabLabel": "ストーリーボード",
+      "noProject": "プロジェクトを開いてください。ストーリーボードはプロジェクトと一緒に保存されます。",
+      "script": "脚本またはアイデア",
+      "scriptHint": "何が起こるかを、シーンごとまたは一文で。@エレメント名でその画像が加わります。",
+      "count": "ショット数",
+      "split": "ショットに分割",
+      "splitHint": {
+        "openrouter": "ショットはOpenRouterの言語モデルが書きます。「プロンプトを改善」と同じく有料です",
+        "agent": "ショットは接続中のエージェントが書きます（無料）"
+      },
+      "frameModel": "フレームの生成元",
+      "clipModel": "クリップの生成元",
+      "shots": "ショット",
+      "shot": "ショット{{number}}",
+      "seconds": "秒",
+      "remove": "ショット{{number}}を削除",
+      "frame": "フレーム",
+      "frameAgain": "フレームを再生成",
+      "clip": "クリップ",
+      "clipNeedsFrame": "このモデルはフレームからクリップを始めます：先にフレームを作ってください",
+      "frameDone": "フレーム完了",
+      "clipDone": "タイムライン上のクリップ",
+      "frameFailed": "フレームに失敗しました：{{reason}}",
+      "clipFailed": "クリップに失敗しました：{{reason}}",
+      "add": "ショットを追加",
+      "allFrames_one": "{{count}}ショット分のフレーム",
+      "allFrames_other": "{{count}}ショット分のフレーム",
+      "allClips_one": "{{count}}ショット分のクリップをタイムラインへ",
+      "allClips_other": "{{count}}ショット分のクリップをタイムラインへ",
+      "allClipsHint": "クリップは再生ヘッドの位置から順に並びます"
+    },
+    "canvas": {
+      "prompt": "テキスト",
+      "media": "画像または動画",
+      "generate": "生成",
+      "promptHint": "作りたい内容。接続した生成のプロンプトに入ります。",
+      "mediaHint": "ライブラリのファイルまたは結果をここにドロップします。",
+      "remove": "ノードを削除",
+      "task": "タスク",
+      "run": "実行",
+      "runAgain": "もう一度実行",
+      "waiting_one": "前の{{count}}個のノードを待機中",
+      "waiting_other": "前の{{count}}個のノードを待機中",
+      "noRoom_one": "{{count}}個のファイルはこのモデルに入れる枠がありません",
+      "noRoom_other": "{{count}}個のファイルはこのモデルに入れる枠がありません",
+      "empty": "テキスト、画像、生成を追加して接続します。テキストはプロンプトへ、ファイルはモデルの入力枠へ。ライブラリからファイルをキャンバスにドラッグできます。",
+      "input": {
+        "prompt": "プロンプト",
+        "media": "ファイル"
+      },
+      "workflow": {
+        "templates": "テンプレート",
+        "save": "ワークフローを保存",
+        "open": "ワークフローを開く",
+        "failed": "ワークフローを開けませんでした: {{reason}}",
+        "template": {
+          "frameToVideo": {
+            "name": "フレームから動画へ",
+            "about": "プロンプトで画像を作り、その画像から専用のモーションプロンプトで動画を始めます。",
+            "prompts": {
+              "idea": "夕暮れの崖の上に立つ灯台、足元で砕ける波、窓にともる暖かい明かり",
+              "motion": "ゆっくりと寄っていく、灯台の光が海を横切って走る"
+            }
+          },
+          "compareImages": {
+            "name": "画像モデルを比較",
+            "about": "1つのプロンプトを3つの画像モデルに並べて入力します。パネルのモデルと比較用のモデルは設定済みです。",
+            "prompts": {
+              "idea": "黄色いレインコートを着た年老いた漁師のポートレート、曇り空のやわらかい光、85mm"
+            }
+          },
+          "promptWriter": {
+            "name": "プロンプトライター",
+            "about": "言語モデルがアイデアからプロンプトを書き、画像モデルがそれを描きます。",
+            "prompts": {
+              "idea": "画像モデル向けに鮮やかなプロンプトを1つ書いてください。雨の夜の東京にある居心地のいいラーメン店。プロンプトのみで答えてください。"
+            }
+          },
+          "productShot": {
+            "name": "商品ショット",
+            "about": "商品写真: 背景を除去し、編集モデルで新しいシーンに配置してから、アップスケールします。",
+            "prompts": {
+              "scene": "商品を朝日の差す大理石のテーブルに置く、やわらかい影、浅い被写界深度"
+            }
+          },
+          "talkingHead": {
+            "name": "トーキングヘッド",
+            "about": "声で読み上げたテキストを、ライブラリの顔に話させます。",
+            "prompts": {
+              "words": "こんにちは。今日は動画をもっと速く編集するための3つのコツを紹介します。"
+            }
+          },
+          "soundtrack": {
+            "name": "音楽と効果音",
+            "about": "2つのプロンプトから、1曲の音楽と1つの効果音を作ります。",
+            "prompts": {
+              "mood": "穏やかなアンビエントピアノとやわらかな弦、ゆっくりしたテンポ、希望に満ちた雰囲気",
+              "effect": "小石の浜辺に寄せる波、遠くにカモメの声"
+            }
+          }
+        }
+      }
+    },
+    "motion": {
+      "tabLabel": "HTMLグラフィックス",
+      "hint": "HTMLとCSSで書いたタイトル、ローワーサード、カウンター、バッジ。アニメーションは自動で動き、クリップは下の動画の上で透明を保ちます。",
+      "templates": {
+        "title": "タイトル",
+        "lowerThird": "ローワーサード",
+        "counter": "カウンター",
+        "badge": "バッジ"
+      },
+      "preview": "プレビュー",
+      "code": "HTMLとCSS",
+      "seconds": "秒",
+      "make": "再生ヘッドの位置にクリップを作成",
+      "rendering": "フレームを描画中… {{percent}}%",
+      "done": "「{{name}}」をライブラリと再生ヘッドの位置に追加しました",
+      "failed": "クリップを作成できませんでした: {{reason}}",
+      "made": "作成済み",
+      "edit": "コードを開く",
+      "defaultName": "HTMLグラフィックス"
+    },
+    "previs": {
+      "tabLabel": "3Dブロッキング",
+      "hint": {
+        "openrouter": "料金をかける前にショットを3Dでブロッキングします。場所、誰がどこへ動くか、カメラの動きを書くと、プロンプトモデルが仮の形状とカメラパスを作ります(約2セント)。カメラ越し、真上、周囲から確認し、そのフレームを動画または画像モデルに渡すか、カメラの動きを録画します。",
+        "agent": "生成にお金を払う前にシーンを3Dで配置しましょう。場所、誰がどこへ動くか、カメラの動きを書くと、接続中のエージェントが無料で仮の形とカメラの経路を組み立てます。カメラ越し、上から、周りから確認し、そのフレームを動画・画像モデルに渡すか、カメラの動きを記録してください。"
+      },
+      "description": "ショット",
+      "placeholder": "女性が狭い廊下をドアに向かって歩く。カメラは後ろからついていき、彼女が立ち止まると回り込んで正面を向く。6秒、35mm、最後は50mm。",
+      "build": "ブロッキングを作成",
+      "change": "現在のものを文章で変更",
+      "building": "ブロッキングを作成中…",
+      "example": "例から始める",
+      "failed": "できませんでした: {{reason}}",
+      "views": "表示",
+      "view": {
+        "camera": "カメラ",
+        "top": "真上",
+        "orbit": "周囲"
+      },
+      "play": "再生",
+      "pause": "一時停止",
+      "time": "ショットの時点",
+      "toVideo": "フレーム → 動画の最初のフレーム",
+      "toPicture": "フレーム → 画像の参照",
+      "video": "カメラの動きを録画",
+      "recording": "録画中… {{percent}}%",
+      "videoDone": "「{{name}}」をメディアライブラリに追加しました。",
+      "frameName": "{{title}}、ブロッキングのフレーム",
+      "videoName": "{{title}}、ブロッキング",
+      "json": "シーンをJSONで表示",
+      "apply": "適用",
+      "badJson": "テキストはJSONではありません: {{reason}}",
+      "noView": "3D ビューを開始できませんでした。このウィンドウはグラフィックカードから WebGL を取得できませんでした。"
+    },
+    "forever": {
+      "slide": "スライドして無限に生成",
+      "hint": "実行中が2件未満の間、同じ実行を新しいシードで送り続けます。停止するか失敗するまで続きます。実行ごとに料金がかかります。",
+      "stop": "停止",
+      "counter_other": " · {{count}} 回 · {{spent}}"
+    },
+    "local": {
+      "intro": "これらのモデルは stable-diffusion.cpp でこのコンピューター上で動作します。キーも料金も不要です。各モデルは一度だけダウンロードし、ファイルはリビジョンに固定され SHA-256 で検証されます。",
+      "device": "デバイス",
+      "devices": {
+        "auto": "自動",
+        "cuda": "CUDA（NVIDIA）",
+        "vulkan": "Vulkan",
+        "cpu": "プロセッサー"
+      },
+      "inUse": "使用中: {{device}} · {{gpu}}",
+      "noEngine": "エンジン未ダウンロード — {{device}} が必要です",
+      "engine": "{{device}} エンジン · {{size}}",
+      "unload": "{{model}} をメモリから解放",
+      "task": {
+        "image": "画像",
+        "video": "音声付き動画"
+      },
+      "installed": "ダウンロード済み",
+      "notInstalled": "未ダウンロード",
+      "accelerators": "高速化: {{list}}",
+      "studios": "このコンピューターのスタジオ",
+      "studiosHint": "起動中のYuE2、MiniMax Music3、ACE-Step Studioは「音楽」モデルとしてここから曲を作り、Speech Studioはエンジンごとに「音声」モデルとしてテキストを読み上げます。作業はスタジオに残り、コピーがここに届きます。",
+      "studioRunning": "起動中 — 「音楽」で使用可",
+      "studioOff": "未起動",
+      "download": "ダウンロード · {{size}}",
+      "downloadNamed": "{{model}} をダウンロード · {{size}}",
+      "removeNamed": "{{model}} を削除",
+      "remove": "削除",
+      "downloading": "{{done}} / {{total}} · {{file}}",
+      "takenFrom": "{{app}} から取得",
+      "notDownloaded": "{{model}} はまだダウンロードされていません: {{size}}。",
+      "engineToo": "お使いのグラフィックカード用エンジンも一緒にダウンロードされます。",
+      "unsupported": "ローカル生成は現在 Windows でのみ利用できます。"
+    },
+    "takes": {
+      "title": "テイク ({{count}})",
+      "take": "テイク {{n}}",
+      "inClip": "クリップに使用中",
+      "use": "使う",
+      "useHint": "このテイクをクリップの位置に置く"
+    },
+    "speechTrimFailed": "ナレーションはそのまま配置しました：無音部分を読み取れませんでした（{{reason}}）"
   }
 }

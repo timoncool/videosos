@@ -15,8 +15,8 @@ function createRuntime(
     id: 'runtime-1',
     feature: 'whisper',
     featureLabel: 'Whisper',
-    modelKey: 'whisper-tiny',
-    modelLabel: 'Tiny',
+    modelKey: 'whisper-large',
+    modelLabel: 'Whisper Large v3 Turbo · Q8',
     backend: 'webgpu',
     state: 'ready',
     estimatedBytes: 256 * 1024 * 1024,
@@ -47,7 +47,7 @@ describe('local-inference types', () => {
       loadingFromCache: false,
       loadedBytes: 0,
       backendLabel: 'WEBGPU',
-      primaryLabel: 'Whisper Tiny',
+      primaryLabel: 'Whisper Large v3 Turbo · Q8',
       unloadableCount: 1,
     })
   })

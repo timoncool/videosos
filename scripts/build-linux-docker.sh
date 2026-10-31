@@ -1,0 +1,67 @@
+#!/bin/bash
+# The Linux x86-64 .deb and AppImage, built on this machine in an Ubuntu 22.04 container (glibc 2.35, so they run
+# there and on anything newer; Docker under WSL on Windows) from the committed HEAD, as Dub Studio builds its own.
+#   scripts/build-linux-docker.sh <output folder> [cache folder]
+# The AppImage is signed for the updater with ~/.tauri/videosos-updater.key and its .password beside it
+# (VIDEOSOS_KEY_FILE overrides the path), mounted read-only; they never go into the output folder.
+# The cache keeps Rust, Node and the cargo target between runs; CARGO_BUILD_JOBS, when set, caps the compile jobs. With VIDEOSOS_SOURCE_READY=1 the committed tree is
+# taken from <output folder>/.source.tar and .source-commit, made beforehand (on Windows: git archive HEAD -o ...),
+# for a worktree whose git folder WSL cannot read.
+set -euo pipefail
+
+if [ "${1:-}" = "--inside" ]; then
+  export DEBIAN_FRONTEND=noninteractive APPIMAGE_EXTRACT_AND_RUN=1 RUSTUP_TOOLCHAIN=stable CARGO_TERM_COLOR=never
+  export CARGO_HOME=/cache/cargo RUSTUP_HOME=/cache/rustup npm_config_cache=/cache/npm PATH=/cache/cargo/bin:/cache/node/bin:$PATH
+  echo "[..] packages"
+  apt-get update -q >/dev/null
+  apt-get install -y -q --no-install-recommends build-essential pkg-config curl ca-certificates git unzip xz-utils \
+    libssl-dev libasound2-dev libwayland-dev libxkbcommon-dev libgtk-3-dev \
+    libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libdbus-1-dev libxdo-dev patchelf file libfuse2 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-libav >/dev/null
+  if [ ! -x /cache/node/bin/node ]; then
+    echo "[..] node 24"
+    v=$(curl -s https://nodejs.org/dist/latest-v24.x/ | grep -o 'node-v24[0-9.]*-linux-x64.tar.xz' | head -1)
+    mkdir -p /cache/node && curl -sL "https://nodejs.org/dist/latest-v24.x/$v" | tar -xJ -C /cache/node --strip-components=1
+  fi
+  if [ ! -x /cache/cargo/bin/cargo ]; then
+    echo "[..] rust stable"
+    curl -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain stable >/dev/null
+  fi
+  echo "[..] source $(cat /out/.source-commit)"
+  rm -rf /cache/src && mkdir -p /cache/src
+  tar -xf /out/.source.tar -C /cache/src
+  cd /cache/src
+  export CARGO_TARGET_DIR=/cache/target
+  mkdir -p desktop/src-tauri
+  ln -sfn /cache/target desktop/src-tauri/target
+  echo "[..] build (log: build.log)"
+  TAURI_SIGNING_PRIVATE_KEY="$(cat /keys/updater.key)" TAURI_SIGNING_PRIVATE_KEY_PASSWORD="$(cat /keys/updater.key.password)" \
+    bash scripts/build-release-linux.sh > /out/build.log 2>&1 || { echo "[ERROR] build failed"; tail -40 /out/build.log; exit 1; }
+  version="$(node -p "require('./desktop/src-tauri/tauri.conf.json').version")"
+  # the cache keeps the packages of earlier versions: take this version's by name
+  deb="$(find /cache/target/release/bundle/deb -name "*_${version}_amd64.deb" | head -n 1)"
+  appimage="$(find /cache/target/release/bundle/appimage -name "*_${version}_amd64.AppImage" | head -n 1)"
+  [ -f "$deb" ] && [ -f "$appimage" ] || { echo "[ERROR] no ${version} package in the bundle folder"; exit 1; }
+  cp "$deb" "/out/VideoSOS-${version}-linux-amd64.deb"
+  [ -f "$appimage.sig" ] || { echo "[ERROR] the AppImage was not signed for the updater"; exit 1; }
+  cp "$appimage" "/out/VideoSOS-${version}-linux-x86_64.AppImage"
+  cp "$appimage.sig" "/out/VideoSOS-${version}-linux-x86_64.AppImage.sig"
+  ls -la /out/*.deb /out/*.AppImage
+  echo "[OK] VideoSOS ${version} for Linux"
+  exit 0
+fi
+
+out="${1:?output folder}"
+cache="${2:-$HOME/videosos-linux2204-cache}"
+repo="$(cd "$(dirname "$0")/.." && pwd)"
+mkdir -p "$out" "$cache"
+cp "$repo/scripts/build-linux-docker.sh" "$out/.build-linux-docker.sh"
+# the committed tree, taken here: a worktree's git folder is not reachable from inside the container
+if [ "${VIDEOSOS_SOURCE_READY:-}" != "1" ]; then
+  git -C "$repo" archive HEAD -o "$out/.source.tar"
+  git -C "$repo" rev-parse --short HEAD > "$out/.source-commit"
+fi
+[ -s "$out/.source.tar" ] || { echo "[ERROR] no committed tree in $out/.source.tar"; exit 1; }
+key="${VIDEOSOS_KEY_FILE:-$HOME/.tauri/videosos-updater.key}"
+[ -f "$key" ] && [ -f "$key.password" ] || { echo "[ERROR] no updater key: $key and $key.password"; exit 1; }
+docker run --rm ${CARGO_BUILD_JOBS:+-e CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS} -v "$(cd "$out" && pwd):/out" -v "$cache:/cache" -v "$key:/keys/updater.key:ro" -v "$key.password:/keys/updater.key.password:ro" \
+  ubuntu:22.04 bash /out/.build-linux-docker.sh --inside

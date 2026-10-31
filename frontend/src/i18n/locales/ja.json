@@ -37,11 +37,12 @@
   "toolbar": {
     "ariaLabel": "エディターツールバー",
     "workspaces": {
-      "motion": "Motion",
+      "motion": "モーション",
       "label": "ワークスペース",
       "edit": "編集",
       "color": "カラー",
-      "animate": "アニメート"
+      "animate": "アニメート",
+      "canvas": "キャンバス"
     },
     "backToProjects": "プロジェクトに戻る",
     "backToProjectsAria": "プロジェクトに戻る",
@@ -60,7 +61,8 @@
     "saveAria": "プロジェクトを保存",
     "export": "書き出し",
     "exportVideo": "動画を書き出し",
-    "downloadProjectZip": "プロジェクトをダウンロード (.zip)"
+    "downloadProjectZip": "プロジェクトをダウンロード (.zip)",
+    "exportFcpxml": "Final Cut、DaVinci、Premiere用のFCPXML"
   },
   "unsavedChanges": {
     "title": "未保存の変更",
@@ -81,12 +83,12 @@
     "general": {
       "autoSave": "自動保存",
       "interval": "間隔",
-      "intervalMinutes": "{{count}} 分",
       "undoHistoryDepth": "元に戻す履歴の深さ",
       "uiSounds": "インターフェースサウンド",
       "uiSoundVolume": "サウンド音量",
       "uiSoundVoice": "サウンドテーマ",
-      "uiSoundPreview": "プレビュー"
+      "uiSoundPreview": "プレビュー",
+      "minutesUnit": "分"
     },
     "ai": {
       "captionSampleInterval": "字幕のサンプリング間隔",

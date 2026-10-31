@@ -5,7 +5,10 @@ import { TooltipProvider } from '@/components/ui/tooltip'
 import { ErrorBoundary } from '@/components/error-boundary'
 import { WorkspaceGate } from '@/features/workspace-gate/workspace-gate'
 import { router } from '@/app/router'
+import { UrlFetchSyncHost } from '@/features/media-library/components/url-fetch-sync-host'
 import { AgentBridgeHost } from '@/features/agent-bridge/components/agent-bridge-host'
+import { StudioHost } from '@/features/studio/components/studio-host'
+import { SettingsHost } from '@/features/editor/components/settings-host'
 import { FirstRunDialog } from '@/features/first-run/first-run-dialog'
 import { GenerateSyncHost } from '@/features/generate/components/generate-sync-host'
 
@@ -17,6 +20,16 @@ const LazyToaster = lazy(async () => {
 async function showProject(projectId: string | null): Promise<void> {
   if (projectId) await router.navigate({ to: '/editor/$projectId', params: { projectId } })
   else await router.navigate({ to: '/projects' })
+}
+
+async function showPage(page: 'projects' | 'new_project' | 'docs' | 'changelog'): Promise<void> {
+  const to = {
+    projects: '/projects',
+    new_project: '/projects/new',
+    docs: '/docs',
+    changelog: '/changelog',
+  } as const
+  await router.navigate({ to: to[page] })
 }
 
 export function App() {
@@ -73,12 +86,16 @@ export function App() {
   return (
     <ErrorBoundary level="app">
       <TooltipProvider delayDuration={300}>
-        <WorkspaceGate>
-          <RouterProvider router={router} />
-        </WorkspaceGate>
-        <AgentBridgeHost showProject={showProject} />
+        <StudioHost go={(place) => void router.navigate({ to: place })}>
+          <WorkspaceGate>
+            <RouterProvider router={router} />
+          </WorkspaceGate>
+        </StudioHost>
+        <AgentBridgeHost showProject={showProject} showPage={showPage} />
+        <SettingsHost />
         <FirstRunDialog />
         <GenerateSyncHost />
+        <UrlFetchSyncHost />
         <GlobalTooltip />
         {showToaster && (
           <Suspense fallback={null}>

@@ -48,7 +48,7 @@
       "audioQualityMedium": "Orta",
       "audioQualityUltra": "Ultra",
       "cannotEncode": "Seçilen kalitede {{width}}×{{height}} için desteklenen bir kodlayıcı yok.",
-      "codec": "Codec",
+      "codec": "Kodek",
       "codecSupportUnverified": "Codec desteği doğrulanamadı. Dışa aktarma çalışabilir ancak uyumluluk garanti edilmez.",
       "duration": "Süre",
       "embedSubtitles": "Altyazıları göm",
@@ -96,7 +96,41 @@
         "embeddedDescription": "Açılıp kapatılabilir altyazı parçası (WebM/MKV)."
       },
       "subtitles": "Altyazılar",
-      "video": "Video"
+      "video": "Video",
+      "rateControl": "Bit hızı denetimi",
+      "rateControlAuto": "Otomatik (kaynağa göre)",
+      "rateControlCbr": "CBR (sabit bit hızı)",
+      "rateControlVbr": "VBR (değişken bit hızı)",
+      "targetBitrate": "Hedef bit hızı",
+      "useSourceBitrate": "Kaynağı kullan",
+      "smartCopy": "Mümkünse akıllı kopyalama",
+      "smartCopyPath": "Akıllı kopyalama · yeniden kodlama yok",
+      "estimatedSize": "Tahmini {{size}}",
+      "sourceBitrate": "Kaynak {{bitrate}}",
+      "smartCopyStatus": {
+        "eligible": "Kullanılabilir: orijinal medya bayt bayt kopyalanacak.",
+        "disabled": "Devre dışı. Zaman çizelgesi işlenip kodlanacak.",
+        "not-video": "Yalnızca video dışa aktarımlarında kullanılabilir.",
+        "range": "Giriş/çıkış aralığı dışa aktarılırken kullanılamaz.",
+        "timeline-layout": "Ek katman içermeyen tek bir tam kaynak klip gerektirir.",
+        "source-unavailable": "Orijinal kaynak dosyası veya meta verileri kullanılamıyor.",
+        "trimmed-or-retimed": "Kaynak kırpıldığı, bölündüğü, ters çevrildiği veya hızı değiştirildiği için kullanılamaz.",
+        "visual-processing": "Görsel düzenlemeler, altyazılar, geçişler veya anahtar kareler işlenmesi gerektiği için kullanılamaz.",
+        "audio-processing": "Ses veya iz karışımı değiştirildiği için kullanılamaz.",
+        "project-mismatch": "Proje çözünürlüğü veya kare hızı kaynakla eşleşmiyor.",
+        "format-mismatch": "Seçilen biçim veya kodek kaynakla eşleşmiyor."
+      },
+      "loudness": "Ses yüksekliği",
+      "loudnessOption": {
+        "off": "Olduğu gibi bırak",
+        "stream": "−14 LUFS — YouTube, sosyal medya",
+        "podcast": "−16 LUFS — podcast, Apple",
+        "broadcast": "−23 LUFS — yayın (EBU R128)"
+      },
+      "loudnessDescription": {
+        "off": "Ses, karıştırıldığı haliyle, işlenmeden dışa aktarılır.",
+        "on": "Tüm karışım EBU R128'e göre {{lufs}} LUFS'a getirilir ve bir limiter tepeleri −1 dBTP altında tutar. Ses yeniden kodlanır, akıllı kopyalama kapanır."
+      }
     },
     "videoContainer": {
       "mp4": "Geniş uyumluluk, paylaşmak için ideal",
@@ -123,6 +157,8 @@
           "title": "Seçilen biçim kodlanamıyor",
           "detail": "Bu tarayıcı seçilen dışa aktarma ayarlarını kodlayamıyor.",
           "detailWithError": "{{error}}",
+          "containerUnsupported": "Bu tarayıcı {{container}} videoyu kodlayamıyor.",
+          "noCodecs": "Bu tarayıcıda dışa aktarım için video kodlayıcı yok.",
           "fix": "Farklı bir biçim/kodek seçin veya güncel bir Chromium tarayıcı deneyin."
         },
         "audio-export-ready": {
@@ -182,8 +218,30 @@
         "worker-export-ready": {
           "title": "Worker dışa aktarma yolu hazır",
           "detail": "Dışa aktarma worker’ı bu kompozisyonu bilinen bir ana iş parçacığı geri dönüşü olmadan render edebilir."
+        },
+        "smart-copy-ready": {
+          "title": "Akıllı kopyalama hazır",
+          "detail": "Orijinal medya, işleme veya yeniden kodlama olmadan kopyalanacak."
         }
+      },
+      "smartCopyPath": "Akıllı kopyalama yolu"
+    },
+    "fcpxml": {
+      "noProject": "Önce bir proje aç.",
+      "failed": "FCPXML oluşturulamadı: {{reason}}",
+      "left": {
+        "kind": "FCPXML’de yok (karşılığı yok): {{items}}",
+        "file": "FCPXML’de yok (çalışma alanında dosya yok): {{items}}",
+        "speed": "FCPXML’de yok (hız değişti): {{items}}",
+        "transition": "FCPXML'de yok (bağlı klipler arasındaki geçişin orada karşılığı yok; kurgu programında ekleyin): {{items}}"
       }
+    },
+    "validation": {
+      "resolution": "Dışa aktarım boyutu geçersiz.",
+      "frameRate": "Kare hızı 1 ile 120 arasında olmalı.",
+      "audioContainer": "Ses dışa aktarımı yalnızca ses biçimi gerektirir.",
+      "videoContainer": "Video dışa aktarımı bir video biçimi gerektirir.",
+      "codecContainer": "{{codec}} kodeki {{container}} içinde desteklenmiyor."
     }
   }
 }

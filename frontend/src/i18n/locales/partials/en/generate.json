@@ -29,7 +29,10 @@
       "refresh": "Read the catalogues again",
       "none": "No model fits this search.",
       "new": "new",
-      "deprecated": "retiring"
+      "deprecated": "retiring",
+      "typicalTime": "≈ {{time}} on your runs",
+      "pin": "Pin to the top",
+      "unpin": "Unpin"
     },
     "keys": {
       "missing": "No key for this provider",
@@ -39,7 +42,9 @@
       "ok": "The key works.",
       "okBalance": "The key works. Balance: {{balance}}",
       "failed": "The provider did not accept the key.",
-      "getOne": "Get a {{provider}} key"
+      "getOne": "Get a {{provider}} key",
+      "spent": "Spent by this key: {{spent}}.",
+      "balanceAdminOnly": "fal shows the balance only to an admin key."
     },
     "form": {
       "loading": "Reading the model's settings…",
@@ -51,9 +56,20 @@
       "noMedia": "The library has no {{kind}} yet.",
       "tooMany": "At most {{max}} files here.",
       "wrongKind": "This slot takes {{kind}}.",
-      "missing": "Fill in: {{fields}}"
+      "missing": "Fill in: {{fields}}",
+      "length": "{{count}} / {{max}}",
+      "tooLong": "{{count}} / {{max}} - longer than the model takes",
+      "shorten": "Shorten {{field}}: {{count}} characters, the model takes at most {{max}}",
+      "atSecond": "Second of frame {{n}}",
+      "atFrame": "Frame number of frame {{n}}",
+      "atAuto": "auto",
+      "atSecondHint": "Under each frame: the second it stands at, up to {{max}}. Empty — the model spaces the frames itself.",
+      "atFrameHint": "Under each frame: its frame number in the video (-1 is the last). Empty — the model spaces the frames itself.",
+      "searchOptions": "Search…",
+      "noOptions": "Nothing found"
     },
     "placeOnTimeline": "Put on the timeline",
+    "placeholder": "Generating, {{model}}: {{state}}",
     "repeat": "Runs",
     "repeatHint": "How many times to run it; each run is a separate result and is paid separately",
     "submit": "Generate",
@@ -81,14 +97,415 @@
       "reuse": "Edit",
       "reuseHint": "Load this run's model and settings into the form",
       "again": "Again",
-      "forgetHint": "Remove from the list and delete its files (media already in the library stays)"
+      "forgetHint": "Remove from the list and delete its files (media already in the library stays)",
+      "like": "Like this result: the best take, shown first when the history is sorted so",
+      "unlike": "Unlike"
     },
     "importFailed": "The result arrived but was not added to the library: {{reason}}",
     "improve": {
       "button": "Improve prompt",
-      "hint": "Rewrite the prompt for this model with an OpenRouter LLM (a fraction of a cent)",
+      "hint": {
+        "openrouter": "Rewrite the prompt for this model with an OpenRouter LLM (a fraction of a cent)",
+        "agent": "Rewrite the prompt for this model: the connected agent writes it, nothing is paid"
+      },
       "needsKey": "Needs an OpenRouter key",
-      "undo": "Back to mine"
-    }
+      "undo": "Back to mine",
+      "noAgent": "The agent is not connected: start it with VideoSOS's MCP (Settings, Agents), or choose OpenRouter there"
+    },
+    "use": {
+      "button": "Use as…",
+      "videoFromFrame": "Video from this frame",
+      "edit": "Edit the picture",
+      "upscale": "Upscale",
+      "removeBackground": "Remove the background",
+      "lipSync": "Lip sync this face",
+      "continue": "Continue from the last frame",
+      "lastFrameName": "{{title}}, last frame",
+      "editVideo": "Edit the video",
+      "sound": "Sound for this video",
+      "lipSyncVoice": "Lip sync with this voice",
+      "transcribe": "Transcribe",
+      "needsProject": "Open a project first: the frame goes into its media library.",
+      "noSlot": "{{model}} takes no file of this kind: choose another model of this task.",
+      "noPrompt": "{{model}} has no text field: choose another model of this task.",
+      "placed": "Put into \"{{field}}\""
+    },
+    "compare": {
+      "pick": "Compare",
+      "button": "Compare ({{count}})",
+      "title": "Side by side",
+      "play": "Play together",
+      "pause": "Pause"
+    },
+    "stats": {
+      "button": "Project spend",
+      "title": "What this project spent",
+      "total": "In total {{total}}, today {{today}}",
+      "empty": "Nothing has been generated for this project yet.",
+      "byTask": "By task",
+      "byProvider": "By provider",
+      "byModel": "By model",
+      "other": "Other",
+      "files": "Files in the project: {{count}} — {{generated}} generated, {{added}} added"
+    },
+    "filter": {
+      "search": "Find by words or model",
+      "task": "Task",
+      "status": "State",
+      "allTasks": "All tasks",
+      "allStates": "Any state",
+      "nothing": "No generation matches."
+    },
+    "zoom": {
+      "title": "Picture",
+      "open": "Open at full size",
+      "in": "Zoom in",
+      "out": "Zoom out",
+      "fit": "Fit the window",
+      "close": "Close"
+    },
+    "sort": {
+      "label": "Sort: {{order}}",
+      "title": "Sort",
+      "newest": "Newest first",
+      "oldest": "Oldest first",
+      "costliest": "Most expensive",
+      "cheapest": "Cheapest",
+      "liked": "Liked first"
+    },
+    "fields": {
+      "prompt": "Prompt",
+      "positive_prompt": "Prompt",
+      "negative_prompt": "Negative prompt",
+      "aspect_ratio": "Aspect ratio",
+      "resolution": "Resolution",
+      "input_references": "Reference images",
+      "seed": "Seed",
+      "output_format": "Output format",
+      "output_quality": "Output quality",
+      "duration": "Duration, s",
+      "number_results": "Number of results",
+      "num_images": "Number of images",
+      "size": "Size",
+      "image_size": "Image size",
+      "num_inference_steps": "Steps",
+      "steps": "Steps",
+      "guidance_scale": "Guidance (CFG)",
+      "cfg_scale": "Guidance (CFG)",
+      "strength": "Strength",
+      "acceleration": "Acceleration",
+      "system": "Instructions",
+      "temperature": "Temperature",
+      "frame_first": "First frame",
+      "frame_last": "Last frame",
+      "background": "Background",
+      "input_audio": "Audio",
+      "language": "Language",
+      "input": "Text",
+      "text": "Text",
+      "voice": "Voice",
+      "instructions": "How to read it",
+      "speed": "Speed",
+      "image": "Image",
+      "frame_images": "Frames",
+      "seed_image": "Source image",
+      "mask_image": "Mask",
+      "generate_audio": "Generate sound",
+      "enable_audio": "Generate sound"
+    },
+    "historyTitle": "Generations",
+    "details": {
+      "title": "Details",
+      "model": "Model",
+      "took": "Took",
+      "seconds": "{{count}} s",
+      "job": "Job",
+      "media": "media of the project",
+      "result": "an earlier result"
+    },
+    "providerWords": {
+      "billed_by_video_tokens_the_price_is_known_after_the_run": "billed by video tokens; the price is known after the run",
+      "billed_by_tokens_the_price_is_known_after_the_run": "billed by tokens; the price is known after the run",
+      "billed_by_the_length_of_the_recording": "billed by the length of the recording",
+      "how_the_model_should_answer": "How the model should answer",
+      "iso_code_for_example_ru_or_en_empty_to_detect": "ISO code, for example ru or en; empty to detect",
+      "tone_pace_and_emotion_in_words": "Tone, pace and emotion, in words."
+    },
+    "jobError": {
+      "no_key": "No {{provider}} key",
+      "catalog": "The provider's model could not be read",
+      "invalid": "The form's values do not fit the model",
+      "refused": "The provider refused the request",
+      "busy": "The provider is busy - the job was not sent, send it again",
+      "network": "No connection to the provider",
+      "provider_failed": "The provider could not do the job",
+      "lost_contact": "Contact with the provider was lost",
+      "too_long": "The job ran too long",
+      "download_failed": "The result did not download",
+      "storage": "The result was not written to disk",
+      "interrupted": "VideoSOS closed while the job was being sent",
+      "details": "Error text",
+      "openKeys": "Open keys"
+    },
+    "rate": {
+      "second": "{{price}} per second",
+      "characters": "{{price}} per 1000 characters",
+      "tokens": "{{input}} / {{output}} per million tokens"
+    },
+    "describe": {
+      "button": "Prompt from the picture",
+      "hint": {
+        "openrouter": "A model looks at the form's first picture and writes the prompt that would make it. The OpenRouter key pays.",
+        "agent": "The connected agent looks at the form's first picture and writes the prompt that would make it; nothing is paid"
+      }
+    },
+    "presets": {
+      "button": "Presets",
+      "hint": "Kept prompts: put one into the field or keep the current one",
+      "empty": "No kept prompts yet. Name the current one and keep it.",
+      "name": "Preset name",
+      "keep": "Keep",
+      "keepHint": "Keep the field's text under this name",
+      "remove": "Remove the preset \"{{name}}\""
+    },
+    "elements": {
+      "button": "Elements",
+      "hint": "Characters, objects and places kept with their pictures: \"@name\" in the prompt sends the pictures to the model",
+      "empty": "Keep a character, an object or a place: put its pictures into the form's picture fields and give it a name. Name it in the prompt as @name.",
+      "use": "Put @{{name}} into the prompt",
+      "pictures_one": "{{count}} picture",
+      "pictures_other": "{{count}} pictures",
+      "remove": "Remove @{{name}}",
+      "name": "Name, one word",
+      "keep": "Keep",
+      "keepHint": "Pictures in the form: {{count}}; they are kept under this name",
+      "noPictures": "Put its pictures into the form first",
+      "badName": "One word: letters, digits, _ and -",
+      "left": "{{names}}: this model has no room for their pictures, they go as words"
+    },
+    "variables": {
+      "title": "Prompt variables",
+      "missing": "Fill in the variables: {{names}}"
+    },
+    "batch": {
+      "add": "Compare with another model",
+      "remove": "Remove the model from the batch",
+      "lacks": "lacks: {{fields}}",
+      "noKey": "no {{provider}} key"
+    },
+    "segment": {
+      "cutting": "Cutting {{from}}–{{to}} s of the clip…",
+      "ready": "The part is in \"Edit video\" as the source: say what to change in it",
+      "failed": "The part was not cut: {{reason}}",
+      "noFile": "The file of {{name}} is not in the library",
+      "name": "{{title}}, {{from}}–{{to}} s"
+    },
+    "storyboard": {
+      "tabLabel": "Storyboard",
+      "noProject": "Open a project: its storyboard is kept with it.",
+      "script": "Script or idea",
+      "scriptHint": "What happens, scene by scene or in a sentence. @element names bring their pictures.",
+      "count": "Shots",
+      "split": "Split into shots",
+      "splitHint": {
+        "openrouter": "A language model of OpenRouter writes the shots; it is paid like Improve prompt",
+        "agent": "The connected agent writes the shots; nothing is paid"
+      },
+      "frameModel": "Frames from",
+      "clipModel": "Clips from",
+      "shots": "Shots",
+      "shot": "Shot {{number}}",
+      "seconds": "s",
+      "remove": "Remove shot {{number}}",
+      "frame": "Frame",
+      "frameAgain": "Frame again",
+      "clip": "Clip",
+      "clipNeedsFrame": "This model starts a clip on a frame: make the frame first",
+      "frameDone": "frame made",
+      "clipDone": "clip on the timeline",
+      "frameFailed": "The frame failed: {{reason}}",
+      "clipFailed": "The clip failed: {{reason}}",
+      "add": "Add a shot",
+      "allFrames_one": "Frame for {{count}} shot",
+      "allFrames_other": "Frames for {{count}} shots",
+      "allClips_one": "Clip for {{count}} shot onto the timeline",
+      "allClips_other": "Clips for {{count}} shots onto the timeline",
+      "allClipsHint": "The clips land one after another from the playhead"
+    },
+    "canvas": {
+      "prompt": "Text",
+      "media": "Picture or video",
+      "generate": "Generation",
+      "promptHint": "What to make; it goes into the prompt of the generations it is joined to.",
+      "mediaHint": "Drop a file from the library or a result here.",
+      "remove": "Remove the node",
+      "task": "Task",
+      "run": "Run",
+      "runAgain": "Run again",
+      "waiting_one": "Waiting for {{count}} node before it",
+      "waiting_other": "Waiting for {{count}} nodes before it",
+      "noRoom_one": "{{count}} file has no slot in this model",
+      "noRoom_other": "{{count}} files have no slot in this model",
+      "empty": "Add a text, a picture and a generation, and join them: text into the prompt, files into the model's slots. Drag files from the library onto the canvas.",
+      "input": {
+        "prompt": "prompt",
+        "media": "files"
+      },
+      "workflow": {
+        "templates": "Templates",
+        "save": "Save workflow",
+        "open": "Open workflow",
+        "failed": "The workflow did not open: {{reason}}",
+        "template": {
+          "frameToVideo": {
+            "name": "Frame to video",
+            "about": "A prompt makes a picture, the picture starts a video with its own motion prompt.",
+            "prompts": {
+              "idea": "A lighthouse on a cliff at dusk, waves breaking below, warm light in the window",
+              "motion": "Slow push in, the beam of the lighthouse sweeps across the sea"
+            }
+          },
+          "compareImages": {
+            "name": "Compare picture models",
+            "about": "One prompt into three picture models side by side; the panel's model and the compared ones are set.",
+            "prompts": {
+              "idea": "Portrait of an old fisherman in a yellow raincoat, soft overcast light, 85 mm"
+            }
+          },
+          "promptWriter": {
+            "name": "Prompt writer",
+            "about": "A language model writes the prompt from an idea, a picture model draws it.",
+            "prompts": {
+              "idea": "Write one vivid prompt for a picture model: a cozy ramen shop on a rainy night in Tokyo. Answer with the prompt only."
+            }
+          },
+          "productShot": {
+            "name": "Product shot",
+            "about": "A product photo: background removed, placed in a new scene by an edit model, then upscaled.",
+            "prompts": {
+              "scene": "Place the product on a marble table in morning sunlight, soft shadows, shallow depth of field"
+            }
+          },
+          "talkingHead": {
+            "name": "Talking head",
+            "about": "Words read by a voice, and a face from the library made to speak them.",
+            "prompts": {
+              "words": "Hello! Today I will show you three tricks for editing video faster."
+            }
+          },
+          "soundtrack": {
+            "name": "Music and sound",
+            "about": "A piece of music and a sound effect from two prompts.",
+            "prompts": {
+              "mood": "Calm ambient piano with soft strings, slow tempo, hopeful",
+              "effect": "Waves on a pebble beach, gulls in the distance"
+            }
+          }
+        }
+      }
+    },
+    "motion": {
+      "tabLabel": "HTML graphics",
+      "hint": "Titles, lower thirds, counters and badges written in HTML and CSS: the animation runs on its own, and the clip keeps its transparency over the video below.",
+      "templates": {
+        "title": "Title",
+        "lowerThird": "Lower third",
+        "counter": "Counter",
+        "badge": "Badge"
+      },
+      "preview": "Preview",
+      "code": "HTML and CSS",
+      "seconds": "Seconds",
+      "make": "Make a clip at the playhead",
+      "rendering": "Drawing the frames… {{percent}}%",
+      "done": "\"{{name}}\" is in the library and at the playhead",
+      "failed": "The clip was not made: {{reason}}",
+      "made": "Made",
+      "edit": "Open its code",
+      "defaultName": "HTML graphics"
+    },
+    "previs": {
+      "tabLabel": "3D blocking",
+      "hint": {
+        "openrouter": "Block the shot in 3D before paying for it: describe the place, who moves where and how the camera goes; the prompt model builds stand-in shapes and a camera path (about two cents). Look through the camera, from above or around, then give its frame to a video or picture model, or record the camera's move.",
+        "agent": "Stage the scene in 3D before you pay for a generation: describe the place, who goes where and how the camera moves, and the connected agent builds stand-ins and the camera path for free. Look through the camera, from above or around, then hand the frame to a video or image model or record the camera move."
+      },
+      "description": "The shot",
+      "placeholder": "A woman walks down a narrow corridor toward a door; the camera follows behind her, then comes round to face her as she stops. 6 seconds, 35 mm, ending at 50 mm.",
+      "build": "Build the blocking",
+      "change": "Change the current one by the words",
+      "building": "Building the blocking…",
+      "example": "Start from an example",
+      "failed": "Not done: {{reason}}",
+      "views": "View",
+      "view": {
+        "camera": "Camera",
+        "top": "Above",
+        "orbit": "Around"
+      },
+      "play": "Play",
+      "pause": "Pause",
+      "time": "Moment of the shot",
+      "toVideo": "Frame → first frame of a video",
+      "toPicture": "Frame → reference of a picture",
+      "video": "Record the camera's move",
+      "recording": "Recording… {{percent}}%",
+      "videoDone": "“{{name}}” is in the media library.",
+      "frameName": "{{title}}, blocking frame",
+      "videoName": "{{title}}, blocking",
+      "json": "Scene as JSON",
+      "apply": "Apply",
+      "badJson": "The text is not JSON: {{reason}}",
+      "noView": "The 3D view did not start: this window got no WebGL from the graphics card."
+    },
+    "forever": {
+      "slide": "Slide to generate without end",
+      "hint": "Sends the same runs again with new seeds while fewer than two are at work, until you stop it or one fails. Every run is paid.",
+      "stop": "Stop",
+      "counter_one": " · {{count}} run · {{spent}}",
+      "counter_other": " · {{count}} runs · {{spent}}"
+    },
+    "local": {
+      "intro": "These models run on this computer through stable-diffusion.cpp: no keys and no cost. Each model is downloaded once; its files are pinned to a revision and checked by SHA-256.",
+      "device": "Device",
+      "devices": {
+        "auto": "Auto",
+        "cuda": "CUDA (NVIDIA)",
+        "vulkan": "Vulkan",
+        "cpu": "Processor"
+      },
+      "inUse": "In use: {{device}} · {{gpu}}",
+      "noEngine": "No engine downloaded — {{device}} is needed",
+      "engine": "{{device}} engine · {{size}}",
+      "unload": "Free {{model}} from memory",
+      "task": {
+        "image": "pictures",
+        "video": "video with sound"
+      },
+      "installed": "downloaded",
+      "notInstalled": "not downloaded",
+      "accelerators": "Accelerators: {{list}}",
+      "studios": "Studios on this computer",
+      "studiosHint": "YuE2, MiniMax Music3 and ACE-Step Studio, when open, make songs from here as Music models; Speech Studio voices texts as Voice models, one for each of its engines. The work stays in the studio and a copy comes here.",
+      "studioRunning": "open — in Music",
+      "studioOff": "not running",
+      "download": "Download · {{size}}",
+      "downloadNamed": "Download {{model}} · {{size}}",
+      "removeNamed": "Remove {{model}}",
+      "remove": "Remove",
+      "downloading": "{{done}} of {{total}} · {{file}}",
+      "takenFrom": "taken from {{app}}",
+      "notDownloaded": "{{model}} is not downloaded yet: {{size}}.",
+      "engineToo": "The engine for your card comes with it.",
+      "unsupported": "Local generation is available on Windows for now."
+    },
+    "takes": {
+      "title": "Takes ({{count}})",
+      "take": "Take {{n}}",
+      "inClip": "In the clip",
+      "use": "Use",
+      "useHint": "Put this take in the clip's place"
+    },
+    "speechTrimFailed": "The voice-over is placed whole: its silence could not be read ({{reason}})"
   }
 }

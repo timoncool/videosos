@@ -5,7 +5,7 @@
     "slots": {
       "in": "Entrada",
       "out": "Saída",
-      "loop": "Loop"
+      "loop": "Repetição"
     },
     "duration": "Duração",
     "stagger": "Escalonamento",

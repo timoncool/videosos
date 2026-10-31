@@ -136,7 +136,7 @@ function MotionGroupSoloToggle({ track, t, updateLayerTrack }: MotionGroupSoloTo
       type="button"
       onClick={() => updateLayerTrack(track.id, { solo: !track.solo })}
       className={cn(
-        'h-5 w-5 rounded text-[9px] font-bold',
+        'h-5 w-5 rounded text-[11px] font-bold',
         track.solo
           ? 'bg-primary/15 text-primary'
           : 'text-muted-foreground hover:bg-accent hover:text-foreground',
@@ -229,7 +229,7 @@ export function MotionGroupNameCell({
           title={track.name}
         >
           {track.name}
-          <span className="ml-1.5 text-[9px] font-normal text-muted-foreground">
+          <span className="ml-1.5 text-[11px] font-normal text-muted-foreground">
             {t('editor.compose.groupLayerCount', { count: layerCount })}
           </span>
         </button>
@@ -307,7 +307,7 @@ export function MotionGroupLaneCell({
             onPointerUp={spanDrag.end}
             onPointerCancel={spanDrag.cancel}
             className={cn(
-              'absolute top-1/2 h-6 -translate-y-1/2 touch-none rounded-sm border border-timeline-motion-segment/80 bg-timeline-motion-segment/70 px-1 text-left text-[9px] text-foreground',
+              'absolute top-1/2 h-6 -translate-y-1/2 touch-none rounded-sm border border-timeline-motion-segment/80 bg-timeline-motion-segment/70 px-1 text-left text-[11px] text-foreground',
               track.locked
                 ? 'cursor-not-allowed opacity-55'
                 : 'cursor-grab active:cursor-grabbing',

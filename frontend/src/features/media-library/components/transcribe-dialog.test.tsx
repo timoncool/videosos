@@ -5,7 +5,6 @@ import { beforeEach, describe, expect, it, vi } from 'vite-plus/test'
 
 const settingsStoreState = vi.hoisted(() => ({
   defaultWhisperModel: 'whisper-base',
-  defaultWhisperQuantization: 'hybrid',
   defaultWhisperLanguage: '',
 }))
 
@@ -54,7 +53,7 @@ vi.mock('@/shared/utils/whisper-settings', () => ({
     { value: 'auto', label: 'Auto-detect' },
     { value: 'zh', label: 'Chinese' },
   ],
-  WHISPER_QUANTIZATION_OPTIONS: [{ value: 'hybrid', label: 'Hybrid' }],
+  WHISPER_QUANTIZATION_OPTIONS: [{ value: 'q8', label: 'Q8' }],
 }))
 
 vi.mock('@/components/ui/button', () => ({
@@ -199,7 +198,6 @@ describe('TranscribeDialog', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     settingsStoreState.defaultWhisperModel = 'whisper-base'
-    settingsStoreState.defaultWhisperQuantization = 'hybrid'
     settingsStoreState.defaultWhisperLanguage = ''
   })
 
@@ -306,7 +304,6 @@ describe('TranscribeDialog', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Start' }))
     expect(onStart).toHaveBeenCalledWith({
       model: 'parakeet-tdt-v3',
-      quantization: 'hybrid',
       language: '',
     })
   })
@@ -329,9 +326,9 @@ describe('TranscribeDialog', () => {
     )
 
     expect(screen.getByLabelText('Language')).toHaveValue('zh')
-    const modelAndQuantizationSelects = screen.getAllByRole('combobox')
-    expect(modelAndQuantizationSelects).toHaveLength(2)
-    fireEvent.change(modelAndQuantizationSelects[0]!, {
+    const modelSelects = screen.getAllByRole('combobox')
+    expect(modelSelects).toHaveLength(1)
+    fireEvent.change(modelSelects[0]!, {
       target: { value: 'parakeet-tdt-v3' },
     })
 

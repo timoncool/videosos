@@ -106,13 +106,13 @@ function CanvasItem({
   isDragging,
   isDropTarget,
   dragOffset,
-  onMouseDown,
+  onPointerDown,
 }: {
   rect: CanvasItemRect
   isDragging: boolean
   isDropTarget: boolean
   dragOffset: { x: number; y: number } | null
-  onMouseDown: (e: React.MouseEvent) => void
+  onPointerDown: (e: React.MouseEvent) => void
 }) {
   const color = getItemColor(rect.type)
 
@@ -133,7 +133,7 @@ function CanvasItem({
   return (
     <div
       style={style}
-      onMouseDown={onMouseDown}
+      onPointerDown={onPointerDown}
       className={cn(
         'rounded border select-none cursor-grab overflow-hidden',
         'flex items-center justify-center',
@@ -291,11 +291,13 @@ function LayoutCanvas({
       dragStartPos.current = null
     }
 
-    window.addEventListener('mousemove', handleMouseMove)
-    window.addEventListener('mouseup', handleMouseUp)
+    window.addEventListener('pointermove', handleMouseMove)
+    window.addEventListener('pointerup', handleMouseUp)
+    window.addEventListener('pointercancel', handleMouseUp)
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
-      window.removeEventListener('mouseup', handleMouseUp)
+      window.removeEventListener('pointermove', handleMouseMove)
+      window.removeEventListener('pointerup', handleMouseUp)
+      window.removeEventListener('pointercancel', handleMouseUp)
     }
   }, [dragIndex, dropTargetIndex, hitTest, onSwap])
 
@@ -319,7 +321,7 @@ function LayoutCanvas({
           isDragging={dragIndex === i}
           isDropTarget={dropTargetIndex === i}
           dragOffset={dragIndex === i ? dragOffset : null}
-          onMouseDown={(e) => handleItemMouseDown(i, e)}
+          onPointerDown={(e) => handleItemMouseDown(i, e)}
         />
       ))}
       {canvasRects.length === 0 && (

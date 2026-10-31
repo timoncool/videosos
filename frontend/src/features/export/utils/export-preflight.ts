@@ -137,6 +137,9 @@ async function resolveSettingsForPreflight(
   clientSettings?: ClientExportSettings
   codecFallback?: ClientCodec
   error?: string
+  /** A translated reason, for the cases this resolver words itself. */
+  errorKey?: string
+  errorParams?: Record<string, string>
   supportedVideoCodecs?: ClientCodec[]
 }> {
   const exportMode = settings.mode
@@ -147,7 +150,9 @@ async function resolveSettingsForPreflight(
   if (exportMode === 'audio') {
     resolveAudioSettings(clientSettings, settings)
     const validation = validateSettings(clientSettings)
-    return validation.valid ? { clientSettings } : { error: validation.error }
+    return validation.valid
+      ? { clientSettings }
+      : { error: validation.error, errorKey: validation.errorKey, errorParams: validation.errorParams }
   }
 
   if (settings.videoContainer) {
@@ -155,7 +160,8 @@ async function resolveSettingsForPreflight(
   }
 
   const validation = validateSettings(clientSettings)
-  if (!validation.valid) return { error: validation.error }
+  if (!validation.valid)
+    return { error: validation.error, errorKey: validation.errorKey, errorParams: validation.errorParams }
 
   const codecs =
     supportedVideoCodecs ??
@@ -179,12 +185,18 @@ async function resolveSettingsForPreflight(
     const postFallbackValidation = validateSettings(clientSettings)
     return postFallbackValidation.valid
       ? { clientSettings, codecFallback: containerFallback, supportedVideoCodecs: codecs }
-      : { error: postFallbackValidation.error, supportedVideoCodecs: codecs }
+      : {
+          error: postFallbackValidation.error,
+          errorKey: postFallbackValidation.errorKey,
+          errorParams: postFallbackValidation.errorParams,
+          supportedVideoCodecs: codecs,
+        }
   }
 
   if (settings.videoContainer) {
     return {
-      error: `The selected ${settings.videoContainer.toUpperCase()} format is not supported in this browser. Try a different format or codec.`,
+      errorKey: 'export.preflight.checks.video-codec-unavailable.containerUnsupported',
+      errorParams: { container: settings.videoContainer.toUpperCase() },
       supportedVideoCodecs: codecs,
     }
   }
@@ -192,7 +204,7 @@ async function resolveSettingsForPreflight(
   const browserFallback = selectFallbackVideoCodec(codecs)
   if (!browserFallback) {
     return {
-      error: 'No supported video codecs available in this browser',
+      errorKey: 'export.preflight.checks.video-codec-unavailable.noCodecs',
       supportedVideoCodecs: codecs,
     }
   }
@@ -202,7 +214,12 @@ async function resolveSettingsForPreflight(
   const postFallbackValidation = validateSettings(clientSettings)
   return postFallbackValidation.valid
     ? { clientSettings, codecFallback: browserFallback, supportedVideoCodecs: codecs }
-    : { error: postFallbackValidation.error, supportedVideoCodecs: codecs }
+    : {
+          error: postFallbackValidation.error,
+          errorKey: postFallbackValidation.errorKey,
+          errorParams: postFallbackValidation.errorParams,
+          supportedVideoCodecs: codecs,
+        }
 }
 
 async function assessVideoAudioCodec(
@@ -442,10 +459,12 @@ export async function assessExportPreflight({
       id: 'video-codec-unavailable',
       severity: 'error',
       titleKey: 'export.preflight.checks.video-codec-unavailable.title',
-      detailKey: resolved.error
-        ? 'export.preflight.checks.video-codec-unavailable.detailWithError'
-        : 'export.preflight.checks.video-codec-unavailable.detail',
-      detailParams: { error: resolved.error },
+      detailKey:
+        resolved.errorKey ??
+        (resolved.error
+          ? 'export.preflight.checks.video-codec-unavailable.detailWithError'
+          : 'export.preflight.checks.video-codec-unavailable.detail'),
+      detailParams: resolved.errorParams ?? { error: resolved.error },
       fixKey: 'export.preflight.checks.video-codec-unavailable.fix',
     })
 

@@ -63,7 +63,7 @@ function AppliedMotionRow({
     <div className="flex min-w-0 items-center gap-2 rounded-md border border-border/60 bg-background/50 px-2 py-1.5">
       <div className="min-w-0 flex-1">
         <div className="truncate text-[11px] font-medium text-foreground">{label}</div>
-        <div className="truncate text-[10px] text-muted-foreground">{detail}</div>
+        <div className="truncate text-[11px] text-muted-foreground">{detail}</div>
       </div>
       <button
         type="button"
@@ -99,7 +99,7 @@ const AppliedModifierRow = memo(function AppliedModifierRow({
       <Waves className="h-3.5 w-3.5 shrink-0 text-sky-400" />
       <div className="min-w-0 flex-1">
         <div className="truncate text-[11px] font-medium text-foreground">{label}</div>
-        <div className="truncate text-[10px] text-muted-foreground">
+        <div className="truncate text-[11px] text-muted-foreground">
           {t('editor.animateStages.scopeLayer')} · {t('editor.animateStages.liveBadge')}
         </div>
       </div>
@@ -139,7 +139,7 @@ const AppliedModifierRow = memo(function AppliedModifierRow({
           </div>
           <Separator />
           <div className="space-y-1.5">
-            <div className="text-[10px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
+            <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
               {t('timeline.keyframeEditor.parameters')}
             </div>
             {modulator.properties.map((property) => (
@@ -344,14 +344,14 @@ export const AppliedContinuousMotionControls = memo(function AppliedContinuousMo
         className="flex flex-col gap-2 rounded-md border border-border/60 bg-secondary/20 p-2"
       >
         <div className="flex items-center justify-between gap-2">
-          <span className="text-[10px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
             {t('editor.animateStages.appliedTitle')}
           </span>
-          <span className="rounded bg-sky-500/10 px-1.5 py-0.5 text-[9px] font-medium text-sky-400">
+          <span className="rounded bg-sky-500/10 px-1.5 py-0.5 text-[11px] font-medium text-sky-400">
             {t('editor.animateStages.liveBadge')}
           </span>
         </div>
-        <p className="text-[10px] leading-snug text-muted-foreground/70">
+        <p className="text-[11px] leading-snug text-muted-foreground/70">
           {t('editor.animateStages.continuousHint')}
         </p>
         <div className="flex flex-col gap-1">{rows}</div>

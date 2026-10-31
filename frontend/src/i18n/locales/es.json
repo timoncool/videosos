@@ -37,11 +37,12 @@
   "toolbar": {
     "ariaLabel": "Barra de herramientas del editor",
     "workspaces": {
-      "motion": "Motion",
+      "motion": "Movimiento",
       "label": "Espacios de trabajo",
       "edit": "Edición",
       "color": "Color",
-      "animate": "Animación"
+      "animate": "Animación",
+      "canvas": "Lienzo"
     },
     "backToProjects": "Volver a proyectos",
     "backToProjectsAria": "Volver a proyectos",
@@ -60,7 +61,8 @@
     "saveAria": "Guardar proyecto",
     "export": "Exportar",
     "exportVideo": "Exportar vídeo",
-    "downloadProjectZip": "Descargar proyecto (.zip)"
+    "downloadProjectZip": "Descargar proyecto (.zip)",
+    "exportFcpxml": "FCPXML para Final Cut, DaVinci, Premiere"
   },
   "unsavedChanges": {
     "title": "Cambios sin guardar",
@@ -81,12 +83,12 @@
     "general": {
       "autoSave": "Guardado automático",
       "interval": "Intervalo",
-      "intervalMinutes": "{{count}} min",
       "undoHistoryDepth": "Profundidad del historial de deshacer",
       "uiSounds": "Sonidos de interfaz",
       "uiSoundVolume": "Volumen del sonido",
       "uiSoundVoice": "Tema de sonido",
-      "uiSoundPreview": "Vista previa"
+      "uiSoundPreview": "Vista previa",
+      "minutesUnit": "min"
     },
     "ai": {
       "captionSampleInterval": "Intervalo de muestreo de subtítulos",

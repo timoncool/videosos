@@ -400,14 +400,14 @@ function AnalyzeMenu({
         <DropdownMenuItem onClick={() => onRun('missing')} disabled={missingCount === 0}>
           <Sparkles className="mr-2 h-3 w-3" />
           {t('sceneBrowser.analyze.newMedia')}
-          <span className="ml-auto text-[10px] text-muted-foreground">
+          <span className="ml-auto text-[11px] text-muted-foreground">
             {t('sceneBrowser.counts.clip', { count: missingCount })}
           </span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => onRun('all')} disabled={totalAnalyzable === 0}>
           <Wand2 className="mr-2 h-3 w-3" />
           {t('sceneBrowser.analyze.reanalyzeAll')}
-          <span className="ml-auto text-[10px] text-muted-foreground">
+          <span className="ml-auto text-[11px] text-muted-foreground">
             {t('sceneBrowser.counts.clip', { count: totalAnalyzable })}
           </span>
         </DropdownMenuItem>

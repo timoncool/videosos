@@ -65,7 +65,6 @@ const KeyframeIndicator = memo(function KeyframeIndicator({
       aria-label={label}
       aria-pressed={expanded}
       onPointerDown={stopClipIndicatorEvent}
-      onMouseDown={stopClipIndicatorEvent}
       onClick={(event) => {
         stopClipIndicatorEvent(event)
         onToggle?.()
@@ -158,7 +157,6 @@ const ClipLabelIndicators = memo(function ClipLabelIndicators({
           title={t('timeline.clipIndicators.hasMotion')}
           aria-label={t('timeline.clipIndicators.hasMotion')}
           onPointerDown={stopClipIndicatorEvent}
-          onMouseDown={stopClipIndicatorEvent}
           onClick={(event) => {
             stopClipIndicatorEvent(event)
             onMotionOpen?.()

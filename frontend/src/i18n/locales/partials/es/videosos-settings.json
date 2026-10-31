@@ -1,27 +1,67 @@
 {
   "settings": {
     "sections": {
-      "providers": "Providers and agent"
+      "providers": "Proveedores",
+      "agents": "Agentes",
+      "network": "Red",
+      "privacy": "Privacidad",
+      "about": "Acerca de",
+      "providersHint": "Claves de OpenRouter, fal y Runware, y el gasto",
+      "agentsHint": "Dirección MCP y límite diario de los agentes",
+      "generalHint": "Idioma, autoguardado, deshacer, sonidos",
+      "timelineHint": "Ajuste, formas de onda, fotogramas",
+      "aiHint": "Descripciones de escenas y modelos locales",
+      "storageHint": "Proxies y archivos en caché",
+      "networkHint": "Proxy y acceso desde otros equipos",
+      "privacyHint": "Estadísticas anónimas y novedades",
+      "aboutHint": "Versión, enlaces, carpetas, apoyo",
+      "local": "Modelos locales",
+      "localHint": "Generación en este equipo, gratis"
     },
     "providers": {
-      "intro": "VideoSOS generates through your own accounts: add a key of OpenRouter, fal or Runware. Keys stay on this computer and are never shown to agents.",
-      "fromEnv": "from the {{variable}} variable",
-      "stored": "key saved",
-      "none": "no key",
-      "replace": "Paste a new key to replace it",
-      "check": "Check",
-      "remove": "Remove",
-      "spend": "Spent on generations",
-      "spendLine": "Today {{today}}, in total {{total}}",
-      "jobs_one": "{{count}} run",
-      "jobs_other": "{{count}} runs",
-      "agent": "Agent (MCP)",
-      "agentHint": "Connect Claude or another agent: it sees this window, generates and edits the timeline while you watch. In Claude Code run:",
-      "budget": "Daily limit for agents, $",
-      "noLimit": "no limit",
-      "badBudget": "The limit is a number of dollars.",
-      "statistics": "Anonymous statistics",
-      "statisticsHint": "How many generations ran and which models; never prompts, files or keys."
+      "intro": "VideoSOS genera a través de tus propias cuentas: añade una clave de OpenRouter, fal o Runware. Las claves se quedan en este equipo y nunca se muestran a los agentes.",
+      "fromEnv": "de la variable {{variable}}",
+      "stored": "clave guardada",
+      "none": "sin clave",
+      "replace": "Pega una clave nueva para reemplazarla",
+      "check": "Comprobar",
+      "remove": "Quitar",
+      "spend": "Gastado en generaciones",
+      "spendLine": "Hoy {{today}}, en total {{total}}",
+      "jobs_one": "{{count}} ejecución",
+      "jobs_other": "{{count}} ejecuciones",
+      "agentHint": "Al superarlo, VideoSOS rechaza las generaciones de un agente durante el resto del día. Vacío significa sin límite.",
+      "budget": "Límite diario para agentes, $",
+      "noLimit": "sin límite",
+      "badBudget": "El límite es una cantidad en dólares.",
+      "confirmEdits": "Las ediciones del agente en la línea de tiempo esperan mi aprobación",
+      "confirmEditsHint": "Una edición del agente muestra qué cambiará y nada cambia hasta que la aceptes.",
+      "agentAbsent": "Ahora no hay ningún agente conectado: conecta uno (abajo) y pídele que escuche las preguntas de VideoSOS.",
+      "agentConnected": "Hay un agente conectado: llamó hace {{seconds}} s.",
+      "assistant": "Asistente de la ventana",
+      "assistantEngine": {
+        "agent": "Agente (MCP)",
+        "openrouter": "OpenRouter"
+      },
+      "assistantHint": {
+        "agent": "“Mejorar prompt”, “Prompt desde la imagen”, la división del storyboard, “Blocking 3D” y la pestaña “Chat” preguntan al agente conectado a VideoSOS: es un modelo de lenguaje, así que no se paga nada más. Responde mientras escucha (assistant_requests_wait).",
+        "openrouter": "“Mejorar prompt”, “Prompt desde la imagen”, la división del storyboard, “Blocking 3D” y la pestaña “Chat” preguntan a un modelo de OpenRouter, pagado con tu clave."
+      }
+    },
+    "general": {
+      "language": "Idioma de la interfaz",
+      "languageHint": "La ventana y los mensajes del programa.",
+      "autoSaveHint": "Guarda el proyecto abierto solo cada pocos minutos",
+      "undoHistoryDepthHint": "Cuántos pasos puede deshacer",
+      "uiSoundsHint": "Sonidos cortos para clics, resultados y errores",
+      "audioOutput": "Salida de sonido",
+      "audioOutputHint": "Dónde suena la vista previa: el dispositivo del sistema o uno elegido. La lista aparece tras permitir el micrófono, que es cuando el navegador da nombre a los dispositivos.",
+      "audioOutputDefault": "Predeterminado del sistema"
+    },
+    "done": "Listo",
+    "timeline": {
+      "showWaveformsHint": "Dibuja el sonido de los clips de audio en la línea de tiempo",
+      "showFilmstripsHint": "Muestra fotogramas a lo largo de los clips de vídeo"
     }
   }
 }

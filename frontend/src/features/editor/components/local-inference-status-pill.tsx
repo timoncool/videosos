@@ -80,8 +80,8 @@ export function LocalInferenceStatusPill() {
             <Cpu className="h-3.5 w-3.5 text-orange-500" />
           )}
           <div className="min-w-0">
-            <div className="text-[10px] font-medium leading-none">{getStateLabel(summary)}</div>
-            <div className="mt-0.5 truncate text-[9px] text-muted-foreground">
+            <div className="text-[11px] font-medium leading-none">{getStateLabel(summary)}</div>
+            <div className="mt-0.5 truncate text-[11px] text-muted-foreground">
               {detailParts.join(' | ')}
             </div>
           </div>

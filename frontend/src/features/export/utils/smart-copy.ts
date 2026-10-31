@@ -253,6 +253,7 @@ function hasTimelineAudioProcessing(
     itemProcessing ||
     trackProcessing ||
     (context.masterBusDb ?? 0) !== 0 ||
+    context.settings.loudnessLufs !== undefined ||
     hasEqProcessing(context.busAudioEq)
   )
 }

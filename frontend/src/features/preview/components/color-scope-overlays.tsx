@@ -47,7 +47,7 @@ function LumaScopeOverlay({ parade, histogram }: { parade: boolean; histogram: b
             className="absolute left-0 right-0 border-t border-slate-400/18"
             style={{ top }}
           >
-            <span className="absolute left-1 -translate-y-1/2 rounded-sm bg-black/45 px-1 font-mono text-[9px] leading-4 text-slate-300/80">
+            <span className="absolute left-1 -translate-y-1/2 rounded-sm bg-black/45 px-1 font-mono text-[10px] leading-4 text-slate-300/80">
               {level}
             </span>
           </div>
@@ -55,8 +55,8 @@ function LumaScopeOverlay({ parade, histogram }: { parade: boolean; histogram: b
       })}
       {histogram ? (
         <>
-          <div className="absolute bottom-1 left-1 font-mono text-[9px] text-slate-400/80">0</div>
-          <div className="absolute bottom-1 right-1 font-mono text-[9px] text-slate-400/80">
+          <div className="absolute bottom-1 left-1 font-mono text-[10px] text-slate-400/80">0</div>
+          <div className="absolute bottom-1 right-1 font-mono text-[10px] text-slate-400/80">
             255
           </div>
         </>

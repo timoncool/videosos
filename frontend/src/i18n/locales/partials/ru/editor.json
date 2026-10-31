@@ -101,7 +101,14 @@
         "frameRate": "Частота кадров",
         "durationSeconds": "Длительность (секунды)",
         "create": "Создать"
-      }
+      },
+      "controllerLayer": "Нулевой объект",
+      "parentColumn": "Родитель",
+      "shiftToggleAllLayers": "Shift-клик — развернуть или свернуть все слои",
+      "parentPickWhipForLayer": "Привязка к родителю для «{{name}}»",
+      "parentPickWhipHelp": "Перетащите на родительский слой. Shift — привязать позицию, Alt — локальная поза, Ctrl/Cmd-клик — отвязать.",
+      "parentForLayer": "Родитель для «{{name}}»",
+      "nullObjectNonRendering": "Нулевой объект (не отображается)"
     },
     "miniTimeline": {
       "inPoint": "Точка входа",
@@ -365,7 +372,38 @@
       "directionTop": "Вверх",
       "directionBottom": "Вниз",
       "resetParam": "Сбросить: {{label}}",
-      "paramColorAria": "Цвет: {{label}}"
+      "paramColorAria": "Цвет: {{label}}",
+      "params": {
+        "warp": "Искажение",
+        "color": "Цвет",
+        "size": "Размер",
+        "intensity": "Интенсивность",
+        "density": "Плотность",
+        "glow": "Свечение",
+        "blocks": "Блоки",
+        "rgb_split": "Разделение RGB",
+        "block_size": "Размер блока",
+        "spread": "Разброс",
+        "blur": "Размытие",
+        "spin": "Вращение",
+        "scale": "Масштаб",
+        "turbulence": "Турбулентность",
+        "chroma": "Цветность",
+        "swirl": "Закрутка",
+        "shine": "Блеск",
+        "zoom": "Наезд",
+        "vignette": "Виньетка",
+        "warmth": "Теплота",
+        "burn": "Засветка",
+        "grain": "Зерно",
+        "slip": "Сдвиг кадра",
+        "shake": "Тряска",
+        "exposure": "Экспозиция",
+        "gate_width": "Ширина рамки",
+        "roll": "Прокрутка",
+        "dim": "Затемнение",
+        "softness": "Мягкость"
+      }
     },
     "propertiesSidebar": {
       "title": "Свойства",
@@ -376,7 +414,9 @@
       "dockToPreview": "Прикрепить к превью",
       "expandFullColumn": "Развернуть на всю колонку",
       "showPanel": "Показать панель свойств",
-      "clipsSelected": "Выбрано клипов: {{count}}"
+      "clipsSelected": "Выбрано клипов: {{count}}",
+      "layer": "Слой",
+      "composition": "Композиция"
     },
     "markerPanel": {
       "notFound": "Маркер не найден",
@@ -408,7 +448,10 @@
       "switchToFrames": "Переключить на кадры",
       "timecode": "Таймкод",
       "frameRate": "Частота кадров",
-      "totalFrames": "Всего кадров"
+      "totalFrames": "Всего кадров",
+      "composition": "Композиция",
+      "matchProject": "Как в проекте",
+      "matchProjectBackground": "Фон как в проекте"
     },
     "clipPanel": {
       "tabVideo": "Видео",
@@ -417,7 +460,10 @@
       "adjustmentLayerHint": "Эффекты на корректирующих слоях применяются ко всем элементам на дорожках выше.",
       "tabText": "Текст",
       "tabAnimation": "Анимация",
-      "tabShape": "Фигура"
+      "tabShape": "Фигура",
+      "tabProperties": "Свойства",
+      "tabController": "Нулевой объект",
+      "tabAnimate": "Анимация"
     },
     "gifSection": {
       "animation": "Анимация",
@@ -614,14 +660,32 @@
       "background": "Фон",
       "on": "Вкл",
       "off": "Выкл",
-      "padding": "Отступ"
+      "padding": "Отступ",
+      "reveal": "Появление",
+      "revealMode": {
+        "whole": "Целиком",
+        "words": "По словам",
+        "karaoke": "Караоке"
+      },
+      "revealHint": {
+        "whole": "Вся строка сразу",
+        "words": "Слова появляются, как их произносят",
+        "karaoke": "Вся строка, звучащее слово подсвечено"
+      },
+      "highlight": "Подсветка"
     },
     "captionPresets": {
       "netflixHint": "Inter на темной плашке со скруглением, в нижней трети — нейтральный эфирный стиль.",
       "youtubeHint": "Roboto с мягкой тенью, без плашки — в стиле автосубтитров.",
       "boldYellowHint": "Roboto Slab кинематографического желтого цвета с черной тенью — классика эпохи DVD.",
       "outlinedHint": "Manrope с тонким контуром — чистый, современный, без тени.",
-      "tiktokHint": "Акцидентный Anton, крупный и по центру — вирусный стиль вертикальных видео."
+      "tiktokHint": "Акцидентный Anton, крупный и по центру — вирусный стиль вертикальных видео.",
+      "lookMinimalHint": "Чистые луки Dub Studio: простой шрифт на тёмной плашке.",
+      "lookViralHint": "Вирусные луки Dub Studio: жирный шрифт, произносимое слово подсвечено цветом.",
+      "lookKaraokeHint": "Караоке Dub Studio: произносимое слово подсвечивается по ходу речи.",
+      "lookPlayfulHint": "Игривые луки Dub Studio: рукописный шрифт на яркой плашке.",
+      "lookNeonHint": "Неоновые луки Dub Studio: светящийся шрифт без плашки.",
+      "lookFreshHint": "Свежие луки Dub Studio: шрифт с обводкой без плашки."
     },
     "alignment": {
       "left": "Выровнять по левому краю",
@@ -694,7 +758,6 @@
       "shapes": "Фигуры",
       "effects": "Эффекты",
       "transitions": "Переходы",
-      "ai": "ИИ",
       "collapsePanel": "Свернуть панель",
       "expandPanel": "Развернуть панель",
       "keyframeEditor": "Редактор ключевых кадров",
@@ -795,106 +858,31 @@
         "swing": "Раскачивание"
       }
     },
-    "tts": {
-      "seek": "Перейти",
-      "dialogTitle": "Генерация речи из текста",
-      "dialogDescription": "Сгенерируйте речь и вставьте ее в позицию текстового клипа.",
-      "kokoroUnsupported": "WebGPU недоступен в этом браузере. Для Kokoro TTS требуется Chrome 113+, Edge 113+ или Safari 26+.",
-      "mossUnsupported": "Хранилище браузера недоступно. Многоязычный TTS MOSS лучше всего работает в современных версиях браузеров на базе Chromium.",
-      "supertonicUnsupported": "Этот браузер не поддерживает локальную среду выполнения Supertonic TTS. Попробуйте свежую версию Chrome или Edge.",
-      "engine": "Движок",
-      "engineSupportDetails": "Сведения о поддержке движка TTS",
-      "kokoroDescription": "Английские голоса на WebGPU.",
-      "supertonicDescription": "Локальные голоса ONNX на 31 языке через WebGPU или WASM.",
-      "supportedLanguages": "Поддерживаемые языки: {{languages}}.",
-      "kokoroOption": "Kokoro (английский, WebGPU)",
-      "mossOption": "MOSS Nano (20 языков, CPU)",
-      "supertonicOption": "Supertonic 3 (31 язык, локальный ONNX)",
-      "language": "Язык",
-      "autoDetectLanguage": "Автоопределение",
-      "voice": "Голос",
-      "text": "Текст",
-      "textPlaceholder": "Введите текст для озвучивания...",
-      "expressiveTags": "Теги экспрессии",
-      "speed": "Скорость",
-      "progressPreparing": "Подготовка локального TTS...",
-      "insertedAndLinked": "Вставлено и связано",
-      "generate": "Сгенерировать",
-      "generating": "Генерация...",
-      "regenerate": "Сгенерировать заново",
-      "insertAndLink": "Вставить и связать",
-      "inserting": "Вставка...",
-      "errors": {
-        "openProject": "Откройте проект перед генерацией звука.",
-        "enterText": "Введите текст для синтеза.",
-        "kokoroUnsupported": "Для Kokoro TTS требуется WebGPU. Попробуйте Chrome 113+, Edge 113+ или Safari 26+.",
-        "mossUnsupported": "Для многоязычного TTS MOSS требуется хранилище браузера. Попробуйте актуальную версию браузера на базе Chromium.",
-        "supertonicUnsupported": "Этот браузер не поддерживает локальную среду выполнения Supertonic TTS. Попробуйте актуальную версию Chrome или Edge.",
-        "generateFailed": "Не удалось сгенерировать речь.",
-        "insertFailed": "Не удалось сохранить и вставить аудио."
-      },
-      "notifications": {
-        "addedAndLinked": "Файл «{{fileName}}» добавлен на таймлайн и связан с текстом.",
-        "savedNoTrack": "Файл «{{fileName}}» сохранен, но нет доступной аудиодорожки."
-      }
-    },
-    "aiPanel": {
-      "textToSpeech": "Синтез речи",
-      "collapseTextToSpeech": "Свернуть синтез речи",
-      "expandTextToSpeech": "Развернуть синтез речи",
-      "runsLocally": "{{runtime}} работает локально в браузере на базе {{backend}}.",
-      "history": "История ({{count}}) — {{size}}",
-      "clearAll": "Очистить всё",
-      "musicGeneration": "Генерация музыки",
-      "collapseMusicGeneration": "Свернуть генерацию музыки",
-      "expandMusicGeneration": "Развернуть генерацию музыки",
-      "musicGenerationInfo": "Сведения о генерации музыки",
-      "musicgenDescription": "Использует адаптированную для браузера модель MusicGen от Xenova через Transformers.js. Первая загрузка весит много, затем модель сохраняется в локальном кэше.",
-      "musicgenPromptHint": "Укажите в промпте жанр, настроение, темп и инструменты. Короткие фрагменты генерируются значительно быстрее.",
-      "musicgenUnsupported": "WebGPU недоступен в этом браузере. Для MusicGen требуется Chrome 113+, Edge 113+ или Safari 26+.",
-      "prompt": "Промпт",
-      "presets": "Пресеты",
-      "musicPromptPlaceholder": "Опишите музыку, которую хотите сгенерировать...",
-      "length": "Длительность",
-      "generateMusic": "Сгенерировать музыку",
-      "musicHistory": "История музыки ({{count}}) — {{size}}",
-      "remove": "Удалить",
-      "saved": "Сохранено",
-      "saving": "Сохранение...",
-      "saveAndInsert": "Сохранить и вставить",
-      "saveToLibrary": "Сохранить в медиатеку",
-      "progressPreparingMusic": "Подготовка локальной генерации музыки...",
-      "errors": {
-        "describeMusic": "Опишите музыку, которую хотите сгенерировать.",
-        "musicgenUnsupported": "Для MusicGen требуется WebGPU. Попробуйте Chrome 113+, Edge 113+ или Safari 26+.",
-        "generateMusicFailed": "Не удалось сгенерировать музыку.",
-        "saveAudioFailed": "Не удалось сохранить аудио в медиатеку."
-      },
-      "notifications": {
-        "savedToLibrary": "Файл «{{fileName}}» сохранён в медиатеку.",
-        "savedAndAdded": "Файл «{{fileName}}» сохранён и добавлен на таймлайн."
-      },
-      "defaultTtsPrompt": "Добро пожаловать в freecut. Этот голос был сгенерирован локально в браузере.",
-      "musicPresets": {
-        "lofiChillLabel": "Lo-fi чилл",
-        "lofiChillPrompt": "Тёплый лоу-фай бит с винтажными ударными, мягким басом и мечтательным лид-синтезатором",
-        "pop80sLabel": "Поп 80-х",
-        "pop80sPrompt": "Поп-трек в стиле 80-х с плотными ударными и синтезатором",
-        "rock90sLabel": "Рок 90-х",
-        "rock90sPrompt": "Рок-песня в стиле 90-х с громкими гитарами и тяжёлыми ударными",
-        "upbeatEdmLabel": "Бодрый EDM",
-        "upbeatEdmPrompt": "Лёгкий и жизнерадостный EDM-трек с синкопированными ударными, воздушными пэдами и яркими эмоциями bpm: 130",
-        "countryLabel": "Кантри",
-        "countryPrompt": "Жизнерадостная песня в стиле кантри с акустическими гитарами",
-        "lofiElectroLabel": "Lo-fi электро",
-        "lofiElectroPrompt": "Медленный чилловый лоу-фай электро с органическими сэмплами"
-      }
-    },
     "colorPanel": {
       "dockLabel": "Рабочая область цветокоррекции",
       "dockTitle": "Цвет",
       "emptyState": "Выберите клип для цветокоррекции",
       "adjustmentLayerLabel": "Цветокоррекция"
+    },
+    "transformHierarchy": {
+      "controllerOption": "Нулевой объект: {{name}}",
+      "none": "Нет"
+    },
+    "compositionControls": {
+      "authoringTitle": "Открытые параметры ({{v0}})",
+      "authoringHint": "Выберите текст и цвета, которые можно менять при повторном использовании композиции.",
+      "addAnother": "Открыть ещё параметр",
+      "add": "Открыть параметр",
+      "allExposed": "Все поддерживаемые параметры уже открыты.",
+      "noCandidates": "Добавьте текстовый слой или фигуру, чтобы открыть их параметры.",
+      "resetOverride": "Сбросить изменение «{{name}}»",
+      "overridden": "«{{name}}» изменён",
+      "instanceTitle": "Изменения шаблона",
+      "instanceHint": "Изменения действуют только в этом экземпляре. Синяя точка отмечает значения, отличающиеся от исходных.",
+      "resetAll": "Сбросить все изменения"
+    },
+    "textProperties": {
+      "scale": "Масштаб"
     }
   }
 }

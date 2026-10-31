@@ -18,6 +18,7 @@ import { applyAnimatedVolume, applyVolume, dbToGain, resample } from './dsp'
 import { applyDucking, collectDuckingSources, type DuckingSource } from './ducking'
 import { downmixToOutputChannels, softClipAudioMix } from './mixdown'
 import { resolveSubCompMediaUrls } from './media-urls'
+import { PeakLimiter, applyGain, planLoudness } from './loudness'
 import { extractAudioSegments, supportsWindowedAudioSegment } from './planning'
 
 const log = createLogger('CanvasAudio/windowed')
@@ -404,32 +405,59 @@ export async function* processAudioWindows(
   const duckingSources = collectDuckingSources(composition, fps)
 
   const decoderPool = await createWindowedAudioDecoderPool()
-  try {
-    for (let chunkStart = 0; chunkStart < totalSamples; chunkStart += chunkSamples) {
-      if (signal?.aborted) throw new DOMException('Audio processing cancelled', 'AbortError')
-
-      const chunkLength = Math.min(chunkSamples, totalSamples - chunkStart)
-      const chunkEnd = chunkStart + chunkLength
-      const mixed = [new Float32Array(chunkLength), new Float32Array(chunkLength)]
-
-      for (const segment of segments) {
-        await mixSegmentIntoAudioWindow({
-          segment,
-          mixed,
-          chunkStart,
-          chunkEnd,
-          sampleRate,
-          fps,
-          decoderPool,
-          duckingSources,
-        })
-      }
-
-      softClipAudioMix(mixed)
-      applyAudioWindowMasterGain(mixed, masterGain)
-
-      yield { samples: mixed, sampleRate, channels }
+  const mixWindow = async (chunkStart: number) => {
+    if (signal?.aborted) throw new DOMException('Audio processing cancelled', 'AbortError')
+    const chunkLength = Math.min(chunkSamples, totalSamples - chunkStart)
+    const chunkEnd = chunkStart + chunkLength
+    const mixed = [new Float32Array(chunkLength), new Float32Array(chunkLength)]
+    for (const segment of segments) {
+      await mixSegmentIntoAudioWindow({
+        segment,
+        mixed,
+        chunkStart,
+        chunkEnd,
+        sampleRate,
+        fps,
+        decoderPool,
+        duckingSources,
+      })
     }
+    return mixed
+  }
+
+  try {
+    const loudnessLufs = composition.loudnessLufs
+    if (loudnessLufs === undefined) {
+      for (let chunkStart = 0; chunkStart < totalSamples; chunkStart += chunkSamples) {
+        const mixed = await mixWindow(chunkStart)
+        softClipAudioMix(mixed)
+        applyAudioWindowMasterGain(mixed, masterGain)
+        yield { samples: mixed, sampleRate, channels }
+      }
+      return
+    }
+
+    // integrated loudness needs the whole programme, so the windows are mixed to measure before they are written
+    const plan = await planLoudness(
+      async function* () {
+        for (let chunkStart = 0; chunkStart < totalSamples; chunkStart += chunkSamples) {
+          yield await mixWindow(chunkStart)
+        }
+      },
+      sampleRate,
+      channels,
+      loudnessLufs,
+    )
+    log.info('Normalising windowed export loudness', { target: loudnessLufs, ...plan })
+    const limiter = new PeakLimiter(sampleRate, channels)
+    for (let chunkStart = 0; chunkStart < totalSamples; chunkStart += chunkSamples) {
+      const mixed = await mixWindow(chunkStart)
+      applyGain(mixed, plan.gain)
+      const limited = limiter.process(mixed)
+      if ((limited[0]?.length ?? 0) > 0) yield { samples: limited, sampleRate, channels }
+    }
+    const tail = limiter.flush()
+    if ((tail[0]?.length ?? 0) > 0) yield { samples: tail, sampleRate, channels }
   } finally {
     await decoderPool.dispose()
   }

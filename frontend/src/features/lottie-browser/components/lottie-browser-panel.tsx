@@ -120,7 +120,7 @@ function LottieBrowserPanelComponent() {
                 className={cn(
                   'rounded-md px-2 py-1 text-[11px] font-medium capitalize transition-colors',
                   category === id
-                    ? 'bg-primary text-primary-foreground'
+                    ? 'bg-[var(--color-overlay)] text-[var(--color-text)] shadow-sm'
                     : 'text-muted-foreground hover:bg-secondary/60 hover:text-foreground',
                 )}
               >
@@ -219,7 +219,7 @@ function LottieBrowserPanelComponent() {
 
       {/* Attribution / licensing note */}
       <div className="border-t border-border px-3 py-2">
-        <p className="text-[10px] leading-tight text-muted-foreground">
+        <p className="text-[11px] leading-tight text-muted-foreground">
           <Trans
             i18nKey="lottieBrowser.attributionNote"
             components={{

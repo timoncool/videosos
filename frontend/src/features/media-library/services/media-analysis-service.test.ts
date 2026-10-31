@@ -18,6 +18,7 @@ let storeState: ReturnType<typeof createStoreState>
 
 vi.mock('../deps/analysis', () => ({
   captionImage: captionImageMock,
+  captioningSource: () => ({ service: 'gemma-captioning', model: 'gemma-4-e4b' }),
   captionVideo: captionVideoMock,
   EMBEDDING_MODEL_ID: 'embed-model',
   EMBEDDING_MODEL_DIM: 384,

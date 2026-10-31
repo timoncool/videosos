@@ -1,3 +1,4 @@
+import './app/idle-callback-polyfill'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { i18n, i18nReady } from './i18n'
@@ -238,7 +239,7 @@ window.addEventListener('unhandledrejection', (event) => {
 })
 
 window.addEventListener('error', (event) => {
-  log.error('Uncaught error:', event.error)
+  log.error('Uncaught error:', event.error ?? event.message)
 })
 
 // A failed lazy-chunk load has two very different causes:

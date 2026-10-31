@@ -138,7 +138,7 @@ export const TextMotionTimelineLanes = memo(function TextMotionTimelineLanes({
         return (
           <div key={band.slot} className="flex h-7 border-t border-border/45 bg-background/25">
             <div
-              className="flex shrink-0 items-center border-r border-border pl-14 pr-2 text-[9px] text-sky-300/90"
+              className="flex shrink-0 items-center border-r border-border pl-14 pr-2 text-[11px] text-sky-300/90"
               style={{ width: LAYER_COLUMN_WIDTH }}
             >
               <span className="w-8 uppercase tracking-[0.08em]">{band.slot}</span>

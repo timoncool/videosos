@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Check, Loader2, RotateCcw, Trash2 } from 'lucide-react'
+import { Check, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { createLogger } from '@/shared/logging/logger'
@@ -117,8 +117,8 @@ export function LocalModelCacheControl({ className }: LocalModelCacheControlProp
     <div className={cn('space-y-3', className)}>
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <p className="text-sm font-medium">{t('projects.settings.modelCache.title')}</p>
-          <p className="mt-0.5 text-xs text-muted-foreground">
+          <p className="text-[13px] font-medium">{t('projects.settings.modelCache.title')}</p>
+          <p className="text-[11px] leading-snug text-muted-foreground">
             {t('projects.settings.modelCache.description')}
           </p>
         </div>
@@ -131,7 +131,7 @@ export function LocalModelCacheControl({ className }: LocalModelCacheControlProp
           }}
           disabled={!inspectionSupported || isLoading}
         >
-          <RotateCcw className={cn('h-3.5 w-3.5', isLoading && 'animate-spin')} />
+          {isLoading && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
           {isLoading
             ? t('projects.settings.modelCache.checking')
             : t('projects.settings.modelCache.refresh')}
@@ -144,8 +144,9 @@ export function LocalModelCacheControl({ className }: LocalModelCacheControlProp
         </p>
       )}
 
-      {inspectionSupported &&
-        cacheSummaries.map((summary) => {
+      {inspectionSupported && cacheSummaries.length > 0 && (
+        <div className="divide-y divide-[var(--color-border)] rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-2)]/40">
+        {cacheSummaries.map((summary) => {
           const isClearing = clearingCacheId === summary.id
           const isCleared = clearedCacheId === summary.id
           const sizeLabel =
@@ -164,11 +165,11 @@ export function LocalModelCacheControl({ className }: LocalModelCacheControlProp
           return (
             <div
               key={summary.id}
-              className="flex items-center justify-between gap-4 rounded-lg border border-white/8 bg-white/[0.02] px-3 py-2.5"
+              className="flex items-center justify-between gap-4 px-3 py-2.5"
             >
-              <div className="flex min-w-0 items-center gap-2 text-sm">
-                <span className="truncate font-medium">{summary.label}</span>
-                <span className="shrink-0 text-xs text-muted-foreground">{sizeLabel}</span>
+              <div className="flex min-w-0 items-center gap-2">
+                <span className="truncate text-[13px] font-medium">{summary.label}</span>
+                <span className="tabnum shrink-0 text-[11px] text-muted-foreground">{sizeLabel}</span>
               </div>
               <Button
                 variant="outline"
@@ -181,7 +182,6 @@ export function LocalModelCacheControl({ className }: LocalModelCacheControlProp
               >
                 {isClearing && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
                 {isCleared && !isClearing && <Check className="h-3.5 w-3.5" />}
-                {!isClearing && !isCleared && <Trash2 className="h-3.5 w-3.5" />}
                 {isClearing
                   ? t('common.clearing')
                   : isCleared
@@ -191,6 +191,8 @@ export function LocalModelCacheControl({ className }: LocalModelCacheControlProp
             </div>
           )
         })}
+        </div>
+      )}
     </div>
   )
 }

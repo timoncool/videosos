@@ -94,7 +94,7 @@ function LottieCardComponent({
       <div className="min-w-0 px-0.5">
         <div className="truncate text-[11px] font-medium text-foreground">{animation.name}</div>
         {animation.author && (
-          <div className="truncate text-[10px] text-muted-foreground">
+          <div className="truncate text-[11px] text-muted-foreground">
             {t('lottieBrowser.by', { author: animation.author })}
           </div>
         )}

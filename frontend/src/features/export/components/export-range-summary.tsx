@@ -27,7 +27,7 @@ export function ExportRangeSummary({
   renderWholeProject,
   onRenderWholeProjectChange,
 }: ExportRangeSummaryProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
 
   return (
     <div className="space-y-3 p-3 rounded-lg border border-border bg-muted/20">
@@ -63,7 +63,7 @@ export function ExportRangeSummary({
             {t('export.settings.duration')}
           </div>
           <div className="font-mono text-foreground">
-            {formatTime(framesToSeconds(range.duration, fps))}
+            {formatTime(framesToSeconds(range.duration, fps), i18n.language)}
           </div>
         </div>
       </div>

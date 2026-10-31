@@ -28,10 +28,10 @@ export const MotionPresetControls = memo(function MotionPresetControls({
 
   return (
     <div className="flex flex-col gap-1.5 rounded-md border border-border/60 bg-secondary/20 p-2">
-      <span className="text-[10px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
+      <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
         {t('editor.animateStages.presetParameters')}
       </span>
-      <span className="text-[9px] leading-snug text-muted-foreground">
+      <span className="text-[11px] leading-snug text-muted-foreground">
         {t('editor.animateStages.presetParametersHint')}
       </span>
       <SliderInput
