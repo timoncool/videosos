@@ -101,7 +101,14 @@
         "frameRate": "Kare hızı",
         "durationSeconds": "Süre (saniye)",
         "create": "Oluştur"
-      }
+      },
+      "controllerLayer": "Boş Nesne",
+      "parentColumn": "Üst",
+      "shiftToggleAllLayers": "Tüm katmanları genişletmek veya daraltmak için Shift tuşuyla tıklayın",
+      "parentPickWhipForLayer": "{{name}} için üst katman seçici",
+      "parentPickWhipHelp": "Bir üst katmana sürükleyin. Shift: konuma yapış. Alt: yerel pozu kullan. Ctrl/Cmd+tıklama: bağlantıyı kopar.",
+      "parentForLayer": "{{name}} için üst katman",
+      "nullObjectNonRendering": "Boş Nesne (işlenmez)"
     },
     "miniTimeline": {
       "inPoint": "Giriş noktası",
@@ -357,7 +364,38 @@
       "directionTop": "Üst",
       "directionBottom": "Alt",
       "resetParam": "{{label}} sıfırla",
-      "paramColorAria": "{{label}} rengi"
+      "paramColorAria": "{{label}} rengi",
+      "params": {
+        "warp": "Çarpıtma",
+        "color": "Renk",
+        "size": "Boyut",
+        "intensity": "Yoğunluk",
+        "density": "Sıklık",
+        "glow": "Parlama",
+        "blocks": "Bloklar",
+        "rgb_split": "RGB Ayrımı",
+        "block_size": "Blok Boyutu",
+        "spread": "Yayılma",
+        "blur": "Bulanıklık",
+        "spin": "Döndürme",
+        "scale": "Ölçek",
+        "turbulence": "Türbülans",
+        "chroma": "Kroma",
+        "swirl": "Girdap",
+        "shine": "Parıltı",
+        "zoom": "Yakınlaştırma",
+        "vignette": "Vinyet",
+        "warmth": "Sıcaklık",
+        "burn": "Yanma",
+        "grain": "Gren",
+        "slip": "Kayma",
+        "shake": "Sarsıntı",
+        "exposure": "Pozlama",
+        "gate_width": "Kapı Genişliği",
+        "roll": "Kaydırma",
+        "dim": "Loşluk",
+        "softness": "Yumuşaklık"
+      }
     },
     "propertiesSidebar": {
       "title": "Özellikler",
@@ -366,7 +404,9 @@
       "dockToPreview": "Önizlemeye sabitle",
       "expandFullColumn": "Tam sütuna genişlet",
       "showPanel": "Özellikler Panelini Göster",
-      "clipsSelected": "{{count}} klip seçildi"
+      "clipsSelected": "{{count}} klip seçildi",
+      "layer": "Katman",
+      "composition": "Kompozisyon"
     },
     "markerPanel": {
       "notFound": "İşaretçi bulunamadı",
@@ -398,7 +438,10 @@
       "switchToFrames": "Kareye geç",
       "timecode": "Zaman Kodu",
       "frameRate": "Kare Hızı",
-      "totalFrames": "Toplam Kare"
+      "totalFrames": "Toplam Kare",
+      "composition": "Kompozisyon",
+      "matchProject": "Projeye Uydur",
+      "matchProjectBackground": "Arka planı projeye uydur"
     },
     "clipPanel": {
       "tabVideo": "Video",
@@ -407,7 +450,10 @@
       "adjustmentLayerHint": "Ayar katmanlarındaki efektler, üst izlerdeki tüm öğelere uygulanır.",
       "tabText": "Metin",
       "tabAnimation": "Animasyon",
-      "tabShape": "Şekil"
+      "tabShape": "Şekil",
+      "tabProperties": "Özellikler",
+      "tabController": "Boş Nesne",
+      "tabAnimate": "Canlandır"
     },
     "gifSection": {
       "animation": "Animasyon",
@@ -602,14 +648,32 @@
       "background": "Arka plan",
       "on": "Açık",
       "off": "Kapalı",
-      "padding": "Dolgu"
+      "padding": "Dolgu",
+      "reveal": "Görünüm",
+      "revealMode": {
+        "whole": "Tümü",
+        "words": "Kelime kelime",
+        "karaoke": "Karaoke"
+      },
+      "revealHint": {
+        "whole": "Satırın tamamı bir kerede",
+        "words": "Kelimeler söylendikçe belirir",
+        "karaoke": "Satırın tamamı, söylenen kelime vurgulu"
+      },
+      "highlight": "Vurgu"
     },
     "captionPresets": {
       "netflixHint": "Yuvarlatılmış koyu kutuda Inter, alt üçte birlik konum — yayın kalitesinde nötr.",
       "youtubeHint": "Yumuşak gölgeli Roboto, kutusuz — otomatik altyazı havası.",
       "boldYellowHint": "Siyah gölgeli sinema sarısı Roboto Slab — DVD dönemi klasiği.",
       "outlinedHint": "İnce konturlu Manrope — temiz, modern, gölgesiz.",
-      "tiktokHint": "Anton display, büyük ve ortalanmış — dikey video viral görünümü."
+      "tiktokHint": "Anton display, büyük ve ortalanmış — dikey video viral görünümü.",
+      "lookMinimalHint": "Dub Studio'nun sade görünümleri: koyu bir plaka üzerinde yalın yazı.",
+      "lookViralHint": "Dub Studio'nun viral görünümleri: kalın yazı, söylenen kelime renkle vurgulanır.",
+      "lookKaraokeHint": "Dub Studio karaoke: söylenen kelime konuşuldukça parlar.",
+      "lookPlayfulHint": "Dub Studio'nun eğlenceli görünümleri: renkli bir balon üzerinde el yazısı.",
+      "lookNeonHint": "Dub Studio'nun neon görünümleri: plakasız parlayan yazı.",
+      "lookFreshHint": "Dub Studio'nun taze görünümleri: plakasız, konturlu yazı."
     },
     "alignment": {
       "left": "Sola Hizala",
@@ -682,7 +746,6 @@
       "shapes": "Şekiller",
       "effects": "Efektler",
       "transitions": "Geçişler",
-      "ai": "YZ",
       "collapsePanel": "Paneli daralt",
       "expandPanel": "Paneli genişlet",
       "keyframeEditor": "Anahtar kare düzenleyici",
@@ -783,104 +846,31 @@
         "swing": "Salla"
       }
     },
-    "tts": {
-      "seek": "Git",
-      "dialogTitle": "Metinden ses oluştur",
-      "dialogDescription": "Konuşma oluşturup metin klibinin konumuna ekleyin.",
-      "kokoroUnsupported": "Bu tarayıcıda WebGPU kullanılamıyor. Kokoro TTS için Chrome 113+, Edge 113+ veya Safari 26+ gerekir.",
-      "mossUnsupported": "Bu tarayıcıda tarayıcı tarafından yönetilen depolama kullanılamıyor. MOSS çok dilli TTS en iyi güncel bir Chromium tarayıcıda çalışır.",
-      "engine": "Motor",
-      "engineSupportDetails": "TTS motoru destek ayrıntıları",
-      "kokoroDescription": "WebGPU üzerinde İngilizce sesler.",
-      "supportedLanguages": "Desteklenen diller: {{languages}}.",
-      "kokoroOption": "Kokoro (İngilizce, WebGPU)",
-      "mossOption": "MOSS Nano (20 dil, CPU)",
-      "voice": "Ses",
-      "text": "Metin",
-      "textPlaceholder": "Seslendirilmesini istediğiniz metni girin...",
-      "speed": "Hız",
-      "progressPreparing": "Yerel TTS hazırlanıyor...",
-      "insertedAndLinked": "Eklendi ve bağlandı",
-      "generate": "Oluştur",
-      "generating": "Oluşturuluyor...",
-      "regenerate": "Yeniden oluştur",
-      "insertAndLink": "Ekle ve bağla",
-      "inserting": "Ekleniyor...",
-      "errors": {
-        "openProject": "Ses oluşturmadan önce bir proje açın.",
-        "enterText": "Sentezlemek için metin girin.",
-        "kokoroUnsupported": "Kokoro TTS için WebGPU gerekir. Chrome 113+, Edge 113+ veya Safari 26+ deneyin.",
-        "mossUnsupported": "MOSS çok dilli TTS için tarayıcı tarafından yönetilen depolama gerekir. Güncel bir Chromium tarayıcı deneyin.",
-        "generateFailed": "Konuşma oluşturulamadı.",
-        "insertFailed": "Ses kaydedilip eklenemedi.",
-        "supertonicUnsupported": "Bu tarayıcı yerel Supertonic TTS çalışma zamanını çalıştıramıyor. Güncel bir Chrome veya Edge deneyin."
-      },
-      "notifications": {
-        "addedAndLinked": "\"{{fileName}}\" zaman çizelgesine eklendi ve metinle bağlandı.",
-        "savedNoTrack": "\"{{fileName}}\" kaydedildi ancak kullanılabilir ses izi yok."
-      },
-      "supertonicUnsupported": "Bu tarayıcı yerel Supertonic TTS çalışma zamanını çalıştıramıyor. Güncel bir Chrome veya Edge deneyin.",
-      "supertonicDescription": "WebGPU veya WASM üzerinde 31 dilde yerel ONNX sesleri.",
-      "supertonicOption": "Supertonic 3 (31 dil, yerel ONNX)",
-      "language": "Dil",
-      "autoDetectLanguage": "Otomatik algıla",
-      "expressiveTags": "İfade etiketleri"
-    },
-    "aiPanel": {
-      "textToSpeech": "Metinden Sese",
-      "collapseTextToSpeech": "Metinden sese bölümünü daralt",
-      "expandTextToSpeech": "Metinden sese bölümünü genişlet",
-      "runsLocally": "{{runtime}}, tarayıcıda {{backend}} üzerinde yerel çalışır.",
-      "history": "Geçmiş ({{count}}) - {{size}}",
-      "clearAll": "Tümünü temizle",
-      "musicGeneration": "Müzik Oluşturma",
-      "collapseMusicGeneration": "Müzik oluşturmayı daralt",
-      "expandMusicGeneration": "Müzik oluşturmayı genişlet",
-      "musicGenerationInfo": "Müzik oluşturma bilgisi",
-      "musicgenDescription": "Transformers.js üzerinden Xenova'nın tarayıcıya hazır MusicGen modelini kullanır. İlk indirme büyüktür, sonra yerelde önbellekte kalır.",
-      "musicgenPromptHint": "Tür, ruh hali, tempo ve enstrümantasyon içeren istem yazın. Daha kısa klipler çok daha hızlı biter.",
-      "musicgenUnsupported": "Bu tarayıcıda WebGPU kullanılamıyor. MusicGen için Chrome 113+, Edge 113+ veya Safari 26+ gerekir.",
-      "prompt": "İstem",
-      "presets": "Ön Ayarlar",
-      "musicPromptPlaceholder": "Oluşturmak istediğiniz müziği açıklayın...",
-      "length": "Uzunluk",
-      "generateMusic": "Müzik Oluştur",
-      "musicHistory": "Müzik Geçmişi ({{count}}) - {{size}}",
-      "remove": "Kaldır",
-      "saved": "Kaydedildi",
-      "saving": "Kaydediliyor...",
-      "saveAndInsert": "Kaydet ve Ekle",
-      "saveToLibrary": "Kitaplığa Kaydet",
-      "progressPreparingMusic": "Yerel müzik oluşturma hazırlanıyor...",
-      "errors": {
-        "describeMusic": "Oluşturmak istediğiniz müziği açıklayın.",
-        "musicgenUnsupported": "MusicGen için WebGPU gerekir. Chrome 113+, Edge 113+ veya Safari 26+ deneyin.",
-        "generateMusicFailed": "Müzik oluşturulamadı.",
-        "saveAudioFailed": "Ses medya kitaplığına kaydedilemedi."
-      },
-      "notifications": {
-        "savedToLibrary": "\"{{fileName}}\" medya kitaplığına kaydedildi.",
-        "savedAndAdded": "\"{{fileName}}\" kaydedildi ve zaman çizelgesine eklendi."
-      },
-      "defaultTtsPrompt": "VideoSOS'a hoş geldiniz. Bu ses tarayıcıda yerel olarak oluşturuldu.",
-      "musicPresets": {
-        "lofiChillLabel": "Lo-fi Rahat",
-        "lofiChillPrompt": "Tozlu davullar, yumuşak bas ve rüya gibi synth melodisiyle sıcak lo-fi beat",
-        "pop80sLabel": "80'ler Pop",
-        "pop80sPrompt": "Baslı davullar ve synth içeren 80'ler pop parçası",
-        "rock90sLabel": "90'lar Rock",
-        "rock90sPrompt": "Gür gitarlar ve güçlü davullarla 90'lar rock şarkısı",
-        "upbeatEdmLabel": "Enerjik EDM",
-        "upbeatEdmPrompt": "Senkoplu davullar, havadar pad'ler ve güçlü duygular içeren hafif ve neşeli EDM parçası bpm: 130",
-        "countryLabel": "Country",
-        "countryPrompt": "Akustik gitarlarla neşeli bir country şarkısı",
-        "lofiElectroLabel": "Lo-fi Elektro",
-        "lofiElectroPrompt": "Organik örneklerle yavaş bpm lo-fi elektro chill"
-      }
-    },
     "colorPanel": {
       "emptyState": "Renk düzenlemek için bir klip seçin",
-      "adjustmentLayerLabel": "Renk düzenleme"
+      "adjustmentLayerLabel": "Renk düzenleme",
+      "dockLabel": "Renk derecelendirme çalışma alanı",
+      "dockTitle": "Renk"
+    },
+    "transformHierarchy": {
+      "controllerOption": "Boş: {{name}}",
+      "none": "Yok"
+    },
+    "compositionControls": {
+      "authoringTitle": "Yayımlanan denetimler ({{v0}})",
+      "authoringHint": "Bu kompozisyon yeniden kullanıldığında düzenlenebilir kalacak metinleri ve renkleri seçin.",
+      "addAnother": "Başka bir özelliği göster",
+      "add": "Özelliği göster",
+      "allExposed": "Desteklenen tüm özellikler gösteriliyor.",
+      "noCandidates": "Düzenlenebilir özellikleri göstermek için bir metin veya şekil katmanı ekleyin.",
+      "resetOverride": "{{name}} geçersiz kılmasını sıfırla",
+      "overridden": "{{name}} geçersiz kılındı",
+      "instanceTitle": "Şablon geçersiz kılmaları",
+      "instanceHint": "Değişiklikler yalnızca bu örneğe uygulanır. Mavi nokta, kaynaktan farklı değerleri işaretler.",
+      "resetAll": "Tüm geçersiz kılmaları sıfırla"
+    },
+    "textProperties": {
+      "scale": "Ölçek"
     }
   }
 }

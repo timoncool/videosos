@@ -88,7 +88,7 @@ export function SceneSearchModeButtons({ compact = false }: { compact?: boolean 
               <Type className="mr-2 h-3 w-3" />
               <div className="flex flex-col">
                 <span>{t('sceneBrowser.search.keyword')}</span>
-                <span className="text-[10px] text-muted-foreground">
+                <span className="text-[11px] text-muted-foreground">
                   {t('sceneBrowser.search.keywordDescription')}
                 </span>
               </div>
@@ -102,7 +102,7 @@ export function SceneSearchModeButtons({ compact = false }: { compact?: boolean 
               <Sparkles className="mr-2 h-3 w-3" />
               <div className="flex flex-col">
                 <span>{t('sceneBrowser.search.semantic')}</span>
-                <span className="text-[10px] text-muted-foreground">
+                <span className="text-[11px] text-muted-foreground">
                   {t('sceneBrowser.search.semanticDescription')}
                 </span>
               </div>

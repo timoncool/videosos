@@ -26,6 +26,7 @@ pub fn env_var(provider: Provider) -> &'static str {
         Provider::Openrouter => "OPENROUTER_API_KEY",
         Provider::Fal => "FAL_KEY",
         Provider::Runware => "RUNWARE_API_KEY",
+        Provider::Local => "VIDEOSOS_LOCAL",
     }
 }
 

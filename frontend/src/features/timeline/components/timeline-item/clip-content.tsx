@@ -711,7 +711,7 @@ const DetailedCompositionClipContent = memo(function DetailedCompositionClipCont
             every other clip's label row. */}
         {renderTitleText(
           label,
-          <span className="shrink-0 rounded bg-violet-950/40 px-1.5 text-[9px] font-semibold uppercase tracking-[0.08em] text-violet-100/90">
+          <span className="shrink-0 rounded bg-violet-950/40 px-1.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-violet-100/90">
             {compositionKindLabel}
           </span>,
         )}

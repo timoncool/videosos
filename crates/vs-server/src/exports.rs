@@ -44,6 +44,19 @@ fn bad(status: StatusCode, message: String) -> Response {
     (status, Json(json!({ "error": message }))).into_response()
 }
 
+/// "Save as" for what the window saves: the desktop shell's own dialog, over the program's window (as in the music
+/// studios), asked for off the UI thread.
+pub type SaveDialog = std::sync::Arc<dyn Fn(&str, Option<PathBuf>) -> Option<PathBuf> + Send + Sync>;
+
+fn save_dialog() -> &'static std::sync::OnceLock<SaveDialog> {
+    static DIALOG: std::sync::OnceLock<SaveDialog> = std::sync::OnceLock::new();
+    &DIALOG
+}
+
+pub fn set_save_dialog(dialog: SaveDialog) {
+    let _ = save_dialog().set(dialog);
+}
+
 #[derive(Deserialize)]
 pub struct SaveQuery {
     name: String,
@@ -84,9 +97,18 @@ async fn save(State(state): State<AppState>, Query(query): Query<SaveQuery>, bod
         free_path(dir, &name)
     } else if query.dialog {
         let start = dirs::video_dir().filter(|dir| dir.is_dir()).unwrap_or_else(|| exports.clone());
-        let chosen = rfd::AsyncFileDialog::new().set_directory(&start).set_file_name(&name).set_title(t!("exports-dialog-title")).save_file().await;
+        let chosen = match save_dialog().get() {
+            // the desktop shell's dialog, over the program's window
+            Some(dialog) => {
+                let (name, start) = (name.clone(), start.clone());
+                let dialog = dialog.clone();
+                tokio::task::spawn_blocking(move || dialog(&name, Some(start))).await.unwrap_or(None)
+            }
+            // the server on its own has no window to put a dialog over
+            None => rfd::AsyncFileDialog::new().set_directory(&start).set_file_name(&name).set_title(t!("exports-dialog-title")).save_file().await.map(|handle| handle.path().to_path_buf()),
+        };
         match chosen {
-            Some(handle) => handle.path().to_path_buf(),
+            Some(path) => path,
             None => {
                 let _ = tokio::fs::remove_file(&partial).await;
                 return Json(json!({ "cancelled": true })).into_response();
@@ -119,23 +141,62 @@ async fn reveal(Json(body): Json<RevealBody>) -> Response {
     if !path.exists() {
         return bad(StatusCode::NOT_FOUND, t!("exports-no-file", path = body.path.clone()));
     }
-    let mut command = if cfg!(windows) {
-        let mut command = std::process::Command::new("explorer");
-        command.arg(format!("/select,{}", path.display()));
-        command
-    } else if cfg!(target_os = "macos") {
-        let mut command = std::process::Command::new("open");
-        command.arg("-R").arg(&path);
-        command
-    } else {
-        let mut command = std::process::Command::new("xdg-open");
-        command.arg(path.parent().unwrap_or(&path));
-        command
-    };
-    match crate::process_group::detach_from_group(&mut command).spawn() {
-        Ok(_) => StatusCode::NO_CONTENT.into_response(),
+    match tokio::task::spawn_blocking(move || show_in_file_manager(&path)).await {
+        Ok(Ok(())) => StatusCode::NO_CONTENT.into_response(),
+        Ok(Err(error)) => bad(StatusCode::INTERNAL_SERVER_ERROR, error.to_string()),
         Err(error) => bad(StatusCode::INTERNAL_SERVER_ERROR, error.to_string()),
     }
+}
+
+#[cfg(windows)]
+fn show_in_file_manager(path: &std::path::Path) -> std::io::Result<()> {
+    let mut command = std::process::Command::new("explorer");
+    // Explorer reads /select, and the path apart: the path is quoted on its own, or one with a space opens
+    // the Documents folder instead
+    std::os::windows::process::CommandExt::raw_arg(&mut command, format!("/select,\"{}\"", path.display()));
+    crate::process_group::detach_from_group(&mut command).spawn().map(drop)
+}
+
+#[cfg(target_os = "macos")]
+fn show_in_file_manager(path: &std::path::Path) -> std::io::Result<()> {
+    let mut command = std::process::Command::new("open");
+    command.arg("-R").arg(path);
+    crate::process_group::detach_from_group(&mut command).spawn().map(drop)
+}
+
+/// The freedesktop file manager interface selects the file, as Explorer does; where no file manager offers it,
+/// the folder opens without the selection.
+#[cfg(all(not(windows), not(target_os = "macos")))]
+fn show_in_file_manager(path: &std::path::Path) -> std::io::Result<()> {
+    let shown = std::process::Command::new("dbus-send")
+        .args(["--session", "--print-reply", "--reply-timeout=3000", "--dest=org.freedesktop.FileManager1", "/org/freedesktop/FileManager1", "org.freedesktop.FileManager1.ShowItems"])
+        .arg(format!("array:string:{}", file_uri(path)))
+        .arg("string:")
+        .stdout(std::process::Stdio::null())
+        .stderr(std::process::Stdio::null())
+        .status()
+        .is_ok_and(|status| status.success());
+    if shown {
+        return Ok(());
+    }
+    let mut command = std::process::Command::new("xdg-open");
+    command.arg(path.parent().unwrap_or(path));
+    crate::process_group::detach_from_group(&mut command).spawn().map(drop)
+}
+
+/// `file://` and the path with every byte outside the unreserved set escaped.
+#[cfg(all(not(windows), not(target_os = "macos")))]
+fn file_uri(path: &std::path::Path) -> String {
+    use std::os::unix::ffi::OsStrExt;
+    let mut uri = String::from("file://");
+    for &byte in path.as_os_str().as_bytes() {
+        if byte.is_ascii_alphanumeric() || b"/-._~".contains(&byte) {
+            uri.push(byte as char);
+        } else {
+            uri.push_str(&format!("%{byte:02X}"));
+        }
+    }
+    uri
 }
 
 pub fn router() -> Router<AppState> {

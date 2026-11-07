@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { cn } from '@/shared/ui/cn'
 import { changeAppLanguage } from '@/i18n'
-import { SUPPORTED_LANGUAGES } from '@/i18n/languages'
+import { SUPPORTED_LANGUAGES, resolveSupportedLanguage } from '@/i18n/languages'
 
 function getLanguageButtonLabel(languageCode: string): string {
   return languageCode.split('-')[0]?.slice(0, 2).toUpperCase() || 'EN'
@@ -27,7 +27,8 @@ export function LanguageSwitcher({
   side = 'bottom',
 }: LanguageSwitcherProps) {
   const { t, i18n: i18nInstance } = useTranslation()
-  const currentLanguage = i18nInstance.resolvedLanguage ?? i18nInstance.language
+  // resolvedLanguage stays on the fallback while a lazily loaded language's bundle arrives
+  const currentLanguage = resolveSupportedLanguage(i18nInstance.language)
   const buttonClass =
     size === 'md'
       ? 'h-10 w-10 font-mono text-xs font-semibold leading-none tracking-normal'

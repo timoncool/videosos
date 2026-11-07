@@ -134,7 +134,7 @@ export function DopesheetExpressionDock({
             />
           ) : (
             <>
-              <div className="grid grid-cols-2 gap-1 text-[9px]">
+              <div className="grid grid-cols-2 gap-1 text-[10px]">
                 <div className="min-w-0 rounded border border-border/70 bg-background/70 px-2 py-1">
                   <div className="text-muted-foreground">Pre-expression</div>
                   <div className="truncate font-mono text-foreground">{preExpressionDisplay}</div>
@@ -174,7 +174,7 @@ export function DopesheetExpressionDock({
                   {pickingReference ? 'Choose property…' : 'Pick property'}
                 </Button>
                 {pickingReference ? (
-                  <span className="truncate text-[9px] text-sky-300" role="status">
+                  <span className="truncate text-[10px] text-sky-300" role="status">
                     Click a highlighted row · Esc to cancel
                   </span>
                 ) : null}
@@ -232,11 +232,11 @@ export function DopesheetExpressionDock({
             aria-label={`${propertyLabel} expression source`}
           />
           {error ? (
-            <div className="truncate rounded border border-red-500/40 bg-red-500/10 px-2 py-1 text-[9px] text-red-300">
+            <div className="truncate rounded border border-red-500/40 bg-red-500/10 px-2 py-1 text-[10px] text-red-300">
               {error}
             </div>
           ) : (
-            <div className="text-right text-[9px] text-muted-foreground">
+            <div className="text-right text-[10px] text-muted-foreground">
               Ctrl/Cmd+Enter to apply
             </div>
           )}

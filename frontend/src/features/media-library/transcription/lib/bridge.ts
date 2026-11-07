@@ -1,7 +1,6 @@
 import type {
   MainThreadMessage,
   PCMChunk,
-  QuantizationType,
   TranscriptSegment,
   TranscribeProgress,
   TranscribeRuntimeInfo,
@@ -69,7 +68,6 @@ export class Bridge {
     file: File,
     model: WhisperModel = DEFAULT_WHISPER_MODEL,
     language?: string,
-    quantization?: QuantizationType,
     engine: TranscriptionEngine = 'whisper',
   ): Promise<void> {
     const { port1, port2 } = new MessageChannel()
@@ -90,7 +88,7 @@ export class Bridge {
     })
 
     transcriptionWorker.postMessage({ type: 'port', port: port2 }, [port2])
-    transcriptionWorker.postMessage({ type: 'init', modelId, language, quantization })
+    transcriptionWorker.postMessage({ type: 'init', modelId, language })
 
     if (hasWebCodecs) {
       this.session.getWorker('decoder').postMessage({ type: 'init', file })

@@ -23,7 +23,7 @@ const ITEM_COLOR_CLASSES: Partial<Record<TimelineItemType['type'], string>> = {
   image: 'bg-timeline-image/30 border-timeline-image',
   text: 'bg-timeline-text/30 border-timeline-text',
   shape: 'bg-timeline-shape/30 border-timeline-shape',
-  adjustment: 'bg-purple-500/30 border-purple-400',
+  adjustment: 'bg-fuchsia-500/25 border-fuchsia-400',
   composition: 'bg-violet-600/40 border-violet-400',
 }
 

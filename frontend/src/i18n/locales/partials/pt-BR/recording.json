@@ -21,7 +21,7 @@
     "syncOffsetEarlier": "Adiantar a gravação",
     "syncOffsetLater": "Atrasar a gravação",
     "headphonesHint": "Use fones de ouvido para que o áudio da linha do tempo não seja captado pelo microfone.",
-    "fileNamePrefix": "voiceover",
+    "fileNamePrefix": "narração",
     "errors": {
       "unsupported": "A gravação por microfone não é compatível com este navegador.",
       "noProject": "Abra um projeto antes de gravar.",

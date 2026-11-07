@@ -82,12 +82,14 @@ export const TimelineProjectMarkers = memo(function TimelineProjectMarkers() {
       setDraggingId(null)
     }
 
-    document.addEventListener('mousemove', handleMouseMove)
-    document.addEventListener('mouseup', handleMouseUp)
+    document.addEventListener('pointermove', handleMouseMove)
+    document.addEventListener('pointerup', handleMouseUp)
+    document.addEventListener('pointercancel', handleMouseUp)
 
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove)
-      document.removeEventListener('mouseup', handleMouseUp)
+      document.removeEventListener('pointermove', handleMouseMove)
+      document.removeEventListener('pointerup', handleMouseUp)
+      document.removeEventListener('pointercancel', handleMouseUp)
       document.body.style.cursor = originalCursor
     }
   }, [draggingId])
@@ -105,7 +107,7 @@ export const TimelineProjectMarkers = memo(function TimelineProjectMarkers() {
           leftPosition={frameToPixels(marker.frame)}
           isDragging={draggingId === marker.id}
           isSelected={selectedMarkerId === marker.id}
-          onMouseDown={handleMouseDown}
+          onPointerDown={handleMouseDown}
         />
       ))}
     </div>
@@ -120,7 +122,7 @@ interface MarkerIndicatorProps {
   leftPosition: number
   isDragging: boolean
   isSelected: boolean
-  onMouseDown: (e: React.MouseEvent, markerId: string) => void
+  onPointerDown: (e: React.MouseEvent, markerId: string) => void
 }
 
 const MarkerIndicator = memo(function MarkerIndicator({
@@ -130,14 +132,14 @@ const MarkerIndicator = memo(function MarkerIndicator({
   leftPosition,
   isDragging,
   isSelected,
-  onMouseDown,
+  onPointerDown,
 }: MarkerIndicatorProps) {
   // Stable callback that passes markerId
   const handleMouseDown = useCallback(
     (e: React.MouseEvent) => {
-      onMouseDown(e, markerId)
+      onPointerDown(e, markerId)
     },
-    [onMouseDown, markerId],
+    [onPointerDown, markerId],
   )
 
   return (
@@ -150,7 +152,7 @@ const MarkerIndicator = memo(function MarkerIndicator({
         cursor: isDragging ? 'grabbing' : 'grab',
         zIndex: isSelected ? 20 : 15,
       }}
-      onMouseDown={handleMouseDown}
+      onPointerDown={handleMouseDown}
       data-tooltip={name}
       data-tooltip-side="bottom"
     >

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Check, Loader2, Trash2 } from 'lucide-react'
+import { Check, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
@@ -114,7 +114,6 @@ export function LocalInferenceUnloadControl({
       >
         {unloadState === 'unloading' && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
         {unloadState === 'done' && <Check className="h-3.5 w-3.5" />}
-        {unloadState === 'idle' && <Trash2 className="h-3.5 w-3.5" />}
         {unloadState === 'unloading'
           ? t('projects.settings.localInference.unloading')
           : unloadState === 'done'

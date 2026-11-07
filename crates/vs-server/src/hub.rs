@@ -1,6 +1,8 @@
-//! Studio Hub in VideoSOS: anonymous statistics (only after the first-run screen showed its checkbox, off
-//! under DO_NOT_TRACK or STUDIO_TELEMETRY=0) and the news feed. What is counted: finished and failed
-//! generations by task and provider, and the models used — never prompts, files or keys.
+//! Studio Hub in VideoSOS, wired as `music-studios/CONTRACT.md` says every program does: anonymous statistics
+//! (only after the first-run screen showed its checkbox, off under DO_NOT_TRACK or STUDIO_TELEMETRY=0) and the
+//! news feed. What is counted: finished and failed generations by task and provider, the models used, every call
+//! to the API by route template, model downloads ready or failed, and the seconds of video made on this computer's
+//! card — never prompts, files or keys.
 
 use std::path::Path;
 use std::sync::OnceLock;
@@ -9,21 +11,26 @@ use crate::jobs::Job;
 
 static HUB: OnceLock<Option<studio_hub_client::Hub>> = OnceLock::new();
 
+/// The system as the report and an issue form name it: "windows 11 (26100)".
+pub fn os_label() -> String {
+    format!(
+        "{} {}",
+        sysinfo::System::name().unwrap_or_else(|| std::env::consts::OS.to_string()),
+        sysinfo::System::os_version().unwrap_or_default()
+    )
+    .to_ascii_lowercase()
+}
+
 pub fn start(data: &Path, http: reqwest::Client) {
     HUB.get_or_init(|| {
-        let os_label = format!(
-            "{} {}",
-            sysinfo::System::name().unwrap_or_else(|| std::env::consts::OS.to_string()),
-            sysinfo::System::os_version().unwrap_or_default()
-        )
-        .to_ascii_lowercase();
+        let os_label = os_label();
         let config = studio_hub_client::HubConfig {
             app: "videosos".into(),
             version: crate::service::app_version().to_string(),
             data_dir: data.to_path_buf(),
             http,
             os_label,
-            gpu: studio_hub_client::Gpu { vendor: "other".into(), vram_gb: "?".into(), backend: "cloud".into() },
+            gpu: gpu(),
             ui_lang: "en".into(),
             urls: Vec::new(),
         };
@@ -38,6 +45,17 @@ pub fn start(data: &Path, http: reqwest::Client) {
             }
         }
     });
+}
+
+/// The card the local models run on: NVML names an NVIDIA one; any other card runs the Vulkan build.
+fn gpu() -> studio_hub_client::Gpu {
+    let snapshot = crate::hw::snapshot();
+    let nvidia = !snapshot.gpu_name.is_empty();
+    studio_hub_client::Gpu {
+        vendor: if nvidia { "nvidia" } else { "other" }.into(),
+        vram_gb: if nvidia { studio_hub_client::Gpu::vram_bucket(snapshot.total_vram) } else { "?".into() },
+        backend: if nvidia { "cuda" } else { "vulkan" }.into(),
+    }
 }
 
 fn hub() -> Option<&'static studio_hub_client::Hub> {
@@ -67,14 +85,57 @@ pub fn router<S: Clone + Send + Sync + 'static>() -> axum::Router<S> {
     hub().map(studio_hub_client::Hub::router).unwrap_or_default()
 }
 
-/// A generation that ended: `<task>_done` or `<task>_failed`, the model as `<provider>:<model>`.
+/// Every call to VideoSOS's API counted by route template, an agent's calls included; without a hub, as it is.
+pub fn track<S: Clone + Send + Sync + 'static>(router: axum::Router<S>) -> axum::Router<S> {
+    match hub() {
+        Some(hub) => hub.track(router),
+        None => router,
+    }
+}
+
+/// A local model or engine finished downloading.
+pub fn setup_ready() {
+    if let Some(hub) = hub() {
+        hub.setup_ready();
+    }
+}
+
+/// A local download failed, `code` an error code in no interface language, so one cause is one row.
+pub fn setup_failed(code: &str) {
+    if let Some(hub) = hub() {
+        hub.setup_failed(code);
+    }
+}
+
+/// The model set a local run loaded: the model's id and its weight files.
+pub fn used_models(set: &str, components: &[String]) {
+    if let Some(hub) = hub() {
+        hub.used_models(Some(set), components, 1);
+    }
+}
+
+/// Seconds of video a local model made with the engine to itself, for the speed by card class.
+pub fn worked(kind: &str, result_seconds: f64, work: std::time::Duration) {
+    if let Some(hub) = hub() {
+        hub.worked(kind, result_seconds, work);
+    }
+}
+
+/// A generation that ended: `<task>_done` or `<task>_failed`, the model as a set named by its provider.
 pub fn job_ended(job: &Job) {
-    let Some(hub) = hub() else { return };
+    if let Some(hub) = hub() {
+        record_job_end(hub, job);
+    }
+}
+
+/// The model goes as a model set: `used_model` takes only `[A-Za-z0-9 ._+-]` up to 40 characters, which no
+/// provider's model id fits (`google/…`, `fal-ai/…`, `runware:100@1`).
+pub fn record_job_end(hub: &studio_hub_client::Hub, job: &Job) {
     let task = if job.task.is_empty() { "generation" } else { job.task.as_str() };
     match job.status.as_str() {
         "done" => {
             hub.count(&format!("{task}_done"), 1);
-            hub.used_model(&format!("{}:{}", job.provider.as_str(), job.model));
+            hub.used_models(Some(job.provider.as_str()), std::slice::from_ref(&job.model), 1);
         }
         "failed" => {
             hub.count(&format!("{task}_failed"), 1);

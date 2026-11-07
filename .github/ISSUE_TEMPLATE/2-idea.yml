@@ -1,0 +1,25 @@
+name: Idea / Идея
+description: Suggest a feature or an improvement · Предложить функцию или улучшение
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Write in any language — English, Русский, 中文. · Пишите на любом языке.
+        [Search existing issues](https://github.com/timoncool/videosos/issues?q=is%3Aissue) first — if the idea is there, add a 👍. · Сначала [поищите](https://github.com/timoncool/videosos/issues?q=is%3Aissue): если идея уже есть, поставьте 👍.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What do you want to do? / Что хотите сделать?
+      description: The task or the problem, not the solution yet. · Задача или неудобство — пока без решения.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: How could VideoSOS help? / Как мог бы помочь VideoSOS?
+  - type: textarea
+    id: examples
+    attributes:
+      label: Examples or screenshots / Примеры или скриншоты
+      description: How other programs do it, mockups, links. · Как это сделано в других программах, наброски, ссылки.

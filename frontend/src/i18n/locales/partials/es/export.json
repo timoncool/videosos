@@ -96,7 +96,41 @@
         "embeddedDescription": "Una pista de subtítulos activable (WebM/MKV)."
       },
       "subtitles": "Subtítulos",
-      "video": "Vídeo"
+      "video": "Vídeo",
+      "rateControl": "Control de velocidad de bits",
+      "rateControlAuto": "Auto (según el origen)",
+      "rateControlCbr": "CBR (velocidad de bits constante)",
+      "rateControlVbr": "VBR (velocidad de bits variable)",
+      "targetBitrate": "Velocidad de bits objetivo",
+      "useSourceBitrate": "Usar el origen",
+      "smartCopy": "Copia inteligente cuando sea posible",
+      "smartCopyPath": "Copia inteligente · sin recodificar",
+      "estimatedSize": "Estimado: {{size}}",
+      "sourceBitrate": "Origen: {{bitrate}}",
+      "smartCopyStatus": {
+        "eligible": "Disponible: los medios originales se copiarán byte a byte.",
+        "disabled": "Desactivada. La línea de tiempo se renderizará y codificará.",
+        "not-video": "Disponible solo para exportaciones de vídeo.",
+        "range": "No disponible al exportar un rango de entrada/salida.",
+        "timeline-layout": "Requiere un único clip de origen completo sin capas adicionales.",
+        "source-unavailable": "El archivo de origen o sus metadatos no están disponibles.",
+        "trimmed-or-retimed": "No disponible porque el origen está recortado, dividido, invertido o con la velocidad modificada.",
+        "visual-processing": "No disponible porque hay que renderizar ediciones visuales, subtítulos, transiciones o fotogramas clave.",
+        "audio-processing": "No disponible porque se ha cambiado el audio o la mezcla de pistas.",
+        "project-mismatch": "La resolución o la velocidad de fotogramas del proyecto no coincide con el origen.",
+        "format-mismatch": "El formato o el códec seleccionado no coincide con el origen."
+      },
+      "loudness": "Sonoridad",
+      "loudnessOption": {
+        "off": "Dejar como está",
+        "stream": "−14 LUFS — YouTube, redes sociales",
+        "podcast": "−16 LUFS — pódcasts, Apple",
+        "broadcast": "−23 LUFS — televisión (EBU R128)"
+      },
+      "loudnessDescription": {
+        "off": "El audio se exporta exactamente como está mezclado, sin procesar.",
+        "on": "Toda la mezcla se lleva a {{lufs}} LUFS según EBU R128 y un limitador mantiene los picos por debajo de −1 dBTP. El audio se recodifica y la copia inteligente se desactiva."
+      }
     },
     "videoContainer": {
       "mp4": "Compatible con casi cualquier reproductor",
@@ -123,6 +157,8 @@
           "title": "No se puede codificar el formato seleccionado",
           "detail": "Este navegador no puede codificar la configuración de exportación seleccionada.",
           "detailWithError": "{{error}}",
+          "containerUnsupported": "Este navegador no puede codificar vídeo {{container}}.",
+          "noCodecs": "Este navegador no tiene un codificador de vídeo para exportar.",
           "fix": "Elige otro formato/códec o prueba con un navegador Chromium reciente."
         },
         "audio-export-ready": {
@@ -182,8 +218,30 @@
         "worker-export-ready": {
           "title": "Ruta de exportación con worker lista",
           "detail": "El worker de exportación puede renderizar esta composición sin un modo alternativo conocido al hilo principal."
+        },
+        "smart-copy-ready": {
+          "title": "Copia inteligente lista",
+          "detail": "Los medios originales se copiarán sin renderizar ni recodificar."
         }
+      },
+      "smartCopyPath": "Ruta de copia inteligente"
+    },
+    "fcpxml": {
+      "noProject": "Abre primero un proyecto.",
+      "failed": "No se creó el FCPXML: {{reason}}",
+      "left": {
+        "kind": "No está en el FCPXML (no tiene equivalente): {{items}}",
+        "file": "No está en el FCPXML (no hay archivo en el espacio de trabajo): {{items}}",
+        "speed": "No está en el FCPXML (velocidad modificada): {{items}}",
+        "transition": "No está en FCPXML (una transición entre clips conectados no tiene equivalente allí; añádela en el editor): {{items}}"
       }
+    },
+    "validation": {
+      "resolution": "El tamaño de exportación no es válido.",
+      "frameRate": "La velocidad de fotogramas debe estar entre 1 y 120.",
+      "audioContainer": "La exportación de audio necesita un formato solo de audio.",
+      "videoContainer": "La exportación de vídeo necesita un formato de vídeo.",
+      "codecContainer": "El códec {{codec}} no es compatible con {{container}}."
     }
   }
 }

@@ -17,7 +17,7 @@ export const AppliedMotionRow = memo(function AppliedMotionRow({
   const content = (
     <>
       <div className="truncate text-[11px] font-medium text-foreground">{label}</div>
-      <div className="truncate text-[10px] text-muted-foreground">{detail}</div>
+      <div className="truncate text-[11px] text-muted-foreground">{detail}</div>
     </>
   )
 

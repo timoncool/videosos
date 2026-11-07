@@ -51,11 +51,29 @@ describe('createSingletonSceneVerificationProvider', () => {
     provider.getWorker()
     provider.disposeWorker()
 
+    expect(worker.postMessage).not.toHaveBeenCalled()
+    vi.advanceTimersByTime(60_000)
     expect(worker.postMessage).toHaveBeenCalledWith({ type: 'dispose' })
     expect(worker.terminate).not.toHaveBeenCalled()
 
     vi.advanceTimersByTime(500)
 
     expect(worker.terminate).toHaveBeenCalledTimes(1)
+  })
+
+  it('keeps the worker for a user that comes back before it idles out', () => {
+    vi.useFakeTimers()
+    const worker = createWorkerDouble()
+    const createWorker = vi.fn(() => worker)
+    const provider = createSingletonSceneVerificationProvider({ id: 'test', label: 'Test', createWorker })
+
+    provider.getWorker()
+    provider.disposeWorker()
+    vi.advanceTimersByTime(30_000)
+    expect(provider.getWorker()).toBe(worker)
+    vi.advanceTimersByTime(60_000)
+
+    expect(worker.postMessage).not.toHaveBeenCalled()
+    expect(createWorker).toHaveBeenCalledTimes(1)
   })
 })

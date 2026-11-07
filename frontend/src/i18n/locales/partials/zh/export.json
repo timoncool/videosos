@@ -96,7 +96,41 @@
         "embeddedDescription": "可开关的软字幕轨道（WebM/MKV）。"
       },
       "subtitles": "字幕",
-      "video": "视频"
+      "video": "视频",
+      "rateControl": "码率控制",
+      "rateControlAuto": "自动（根据源）",
+      "rateControlCbr": "CBR（恒定码率）",
+      "rateControlVbr": "VBR（可变码率）",
+      "targetBitrate": "目标码率",
+      "useSourceBitrate": "使用源码率",
+      "smartCopy": "尽可能使用智能复制",
+      "smartCopyPath": "智能复制 · 不重新编码",
+      "estimatedSize": "预计 {{size}}",
+      "sourceBitrate": "源 {{bitrate}}",
+      "smartCopyStatus": {
+        "eligible": "可用：原始媒体将逐字节复制。",
+        "disabled": "已停用。时间轴将被渲染并编码。",
+        "not-video": "仅适用于视频导出。",
+        "range": "导出入点/出点范围时不可用。",
+        "timeline-layout": "需要一个完整的源片段且不含其他图层。",
+        "source-unavailable": "原始源文件或元数据不可用。",
+        "trimmed-or-retimed": "不可用，因为源已被裁剪、拆分、倒放或变速。",
+        "visual-processing": "不可用，因为必须渲染视觉编辑、字幕、转场或关键帧。",
+        "audio-processing": "不可用，因为音频或轨道混音已被更改。",
+        "project-mismatch": "项目分辨率或帧率与源不一致。",
+        "format-mismatch": "所选格式或编解码器与源不一致。"
+      },
+      "loudness": "响度",
+      "loudnessOption": {
+        "off": "保持不变",
+        "stream": "−14 LUFS — YouTube、社交平台",
+        "podcast": "−16 LUFS — 播客、Apple",
+        "broadcast": "−23 LUFS — 广播 (EBU R128)"
+      },
+      "loudnessDescription": {
+        "off": "音频按混音原样导出，不做处理。",
+        "on": "整个混音按 EBU R128 调整到 {{lufs}} LUFS，限幅器将峰值保持在 −1 dBTP 以下。音频会重新编码，智能复制将关闭。"
+      }
     },
     "videoContainer": {
       "mp4": "兼容性广，适合分享",
@@ -123,6 +157,8 @@
           "title": "无法编码所选格式",
           "detail": "此浏览器无法编码所选导出设置。",
           "detailWithError": "{{error}}",
+          "containerUnsupported": "此浏览器无法编码 {{container}} 视频。",
+          "noCodecs": "此浏览器没有可用于导出的视频编码器。",
           "fix": "请选择其他格式/编解码器，或尝试较新的 Chromium 浏览器。"
         },
         "audio-export-ready": {
@@ -182,8 +218,30 @@
         "worker-export-ready": {
           "title": "Worker 导出路径已就绪",
           "detail": "导出 worker 可以渲染此合成，且没有已知的主线程回退。"
+        },
+        "smart-copy-ready": {
+          "title": "智能复制就绪",
+          "detail": "原始媒体将在不渲染、不重新编码的情况下复制。"
         }
+      },
+      "smartCopyPath": "智能复制路径"
+    },
+    "fcpxml": {
+      "noProject": "请先打开一个项目。",
+      "failed": "FCPXML 未生成：{{reason}}",
+      "left": {
+        "kind": "不在 FCPXML 中（没有对应项）：{{items}}",
+        "file": "不在 FCPXML 中（工作区中没有文件）：{{items}}",
+        "speed": "不在 FCPXML 中（速度已更改）：{{items}}",
+        "transition": "未包含在 FCPXML 中（连接片段之间的转场在那里没有对应元素；请在剪辑软件中添加）：{{items}}"
       }
+    },
+    "validation": {
+      "resolution": "导出尺寸无效。",
+      "frameRate": "帧率必须在 1 到 120 之间。",
+      "audioContainer": "音频导出需要纯音频格式。",
+      "videoContainer": "视频导出需要视频格式。",
+      "codecContainer": "{{container}} 不支持 {{codec}} 编解码器。"
     }
   }
 }

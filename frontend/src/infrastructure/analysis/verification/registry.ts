@@ -4,13 +4,12 @@ import {
   type SceneVerificationModelId,
 } from '@/shared/utils/scene-verification-models'
 import { gemmaSceneVerificationProvider } from './gemma-scene-verification-provider'
-import { lfmSceneVerificationProvider } from './lfm-scene-verification-provider'
 import type { SceneVerificationProvider } from './types'
 
 export type VerificationModel = SceneVerificationModelId
 
 const sceneVerificationProviderRegistry = new ProviderRegistry<SceneVerificationProvider>(
-  [gemmaSceneVerificationProvider, lfmSceneVerificationProvider],
+  [gemmaSceneVerificationProvider],
   DEFAULT_SCENE_VERIFICATION_MODEL,
 )
 

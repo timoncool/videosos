@@ -4,6 +4,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
+import { bitrateUnit } from '../utils/export-format'
 import type { Dispatch, SetStateAction } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -32,7 +33,7 @@ export function ExportRateControlFields({
   resolvedVideoBitrate,
   sourceVideo,
 }: ExportRateControlFieldsProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
 
   return (
     <div className="grid gap-3 md:grid-cols-2">
@@ -101,7 +102,7 @@ export function ExportRateControlFields({
             className="pr-14"
           />
           <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
-            Mbps
+            {bitrateUnit(i18n.language)}
           </span>
         </div>
       </div>

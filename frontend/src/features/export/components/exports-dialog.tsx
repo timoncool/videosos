@@ -228,7 +228,7 @@ export function ExportsDialog({ open, onClose, projectId }: ExportsDialogProps) 
             <TabsTrigger value="queue" className="gap-1.5">
               {t('export.renderQueue.tabQueue')}
               {activeCount > 0 && (
-                <span className="rounded-full bg-primary px-1.5 text-[10px] font-medium leading-tight text-primary-foreground">
+                <span className="rounded-full bg-primary px-1.5 text-[11px] font-medium leading-tight text-primary-foreground">
                   {activeCount}
                 </span>
               )}

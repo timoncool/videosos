@@ -175,9 +175,17 @@ function getPresentationOptionValue(config: Pick<PresentationConfig, 'id' | 'dir
 }
 
 function getPresentationOptionLabel(
-  config: Pick<PresentationConfig, 'label' | 'description' | 'direction'>,
+  config: Pick<PresentationConfig, 'id' | 'label' | 'description' | 'direction'>,
 ): string {
-  return config.direction ? config.description : config.label
+  return config.direction
+    ? config.description
+    : i18n.t(`names.transitionNames.${config.id}`, { defaultValue: config.label })
+}
+
+/** A transition's parameter in the window's language; the key goes by its label, as one key means different things. */
+function parameterLabel(label: string): string {
+  const key = label.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '')
+  return i18n.t(`editor.transitionPanel.params.${key}`, { defaultValue: label })
 }
 
 const DIRECTION_OPTIONS = [
@@ -383,7 +391,7 @@ export function TransitionPanel() {
           ? i18n.t(TRANSITION_CATEGORY_INFO[category].titleKey)
           : category
         const filtered = configs.filter((config) =>
-          [config.id, config.label, config.description, config.direction, category, categoryTitle]
+          [config.id, config.label, getPresentationOptionLabel(config), config.description, config.direction, category, categoryTitle]
             .filter(Boolean)
             .some((value) => String(value).toLowerCase().includes(query)),
         )
@@ -798,7 +806,7 @@ export function TransitionPanel() {
         )}
 
         {transitionDefinition?.parameters?.map((parameter) => (
-          <PropertyRow key={parameter.key} label={parameter.label} tooltip={parameter.description}>
+          <PropertyRow key={parameter.key} label={parameterLabel(parameter.label)} tooltip={parameter.description}>
             <div className="flex items-center gap-1 w-full">
               {parameter.type === 'number' ? (
                 <SliderInput
@@ -814,7 +822,7 @@ export function TransitionPanel() {
                 />
               ) : (
                 <TransitionColorPicker
-                  label={parameter.label}
+                  label={parameterLabel(parameter.label)}
                   initialColor={getColorParameterValue(selectedTransition.properties, parameter)}
                   onColorChange={(color) => handleParameterChange(parameter, color)}
                 />
@@ -825,8 +833,8 @@ export function TransitionPanel() {
                 className="h-7 w-7 flex-shrink-0"
                 onClick={() => handleParameterReset(parameter)}
                 disabled={isParameterAtDefault(selectedTransition.properties, parameter)}
-                title={t('editor.transitionPanel.resetParam', { label: parameter.label })}
-                aria-label={t('editor.transitionPanel.resetParam', { label: parameter.label })}
+                title={t('editor.transitionPanel.resetParam', { label: parameterLabel(parameter.label) })}
+                aria-label={t('editor.transitionPanel.resetParam', { label: parameterLabel(parameter.label) })}
               >
                 <RotateCcw className="w-3.5 h-3.5" />
               </Button>

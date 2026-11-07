@@ -52,7 +52,7 @@ export function ExportProgressView({
   elapsedSeconds,
   onCancel,
 }: ExportProgressViewProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
 
   return (
     <div className="space-y-4 py-4 overflow-hidden">
@@ -83,7 +83,9 @@ export function ExportProgressView({
             <div className="flex items-center gap-2 text-sm">
               <Clock className="h-4 w-4 text-muted-foreground flex-shrink-0" />
               <span className="text-muted-foreground">{t('export.progress.elapsedLabel')}</span>
-              <span className="font-medium tabular-nums">{formatTime(elapsedSeconds)}</span>
+              <span className="font-medium tabular-nums">
+                {formatTime(elapsedSeconds, i18n.language)}
+              </span>
             </div>
           )}
         </div>

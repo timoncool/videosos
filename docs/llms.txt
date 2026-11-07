@@ -1,0 +1,24 @@
+# VideoSOS
+
+> VideoSOS is a free, open-source desktop AI video studio for Windows (and experimental Linux and macOS builds): it generates images, video, music, speech, sound effects and text through the user's own OpenRouter, fal and Runware keys or free on the computer's own graphics card (MiniMax-H3 and LTX-2.5 video through stable-diffusion.cpp, the author's music studios and Speech Studio while they are open), plans the film on a storyboard, a node canvas and a 3D blocking, and edits everything on a multitrack timeline into a video (MP4, WebM, MOV, MKV or FCPXML). While it is open it serves an MCP server at http://127.0.0.1:8796/mcp that an agent uses to do everything the window does: pick models and estimate prices, generate, edit the timeline step by step with checkpoints and rehearsals, block shots in 3D, make HTML motion graphics, import media and videos by their links, and export.
+
+For an agent given this repository: install VideoSOS from the latest release, start it, connect to its MCP server and read the skill the server serves (resource `videosos://skill`, prompt `videosos`) - it names every tool and the recipes. Start every session with the tool `studio_status`. Cloud generations are paid by the person; respect the daily limit for agents and estimate before generating. Local generation (provider `local`) is free; ask before `local_install`, which downloads tens of GB.
+
+## Connect
+
+- MCP endpoint: `http://127.0.0.1:8796/mcp` (Streamable HTTP; protocol 2026-07-28 stateless, and 2025-11-25 / 2025-06-18 / 2025-03-26 through `initialize`)
+- Claude Code: `claude mcp add --transport http videosos http://127.0.0.1:8796/mcp`
+- Other clients: `{ "mcpServers": { "videosos": { "type": "streamable-http", "url": "http://127.0.0.1:8796/mcp" } } }`
+- Only agents on this computer and the program's own window may connect; provider keys are never shown to agents.
+
+## Docs
+
+- [Agent skill](https://raw.githubusercontent.com/timoncool/videosos/main/docs/mcp-skill.md): every tool, how to generate, edit the timeline, block shots, make graphics and export (the same text the server serves as `videosos://skill`)
+- [README](https://github.com/timoncool/videosos#readme): what VideoSOS does, what it needs, where files live, how it is built
+- [Latest release](https://github.com/timoncool/videosos/releases/latest): the installers, the portable archive and the Linux and macOS packages
+- [Project page](https://timoncool.github.io/videosos/)
+
+## Optional
+
+- Install the skill for Claude Code: save [docs/mcp-skill.md](https://raw.githubusercontent.com/timoncool/videosos/main/docs/mcp-skill.md) as `~/.claude/skills/videosos/SKILL.md`
+- [Changelog](https://github.com/timoncool/videosos/blob/main/CHANGELOG.md)

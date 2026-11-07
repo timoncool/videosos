@@ -24,7 +24,7 @@ const EDITOR_DENSITY_PRESETS = {
     previewSplitHeaderHeight: 32,
     previewControlsHeight: 32,
     previewControlButtonSize: 30,
-    timelineDefaultSize: 28,
+    timelineDefaultSize: 36,
     timelineMinSize: 14,
     timelineMaxSize: 80,
     graphPanelSizeIncrease: 10,
@@ -60,6 +60,9 @@ export function getEditorLayout(preset: unknown = DEFAULT_EDITOR_DENSITY_PRESET)
 }
 
 export const EDITOR_LAYOUT = getEditorLayout()
+
+/** The track-header column on a compact screen, where the dopesheet's full width would leave the clips no room. */
+export const COMPACT_TIMELINE_SIDEBAR_WIDTH = 168
 
 const EDITOR_LAYOUT_CSS_VAR_NAMES = {
   toolbarHeight: '--editor-toolbar-height',

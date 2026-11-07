@@ -175,7 +175,11 @@ export function getVideoCodecOptions(
  * control and the resolution its scale produces. Settings and presets are
  * compared as one string so preset detection stays branch-free.
  */
-function presetSignature(preset: ExportPreset, projectWidth: number, projectHeight: number): string {
+function presetSignature(
+  preset: ExportPreset,
+  projectWidth: number,
+  projectHeight: number,
+): string {
   const resolution = scaledResolution(projectWidth, projectHeight, preset.scale)
   return [
     preset.container,
@@ -186,10 +190,7 @@ function presetSignature(preset: ExportPreset, projectWidth: number, projectHeig
   ].join('|')
 }
 
-function settingsSignature(
-  videoContainer: ClientVideoContainer,
-  settings: ExportSettings,
-): string {
+function settingsSignature(videoContainer: ClientVideoContainer, settings: ExportSettings): string {
   const { width, height } = settings.resolution
   return [
     videoContainer,

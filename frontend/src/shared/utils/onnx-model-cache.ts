@@ -203,8 +203,3 @@ export async function fetchOnnxModelText(url: string): Promise<string> {
   }
   return response.text()
 }
-
-/** Fetch a small JSON asset (config, tokenizer, voice style), with the same caching. */
-export async function fetchOnnxModelJson<T>(url: string): Promise<T> {
-  return JSON.parse(await fetchOnnxModelText(url)) as T
-}

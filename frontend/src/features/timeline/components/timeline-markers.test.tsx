@@ -73,7 +73,7 @@ describe('TimelineMarkers ruler scrub cancellation', () => {
     const ruler = container.querySelector('[style*="cursor: ew-resize"]') as HTMLDivElement
     ruler.getBoundingClientRect = scrollContainer.getBoundingClientRect
 
-    fireEvent.mouseDown(ruler, { button: 0, clientX: 290 })
+    fireEvent.pointerDown(ruler, { button: 0, clientX: 290 })
     expect(mainTimelineScrubActiveRef.current).toBe(true)
     expect(timelineSkimmerScrubSignal.current).toBe(true)
     expect(frameCallbacks).toHaveLength(1)
@@ -132,7 +132,7 @@ describe('TimelineMarkers ruler scrub cancellation', () => {
     ruler.getBoundingClientRect = readRulerRect
 
     // viewport x 150 + scrollLeft 200 = timeline x 350 = frame 105.
-    fireEvent.mouseDown(ruler, { button: 0, clientX: 250 })
+    fireEvent.pointerDown(ruler, { button: 0, clientX: 250 })
     expect(frameCallbacks).toHaveLength(1)
     readViewportRect.mockClear()
     readRulerRect.mockClear()
@@ -143,7 +143,7 @@ describe('TimelineMarkers ruler scrub cancellation', () => {
     expect(readRulerRect).not.toHaveBeenCalled()
     expect(usePlaybackStore.getState().currentFrame).toBe(105)
 
-    fireEvent.mouseUp(document, { clientX: 250 })
+    fireEvent.pointerUp(document, { clientX: 250 })
   })
 
   it('keeps a stationary same-frame click on the committed frame pixel', () => {
@@ -176,10 +176,10 @@ describe('TimelineMarkers ruler scrub cancellation', () => {
 
     // At 100 px/s and 30 fps, x=24 resolves to frame 7, whose committed
     // integer pixel is round(7 * 100 / 30) = 23.
-    fireEvent.mouseDown(ruler, { button: 0, clientX: 24 })
+    fireEvent.pointerDown(ruler, { button: 0, clientX: 24 })
     expect(playhead).toHaveStyle({ transform: 'translate3d(23px, 0, 0)' })
 
-    fireEvent.mouseUp(document, { clientX: 24 })
+    fireEvent.pointerUp(document, { clientX: 24 })
     expect(usePlaybackStore.getState().currentFrame).toBe(7)
     expect(playhead).toHaveStyle({ transform: 'translate3d(23px, 0, 0)' })
   })
@@ -206,7 +206,7 @@ describe('TimelineMarkers ruler scrub cancellation', () => {
       toJSON: () => ({}),
     })
 
-    fireEvent.mouseMove(ruler, { clientX: 100 })
+    fireEvent.pointerMove(ruler, { clientX: 100 })
     await waitFor(() => expect(usePlaybackStore.getState().previewFrame).toBe(30))
 
     fireEvent.mouseLeave(ruler, { relatedTarget: track })
@@ -236,7 +236,7 @@ describe('TimelineMarkers ruler scrub cancellation', () => {
       toJSON: () => ({}),
     })
 
-    fireEvent.mouseMove(ruler, { clientX: 100 })
+    fireEvent.pointerMove(ruler, { clientX: 100 })
     await waitFor(() => expect(usePlaybackStore.getState().previewFrame).toBe(30))
 
     fireEvent.mouseLeave(ruler, { relatedTarget: outside })
@@ -267,9 +267,9 @@ describe('TimelineMarkers ruler scrub cancellation', () => {
         height: 34,
       }) as DOMRect
 
-    fireEvent.mouseMove(ruler, { clientX: 50 })
-    fireEvent.mouseMove(ruler, { clientX: 75 })
-    fireEvent.mouseMove(ruler, { clientX: 100 })
+    fireEvent.pointerMove(ruler, { clientX: 50 })
+    fireEvent.pointerMove(ruler, { clientX: 75 })
+    fireEvent.pointerMove(ruler, { clientX: 100 })
 
     expect(frameCallbacks).toHaveLength(1)
     expect(usePlaybackStore.getState().previewFrame).toBeNull()

@@ -1,0 +1,75 @@
+name: Bug report / Ошибка
+description: Something is broken or works wrong · Что-то сломалось или работает не так
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report! Write in any language — English, Русский, 中文.
+        Спасибо, что сообщаете! Пишите на любом языке.
+
+        - Please check that you have the [latest version](https://github.com/timoncool/videosos/releases/latest) — many problems are already fixed. · Проверьте, что у вас [последняя версия](https://github.com/timoncool/videosos/releases/latest).
+        - [Search existing issues](https://github.com/timoncool/videosos/issues?q=is%3Aissue) — if yours is there, add a 👍 or a comment. · [Поищите похожие](https://github.com/timoncool/videosos/issues?q=is%3Aissue).
+        - One problem per report. · Одна проблема — одно сообщение.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened? / Что случилось?
+      description: Copy the exact error text, if there was one. · Если было сообщение об ошибке, скопируйте его текст целиком.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce / Как повторить
+      placeholder: |
+        1. …
+        2. …
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect? / Что ожидали?
+  - type: input
+    id: version
+    attributes:
+      label: Version / Версия
+      description: "Settings → About, or the installer's name (VideoSOS_2.1.0_x64-setup.exe). · Настройки → О программе или имя установщика."
+      placeholder: "2.1.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where / Где
+      options:
+        - Desktop app / Программа на компьютере
+        - Browser (Chrome, Edge) / Браузер
+        - Agent over MCP / Агент через MCP
+        - Not sure / Не знаю
+  - type: input
+    id: gpu
+    attributes:
+      label: Graphics card / Видеокарта
+      description: For generation on this computer — card, its memory and driver version. · Для генерации на этом компьютере — карта, её память и драйвер.
+      placeholder: "RTX 3060 12 GB, driver 581.57 · no GPU"
+  - type: input
+    id: os
+    attributes:
+      label: System / Система
+      placeholder: "Windows 11 24H2"
+  - type: textarea
+    id: log
+    attributes:
+      label: Messages / Сообщения
+      description: |
+        The text of the error notification, or the lines of the **Journal**. · Текст уведомления об ошибке или строки **Журнала**.
+
+        Remove API keys if any. · Уберите ключи API, если они там есть.
+      render: shell
+  - type: textarea
+    id: attachments
+    attributes:
+      label: Screenshots or files / Скриншоты или файлы
+      description: Drag images or videos here. · Перетащите сюда картинки или видео.

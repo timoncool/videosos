@@ -731,7 +731,7 @@ export function AudioEqCurveEditor({
         {CURVE_GRID_LEVELS_DB.map((level) => (
           <div
             key={`db-${level}`}
-            className="pointer-events-none absolute left-1.5 -translate-y-1/2 text-[10px] leading-none text-current opacity-40"
+            className="pointer-events-none absolute left-1.5 -translate-y-1/2 text-[11px] leading-none text-current opacity-40"
             style={{ top: `${(displayDbToY(level) / CURVE_HEIGHT) * 100}%` }}
           >
             {level > 0 ? `+${level}` : level}
@@ -741,7 +741,7 @@ export function AudioEqCurveEditor({
         {CURVE_GRID_FREQUENCIES_HZ.map((frequencyHz) => (
           <div
             key={`freq-${frequencyHz}`}
-            className="pointer-events-none absolute -translate-x-1/2 text-[10px] leading-none text-current opacity-45"
+            className="pointer-events-none absolute -translate-x-1/2 text-[11px] leading-none text-current opacity-45"
             style={{
               left: `${(frequencyToX(frequencyHz) / CURVE_WIDTH) * 100}%`,
               bottom: '3px',
@@ -800,7 +800,7 @@ export function AudioEqCurveEditor({
         })}
 
         {disabled ? (
-          <div className="pointer-events-none absolute inset-x-0 top-2 text-center text-[10px] text-muted-foreground">
+          <div className="pointer-events-none absolute inset-x-0 top-2 text-center text-[11px] text-muted-foreground">
             Mixed EQ values
           </div>
         ) : null}

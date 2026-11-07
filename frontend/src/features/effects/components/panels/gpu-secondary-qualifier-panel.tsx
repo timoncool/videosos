@@ -371,7 +371,7 @@ export const GpuSecondaryQualifierPanel = memo(function GpuSecondaryQualifierPan
 
       {collapsed ? null : (
         <div className="space-y-0">
-          <div className="px-2 pb-1 pt-1 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+          <div className="px-2 pb-1 pt-1 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
             {t('effects.qualifier.key')}
           </div>
           <div className={cn('px-2 pb-1', !enabled && 'opacity-50')}>
@@ -386,7 +386,7 @@ export const GpuSecondaryQualifierPanel = memo(function GpuSecondaryQualifierPan
           </div>
           {HUE_KEYS.map(renderNumberRow)}
 
-          <div className="px-2 pb-1 pt-2 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+          <div className="px-2 pb-1 pt-2 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
             {t('effects.qualifier.matte')}
           </div>
           <div className="px-2 pb-1 flex gap-1">
@@ -395,7 +395,7 @@ export const GpuSecondaryQualifierPanel = memo(function GpuSecondaryQualifierPan
           </div>
           {MATTE_KEYS.map(renderNumberRow)}
 
-          <div className="px-2 pb-1 pt-2 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+          <div className="px-2 pb-1 pt-2 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
             {t('effects.qualifier.correction')}
           </div>
           {CORRECTION_KEYS.map(renderNumberRow)}

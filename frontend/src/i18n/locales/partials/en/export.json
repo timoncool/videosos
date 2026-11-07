@@ -94,7 +94,7 @@
       "smartCopy": "Smart copy when possible",
       "smartCopyPath": "Smart copy · no re-encoding",
       "estimatedSize": "Estimated {{size}}",
-      "sourceBitrate": "Source {{bitrate}} Mbps",
+      "sourceBitrate": "Source {{bitrate}}",
       "smartCopyStatus": {
         "eligible": "Available: the original media will be copied byte-for-byte.",
         "disabled": "Disabled. The timeline will be rendered and encoded.",
@@ -119,7 +119,18 @@
         "embeddedDescription": "A soft, toggleable subtitle track (WebM/MKV)."
       },
       "subtitles": "Subtitles",
-      "video": "Video"
+      "video": "Video",
+      "loudness": "Loudness",
+      "loudnessOption": {
+        "off": "Leave as is",
+        "stream": "−14 LUFS — YouTube, social",
+        "podcast": "−16 LUFS — podcasts, Apple",
+        "broadcast": "−23 LUFS — broadcast (EBU R128)"
+      },
+      "loudnessDescription": {
+        "off": "The audio is exported exactly as mixed, unprocessed.",
+        "on": "The whole mix is brought to {{lufs}} LUFS per EBU R128 and a limiter keeps peaks under −1 dBTP. The audio is re-encoded and smart copy is turned off."
+      }
     },
     "videoContainer": {
       "mp4": "Widely supported, great for sharing",
@@ -147,6 +158,8 @@
           "title": "Selected format cannot be encoded",
           "detail": "This browser cannot encode the selected export settings.",
           "detailWithError": "{{error}}",
+          "containerUnsupported": "This browser cannot encode {{container}} video.",
+          "noCodecs": "This browser has no video encoder for export.",
           "fix": "Choose a different format/codec or try a recent Chromium browser."
         },
         "audio-export-ready": {
@@ -212,6 +225,23 @@
           "detail": "The export worker can render this composition without a known main-thread fallback."
         }
       }
+    },
+    "fcpxml": {
+      "noProject": "Open a project first.",
+      "failed": "FCPXML was not made: {{reason}}",
+      "left": {
+        "kind": "Not in FCPXML (no counterpart there): {{items}}",
+        "file": "Not in FCPXML (no file in the workspace): {{items}}",
+        "speed": "Not in FCPXML (speed changed): {{items}}",
+        "transition": "Not in FCPXML (a transition between connected clips has no counterpart there; add it in the editor): {{items}}"
+      }
+    },
+    "validation": {
+      "resolution": "The export size is not valid.",
+      "frameRate": "The frame rate must be from 1 to 120.",
+      "audioContainer": "Audio export needs an audio-only format.",
+      "videoContainer": "Video export needs a video format.",
+      "codecContainer": "The {{codec}} codec is not supported in {{container}}."
     }
   }
 }

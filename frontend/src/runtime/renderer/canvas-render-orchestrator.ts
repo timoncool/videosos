@@ -368,6 +368,14 @@ interface SingleFrameOptions {
   format?: 'image/jpeg' | 'image/png' | 'image/webp'
 }
 
+/** The loudness target is an export setting, but the audio paths read it from the composition they mix. */
+function withExportLoudness<T extends RenderEngineOptions | AudioRenderOptions>(options: T): T {
+  return {
+    ...options,
+    composition: { ...options.composition, loudnessLufs: options.settings.loudnessLufs },
+  }
+}
+
 async function tryPacketRemuxComposition(
   options: RenderEngineOptions,
 ): Promise<ClientRenderResult | null> {
@@ -542,7 +550,10 @@ async function tryPacketRemuxComposition(
 /**
  * Main render function – orchestrates the entire client-side render.
  */
-export async function renderComposition(options: RenderEngineOptions): Promise<ClientRenderResult> {
+export async function renderComposition(
+  requested: RenderEngineOptions,
+): Promise<ClientRenderResult> {
+  const options = withExportLoudness(requested)
   const { settings, composition, onProgress, signal } = options
   const { fps, durationInFrames = 0 } = composition
   const canvasAudio = await loadCanvasAudio()
@@ -1017,8 +1028,8 @@ export async function renderSingleFrame(options: SingleFrameOptions): Promise<Bl
  * Render audio-only export (no video frames).
  * Extracts and mixes all audio from the composition and encodes to the specified format.
  */
-export async function renderAudioOnly(options: AudioRenderOptions): Promise<ClientRenderResult> {
-  const { settings, composition, onProgress, signal } = options
+export async function renderAudioOnly(requested: AudioRenderOptions): Promise<ClientRenderResult> {
+  const { settings, composition, onProgress, signal } = withExportLoudness(requested)
   const { fps, durationInFrames = 0 } = composition
   const canvasAudio = await loadCanvasAudio()
 

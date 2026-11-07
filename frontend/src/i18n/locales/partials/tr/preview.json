@@ -68,7 +68,11 @@
       "loadingMedia": "Medya yükleniyor",
       "videoPreview": "Video önizlemesi",
       "emptyTitle": "Zaman çizelgesinde henüz bir şey yok",
-      "emptyDescription": "Medya içe aktarın, bir klibi zaman çizelgesine sürükleyin, ardından önizlemek için Boşluk tuşuna basın."
+      "emptyDescription": "Medya içe aktarın, bir klibi zaman çizelgesine sürükleyin, ardından önizlemek için Boşluk tuşuna basın.",
+      "gradeComparisonSplit": "Bölünmüş derecelendirme karşılaştırması",
+      "gradeComparisonBefore": "Önce",
+      "gradeComparisonAfter": "Sonra",
+      "gradeComparisonWipe": "Bölünmüş karşılaştırmayı ayarla"
     },
     "zoom": {
       "ariaLabel": "Önizleme yakınlaştırması",

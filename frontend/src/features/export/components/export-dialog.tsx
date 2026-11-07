@@ -300,6 +300,7 @@ export function ExportDialog({ open, onClose, onOpenRenderQueue }: ExportDialogP
     startExport,
     cancelExport,
     downloadVideo,
+    resultFile,
     resetState,
     getSupportedCodecs,
   } = clientRender
@@ -573,7 +574,7 @@ export function ExportDialog({ open, onClose, onOpenRenderQueue }: ExportDialogP
   return (
     <Dialog open={open} onOpenChange={handleClose} modal>
       <DialogContent
-        className={`overflow-hidden ${
+        className={`max-h-[calc(100dvh-2rem)] overflow-y-auto ${
           view === 'settings'
             ? 'sm:max-w-[900px]'
             : view === 'complete' && isVideoResult
@@ -690,6 +691,7 @@ export function ExportDialog({ open, onClose, onOpenRenderQueue }: ExportDialogP
             elapsedSeconds={elapsedSeconds}
             onClose={handleClose}
             onDownload={downloadVideo}
+            resultFile={resultFile}
           />
         )}
 

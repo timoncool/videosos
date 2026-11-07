@@ -70,7 +70,8 @@
       "alsoDeleteLocalFiles": "Supprimer également les fichiers locaux sur le disque",
       "removeFilesFromFolder": "Supprimer les fichiers du dossier lié. Cette action est irréversible.",
       "removeFilesFromNamedFolder": "Supprimer les fichiers du dossier lié « {{folder}} ». Cette action est irréversible.",
-      "openProject": "Ouvrir le projet"
+      "openProject": "Ouvrir le projet",
+      "actions": "Actions du projet"
     },
     "form": {
       "createTitle": "Créer un nouveau projet",

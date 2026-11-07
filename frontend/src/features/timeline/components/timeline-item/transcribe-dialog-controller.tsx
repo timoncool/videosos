@@ -1,4 +1,5 @@
 import { memo } from 'react'
+import { i18n } from '@/i18n'
 import { cancelMediaTranscriptionJob } from '@/features/timeline/deps/media-transcription-service'
 import {
   TranscribeDialog,
@@ -11,7 +12,6 @@ import {
 } from '@/shared/utils/transcription-progress'
 import {
   isTranscriptionOutOfMemoryError,
-  TRANSCRIPTION_OOM_HINT,
 } from '@/shared/utils/transcription-cancellation'
 import type { CaptionDialogState } from './use-caption-dialog-state'
 
@@ -81,7 +81,7 @@ export const TranscribeDialogController = memo(function TranscribeDialogControll
           markCaptionEnded()
           const baseMessage = error instanceof Error ? error.message : 'Failed to generate captions'
           setDialogError(
-            isTranscriptionOutOfMemoryError(error) ? TRANSCRIPTION_OOM_HINT : baseMessage,
+            isTranscriptionOutOfMemoryError(error) ? i18n.t('transcript.outOfMemory') : baseMessage,
           )
         }
         try {

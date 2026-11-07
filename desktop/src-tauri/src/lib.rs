@@ -13,6 +13,7 @@ use std::time::{Duration, Instant};
 
 use tauri::{Manager, WebviewUrl, WebviewWindowBuilder};
 use vs_server::service::{self, Claim};
+use vs_server::vs_providers::net as vs_providers_net;
 
 fn wait_for_own_service(port: u16, stopped: &Receiver<Result<(), String>>) -> Result<(), String> {
     let deadline = Instant::now() + Duration::from_secs(30);
@@ -43,6 +44,11 @@ fn fatal(message: &str) {
         .show();
 }
 
+/// The page the embedded server serves this window; anything else opens in the person's browser.
+fn own_page(url: &tauri::Url, port: u16) -> bool {
+    url.host_str() == Some("127.0.0.1") && url.port() == Some(port)
+}
+
 fn open_in_browser(app: &tauri::AppHandle, url: &tauri::Url) {
     use tauri_plugin_opener::OpenerExt;
     if let Err(e) = app.opener().open_url(url.as_str(), None::<&str>) {
@@ -58,7 +64,7 @@ fn single_instance_wanted() -> bool {
 
 fn start_or_reuse_service(repo_root: &std::path::Path) -> Result<u16, String> {
     let port = service::listen_port()?;
-    match service::claim_port(port, Duration::from_secs(20)).map_err(|busy| busy.to_string())? {
+    match service::claim_port_on(vs_server::bind_address(repo_root), port, Duration::from_secs(20)).map_err(|busy| busy.to_string())? {
         Claim::Bound(listener) => {
             let root = repo_root.to_path_buf();
             let (tx, rx) = std::sync::mpsc::channel();
@@ -168,6 +174,78 @@ fn spawn_update_check(app: tauri::AppHandle, portable: bool) {
     });
 }
 
+/// The service's answer to a plain local request: `Err(false)` when nothing listens, `Err(true)` when it did not
+/// answer in `wait`.
+fn service_call(path: &str, wait: Duration) -> Result<String, bool> {
+    use std::io::{Read, Write};
+    let Some(port) = service::recorded_port() else { return Err(false) };
+    let address = std::net::SocketAddr::from(([127, 0, 0, 1], port));
+    let Ok(mut stream) = std::net::TcpStream::connect_timeout(&address, Duration::from_millis(500)) else {
+        return Err(false);
+    };
+    let _ = stream.set_read_timeout(Some(wait));
+    let request = format!("GET {path} HTTP/1.0\r\nHost: 127.0.0.1:{port}\r\nContent-Length: 0\r\n\r\n");
+    let mut response = String::new();
+    if stream.write_all(request.as_bytes()).is_err() || stream.read_to_string(&mut response).is_err() {
+        return Err(true);
+    }
+    response.split("\r\n\r\n").nth(1).map(str::to_owned).ok_or(true)
+}
+
+/// Generations not finished yet; `None` when the service could not say in `wait`.
+fn generations_in_progress(wait: Duration) -> Option<usize> {
+    match service_call("/api/jobs?limit=1000", wait) {
+        Ok(body) => serde_json::from_str::<serde_json::Value>(&body).ok().and_then(|answer| {
+            answer["jobs"].as_array().map(|jobs| {
+                jobs.iter().filter(|job| matches!(job["status"].as_str(), Some("queued" | "sending" | "running"))).count()
+            })
+        }),
+        Err(false) => Some(0),
+        Err(true) => None,
+    }
+}
+
+/// Quit, asking first only while a generation is not finished: one being sent, or answered in one request, is
+/// lost with the program and may still be paid.
+fn confirm_quit(app: &tauri::AppHandle) {
+    use tauri_plugin_dialog::{DialogExt, MessageDialogButtons, MessageDialogKind};
+    let running = generations_in_progress(Duration::from_secs(2));
+    if running == Some(0) {
+        app.exit(0);
+        return;
+    }
+    let text = |key: &str, args: &[(&'static str, String)]| vs_server::i18n::text(key, args);
+    let count = running.map_or_else(|| "?".to_string(), |count| count.to_string());
+    let mut dialog = app
+        .dialog()
+        .message(text("quit-running", &[("count", count)]))
+        .title(text("quit-title", &[]))
+        .kind(MessageDialogKind::Warning)
+        .buttons(MessageDialogButtons::OkCancelCustom(text("quit-button-quit", &[]), text("quit-button-stay", &[])));
+    if let Some(window) = app.get_webview_window("main") {
+        dialog = dialog.parent(&window);
+    }
+    if dialog.blocking_show() {
+        app.exit(0);
+    }
+}
+
+/// Tauri's own WebView2 switches, the proxy the person chose for what the window loads itself (as in the music
+/// studios), and whatever is set in the variable WebView2 documents for exactly this.
+#[cfg(windows)]
+fn webview_browser_arguments(proxy: &vs_providers_net::ProxySettings) -> String {
+    let mut own = "--disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection --autoplay-policy=no-user-gesture-required".to_owned();
+    if proxy.mode == vs_providers_net::ProxyMode::Off {
+        own.push_str(" --no-proxy-server");
+    } else if let Some(url) = proxy.window_proxy().filter(|url| !matches!(url.scheme(), "http" | "socks5")) {
+        own.push_str(&format!(" --proxy-server={}://{}:{}", url.scheme(), url.host_str().unwrap_or_default(), url.port_or_known_default().unwrap_or_default()));
+    }
+    match std::env::var("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS") {
+        Ok(extra) if !extra.trim().is_empty() => format!("{own} {}", extra.trim()),
+        _ => own,
+    }
+}
+
 /// Hides this process's own console window; a console shared with a terminal it was started from is left.
 #[cfg(windows)]
 fn hide_console_window() {
@@ -189,7 +267,7 @@ fn hide_console_window() {
 }
 
 pub fn run() {
-    if !vs_server::process_group::bind_children_to_this_process() {
+    if cfg!(windows) && !vs_server::process_group::bind_children_to_this_process() {
         eprintln!("[ERROR] the process did not join its own job object: ffmpeg children end only with their handles");
     }
     #[cfg(windows)]
@@ -232,8 +310,17 @@ pub fn run() {
             let url = format!("http://127.0.0.1:{port}/projects");
             let icon = app.default_window_icon().cloned();
             let (for_tabs, for_links) = (app.handle().clone(), app.handle().clone());
-            let win = WebviewWindowBuilder::new(app, "main", WebviewUrl::External(url.parse().expect("a valid URL")))
-                .title(format!("VideoSOS {}", app.package_info().version))
+            let proxy = vs_server::settings::saved_proxy(&repo_root.join("data"));
+            let window = WebviewWindowBuilder::new(app, "main", WebviewUrl::External(url.parse().expect("a valid URL")));
+            #[cfg(windows)]
+            let window = window.additional_browser_args(&webview_browser_arguments(&proxy));
+            // a proxy of the person's own reaches the window through Tauri where it takes the scheme
+            let window = match proxy.window_proxy().filter(|url| matches!(url.scheme(), "http" | "socks5")) {
+                Some(url) => window.proxy_url(url),
+                None => window,
+            };
+            let win = window
+                .title(format!("VideoSOS {}{}", app.package_info().version, if layout::is_portable() { " Portable" } else { "" }))
                 .inner_size(1600.0, 1000.0)
                 .min_inner_size(1200.0, 760.0)
                 .resizable(true)
@@ -245,9 +332,16 @@ pub fn run() {
                     open_in_browser(&for_tabs, &target);
                     tauri::webview::NewWindowResponse::Deny
                 })
+                // the window shows only VideoSOS's own page: its microphone requests (the sound outputs' names,
+                // the voice-over) are the person's own clicks
+                .on_permission_request(move |webview, kind| match kind {
+                    tauri::webview::PermissionKind::Microphone if webview.url().is_ok_and(|url| own_page(&url, port)) => {
+                        tauri::webview::PermissionResponse::Allow
+                    }
+                    _ => tauri::webview::PermissionResponse::Default,
+                })
                 .on_navigation(move |target| {
-                    let own = target.host_str() == Some("127.0.0.1") && target.port() == Some(port);
-                    if own || !matches!(target.scheme(), "http" | "https") {
+                    if own_page(target, port) || !matches!(target.scheme(), "http" | "https") {
                         return true;
                     }
                     open_in_browser(&for_links, target);
@@ -257,14 +351,41 @@ pub fn run() {
             if let Some(icon) = icon {
                 let _ = win.set_icon(icon);
             }
+            let dialogs = app.handle().clone();
+            vs_server::exports::set_save_dialog(std::sync::Arc::new(move |name: &str, start: Option<std::path::PathBuf>| {
+                use tauri_plugin_dialog::DialogExt;
+                let mut dialog = dialogs.dialog().file().set_file_name(name);
+                if let Some(extension) = std::path::Path::new(name).extension().and_then(|extension| extension.to_str()) {
+                    dialog = dialog.add_filter(extension.to_uppercase(), &[extension]);
+                }
+                if let Some(folder) = start {
+                    dialog = dialog.set_directory(folder);
+                }
+                if let Some(window) = dialogs.get_webview_window("main") {
+                    dialog = dialog.set_parent(&window);
+                }
+                dialog.blocking_save_file().and_then(|path| path.into_path().ok())
+            }));
             spawn_update_check(app.handle().clone(), layout::is_portable());
             Ok(())
         })
         .build(context)
         .expect("Tauri did not start")
-        .run(|_, event| {
-            if let tauri::RunEvent::Exit = event {
-                vs_server::hub::flush_on_exit();
+        .run(|app, event| match &event {
+            // closing the main window quits on every platform; Cmd+Q and the Dock reach it as an exit request
+            // with no code, and an exit the program requests itself carries one and goes through
+            tauri::RunEvent::WindowEvent { label, event: tauri::WindowEvent::CloseRequested { api, .. }, .. } if label == "main" => {
+                api.prevent_close();
+                let app = app.clone();
+                std::thread::spawn(move || confirm_quit(&app));
             }
+            #[cfg(target_os = "macos")]
+            tauri::RunEvent::ExitRequested { code: None, api, .. } => {
+                api.prevent_exit();
+                let app = app.clone();
+                std::thread::spawn(move || confirm_quit(&app));
+            }
+            tauri::RunEvent::Exit => vs_server::hub::flush_on_exit(),
+            _ => {}
         });
 }

@@ -46,7 +46,7 @@ export const StretchHandles = memo(function StretchHandles({
           'absolute left-0 top-0 bottom-0 w-3 cursor-ew-resize transition-opacity duration-75',
           showLeftHandle ? 'opacity-100' : 'opacity-0 pointer-events-none',
         )}
-        onMouseDown={(e) => onStretchStart(e, 'start')}
+        onPointerDown={(e) => onStretchStart(e, 'start')}
       >
         <div
           className={cn(
@@ -65,7 +65,7 @@ export const StretchHandles = memo(function StretchHandles({
           'absolute right-0 top-0 bottom-0 w-3 cursor-ew-resize transition-opacity duration-75',
           showRightHandle ? 'opacity-100' : 'opacity-0 pointer-events-none',
         )}
-        onMouseDown={(e) => onStretchStart(e, 'end')}
+        onPointerDown={(e) => onStretchStart(e, 'end')}
       >
         <div
           className={cn(

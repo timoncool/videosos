@@ -42,14 +42,14 @@ describe('AudioVolumeControl', () => {
     const button = screen.getByRole('button', { name: 'Adjust clip volume' })
 
     fireEvent.mouseEnter(button)
-    fireEvent.mouseDown(button)
+    fireEvent.pointerDown(button)
     expect(onVolumeMouseDown).not.toHaveBeenCalled()
 
     act(() => {
       vi.advanceTimersByTime(180)
     })
 
-    fireEvent.mouseDown(button)
+    fireEvent.pointerDown(button)
     expect(onVolumeMouseDown).toHaveBeenCalledTimes(1)
   })
 

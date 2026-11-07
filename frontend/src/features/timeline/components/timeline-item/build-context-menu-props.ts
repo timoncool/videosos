@@ -37,6 +37,7 @@ export interface TimelineItemContextMenuParams {
   handleReverseSelected: () => void
   handleFreezeFrame: () => void
   handleGenerateAudioFromText: () => void
+  handleRegenerateSegment: () => void
   handleRemoveSilence: () => void
   handleRemoveFillers: () => void
   handleCreatePreComp: () => void
@@ -81,6 +82,7 @@ export function buildTimelineItemContextMenuProps({
   handleReverseSelected,
   handleFreezeFrame,
   handleGenerateAudioFromText,
+  handleRegenerateSegment,
   handleRemoveSilence,
   handleRemoveFillers,
   handleCreatePreComp,
@@ -127,6 +129,8 @@ export function buildTimelineItemContextMenuProps({
         return frame > item.from && frame < item.from + item.durationInFrames
       })(),
       onFreezeFrame: handleFreezeFrame,
+      canRegenerateSegment: item.type === 'video' && !!item.mediaId && !isBroken,
+      onRegenerateSegment: handleRegenerateSegment,
       isTextItem: item.type === 'text' && hasSpeakableText,
       onGenerateAudioFromText: handleGenerateAudioFromText,
       canRemoveSilence:

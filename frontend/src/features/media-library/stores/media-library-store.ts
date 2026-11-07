@@ -27,6 +27,9 @@ import {
 import { scanWorkspaceMediaHealth } from '../utils/workspace-health'
 import { mergeTranscriptionProgress } from '@/shared/utils/transcription-progress'
 
+/** The latest started library load: an older one that ends after it does not overwrite it. */
+let latestLoad = 0
+
 const logger = createLogger('MediaLibraryStore')
 
 /** Tracked timeout for notification auto-clear */
@@ -213,6 +216,7 @@ const newStore: MediaLibraryStoreApi =
           }
 
           set({ isLoading: true, error: null })
+          const load = ++latestLoad
 
           const opId = createOperationId()
           const event = logger.startEvent('loadMediaItems', opId)
@@ -222,6 +226,8 @@ const newStore: MediaLibraryStoreApi =
             // v3: Load project-scoped media only
             const { mediaLibraryService } = await loadMediaLibraryService()
             const mediaItems = await mediaLibraryService.getMediaForProject(currentProjectId)
+            // loads overlap when several imports finish together: a list read before a later load's is older
+            if (load !== latestLoad) return
 
             set({
               mediaItems,

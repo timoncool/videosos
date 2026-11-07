@@ -143,7 +143,7 @@ function SceneRowBase({ scene, mediaName, match }: SceneRowBaseProps) {
         <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
           <Search className="h-4 w-4 text-white/90" />
         </div>
-        <span className="absolute bottom-0.5 right-0.5 rounded bg-black/70 px-1 font-mono text-[10px] leading-none text-white/90">
+        <span className="absolute bottom-0.5 right-0.5 rounded bg-black/70 px-1 font-mono text-[11px] leading-none text-white/90">
           {timestampLabel}
         </span>
       </div>
@@ -209,7 +209,7 @@ function SceneRowBase({ scene, mediaName, match }: SceneRowBaseProps) {
                 </span>
               </>
             ) : (
-              <span className="text-[10px] italic text-muted-foreground/60">
+              <span className="text-[11px] italic text-muted-foreground/60">
                 No palette indexed
               </span>
             )}

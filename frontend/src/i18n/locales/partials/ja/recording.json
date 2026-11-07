@@ -21,7 +21,7 @@
     "syncOffsetEarlier": "テイクを早める",
     "syncOffsetLater": "テイクを遅らせる",
     "headphonesHint": "タイムラインの音声がマイクに録音されないよう、ヘッドホンを使用してください。",
-    "fileNamePrefix": "voiceover",
+    "fileNamePrefix": "ナレーション",
     "errors": {
       "unsupported": "このブラウザではマイク録音がサポートされていません。",
       "noProject": "録音する前にプロジェクトを開いてください。",

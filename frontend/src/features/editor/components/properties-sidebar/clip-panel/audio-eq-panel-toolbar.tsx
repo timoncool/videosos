@@ -129,7 +129,7 @@ export function AudioEqPanelHeader({
         Equalizer{targetLabel ? ` - ${targetLabel}` : ''}
       </div>
       <div className="ml-auto flex min-w-0 items-center gap-2">
-        <div className="text-[10px] uppercase tracking-[0.16em] text-zinc-500">Preset</div>
+        <div className="text-[11px] uppercase tracking-[0.16em] text-zinc-500">Preset</div>
         <EqPresetPicker
           presetId={presetId}
           placeholder={presetPlaceholder}

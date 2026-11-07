@@ -177,7 +177,14 @@ export function getPacketRemuxPlan(
   if (clipBlocksRemux(videoItem, composition)) return null
 
   const includeAudio = candidate.track.muted !== true
-  if (includeAudio && hasRemuxBlockingAudioAdjustments(videoItem)) return null
+  if (
+    includeAudio &&
+    (hasRemuxBlockingAudioAdjustments(videoItem) ||
+      (composition.masterBusDb ?? 0) !== 0 ||
+      composition.loudnessLufs !== undefined)
+  ) {
+    return null
+  }
 
   const trim = resolveRemuxTrimBounds(videoItem, composition, settings)
   if (!trim) return null

@@ -1,27 +1,67 @@
 {
   "settings": {
     "sections": {
-      "providers": "Providers and agent"
+      "providers": "プロバイダー",
+      "agents": "エージェント",
+      "network": "ネットワーク",
+      "privacy": "プライバシー",
+      "about": "バージョン情報",
+      "providersHint": "OpenRouter・fal・Runware のキーと支出",
+      "agentsHint": "MCP アドレスとエージェントの1日の上限",
+      "generalHint": "言語、自動保存、元に戻す、サウンド",
+      "timelineHint": "スナップ、波形、フィルムストリップ",
+      "aiHint": "シーンのキャプションとローカルモデル",
+      "storageHint": "プロキシとキャッシュ",
+      "networkHint": "プロキシとほかのコンピューターからのアクセス",
+      "privacyHint": "匿名の統計とニュース",
+      "aboutHint": "バージョン、リンク、フォルダー、サポート",
+      "local": "ローカルモデル",
+      "localHint": "このコンピューターで無料生成"
     },
     "providers": {
-      "intro": "VideoSOS generates through your own accounts: add a key of OpenRouter, fal or Runware. Keys stay on this computer and are never shown to agents.",
-      "fromEnv": "from the {{variable}} variable",
-      "stored": "key saved",
-      "none": "no key",
-      "replace": "Paste a new key to replace it",
-      "check": "Check",
-      "remove": "Remove",
-      "spend": "Spent on generations",
-      "spendLine": "Today {{today}}, in total {{total}}",
-      "jobs_one": "{{count}} run",
-      "jobs_other": "{{count}} runs",
-      "agent": "Agent (MCP)",
-      "agentHint": "Connect Claude or another agent: it sees this window, generates and edits the timeline while you watch. In Claude Code run:",
-      "budget": "Daily limit for agents, $",
-      "noLimit": "no limit",
-      "badBudget": "The limit is a number of dollars.",
-      "statistics": "Anonymous statistics",
-      "statisticsHint": "How many generations ran and which models; never prompts, files or keys."
+      "intro": "VideoSOSはご自身のアカウントで生成します。OpenRouter、fal、Runwareのキーを追加してください。キーはこのコンピューター上にのみ保存され、エージェントには表示されません。",
+      "fromEnv": "環境変数{{variable}}から",
+      "stored": "キー保存済み",
+      "none": "キーなし",
+      "replace": "新しいキーを貼り付けると置き換えられます",
+      "check": "確認",
+      "remove": "削除",
+      "spend": "生成での支出",
+      "spendLine": "本日{{today}}、合計{{total}}",
+      "jobs_one": "{{count}}回の実行",
+      "jobs_other": "{{count}}回の実行",
+      "agentHint": "この上限を超えると、VideoSOSはその日の残りの時間、エージェントによる生成を拒否します。空欄の場合は上限なしです。",
+      "budget": "エージェントの1日あたりの上限($)",
+      "noLimit": "上限なし",
+      "badBudget": "上限はドル単位の数値で指定してください。",
+      "confirmEdits": "エージェントのタイムライン編集は承認を待つ",
+      "confirmEditsHint": "エージェントの編集は変更内容を表示し、承認するまで何も変わりません。",
+      "agentAbsent": "現在接続中のエージェントはありません。下で接続し、VideoSOS からの質問を待ち受けるよう頼んでください。",
+      "agentConnected": "エージェントが接続中です: {{seconds}} 秒前に応答しました。",
+      "assistant": "ウィンドウのアシスタント",
+      "assistantEngine": {
+        "agent": "エージェント (MCP)",
+        "openrouter": "OpenRouter"
+      },
+      "assistantHint": {
+        "agent": "「プロンプトを改善」、「画像からプロンプト」、ストーリーボードの分割、「3Dブロッキング」、「チャット」タブは VideoSOS に接続したエージェントに問い合わせます。エージェント自体が言語モデルなので追加料金はかかりません。待ち受け中に応答します (assistant_requests_wait)。",
+        "openrouter": "「プロンプトを改善」、「画像からプロンプト」、ストーリーボードの分割、「3Dブロッキング」、「チャット」タブは OpenRouter のモデルに問い合わせ、あなたのキーで支払われます。"
+      }
+    },
+    "general": {
+      "language": "表示言語",
+      "languageHint": "ウィンドウとプログラムのメッセージの言語です。",
+      "autoSaveHint": "開いているプロジェクトを数分ごとに自動保存します",
+      "undoHistoryDepthHint": "元に戻せるステップ数",
+      "uiSoundsHint": "クリック、結果、エラーの短いサウンド",
+      "audioOutput": "音声出力",
+      "audioOutputHint": "プレビューの再生先：システムのデバイスまたは選択したデバイス。マイクを許可するとリストが表示されます。ブラウザーがデバイス名を取得できるのはそのときです。",
+      "audioOutputDefault": "システムのデフォルト"
+    },
+    "done": "完了",
+    "timeline": {
+      "showWaveformsHint": "タイムラインにオーディオクリップの波形を表示",
+      "showFilmstripsHint": "ビデオクリップに沿ってフレームを表示"
     }
   }
 }

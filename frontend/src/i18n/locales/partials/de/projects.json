@@ -70,7 +70,8 @@
       "alsoDeleteLocalFiles": "Auch lokale Dateien auf der Festplatte löschen",
       "removeFilesFromFolder": "Dateien aus dem verknüpften Ordner entfernen. Dies kann nicht rückgängig gemacht werden.",
       "removeFilesFromNamedFolder": "Dateien aus dem verknüpften Ordner „{{folder}}\" entfernen. Dies kann nicht rückgängig gemacht werden.",
-      "openProject": "Projekt öffnen"
+      "openProject": "Projekt öffnen",
+      "actions": "Projektaktionen"
     },
     "form": {
       "createTitle": "Neues Projekt erstellen",

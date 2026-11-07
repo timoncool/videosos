@@ -32,7 +32,7 @@ function Harness() {
 
   return (
     <>
-      <button type="button" onMouseDown={(event) => handleTrackResizeStart(event, 'v1')}>
+      <button type="button" onPointerDown={(event) => handleTrackResizeStart(event, 'v1')}>
         Resize V1
       </button>
       <button type="button" onDoubleClick={(event) => handleTrackResizeReset(event, 'v1')}>
@@ -71,12 +71,12 @@ describe('useTrackHeightResize', () => {
     render(<Harness />)
 
     // Video tracks grow upward, so dragging down by 10px shrinks them by 10px.
-    fireEvent.mouseDown(screen.getByRole('button', { name: 'Resize V1' }), {
+    fireEvent.pointerDown(screen.getByRole('button', { name: 'Resize V1' }), {
       altKey: true,
       clientY: 100,
     })
-    fireEvent.mouseMove(document, { clientY: 110 })
-    fireEvent.mouseUp(document, { clientY: 110 })
+    fireEvent.pointerMove(document, { clientY: 110 })
+    fireEvent.pointerUp(document, { clientY: 110 })
 
     const expectedHeight = DEFAULT_TRACK_HEIGHT - 10
     expect(trackHeights()).toEqual([expectedHeight, expectedHeight, expectedHeight])
@@ -85,9 +85,9 @@ describe('useTrackHeightResize', () => {
   it('resizing is a local view change: no undo entry, project stays clean', () => {
     render(<Harness />)
 
-    fireEvent.mouseDown(screen.getByRole('button', { name: 'Resize V1' }), { clientY: 100 })
-    fireEvent.mouseMove(document, { clientY: 110 })
-    fireEvent.mouseUp(document, { clientY: 110 })
+    fireEvent.pointerDown(screen.getByRole('button', { name: 'Resize V1' }), { clientY: 100 })
+    fireEvent.pointerMove(document, { clientY: 110 })
+    fireEvent.pointerUp(document, { clientY: 110 })
 
     expect(trackHeights()[0]).toBe(DEFAULT_TRACK_HEIGHT - 10)
     expect(useTimelineCommandStore.getState().undoStack).toHaveLength(0)

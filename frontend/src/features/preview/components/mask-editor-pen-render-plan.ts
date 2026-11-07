@@ -104,10 +104,10 @@ export interface PenPathRenderState {
   closeRadius: number
 }
 
-const PEN_ACCENT = '#22d3ee'
-const PEN_PLACED_STROKE = '#22d3ee'
-const PEN_FADED_STROKE = 'rgba(34, 211, 238, 0.4)'
-const PEN_CURSOR_HINT_FILL = 'rgba(34, 211, 238, 0.5)'
+const PEN_ACCENT = '#fbbf24'
+const PEN_PLACED_STROKE = '#fbbf24'
+const PEN_FADED_STROKE = 'rgba(251, 191, 36, 0.4)'
+const PEN_CURSOR_HINT_FILL = 'rgba(251, 191, 36, 0.5)'
 const PEN_CURSOR_HINT_RADIUS = 3
 const PEN_DASH: [number, number] = [4, 4]
 
@@ -116,7 +116,7 @@ type PenHandleVisual = 'active' | 'hovered' | 'idle'
 const PEN_HANDLE_FILL_BY_VISUAL: Record<PenHandleVisual, string> = {
   active: '#fff',
   hovered: PEN_ACCENT,
-  idle: 'rgba(34, 211, 238, 0.6)',
+  idle: 'rgba(251, 191, 36, 0.6)',
 }
 
 type PenVertexVisual =

@@ -484,7 +484,7 @@ export const DopesheetPropertyRowContent = memo(function DopesheetPropertyRowCon
       </div>
       <div
         className={cn(
-          'flex h-full min-w-0 items-center overflow-hidden pr-1 text-[9px] font-medium leading-none text-foreground/90',
+          'flex h-full min-w-0 items-center overflow-hidden pr-1 text-[10px] font-medium leading-none text-foreground/90',
           compoundRow ? 'w-[54px] shrink-0 pl-1' : classic ? 'flex-1 pl-1' : 'flex-1 pl-[10px]',
         )}
         title={rowLabel}

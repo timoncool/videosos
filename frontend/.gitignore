@@ -53,7 +53,6 @@ Trace-*.json
 .claude/worktrees/
 .claude/skills/impeccable/
 
-.vercel
 .env*.local
 CLAUDE.md
 crates/*/target/
@@ -68,7 +67,6 @@ headless/output/
 headless/assets/
 tmp-workspace/
 
-.vercel
 
 # FreeCut workspace artifacts, if the repo folder itself is picked as a
 # workspace. Leading slash anchors to repo root so nested app code paths

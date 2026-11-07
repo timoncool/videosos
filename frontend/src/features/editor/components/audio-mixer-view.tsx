@@ -506,7 +506,7 @@ const ChannelStrip = memo(function ChannelStrip({
   const stripWidth = expanded ? 'min-w-[68px] w-[68px]' : 'min-w-[52px] w-[52px]'
   const meterBarWidth = expanded ? 'w-[14px]' : 'w-[14px]'
   const meterBarGap = 'gap-[2px]'
-  const buttonSize = expanded ? 'w-[22px] h-[18px] text-[10px]' : 'w-[18px] h-[16px] text-[9px]'
+  const buttonSize = expanded ? 'w-[22px] h-[18px] text-[11px]' : 'w-[18px] h-[16px] text-[11px]'
 
   return (
     <div className={`flex h-full ${stripWidth}`}>
@@ -520,7 +520,7 @@ const ChannelStrip = memo(function ChannelStrip({
       <div className={`flex flex-1 flex-col items-center ${expanded ? 'px-1' : 'px-0.5'}`}>
         {/* Track name */}
         <div
-          className={`w-full text-center uppercase tracking-wider text-muted-foreground/80 truncate px-0.5 py-1 leading-tight ${expanded ? 'text-[11px]' : 'text-[10px]'}`}
+          className={`w-full text-center uppercase tracking-wider text-muted-foreground/80 truncate px-0.5 py-1 leading-tight ${expanded ? 'text-[11px]' : 'text-[11px]'}`}
           title={track.name}
         >
           {track.name}
@@ -529,7 +529,7 @@ const ChannelStrip = memo(function ChannelStrip({
         <div className="flex w-full justify-center py-0.5 shrink-0">
           <button
             type="button"
-            className={`min-w-[28px] rounded-[3px] px-2 py-0.5 text-[9px] font-semibold tracking-[0.14em] transition-colors ${
+            className={`min-w-[28px] rounded-[3px] px-2 py-0.5 text-[11px] font-semibold tracking-[0.14em] transition-colors ${
               eqActive
                 ? 'border border-sky-400/50 bg-sky-500/15 text-sky-300 shadow-[0_0_10px_rgba(56,189,248,0.22)]'
                 : 'border border-transparent bg-muted/30 text-muted-foreground/45 hover:bg-sky-500/10 hover:text-sky-300'
@@ -611,7 +611,7 @@ const ChannelStrip = memo(function ChannelStrip({
         </div>
 
         {/* dB readout — color-coded */}
-        <div ref={dbReadoutRef} className={`text-[10px] font-mono py-0.5 leading-none ${dbColor}`}>
+        <div ref={dbReadoutRef} className={`text-[11px] font-mono py-0.5 leading-none ${dbColor}`}>
           {formatFaderDb(track.volume)}
         </div>
       </div>
@@ -696,7 +696,7 @@ const BusMeter = memo(function BusMeter({
       }
       if (dbReadoutRef.current) {
         dbReadoutRef.current.textContent = formatFaderDb(db)
-        dbReadoutRef.current.className = `text-[10px] font-mono py-0.5 leading-none ${
+        dbReadoutRef.current.className = `text-[11px] font-mono py-0.5 leading-none ${
           db > 0.05
             ? 'text-amber-400/90'
             : db > -0.05
@@ -814,13 +814,13 @@ const BusMeter = memo(function BusMeter({
       {/* Inset panel */}
       <div className="flex flex-col items-center h-full w-full rounded-[3px] bg-black/30 shadow-[inset_0_1px_3px_rgba(0,0,0,0.4)] border border-border/20 px-1">
         {/* Label */}
-        <div className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/70 py-1 leading-tight font-mono whitespace-nowrap">
+        <div className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground/70 py-1 leading-tight font-mono whitespace-nowrap">
           Bus 1
         </div>
         <div className="flex justify-center py-0.5 shrink-0">
           <button
             type="button"
-            className={`min-w-[28px] rounded-[3px] px-2 py-0.5 text-[9px] font-semibold tracking-[0.14em] transition-colors ${
+            className={`min-w-[28px] rounded-[3px] px-2 py-0.5 text-[11px] font-semibold tracking-[0.14em] transition-colors ${
               eqActive
                 ? 'border border-sky-400/50 bg-sky-500/15 text-sky-300 shadow-[0_0_10px_rgba(56,189,248,0.22)]'
                 : 'border border-transparent bg-muted/30 text-muted-foreground/45 hover:bg-sky-500/10 hover:text-sky-300'
@@ -837,7 +837,7 @@ const BusMeter = memo(function BusMeter({
         <div className="flex justify-center py-0.5 shrink-0">
           <button
             type="button"
-            className={`w-[18px] h-[16px] rounded-[3px] text-[9px] font-bold leading-none flex items-center justify-center transition-colors ${
+            className={`w-[18px] h-[16px] rounded-[3px] text-[11px] font-bold leading-none flex items-center justify-center transition-colors ${
               muted
                 ? 'bg-red-600 text-white shadow-[0_0_8px_rgba(220,38,38,0.4)]'
                 : 'bg-muted/40 text-muted-foreground/40 hover:bg-muted/70 hover:text-muted-foreground/70'
@@ -945,7 +945,7 @@ const BusMeter = memo(function BusMeter({
         </div>
 
         {/* dB readout */}
-        <div ref={dbReadoutRef} className={`text-[10px] font-mono py-0.5 leading-none ${dbColor}`}>
+        <div ref={dbReadoutRef} className={`text-[11px] font-mono py-0.5 leading-none ${dbColor}`}>
           {formatFaderDb(volumeDb)}
         </div>
       </div>
@@ -972,7 +972,7 @@ const ScaleColumn = memo(function ScaleColumn() {
           return (
             <div
               key={mark}
-              className="absolute right-0 -translate-y-1/2 text-[9px] font-mono text-muted-foreground/70 leading-none whitespace-nowrap"
+              className="absolute right-0 -translate-y-1/2 text-[11px] font-mono text-muted-foreground/70 leading-none whitespace-nowrap"
               style={{ bottom: `${percent}%` }}
             >
               {mark}
@@ -1135,7 +1135,7 @@ const MixerBody = memo(function MixerBody({
           {tracks.length > 0 && <div className="w-[2px] shrink-0 bg-border/40" />}
 
           {tracks.length === 0 && (
-            <div className="flex-1 flex items-center justify-center text-[10px] text-muted-foreground/30 italic">
+            <div className="flex-1 flex items-center justify-center text-[11px] text-muted-foreground/30 italic">
               No audio tracks
             </div>
           )}

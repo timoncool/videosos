@@ -1114,7 +1114,7 @@ export const AudioMeterPanel = memo(function AudioMeterPanel() {
           className="flex min-w-0 items-center justify-between gap-1 border-b border-border bg-secondary/20 px-1.5"
           style={{ height: EDITOR_LAYOUT_CSS_VALUES.timelineTracksHeaderHeight }}
         >
-          <span className="min-w-0 text-xs text-muted-foreground font-mono uppercase tracking-[0.12em]">
+          <span className="min-w-0 truncate font-mono text-[11px] uppercase tracking-[0.04em] text-muted-foreground" title={t('editor.audioMeters.meters')}>
             {t('editor.audioMeters.meters')}
           </span>
           {modeDropdown}
@@ -1122,7 +1122,7 @@ export const AudioMeterPanel = memo(function AudioMeterPanel() {
 
         <div className="flex-1 px-2 py-3 min-h-0">
           <div className="h-full rounded-md border border-border/50 bg-black/30 px-2 py-3 shadow-[inset_0_1px_4px_rgba(0,0,0,0.4)]">
-            <div className="mb-3 text-center text-[10px] uppercase tracking-[0.22em] text-muted-foreground font-mono">
+            <div className="mb-3 text-center text-[11px] uppercase tracking-[0.22em] text-muted-foreground font-mono">
               Master
             </div>
 
@@ -1134,7 +1134,7 @@ export const AudioMeterPanel = memo(function AudioMeterPanel() {
                   return (
                     <div key={mark} className="absolute inset-x-0" style={{ bottom }}>
                       <div className="absolute left-0 right-5 h-px bg-border/30" />
-                      <span className="absolute right-0 -translate-y-1/2 text-[10px] font-mono text-muted-foreground">
+                      <span className="absolute right-0 -translate-y-1/2 text-[11px] font-mono text-muted-foreground">
                         {mark}
                       </span>
                     </div>
@@ -1206,7 +1206,7 @@ export const AudioMeterPanel = memo(function AudioMeterPanel() {
             </div>
 
             {/* Peak dB readout */}
-            <div className="mt-3 text-center text-[10px] font-mono text-muted-foreground">
+            <div className="mt-3 text-center text-[11px] font-mono text-muted-foreground">
               {statusLabel}
             </div>
           </div>

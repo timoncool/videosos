@@ -73,7 +73,11 @@ describe('ExportPreflightPanel', () => {
   it('colours each check label by its own severity, not the summary', () => {
     render(
       <ExportPreflightPanel
-        preflight={preflight([check('bad', 'error'), check('meh', 'warning'), check('fyi', 'info')])}
+        preflight={preflight([
+          check('bad', 'error'),
+          check('meh', 'warning'),
+          check('fyi', 'info'),
+        ])}
       />,
     )
 

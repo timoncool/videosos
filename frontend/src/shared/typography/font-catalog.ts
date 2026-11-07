@@ -406,6 +406,7 @@ export const FONT_CATALOG: readonly FontCatalogEntry[] = [
   },
   { value: 'Oxygen', label: 'Oxygen', family: 'Oxygen', weights: [300, 400, 700] },
   { value: 'Pacifico', label: 'Pacifico', family: 'Pacifico', weights: [400] },
+  { value: 'Russo One', label: 'Russo One', family: 'Russo One', weights: [400] },
   { value: 'Alfa Slab One', label: 'Alfa Slab One', family: 'Alfa Slab One', weights: [400] },
   {
     value: 'Lexend',

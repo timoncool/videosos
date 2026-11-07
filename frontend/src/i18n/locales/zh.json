@@ -37,11 +37,12 @@
   "toolbar": {
     "ariaLabel": "编辑器工具栏",
     "workspaces": {
-      "motion": "Motion",
+      "motion": "运动",
       "label": "工作区",
       "edit": "剪辑",
       "color": "调色",
-      "animate": "动画"
+      "animate": "动画",
+      "canvas": "画布"
     },
     "backToProjects": "返回项目",
     "backToProjectsAria": "返回项目",
@@ -60,7 +61,8 @@
     "saveAria": "保存项目",
     "export": "导出",
     "exportVideo": "导出视频",
-    "downloadProjectZip": "下载项目 (.zip)"
+    "downloadProjectZip": "下载项目 (.zip)",
+    "exportFcpxml": "适用于 Final Cut、DaVinci、Premiere 的 FCPXML"
   },
   "unsavedChanges": {
     "title": "未保存的更改",
@@ -81,12 +83,12 @@
     "general": {
       "autoSave": "自动保存",
       "interval": "间隔",
-      "intervalMinutes": "{{count}} 分钟",
       "undoHistoryDepth": "撤销历史深度",
       "uiSounds": "界面音效",
       "uiSoundVolume": "音效音量",
       "uiSoundVoice": "音效主题",
-      "uiSoundPreview": "试听"
+      "uiSoundPreview": "试听",
+      "minutesUnit": "分钟"
     },
     "ai": {
       "captionSampleInterval": "字幕采样间隔",

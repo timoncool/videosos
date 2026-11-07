@@ -57,7 +57,7 @@ export const TimelineRulerSurface = memo(function TimelineRulerSurface({
   return (
     <div
       ref={rulerRef}
-      className="relative z-30 shrink-0 timeline-ruler bg-background"
+      className="relative z-30 shrink-0 timeline-ruler touch-none bg-background"
       style={{ width: `${initialWidth}px`, height: EDITOR_LAYOUT_CSS_VALUES.timelineRulerHeight }}
     >
       <div

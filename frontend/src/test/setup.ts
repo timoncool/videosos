@@ -6,6 +6,21 @@ import { resetAutoKeyframeStore } from '@/features/keyframes/stores/auto-keyfram
 // Tests read English text; the detector would otherwise follow the machine's own language.
 await i18n.changeLanguage('en')
 
+// jsdom has no matchMedia; queries answer as on a wide desktop screen.
+if (typeof window !== 'undefined' && typeof window.matchMedia !== 'function') {
+  window.matchMedia = (query: string) =>
+    ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      addListener: () => {},
+      removeListener: () => {},
+      dispatchEvent: () => false,
+    }) as MediaQueryList
+}
+
 // Mock ImageData for Canvas operations
 type TestGlobalWithImageData = typeof globalThis & { ImageData?: typeof ImageData }
 const testGlobal = globalThis as TestGlobalWithImageData

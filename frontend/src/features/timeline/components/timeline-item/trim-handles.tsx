@@ -147,11 +147,11 @@ export const TrimHandles = memo(function TrimHandles({
         <ContextMenuTrigger asChild disabled={trackLocked || !hasJoinableLeft}>
           <div
             className={cn(
-              'absolute left-0 top-0 bottom-0 w-3 transition-opacity duration-75',
+              'absolute left-0 top-0 bottom-0 w-3 touch-none transition-opacity duration-75',
               startCursorClass,
               showLeftHandle ? 'opacity-100' : 'opacity-0 pointer-events-none',
             )}
-            onMouseDown={(e) => onTrimStart(e, 'start')}
+            onPointerDown={(e) => onTrimStart(e, 'start')}
           >
             {/* Halo visuals — only during hover; active operations use external overlay */}
             {!activeEdges && (
@@ -206,11 +206,11 @@ export const TrimHandles = memo(function TrimHandles({
         <ContextMenuTrigger asChild disabled={trackLocked || !hasJoinableRight}>
           <div
             className={cn(
-              'absolute right-0 top-0 bottom-0 w-3 transition-opacity duration-75',
+              'absolute right-0 top-0 bottom-0 w-3 touch-none transition-opacity duration-75',
               endCursorClass,
               showRightHandle ? 'opacity-100' : 'opacity-0 pointer-events-none',
             )}
-            onMouseDown={(e) => onTrimStart(e, 'end')}
+            onPointerDown={(e) => onTrimStart(e, 'end')}
           >
             {!activeEdges && (
               <>

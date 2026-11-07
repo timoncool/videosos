@@ -618,7 +618,7 @@ export const ColorGradeSection = memo(function ColorGradeSection({
   const gradeGallery = gradePresets.length > 0 && (
     <div className="px-2 pb-2">
       <div className="mb-1 flex items-center justify-between">
-        <span className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+        <span className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
           {t('effects.colorPanel.gallery')}
         </span>
       </div>

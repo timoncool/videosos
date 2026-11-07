@@ -45,7 +45,7 @@ export const MiniTimelineTrackLanes = memo(function MiniTimelineTrackLanes({
   return (
     <div className="relative" style={{ height: trackAreaHeight }}>
       <div
-        className="absolute left-0 top-0 h-full border-r border-black/35 text-[9px] font-semibold text-zinc-400"
+        className="absolute left-0 top-0 h-full border-r border-black/35 text-[11px] font-semibold text-zinc-400"
         style={{ width: labelWidth }}
       >
         {tracks.length > 0 ? (

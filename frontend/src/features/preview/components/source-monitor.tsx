@@ -1462,7 +1462,7 @@ function SourcePlaybackControls({
                       size="sm"
                       className={`h-6 min-w-6 px-1.5 font-mono text-[11px] ${
                         sourcePatchVideoEnabled
-                          ? 'bg-primary text-primary-foreground hover:bg-primary/90'
+                          ? 'bg-[var(--color-accent)]/15 text-[var(--color-accent)] hover:bg-[var(--color-accent)]/25'
                           : ''
                       }`}
                       onClick={toggleSourcePatchVideoEnabled}
@@ -1492,7 +1492,7 @@ function SourcePlaybackControls({
                       size="sm"
                       className={`h-6 min-w-6 px-1.5 font-mono text-[11px] ${
                         sourcePatchAudioEnabled
-                          ? 'bg-primary text-primary-foreground hover:bg-primary/90'
+                          ? 'bg-[var(--color-accent)]/15 text-[var(--color-accent)] hover:bg-[var(--color-accent)]/25'
                           : ''
                       }`}
                       onClick={toggleSourcePatchAudioEnabled}

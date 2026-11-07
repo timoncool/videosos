@@ -1,4 +1,1 @@
-export {
-  resolveEffectiveTrackStates,
-  timelineToSourceFrames,
-} from './timeline-frame-contract'
+export { resolveEffectiveTrackStates, timelineToSourceFrames } from './timeline-frame-contract'

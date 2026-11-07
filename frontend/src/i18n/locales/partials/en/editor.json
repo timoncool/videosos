@@ -101,7 +101,14 @@
         "frameRate": "Frame rate",
         "durationSeconds": "Duration (seconds)",
         "create": "Create"
-      }
+      },
+      "controllerLayer": "Null Object",
+      "parentColumn": "Parent",
+      "shiftToggleAllLayers": "Shift-click to expand or collapse all layers",
+      "parentPickWhipForLayer": "Parent pick whip for {{name}}",
+      "parentPickWhipHelp": "Drag to a parent layer. Shift: snap position. Alt: use local pose. Ctrl/Cmd-click: detach.",
+      "parentForLayer": "Parent for {{name}}",
+      "nullObjectNonRendering": "Null Object (does not render)"
     },
     "miniTimeline": {
       "inPoint": "In point",
@@ -357,7 +364,38 @@
       "directionTop": "Top",
       "directionBottom": "Bottom",
       "resetParam": "Reset {{label}}",
-      "paramColorAria": "{{label}} color"
+      "paramColorAria": "{{label}} color",
+      "params": {
+        "warp": "Warp",
+        "color": "Color",
+        "size": "Size",
+        "intensity": "Intensity",
+        "density": "Density",
+        "glow": "Glow",
+        "blocks": "Blocks",
+        "rgb_split": "RGB Split",
+        "block_size": "Block Size",
+        "spread": "Spread",
+        "blur": "Blur",
+        "spin": "Spin",
+        "scale": "Scale",
+        "turbulence": "Turbulence",
+        "chroma": "Chroma",
+        "swirl": "Swirl",
+        "shine": "Shine",
+        "zoom": "Zoom",
+        "vignette": "Vignette",
+        "warmth": "Warmth",
+        "burn": "Burn",
+        "grain": "Grain",
+        "slip": "Slip",
+        "shake": "Shake",
+        "exposure": "Exposure",
+        "gate_width": "Gate Width",
+        "roll": "Roll",
+        "dim": "Dim",
+        "softness": "Softness"
+      }
     },
     "propertiesSidebar": {
       "title": "Properties",
@@ -366,7 +404,9 @@
       "dockToPreview": "Dock to preview",
       "expandFullColumn": "Expand full column",
       "showPanel": "Show Properties Panel",
-      "clipsSelected": "{{count}} clips selected"
+      "clipsSelected": "{{count}} clips selected",
+      "layer": "Layer",
+      "composition": "Composition"
     },
     "markerPanel": {
       "notFound": "Marker not found",
@@ -398,7 +438,10 @@
       "switchToFrames": "Switch to frames",
       "timecode": "Timecode",
       "frameRate": "Frame Rate",
-      "totalFrames": "Total Frames"
+      "totalFrames": "Total Frames",
+      "composition": "Composition",
+      "matchProject": "Match Project",
+      "matchProjectBackground": "Match project background"
     },
     "clipPanel": {
       "tabVideo": "Video",
@@ -407,7 +450,10 @@
       "adjustmentLayerHint": "Effects on adjustment layers apply to all items on tracks above.",
       "tabText": "Text",
       "tabAnimation": "Animation",
-      "tabShape": "Shape"
+      "tabShape": "Shape",
+      "tabProperties": "Properties",
+      "tabController": "Null Object",
+      "tabAnimate": "Animate"
     },
     "gifSection": {
       "animation": "Animation",
@@ -602,14 +648,32 @@
       "background": "Background",
       "on": "On",
       "off": "Off",
-      "padding": "Padding"
+      "padding": "Padding",
+      "reveal": "Reveal",
+      "revealMode": {
+        "whole": "Whole",
+        "words": "By word",
+        "karaoke": "Karaoke"
+      },
+      "revealHint": {
+        "whole": "The whole line at once",
+        "words": "Words appear as they are spoken",
+        "karaoke": "The whole line, the spoken word lit"
+      },
+      "highlight": "Highlight"
     },
     "captionPresets": {
       "netflixHint": "Inter on a rounded dark box, lower-third — broadcast-grade neutral.",
       "youtubeHint": "Roboto with a soft drop shadow, no box — the auto-captions vibe.",
       "boldYellowHint": "Roboto Slab in cinema yellow with a black drop shadow — DVD-era classic.",
       "outlinedHint": "Manrope with a hairline outline — clean, modern, no shadow.",
-      "tiktokHint": "Anton display, oversized and centered — vertical-video viral look."
+      "tiktokHint": "Anton display, oversized and centered — vertical-video viral look.",
+      "lookMinimalHint": "Dub Studio's clean looks: plain type on a dark plate.",
+      "lookViralHint": "Dub Studio's viral looks: heavy type, the spoken word lit in colour.",
+      "lookKaraokeHint": "Dub Studio's karaoke: the spoken word lit as it is sung or said.",
+      "lookPlayfulHint": "Dub Studio's playful looks: hand-drawn type on a bright bubble.",
+      "lookNeonHint": "Dub Studio's neon looks: glowing type with no plate.",
+      "lookFreshHint": "Dub Studio's fresh looks: outlined type with no plate."
     },
     "alignment": {
       "left": "Align Left",
@@ -682,7 +746,6 @@
       "shapes": "Shapes",
       "effects": "Effects",
       "transitions": "Transitions",
-      "ai": "AI",
       "collapsePanel": "Collapse panel",
       "expandPanel": "Expand panel",
       "keyframeEditor": "Keyframe editor",
@@ -783,106 +846,31 @@
         "swing": "Swing"
       }
     },
-    "tts": {
-      "seek": "Seek",
-      "dialogTitle": "Generate audio from text",
-      "dialogDescription": "Generate speech and insert it at the text clip's position.",
-      "kokoroUnsupported": "WebGPU is not available in this browser. Kokoro TTS needs Chrome 113+, Edge 113+, or Safari 26+.",
-      "mossUnsupported": "Browser-managed storage is not available in this browser. MOSS multilingual TTS works best in a recent Chromium browser.",
-      "supertonicUnsupported": "This browser cannot run the local Supertonic TTS runtime. Try a recent Chrome or Edge browser.",
-      "engine": "Engine",
-      "engineSupportDetails": "TTS engine support details",
-      "kokoroDescription": "English voices on WebGPU.",
-      "supertonicDescription": "31-language local ONNX voices on WebGPU or WASM.",
-      "supportedLanguages": "Supported languages: {{languages}}.",
-      "kokoroOption": "Kokoro (English, WebGPU)",
-      "mossOption": "MOSS Nano (20 languages, CPU)",
-      "supertonicOption": "Supertonic 3 (31 languages, local ONNX)",
-      "language": "Language",
-      "autoDetectLanguage": "Auto detect",
-      "voice": "Voice",
-      "text": "Text",
-      "textPlaceholder": "Enter the text you want to hear spoken...",
-      "expressiveTags": "Expressive tags",
-      "speed": "Speed",
-      "progressPreparing": "Preparing local TTS...",
-      "insertedAndLinked": "Inserted and linked",
-      "generate": "Generate",
-      "generating": "Generating...",
-      "regenerate": "Regenerate",
-      "insertAndLink": "Insert and link",
-      "inserting": "Inserting...",
-      "errors": {
-        "openProject": "Open a project before generating audio.",
-        "enterText": "Enter some text to synthesize.",
-        "kokoroUnsupported": "WebGPU is required for Kokoro TTS. Try Chrome 113+, Edge 113+, or Safari 26+.",
-        "mossUnsupported": "Browser-managed storage is required for MOSS multilingual TTS. Try a recent Chromium browser.",
-        "supertonicUnsupported": "This browser cannot run the local Supertonic TTS runtime. Try a recent Chrome or Edge browser.",
-        "generateFailed": "Failed to generate speech.",
-        "insertFailed": "Failed to save and insert audio."
-      },
-      "notifications": {
-        "addedAndLinked": "Added \"{{fileName}}\" to timeline and linked with text.",
-        "savedNoTrack": "Saved \"{{fileName}}\" but no audio track is available."
-      }
-    },
-    "aiPanel": {
-      "textToSpeech": "Text to Speech",
-      "collapseTextToSpeech": "Collapse text to speech",
-      "expandTextToSpeech": "Expand text to speech",
-      "runsLocally": "{{runtime}} runs locally in the browser on {{backend}}.",
-      "history": "History ({{count}}) - {{size}}",
-      "clearAll": "Clear all",
-      "musicGeneration": "Music Generation",
-      "collapseMusicGeneration": "Collapse music generation",
-      "expandMusicGeneration": "Expand music generation",
-      "musicGenerationInfo": "Music generation info",
-      "musicgenDescription": "Uses Xenova's browser-ready MusicGen model through Transformers.js. The first download is large, then it stays cached locally.",
-      "musicgenPromptHint": "Prompt with genre, mood, tempo, and instrumentation. Shorter clips finish much faster.",
-      "musicgenUnsupported": "WebGPU is not available in this browser. MusicGen needs Chrome 113+, Edge 113+, or Safari 26+.",
-      "prompt": "Prompt",
-      "presets": "Presets",
-      "musicPromptPlaceholder": "Describe the kind of music you want to generate...",
-      "length": "Length",
-      "generateMusic": "Generate Music",
-      "musicHistory": "Music History ({{count}}) - {{size}}",
-      "remove": "Remove",
-      "saved": "Saved",
-      "saving": "Saving...",
-      "saveAndInsert": "Save & Insert",
-      "saveToLibrary": "Save to Library",
-      "progressPreparingMusic": "Preparing local music generation...",
-      "errors": {
-        "describeMusic": "Describe the music you want to generate.",
-        "musicgenUnsupported": "WebGPU is required for MusicGen. Try Chrome 113+, Edge 113+, or Safari 26+.",
-        "generateMusicFailed": "Failed to generate music.",
-        "saveAudioFailed": "Failed to save audio to the media library."
-      },
-      "notifications": {
-        "savedToLibrary": "Saved \"{{fileName}}\" to the media library.",
-        "savedAndAdded": "Saved \"{{fileName}}\" and added to timeline."
-      },
-      "defaultTtsPrompt": "Welcome to freecut. This voice was generated locally in the browser.",
-      "musicPresets": {
-        "lofiChillLabel": "Lo-fi Chill",
-        "lofiChillPrompt": "Warm lo-fi beat with dusty drums, mellow bass, and a dreamy synth lead",
-        "pop80sLabel": "80s Pop",
-        "pop80sPrompt": "80s pop track with bassy drums and synth",
-        "rock90sLabel": "90s Rock",
-        "rock90sPrompt": "90s rock song with loud guitars and heavy drums",
-        "upbeatEdmLabel": "Upbeat EDM",
-        "upbeatEdmPrompt": "A light and cheery EDM track, with syncopated drums, airy pads, and strong emotions bpm: 130",
-        "countryLabel": "Country",
-        "countryPrompt": "A cheerful country song with acoustic guitars",
-        "lofiElectroLabel": "Lo-fi Electro",
-        "lofiElectroPrompt": "Lofi slow bpm electro chill with organic samples"
-      }
-    },
     "colorPanel": {
       "dockLabel": "Color grading workspace",
       "dockTitle": "Color",
       "emptyState": "Select a clip to grade",
       "adjustmentLayerLabel": "Grade"
+    },
+    "transformHierarchy": {
+      "controllerOption": "Null: {{name}}",
+      "none": "None"
+    },
+    "compositionControls": {
+      "authoringTitle": "Published controls ({{v0}})",
+      "authoringHint": "Choose the text and colors that stay editable when this composition is reused.",
+      "addAnother": "Expose another property",
+      "add": "Expose property",
+      "allExposed": "All supported properties are exposed.",
+      "noCandidates": "Add a text or shape layer to expose editable properties.",
+      "resetOverride": "Reset {{name}} override",
+      "overridden": "{{name}} is overridden",
+      "instanceTitle": "Template overrides",
+      "instanceHint": "Changes apply only to this instance. A blue dot marks values that differ from the source.",
+      "resetAll": "Reset all overrides"
+    },
+    "textProperties": {
+      "scale": "Scale"
     }
   }
 }

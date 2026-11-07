@@ -125,7 +125,7 @@ export const AppliedMotionSummary = memo(function AppliedMotionSummary({
       <section className="flex flex-col gap-2">
         <div>
           <h3 className="text-xs font-medium">{t('editor.animateStages.appliedTitle')}</h3>
-          <p className="mt-0.5 text-[10px] text-muted-foreground">
+          <p className="mt-0.5 text-[11px] text-muted-foreground">
             {t('editor.editAnimation.appliedHint')}
           </p>
         </div>
@@ -138,7 +138,7 @@ export const AppliedMotionSummary = memo(function AppliedMotionSummary({
 
   return (
     <section className="flex flex-col gap-2 rounded-md border border-border/60 bg-secondary/20 p-2">
-      <span className="text-[10px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
+      <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
         {t('editor.animateStages.appliedTitle')}
       </span>
       <div className="flex flex-col gap-1">{rows}</div>

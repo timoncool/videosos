@@ -1,17 +1,44 @@
 import { useEffect } from 'react'
-import { generateApi, onServerEvent, type Provider } from '../services/generate-api'
+import { generateApi, onGenerateEvent, type Provider } from '../services/generate-api'
 import { importFinished } from '../services/result-importer'
-import { useGenerateStore } from '../stores/generate-store'
+import { useGenerateStore, type Persisted } from '../stores/generate-store'
+import { emitUiSound } from '@/shared/ui/ui-sound'
 
 function report(error: unknown): void {
   useGenerateStore.getState().setServerError(error instanceof Error ? error.message : String(error))
 }
 
 async function loadKeys(): Promise<void> {
-  const { keys } = await generateApi.keys()
+  const [{ keys }, settings] = await Promise.all([generateApi.keys(), generateApi.settings()])
   const set: Partial<Record<Provider, boolean>> = {}
   for (const key of keys) set[key.provider] = key.set
+  // this computer needs no key, as the catalog says; whether a model is downloaded is told by /api/local
+  set.local = true
   useGenerateStore.getState().setKeys(set)
+  useGenerateStore.getState().setAssistant(settings.assistant === 'agent' ? 'agent' : 'openrouter')
+}
+
+const LEGACY_KEY = 'videosos-generate'
+
+/**
+ * Reads what the panel was left at. VideoSOS 2.0.0 kept it in the window's storage: found there while the
+ * server has nothing, it moves to the server once and leaves the window.
+ */
+export function useGenerateChoices(): void {
+  useEffect(() => {
+    void (async () => {
+      const kept = await generateApi.choices()
+      const legacy = Object.keys(kept).length === 0 ? localStorage.getItem(LEGACY_KEY) : null
+      if (legacy) {
+        const moved = JSON.parse(legacy) as Partial<Persisted>
+        useGenerateStore.getState().readChoices(moved)
+        await generateApi.saveChoices({ ...moved })
+        localStorage.removeItem(LEGACY_KEY)
+        return
+      }
+      useGenerateStore.getState().readChoices(kept as Partial<Persisted>)
+    })().catch(report)
+  }, [])
 }
 
 /**
@@ -34,27 +61,48 @@ export function useGenerateSync(projectId: string | null): void {
       })
       .catch(report)
     void loadKeys().catch(report)
-    const unsubscribe = onServerEvent((event) => {
+    const readAgent = () =>
+      generateApi
+        .agentStatus()
+        .then(
+          (status) => useGenerateStore.getState().setAgentConnected(status.agent_connected),
+          report,
+        )
+    void readAgent()
+    const agentTimer = window.setInterval(() => void readAgent(), 10_000)
+    const unsubscribe = onGenerateEvent((event) => {
       if (event.kind === 'job') {
         if (event.data.project_id === projectId) {
+          // a generation that ends while the window follows it sounds, as a finished job does in Dub Studio
+          const before = useGenerateStore
+            .getState()
+            .jobs.find((job) => job.id === event.data.id)?.status
+          if (before && before !== event.data.status) {
+            if (event.data.status === 'done') emitUiSound('confirm')
+            if (event.data.status === 'failed') emitUiSound('error')
+          }
           useGenerateStore.getState().upsertJob(event.data)
           importFinished([event.data])
         }
       } else if (event.kind === 'job_removed') {
         useGenerateStore.getState().removeJob(event.data.id)
-      } else if (event.kind === 'keys') {
+      } else if (event.kind === 'keys' || event.kind === 'settings') {
         void loadKeys().catch(report)
       } else if (event.kind === 'resync') {
         void generateApi
           .jobs(projectId)
           .then(({ jobs }) => {
-            if (!cancelled) useGenerateStore.getState().setJobs(jobs.filter((job) => job.project_id === projectId))
+            if (!cancelled)
+              useGenerateStore
+                .getState()
+                .setJobs(jobs.filter((job) => job.project_id === projectId))
           })
           .catch(report)
       }
     })
     return () => {
       cancelled = true
+      window.clearInterval(agentTimer)
       unsubscribe()
     }
   }, [projectId])

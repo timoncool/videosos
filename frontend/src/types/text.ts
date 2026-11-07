@@ -37,7 +37,13 @@ export type TextStroke = {
   color: string
 }
 
+/** How a caption with word timings shows: the whole line, word by word as spoken, or the whole line with the spoken word lit. */
+export type CaptionReveal = 'whole' | 'words' | 'karaoke'
+
 export type TextVisualStyleFields = {
+  captionReveal?: CaptionReveal
+  /** The colour the spoken word is lit with in karaoke. */
+  captionHighlight?: string
   backgroundColor?: string
   backgroundRadius?: number
   textAlign?: TextHorizontalAlign

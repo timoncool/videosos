@@ -41,7 +41,7 @@ function PathVertexToolbar({
       data-testid={`motion-path-vertex-toolbar-${itemId}`}
     >
       <div
-        className="flex items-center justify-between gap-2 border-r border-border px-2 text-[10px] text-muted-foreground"
+        className="flex items-center justify-between gap-2 border-r border-border px-2 text-[11px] text-muted-foreground"
         style={{ width: LAYER_COLUMN_WIDTH }}
       >
         <span>
@@ -54,7 +54,7 @@ function PathVertexToolbar({
         </span>
         <button
           type="button"
-          className="rounded border border-border bg-background px-1.5 py-0.5 text-[10px] text-foreground hover:bg-accent"
+          className="rounded border border-border bg-background px-1.5 py-0.5 text-[11px] text-foreground hover:bg-accent"
           data-testid={`motion-toggle-all-path-vertices-${itemId}`}
           aria-pressed={showAllPathVertices}
           onClick={() =>
@@ -69,7 +69,7 @@ function PathVertexToolbar({
           {showAllPathVertices ? 'Selected vertices' : 'All vertices'}
         </button>
       </div>
-      <div className="flex flex-1 items-center px-2 text-[10px] text-muted-foreground/70">
+      <div className="flex flex-1 items-center px-2 text-[11px] text-muted-foreground/70">
         Select path points in the preview to focus these channels.
       </div>
     </div>

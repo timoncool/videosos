@@ -285,7 +285,7 @@ export function CompositionsSection() {
           <span className="text-xs font-semibold tracking-wide uppercase text-muted-foreground">
             {t('media.compositions.sectionTitle')}
           </span>
-          <span className="text-[10px] tabular-nums text-muted-foreground">
+          <span className="text-[11px] tabular-nums text-muted-foreground">
             {compositions.length}
           </span>
         </CollapsibleTrigger>
@@ -396,10 +396,10 @@ export function CompositionsSection() {
 function CompositionGroupHeader({ label, count }: { label: string; count: number }) {
   return (
     <div className="flex items-center gap-1.5 px-1 pt-1 pb-1">
-      <span className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground/70">
+      <span className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground/70">
         {label}
       </span>
-      <span className="text-[10px] tabular-nums text-muted-foreground/50">{count}</span>
+      <span className="text-[11px] tabular-nums text-muted-foreground/50">{count}</span>
     </div>
   )
 }
@@ -692,10 +692,10 @@ const CompositionCardInternal = memo(function CompositionCardInternal({
                       onChange={(e) => onEditValueChange(e.target.value)}
                       onBlur={() => onCommitRename(composition.id)}
                       onKeyDown={handleKeyDown}
-                      className="w-full bg-transparent border border-primary rounded px-1 py-0.5 text-[10px] text-foreground outline-none"
+                      className="w-full bg-transparent border border-primary rounded px-1 py-0.5 text-[11px] text-foreground outline-none"
                     />
                   ) : (
-                    <h3 className="text-[10px] font-medium text-foreground truncate group-hover:text-violet-400 transition-colors">
+                    <h3 className="text-[11px] font-medium text-foreground truncate group-hover:text-violet-400 transition-colors">
                       {composition.name}
                     </h3>
                   )}
@@ -790,7 +790,7 @@ const CompositionCardInternal = memo(function CompositionCardInternal({
               <div className="p-0.5 rounded bg-violet-600/90 text-white flex-shrink-0">
                 <Layers className="w-2.5 h-2.5" />
               </div>
-              <span className="text-[10px] text-muted-foreground">
+              <span className="text-[11px] text-muted-foreground">
                 {durationLabel} &middot; {t('media.compositions.itemCount', { count: itemCount })}
               </span>
             </div>

@@ -10,6 +10,7 @@ import { ExportRangeSummary, type ExportRangeSummaryProps } from './export-range
 import { ExportPreflightPanel } from './export-preflight-panel'
 import { ExportVideoSettings, type ExportVideoSettingsProps } from './export-video-settings'
 import { ExportAudioSettings, type ExportAudioSettingsProps } from './export-audio-settings'
+import { ExportLoudnessField } from './export-loudness-field'
 import { ExportSettingsFooter, type ExportSettingsFooterProps } from './export-settings-footer'
 import type { ExportPreflightResult } from '../utils/export-preflight'
 
@@ -46,6 +47,10 @@ export function ExportSettingsView(props: ExportSettingsViewProps) {
           ) : (
             <ExportAudioSettings {...props.audio} />
           )}
+          <ExportLoudnessField
+            settings={props.audio.settings}
+            setSettings={props.audio.setSettings}
+          />
         </div>
       </div>
 

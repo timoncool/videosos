@@ -34,13 +34,11 @@ import {
   normalizeSelectableWhisperModel,
   WHISPER_AUTO_LANGUAGE_VALUE,
   WHISPER_LANGUAGE_OPTIONS,
-  WHISPER_QUANTIZATION_OPTIONS,
 } from '@/shared/utils/whisper-settings'
-import type { MediaTranscriptModel, MediaTranscriptQuantization } from '@/types/storage'
+import type { MediaTranscriptModel } from '@/types/storage'
 
 export interface TranscribeDialogValues {
   model: MediaTranscriptModel
-  quantization: MediaTranscriptQuantization
   language: string
 }
 
@@ -78,7 +76,6 @@ export function TranscribeDialog({
 }: TranscribeDialogProps) {
   const { t } = useTranslation()
   const defaultModel = useSettingsStore((s) => s.defaultWhisperModel)
-  const defaultQuantization = useSettingsStore((s) => s.defaultWhisperQuantization)
   const defaultLanguage = useSettingsStore((s) => s.defaultWhisperLanguage)
   const clearMediaSkimPreview = useEditorStore((s) => s.clearMediaSkimPreview)
   const clearCompoundClipSkimPreview = useEditorStore((s) => s.clearCompoundClipSkimPreview)
@@ -90,7 +87,6 @@ export function TranscribeDialog({
   const [model, setModel] = useState<MediaTranscriptModel>(() =>
     normalizeSelectableWhisperModel(defaultModel),
   )
-  const [quantization, setQuantization] = useState<MediaTranscriptQuantization>(defaultQuantization)
   const [languageValue, setLanguageValue] = useState<string>(() =>
     getWhisperLanguageSelectValue(defaultLanguage),
   )
@@ -99,13 +95,12 @@ export function TranscribeDialog({
     if (!open) return
     const nextModel = normalizeSelectableWhisperModel(defaultModel)
     setModel(nextModel)
-    setQuantization(defaultQuantization)
     setLanguageValue(
       isParakeetModel(nextModel)
         ? WHISPER_AUTO_LANGUAGE_VALUE
         : getWhisperLanguageSelectValue(defaultLanguage),
     )
-  }, [open, defaultLanguage, defaultModel, defaultQuantization])
+  }, [open, defaultLanguage, defaultModel])
 
   useEffect(() => {
     if (!open) return
@@ -129,7 +124,6 @@ export function TranscribeDialog({
   const handleStart = () => {
     onStart({
       model,
-      quantization,
       language: isParakeetModel(model)
         ? getWhisperLanguageSettingValue(WHISPER_AUTO_LANGUAGE_VALUE)
         : getWhisperLanguageSettingValue(languageValue),
@@ -194,30 +188,6 @@ export function TranscribeDialog({
               </SelectContent>
             </Select>
           </div>
-
-          {!isParakeetModel(model) && (
-            <div className="space-y-1.5">
-              <Label htmlFor="transcribe-quantization" className="text-sm">
-                {t('media.transcribe.quantization')}
-              </Label>
-              <Select
-                value={quantization}
-                onValueChange={(value) => setQuantization(value as MediaTranscriptQuantization)}
-                disabled={isRunning}
-              >
-                <SelectTrigger id="transcribe-quantization">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {WHISPER_QUANTIZATION_OPTIONS.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
 
           {isParakeetModel(model) ? (
             <div className="space-y-1.5">

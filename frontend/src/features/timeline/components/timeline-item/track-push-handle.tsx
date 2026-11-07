@@ -13,7 +13,7 @@ interface TrackPushHandleProps {
   clipLeftStyle: string
   /** CSS length for the trigger zone width (can reference shared zoom vars) */
   zoneStyle: string
-  onMouseDown: (e: React.MouseEvent) => void
+  onPointerDown: (e: React.MouseEvent) => void
 }
 
 /**
@@ -31,7 +31,7 @@ export const TrackPushHandle = memo(function TrackPushHandle({
   isActive,
   clipLeftStyle,
   zoneStyle,
-  onMouseDown,
+  onPointerDown,
 }: TrackPushHandleProps) {
   if (!enabled && !isActive) return null
 
@@ -44,7 +44,7 @@ export const TrackPushHandle = memo(function TrackPushHandle({
         width: zoneStyle,
         zIndex: 1,
       }}
-      onMouseDown={onMouseDown}
+      onPointerDown={onPointerDown}
     >
       {/* Visuals: CSS-only hover — no state re-renders */}
       <div
