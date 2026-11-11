@@ -35,7 +35,7 @@ type EqBandFieldProps = Pick<EqBandCardProps, 'view' | 'onFieldChange' | 'onFiel
 function EqBandFrequencyFields({ view, onFieldChange, onFieldLiveChange }: EqBandFieldProps) {
   return (
     <>
-      <div className="text-[10px] text-zinc-500">Frequency</div>
+      <div className="text-[11px] text-zinc-500">Frequency</div>
       <div className="flex items-center gap-1.5">
         <NumberInput
           value={view.frequencyHz}
@@ -56,7 +56,7 @@ function EqBandFrequencyFields({ view, onFieldChange, onFieldLiveChange }: EqBan
           step={1}
         />
       </div>
-      <div className="mt-0.5 flex justify-between text-[9px] text-zinc-600">
+      <div className="mt-0.5 flex justify-between text-[11px] text-zinc-600">
         <span>{formatFrequencyRangeLabel(view.minFrequencyHz)}</span>
         <span>{formatFrequencyRangeLabel(view.maxFrequencyHz)}</span>
       </div>
@@ -67,7 +67,7 @@ function EqBandFrequencyFields({ view, onFieldChange, onFieldLiveChange }: EqBan
 function EqBandGainFields({ view, onFieldChange, onFieldLiveChange }: EqBandFieldProps) {
   return (
     <>
-      <div className="text-[10px] text-zinc-500">Gain</div>
+      <div className="text-[11px] text-zinc-500">Gain</div>
       <div className="flex items-center gap-1.5">
         <NumberInput
           value={view.gainDb}
@@ -88,13 +88,13 @@ function EqBandGainFields({ view, onFieldChange, onFieldLiveChange }: EqBandFiel
           step={0.1}
         />
       </div>
-      <div className="mt-0.5 flex justify-between text-[9px] text-zinc-600">
+      <div className="mt-0.5 flex justify-between text-[11px] text-zinc-600">
         <span>{AUDIO_EQ_GAIN_DB_MIN} dB</span>
         <span>{GAIN_MAX_LABEL}</span>
       </div>
       {bandShowsQ(view.type) ? (
         <>
-          <div className="text-[10px] text-zinc-500">Q Factor</div>
+          <div className="text-[11px] text-zinc-500">Q Factor</div>
           <div className="flex items-center gap-1.5">
             <NumberInput
               value={view.q}
@@ -114,7 +114,7 @@ function EqBandGainFields({ view, onFieldChange, onFieldLiveChange }: EqBandFiel
               step={0.05}
             />
           </div>
-          <div className="mt-0.5 flex justify-between text-[9px] text-zinc-600">
+          <div className="mt-0.5 flex justify-between text-[11px] text-zinc-600">
             <span>{AUDIO_EQ_Q_MIN.toFixed(1)}</span>
             <span>{AUDIO_EQ_Q_MAX.toFixed(1)}</span>
           </div>

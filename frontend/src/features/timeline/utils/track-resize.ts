@@ -191,11 +191,9 @@ export function getTrackSectionLayout({
     getTrackSectionHeights(tracks)
   const { availablePaneHeight, minimumSectionDividerPosition, maximumSectionDividerPosition } =
     getSectionDividerBounds(viewportHeight, tracks, trackTitleBarHeight)
+  // the video tracks, with their clip labels, are in view by default; the sound tracks below take the rest
   const defaultSectionDividerPosition = hasTrackSections
-    ? // Center the divider so the video and audio panes get equal height by
-      // default. (videoPaneHeight === position, audioPaneHeight === available
-      // - position, so half the available height splits them evenly.)
-      availablePaneHeight / 2
+    ? Math.min(maximumSectionDividerPosition, Math.max(availablePaneHeight / 2, videoSectionHeight + trackTitleBarHeight))
     : videoSectionHeight > 0
       ? availablePaneHeight
       : 0

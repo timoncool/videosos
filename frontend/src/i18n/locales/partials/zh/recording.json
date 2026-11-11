@@ -21,7 +21,7 @@
     "syncOffsetEarlier": "提前该片段",
     "syncOffsetLater": "延后该片段",
     "headphonesHint": "使用耳机，避免麦克风录入时间轴音频。",
-    "fileNamePrefix": "voiceover",
+    "fileNamePrefix": "旁白",
     "errors": {
       "unsupported": "此浏览器不支持麦克风录制。",
       "noProject": "请先打开一个项目再进行录制。",

@@ -3,15 +3,15 @@ import { toast } from 'sonner'
 import { i18n } from '@/i18n'
 import type { TimelineItem as TimelineItemType } from '@/types/timeline'
 import type { AnimatableProperty } from '@/types/keyframe'
-import type { MediaTranscriptModel, MediaTranscriptQuantization } from '@/types/storage'
+import type { MediaTranscriptModel } from '@/types/storage'
 import { useSelectionStore } from '@/shared/state/selection'
 import { usePlaybackStore } from '@/shared/state/playback'
 import { useClearKeyframesDialogStore } from '@/shared/state/clear-keyframes-dialog'
-import { useTtsGenerateDialogStore } from '@/shared/state/tts-generate-dialog'
+import { useSpeechRequestStore } from '@/shared/state/speech-request-store'
+import { useSegmentRequestStore } from '@/shared/state/segment-request-store'
 import { getTextItemPlainText } from '@/shared/utils/text-item-spans'
 import {
   isTranscriptionOutOfMemoryError,
-  TRANSCRIPTION_OOM_HINT,
 } from '@/shared/utils/transcription-cancellation'
 import { useMediaLibraryStore } from '@/features/timeline/deps/media-library-store'
 import {
@@ -211,6 +211,26 @@ export function useTimelineItemActions({
     void insertFreezeFrame(item.id, currentFrame)
   }, [item.id, item.type])
 
+  const handleRegenerateSegment = useCallback(() => {
+    if (item.type !== 'video' || !item.mediaId) {
+      return
+    }
+    const projectFps = useTimelineSettingsStore.getState().fps || 30
+    const sourceFps = item.sourceFps && item.sourceFps > 0 ? item.sourceFps : projectFps
+    const start = (item.sourceStart ?? 0) / sourceFps
+    const end =
+      item.sourceEnd !== undefined
+        ? item.sourceEnd / sourceFps
+        : start + (item.durationInFrames / projectFps) * (item.speed ?? 1)
+    useSegmentRequestStore.getState().ask({
+      mediaId: item.mediaId,
+      label: item.label,
+      start,
+      end,
+      at: item.from / projectFps,
+    })
+  }, [item])
+
   const textContent = item.type === 'text' ? getTextItemPlainText(item) : ''
   const hasSpeakableText = textContent.trim().length > 0
 
@@ -218,8 +238,9 @@ export function useTimelineItemActions({
     if (!hasSpeakableText) {
       return
     }
-    useTtsGenerateDialogStore.getState().open(textContent, item.id)
-  }, [hasSpeakableText, item.id, textContent])
+    const projectFps = useTimelineSettingsStore.getState().fps || 30
+    useSpeechRequestStore.getState().ask({ text: textContent, at: item.from / projectFps })
+  }, [hasSpeakableText, item.from, textContent])
 
   const handleCaptionGeneration = useCallback(
     (
@@ -227,7 +248,6 @@ export function useTimelineItemActions({
       options?: {
         forceTranscription?: boolean
         replaceExisting?: boolean
-        quantization?: MediaTranscriptQuantization
         language?: string
         onError?: (error: unknown) => void
       },
@@ -251,7 +271,6 @@ export function useTimelineItemActions({
           if (needsTranscription) {
             const result = await runMediaTranscriptionJob(mediaId, {
               model,
-              quantization: options?.quantization,
               language: options?.language || undefined,
             })
             if (result.status === 'cancelled') {
@@ -285,7 +304,7 @@ export function useTimelineItemActions({
               ? error.message
               : i18n.t('timeline.captions.failedGenerateSegment')
           const friendlyMessage = isTranscriptionOutOfMemoryError(error)
-            ? TRANSCRIPTION_OOM_HINT
+            ? i18n.t('transcript.outOfMemory')
             : fallbackMessage
           options?.onError?.(error)
           store.showNotification({
@@ -307,7 +326,6 @@ export function useTimelineItemActions({
     (
       values: {
         model: MediaTranscriptModel
-        quantization: MediaTranscriptQuantization
         language: string
       },
       hasExistingCaptions: boolean,
@@ -318,7 +336,6 @@ export function useTimelineItemActions({
         // transcripts are auto-enabled as virtual captions when clips load.
         forceTranscription: true,
         replaceExisting: hasExistingCaptions,
-        quantization: values.quantization,
         language: values.language,
         onError,
       })
@@ -609,6 +626,7 @@ export function useTimelineItemActions({
     handleBentoLayout,
     handleFreezeFrame,
     handleGenerateAudioFromText,
+    handleRegenerateSegment,
     handleCaptionsFromDialog,
     handleCreatePreComp,
     handleEnterComposition,

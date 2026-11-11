@@ -48,10 +48,7 @@ export function ExportAudioSettings({
 
       <div className="space-y-2">
         <Label htmlFor="audio-format">{t('export.settings.format')}</Label>
-        <Select
-          value={container}
-          onValueChange={(v) => setContainer(v as ClientAudioContainer)}
-        >
+        <Select value={container} onValueChange={(v) => setContainer(v as ClientAudioContainer)}>
           <SelectTrigger id="audio-format">
             <SelectValue placeholder={t('export.settings.selectFormat')} />
           </SelectTrigger>

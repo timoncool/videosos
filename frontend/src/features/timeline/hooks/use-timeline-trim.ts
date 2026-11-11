@@ -1308,14 +1308,16 @@ export function useTimelineTrim(
         if (e.key === 'Shift') shiftKeyRef.current = false
       }
 
-      window.addEventListener('mousemove', coalescedMouseMove.queue)
-      window.addEventListener('mouseup', handleCoalescedMouseUp)
+      window.addEventListener('pointermove', coalescedMouseMove.queue)
+      window.addEventListener('pointerup', handleCoalescedMouseUp)
+      window.addEventListener('pointercancel', handleCoalescedMouseUp)
       window.addEventListener('keydown', handleKeyDown)
       window.addEventListener('keyup', handleKeyUp)
 
       return () => {
-        window.removeEventListener('mousemove', coalescedMouseMove.queue)
-        window.removeEventListener('mouseup', handleCoalescedMouseUp)
+        window.removeEventListener('pointermove', coalescedMouseMove.queue)
+        window.removeEventListener('pointerup', handleCoalescedMouseUp)
+        window.removeEventListener('pointercancel', handleCoalescedMouseUp)
         coalescedMouseMove.cancel()
         window.removeEventListener('keydown', handleKeyDown)
         window.removeEventListener('keyup', handleKeyUp)

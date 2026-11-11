@@ -113,6 +113,8 @@ interface CommandStoreActions {
   removeContext: (compositionId: string) => void
 }
 
+let executeDepth = 0
+
 export const useTimelineCommandStore = create<CommandStoreState & CommandStoreActions>()(
   (set, get) => ({
     // State
@@ -125,10 +127,24 @@ export const useTimelineCommandStore = create<CommandStoreState & CommandStoreAc
 
     // Execute a command
     execute: <T>(command: TimelineCommand, action: () => T): T => {
+      // a command run inside another is part of it: only the outermost one is a step of the history
+      if (executeDepth > 0) {
+        executeDepth += 1
+        try {
+          return action()
+        } finally {
+          executeDepth -= 1
+        }
+      }
       const beforeSnapshot = captureSnapshot()
 
-      // Execute the action
-      const result = action()
+      executeDepth = 1
+      let result: T
+      try {
+        result = action()
+      } finally {
+        executeDepth = 0
+      }
 
       // Capture after state to check if anything changed
       const afterSnapshot = captureSnapshot()

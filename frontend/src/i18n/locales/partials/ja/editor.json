@@ -101,7 +101,14 @@
         "frameRate": "フレームレート",
         "durationSeconds": "デュレーション（秒）",
         "create": "作成"
-      }
+      },
+      "controllerLayer": "ヌルオブジェクト",
+      "parentColumn": "親",
+      "shiftToggleAllLayers": "Shiftキーを押しながらクリックすると、すべてのレイヤーを展開または折りたたみます",
+      "parentPickWhipForLayer": "{{name}}の親ピックウィップ",
+      "parentPickWhipHelp": "親レイヤーにドラッグします。Shift: 位置にスナップ。Alt: ローカルポーズを使用。Ctrl/Cmd+クリック: 親子関係を解除。",
+      "parentForLayer": "{{name}}の親",
+      "nullObjectNonRendering": "ヌルオブジェクト(レンダリングされません)"
     },
     "miniTimeline": {
       "inPoint": "イン点",
@@ -357,7 +364,38 @@
       "directionTop": "上",
       "directionBottom": "下",
       "resetParam": "{{label}}をリセット",
-      "paramColorAria": "{{label}}の色"
+      "paramColorAria": "{{label}}の色",
+      "params": {
+        "warp": "ワープ",
+        "color": "カラー",
+        "size": "サイズ",
+        "intensity": "強度",
+        "density": "密度",
+        "glow": "グロー",
+        "blocks": "ブロック",
+        "rgb_split": "RGBスプリット",
+        "block_size": "ブロックサイズ",
+        "spread": "拡散",
+        "blur": "ぼかし",
+        "spin": "スピン",
+        "scale": "スケール",
+        "turbulence": "乱流",
+        "chroma": "クロマ",
+        "swirl": "渦巻き",
+        "shine": "輝き",
+        "zoom": "ズーム",
+        "vignette": "ビネット",
+        "warmth": "暖かさ",
+        "burn": "焼き込み",
+        "grain": "粒状感",
+        "slip": "ずれ",
+        "shake": "シェイク",
+        "exposure": "露出",
+        "gate_width": "ゲート幅",
+        "roll": "ロール",
+        "dim": "減光",
+        "softness": "やわらかさ"
+      }
     },
     "propertiesSidebar": {
       "title": "プロパティ",
@@ -366,7 +404,9 @@
       "dockToPreview": "プレビューにドッキング",
       "expandFullColumn": "フルカラムに展開",
       "showPanel": "プロパティパネルを表示",
-      "clipsSelected": "{{count}} クリップを選択中"
+      "clipsSelected": "{{count}} クリップを選択中",
+      "layer": "レイヤー",
+      "composition": "コンポジション"
     },
     "markerPanel": {
       "notFound": "マーカーが見つかりません",
@@ -398,7 +438,10 @@
       "switchToFrames": "フレームに切り替え",
       "timecode": "タイムコード",
       "frameRate": "フレームレート",
-      "totalFrames": "総フレーム数"
+      "totalFrames": "総フレーム数",
+      "composition": "コンポジション",
+      "matchProject": "プロジェクトに合わせる",
+      "matchProjectBackground": "背景をプロジェクトに合わせる"
     },
     "clipPanel": {
       "tabVideo": "ビデオ",
@@ -407,7 +450,10 @@
       "adjustmentLayerHint": "調整レイヤーのエフェクトは、上のトラックのすべてのアイテムに適用されます。",
       "tabText": "テキスト",
       "tabAnimation": "アニメーション",
-      "tabShape": "シェイプ"
+      "tabShape": "シェイプ",
+      "tabProperties": "プロパティ",
+      "tabController": "ヌルオブジェクト",
+      "tabAnimate": "アニメート"
     },
     "gifSection": {
       "animation": "アニメーション",
@@ -602,14 +648,32 @@
       "background": "背景",
       "on": "オン",
       "off": "オフ",
-      "padding": "余白"
+      "padding": "余白",
+      "reveal": "表示",
+      "revealMode": {
+        "whole": "一括",
+        "words": "単語ごと",
+        "karaoke": "カラオケ"
+      },
+      "revealHint": {
+        "whole": "行全体を一度に",
+        "words": "話された単語から表示",
+        "karaoke": "行全体で、話している単語を強調"
+      },
+      "highlight": "強調色"
     },
     "captionPresets": {
       "netflixHint": "角丸の暗いボックスに Inter、下三分の一 — 放送品質のニュートラル。",
       "youtubeHint": "Roboto に柔らかいドロップシャドウ、ボックスなし — 自動字幕の雰囲気。",
       "boldYellowHint": "シネマイエローの Roboto Slab に黒いドロップシャドウ — DVD時代の定番。",
       "outlinedHint": "細いアウトラインの Manrope — すっきりとモダン、影なし。",
-      "tiktokHint": "Anton ディスプレイ、特大で中央寄せ — 縦型動画のバイラルな見た目。"
+      "tiktokHint": "Anton ディスプレイ、特大で中央寄せ — 縦型動画のバイラルな見た目。",
+      "lookMinimalHint": "Dub Studio のシンプルなルック：暗いプレートに飾らない文字。",
+      "lookViralHint": "Dub Studio のバイラルなルック：太い文字、話している単語を色で強調。",
+      "lookKaraokeHint": "Dub Studio のカラオケ：話している単語が声に合わせて光ります。",
+      "lookPlayfulHint": "Dub Studio の遊び心あるルック：明るいバブルに手書き風の文字。",
+      "lookNeonHint": "Dub Studio のネオンルック：プレートなしで光る文字。",
+      "lookFreshHint": "Dub Studio のフレッシュなルック：プレートなしで縁取りの文字。"
     },
     "alignment": {
       "left": "左揃え",
@@ -682,7 +746,6 @@
       "shapes": "図形",
       "effects": "エフェクト",
       "transitions": "トランジション",
-      "ai": "AI",
       "collapsePanel": "パネルを折りたたむ",
       "expandPanel": "パネルを展開",
       "keyframeEditor": "キーフレームエディター",
@@ -783,104 +846,31 @@
         "swing": "スイング"
       }
     },
-    "tts": {
-      "seek": "シーク",
-      "dialogTitle": "テキストから音声を生成",
-      "dialogDescription": "音声を生成してテキストクリップの位置に挿入します。",
-      "kokoroUnsupported": "このブラウザでは WebGPU を利用できません。Kokoro TTS には Chrome 113+、Edge 113+、または Safari 26+ が必要です。",
-      "mossUnsupported": "このブラウザではブラウザ管理ストレージを利用できません。MOSS 多言語 TTS は新しい Chromium ブラウザで最適に動作します。",
-      "engine": "エンジン",
-      "engineSupportDetails": "TTS エンジンの対応状況",
-      "kokoroDescription": "WebGPU の英語音声。",
-      "supportedLanguages": "対応言語: {{languages}}。",
-      "kokoroOption": "Kokoro (英語、WebGPU)",
-      "mossOption": "MOSS Nano (20言語、CPU)",
-      "voice": "音声",
-      "text": "テキスト",
-      "textPlaceholder": "読み上げたいテキストを入力...",
-      "speed": "速度",
-      "progressPreparing": "ローカル TTS を準備中...",
-      "insertedAndLinked": "挿入してリンク済み",
-      "generate": "生成",
-      "generating": "生成中...",
-      "regenerate": "再生成",
-      "insertAndLink": "挿入してリンク",
-      "inserting": "挿入中...",
-      "errors": {
-        "openProject": "音声を生成する前にプロジェクトを開いてください。",
-        "enterText": "合成するテキストを入力してください。",
-        "kokoroUnsupported": "Kokoro TTS には WebGPU が必要です。Chrome 113+、Edge 113+、または Safari 26+ をお試しください。",
-        "mossUnsupported": "MOSS 多言語 TTS にはブラウザ管理ストレージが必要です。新しい Chromium ブラウザをお試しください。",
-        "generateFailed": "音声を生成できませんでした。",
-        "insertFailed": "音声を保存して挿入できませんでした。",
-        "supertonicUnsupported": "このブラウザーではローカルの Supertonic TTS ランタイムを実行できません。最新の Chrome または Edge をお試しください。"
-      },
-      "notifications": {
-        "addedAndLinked": "\"{{fileName}}\" をタイムラインに追加し、テキストとリンクしました。",
-        "savedNoTrack": "\"{{fileName}}\" を保存しましたが、利用可能な音声トラックがありません。"
-      },
-      "supertonicUnsupported": "このブラウザーではローカルの Supertonic TTS ランタイムを実行できません。最新の Chrome または Edge をお試しください。",
-      "supertonicDescription": "WebGPU または WASM 上で動作する 31 言語対応のローカル ONNX 音声。",
-      "supertonicOption": "Supertonic 3（31 言語、ローカル ONNX）",
-      "language": "言語",
-      "autoDetectLanguage": "自動検出",
-      "expressiveTags": "表現タグ"
-    },
-    "aiPanel": {
-      "textToSpeech": "テキスト読み上げ",
-      "collapseTextToSpeech": "テキスト読み上げを折りたたむ",
-      "expandTextToSpeech": "テキスト読み上げを展開",
-      "runsLocally": "{{runtime}} はブラウザ内で {{backend}} を使ってローカル実行されます。",
-      "history": "履歴 ({{count}}) - {{size}}",
-      "clearAll": "すべてクリア",
-      "musicGeneration": "音楽生成",
-      "collapseMusicGeneration": "音楽生成を折りたたむ",
-      "expandMusicGeneration": "音楽生成を展開",
-      "musicGenerationInfo": "音楽生成情報",
-      "musicgenDescription": "Transformers.js 経由で、Xenova のブラウザ対応 MusicGen モデルを使用します。初回ダウンロードは大きめですが、その後はローカルにキャッシュされます。",
-      "musicgenPromptHint": "ジャンル、ムード、テンポ、楽器編成を指定してください。短いクリップほどかなり速く完了します。",
-      "musicgenUnsupported": "このブラウザでは WebGPU を利用できません。MusicGen には Chrome 113+、Edge 113+、または Safari 26+ が必要です。",
-      "prompt": "プロンプト",
-      "presets": "プリセット",
-      "musicPromptPlaceholder": "生成したい音楽の種類を説明してください...",
-      "length": "長さ",
-      "generateMusic": "音楽を生成",
-      "musicHistory": "音楽履歴 ({{count}}) - {{size}}",
-      "remove": "削除",
-      "saved": "保存済み",
-      "saving": "保存中...",
-      "saveAndInsert": "保存して挿入",
-      "saveToLibrary": "ライブラリに保存",
-      "progressPreparingMusic": "ローカル音楽生成を準備中...",
-      "errors": {
-        "describeMusic": "生成したい音楽を説明してください。",
-        "musicgenUnsupported": "MusicGen には WebGPU が必要です。Chrome 113+、Edge 113+、または Safari 26+ をお試しください。",
-        "generateMusicFailed": "音楽を生成できませんでした。",
-        "saveAudioFailed": "メディアライブラリに音声を保存できませんでした。"
-      },
-      "notifications": {
-        "savedToLibrary": "\"{{fileName}}\" をメディアライブラリに保存しました。",
-        "savedAndAdded": "\"{{fileName}}\" を保存してタイムラインに追加しました。"
-      },
-      "defaultTtsPrompt": "Welcome to freecut. This voice was generated locally in the browser.",
-      "musicPresets": {
-        "lofiChillLabel": "Lo-fi チル",
-        "lofiChillPrompt": "温かい lo-fi ビート、ダスティなドラム、メロウなベース、夢のようなシンセリード",
-        "pop80sLabel": "80年代ポップ",
-        "pop80sPrompt": "太いドラムとシンセが印象的な80年代ポップトラック",
-        "rock90sLabel": "90年代ロック",
-        "rock90sPrompt": "大きなギターと重いドラムの90年代ロックソング",
-        "upbeatEdmLabel": "アップビート EDM",
-        "upbeatEdmPrompt": "明るく爽やかな EDM トラック、シンコペーションのドラム、空気感のあるパッド、強い感情 bpm: 130",
-        "countryLabel": "カントリー",
-        "countryPrompt": "アコースティックギターの入った明るいカントリーソング",
-        "lofiElectroLabel": "Lo-fi エレクトロ",
-        "lofiElectroPrompt": "オーガニックなサンプルを使った低速 BPM の lo-fi エレクトロチル"
-      }
-    },
     "colorPanel": {
       "emptyState": "グレーディングするクリップを選択してください",
-      "adjustmentLayerLabel": "グレーディング"
+      "adjustmentLayerLabel": "グレーディング",
+      "dockLabel": "カラーグレーディング用ワークスペース",
+      "dockTitle": "カラー"
+    },
+    "transformHierarchy": {
+      "controllerOption": "ヌル: {{name}}",
+      "none": "なし"
+    },
+    "compositionControls": {
+      "authoringTitle": "公開するコントロール({{v0}})",
+      "authoringHint": "このコンポジションを再利用するときに編集可能なままにするテキストと色を選択します。",
+      "addAnother": "別のプロパティを公開",
+      "add": "プロパティを公開",
+      "allExposed": "サポートされているすべてのプロパティが公開されています。",
+      "noCandidates": "編集可能なプロパティを公開するには、テキストまたはシェイプレイヤーを追加してください。",
+      "resetOverride": "{{name}}のオーバーライドをリセット",
+      "overridden": "{{name}}はオーバーライドされています",
+      "instanceTitle": "テンプレートのオーバーライド",
+      "instanceHint": "変更はこのインスタンスにのみ適用されます。青い点は、元の値と異なる値を示します。",
+      "resetAll": "すべてのオーバーライドをリセット"
+    },
+    "textProperties": {
+      "scale": "スケール"
     }
   }
 }

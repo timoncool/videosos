@@ -6,6 +6,7 @@ import {
   clampAudioEqFrequencyForSampleRate,
 } from '@/shared/utils/audio-eq'
 import type { ResolvedAudioEqSettings } from '@/types/audio'
+import { useAudioOutputStore } from '@/shared/state/audio-output-store'
 
 export const PREVIEW_AUDIO_GAIN_RAMP_SECONDS = 0.008
 const PREVIEW_AUDIO_EQ_RAMP_SECONDS = 0.012
@@ -34,6 +35,22 @@ export interface PreviewClipAudioGraph {
   dispose: () => void
 }
 
+type RoutableAudioContext = AudioContext & { sinkId?: string; setSinkId?: (id: string) => Promise<void> }
+
+/** The preview plays through the output chosen in the settings; a browser without setSinkId keeps the default. */
+function routeToChosenOutput(context: AudioContext): void {
+  const routable = context as RoutableAudioContext
+  const { deviceId, setError } = useAudioOutputStore.getState()
+  if (!routable.setSinkId || routable.sinkId === deviceId) return
+  routable.setSinkId(deviceId).then(
+    () => setError(null),
+    (error: unknown) => {
+      console.error('[ERROR] the preview did not move to the chosen sound output:', error)
+      setError(error instanceof Error ? error.message : String(error))
+    },
+  )
+}
+
 let sharedPreviewAudioContext: AudioContext | null = null
 
 export function getSharedPreviewAudioContext(): AudioContext | null {
@@ -47,6 +64,7 @@ export function getSharedPreviewAudioContext(): AudioContext | null {
 
   if (sharedPreviewAudioContext === null || sharedPreviewAudioContext.state === 'closed') {
     sharedPreviewAudioContext = new AudioContextCtor()
+    routeToChosenOutput(sharedPreviewAudioContext)
   }
 
   return sharedPreviewAudioContext
@@ -61,6 +79,11 @@ export function peekSharedPreviewAudioContext(): AudioContext | null {
     ? sharedPreviewAudioContext
     : null
 }
+
+useAudioOutputStore.subscribe((state, before) => {
+  const context = peekSharedPreviewAudioContext()
+  if (context && state.deviceId !== before.deviceId) routeToChosenOutput(context)
+})
 
 function createPassNodes(
   context: AudioContext,

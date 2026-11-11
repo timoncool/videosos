@@ -402,15 +402,15 @@ export function useMarqueeSelection({
     onGestureCancel?.(wasActualDrag)
   })
 
-  const onMouseDown = useEffectEvent((e: MouseEvent) => {
+  const onMouseDown = useEffectEvent((e: PointerEvent) => {
     // A previous drag may have lost its mouseup while the page was unfocused.
     // Never let that stale gesture compete with a new interaction.
     cancelGesture()
 
     if (!enabledRef.current || !containerRef.current || !boundsRef.current) return
 
-    // Only trigger on left click
-    if (e.button !== 0) return
+    // Only trigger on left click; a finger on empty space scrolls instead of drawing a box
+    if (e.button !== 0 || e.pointerType === 'touch') return
 
     // Check if click is inside hit area bounds
     const boundsEl = boundsRef.current
@@ -638,9 +638,10 @@ export function useMarqueeSelection({
   // This ensures marquee works even when items load after mount
   useEffect(() => {
     // Use capture phase to intercept before other handlers
-    document.addEventListener('mousedown', onMouseDown, true)
-    document.addEventListener('mousemove', onMouseMove)
-    document.addEventListener('mouseup', onMouseUp, true)
+    document.addEventListener('pointerdown', onMouseDown, true)
+    document.addEventListener('pointermove', onMouseMove)
+    document.addEventListener('pointerup', onMouseUp, true)
+    document.addEventListener('pointercancel', cancelGesture, true)
     window.addEventListener('blur', cancelGesture)
 
     const handleVisibilityChange = () => {
@@ -651,9 +652,10 @@ export function useMarqueeSelection({
     document.addEventListener('visibilitychange', handleVisibilityChange)
 
     return () => {
-      document.removeEventListener('mousedown', onMouseDown, true)
-      document.removeEventListener('mousemove', onMouseMove)
-      document.removeEventListener('mouseup', onMouseUp, true)
+      document.removeEventListener('pointerdown', onMouseDown, true)
+      document.removeEventListener('pointermove', onMouseMove)
+      document.removeEventListener('pointerup', onMouseUp, true)
+      document.removeEventListener('pointercancel', cancelGesture, true)
       window.removeEventListener('blur', cancelGesture)
       document.removeEventListener('visibilitychange', handleVisibilityChange)
     }

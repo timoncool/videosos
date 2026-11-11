@@ -26,6 +26,7 @@ import {
 } from '@/features/editor/deps/timeline-ui'
 import { toast } from 'sonner'
 import { useEditorHotkeys } from '@/features/editor/hooks/use-editor-hotkeys'
+import { useCompactSidebars } from '@/features/editor/hooks/use-compact-layout'
 import { useAutoSave } from '../hooks/use-auto-save'
 import {
   useTimelineShortcuts,
@@ -49,18 +50,22 @@ import { useProjectStore } from '@/features/editor/deps/projects'
 import {
   importExportDialog,
   importExportsDialog,
+  exportFcpxml,
   RenderQueuePersistence,
   RenderQueueRunner,
   useRenderQueueStore,
 } from '@/features/editor/deps/export-contract'
-import { getEditorLayout, getEditorLayoutCssVars } from '@/config/editor-layout'
+import {
+  COMPACT_TIMELINE_SIDEBAR_WIDTH,
+  getEditorLayout,
+  getEditorLayoutCssVars,
+} from '@/config/editor-layout'
 import { EDITOR_WORKSPACE_TIMELINE_SIZE, type EditorWorkspaceId } from '@/config/editor-workspaces'
 import {
   createProjectUpgradeBackup,
   formatProjectUpgradeBackupName,
 } from '@/features/editor/deps/projects'
 import { useClearKeyframesDialogStore } from '@/shared/state/clear-keyframes-dialog'
-import { useTtsGenerateDialogStore } from '@/shared/state/tts-generate-dialog'
 import { useProjectMediaMatchDialogStore } from '@/shared/state/project-media-match-dialog'
 import { rememberLastEditorProjectId } from '@/shared/projects/last-editor-project'
 import {
@@ -80,6 +85,7 @@ const LazyColorTimelineNavigator = lazy(() =>
     default: ColorTimelineNavigator,
   })),
 )
+const LazyNodeCanvas = lazy(() => import('../deps/generate').then(({ NodeCanvas }) => ({ default: NodeCanvas })))
 const EDITOR_PROJECT_ROUTE_ID = '/editor/$projectId'
 
 function workspaceTimelineSizeStorageKey(workspace: EditorWorkspaceId): string {
@@ -122,11 +128,6 @@ const LazyExportsDialog = lazy(() =>
 const LazyClearKeyframesDialog = lazy(() =>
   import('@/features/editor/components/clear-keyframes-dialog').then((module) => ({
     default: module.ClearKeyframesDialog,
-  })),
-)
-const LazyTtsGenerateDialog = lazy(() =>
-  import('@/features/editor/components/tts-generate-dialog').then((module) => ({
-    default: module.TtsGenerateDialog,
   })),
 )
 const LazyProjectMediaMatchDialog = lazy(() =>
@@ -285,7 +286,7 @@ export const Editor = memo(function Editor({ projectId, project, migration }: Ed
 
   if (!upgradeApproved) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-full bg-background flex items-center justify-center">
         <div className="text-sm text-muted-foreground">
           {t('editor.editor.upgrading', { defaultValue: 'Upgrading project…' })}
         </div>
@@ -298,7 +299,6 @@ export const Editor = memo(function Editor({ projectId, project, migration }: Ed
 
 const EditorDialogHost = memo(function EditorDialogHost({ projectId }: { projectId: string }) {
   const clearKeyframesDialogOpen = useClearKeyframesDialogStore((s) => s.isOpen)
-  const ttsGenerateDialogOpen = useTtsGenerateDialogStore((s) => s.isOpen)
   const projectMediaMatchDialogOpen = useProjectMediaMatchDialogStore(
     (s) => s.isOpen && s.projectId === projectId,
   )
@@ -315,11 +315,6 @@ const EditorDialogHost = memo(function EditorDialogHost({ projectId }: { project
       {projectMediaMatchDialogOpen && (
         <Suspense fallback={null}>
           <LazyProjectMediaMatchDialog projectId={projectId} />
-        </Suspense>
-      )}
-      {ttsGenerateDialogOpen && (
-        <Suspense fallback={null}>
-          <LazyTtsGenerateDialog />
         </Suspense>
       )}
       {embeddedSubtitlePickerOpen && (
@@ -653,6 +648,10 @@ export const LoadedEditor = memo(function LoadedEditor({
     setBundleExportDialogOpen(true)
   }, [project.name])
 
+  const handleExportFcpxml = useCallback(() => {
+    exportFcpxml().catch((error: unknown) => toast.error(i18n.t('export.fcpxml.failed', { reason: error instanceof Error ? error.message : String(error) })))
+  }, [])
+
   // Enable keyboard shortcuts
   useEditorHotkeys({
     onSave: handleSave,
@@ -661,6 +660,7 @@ export const LoadedEditor = memo(function LoadedEditor({
 
   // Enable transition breakage notifications
   useTransitionBreakageNotifications()
+  const compact = useCompactSidebars()
 
   const timelineDuration = 30
   const isColorWorkspace = workspace === 'color'
@@ -671,8 +671,12 @@ export const LoadedEditor = memo(function LoadedEditor({
 
   return (
     <div
-      className="h-screen bg-background flex flex-col overflow-hidden"
-      style={editorLayoutCssVars as import('react').CSSProperties}
+      className="h-full bg-background flex flex-col overflow-hidden"
+      style={
+        (compact
+          ? { ...editorLayoutCssVars, '--editor-timeline-sidebar-width': `${COMPACT_TIMELINE_SIDEBAR_WIDTH}px` }
+          : editorLayoutCssVars) as import('react').CSSProperties
+      }
       role="application"
       aria-label={t('editor.editor.appLabel')}
     >
@@ -687,13 +691,14 @@ export const LoadedEditor = memo(function LoadedEditor({
           onSave={handleSave}
           onExport={handleExport}
           onExportBundle={handleExportBundle}
+          onExportFcpxml={handleExportFcpxml}
           onOpenRenderQueue={handleOpenRenderQueue}
           renderQueueCount={renderQueueActiveCount}
         />
       </InteractionLockRegion>
 
       {/* Main Layout: Full-height sidebar + vertical split */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="relative flex-1 flex overflow-hidden">
         {/* Left Sidebar - Media Library (full column mode) */}
         {mediaFullColumn && !hidesDefaultSidebars && (
           <InteractionLockRegion locked={isMaskEditingActive}>
@@ -704,7 +709,22 @@ export const LoadedEditor = memo(function LoadedEditor({
         )}
 
         {/* Right side: Preview/Properties + Timeline */}
-        {isColorWorkspace ? (
+        {workspace === 'canvas' ? (
+          <div className="flex min-w-0 flex-1 overflow-hidden">
+            {!mediaFullColumn && (
+              <ErrorBoundary level="feature">
+                <MediaSidebar />
+              </ErrorBoundary>
+            )}
+            <div className="min-w-0 flex-1">
+              <ErrorBoundary level="feature">
+                <Suspense fallback={null}>
+                  <LazyNodeCanvas />
+                </Suspense>
+              </ErrorBoundary>
+            </div>
+          </div>
+        ) : isColorWorkspace ? (
           <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
             <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
               <ErrorBoundary level="feature">
@@ -791,7 +811,9 @@ export const LoadedEditor = memo(function LoadedEditor({
                         </Suspense>
                       )}
                     </div>
-                    <AudioMeterPanel />
+                    <div className="hidden md:flex">
+                      <AudioMeterPanel />
+                    </div>
                   </div>
                 </ErrorBoundary>
               </InteractionLockRegion>

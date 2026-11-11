@@ -108,7 +108,7 @@ export const TrackHeader = memo(function TrackHeader({
             `}
             style={{ height: `${track.height}px` }}
             onClick={onSelect}
-            onMouseDown={handleDragStart}
+            onPointerDown={handleDragStart}
           >
             <div className="flex h-6 shrink-0 items-center gap-0.5 overflow-hidden border-b border-border/60">
               <div className="flex h-5 w-4 shrink-0 items-center justify-center">
@@ -127,7 +127,7 @@ export const TrackHeader = memo(function TrackHeader({
                   e.stopPropagation()
                   onToggleDisabled()
                 }}
-                onMouseDown={(e) => e.stopPropagation()}
+                onPointerDown={(e) => e.stopPropagation()}
                 aria-label={
                   trackDisabled
                     ? t('timeline.trackHeader.enableTrack')
@@ -159,7 +159,7 @@ export const TrackHeader = memo(function TrackHeader({
                   e.stopPropagation()
                   onToggleSolo()
                 }}
-                onMouseDown={(e) => e.stopPropagation()}
+                onPointerDown={(e) => e.stopPropagation()}
                 aria-label={
                   track.solo
                     ? t('timeline.trackHeader.unsoloTrack')
@@ -187,7 +187,7 @@ export const TrackHeader = memo(function TrackHeader({
                   e.stopPropagation()
                   onToggleLock()
                 }}
-                onMouseDown={(e) => e.stopPropagation()}
+                onPointerDown={(e) => e.stopPropagation()}
                 aria-label={
                   track.locked
                     ? t('timeline.trackHeader.unlockTrack')
@@ -214,7 +214,7 @@ export const TrackHeader = memo(function TrackHeader({
                   e.stopPropagation()
                   onToggleSyncLock()
                 }}
-                onMouseDown={(e) => e.stopPropagation()}
+                onPointerDown={(e) => e.stopPropagation()}
                 aria-label={
                   syncLockEnabled
                     ? t('timeline.trackHeader.disableSyncLock')
@@ -241,7 +241,7 @@ export const TrackHeader = memo(function TrackHeader({
                   e.stopPropagation()
                   onCloseGaps?.()
                 }}
-                onMouseDown={(e) => e.stopPropagation()}
+                onPointerDown={(e) => e.stopPropagation()}
                 aria-label={t('timeline.trackHeader.closeAllGaps')}
                 data-tooltip={t('timeline.trackHeader.closeAllGaps')}
               >

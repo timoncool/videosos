@@ -4,27 +4,27 @@ import { describe, expect, it } from 'vite-plus/test'
 import {
   formatSceneCaption,
   formatSceneCaptionFromData,
-  LFM_SCENE_CAPTION_PROMPT,
+  SCENE_CAPTION_PROMPT,
   normalizeShotVocabulary,
   normalizeSceneCaptionData,
   parseSceneCaptionResponse,
 } from './scene-caption-format'
 
-describe('LFM_SCENE_CAPTION_PROMPT', () => {
+describe('SCENE_CAPTION_PROMPT', () => {
   it('asks for JSON only with structured scene fields', () => {
-    expect(LFM_SCENE_CAPTION_PROMPT).toContain('return a valid JSON object only')
-    expect(LFM_SCENE_CAPTION_PROMPT).toContain('"caption": string')
-    expect(LFM_SCENE_CAPTION_PROMPT).toContain('"shotType": string | null')
-    expect(LFM_SCENE_CAPTION_PROMPT).toContain(
+    expect(SCENE_CAPTION_PROMPT).toContain('return a valid JSON object only')
+    expect(SCENE_CAPTION_PROMPT).toContain('"caption": string')
+    expect(SCENE_CAPTION_PROMPT).toContain('"shotType": string | null')
+    expect(SCENE_CAPTION_PROMPT).toContain(
       'Use null for missing scalar fields and [] for missing subjects',
     )
-    expect(LFM_SCENE_CAPTION_PROMPT).toContain(
+    expect(SCENE_CAPTION_PROMPT).toContain(
       'The first character of the response must be { and the last character must be }',
     )
-    expect(LFM_SCENE_CAPTION_PROMPT).toContain(
+    expect(SCENE_CAPTION_PROMPT).toContain(
       'Use double quotes around every key and every string value',
     )
-    expect(LFM_SCENE_CAPTION_PROMPT).toContain('Do not mention camera motion')
+    expect(SCENE_CAPTION_PROMPT).toContain('Do not mention camera motion')
   })
 })
 

@@ -13,7 +13,4 @@ Browser-based multi-track video editor. React 19 + TypeScript + Vite.
 
 ## Git
 
-- `main` — production, `staging` — pre-release integration, `develop` — active development
-- Commit work straight to `develop` — do **not** cut feature branches
-- PR target: `staging` (`develop` PRs into `staging`; `staging` is promoted to `main`). Do **not** open PRs against `main` directly
-- Conventional commits — `type(scope): description` (e.g. `fix(timeline):`, `feat(export):`)
+- This frontend is part of VideoSOS: branches, pull requests, commit messages and the changelog follow the repository root's `AGENTS.md`

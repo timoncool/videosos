@@ -1,94 +1,511 @@
 {
   "generate": {
-    "tabLabel": "Generate",
-    "serverError": "The VideoSOS server did not answer: {{reason}}",
+    "tabLabel": "Generar",
+    "serverError": "El servidor de VideoSOS no respondió: {{reason}}",
     "tasks": {
-      "image": "Image",
-      "image_edit": "Edit image",
-      "video": "Video",
-      "video_edit": "Edit video",
-      "lip_sync": "Lip sync",
-      "upscale": "Upscale",
-      "remove_background": "Remove background",
-      "music": "Music",
-      "speech": "Voice",
-      "sound": "Sound effects",
-      "transcribe": "Transcribe",
-      "text": "Text"
+      "image": "Imagen",
+      "image_edit": "Editar imagen",
+      "video": "Vídeo",
+      "video_edit": "Editar vídeo",
+      "lip_sync": "Sincronización labial",
+      "upscale": "Aumentar resolución",
+      "remove_background": "Quitar fondo",
+      "music": "Música",
+      "speech": "Voz",
+      "sound": "Efectos de sonido",
+      "transcribe": "Transcribir",
+      "text": "Texto"
     },
     "media": {
-      "image": "an image",
-      "video": "a video",
+      "image": "una imagen",
+      "video": "un vídeo",
       "audio": "audio"
     },
     "model": {
-      "choose": "Choose a model",
-      "loading": "Reading the models…",
-      "search": "Search models",
-      "all": "All",
-      "refresh": "Read the catalogues again",
-      "none": "No model fits this search.",
-      "new": "new",
-      "deprecated": "retiring"
+      "choose": "Elegir un modelo",
+      "loading": "Leyendo los modelos…",
+      "search": "Buscar modelos",
+      "all": "Todos",
+      "refresh": "Volver a leer los catálogos",
+      "none": "Ningún modelo coincide con esta búsqueda.",
+      "new": "nuevo",
+      "deprecated": "en retirada",
+      "typicalTime": "≈ {{time}} en tus ejecuciones",
+      "pin": "Fijar arriba",
+      "unpin": "Desfijar"
     },
     "keys": {
-      "missing": "No key for this provider",
-      "needed": "Add your {{provider}} key to run this model.",
-      "placeholder": "Paste the API key",
-      "save": "Save",
-      "ok": "The key works.",
-      "okBalance": "The key works. Balance: {{balance}}",
-      "failed": "The provider did not accept the key.",
-      "getOne": "Get a {{provider}} key"
+      "missing": "No hay clave para este proveedor",
+      "needed": "Añade tu clave de {{provider}} para ejecutar este modelo.",
+      "placeholder": "Pega la clave de API",
+      "save": "Guardar",
+      "ok": "La clave funciona.",
+      "okBalance": "La clave funciona. Saldo: {{balance}}",
+      "failed": "El proveedor no aceptó la clave.",
+      "getOne": "Obtener una clave de {{provider}}",
+      "spent": "Gastado con esta clave: {{spent}}.",
+      "balanceAdminOnly": "fal solo muestra el saldo a una clave de administrador."
     },
     "form": {
-      "loading": "Reading the model's settings…",
-      "more": "More settings ({{count}})",
-      "default": "Model default",
-      "dropHere": "Drop {{kind}} from the library or a result here",
-      "pick": "Pick from the library",
-      "remove": "Remove",
-      "noMedia": "The library has no {{kind}} yet.",
-      "tooMany": "At most {{max}} files here.",
-      "wrongKind": "This slot takes {{kind}}.",
-      "missing": "Fill in: {{fields}}"
+      "loading": "Leyendo los ajustes del modelo…",
+      "more": "Más ajustes ({{count}})",
+      "default": "Predeterminado del modelo",
+      "dropHere": "Suelta aquí {{kind}} de la biblioteca o un resultado",
+      "pick": "Elegir de la biblioteca",
+      "remove": "Quitar",
+      "noMedia": "La biblioteca aún no tiene {{kind}}.",
+      "tooMany": "Como máximo {{max}} archivos aquí.",
+      "wrongKind": "Este espacio admite {{kind}}.",
+      "missing": "Rellena: {{fields}}",
+      "length": "{{count}} / {{max}}",
+      "tooLong": "{{count}} / {{max}}: más largo de lo que admite el modelo",
+      "shorten": "Acorta «{{field}}»: {{count}} caracteres, el modelo admite como máximo {{max}}",
+      "atSecond": "Segundo del fotograma {{n}}",
+      "atFrame": "Número del fotograma {{n}}",
+      "atAuto": "auto",
+      "atSecondHint": "Bajo cada fotograma: el segundo en que aparece, hasta {{max}}. Vacío: el modelo reparte los fotogramas.",
+      "atFrameHint": "Bajo cada fotograma: su número en el vídeo (-1 es el último). Vacío: el modelo reparte los fotogramas.",
+      "searchOptions": "Buscar…",
+      "noOptions": "No se encontró nada"
     },
-    "placeOnTimeline": "Put on the timeline",
-    "repeat": "Runs",
-    "repeatHint": "How many times to run it; each run is a separate result and is paid separately",
-    "submit": "Generate",
+    "placeOnTimeline": "Poner en la línea de tiempo",
+    "repeat": "Ejecuciones",
+    "repeatHint": "Cuántas veces ejecutarlo; cada ejecución da un resultado independiente y se paga por separado",
+    "submit": "Generar",
     "cost": {
-      "unknown": "price after the run",
-      "estimated": "Worked out before the run",
-      "billed": "As the provider billed it",
-      "failed": "Price unknown: {{reason}}"
+      "unknown": "precio tras la ejecución",
+      "estimated": "Calculado antes de la ejecución",
+      "billed": "Según la facturación del proveedor",
+      "failed": "Precio desconocido: {{reason}}"
     },
-    "history": "Generations ({{count}})",
+    "history": "Generaciones ({{count}})",
     "status": {
-      "queued": "waiting",
-      "sending": "sending",
-      "running": "working",
-      "done": "done",
-      "failed": "failed",
-      "cancelled": "cancelled"
+      "queued": "en espera",
+      "sending": "enviando",
+      "running": "en curso",
+      "done": "listo",
+      "failed": "fallido",
+      "cancelled": "cancelado"
     },
     "actions": {
-      "cancel": "Cancel",
-      "place": "To timeline",
-      "placeHint": "Put the result at the playhead",
-      "copy": "Copy",
-      "placeText": "As text",
-      "reuse": "Edit",
-      "reuseHint": "Load this run's model and settings into the form",
-      "again": "Again",
-      "forgetHint": "Remove from the list and delete its files (media already in the library stays)"
+      "cancel": "Cancelar",
+      "place": "A la línea de tiempo",
+      "placeHint": "Poner el resultado en el cabezal de reproducción",
+      "copy": "Copiar",
+      "placeText": "Como texto",
+      "reuse": "Editar",
+      "reuseHint": "Cargar en el formulario el modelo y los ajustes de esta ejecución",
+      "again": "Repetir",
+      "forgetHint": "Quitar de la lista y eliminar sus archivos (los medios que ya están en la biblioteca se conservan)",
+      "like": "Marcar este resultado como la mejor toma: aparece primero cuando el historial se ordena así",
+      "unlike": "Quitar marca"
     },
-    "importFailed": "The result arrived but was not added to the library: {{reason}}",
+    "importFailed": "El resultado llegó pero no se añadió a la biblioteca: {{reason}}",
     "improve": {
-      "button": "Improve prompt",
-      "hint": "Rewrite the prompt for this model with an OpenRouter LLM (a fraction of a cent)",
-      "needsKey": "Needs an OpenRouter key",
-      "undo": "Back to mine"
-    }
+      "button": "Mejorar prompt",
+      "hint": {
+        "openrouter": "Reescribe el prompt para este modelo con un LLM de OpenRouter (una fracción de céntimo)",
+        "agent": "Reescribir el prompt para este modelo: lo escribe el agente conectado, sin coste"
+      },
+      "needsKey": "Requiere una clave de OpenRouter",
+      "undo": "Volver al mío",
+      "noAgent": "El agente no está conectado: inícialo con el MCP de VideoSOS (Ajustes, Agentes) o elige allí OpenRouter"
+    },
+    "use": {
+      "button": "Usar como…",
+      "videoFromFrame": "Vídeo a partir de este fotograma",
+      "edit": "Editar la imagen",
+      "upscale": "Aumentar resolución",
+      "removeBackground": "Quitar el fondo",
+      "lipSync": "Sincronizar los labios de esta cara",
+      "continue": "Continuar desde el último fotograma",
+      "editVideo": "Editar el vídeo",
+      "sound": "Sonido para este vídeo",
+      "lipSyncVoice": "Sincronizar los labios con esta voz",
+      "transcribe": "Transcribir",
+      "needsProject": "Abre primero un proyecto: el fotograma se guarda en su biblioteca de medios.",
+      "noSlot": "{{model}} no admite archivos de este tipo: elige otro modelo para esta tarea.",
+      "noPrompt": "{{model}} no tiene campo de texto: elige otro modelo de esta tarea.",
+      "placed": "Colocado en «{{field}}»",
+      "lastFrameName": "{{title}}, último fotograma"
+    },
+    "compare": {
+      "pick": "Comparar",
+      "button": "Comparar ({{count}})",
+      "title": "Lado a lado",
+      "play": "Reproducir juntos",
+      "pause": "Pausa"
+    },
+    "stats": {
+      "button": "Gasto del proyecto",
+      "title": "Lo que ha gastado este proyecto",
+      "total": "En total {{total}}, hoy {{today}}",
+      "empty": "Todavía no se ha generado nada para este proyecto.",
+      "byTask": "Por tarea",
+      "byProvider": "Por proveedor",
+      "byModel": "Por modelo",
+      "other": "Otros",
+      "files": "Archivos en el proyecto: {{count}} — {{generated}} generados, {{added}} añadidos"
+    },
+    "filter": {
+      "search": "Buscar por palabras o modelo",
+      "task": "Tarea",
+      "status": "Estado",
+      "allTasks": "Todas las tareas",
+      "allStates": "Cualquier estado",
+      "nothing": "Ninguna generación coincide."
+    },
+    "zoom": {
+      "title": "Imagen",
+      "open": "Abrir a tamaño completo",
+      "in": "Acercar",
+      "out": "Alejar",
+      "fit": "Ajustar a la ventana",
+      "close": "Cerrar"
+    },
+    "sort": {
+      "label": "Orden: {{order}}",
+      "title": "Orden",
+      "newest": "Más recientes",
+      "oldest": "Más antiguos",
+      "costliest": "Más caros",
+      "cheapest": "Más baratos",
+      "liked": "Favoritos primero"
+    },
+    "fields": {
+      "prompt": "Prompt",
+      "positive_prompt": "Prompt",
+      "negative_prompt": "Prompt negativo",
+      "aspect_ratio": "Proporción",
+      "resolution": "Resolución",
+      "input_references": "Imágenes de referencia",
+      "seed": "Semilla",
+      "output_format": "Formato de salida",
+      "output_quality": "Calidad de salida",
+      "duration": "Duración, s",
+      "number_results": "Número de resultados",
+      "num_images": "Número de imágenes",
+      "size": "Tamaño",
+      "image_size": "Tamaño de imagen",
+      "num_inference_steps": "Pasos",
+      "steps": "Pasos",
+      "guidance_scale": "Fidelidad al prompt (CFG)",
+      "cfg_scale": "Fidelidad al prompt (CFG)",
+      "strength": "Intensidad",
+      "acceleration": "Aceleración",
+      "system": "Instrucciones",
+      "temperature": "Temperatura",
+      "frame_first": "Primer fotograma",
+      "frame_last": "Último fotograma",
+      "background": "Fondo",
+      "input_audio": "Audio",
+      "language": "Idioma",
+      "input": "Texto",
+      "text": "Texto",
+      "voice": "Voz",
+      "instructions": "Cómo leerlo",
+      "speed": "Velocidad",
+      "image": "Imagen",
+      "frame_images": "Fotogramas",
+      "seed_image": "Imagen de origen",
+      "mask_image": "Máscara",
+      "generate_audio": "Generar sonido",
+      "enable_audio": "Generar sonido"
+    },
+    "historyTitle": "Generaciones",
+    "details": {
+      "title": "Detalles",
+      "model": "Modelo",
+      "took": "Tardó",
+      "seconds": "{{count}} s",
+      "job": "Tarea",
+      "media": "medio del proyecto",
+      "result": "un resultado anterior"
+    },
+    "providerWords": {
+      "billed_by_video_tokens_the_price_is_known_after_the_run": "facturado por tokens de vídeo; el precio se conoce tras la ejecución",
+      "billed_by_tokens_the_price_is_known_after_the_run": "facturado por tokens; el precio se conoce tras la ejecución",
+      "billed_by_the_length_of_the_recording": "facturado por la duración de la grabación",
+      "how_the_model_should_answer": "Cómo debe responder el modelo",
+      "iso_code_for_example_ru_or_en_empty_to_detect": "Código ISO, por ejemplo ru o en; vacío para detectar",
+      "tone_pace_and_emotion_in_words": "Tono, ritmo y emoción, con palabras."
+    },
+    "jobError": {
+      "no_key": "Falta la clave de {{provider}}",
+      "catalog": "No se pudo leer el modelo del proveedor",
+      "invalid": "Los valores del formulario no son válidos para el modelo",
+      "refused": "El proveedor rechazó la solicitud",
+      "busy": "El proveedor está ocupado: la tarea no se envió, vuelve a enviarla",
+      "network": "Sin conexión con el proveedor",
+      "provider_failed": "El proveedor no pudo realizar la tarea",
+      "lost_contact": "Se perdió la conexión con el proveedor",
+      "too_long": "La tarea tardó demasiado",
+      "download_failed": "No se pudo descargar el resultado",
+      "storage": "El resultado no se escribió en el disco",
+      "interrupted": "VideoSOS se cerró mientras se enviaba la tarea",
+      "details": "Texto del error",
+      "openKeys": "Abrir claves"
+    },
+    "placeholder": "Generando, {{model}}: {{state}}",
+    "rate": {
+      "second": "{{price}} por segundo",
+      "characters": "{{price}} por 1000 caracteres",
+      "tokens": "{{input}} / {{output}} por millón de tokens"
+    },
+    "describe": {
+      "button": "Prompt desde la imagen",
+      "hint": {
+        "openrouter": "Un modelo mira la primera imagen del formulario y escribe el prompt que la produciría. Lo paga la clave de OpenRouter.",
+        "agent": "El agente conectado mira la primera imagen del formulario y escribe el prompt que la generaría; sin coste"
+      }
+    },
+    "presets": {
+      "button": "Preajustes",
+      "hint": "Prompts guardados: ponlos en el campo o guarda el actual",
+      "empty": "Aún no hay prompts guardados. Ponle nombre al actual y guárdalo.",
+      "name": "Nombre del preajuste",
+      "keep": "Guardar",
+      "keepHint": "Guardar el texto del campo con este nombre",
+      "remove": "Quitar el preajuste «{{name}}»"
+    },
+    "elements": {
+      "button": "Elementos",
+      "hint": "Personajes, objetos y lugares con sus imágenes: «@nombre» en el prompt envía las imágenes al modelo",
+      "empty": "Guarda un personaje, un objeto o un lugar: pon sus imágenes en los campos de imagen del formulario y dale un nombre. Nómbralo en el prompt como @nombre.",
+      "use": "Poner @{{name}} en el prompt",
+      "pictures_one": "{{count}} imagen",
+      "pictures_other": "{{count}} imágenes",
+      "remove": "Quitar @{{name}}",
+      "name": "Nombre, una palabra",
+      "keep": "Guardar",
+      "keepHint": "Imágenes en el formulario: {{count}}; se guardan con este nombre",
+      "noPictures": "Primero pon sus imágenes en el formulario",
+      "badName": "Una palabra: letras, dígitos, _ y -",
+      "left": "{{names}}: este modelo no tiene sitio para sus imágenes, se envían como texto"
+    },
+    "variables": {
+      "title": "Variables del prompt",
+      "missing": "Rellena las variables: {{names}}"
+    },
+    "batch": {
+      "add": "Comparar con otro modelo",
+      "remove": "Quitar el modelo del lote",
+      "lacks": "falta: {{fields}}",
+      "noKey": "sin clave de {{provider}}"
+    },
+    "segment": {
+      "cutting": "Cortando {{from}}–{{to}} s del clip…",
+      "ready": "El fragmento está en «Editar vídeo» como origen: indica qué cambiar en él",
+      "failed": "No se cortó el fragmento: {{reason}}",
+      "noFile": "El archivo de {{name}} no está en la biblioteca",
+      "name": "{{title}}, {{from}}–{{to}} s"
+    },
+    "storyboard": {
+      "tabLabel": "Storyboard",
+      "noProject": "Abre un proyecto: el storyboard se guarda con él.",
+      "script": "Guion o idea",
+      "scriptHint": "Qué ocurre, escena por escena o en una frase. Los nombres @elemento traen sus imágenes.",
+      "count": "Planos",
+      "split": "Dividir en planos",
+      "splitHint": {
+        "openrouter": "Un modelo de lenguaje de OpenRouter escribe los planos; se paga como Mejorar prompt",
+        "agent": "Los planos los escribe el agente conectado; sin coste"
+      },
+      "frameModel": "Fotogramas de",
+      "clipModel": "Clips de",
+      "shots": "Planos",
+      "shot": "Plano {{number}}",
+      "seconds": "s",
+      "remove": "Quitar el plano {{number}}",
+      "frame": "Fotograma",
+      "frameAgain": "Repetir fotograma",
+      "clip": "Clip",
+      "clipNeedsFrame": "Este modelo empieza un clip desde un fotograma: crea primero el fotograma",
+      "frameDone": "fotograma listo",
+      "clipDone": "clip en la línea de tiempo",
+      "frameFailed": "El fotograma falló: {{reason}}",
+      "clipFailed": "El clip falló: {{reason}}",
+      "add": "Añadir un plano",
+      "allFrames_one": "Fotograma para {{count}} plano",
+      "allFrames_other": "Fotogramas para {{count}} planos",
+      "allClips_one": "Clip para {{count}} plano en la línea de tiempo",
+      "allClips_other": "Clips para {{count}} planos en la línea de tiempo",
+      "allClipsHint": "Los clips se colocan uno tras otro desde el cabezal de reproducción"
+    },
+    "canvas": {
+      "prompt": "Texto",
+      "media": "Imagen o vídeo",
+      "generate": "Generación",
+      "promptHint": "Qué crear; pasa al prompt de las generaciones a las que está conectado.",
+      "mediaHint": "Suelta aquí un archivo de la biblioteca multimedia o un resultado.",
+      "remove": "Quitar el nodo",
+      "task": "Tarea",
+      "run": "Ejecutar",
+      "runAgain": "Ejecutar de nuevo",
+      "waiting_one": "Esperando {{count}} nodo anterior",
+      "waiting_other": "Esperando {{count}} nodos anteriores",
+      "noRoom_one": "{{count}} archivo no tiene hueco en este modelo",
+      "noRoom_other": "{{count}} archivos no tienen hueco en este modelo",
+      "empty": "Añade un texto, una imagen y una generación, y conéctalos: el texto al prompt, los archivos a las entradas del modelo. Arrastra archivos de la biblioteca multimedia al lienzo.",
+      "input": {
+        "prompt": "prompt",
+        "media": "archivos"
+      },
+      "workflow": {
+        "templates": "Plantillas",
+        "save": "Guardar workflow",
+        "open": "Abrir workflow",
+        "failed": "No se pudo abrir el workflow: {{reason}}",
+        "template": {
+          "frameToVideo": {
+            "name": "De fotograma a vídeo",
+            "about": "Un prompt crea una imagen y la imagen inicia un vídeo con su propio prompt de movimiento.",
+            "prompts": {
+              "idea": "Un faro en un acantilado al anochecer, las olas rompen abajo, luz cálida en la ventana",
+              "motion": "Avance lento, el haz del faro barre el mar"
+            }
+          },
+          "compareImages": {
+            "name": "Comparar modelos de imagen",
+            "about": "Un prompt en tres modelos de imagen lado a lado; el modelo del panel y los de comparación ya están configurados.",
+            "prompts": {
+              "idea": "Retrato de un viejo pescador con un impermeable amarillo, luz suave de día nublado, 85 mm"
+            }
+          },
+          "promptWriter": {
+            "name": "Redactor de prompts",
+            "about": "Un modelo de lenguaje escribe el prompt a partir de una idea y un modelo de imagen lo dibuja.",
+            "prompts": {
+              "idea": "Escribe un prompt vívido para un modelo de imagen: una acogedora tienda de ramen en una noche lluviosa en Tokio. Responde solo con el prompt."
+            }
+          },
+          "productShot": {
+            "name": "Foto de producto",
+            "about": "Una foto de producto: se quita el fondo, un modelo de edición la sitúa en una escena nueva y después se escala.",
+            "prompts": {
+              "scene": "Coloca el producto sobre una mesa de mármol con luz de la mañana, sombras suaves, poca profundidad de campo"
+            }
+          },
+          "talkingHead": {
+            "name": "Presentador hablando",
+            "about": "Un texto leído por una voz y un rostro de la biblioteca multimedia que lo dice.",
+            "prompts": {
+              "words": "¡Hola! Hoy te voy a enseñar tres trucos para editar vídeo más rápido."
+            }
+          },
+          "soundtrack": {
+            "name": "Música y sonido",
+            "about": "Una pieza de música y un efecto de sonido a partir de dos prompts.",
+            "prompts": {
+              "mood": "Piano ambient tranquilo con cuerdas suaves, tempo lento, esperanzador",
+              "effect": "Olas en una playa de guijarros, gaviotas a lo lejos"
+            }
+          }
+        }
+      }
+    },
+    "motion": {
+      "tabLabel": "Gráficos HTML",
+      "hint": "Títulos, tercios inferiores, contadores e insignias escritos en HTML y CSS: la animación funciona sola y el clip conserva su transparencia sobre el vídeo de debajo.",
+      "templates": {
+        "title": "Título",
+        "lowerThird": "Tercio inferior",
+        "counter": "Contador",
+        "badge": "Insignia"
+      },
+      "preview": "Vista previa",
+      "code": "HTML y CSS",
+      "seconds": "Segundos",
+      "make": "Crear un clip en el cabezal",
+      "rendering": "Dibujando los fotogramas… {{percent}} %",
+      "done": "«{{name}}» está en la biblioteca y en el cabezal",
+      "failed": "No se creó el clip: {{reason}}",
+      "made": "Creado",
+      "edit": "Abrir su código",
+      "defaultName": "Gráficos HTML"
+    },
+    "previs": {
+      "tabLabel": "Blocking 3D",
+      "hint": {
+        "openrouter": "Planifica el plano en 3D antes de pagar por él: describe el lugar, quién se mueve y hacia dónde, y cómo va la cámara; el modelo de prompts construye formas provisionales y una trayectoria de cámara (unos dos céntimos). Mira a través de la cámara, desde arriba o alrededor, y luego pasa su fotograma a un modelo de vídeo o de imagen, o graba el movimiento de la cámara.",
+        "agent": "Pon en escena en 3D antes de pagar una generación: describe el lugar, quién va adónde y cómo se mueve la cámara, y el agente conectado arma gratis las figuras y el recorrido de la cámara. Mira a través de la cámara, desde arriba o alrededor, y luego pasa el fotograma a un modelo de vídeo o de imagen o graba el movimiento de cámara."
+      },
+      "description": "El plano",
+      "placeholder": "Una mujer camina por un pasillo estrecho hacia una puerta; la cámara la sigue por detrás y luego da la vuelta hasta quedar frente a ella cuando se detiene. 6 segundos, 35 mm, terminando en 50 mm.",
+      "build": "Crear el blocking",
+      "change": "Cambiar el actual según las palabras",
+      "building": "Creando el blocking…",
+      "example": "Empezar desde un ejemplo",
+      "failed": "No se pudo: {{reason}}",
+      "views": "Vista",
+      "view": {
+        "camera": "Cámara",
+        "top": "Cenital",
+        "orbit": "Órbita"
+      },
+      "play": "Reproducir",
+      "pause": "Pausa",
+      "time": "Momento del plano",
+      "toVideo": "Fotograma → primer fotograma de un vídeo",
+      "toPicture": "Fotograma → referencia de una imagen",
+      "video": "Grabar el movimiento de la cámara",
+      "recording": "Grabando… {{percent}} %",
+      "videoDone": "«{{name}}» está en la biblioteca multimedia.",
+      "frameName": "{{title}}, fotograma de blocking",
+      "videoName": "{{title}}, blocking",
+      "json": "Escena como JSON",
+      "apply": "Aplicar",
+      "badJson": "El texto no es JSON: {{reason}}",
+      "noView": "La vista 3D no se inició: esta ventana no obtuvo WebGL de la tarjeta gráfica."
+    },
+    "forever": {
+      "slide": "Desliza para generar sin fin",
+      "hint": "Vuelve a enviar las mismas ejecuciones con nuevas semillas mientras haya menos de dos en curso, hasta que pares o una falle. Cada ejecución se paga.",
+      "stop": "Detener",
+      "counter_one": " · {{count}} ejecución · {{spent}}",
+      "counter_other": " · {{count}} ejecuciones · {{spent}}"
+    },
+    "local": {
+      "intro": "Estos modelos se ejecutan en este equipo con stable-diffusion.cpp: sin claves ni coste. Cada modelo se descarga una vez; sus archivos están fijados a una revisión y se comprueban con SHA-256.",
+      "device": "Dispositivo",
+      "devices": {
+        "auto": "Automático",
+        "cuda": "CUDA (NVIDIA)",
+        "vulkan": "Vulkan",
+        "cpu": "Procesador"
+      },
+      "inUse": "En uso: {{device}} · {{gpu}}",
+      "noEngine": "No hay motor descargado: se necesita {{device}}",
+      "engine": "Motor {{device}} · {{size}}",
+      "unload": "Liberar {{model}} de la memoria",
+      "task": {
+        "image": "imágenes",
+        "video": "vídeo con sonido"
+      },
+      "installed": "descargado",
+      "notInstalled": "no descargado",
+      "accelerators": "Aceleradores: {{list}}",
+      "studios": "Estudios en este equipo",
+      "studiosHint": "YuE2, MiniMax Music3 y ACE-Step Studio, abiertos, crean canciones desde aquí como modelos de Música; Speech Studio da voz a textos como modelos de Voz, uno por cada motor. El trabajo queda en el estudio y aquí llega una copia.",
+      "studioRunning": "abierto — en Música",
+      "studioOff": "no iniciado",
+      "download": "Descargar · {{size}}",
+      "downloadNamed": "Descargar {{model}} · {{size}}",
+      "removeNamed": "Eliminar {{model}}",
+      "remove": "Eliminar",
+      "downloading": "{{done}} de {{total}} · {{file}}",
+      "takenFrom": "tomado de {{app}}",
+      "notDownloaded": "{{model}} aún no está descargado: {{size}}.",
+      "engineToo": "Con él se descarga el motor para tu tarjeta.",
+      "unsupported": "Por ahora la generación local solo está disponible en Windows."
+    },
+    "takes": {
+      "title": "Tomas ({{count}})",
+      "take": "Toma {{n}}",
+      "inClip": "En el clip",
+      "use": "Usar",
+      "useHint": "Poner esta toma en lugar del clip"
+    },
+    "speechTrimFailed": "La locución se colocó entera: no se pudo leer su silencio ({{reason}})"
   }
 }

@@ -85,7 +85,7 @@ export function ShapePathControls({
                   </Button>
                 </div>
               </PropertyRow>
-              <p className="px-1 pb-1 text-[10px] leading-4 text-muted-foreground">
+              <p className="px-1 pb-1 text-[11px] leading-4 text-muted-foreground">
                 {t(
                   pathClosed === false
                     ? 'editor.shapeSection.openPathHint'

@@ -225,7 +225,7 @@ export function MediaInfoPopover({
         {/* Info rows */}
         <div className="p-3 space-y-1">
           {rows.map((row) => (
-            <div key={row.label} className="flex items-center gap-2 text-[10px]">
+            <div key={row.label} className="flex items-center gap-2 text-[11px]">
               <span className="text-muted-foreground flex-shrink-0">{row.icon}</span>
               <span className="text-muted-foreground w-16 flex-shrink-0">{row.label}</span>
               <span className="text-foreground truncate">{row.value}</span>
@@ -237,32 +237,32 @@ export function MediaInfoPopover({
           <div className="border-t border-border/50">
             <div className="flex items-center gap-1.5 px-3 py-1.5">
               <FileText className="w-3 h-3 text-primary" />
-              <span className="text-[10px] font-medium text-muted-foreground">
+              <span className="text-[11px] font-medium text-muted-foreground">
                 {transcript
                   ? t('media.info.transcriptWithCount', { count: transcript.segments.length })
                   : t('media.info.transcript')}
               </span>
               {transcript && (
-                <span className="ml-auto text-[10px] text-muted-foreground">
+                <span className="ml-auto text-[11px] text-muted-foreground">
                   {getMediaTranscriptionModelLabel(transcript.model)}
                 </span>
               )}
             </div>
             {transcriptLoading ? (
-              <div className="px-3 pb-3 flex items-center gap-2 text-[10px] text-muted-foreground">
+              <div className="px-3 pb-3 flex items-center gap-2 text-[11px] text-muted-foreground">
                 <Loader2 className="w-3 h-3 animate-spin" />
                 {t('media.info.loadingTranscript')}
               </div>
             ) : transcript ? (
               <div className="px-3 pb-2 space-y-2">
-                <p className="text-[10px] leading-snug text-foreground/85 line-clamp-3">
+                <p className="text-[11px] leading-snug text-foreground/85 line-clamp-3">
                   {transcript.text}
                 </p>
                 <div className="space-y-1.5 max-h-40 overflow-y-auto">
                   {transcript.segments.map((segment, i) => (
                     <div
                       key={`${segment.start}-${segment.end}-${i}`}
-                      className="flex gap-2 text-[10px]"
+                      className="flex gap-2 text-[11px]"
                     >
                       <button
                         type="button"

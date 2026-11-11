@@ -39,8 +39,8 @@ export function ProjectTemplatePicker({
             >
               {/* Aspect Ratio Silhouette */}
               <div
-                className={`bg-primary/20 border-2 border-dashed rounded-sm ${
-                  isSelected ? 'border-primary' : 'border-primary/40'
+                className={`border-2 border-dashed rounded-sm ${
+                  isSelected ? 'border-[var(--color-accent)] bg-[var(--color-accent)]/15' : 'border-white/20 bg-white/[0.04]'
                 }`}
                 style={{
                   aspectRatio: `${template.width} / ${template.height}`,

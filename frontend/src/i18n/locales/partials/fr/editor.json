@@ -101,7 +101,14 @@
         "frameRate": "Fréquence d’images",
         "durationSeconds": "Durée (secondes)",
         "create": "Créer"
-      }
+      },
+      "controllerLayer": "Objet nul",
+      "parentColumn": "Parent",
+      "shiftToggleAllLayers": "Maj+clic pour développer ou réduire tous les calques",
+      "parentPickWhipForLayer": "Lasso de parentage pour {{name}}",
+      "parentPickWhipHelp": "Faites glisser vers un calque parent. Maj : aimanter la position. Alt : utiliser la pose locale. Ctrl/Cmd+clic : détacher.",
+      "parentForLayer": "Parent de {{name}}",
+      "nullObjectNonRendering": "Objet nul (non rendu)"
     },
     "miniTimeline": {
       "inPoint": "Point d'entrée",
@@ -357,7 +364,38 @@
       "directionTop": "Haut",
       "directionBottom": "Bas",
       "resetParam": "Réinitialiser {{label}}",
-      "paramColorAria": "Couleur de {{label}}"
+      "paramColorAria": "Couleur de {{label}}",
+      "params": {
+        "warp": "Déformation",
+        "color": "Couleur",
+        "size": "Taille",
+        "intensity": "Intensité",
+        "density": "Densité",
+        "glow": "Lueur",
+        "blocks": "Blocs",
+        "rgb_split": "Séparation RVB",
+        "block_size": "Taille des blocs",
+        "spread": "Dispersion",
+        "blur": "Flou",
+        "spin": "Rotation",
+        "scale": "Échelle",
+        "turbulence": "Turbulence",
+        "chroma": "Chroma",
+        "swirl": "Tourbillon",
+        "shine": "Éclat",
+        "zoom": "Zoom",
+        "vignette": "Vignettage",
+        "warmth": "Chaleur",
+        "burn": "Brûlure",
+        "grain": "Grain",
+        "slip": "Décalage",
+        "shake": "Secousse",
+        "exposure": "Exposition",
+        "gate_width": "Largeur du couloir",
+        "roll": "Défilement",
+        "dim": "Assombrissement",
+        "softness": "Douceur"
+      }
     },
     "propertiesSidebar": {
       "title": "Propriétés",
@@ -366,7 +404,9 @@
       "dockToPreview": "Ancrer à l'aperçu",
       "expandFullColumn": "Étendre en colonne complète",
       "showPanel": "Afficher le panneau de propriétés",
-      "clipsSelected": "{{count}} clips sélectionnés"
+      "clipsSelected": "{{count}} clips sélectionnés",
+      "layer": "Calque",
+      "composition": "Composition"
     },
     "markerPanel": {
       "notFound": "Marqueur introuvable",
@@ -398,7 +438,10 @@
       "switchToFrames": "Passer aux images",
       "timecode": "Code temporel",
       "frameRate": "Fréquence d'images",
-      "totalFrames": "Images totales"
+      "totalFrames": "Images totales",
+      "composition": "Composition",
+      "matchProject": "Adapter au projet",
+      "matchProjectBackground": "Adapter l’arrière-plan au projet"
     },
     "clipPanel": {
       "tabVideo": "Vidéo",
@@ -407,7 +450,10 @@
       "adjustmentLayerHint": "Les effets sur les calques de réglage s'appliquent à tous les éléments des pistes situées au-dessus.",
       "tabText": "Texte",
       "tabAnimation": "Animation",
-      "tabShape": "Forme"
+      "tabShape": "Forme",
+      "tabProperties": "Propriétés",
+      "tabController": "Objet nul",
+      "tabAnimate": "Animer"
     },
     "gifSection": {
       "animation": "Animation",
@@ -602,14 +648,32 @@
       "background": "Arrière-plan",
       "on": "Activé",
       "off": "Désactivé",
-      "padding": "Marge intérieure"
+      "padding": "Marge intérieure",
+      "reveal": "Apparition",
+      "revealMode": {
+        "whole": "Entière",
+        "words": "Mot à mot",
+        "karaoke": "Karaoké"
+      },
+      "revealHint": {
+        "whole": "Toute la ligne d'un coup",
+        "words": "Les mots apparaissent quand ils sont prononcés",
+        "karaoke": "Toute la ligne, le mot prononcé surligné"
+      },
+      "highlight": "Surlignage"
     },
     "captionPresets": {
       "netflixHint": "Inter sur un cadre sombre arrondi, bas de l'image — neutre de qualité broadcast.",
       "youtubeHint": "Roboto avec une ombre portée douce, sans cadre — l'ambiance des sous-titres automatiques.",
       "boldYellowHint": "Roboto Slab en jaune cinéma avec une ombre noire — classique de l'ère DVD.",
       "outlinedHint": "Manrope avec un contour fin — net, moderne, sans ombre.",
-      "tiktokHint": "Police Anton, surdimensionnée et centrée — le look viral de la vidéo verticale."
+      "tiktokHint": "Police Anton, surdimensionnée et centrée — le look viral de la vidéo verticale.",
+      "lookMinimalHint": "Looks sobres de Dub Studio : texte simple sur une plaque sombre.",
+      "lookViralHint": "Looks viraux de Dub Studio : texte épais, le mot prononcé mis en couleur.",
+      "lookKaraokeHint": "Karaoké de Dub Studio : le mot prononcé s’allume au fil de la voix.",
+      "lookPlayfulHint": "Looks ludiques de Dub Studio : écriture manuscrite sur une bulle colorée.",
+      "lookNeonHint": "Looks néon de Dub Studio : texte lumineux sans plaque.",
+      "lookFreshHint": "Looks frais de Dub Studio : texte détouré sans plaque."
     },
     "alignment": {
       "left": "Aligner à gauche",
@@ -682,7 +746,6 @@
       "shapes": "Formes",
       "effects": "Effets",
       "transitions": "Transitions",
-      "ai": "IA",
       "collapsePanel": "Réduire le panneau",
       "expandPanel": "Développer le panneau",
       "keyframeEditor": "Éditeur d'images clés",
@@ -783,104 +846,31 @@
         "swing": "Balancer"
       }
     },
-    "tts": {
-      "seek": "Parcourir",
-      "dialogTitle": "Générer de l'audio depuis le texte",
-      "dialogDescription": "Générez une voix et insérez-la à la position du clip de texte.",
-      "kokoroUnsupported": "WebGPU n'est pas disponible dans ce navigateur. Kokoro TTS nécessite Chrome 113+, Edge 113+ ou Safari 26+.",
-      "mossUnsupported": "Le stockage géré par le navigateur n'est pas disponible. MOSS TTS multilingue fonctionne mieux dans un navigateur Chromium récent.",
-      "supertonicUnsupported": "Ce navigateur ne peut pas exécuter le runtime TTS local de Supertonic. Essayez une version récente de Chrome ou Edge.",
-      "engine": "Moteur",
-      "engineSupportDetails": "Détails de compatibilité du moteur TTS",
-      "kokoroDescription": "Voix anglaises sur WebGPU.",
-      "supertonicDescription": "Voix ONNX locales en 31 langues sur WebGPU ou WASM.",
-      "supportedLanguages": "Langues prises en charge : {{languages}}.",
-      "kokoroOption": "Kokoro (anglais, WebGPU)",
-      "mossOption": "MOSS Nano (20 langues, CPU)",
-      "supertonicOption": "Supertonic 3 (31 langues, ONNX local)",
-      "language": "Langue",
-      "autoDetectLanguage": "Détection automatique",
-      "voice": "Voix",
-      "text": "Texte",
-      "textPlaceholder": "Saisissez le texte à lire...",
-      "expressiveTags": "Balises expressives",
-      "speed": "Vitesse",
-      "progressPreparing": "Préparation du TTS local...",
-      "insertedAndLinked": "Inséré et lié",
-      "generate": "Générer",
-      "generating": "Génération...",
-      "regenerate": "Régénérer",
-      "insertAndLink": "Insérer et lier",
-      "inserting": "Insertion...",
-      "errors": {
-        "openProject": "Ouvrez un projet avant de générer de l'audio.",
-        "enterText": "Saisissez du texte à synthétiser.",
-        "kokoroUnsupported": "WebGPU est requis pour Kokoro TTS. Essayez Chrome 113+, Edge 113+ ou Safari 26+.",
-        "mossUnsupported": "Le stockage géré par le navigateur est requis pour MOSS TTS multilingue. Essayez un navigateur Chromium récent.",
-        "supertonicUnsupported": "Ce navigateur ne peut pas exécuter le runtime TTS local de Supertonic. Essayez une version récente de Chrome ou Edge.",
-        "generateFailed": "Échec de la génération vocale.",
-        "insertFailed": "Échec de l'enregistrement et de l'insertion de l'audio."
-      },
-      "notifications": {
-        "addedAndLinked": "« {{fileName}} » a été ajouté à la timeline et lié au texte.",
-        "savedNoTrack": "« {{fileName}} » a été enregistré, mais aucune piste audio n'est disponible."
-      }
-    },
-    "aiPanel": {
-      "textToSpeech": "Texte vers voix",
-      "collapseTextToSpeech": "Réduire le texte vers voix",
-      "expandTextToSpeech": "Développer le texte vers voix",
-      "runsLocally": "{{runtime}} s'exécute localement dans le navigateur avec {{backend}}.",
-      "history": "Historique ({{count}}) - {{size}}",
-      "clearAll": "Tout effacer",
-      "musicGeneration": "Génération musicale",
-      "collapseMusicGeneration": "Réduire la génération musicale",
-      "expandMusicGeneration": "Développer la génération musicale",
-      "musicGenerationInfo": "Infos de génération musicale",
-      "musicgenDescription": "Utilise le modèle MusicGen de Xenova prêt pour le navigateur via Transformers.js. Le premier téléchargement est volumineux, puis il reste en cache local.",
-      "musicgenPromptHint": "Décrivez le genre, l'ambiance, le tempo et les instruments. Les clips plus courts finissent beaucoup plus vite.",
-      "musicgenUnsupported": "WebGPU n'est pas disponible dans ce navigateur. MusicGen nécessite Chrome 113+, Edge 113+ ou Safari 26+.",
-      "prompt": "Prompt",
-      "presets": "Préréglages",
-      "musicPromptPlaceholder": "Décrivez le type de musique à générer...",
-      "length": "Durée",
-      "generateMusic": "Générer la musique",
-      "musicHistory": "Historique musical ({{count}}) - {{size}}",
-      "remove": "Supprimer",
-      "saved": "Enregistré",
-      "saving": "Enregistrement...",
-      "saveAndInsert": "Enregistrer et insérer",
-      "saveToLibrary": "Enregistrer dans la bibliothèque",
-      "progressPreparingMusic": "Préparation de la génération musicale locale...",
-      "errors": {
-        "describeMusic": "Décrivez la musique à générer.",
-        "musicgenUnsupported": "WebGPU est requis pour MusicGen. Essayez Chrome 113+, Edge 113+ ou Safari 26+.",
-        "generateMusicFailed": "Échec de la génération musicale.",
-        "saveAudioFailed": "Impossible d'enregistrer l'audio dans la bibliothèque multimédia."
-      },
-      "notifications": {
-        "savedToLibrary": "« {{fileName}} » a été enregistré dans la bibliothèque multimédia.",
-        "savedAndAdded": "« {{fileName}} » a été enregistré et ajouté à la timeline."
-      },
-      "defaultTtsPrompt": "Welcome to freecut. This voice was generated locally in the browser.",
-      "musicPresets": {
-        "lofiChillLabel": "Lo-fi Chill",
-        "lofiChillPrompt": "Warm lo-fi beat with dusty drums, mellow bass, and a dreamy synth lead",
-        "pop80sLabel": "80s Pop",
-        "pop80sPrompt": "80s pop track with bassy drums and synth",
-        "rock90sLabel": "90s Rock",
-        "rock90sPrompt": "90s rock song with loud guitars and heavy drums",
-        "upbeatEdmLabel": "Upbeat EDM",
-        "upbeatEdmPrompt": "A light and cheery EDM track, with syncopated drums, airy pads, and strong emotions bpm: 130",
-        "countryLabel": "Country",
-        "countryPrompt": "A cheerful country song with acoustic guitars",
-        "lofiElectroLabel": "Lo-fi Electro",
-        "lofiElectroPrompt": "Lofi slow bpm electro chill with organic samples"
-      }
-    },
     "colorPanel": {
       "emptyState": "Sélectionnez un clip à étalonner",
-      "adjustmentLayerLabel": "Étalonnage"
+      "adjustmentLayerLabel": "Étalonnage",
+      "dockLabel": "Espace d’étalonnage",
+      "dockTitle": "Couleur"
+    },
+    "transformHierarchy": {
+      "controllerOption": "Nul : {{name}}",
+      "none": "Aucun"
+    },
+    "compositionControls": {
+      "authoringTitle": "Contrôles publiés ({{v0}})",
+      "authoringHint": "Choisissez les textes et les couleurs qui restent modifiables lorsque cette composition est réutilisée.",
+      "addAnother": "Exposer une autre propriété",
+      "add": "Exposer la propriété",
+      "allExposed": "Toutes les propriétés prises en charge sont exposées.",
+      "noCandidates": "Ajoutez un calque de texte ou de forme pour exposer des propriétés modifiables.",
+      "resetOverride": "Réinitialiser la substitution de {{name}}",
+      "overridden": "{{name}} est substitué",
+      "instanceTitle": "Substitutions du modèle",
+      "instanceHint": "Les modifications ne s’appliquent qu’à cette instance. Un point bleu signale les valeurs qui diffèrent de la source.",
+      "resetAll": "Réinitialiser toutes les substitutions"
+    },
+    "textProperties": {
+      "scale": "Échelle"
     }
   }
 }

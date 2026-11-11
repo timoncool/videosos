@@ -49,7 +49,7 @@ export const MotionPresetStages = memo(function MotionPresetStages({
               >
                 {layerPresets.length > 0 ? (
                   <div className="flex flex-col gap-1.5">
-                    <span className="text-[10px] font-medium text-muted-foreground">
+                    <span className="text-[11px] font-medium text-muted-foreground">
                       {t('editor.animateStages.scopeLayer')}
                     </span>
                     <MotionPresetSection
@@ -64,7 +64,7 @@ export const MotionPresetStages = memo(function MotionPresetStages({
                 ) : null}
                 {showTextScope ? (
                   <div className="flex flex-col gap-1.5">
-                    <span className="text-[10px] font-medium text-muted-foreground">
+                    <span className="text-[11px] font-medium text-muted-foreground">
                       {t('editor.animateStages.scopeText')}
                     </span>
                     <TextMotionSlotRows

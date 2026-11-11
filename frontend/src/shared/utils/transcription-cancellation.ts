@@ -41,5 +41,3 @@ export function isTranscriptionOutOfMemoryError(error: unknown): boolean {
   return OOM_PATTERNS.some((pattern) => pattern.test(message))
 }
 
-export const TRANSCRIPTION_OOM_HINT =
-  'The model ran out of memory. Try Whisper Small or a lower quantization (q8 or q4), then try again.'

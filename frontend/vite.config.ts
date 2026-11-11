@@ -55,8 +55,12 @@ const toolIgnorePatterns = [
   'scripts/**',
 ]
 
+// The program's version comes from the desktop shell's config, the one place a release changes it.
+const appVersion = (JSON.parse(readFileSync(new URL('../desktop/src-tauri/tauri.conf.json', import.meta.url), 'utf-8')) as { version: string }).version
+
 // https://vite.dev/config/
 export default defineConfig({
+  define: { __APP_VERSION__: JSON.stringify(appVersion) },
   lint: {
     ...oxlintConfig,
     ignorePatterns: toolIgnorePatterns,
@@ -109,6 +113,8 @@ export default defineConfig({
     proxy: {
       '/api': 'http://127.0.0.1:8796',
       '/mcp': 'http://127.0.0.1:8796',
+      '/v1': 'http://127.0.0.1:8796',
+      '/health': 'http://127.0.0.1:8796',
     },
     headers: {
       'Cross-Origin-Embedder-Policy': 'require-corp',

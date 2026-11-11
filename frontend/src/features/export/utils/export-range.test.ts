@@ -84,7 +84,10 @@ describe('findDominantVideoMediaId', () => {
 
   it('keeps the first clip when two are equally long', () => {
     expect(
-      findDominantVideoMediaId([videoItem('a', 0, 60, 'media-a'), videoItem('b', 0, 60, 'media-b')]),
+      findDominantVideoMediaId([
+        videoItem('a', 0, 60, 'media-a'),
+        videoItem('b', 0, 60, 'media-b'),
+      ]),
     ).toBe('media-a')
   })
 

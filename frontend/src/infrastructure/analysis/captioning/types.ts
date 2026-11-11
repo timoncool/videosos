@@ -63,6 +63,8 @@ export interface CaptioningOptions {
 export interface MediaCaptioningProvider {
   id: string
   label: string
+  /** The model id a caption set records as made by. */
+  model: string
   captionVideo(video: HTMLVideoElement, options?: CaptioningOptions): Promise<MediaCaption[]>
   captionImage(imageBlob: Blob, options?: CaptioningOptions): Promise<MediaCaption[]>
 }

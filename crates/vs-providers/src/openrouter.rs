@@ -55,6 +55,7 @@ pub async fn catalog(http: &Http) -> Result<Vec<ModelEntry>, ProviderError> {
             created: created(model),
             status: "live".into(),
             price: None,
+            rates: Vec::new(),
             thumbnail: None,
             source: json!({ "kind": "image", "parameters": model["supported_parameters"] }),
         });
@@ -81,7 +82,8 @@ pub async fn catalog(http: &Http) -> Result<Vec<ModelEntry>, ProviderError> {
             tasks: vec![task],
             created: created(model),
             status: "live".into(),
-            price: rule.rates.iter().filter(|rate| rate.unit == "second").min_by(|a, b| a.amount.total_cmp(&b.amount)).map(|rate| format!("${} per second ({})", money(rate.amount), rate.label.clone().unwrap_or_default())),
+            price: None,
+            rates: rule.rates.iter().filter(|rate| rate.unit == "second").min_by(|a, b| a.amount.total_cmp(&b.amount)).cloned().into_iter().collect(),
             thumbnail: None,
             source: json!({ "kind": "video", "model": model }),
         });
@@ -103,10 +105,13 @@ pub async fn catalog(http: &Http) -> Result<Vec<ModelEntry>, ProviderError> {
         } else {
             continue;
         };
-        let price = match kind {
-            "speech" => prompt_price.map(|price| format!("${} per 1000 characters", money(price * 1000.0))),
-            "text" => prompt_price.zip(price_number(&model["pricing"]["completion"])).map(|(input, output)| format!("${} / ${} per million tokens", money(input * 1e6), money(output * 1e6))),
-            _ => None,
+        let rates = match kind {
+            "speech" => prompt_price.map(|amount| vec![Rate { amount, unit: "character".into(), label: None }]).unwrap_or_default(),
+            "text" => prompt_price
+                .zip(price_number(&model["pricing"]["completion"]))
+                .map(|(input, output)| vec![Rate { amount: input, unit: "token_in".into(), label: None }, Rate { amount: output, unit: "token_out".into(), label: None }])
+                .unwrap_or_default(),
+            _ => Vec::new(),
         };
         entries.push(ModelEntry {
             provider: Provider::Openrouter,
@@ -116,9 +121,10 @@ pub async fn catalog(http: &Http) -> Result<Vec<ModelEntry>, ProviderError> {
             tasks: vec![task],
             created: created(model),
             status: if model["expiration_date"].is_null() { "live".into() } else { "deprecated".into() },
-            price,
+            price: None,
+            rates,
             thumbnail: None,
-            source: json!({ "kind": kind, "voices": model["supported_voices"], "pricing": model["pricing"], "parameters": model["supported_parameters"] }),
+            source: json!({ "kind": kind, "voices": model["supported_voices"], "pricing": model["pricing"], "parameters": model["supported_parameters"], "inputs": model.pointer("/architecture/input_modalities") }),
         });
     }
     Ok(entries)
@@ -165,11 +171,11 @@ fn select(key: &str, label: &str, values: &Value, role: Option<Role>, advanced: 
 }
 
 fn prompt(key: &str, label: &str, required: bool) -> Field {
-    Field { key: key.into(), label: label.into(), description: None, kind: FieldKind::Textarea, required, default: None, advanced: false, role: Some(Role::Prompt) }
+    Field { key: key.into(), label: label.into(), description: None, kind: FieldKind::Textarea { max_length: None }, required, default: None, advanced: false, role: Some(Role::Prompt) }
 }
 
 fn media(key: &str, label: &str, kind: MediaKind, min: u32, max: u32, role: Role) -> Field {
-    Field { key: key.into(), label: label.into(), description: None, kind: FieldKind::Media { media: kind, min, max, list: key == "input_references" }, required: min > 0, default: None, advanced: false, role: Some(role) }
+    Field { key: key.into(), label: label.into(), description: None, kind: FieldKind::Media { media: kind, min, max, list: matches!(key, "input_references" | "input_images"), at: None }, required: min > 0, default: None, advanced: false, role: Some(role) }
 }
 
 pub fn form(entry: &ModelEntry) -> Result<ModelForm, ProviderError> {
@@ -205,6 +211,9 @@ pub fn form(entry: &ModelEntry) -> Result<ModelForm, ProviderError> {
         "video" => {
             let model = &source["model"];
             fields.push(prompt("prompt", "Prompt", true));
+            if entry.tasks.contains(&Task::VideoEdit) {
+                fields.push(media("input_video", "Source video", MediaKind::Video, 1, 1, Role::Source));
+            }
             let frames: Vec<&str> = model["supported_frame_images"].as_array().map(|list| list.iter().filter_map(Value::as_str).collect()).unwrap_or_default();
             if frames.contains(&"first_frame") {
                 fields.push(media("frame_first", "First frame", MediaKind::Image, 0, 1, Role::FirstFrame));
@@ -237,7 +246,7 @@ pub fn form(entry: &ModelEntry) -> Result<ModelForm, ProviderError> {
             if let Some(field) = select("voice", "Voice", &source["voices"], Some(Role::Voice), false) {
                 fields.push(field);
             }
-            fields.push(Field { key: "instructions".into(), label: "How to read it".into(), description: Some("Tone, pace and emotion, in words.".into()), kind: FieldKind::Text, required: false, default: None, advanced: true, role: None });
+            fields.push(Field { key: "instructions".into(), label: "How to read it".into(), description: Some("Tone, pace and emotion, in words.".into()), kind: FieldKind::Text { max_length: None }, required: false, default: None, advanced: true, role: None });
             fields.push(Field { key: "speed".into(), label: "Speed".into(), description: None, kind: FieldKind::Number { min: Some(0.5), max: Some(2.0) }, required: false, default: None, advanced: true, role: None });
             if let Some(per_character) = price_number(&source["pricing"]["prompt"]).filter(|price| *price > 0.0) {
                 price.rates.push(Rate { amount: per_character, unit: "character".into(), label: None });
@@ -245,12 +254,15 @@ pub fn form(entry: &ModelEntry) -> Result<ModelForm, ProviderError> {
         }
         "transcribe" => {
             fields.push(media("input_audio", "Audio", MediaKind::Audio, 1, 1, Role::Audio));
-            fields.push(Field { key: "language".into(), label: "Language".into(), description: Some("ISO code, for example ru or en; empty to detect".into()), kind: FieldKind::Text, required: false, default: None, advanced: false, role: None });
+            fields.push(Field { key: "language".into(), label: "Language".into(), description: Some("ISO code, for example ru or en; empty to detect".into()), kind: FieldKind::Text { max_length: None }, required: false, default: None, advanced: false, role: None });
             price.note = Some("billed by the length of the recording".into());
         }
         "text" => {
             fields.push(prompt("prompt", "Request", true));
-            fields.push(Field { key: "system".into(), label: "Instructions".into(), description: Some("How the model should answer".into()), kind: FieldKind::Textarea, required: false, default: None, advanced: true, role: None });
+            if source["inputs"].as_array().is_some_and(|inputs| inputs.iter().any(|input| input == "image")) {
+                fields.push(media("input_images", "Images", MediaKind::Image, 0, 4, Role::Reference));
+            }
+            fields.push(Field { key: "system".into(), label: "Instructions".into(), description: Some("How the model should answer".into()), kind: FieldKind::Textarea { max_length: None }, required: false, default: None, advanced: true, role: None });
             fields.push(Field { key: "temperature".into(), label: "Temperature".into(), description: None, kind: FieldKind::Number { min: Some(0.0), max: Some(2.0) }, required: false, default: None, advanced: true, role: None });
             if let (Some(input), Some(output)) = (price_number(&source["pricing"]["prompt"]), price_number(&source["pricing"]["completion"])) {
                 price.rates.push(Rate { amount: input, unit: "token_in".into(), label: None });
@@ -313,6 +325,13 @@ pub fn build(form: &ModelForm, values: &Map<String, Value>) -> Map<String, Value
                     body.entry("frame_images").or_insert_with(|| json!([])).as_array_mut().expect("an array").push(part);
                 }
             }
+            "input_video" => {
+                let url = value.as_array().and_then(|list| list.first()).and_then(Value::as_str).or(value.as_str());
+                if let Some(url) = url {
+                    let part = json!({ "type": "video_url", "video_url": { "url": url } });
+                    body.entry("input_references").or_insert_with(|| json!([])).as_array_mut().expect("an array").push(part);
+                }
+            }
             "input_audio" => {
                 let uri = value.as_array().and_then(|list| list.first()).and_then(Value::as_str).or(value.as_str()).unwrap_or_default();
                 let (format, data) = split_data_uri(uri);
@@ -324,6 +343,35 @@ pub fn build(form: &ModelForm, values: &Map<String, Value>) -> Map<String, Value
         }
     }
     body
+}
+
+/// 16-bit little-endian PCM as OpenRouter's speech answers it, put into a WAV file by the rate and the channels
+/// its Content-Type names (`audio/pcm;rate=24000;channels=1`).
+fn wav_of_pcm(content_type: &str, pcm: &[u8]) -> Result<Vec<u8>, ProviderError> {
+    let parameter = |name: &str| {
+        content_type.split(';').filter_map(|part| part.trim().split_once('=')).find(|(key, _)| key.trim().eq_ignore_ascii_case(name)).and_then(|(_, value)| value.trim().parse::<u32>().ok())
+    };
+    if !content_type.trim_start().to_ascii_lowercase().starts_with("audio/pcm") {
+        return Err(ProviderError::Refused(format!("OpenRouter answered the speech as {content_type}, not as PCM")));
+    }
+    let rate = parameter("rate").ok_or_else(|| ProviderError::Refused(format!("OpenRouter's speech did not say its sample rate ({content_type})")))?;
+    let channels = parameter("channels").unwrap_or(1) as u16;
+    let block = channels * 2;
+    let mut wav = Vec::with_capacity(44 + pcm.len());
+    wav.extend_from_slice(b"RIFF");
+    wav.extend_from_slice(&(36 + pcm.len() as u32).to_le_bytes());
+    wav.extend_from_slice(b"WAVEfmt ");
+    wav.extend_from_slice(&16u32.to_le_bytes());
+    wav.extend_from_slice(&1u16.to_le_bytes());
+    wav.extend_from_slice(&channels.to_le_bytes());
+    wav.extend_from_slice(&rate.to_le_bytes());
+    wav.extend_from_slice(&(rate * block as u32).to_le_bytes());
+    wav.extend_from_slice(&block.to_le_bytes());
+    wav.extend_from_slice(&16u16.to_le_bytes());
+    wav.extend_from_slice(b"data");
+    wav.extend_from_slice(&(pcm.len() as u32).to_le_bytes());
+    wav.extend_from_slice(pcm);
+    Ok(wav)
 }
 
 fn split_data_uri(uri: &str) -> (String, String) {
@@ -381,15 +429,18 @@ pub async fn submit(http: &Http, key: &str, form: &ModelForm, values: &Map<Strin
             Ok(Submitted::Pending { handle: json!({ "id": id }) })
         }
         "speech" => {
-            body.insert("response_format".into(), json!("mp3"));
+            // pcm is the one format every speech model of OpenRouter answers in (Gemini's take nothing else)
+            body.insert("response_format".into(), json!("pcm"));
             let response = http.client.post(format!("{API}/audio/speech")).bearer_auth(key).json(&Value::Object(body)).send().await?;
             let status = response.status();
             if !status.is_success() {
                 return Err(refusal(status, &response.text().await.unwrap_or_default()));
             }
+            let kind = response.headers().get(reqwest::header::CONTENT_TYPE).and_then(|value| value.to_str().ok()).unwrap_or_default().to_string();
             let bytes = response.bytes().await?;
+            let wav = wav_of_pcm(&kind, &bytes)?;
             use base64::Engine;
-            Ok(Submitted::Done { outputs: vec![Output::Data { data_base64: base64::engine::general_purpose::STANDARD.encode(&bytes), mime: "audio/mpeg".into() }], cost: None })
+            Ok(Submitted::Done { outputs: vec![Output::Data { data_base64: base64::engine::general_purpose::STANDARD.encode(&wav), mime: "audio/wav".into() }], cost: None })
         }
         "transcribe" => {
             let answer = post(http, key, "/audio/transcriptions", &body).await?;
@@ -402,7 +453,14 @@ pub async fn submit(http: &Http, key: &str, form: &ModelForm, values: &Map<Strin
                 messages.push(json!({ "role": "system", "content": system }));
             }
             let request = body.remove("prompt").and_then(|value| value.as_str().map(str::to_string)).unwrap_or_default();
-            messages.push(json!({ "role": "user", "content": request }));
+            let images: Vec<Value> = body.remove("input_images").and_then(|value| value.as_array().cloned()).unwrap_or_default().iter().filter_map(Value::as_str).map(image_part).collect();
+            if images.is_empty() {
+                messages.push(json!({ "role": "user", "content": request }));
+            } else {
+                let mut content = vec![json!({ "type": "text", "text": request })];
+                content.extend(images);
+                messages.push(json!({ "role": "user", "content": content }));
+            }
             body.insert("messages".into(), Value::Array(messages));
             let answer = post(http, key, "/chat/completions", &body).await?;
             let text = answer.pointer("/choices/0/message/content").and_then(Value::as_str).ok_or_else(|| ProviderError::Refused(format!("OpenRouter answered without text: {}", answer.to_string().chars().take(300).collect::<String>())))?;
@@ -437,15 +495,61 @@ pub fn upload(media: &MediaPayload) -> String {
     media.data_uri()
 }
 
-/// What the key may still spend, when it has a limit.
-pub async fn balance(http: &Http, key: &str) -> Result<Option<f64>, ProviderError> {
+/// What the key may still spend when it has a limit, and what it has spent, in USD (`GET /key`). The account's
+/// own credits are told only to a management key, so a model key cannot read them.
+pub async fn key_money(http: &Http, key: &str) -> Result<(Option<f64>, Option<f64>), ProviderError> {
     let answer: Value = http.get_json(&format!("{API}/key"), auth(key)).await?;
-    Ok(answer.pointer("/data/limit_remaining").and_then(Value::as_f64))
+    Ok((answer.pointer("/data/limit_remaining").and_then(Value::as_f64), answer.pointer("/data/usage").and_then(Value::as_f64)))
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn a_text_model_that_sees_pictures_takes_them() {
+        let entry = |inputs: Value| ModelEntry {
+            provider: Provider::Openrouter,
+            id: "x/vision".into(),
+            name: "Vision".into(),
+            description: String::new(),
+            tasks: vec![Task::Text],
+            created: None,
+            status: "live".into(),
+            price: None,
+            rates: Vec::new(),
+            thumbnail: None,
+            source: json!({ "kind": "text", "pricing": {}, "parameters": [], "inputs": inputs }),
+        };
+        let seeing = form(&entry(json!(["text", "image"]))).unwrap();
+        assert!(seeing.fields.iter().any(|field| field.key == "input_images"));
+        let blind = form(&entry(json!(["text"]))).unwrap();
+        assert!(!blind.fields.iter().any(|field| field.key == "input_images"));
+    }
+
+    #[test]
+    fn a_video_edit_model_takes_its_source_as_a_video_reference() {
+        let entry = ModelEntry {
+            provider: Provider::Openrouter,
+            id: "black-forest-labs/flux-video-edit".into(),
+            name: "FLUX Video Edit".into(),
+            description: String::new(),
+            tasks: vec![Task::VideoEdit],
+            created: None,
+            status: "live".into(),
+            price: None,
+            rates: Vec::new(),
+            thumbnail: None,
+            source: json!({ "kind": "video", "model": { "pricing_skus": {} } }),
+        };
+        let edit = form(&entry).unwrap();
+        let source = edit.fields.iter().find(|field| field.key == "input_video").expect("a source video field");
+        assert!(source.required && source.role == Some(Role::Source));
+        let values = Map::from_iter([("prompt".into(), json!("paint it")), ("input_video".into(), json!(["data:video/mp4;base64,AAAA"]))]);
+        let body = build(&edit, &values);
+        assert_eq!(body["input_references"], json!([{ "type": "video_url", "video_url": { "url": "data:video/mp4;base64,AAAA" } }]));
+        assert!(body.get("input_video").is_none());
+    }
 
     #[test]
     fn video_skus_become_rates() {
@@ -472,5 +576,11 @@ mod tests {
     #[test]
     fn audio_goes_as_raw_base64_with_its_format() {
         assert_eq!(split_data_uri("data:audio/wav;base64,UklG"), ("wav".to_string(), "UklG".to_string()));
+        let wav = wav_of_pcm("audio/pcm;rate=24000;channels=1", &[1, 0, 2, 0]).unwrap();
+        assert_eq!(&wav[..4], b"RIFF");
+        assert_eq!(u32::from_le_bytes(wav[24..28].try_into().unwrap()), 24000);
+        assert_eq!(&wav[44..], &[1, 0, 2, 0]);
+        assert!(wav_of_pcm("audio/pcm", &[0, 0]).is_err());
+        assert!(wav_of_pcm("audio/mpeg", &[0, 0]).is_err());
     }
 }

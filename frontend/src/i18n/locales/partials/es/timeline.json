@@ -88,7 +88,8 @@
       "unreverse": "Quitar inversion",
       "updatingCaptions": "Actualizando Subtitulos",
       "copyGrade": "Copiar etalonaje",
-      "pasteGrade": "Pegar etalonaje"
+      "pasteGrade": "Pegar etalonaje",
+      "regenerateSegment": "Regenerar este fragmento"
     },
     "fadeHandles": {
       "adjustAudioFadeIn": "Ajustar Audio fundido entrada",
@@ -190,7 +191,11 @@
       "zoomOutTooltip": "zoom salida",
       "zoomSlider": "zoom control",
       "zoomToFit": "zoom a ajustar",
-      "zoomToFitTooltip": "zoom a ajustar"
+      "zoomToFitTooltip": "zoom a ajustar",
+      "disableAudioSkimming": "Desactivar el skimming de audio",
+      "enableAudioSkimming": "Activar el skimming de audio",
+      "audioSkimmingDisabled": "Skimming de audio desactivado",
+      "audioSkimmingEnabled": "Skimming de audio activado"
     },
     "itemActions": {
       "appliedEffectToClips": "Applied efecto a clips",
@@ -208,7 +213,7 @@
         "easeIn": "Entrada suave",
         "easeInOut": "Entrada/Salida",
         "overshoot": "Rebote",
-        "snap": "Snap",
+        "snap": "Ajuste",
         "outCubic": "Salida Cubic",
         "outQuart": "Salida Quart",
         "outQuint": "Salida Quint",
@@ -337,6 +342,22 @@
       "adjustClipVolume": "Ajustar clip volumen"
     },
     "emptyTitle": "Arrastra medios aquí para empezar a editar",
-    "emptyDescription": "Suelta clips en las pistas y pulsa Espacio para previsualizar."
+    "emptyDescription": "Suelta clips en las pistas y pulsa Espacio para previsualizar.",
+    "checkpoints": {
+      "title": "Puntos de restauración",
+      "hint": "La línea de tiempo tal como estaba antes de cada edición del agente y donde tú la guardaste. Al volver atrás también se guarda la actual, y Deshacer la recupera.",
+      "empty": "Aún no hay puntos de restauración: se guarda uno antes de cada edición del agente, o guarda uno aquí.",
+      "reason": {
+        "agent_one": "Antes de {{count}} edición del agente",
+        "agent_other": "Antes de {{count}} ediciones del agente",
+        "restore": "Antes de volver atrás",
+        "asked": "Guardado aquí"
+      },
+      "restore": "Volver",
+      "restored": "La línea de tiempo vuelve a {{time}}",
+      "label": "Qué es, si quieres",
+      "keep": "Guardar",
+      "kept": "Punto de restauración guardado"
+    }
   }
 }

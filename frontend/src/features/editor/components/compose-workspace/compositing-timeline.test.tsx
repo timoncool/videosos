@@ -1276,10 +1276,10 @@ describe('CompositingTimeline', { timeout: 15_000 }, () => {
     const originalTicks = Array.from(rulerSurface.children)
     const originalTickPositions = originalTicks.map((tick) => (tick as HTMLElement).style.left)
 
-    fireEvent.mouseDown(screen.getByTestId('keyframe-navigator-right-handle'), {
+    fireEvent.pointerDown(screen.getByTestId('keyframe-navigator-right-handle'), {
       clientX: 1000,
     })
-    fireEvent.mouseMove(window, { clientX: 800 })
+    fireEvent.pointerMove(window, { clientX: 800 })
     expect(frameCallbacks).toHaveLength(1)
     act(() => frameCallbacks.shift()?.(performance.now()))
 
@@ -1290,7 +1290,7 @@ describe('CompositingTimeline', { timeout: 15_000 }, () => {
     )
     expect(previewEndFrame).not.toBe('120')
 
-    fireEvent.mouseUp(window)
+    fireEvent.pointerUp(window)
 
     expect(navigator).toHaveAttribute('data-end-frame', previewEndFrame)
     expect(

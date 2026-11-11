@@ -101,7 +101,14 @@
         "frameRate": "Bildrate",
         "durationSeconds": "Dauer (Sekunden)",
         "create": "Erstellen"
-      }
+      },
+      "controllerLayer": "Null-Objekt",
+      "parentColumn": "Übergeordnet",
+      "shiftToggleAllLayers": "Mit Umschalt klicken, um alle Ebenen ein- oder auszuklappen",
+      "parentPickWhipForLayer": "Parent-Pickwhip für {{name}}",
+      "parentPickWhipHelp": "Auf eine übergeordnete Ebene ziehen. Umschalt: Position einrasten. Alt: lokale Pose verwenden. Strg/Cmd-Klick: lösen.",
+      "parentForLayer": "Übergeordnete Ebene für {{name}}",
+      "nullObjectNonRendering": "Null-Objekt (wird nicht gerendert)"
     },
     "miniTimeline": {
       "inPoint": "In-Punkt",
@@ -357,7 +364,38 @@
       "directionTop": "Oben",
       "directionBottom": "Unten",
       "resetParam": "{{label}} zurücksetzen",
-      "paramColorAria": "Farbe von {{label}}"
+      "paramColorAria": "Farbe von {{label}}",
+      "params": {
+        "warp": "Verzerrung",
+        "color": "Farbe",
+        "size": "Größe",
+        "intensity": "Intensität",
+        "density": "Dichte",
+        "glow": "Leuchten",
+        "blocks": "Blöcke",
+        "rgb_split": "RGB-Trennung",
+        "block_size": "Blockgröße",
+        "spread": "Streuung",
+        "blur": "Weichzeichnung",
+        "spin": "Drehung",
+        "scale": "Skalierung",
+        "turbulence": "Turbulenz",
+        "chroma": "Chroma",
+        "swirl": "Wirbel",
+        "shine": "Glanz",
+        "zoom": "Zoom",
+        "vignette": "Vignette",
+        "warmth": "Wärme",
+        "burn": "Ausbrennen",
+        "grain": "Körnung",
+        "slip": "Verschiebung",
+        "shake": "Wackeln",
+        "exposure": "Belichtung",
+        "gate_width": "Bildfensterbreite",
+        "roll": "Rollen",
+        "dim": "Abdunkeln",
+        "softness": "Weichheit"
+      }
     },
     "propertiesSidebar": {
       "title": "Eigenschaften",
@@ -366,7 +404,9 @@
       "dockToPreview": "An Vorschau andocken",
       "expandFullColumn": "Auf volle Spalte erweitern",
       "showPanel": "Eigenschaftenleiste anzeigen",
-      "clipsSelected": "{{count}} Clips ausgewählt"
+      "clipsSelected": "{{count}} Clips ausgewählt",
+      "layer": "Ebene",
+      "composition": "Komposition"
     },
     "markerPanel": {
       "notFound": "Marker nicht gefunden",
@@ -388,7 +428,7 @@
       "updateFailed": "Canvas-Einstellungen konnten nicht aktualisiert werden",
       "tryAgain": "Bitte erneut versuchen.",
       "noProjectLoaded": "Kein Projekt geladen",
-      "canvas": "Canvas",
+      "canvas": "Leinwand",
       "swap": "Tauschen",
       "background": "Hintergrund",
       "resetToBlack": "Auf Schwarz zurücksetzen",
@@ -398,7 +438,10 @@
       "switchToFrames": "Auf Frames umschalten",
       "timecode": "Timecode",
       "frameRate": "Bildrate",
-      "totalFrames": "Frames gesamt"
+      "totalFrames": "Frames gesamt",
+      "composition": "Komposition",
+      "matchProject": "An Projekt anpassen",
+      "matchProjectBackground": "Hintergrund an Projekt anpassen"
     },
     "clipPanel": {
       "tabVideo": "Video",
@@ -407,7 +450,10 @@
       "adjustmentLayerHint": "Effekte auf Einstellungsebenen gelten für alle Elemente auf Spuren darüber.",
       "tabText": "Text",
       "tabAnimation": "Animation",
-      "tabShape": "Form"
+      "tabShape": "Form",
+      "tabProperties": "Eigenschaften",
+      "tabController": "Null-Objekt",
+      "tabAnimate": "Animieren"
     },
     "gifSection": {
       "animation": "Animation",
@@ -602,14 +648,32 @@
       "background": "Hintergrund",
       "on": "Ein",
       "off": "Aus",
-      "padding": "Innenabstand"
+      "padding": "Innenabstand",
+      "reveal": "Einblenden",
+      "revealMode": {
+        "whole": "Ganz",
+        "words": "Wortweise",
+        "karaoke": "Karaoke"
+      },
+      "revealHint": {
+        "whole": "Die ganze Zeile auf einmal",
+        "words": "Wörter erscheinen, wenn sie gesprochen werden",
+        "karaoke": "Die ganze Zeile, das gesprochene Wort hervorgehoben"
+      },
+      "highlight": "Hervorhebung"
     },
     "captionPresets": {
       "netflixHint": "Inter auf einer abgerundeten dunklen Box, unteres Drittel — broadcast-taugliches Neutral.",
       "youtubeHint": "Roboto mit weichem Schlagschatten, ohne Box — der Auto-Untertitel-Look.",
       "boldYellowHint": "Roboto Slab in Kino-Gelb mit schwarzem Schlagschatten — Klassiker aus der DVD-Ära.",
       "outlinedHint": "Manrope mit feiner Kontur — sauber, modern, ohne Schatten.",
-      "tiktokHint": "Anton-Schrift, übergroß und zentriert — der virale Look des Hochformat-Videos."
+      "tiktokHint": "Anton-Schrift, übergroß und zentriert — der virale Look des Hochformat-Videos.",
+      "lookMinimalHint": "Klare Looks aus Dub Studio: schlichte Schrift auf dunkler Fläche.",
+      "lookViralHint": "Virale Looks aus Dub Studio: kräftige Schrift, das gesprochene Wort farbig hervorgehoben.",
+      "lookKaraokeHint": "Karaoke aus Dub Studio: das gesprochene Wort wird beim Sprechen hervorgehoben.",
+      "lookPlayfulHint": "Verspielte Looks aus Dub Studio: Handschrift auf einer bunten Blase.",
+      "lookNeonHint": "Neon-Looks aus Dub Studio: leuchtende Schrift ohne Fläche.",
+      "lookFreshHint": "Frische Looks aus Dub Studio: Schrift mit Kontur ohne Fläche."
     },
     "alignment": {
       "left": "Links ausrichten",
@@ -682,7 +746,6 @@
       "shapes": "Formen",
       "effects": "Effekte",
       "transitions": "Übergänge",
-      "ai": "KI",
       "collapsePanel": "Panel einklappen",
       "expandPanel": "Panel ausklappen",
       "keyframeEditor": "Keyframe-Editor",
@@ -783,104 +846,31 @@
         "swing": "Schwingen"
       }
     },
-    "tts": {
-      "seek": "Suchen",
-      "dialogTitle": "Audio aus Text generieren",
-      "dialogDescription": "Sprache erzeugen und an der Position des Textclips einfügen.",
-      "kokoroUnsupported": "WebGPU ist in diesem Browser nicht verfügbar. Kokoro TTS benötigt Chrome 113+, Edge 113+ oder Safari 26+.",
-      "mossUnsupported": "Browserverwalteter Speicher ist nicht verfügbar. MOSS mehrsprachiges TTS funktioniert am besten in einem aktuellen Chromium-Browser.",
-      "supertonicUnsupported": "Dieser Browser kann die lokale Supertonic-TTS-Laufzeit nicht ausführen. Versuche es mit einer aktuellen Version von Chrome oder Edge.",
-      "engine": "Engine",
-      "engineSupportDetails": "Details zur TTS-Engine-Unterstützung",
-      "kokoroDescription": "Englische Stimmen über WebGPU.",
-      "supertonicDescription": "Lokale ONNX-Stimmen in 31 Sprachen mit WebGPU oder WASM.",
-      "supportedLanguages": "Unterstützte Sprachen: {{languages}}.",
-      "kokoroOption": "Kokoro (Englisch, WebGPU)",
-      "mossOption": "MOSS Nano (20 Sprachen, CPU)",
-      "supertonicOption": "Supertonic 3 (31 Sprachen, lokales ONNX)",
-      "language": "Sprache",
-      "autoDetectLanguage": "Automatisch erkennen",
-      "voice": "Stimme",
-      "text": "Text",
-      "textPlaceholder": "Gib den Text ein, den du hören möchtest...",
-      "expressiveTags": "Ausdrucks-Tags",
-      "speed": "Geschwindigkeit",
-      "progressPreparing": "Lokales TTS wird vorbereitet...",
-      "insertedAndLinked": "Eingefügt und verknüpft",
-      "generate": "Generieren",
-      "generating": "Generieren...",
-      "regenerate": "Neu generieren",
-      "insertAndLink": "Einfügen und verknüpfen",
-      "inserting": "Einfügen...",
-      "errors": {
-        "openProject": "Öffne ein Projekt, bevor du Audio generierst.",
-        "enterText": "Gib Text zum Synthetisieren ein.",
-        "kokoroUnsupported": "WebGPU ist für Kokoro TTS erforderlich. Versuche Chrome 113+, Edge 113+ oder Safari 26+.",
-        "mossUnsupported": "Browserverwalteter Speicher ist für MOSS mehrsprachiges TTS erforderlich. Versuche einen aktuellen Chromium-Browser.",
-        "supertonicUnsupported": "Dieser Browser kann die lokale Supertonic-TTS-Laufzeit nicht ausführen. Versuche es mit einer aktuellen Version von Chrome oder Edge.",
-        "generateFailed": "Sprache konnte nicht generiert werden.",
-        "insertFailed": "Audio konnte nicht gespeichert und eingefügt werden."
-      },
-      "notifications": {
-        "addedAndLinked": "\"{{fileName}}\" wurde zur Timeline hinzugefügt und mit Text verknüpft.",
-        "savedNoTrack": "\"{{fileName}}\" wurde gespeichert, aber es ist keine Audiospur verfügbar."
-      }
-    },
-    "aiPanel": {
-      "textToSpeech": "Text zu Sprache",
-      "collapseTextToSpeech": "Text zu Sprache einklappen",
-      "expandTextToSpeech": "Text zu Sprache ausklappen",
-      "runsLocally": "{{runtime}} läuft lokal im Browser mit {{backend}}.",
-      "history": "Verlauf ({{count}}) - {{size}}",
-      "clearAll": "Alle löschen",
-      "musicGeneration": "Musik generieren",
-      "collapseMusicGeneration": "Musikgenerierung einklappen",
-      "expandMusicGeneration": "Musikgenerierung ausklappen",
-      "musicGenerationInfo": "Infos zur Musikgenerierung",
-      "musicgenDescription": "Verwendet Xenovas browserfähiges MusicGen-Modell über Transformers.js. Der erste Download ist groß, danach bleibt es lokal im Cache.",
-      "musicgenPromptHint": "Beschreibe Genre, Stimmung, Tempo und Instrumentierung. Kürzere Clips sind deutlich schneller fertig.",
-      "musicgenUnsupported": "WebGPU ist in diesem Browser nicht verfügbar. MusicGen benötigt Chrome 113+, Edge 113+ oder Safari 26+.",
-      "prompt": "Prompt",
-      "presets": "Vorgaben",
-      "musicPromptPlaceholder": "Beschreibe, welche Musik du erzeugen möchtest...",
-      "length": "Länge",
-      "generateMusic": "Musik generieren",
-      "musicHistory": "Musikverlauf ({{count}}) - {{size}}",
-      "remove": "Entfernen",
-      "saved": "Gespeichert",
-      "saving": "Speichern...",
-      "saveAndInsert": "Speichern und einfügen",
-      "saveToLibrary": "In Bibliothek speichern",
-      "progressPreparingMusic": "Lokale Musikgenerierung wird vorbereitet...",
-      "errors": {
-        "describeMusic": "Beschreibe die Musik, die du erzeugen möchtest.",
-        "musicgenUnsupported": "WebGPU ist für MusicGen erforderlich. Versuche Chrome 113+, Edge 113+ oder Safari 26+.",
-        "generateMusicFailed": "Musik konnte nicht generiert werden.",
-        "saveAudioFailed": "Audio konnte nicht in der Medienbibliothek gespeichert werden."
-      },
-      "notifications": {
-        "savedToLibrary": "\"{{fileName}}\" wurde in der Medienbibliothek gespeichert.",
-        "savedAndAdded": "\"{{fileName}}\" wurde gespeichert und zur Timeline hinzugefügt."
-      },
-      "defaultTtsPrompt": "Welcome to freecut. This voice was generated locally in the browser.",
-      "musicPresets": {
-        "lofiChillLabel": "Lo-fi Chill",
-        "lofiChillPrompt": "Warm lo-fi beat with dusty drums, mellow bass, and a dreamy synth lead",
-        "pop80sLabel": "80s Pop",
-        "pop80sPrompt": "80s pop track with bassy drums and synth",
-        "rock90sLabel": "90s Rock",
-        "rock90sPrompt": "90s rock song with loud guitars and heavy drums",
-        "upbeatEdmLabel": "Upbeat EDM",
-        "upbeatEdmPrompt": "A light and cheery EDM track, with syncopated drums, airy pads, and strong emotions bpm: 130",
-        "countryLabel": "Country",
-        "countryPrompt": "A cheerful country song with acoustic guitars",
-        "lofiElectroLabel": "Lo-fi Electro",
-        "lofiElectroPrompt": "Lofi slow bpm electro chill with organic samples"
-      }
-    },
     "colorPanel": {
       "emptyState": "Wähle einen Clip für die Farbkorrektur aus",
-      "adjustmentLayerLabel": "Farbkorrektur"
+      "adjustmentLayerLabel": "Farbkorrektur",
+      "dockLabel": "Arbeitsbereich Farbkorrektur",
+      "dockTitle": "Farbe"
+    },
+    "transformHierarchy": {
+      "controllerOption": "Null: {{name}}",
+      "none": "Keine"
+    },
+    "compositionControls": {
+      "authoringTitle": "Veröffentlichte Steuerelemente ({{v0}})",
+      "authoringHint": "Wählen Sie Texte und Farben aus, die beim Wiederverwenden dieser Komposition bearbeitbar bleiben.",
+      "addAnother": "Weitere Eigenschaft freigeben",
+      "add": "Eigenschaft freigeben",
+      "allExposed": "Alle unterstützten Eigenschaften sind freigegeben.",
+      "noCandidates": "Fügen Sie eine Text- oder Formebene hinzu, um bearbeitbare Eigenschaften freizugeben.",
+      "resetOverride": "Überschreibung von {{name}} zurücksetzen",
+      "overridden": "{{name}} ist überschrieben",
+      "instanceTitle": "Vorlagen-Überschreibungen",
+      "instanceHint": "Änderungen gelten nur für diese Instanz. Ein blauer Punkt markiert Werte, die von der Quelle abweichen.",
+      "resetAll": "Alle Überschreibungen zurücksetzen"
+    },
+    "textProperties": {
+      "scale": "Skalierung"
     }
   }
 }

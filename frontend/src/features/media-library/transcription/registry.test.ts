@@ -15,14 +15,10 @@ describe('mediaTranscriptionAdapterRegistry', () => {
       label: 'Browser Whisper',
     })
     expect(getDefaultMediaTranscriptionModel()).toBe('parakeet-tdt-v3')
-    expect(getMediaTranscriptionModelOptions()).toContainEqual({
-      value: 'whisper-small',
-      label: 'Whisper Small',
-    })
-    expect(getMediaTranscriptionModelOptions()).not.toContainEqual({
-      value: 'whisper-tiny',
-      label: 'Tiny',
-    })
+    expect(getMediaTranscriptionModelOptions().map((option) => option.value)).toEqual([
+      'parakeet-tdt-v3',
+      'whisper-large',
+    ])
   })
 
   it('formats model labels through the active adapter', () => {

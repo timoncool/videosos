@@ -89,7 +89,7 @@ export const VideoFadeHandles = memo(function VideoFadeHandles({
           e.preventDefault()
           e.stopPropagation()
         }}
-        onMouseDown={(e) => {
+        onPointerDown={(e) => {
           setHoveredHandle('in')
           onFadeHandleMouseDown(e, 'in')
         }}
@@ -113,7 +113,7 @@ export const VideoFadeHandles = memo(function VideoFadeHandles({
           e.preventDefault()
           e.stopPropagation()
         }}
-        onMouseDown={(e) => {
+        onPointerDown={(e) => {
           setHoveredHandle('out')
           onFadeHandleMouseDown(e, 'out')
         }}

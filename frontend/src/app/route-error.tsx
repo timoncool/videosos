@@ -110,7 +110,7 @@ export function RouteErrorScreen({ error, reset }: ErrorComponentProps) {
   }
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-6 py-12">
+    <div className="relative flex min-h-full items-center justify-center overflow-hidden bg-background px-6 py-12">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent"

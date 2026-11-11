@@ -76,7 +76,6 @@ vi.mock('@/features/media-library/deps/settings-contract', () => ({
   useSettingsStore: {
     getState: () => ({
       defaultWhisperModel: 'tiny',
-      defaultWhisperQuantization: 'q8',
       defaultWhisperLanguage: 'auto',
       defaultCaptionStylePresetId: 'netflix',
     }),
@@ -845,13 +844,18 @@ describe('mediaTranscriptionService.transcribeMedia', () => {
           id: 'nested-clip',
           transcriptCaptions: expect.objectContaining({
             sourceTranscriptUpdatedAt: transcript.updatedAt,
-            timingVersion: 4,
+            timingVersion: 5,
             cues: [
               {
                 id: 'transcript-media-1-0',
                 startSeconds: 0.2,
                 endSeconds: 1.4,
                 text: 'Fresh nested phrase',
+                words: [
+                  { text: 'Fresh', startSeconds: 0.2, endSeconds: 0.5 },
+                  { text: ' nested', startSeconds: 0.53, endSeconds: 0.9 },
+                  { text: ' phrase', startSeconds: 0.93, endSeconds: 1.4 },
+                ],
               },
             ],
           }),
@@ -864,7 +868,7 @@ describe('mediaTranscriptionService.transcribeMedia', () => {
           items: [
             expect.objectContaining({
               id: 'stashed-clip',
-              transcriptCaptions: expect.objectContaining({ timingVersion: 4 }),
+              transcriptCaptions: expect.objectContaining({ timingVersion: 5 }),
             }),
           ],
         }),

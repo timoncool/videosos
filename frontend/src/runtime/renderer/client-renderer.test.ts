@@ -83,6 +83,8 @@ describe('client-renderer export matrix', () => {
     ).toEqual({
       valid: false,
       error: 'Codec avc is not supported in WEBM',
+      errorKey: 'export.validation.codecContainer',
+      errorParams: { codec: 'avc', container: 'WEBM' },
     })
 
     expect(
@@ -97,6 +99,7 @@ describe('client-renderer export matrix', () => {
     ).toEqual({
       valid: false,
       error: 'Audio export must use an audio-only container',
+      errorKey: 'export.validation.audioContainer',
     })
   })
 

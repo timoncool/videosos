@@ -61,7 +61,7 @@ export const ContinuousMotionStage = memo(function ContinuousMotionStage({
             >
               {modulators.length > 0 ? (
                 <div className="flex flex-col gap-1.5">
-                  <span className="text-[10px] font-medium text-muted-foreground">
+                  <span className="text-[11px] font-medium text-muted-foreground">
                     {t('editor.animateStages.scopeLayer')}
                   </span>
                   <div className="grid grid-cols-3 gap-1.5">
@@ -107,7 +107,7 @@ export const ContinuousMotionStage = memo(function ContinuousMotionStage({
               ) : null}
               {selectedTextItems.length > 0 ? (
                 <div className="flex flex-col gap-1.5">
-                  <span className="text-[10px] font-medium text-muted-foreground">
+                  <span className="text-[11px] font-medium text-muted-foreground">
                     {t('editor.animateStages.scopeText')}
                   </span>
                   <TextMotionSlotRows

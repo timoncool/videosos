@@ -70,7 +70,8 @@
       "alsoDeleteLocalFiles": "Also delete local files on disk",
       "removeFilesFromFolder": "Remove files from the linked folder. This cannot be undone.",
       "removeFilesFromNamedFolder": "Remove files from the linked folder \"{{folder}}\". This cannot be undone.",
-      "openProject": "Open project"
+      "openProject": "Open project",
+      "actions": "Project actions"
     },
     "form": {
       "createTitle": "Create New Project",

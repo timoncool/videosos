@@ -1,6 +1,6 @@
 [package]
 name = "videosos-desktop"
-version = "2.0.0"
+version = "2.1.0"
 edition = "2021"
 description = "Tauri shell of VideoSOS: runs vs-server on 127.0.0.1:8796 (VIDEOSOS_PORT) inside this process and opens the window on it"
 

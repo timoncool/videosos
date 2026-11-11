@@ -8,19 +8,36 @@
 #[macro_use]
 pub mod i18n;
 pub mod catalog;
+mod chat;
+mod checkpoints;
+mod assistant;
+mod choices;
+mod elements;
+pub use vs_providers;
 pub mod credentials;
 pub mod events;
-mod exports;
+pub mod exports;
+pub mod hw;
 pub mod fs_api;
 pub mod hub;
 pub mod jobs;
+pub mod local;
+pub mod journal;
 mod keys;
 pub mod mcp;
 pub mod process_group;
+pub mod remote;
+pub mod request_log;
 pub mod service;
 pub mod settings;
+mod studios;
 mod spa;
 mod spend;
+mod tagging;
+mod title;
+pub mod tools;
+pub mod url_import;
+pub mod ytdlp;
 
 use std::net::TcpListener;
 use std::path::{Path, PathBuf};
@@ -50,6 +67,9 @@ pub struct Inner {
     pub http: vs_providers::http::Http,
     pub catalog: Arc<catalog::Catalog>,
     pub jobs: Arc<jobs::Jobs>,
+    pub journal: journal::Journal,
+    /// Videos downloaded by their links.
+    pub fetches: url_import::Fetches,
 }
 
 impl std::ops::Deref for AppState {
@@ -65,20 +85,43 @@ impl AppState {
         let data = repo_root.join("data");
         let workspace = data.join("workspace");
         std::fs::create_dir_all(&workspace)?;
+        // copies an agent handed over for import last run: the window has taken them or never will
+        let inbox = data.join("inbox");
+        if inbox.is_dir()
+            && let Err(error) = std::fs::remove_dir_all(&inbox)
+        {
+            tracing::warn!("the old import copies in {} were not removed: {error}", inbox.display());
+        }
         credentials::init(repo_root);
+        request_log::init(&data);
         settings::init(&data);
+        choices::init(&data);
+        checkpoints::init(&data);
         let http = vs_providers::http::Http::new(reqwest::Client::builder()).map_err(|e| anyhow::anyhow!(e.to_string()))?;
         let catalog = catalog::Catalog::open(&data, http.clone());
         let jobs = jobs::Jobs::open(&data, &workspace, http.clone(), catalog.clone())?;
         spend::init(jobs.clone());
         hub::start(&data, http.client.clone());
-        Ok(Self { inner: Arc::new(Inner { repo_root: repo_root.to_path_buf(), workspace, data, http, catalog, jobs }) })
+        // the language the window last showed, so what VideoSOS says before a window opens is in it too
+        match std::fs::read_to_string(data.join(UI_LANGUAGE_FILE)) {
+            Ok(code) => match i18n::set_language(code.trim()) {
+                Ok(()) => hub::set_language(code.trim()),
+                Err(error) => tracing::error!("[ERROR] {UI_LANGUAGE_FILE}: {error}"),
+            },
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
+            Err(error) => tracing::error!("[ERROR] {UI_LANGUAGE_FILE}: {error}"),
+        }
+        let journal = journal::Journal::open(&data)?;
+        let fetches = url_import::Fetches::open(&data);
+        Ok(Self { inner: Arc::new(Inner { repo_root: repo_root.to_path_buf(), workspace, data, http, catalog, jobs, journal, fetches }) })
     }
 
     /// Work left from the last run and the catalogue read afresh.
     pub fn start_background(&self) {
         self.jobs.resume();
         self.catalog.refresh_all();
+        studios::watch();
+        local::link_from_neighbors(&self.data);
     }
 }
 
@@ -87,20 +130,38 @@ struct LanguageBody {
     language: String,
 }
 
-/// The window says which language it shows: the server's own messages follow it.
-async fn set_language(Json(body): Json<LanguageBody>) -> Result<StatusCode, (StatusCode, String)> {
+/// Where the window's language is kept between runs, in the data folder.
+const UI_LANGUAGE_FILE: &str = "ui-language.txt";
+
+/// The window says which language it shows: the server's own messages follow it, now and after a restart.
+async fn set_language(State(state): State<AppState>, Json(body): Json<LanguageBody>) -> Result<StatusCode, (StatusCode, String)> {
     i18n::set_language(&body.language).map_err(|e| (StatusCode::BAD_REQUEST, e))?;
     hub::set_language(&body.language);
+    let file = state.data.join(UI_LANGUAGE_FILE);
+    std::fs::write(&file, &body.language).map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, format!("{}: {e}", file.display())))?;
     Ok(StatusCode::NO_CONTENT)
+}
+
+/// Where the program keeps what the person makes, for Settings, About.
+async fn app_paths(State(state): State<AppState>) -> Json<Value> {
+    Json(json!({
+        "data_dir": state.data.display().to_string(),
+        "projects_dir": state.workspace.display().to_string(),
+        "generations_dir": state.data.join("generations").display().to_string(),
+        "exports_dir": state.data.join("exports").display().to_string(),
+        "logs_dir": state.data.join("logs").display().to_string(),
+    }))
 }
 
 async fn info(State(state): State<AppState>) -> Json<Value> {
     Json(json!({
         "app": service::APP_ID,
         "version": service::app_version(),
+        "portable": service::is_portable(),
         "workspace": state.workspace.display().to_string(),
         "data": state.data.display().to_string(),
         "os": std::env::consts::OS,
+        "system": hub::os_label(),
     }))
 }
 
@@ -109,6 +170,9 @@ async fn info(State(state): State<AppState>) -> Json<Value> {
 /// money, so only the window and agents on this computer may ask for them.
 async fn local_only(request: axum::extract::Request, next: axum::middleware::Next) -> axum::response::Response {
     use axum::response::IntoResponse;
+    if request.extensions().get::<remote::FromNetwork>().is_some() {
+        return next.run(request).await;
+    }
     let headers = request.headers();
     let host_ok = headers
         .get(header::HOST)
@@ -124,23 +188,37 @@ async fn local_only(request: axum::extract::Request, next: axum::middleware::Nex
 /// The API and the window on one origin. Every answer carries the cross-origin isolation headers the
 /// editor needs for SharedArrayBuffer (decoding and export workers).
 pub fn app(state: AppState) -> Router {
-    let api = Router::new()
+    // counted before the MCP tools take the router: an agent's calls are VideoSOS's features too
+    let api = hub::track(
+        Router::new()
         .route("/health", get(service::health))
         .route("/api/info", get(info))
+        .route("/api/app/paths", get(app_paths))
+        .route("/api/network", get(remote::status).put(remote::change))
         .route("/api/ui-language", post(set_language))
         .route("/api/events", get(events::stream))
         .merge(fs_api::router())
         .merge(catalog::router())
         .merge(jobs::router())
+        .merge(local::router())
         .merge(keys::router())
         .merge(settings::router())
+        .merge(assistant::router())
+        .merge(choices::router())
+        .merge(checkpoints::router())
+        .merge(url_import::router())
+        .merge(chat::router())
         .merge(exports::router())
+        .merge(hw::router())
+        .merge(journal::router())
         .with_state(state.clone())
-        .merge(hub::router());
+        .merge(hub::router()),
+    );
     mcp::install(api.clone());
     api.merge(mcp::router().with_state(state.clone()))
         .merge(spa::router(&state.repo_root))
         .layer(axum::middleware::from_fn(local_only))
+        .layer(axum::middleware::from_fn(remote::guard))
         .layer(SetResponseHeaderLayer::overriding(
             HeaderName::from_static("cross-origin-opener-policy"),
             HeaderValue::from_static("same-origin"),
@@ -156,6 +234,11 @@ pub fn app(state: AppState) -> Router {
         .layer(SetResponseHeaderLayer::if_not_present(header::X_CONTENT_TYPE_OPTIONS, HeaderValue::from_static("nosniff")))
 }
 
+/// The address the service binds: every address when access from the network is on, loopback otherwise.
+pub fn bind_address(repo_root: &Path) -> [u8; 4] {
+    remote::start(settings::saved_network(&repo_root.join("data")))
+}
+
 /// Serves on the listener the caller bound until the process ends.
 pub fn serve_blocking(repo_root: &Path, listener: TcpListener) -> anyhow::Result<()> {
     let runtime = tokio::runtime::Builder::new_multi_thread().enable_all().thread_name("vs-server").build()?;
@@ -167,7 +250,7 @@ pub fn serve_blocking(repo_root: &Path, listener: TcpListener) -> anyhow::Result
         state.start_background();
         let listener = tokio::net::TcpListener::from_std(listener)?;
         tracing::info!("VideoSOS {} on http://127.0.0.1:{port}/", service::app_version());
-        axum::serve(listener, app(state)).await?;
+        axum::serve(listener, app(state).into_make_service_with_connect_info::<std::net::SocketAddr>()).await?;
         Ok(())
     })
 }

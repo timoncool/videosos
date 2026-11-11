@@ -137,7 +137,7 @@ function SceneCardBase({ scene, mediaName, match }: SceneCardBaseProps) {
         <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
           <Search className="h-5 w-5 text-white/90" />
         </div>
-        <span className="absolute bottom-1 right-1 rounded bg-black/70 px-1 font-mono text-[10px] leading-none text-white/90">
+        <span className="absolute bottom-1 right-1 rounded bg-black/70 px-1 font-mono text-[11px] leading-none text-white/90">
           {timestampLabel}
         </span>
         {hasPalette && (
@@ -155,7 +155,7 @@ function SceneCardBase({ scene, mediaName, match }: SceneCardBaseProps) {
       </div>
       <div className="min-w-0 space-y-1 px-1.5 py-1.5">
         {showSourceMediaName && (
-          <div className="truncate text-[10px] text-muted-foreground" title={scene.mediaFileName}>
+          <div className="truncate text-[11px] text-muted-foreground" title={scene.mediaFileName}>
             {scene.mediaFileName}
           </div>
         )}

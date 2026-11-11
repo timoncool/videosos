@@ -162,8 +162,8 @@ describe('timeline navigator interaction', () => {
 
     const thumb = getByTestId('timeline-navigator-thumb')
     const initialWidth = thumb.style.width
-    fireEvent.mouseDown(getByTestId('timeline-navigator-right-handle'), { clientX: 200 })
-    fireEvent.mouseMove(window, { clientX: 240 })
+    fireEvent.pointerDown(getByTestId('timeline-navigator-right-handle'), { clientX: 200 })
+    fireEvent.pointerMove(window, { clientX: 240 })
 
     const previewWidth = thumb.style.width
     expect(previewWidth).not.toBe(initialWidth)
@@ -172,7 +172,7 @@ describe('timeline navigator interaction', () => {
     rerender(<TimelineNavigator actualDuration={10} scrollContainerRef={scrollContainerRef} />)
     expect(thumb.style.width).toBe(previewWidth)
 
-    fireEvent.mouseUp(window)
+    fireEvent.pointerUp(window)
 
     expect(useZoomStore.getState().level).not.toBe(1)
     expect(thumb.style.width).toBe(previewWidth)
@@ -201,18 +201,18 @@ describe('timeline navigator interaction', () => {
       <TimelineNavigator actualDuration={10} scrollContainerRef={{ current: scrollContainer }} />,
     )
 
-    fireEvent.mouseDown(getByTestId('timeline-navigator-thumb'), { clientX: 200 })
-    fireEvent.mouseMove(window, { clientX: 230 })
+    fireEvent.pointerDown(getByTestId('timeline-navigator-thumb'), { clientX: 200 })
+    fireEvent.pointerMove(window, { clientX: 230 })
     act(() => frameCallbacks.shift()?.(0))
     expect(liveViewportChange).toHaveBeenCalledTimes(1)
-    fireEvent.mouseUp(window)
+    fireEvent.pointerUp(window)
 
     liveViewportChange.mockClear()
-    fireEvent.mouseDown(getByTestId('timeline-navigator-right-handle'), { clientX: 250 })
-    fireEvent.mouseMove(window, { clientX: 280 })
+    fireEvent.pointerDown(getByTestId('timeline-navigator-right-handle'), { clientX: 250 })
+    fireEvent.pointerMove(window, { clientX: 280 })
     act(() => frameCallbacks.shift()?.(16))
     expect(liveViewportChange).toHaveBeenCalledTimes(1)
-    fireEvent.mouseUp(window)
+    fireEvent.pointerUp(window)
 
     clientWidthSpy.mockRestore()
     animationFrameSpy.mockRestore()
@@ -237,21 +237,21 @@ describe('timeline navigator interaction', () => {
     )
 
     const thumb = getByTestId('timeline-navigator-thumb')
-    fireEvent.mouseDown(getByTestId('timeline-navigator-right-handle'), { clientX: 200 })
-    fireEvent.mouseMove(window, { clientX: 300 })
+    fireEvent.pointerDown(getByTestId('timeline-navigator-right-handle'), { clientX: 200 })
+    fireEvent.pointerMove(window, { clientX: 300 })
     frameCallbacks.shift()?.(0)
     const minimumWidth = thumb.style.width
     const minimumLeft = thumb.style.left
     const minimumScrollLeft = scrollContainer.scrollLeft
 
-    fireEvent.mouseMove(window, { clientX: 500 })
+    fireEvent.pointerMove(window, { clientX: 500 })
     frameCallbacks.shift()?.(16)
 
     expect(thumb.style.width).toBe(minimumWidth)
     expect(thumb.style.left).toBe(minimumLeft)
     expect(scrollContainer.scrollLeft).toBe(minimumScrollLeft)
 
-    fireEvent.mouseUp(window)
+    fireEvent.pointerUp(window)
     expect(scrollContainer.scrollLeft).toBe(minimumScrollLeft)
     expect(useZoomStore.getState()).toMatchObject({
       level: ZOOM_MIN,
@@ -295,8 +295,8 @@ describe('timeline navigator interaction', () => {
       trackWidth: 400,
       scrollLeft: 120,
     })
-    fireEvent.mouseDown(getByTestId('timeline-navigator-right-handle'), { clientX: 200 })
-    fireEvent.mouseMove(window, { clientX: 240 })
+    fireEvent.pointerDown(getByTestId('timeline-navigator-right-handle'), { clientX: 200 })
+    fireEvent.pointerMove(window, { clientX: 240 })
 
     const firstDrag = getNavigatorResizeDragResult({
       dragTarget: 'right',
@@ -315,7 +315,7 @@ describe('timeline navigator interaction', () => {
     })
 
     currentTrackWidth = 800
-    fireEvent.mouseMove(window, { clientX: 250 })
+    fireEvent.pointerMove(window, { clientX: 250 })
 
     const finalDrag = getNavigatorResizeDragResult({
       dragTarget: 'right',
@@ -336,7 +336,7 @@ describe('timeline navigator interaction', () => {
     expect(Number.parseFloat(thumb.style.width)).toBeCloseTo(finalMetrics.thumbWidth)
     expect(Number.parseFloat(thumb.style.left)).toBeCloseTo(finalMetrics.thumbLeft)
 
-    fireEvent.mouseUp(window)
+    fireEvent.pointerUp(window)
 
     expect(useZoomStore.getState().level).toBeCloseTo(finalDrag.nextZoom)
 

@@ -178,7 +178,7 @@ export function GroupExpandButton({
           )}
         />
       )}
-      <span className="truncate pl-px text-[9px] font-semibold uppercase leading-none tracking-[0.08em] text-foreground">
+      <span className="truncate pl-px text-[10px] font-semibold uppercase leading-none tracking-[0.08em] text-foreground">
         {groupLabel}
       </span>
     </button>

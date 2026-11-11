@@ -1,0 +1,264 @@
+{
+  "agent": {
+    "address": "Endereço",
+    "config": "Claude Desktop, Cursor e outros clientes",
+    "copied": "Copiado",
+    "copy": "Copiar",
+    "failed": "Não foi possível ler o status do agente",
+    "intro": "Um agente conectado aqui (Claude Code, Cursor, Codex e outros) controla o VideoSOS como você: escolhe modelos e estima preços, gera imagens, vídeos, músicas e vozes com as suas chaves, edita a linha do tempo do projeto aberto com possibilidade de desfazer, importa mídia e exporta o vídeo, enquanto você acompanha cada etapa nesta janela. Suas chaves de provedor nunca são mostradas a ele.",
+    "lastCall": "Última chamada do agente: {{call}} · há {{seconds}} s",
+    "none": "Nenhum agente se conectou ainda",
+    "windowOff": "A janela não está conectada",
+    "windowOn": "A janela está conectada: o agente a vê"
+  },
+  "float": {
+    "dock": "Devolver ao cabeçalho"
+  },
+  "help": {
+    "boostySub": "Assinatura Boosty",
+    "card": "Cartão / PayPal",
+    "donateTitle": "Apoie o autor",
+    "founder": "fundador da",
+    "madeBy": "Feito por",
+    "crypto": "Cripto",
+    "copy": "Copiar",
+    "tier5": "uma semana de CI/CD e domínios",
+    "tier25": "um mês de hospedagem",
+    "tier100": "um dia de desenvolvimento",
+    "tier500": "um recurso inteiro",
+    "thanks": "Obrigado por manter o código aberto vivo!"
+  },
+  "hub": {
+    "byEnv": "Desligadas por DO_NOT_TRACK ou STUDIO_TELEMETRY no ambiente.",
+    "checkbox": "Enviar estatísticas de uso anônimas",
+    "close": "Fechar",
+    "feedNever": "As notícias ainda não foram buscadas no servidor: o VideoSOS mostra as notícias da sua versão.",
+    "feedSource": "Novidades de",
+    "nothing": "Nada para enviar hoje ainda.",
+    "notices": "Avisos",
+    "refresh": "Verificar agora",
+    "reset": "Novo id de instalação",
+    "what": "O que é enviado",
+    "why": "Saber quantas pessoas usam o VideoSOS e para quê ajuda a decidir no que trabalhar. Nada pessoal: nem prompts, nem arquivos, nem chaves — só a contagem de gerações por tarefa e provedor e suas falhas (nomes, caminhos e tudo entre aspas são removidos neste computador), os modelos usados, quais funções do VideoSOS foram usadas (pelo nome, nunca com o quê), downloads de modelos concluídos ou com falha, os segundos de vídeo feitos na placa de vídeo deste computador, a versão, o sistema, a classe da placa de vídeo, o idioma da janela e um número do computador comum aos nossos programas (um hash irreversível, não o número do sistema).",
+    "ad": "Publicidade"
+  },
+  "monitor": {
+    "popOut": "Destacar o monitor de recursos",
+    "power": "Consumo",
+    "process": "Processo",
+    "title": "Recursos"
+  },
+  "news": {
+    "changelogNote": "O registro de alterações é mantido em inglês.",
+    "close": "Fechar",
+    "empty": "Ainda não há nada.",
+    "releaseNotes": "Notas da versão",
+    "sections": {
+      "added": "Adicionado",
+      "changed": "Alterado",
+      "fixed": "Corrigido"
+    },
+    "tabChangelog": "Registro de alterações",
+    "tabNews": "Notícias",
+    "title": "Novidades",
+    "unreleased": "Não lançado"
+  },
+  "offline": {
+    "body": "Esta janela não consegue acessar o serviço do VideoSOS neste computador. Se você fechou o aplicativo, abra-o novamente; se ele parou sozinho, reinicie-o. A página volta sozinha assim que o serviço responder.",
+    "retry": "Verificar agora",
+    "retrying": "Verificando a cada 2 s · {{seconds}} s",
+    "title": "O serviço do estúdio não está respondendo"
+  },
+  "prefs": {
+    "copied": "Copiado",
+    "copyPath": "Copiar caminho",
+    "dataDir": "Pasta de dados",
+    "dataHint": "Projetos, gerações, seu histórico e as configurações do VideoSOS ficam guardados aqui",
+    "dataTitle": "Pasta de dados",
+    "issues": "Relatar um problema",
+    "license": "Licença (MIT)",
+    "links": "Links úteis",
+    "pathsFailed": "Não foi possível obter a pasta de dados: {{error}}",
+    "projectsDir": "Projetos",
+    "releases": "Versões",
+    "repo": "Código-fonte",
+    "generationsDir": "Gerações",
+    "exportsDir": "Exportações",
+    "logsDir": "Logs",
+    "openFolder": "Mostrar no gerenciador de arquivos"
+  },
+  "units": {
+    "gb": "GB",
+    "watt": "W"
+  },
+  "app": {
+    "name": "VideoSOS",
+    "tagline": "Estúdio de vídeo com IA: geração e edição em uma só janela"
+  },
+  "network": {
+    "proxyTitle": "Proxy",
+    "proxyIntro": "Tudo o que o VideoSOS busca na internet passa por ele: as gerações na OpenRouter, fal e Runware, as listas de modelos, as notícias e as atualizações. Este computador e a rede local nunca usam o proxy.",
+    "proxyModeSystem": "Como no sistema",
+    "proxyModeCustom": "Meu proxy",
+    "proxyModeOff": "Sem proxy",
+    "proxyKind": "Protocolo",
+    "proxyKindHint": "Para um endereço escrito sem protocolo. O SOCKS5 resolve os nomes dos sites no proxy.",
+    "proxyAddress": "Endereço",
+    "proxyAddressPlaceholder": "127.0.0.1:1080 ou host:porta:login:senha",
+    "proxyAddressHint": "Qualquer forma usual: host:porta, host:porta:login:senha, login:senha@host:porta, socks5://login:senha@host:porta.",
+    "proxyTest": "Testar",
+    "proxySave": "Salvar",
+    "proxySaved": "Proxy salvo e em uso",
+    "proxyReachable": "responde",
+    "proxyUnreachable": "sem resposta",
+    "proxyWindowNote": "A própria janela (imagens dos modelos, notícias) usa o proxy na próxima inicialização e sem login: um navegador não consegue repassar um login ao SOCKS.",
+    "show": "Mostrar",
+    "hide": "Ocultar",
+    "access": "Acesso pela rede",
+    "accessHint": "Abre o VideoSOS em um navegador em outro computador ou celular. Tudo é executado aqui; o navegador precisa da chave de acesso. Agentes neste computador e a própria janela não precisam de chave.",
+    "accessRestart": "Feche e abra o VideoSOS novamente para que isso tenha efeito: o endereço é definido na inicialização.",
+    "accessKey": "Chave",
+    "accessNewKey": "Nova chave",
+    "accessInternet": "Pela internet: encaminhe esta porta para este computador no seu roteador e abra http://<seu endereço>:<porta>/?key=<chave>. Qualquer pessoa com a chave controla o VideoSOS e gasta com as suas chaves."
+  },
+  "journal": {
+    "title": "Atividade",
+    "empty": "As mudanças feitas por um agente e as mensagens do VideoSOS aparecem aqui.",
+    "unreadable": "Não foi possível ler a atividade: {{error}}",
+    "clear": "Limpar",
+    "remove": "Remover esta linha",
+    "agent": "Agente",
+    "app": "VideoSOS",
+    "line": "{{verb}}: {{kind}} “{{name}}”",
+    "lineNoName": "{{verb}}: {{kind}}",
+    "verb": {
+      "started": "Iniciado",
+      "cancelled": "Parado",
+      "deleted": "Excluído",
+      "updated": "Alterado",
+      "imported": "Importado",
+      "exported": "Exportado",
+      "undone": "Desfeito",
+      "redone": "Refeito",
+      "created": "Criado",
+      "restored": "Restaurado"
+    },
+    "kind": {
+      "generation": "geração",
+      "timeline": "linha do tempo",
+      "media": "mídia",
+      "video": "vídeo",
+      "download": "download por link",
+      "checkpoint": "ponto de restauração",
+      "blocking": "blocking 3D",
+      "key": "chave",
+      "proxy": "proxy",
+      "project": "projeto",
+      "transcript": "transcrição",
+      "captions": "legendas",
+      "settings": "configurações",
+      "element": "elemento",
+      "preset": "predefinição de prompt",
+      "storyboard": "storyboard",
+      "canvas": "tela",
+      "fcpxml": "FCPXML",
+      "local device": "dispositivo local",
+      "local model": "modelo local",
+      "recording": "gravação",
+      "subtitles": "legendas"
+    }
+  },
+  "files": {
+    "title": "Arquivos",
+    "showInFolder": "Mostrar na pasta"
+  },
+  "family": {
+    "title": "Outros programas do autor",
+    "dub": "Dublagem de vídeo offline com voz clonada",
+    "yue2": "Músicas com IA e partitura editável",
+    "minimax": "Estúdio de música com IA local e na nuvem",
+    "ace": "Estúdio de música com IA: músicas, vocais, covers, clipes",
+    "bulka": "Música em live coding com um agente de IA",
+    "dungeon": "Um RPG local com IA"
+  },
+  "topbar": {
+    "projects": "Projetos",
+    "new": "Novo",
+    "newSub": "projeto",
+    "newTitle": "Começar um novo projeto",
+    "help": "Ajuda",
+    "portable": "portátil"
+  },
+  "status": {
+    "idle": "Pronto"
+  },
+  "start": {
+    "eyebrow": "OpenRouter · fal · Runware · MCP",
+    "title": "Gere e edite vídeo em uma só janela.",
+    "lead": "Crie imagens, vídeo, música, vozes e sons com os melhores modelos usando suas próprias chaves e monte tudo em um vídeo pronto numa linha do tempo multipista.",
+    "cardTitle": "Comece um projeto",
+    "cardText": "Um projeto guarda mídia, gerações e linha do tempo juntos neste computador.",
+    "projects": "Projetos",
+    "features": {
+      "generate": {
+        "title": "Todas as modalidades",
+        "text": "Imagens, vídeo, lip-sync, música, vozes, sons e texto"
+      },
+      "edit": {
+        "title": "Editor multipista",
+        "text": "Linha do tempo, keyframes, efeitos, legendas, exportação MP4"
+      },
+      "agent": {
+        "title": "Agente de IA via MCP",
+        "text": "Claude e outros apertam os mesmos botões que você"
+      },
+      "yours": {
+        "title": "Suas chaves, seus arquivos",
+        "text": "Você paga os provedores diretamente; nada passa por nós"
+      }
+    }
+  },
+  "share": {
+    "title": "Compartilhar",
+    "text": "“{{title}}” – feito no VideoSOS",
+    "file": "Enviar o arquivo…",
+    "fileUnavailable": "Aqui não é possível enviar arquivos",
+    "fileRefused": "O sistema não aceita este arquivo para envio – salve e envie você mesmo",
+    "failed": "Não foi possível compartilhar: {{reason}}",
+    "copyText": "Copiar o texto com o link",
+    "copied": "Texto com o link copiado",
+    "places": {
+      "telegram": "Telegram",
+      "x": "X (Twitter)",
+      "vk": "VK",
+      "whatsapp": "WhatsApp",
+      "reddit": "Reddit"
+    }
+  },
+  "chat": {
+    "tabLabel": "Chat",
+    "model": "Modelo",
+    "costHint": "Quanto esta conversa custou na conta do OpenRouter",
+    "clear": "Limpar a conversa",
+    "intro": "O assistente trabalha no VideoSOS com as mesmas ferramentas de um agente conectado: lê a linha do tempo, gera, edita e exporta, e você vê cada passo. Quem paga é a sua chave do OpenRouter; as gerações contam no limite diário dos agentes.",
+    "suggestions": {
+      "what": "O que há na linha do tempo agora?",
+      "picture": "Gere uma imagem de um pôr do sol sobre o mar e coloque na linha do tempo",
+      "cut": "Divida o primeiro clipe ao meio e adicione uma transição suave entre as partes",
+      "captions": "Adicione no início um título com o nome do projeto"
+    },
+    "tools": "Passos do assistente",
+    "toolRunning": "Em andamento",
+    "toolDone": "Concluído",
+    "toolFailed": "Falhou",
+    "thinking": "Pensando",
+    "placeholder": "Escreva o que fazer…",
+    "send": "Enviar",
+    "stop": "Parar",
+    "footnote": "Enter envia, Shift+Enter quebra a linha. Antes de gerações caras, o assistente pergunta.",
+    "needsKey": "O chat precisa de uma chave do OpenRouter: o assistente responde com um modelo do OpenRouter e trabalha com as ferramentas do VideoSOS.",
+    "openKeys": "Abrir chaves",
+    "byAgent": "Responde o agente conectado (MCP)",
+    "introAgent": "Suas mensagens vão para o agente conectado por MCP: ele trabalha no VideoSOS com as ferramentas dele, lê a linha do tempo, gera, edita e exporta, e os passos aparecem aqui. As respostas não custam nada; as gerações contam no limite diário dos agentes."
+  }
+}

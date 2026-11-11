@@ -5,11 +5,7 @@
 
 import { useTranslation } from 'react-i18next'
 import { AlertCircle, CheckCircle2, Loader2, X } from 'lucide-react'
-import {
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+import { DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import type { DialogView } from '../hooks/use-export-dialog-view'
 
 export function ExportDialogHeading({ view }: { view: DialogView }) {

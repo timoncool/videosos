@@ -329,22 +329,25 @@ export const CanvasPanel = memo(function CanvasPanel() {
           <Button
             variant="outline"
             size="sm"
-            className="flex-1 h-7 text-xs"
+            className="h-7 min-w-0 flex-1 text-xs"
             onClick={handleSwapDimensions}
+            title={t('editor.canvasPanel.swap')}
           >
-            <ArrowLeftRight className="w-3 h-3 mr-1.5" />
-            {t('editor.canvasPanel.swap')}
+            <ArrowLeftRight className="mr-1.5 h-3 w-3 shrink-0" />
+            <span className="truncate">{t('editor.canvasPanel.swap')}</span>
           </Button>
           <Button
             variant="outline"
             size="sm"
-            className="flex-1 h-7 text-xs"
+            className="h-7 min-w-0 flex-1 text-xs"
             onClick={handleResetDimensions}
           >
-            <RotateCcw className="w-3 h-3 mr-1.5" />
-            {isLayerComposition
-              ? t('editor.canvasPanel.matchProject', { defaultValue: 'Match Project' })
-              : t('common.reset')}
+            <RotateCcw className="mr-1.5 h-3 w-3 shrink-0" />
+            <span className="truncate">
+              {isLayerComposition
+                ? t('editor.canvasPanel.matchProject', { defaultValue: 'Match Project' })
+                : t('common.reset')}
+            </span>
           </Button>
         </div>
 

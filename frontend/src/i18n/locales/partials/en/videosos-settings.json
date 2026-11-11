@@ -1,7 +1,22 @@
 {
   "settings": {
     "sections": {
-      "providers": "Providers and agent"
+      "providers": "Providers",
+      "agents": "Agents",
+      "network": "Network",
+      "privacy": "Privacy",
+      "about": "About",
+      "providersHint": "Keys of OpenRouter, fal and Runware, and the spend",
+      "agentsHint": "MCP address and the agents' daily limit",
+      "generalHint": "Language, autosave, undo, sounds",
+      "timelineHint": "Snapping, waveforms, filmstrips",
+      "aiHint": "Scene captions and local models",
+      "storageHint": "Proxies and cached files",
+      "networkHint": "Proxy and access from other computers",
+      "privacyHint": "Anonymous statistics and news",
+      "aboutHint": "Version, links, folders, support",
+      "local": "Local models",
+      "localHint": "Generation on this computer, free"
     },
     "providers": {
       "intro": "VideoSOS generates through your own accounts: add a key of OpenRouter, fal or Runware. Keys stay on this computer and are never shown to agents.",
@@ -15,13 +30,38 @@
       "spendLine": "Today {{today}}, in total {{total}}",
       "jobs_one": "{{count}} run",
       "jobs_other": "{{count}} runs",
-      "agent": "Agent (MCP)",
-      "agentHint": "Connect Claude or another agent: it sees this window, generates and edits the timeline while you watch. In Claude Code run:",
+      "agentHint": "Past it, VideoSOS refuses an agent's generations for the rest of the day. Empty means no limit.",
+      "confirmEdits": "Agents' timeline edits wait for me",
+      "confirmEditsHint": "An agent's edit shows what will change, and nothing changes until you accept it.",
       "budget": "Daily limit for agents, $",
       "noLimit": "no limit",
       "badBudget": "The limit is a number of dollars.",
-      "statistics": "Anonymous statistics",
-      "statisticsHint": "How many generations ran and which models; never prompts, files or keys."
+      "assistant": "The window's assistant",
+      "assistantEngine": {
+        "agent": "Agent (MCP)",
+        "openrouter": "OpenRouter"
+      },
+      "assistantHint": {
+        "agent": "Improve prompt, Prompt from the picture, the storyboard's split, the 3D blocking and the Chat tab ask the agent connected to VideoSOS: it is a language model itself, so nothing more is paid. It answers while it listens (assistant_requests_wait).",
+        "openrouter": "Improve prompt, Prompt from the picture, the storyboard's split, the 3D blocking and the Chat tab ask a model of OpenRouter, paid by your key."
+      },
+      "agentConnected": "An agent is connected: it called {{seconds}} s ago.",
+      "agentAbsent": "No agent is connected now: connect one (below) and ask it to listen to VideoSOS's questions."
+    },
+    "general": {
+      "language": "Interface language",
+      "languageHint": "The window and the messages of the program.",
+      "autoSaveHint": "Saves the open project on its own every few minutes",
+      "undoHistoryDepthHint": "How many steps Undo can go back",
+      "uiSoundsHint": "Short sounds for clicks, results and errors",
+      "audioOutput": "Sound output",
+      "audioOutputHint": "Where the preview plays: the system device or a chosen one. The list appears after the microphone is allowed - that is when the browser names devices.",
+      "audioOutputDefault": "System default"
+    },
+    "done": "Done",
+    "timeline": {
+      "showWaveformsHint": "Draws the sound of audio clips on the timeline",
+      "showFilmstripsHint": "Shows frames along video clips"
     }
   }
 }

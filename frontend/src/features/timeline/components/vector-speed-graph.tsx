@@ -54,7 +54,7 @@ function NumberField({
   }
 
   return (
-    <label className="flex h-6 min-w-[122px] items-center rounded border border-border/60 bg-background/80 px-1.5 text-[9px]">
+    <label className="flex h-6 min-w-[122px] items-center rounded border border-border/60 bg-background/80 px-1.5 text-[10px]">
       <span className="mr-1 shrink-0 text-muted-foreground">{label}</span>
       <input
         ref={inputRef}
@@ -329,10 +329,10 @@ export function VectorSpeedGraph({
             )
           })}
         </svg>
-        <div className="pointer-events-none absolute bottom-1 left-2 text-[9px] text-muted-foreground">
+        <div className="pointer-events-none absolute bottom-1 left-2 text-[10px] text-muted-foreground">
           0 {property === 'scale' ? '%/s' : 'px/s'}
         </div>
-        <div className="pointer-events-none absolute left-2 top-1 text-[9px] text-muted-foreground">
+        <div className="pointer-events-none absolute left-2 top-1 text-[10px] text-muted-foreground">
           {maxSpeed.toFixed(1)} {property === 'scale' ? '%/s' : 'px/s'}
         </div>
       </div>

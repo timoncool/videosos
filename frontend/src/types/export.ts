@@ -42,6 +42,8 @@ export interface ExportSettings {
   /** Copy the original bytes when the timeline is provably passthrough-safe. */
   smartCopy?: boolean
   audioBitrate?: string
+  /** Integrated loudness the mix is normalised to, in LUFS, with a -1 dBFS peak limiter; unset leaves the mix as mixed. */
+  loudnessLufs?: number
   proResProfile?: 'proxy' | 'light' | 'standard' | 'hq' | '4444' | '4444-xq'
 }
 
@@ -71,4 +73,6 @@ export interface CompositionInputProps {
   busAudioEq?: AudioEqSettings
   /** Project-scoped master bus gain in dB (0 = unity). Applied to final mix. */
   masterBusDb?: number
+  /** Integrated loudness the final mix is normalised to, in LUFS; unset leaves it as mixed. */
+  loudnessLufs?: number
 }

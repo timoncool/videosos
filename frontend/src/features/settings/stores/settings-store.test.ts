@@ -12,7 +12,6 @@ const DEFAULT_SETTINGS = {
   maxUndoHistory: 50,
   autoSaveInterval: 1,
   defaultWhisperModel: 'parakeet-tdt-v3' as const,
-  defaultWhisperQuantization: 'hybrid' as const,
   defaultWhisperLanguage: '',
 }
 
@@ -39,16 +38,16 @@ describe('settings-store', () => {
     })
 
     it('updates whisper defaults', () => {
-      useSettingsStore.getState().setSetting('defaultWhisperModel', 'whisper-small')
-      useSettingsStore.getState().setSetting('defaultWhisperQuantization', 'q8')
+      useSettingsStore.getState().setSetting('defaultWhisperModel', 'whisper-large')
 
-      expect(useSettingsStore.getState().defaultWhisperModel).toBe('whisper-small')
-      expect(useSettingsStore.getState().defaultWhisperQuantization).toBe('q8')
+      expect(useSettingsStore.getState().defaultWhisperModel).toBe('whisper-large')
     })
 
-    it('normalizes legacy tiny model selections back to the default model', () => {
+    it('normalizes removed model selections back to the default model', () => {
       useSettingsStore.getState().setSetting('defaultWhisperModel', 'whisper-tiny')
+      expect(useSettingsStore.getState().defaultWhisperModel).toBe('parakeet-tdt-v3')
 
+      useSettingsStore.getState().setSetting('defaultWhisperModel', 'whisper-small')
       expect(useSettingsStore.getState().defaultWhisperModel).toBe('parakeet-tdt-v3')
     })
 

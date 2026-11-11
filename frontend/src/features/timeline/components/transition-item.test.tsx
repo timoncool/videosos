@@ -198,8 +198,8 @@ describe('TransitionItem preview bridge motion', () => {
     const handle = container.querySelector('[data-transition-hit-zone="left-edge"]')
     expect(handle).not.toBeNull()
 
-    fireEvent.mouseDown(handle!, { button: 0, clientX: 10 })
-    fireEvent.mouseUp(document, { clientX: 10 })
+    fireEvent.pointerDown(handle!, { button: 0, clientX: 10 })
+    fireEvent.pointerUp(document, { clientX: 10 })
 
     expect(useSelectionStore.getState().selectedTransitionId).toBe('tr-1')
   })

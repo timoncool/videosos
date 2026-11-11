@@ -73,6 +73,7 @@ fn entry_of(model: &Value) -> Option<ModelEntry> {
         created,
         status: if meta["status"].as_str() == Some("deprecated") { "deprecated".into() } else { "live".into() },
         price: None,
+        rates: Vec::new(),
         thumbnail: meta["thumbnail_url"].as_str().map(str::to_string),
         source: json!({ "category": category }),
     })
@@ -190,6 +191,19 @@ pub fn form(endpoint: &str, document: &Value) -> Result<ModelForm, ProviderError
 }
 
 /// The price per unit; fal asks for a key.
+/// The account's credit balance in USD. fal tells it only to an admin key: a key it refuses gets None.
+pub async fn balance(http: &Http, key: &str) -> Result<Option<f64>, ProviderError> {
+    match http.get_json::<Value>(&format!("{PLATFORM}/account/billing?expand=credits"), auth(key)).await {
+        Ok(body) => body
+            .pointer("/credits/current_balance")
+            .and_then(Value::as_f64)
+            .map(Some)
+            .ok_or_else(|| ProviderError::Network("fal billing: no credits.current_balance in the answer".into())),
+        Err(ProviderError::Refused(_)) => Ok(None),
+        Err(error) => Err(error),
+    }
+}
+
 pub async fn price(http: &Http, key: &str, endpoint: &str) -> Result<PriceRule, ProviderError> {
     let url = format!("{PLATFORM}/models/pricing?endpoint_id={}", urlencode(endpoint));
     let body: Value = http.get_json(&url, auth(key)).await?;
@@ -268,8 +282,13 @@ pub async fn poll(http: &Http, key: &str, handle: &Value) -> Result<Polled, Prov
 }
 
 pub async fn cancel(http: &Http, key: &str, handle: &Value) -> Result<(), ProviderError> {
-    if let Some(url) = handle["cancel_url"].as_str() {
-        http.client.put(url).header("Authorization", format!("Key {key}")).send().await?;
+    let Some(url) = handle["cancel_url"].as_str() else {
+        return Err(ProviderError::Refused("fal gave no address to cancel the job".into()));
+    };
+    let response = http.client.put(url).header("Authorization", format!("Key {key}")).send().await?;
+    let status = response.status();
+    if !status.is_success() {
+        return Err(refusal(status, &response.text().await.unwrap_or_default()));
     }
     Ok(())
 }

@@ -1472,8 +1472,9 @@ export function useTimelineDrag(
           clearLinkedMovePreview()
 
           // Remove this listener - the main useEffect will handle it now
-          window.removeEventListener('mousemove', checkDragThreshold)
-          window.removeEventListener('mouseup', cancelDrag)
+          window.removeEventListener('pointermove', checkDragThreshold)
+          window.removeEventListener('pointerup', cancelDrag)
+          window.removeEventListener('pointercancel', cancelDrag)
         }
       }
 
@@ -1486,12 +1487,14 @@ export function useTimelineDrag(
         dragPreviewOffsetByItemRef.current = {}
         clearLargeAltDragCanvas()
         clearLinkedMovePreview()
-        window.removeEventListener('mousemove', checkDragThreshold)
-        window.removeEventListener('mouseup', cancelDrag)
+        window.removeEventListener('pointermove', checkDragThreshold)
+        window.removeEventListener('pointerup', cancelDrag)
+        window.removeEventListener('pointercancel', cancelDrag)
       }
 
-      window.addEventListener('mousemove', checkDragThreshold)
-      window.addEventListener('mouseup', cancelDrag)
+      window.addEventListener('pointermove', checkDragThreshold)
+      window.addEventListener('pointerup', cancelDrag)
+      window.addEventListener('pointercancel', cancelDrag)
     },
     [
       clearLinkedMovePreview,
@@ -1977,12 +1980,14 @@ export function useTimelineDrag(
         handleMouseUp()
       }
 
-      window.addEventListener('mousemove', coalescedMouseMove.queue)
-      window.addEventListener('mouseup', handleCoalescedMouseUp)
+      window.addEventListener('pointermove', coalescedMouseMove.queue)
+      window.addEventListener('pointerup', handleCoalescedMouseUp)
+      window.addEventListener('pointercancel', handleCoalescedMouseUp)
 
       return () => {
-        window.removeEventListener('mousemove', coalescedMouseMove.queue)
-        window.removeEventListener('mouseup', handleCoalescedMouseUp)
+        window.removeEventListener('pointermove', coalescedMouseMove.queue)
+        window.removeEventListener('pointerup', handleCoalescedMouseUp)
+        window.removeEventListener('pointercancel', handleCoalescedMouseUp)
         coalescedMouseMove.cancel()
         magneticSnapTargetsRef.current = []
         dragVisualTopByTrackIdRef.current.clear()

@@ -61,14 +61,14 @@ export function ShapeStrokeControls({
 
       {showNoAppearanceNotice && (
         <div className="mx-1 my-1 flex items-center gap-2 rounded-md border border-border bg-muted/30 px-2 py-1.5">
-          <span className="min-w-0 flex-1 text-[10px] leading-4 text-muted-foreground">
+          <span className="min-w-0 flex-1 text-[11px] leading-4 text-muted-foreground">
             {t('editor.shapeSection.noVisibleAppearance')}
           </span>
           <Button
             type="button"
             variant="ghost"
             size="sm"
-            className="h-6 flex-shrink-0 px-2 text-[10px]"
+            className="h-6 flex-shrink-0 px-2 text-[11px]"
             onClick={() => onStrokeEnabledChange(true)}
           >
             {t('editor.shapeSection.enableStroke')}

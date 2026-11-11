@@ -35,7 +35,7 @@ export function DopesheetExpressionGuide({
           type="button"
           variant="ghost"
           size="sm"
-          className="h-5 gap-1 px-1.5 text-[9px]"
+          className="h-5 gap-1 px-1.5 text-[10px]"
           onClick={onClose}
           aria-label="Close expression syntax guide"
         >
@@ -72,7 +72,7 @@ export function DopesheetExpressionGuide({
                 title={`${preset.description}\n${preset.source}`}
                 onClick={() => onApplyPreset(preset.source)}
               >
-                <span className="block truncate text-[9px] text-foreground">{preset.label}</span>
+                <span className="block truncate text-[10px] text-foreground">{preset.label}</span>
                 <span className="block truncate font-mono text-[8px] text-muted-foreground">
                   {preset.source}
                 </span>

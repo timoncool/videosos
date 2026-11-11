@@ -123,8 +123,8 @@ describe('GpuCurvesPanel', () => {
     setupEditorSvg()
 
     // Default channel control yields 4 points; index 1 is the legacy shadow point.
-    fireEvent.mouseDown(getPoint(1), { button: 0, clientX: 57.5, clientY: 172.5 })
-    fireEvent.mouseMove(window, { clientX: 0.3 * CURVE_SIZE, clientY: 0.4 * CURVE_SIZE })
+    fireEvent.pointerDown(getPoint(1), { button: 0, clientX: 57.5, clientY: 172.5 })
+    fireEvent.pointerMove(window, { clientX: 0.3 * CURVE_SIZE, clientY: 0.4 * CURVE_SIZE })
 
     expect(props.onParamsBatchLiveChange).toHaveBeenCalled()
     const liveUpdate = props.onParamsBatchLiveChange.mock.calls.at(-1)?.[1]
@@ -133,7 +133,7 @@ describe('GpuCurvesPanel', () => {
     expect(livePoints[1]!.x).toBeCloseTo(0.3, 2)
     expect(livePoints[1]!.y).toBeCloseTo(0.6, 2)
 
-    fireEvent.mouseUp(window, { clientX: 0.3 * CURVE_SIZE, clientY: 0.4 * CURVE_SIZE })
+    fireEvent.pointerUp(window, { clientX: 0.3 * CURVE_SIZE, clientY: 0.4 * CURVE_SIZE })
 
     expect(props.onParamsBatchChange).toHaveBeenCalledTimes(1)
     const committed = parsePoints(props.onParamsBatchChange.mock.calls[0]?.[1].masterPoints)
@@ -147,9 +147,9 @@ describe('GpuCurvesPanel', () => {
     render(<GpuCurvesPanel {...props} />)
     setupEditorSvg()
 
-    fireEvent.mouseDown(getPoint(0), { button: 0, clientX: 0, clientY: CURVE_SIZE })
-    fireEvent.mouseMove(window, { clientX: 0.5 * CURVE_SIZE, clientY: 0.8 * CURVE_SIZE })
-    fireEvent.mouseUp(window, { clientX: 0.5 * CURVE_SIZE, clientY: 0.8 * CURVE_SIZE })
+    fireEvent.pointerDown(getPoint(0), { button: 0, clientX: 0, clientY: CURVE_SIZE })
+    fireEvent.pointerMove(window, { clientX: 0.5 * CURVE_SIZE, clientY: 0.8 * CURVE_SIZE })
+    fireEvent.pointerUp(window, { clientX: 0.5 * CURVE_SIZE, clientY: 0.8 * CURVE_SIZE })
 
     const committed = parsePoints(props.onParamsBatchChange.mock.calls[0]?.[1].masterPoints)
     expect(committed[0]!.x).toBe(0)
@@ -162,9 +162,9 @@ describe('GpuCurvesPanel', () => {
     setupEditorSvg()
 
     // Drag the shadow point (x=0.25) far past the highlight point (x=0.75).
-    fireEvent.mouseDown(getPoint(1), { button: 0, clientX: 57.5, clientY: 172.5 })
-    fireEvent.mouseMove(window, { clientX: 0.95 * CURVE_SIZE, clientY: 0.5 * CURVE_SIZE })
-    fireEvent.mouseUp(window, { clientX: 0.95 * CURVE_SIZE, clientY: 0.5 * CURVE_SIZE })
+    fireEvent.pointerDown(getPoint(1), { button: 0, clientX: 57.5, clientY: 172.5 })
+    fireEvent.pointerMove(window, { clientX: 0.95 * CURVE_SIZE, clientY: 0.5 * CURVE_SIZE })
+    fireEvent.pointerUp(window, { clientX: 0.95 * CURVE_SIZE, clientY: 0.5 * CURVE_SIZE })
 
     const committed = parsePoints(props.onParamsBatchChange.mock.calls[0]?.[1].masterPoints)
     expect(committed[1]!.x).toBeLessThan(committed[2]!.x)
@@ -175,7 +175,7 @@ describe('GpuCurvesPanel', () => {
     render(<GpuCurvesPanel {...props} />)
     const svg = setupEditorSvg()
 
-    fireEvent.mouseDown(svg, { button: 0, clientX: 0.5 * CURVE_SIZE, clientY: 0.5 * CURVE_SIZE })
+    fireEvent.pointerDown(svg, { button: 0, clientX: 0.5 * CURVE_SIZE, clientY: 0.5 * CURVE_SIZE })
 
     const added = parsePoints(props.onParamsBatchLiveChange.mock.calls[0]?.[1].masterPoints)
     expect(added).toHaveLength(5)
@@ -183,8 +183,8 @@ describe('GpuCurvesPanel', () => {
     expect(added[2]!.y).toBeCloseTo(0.5, 2)
 
     // The freshly added point is grabbed: a mousemove drags it, mouseup commits.
-    fireEvent.mouseMove(window, { clientX: 0.5 * CURVE_SIZE, clientY: 0.2 * CURVE_SIZE })
-    fireEvent.mouseUp(window, { clientX: 0.5 * CURVE_SIZE, clientY: 0.2 * CURVE_SIZE })
+    fireEvent.pointerMove(window, { clientX: 0.5 * CURVE_SIZE, clientY: 0.2 * CURVE_SIZE })
+    fireEvent.pointerUp(window, { clientX: 0.5 * CURVE_SIZE, clientY: 0.2 * CURVE_SIZE })
 
     expect(props.onParamsBatchChange).toHaveBeenCalledTimes(1)
     const committed = parsePoints(props.onParamsBatchChange.mock.calls[0]?.[1].masterPoints)
@@ -204,7 +204,7 @@ describe('GpuCurvesPanel', () => {
     render(<GpuCurvesPanel {...props} />)
     const svg = setupEditorSvg()
 
-    fireEvent.mouseDown(svg, { button: 0, clientX: 0.51 * CURVE_SIZE, clientY: 0.3 * CURVE_SIZE })
+    fireEvent.pointerDown(svg, { button: 0, clientX: 0.51 * CURVE_SIZE, clientY: 0.3 * CURVE_SIZE })
 
     expect(props.onParamsBatchLiveChange).not.toHaveBeenCalled()
     expect(props.onParamsBatchChange).not.toHaveBeenCalled()
@@ -214,7 +214,7 @@ describe('GpuCurvesPanel', () => {
     const props = renderFourPointCurve()
     setupEditorSvg()
 
-    fireEvent.mouseDown(getPoint(1), { button: 0, detail: 2, clientX: 69, clientY: 138 })
+    fireEvent.pointerDown(getPoint(1), { button: 0, detail: 2, clientX: 69, clientY: 138 })
 
     expect(props.onParamsBatchChange).toHaveBeenCalledTimes(1)
     const committed = parsePoints(props.onParamsBatchChange.mock.calls[0]?.[1].masterPoints)
@@ -248,7 +248,7 @@ describe('GpuCurvesPanel', () => {
     render(<GpuCurvesPanel {...props} />)
     setupEditorSvg()
 
-    fireEvent.mouseDown(getPoint(0), { button: 0, detail: 2, clientX: 0, clientY: CURVE_SIZE })
+    fireEvent.pointerDown(getPoint(0), { button: 0, detail: 2, clientX: 0, clientY: CURVE_SIZE })
 
     expect(props.onParamsBatchChange).not.toHaveBeenCalled()
     expect(document.querySelectorAll('ellipse[data-curve-point]')).toHaveLength(4)
@@ -295,10 +295,10 @@ describe('GpuCurvesPanel', () => {
     render(<GpuCurvesPanel {...props} />)
     const svg = setupEditorSvg()
 
-    fireEvent.mouseDown(svg, { button: 0, clientX: 0.5 * CURVE_SIZE, clientY: 0.5 * CURVE_SIZE })
-    fireEvent.mouseDown(getPoint(1), { button: 0, clientX: 57.5, clientY: 172.5 })
-    fireEvent.mouseMove(window, { clientX: 0.3 * CURVE_SIZE, clientY: 0.4 * CURVE_SIZE })
-    fireEvent.mouseUp(window, { clientX: 0.3 * CURVE_SIZE, clientY: 0.4 * CURVE_SIZE })
+    fireEvent.pointerDown(svg, { button: 0, clientX: 0.5 * CURVE_SIZE, clientY: 0.5 * CURVE_SIZE })
+    fireEvent.pointerDown(getPoint(1), { button: 0, clientX: 57.5, clientY: 172.5 })
+    fireEvent.pointerMove(window, { clientX: 0.3 * CURVE_SIZE, clientY: 0.4 * CURVE_SIZE })
+    fireEvent.pointerUp(window, { clientX: 0.3 * CURVE_SIZE, clientY: 0.4 * CURVE_SIZE })
 
     expect(props.onParamsBatchLiveChange).not.toHaveBeenCalled()
     expect(props.onParamsBatchChange).not.toHaveBeenCalled()

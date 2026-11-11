@@ -70,7 +70,8 @@
       "alsoDeleteLocalFiles": "Diskteki yerel dosyaları da sil",
       "removeFilesFromFolder": "Bağlı klasördeki dosyaları kaldır. Bu geri alınamaz.",
       "removeFilesFromNamedFolder": "\"{{folder}}\" bağlı klasöründeki dosyaları kaldır. Bu geri alınamaz.",
-      "openProject": "Projeyi aç"
+      "openProject": "Projeyi aç",
+      "actions": "Proje işlemleri"
     },
     "form": {
       "createTitle": "Yeni Proje Oluştur",

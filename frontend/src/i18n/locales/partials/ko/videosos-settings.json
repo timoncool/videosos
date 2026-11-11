@@ -1,27 +1,67 @@
 {
   "settings": {
     "sections": {
-      "providers": "Providers and agent"
+      "providers": "공급자",
+      "agents": "에이전트",
+      "network": "네트워크",
+      "privacy": "개인정보 보호",
+      "about": "정보",
+      "providersHint": "OpenRouter, fal, Runware 키와 지출",
+      "agentsHint": "MCP 주소와 에이전트 일일 한도",
+      "generalHint": "언어, 자동 저장, 실행 취소, 소리",
+      "timelineHint": "스냅, 파형, 필름스트립",
+      "aiHint": "장면 캡션과 로컬 모델",
+      "storageHint": "프록시와 캐시 파일",
+      "networkHint": "프록시와 다른 컴퓨터에서의 접근",
+      "privacyHint": "익명 통계와 소식",
+      "aboutHint": "버전, 링크, 폴더, 후원",
+      "local": "로컬 모델",
+      "localHint": "이 컴퓨터에서 무료 생성"
     },
     "providers": {
-      "intro": "VideoSOS generates through your own accounts: add a key of OpenRouter, fal or Runware. Keys stay on this computer and are never shown to agents.",
-      "fromEnv": "from the {{variable}} variable",
-      "stored": "key saved",
-      "none": "no key",
-      "replace": "Paste a new key to replace it",
-      "check": "Check",
-      "remove": "Remove",
-      "spend": "Spent on generations",
-      "spendLine": "Today {{today}}, in total {{total}}",
-      "jobs_one": "{{count}} run",
-      "jobs_other": "{{count}} runs",
-      "agent": "Agent (MCP)",
-      "agentHint": "Connect Claude or another agent: it sees this window, generates and edits the timeline while you watch. In Claude Code run:",
-      "budget": "Daily limit for agents, $",
-      "noLimit": "no limit",
-      "badBudget": "The limit is a number of dollars.",
-      "statistics": "Anonymous statistics",
-      "statisticsHint": "How many generations ran and which models; never prompts, files or keys."
+      "intro": "VideoSOS는 사용자의 계정으로 생성합니다. OpenRouter, fal 또는 Runware 키를 추가하세요. 키는 이 컴퓨터에만 저장되며 에이전트에는 표시되지 않습니다.",
+      "fromEnv": "{{variable}} 변수에서 가져옴",
+      "stored": "키 저장됨",
+      "none": "키 없음",
+      "replace": "새 키를 붙여넣으면 교체됩니다",
+      "check": "확인",
+      "remove": "제거",
+      "spend": "생성에 사용한 금액",
+      "spendLine": "오늘 {{today}}, 총 {{total}}",
+      "jobs_one": "{{count}}회 실행",
+      "jobs_other": "{{count}}회 실행",
+      "agentHint": "이 한도를 넘으면 VideoSOS는 그날 남은 시간 동안 에이전트의 생성 요청을 거부합니다. 비워 두면 한도가 없습니다.",
+      "budget": "에이전트 일일 한도($)",
+      "noLimit": "한도 없음",
+      "badBudget": "한도는 달러 단위의 숫자로 입력하세요.",
+      "confirmEdits": "에이전트의 타임라인 편집은 내 승인을 기다림",
+      "confirmEditsHint": "에이전트의 편집은 무엇이 바뀌는지 보여주며, 수락하기 전에는 아무것도 바뀌지 않습니다.",
+      "agentAbsent": "지금 연결된 에이전트가 없습니다. 아래에서 연결하고 VideoSOS의 질문을 듣도록 요청하세요.",
+      "agentConnected": "에이전트가 연결되어 있습니다: {{seconds}}초 전에 응답했습니다.",
+      "assistant": "창의 어시스턴트",
+      "assistantEngine": {
+        "agent": "에이전트 (MCP)",
+        "openrouter": "OpenRouter"
+      },
+      "assistantHint": {
+        "agent": "“프롬프트 개선”, “이미지로 프롬프트 만들기”, 스토리보드 분할, “3D 블로킹”, “채팅” 탭은(는) VideoSOS에 연결된 에이전트에게 묻습니다. 에이전트 자체가 언어 모델이므로 추가 비용이 없습니다. 듣고 있는 동안 답합니다 (assistant_requests_wait).",
+        "openrouter": "“프롬프트 개선”, “이미지로 프롬프트 만들기”, 스토리보드 분할, “3D 블로킹”, “채팅” 탭은(는) 내 키로 결제되는 OpenRouter 모델에게 묻습니다."
+      }
+    },
+    "general": {
+      "language": "인터페이스 언어",
+      "languageHint": "창과 프로그램 메시지에 적용됩니다.",
+      "autoSaveHint": "열린 프로젝트를 몇 분마다 자동으로 저장합니다",
+      "undoHistoryDepthHint": "실행 취소로 되돌릴 수 있는 단계 수",
+      "uiSoundsHint": "클릭, 결과, 오류에 짧은 소리",
+      "audioOutput": "소리 출력",
+      "audioOutputHint": "미리보기가 재생될 위치: 시스템 장치 또는 선택한 장치. 마이크를 허용하면 목록이 표시됩니다 - 그때 브라우저가 장치 이름을 알려 줍니다.",
+      "audioOutputDefault": "시스템 기본값"
+    },
+    "done": "완료",
+    "timeline": {
+      "showWaveformsHint": "타임라인에 오디오 클립의 파형을 표시",
+      "showFilmstripsHint": "비디오 클립을 따라 프레임 표시"
     }
   }
 }

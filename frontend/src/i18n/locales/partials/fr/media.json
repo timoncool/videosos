@@ -114,7 +114,17 @@
       "size": "Taille",
       "transcript": "Transcription",
       "transcriptWithCount": "Transcription ({{count}})",
-      "type": "Type"
+      "type": "Type",
+      "source": "Source",
+      "sourceStatus": {
+        "app-storage": "Stockage de l’application",
+        "changed": "Le fichier lié a changé",
+        "checking": "Vérification...",
+        "linked": "Fichier lié",
+        "needs-permission": "Autorisation requise",
+        "unavailable": "Indisponible",
+        "workspace-copy": "Copie dans l’espace de travail"
+      }
     },
     "library": {
       "aiAnalysisProgress": "Analyse IA",
@@ -154,7 +164,7 @@
       "groupGifs": "GIF",
       "groupImages": "Images",
       "groupLottie": "Lottie",
-      "groupVideos": "Videos",
+      "groupVideos": "Vidéos",
       "import": "Importer",
       "importFromUrlDescription": "Importez un fichier multimédia depuis une URL directe.",
       "importFromUrlHint": "Collez un lien direct vers une vidéo, un audio, une image ou un GIF.",
@@ -173,7 +183,7 @@
       "missingCount": "{{count}} manquants",
       "proxyCount": "{{count}} proxys",
       "proxyGenerationProgress": "Progression des proxys",
-      "scenesTab": "Scenes",
+      "scenesTab": "Scènes",
       "searchScenes": "Rechercher des scènes",
       "selected": "Sélectionné",
       "selectedAssetsCount": "{{count}} ressources sélectionnées",
@@ -193,7 +203,7 @@
       "checkingWorkspaceHealthShort": "Vérification",
       "allShort": "TOUT",
       "typeShort": {
-        "video": "VIDEO",
+        "video": "VIDÉO",
         "audio": "AUDIO",
         "image": "IMAGE",
         "lottie": "LOTTIE"
@@ -224,7 +234,10 @@
       "importFailed_one": "{{count}} fichier n’a pas pu être importé. Vérifiez le fichier et réessayez.",
       "importFailed_other": "{{count}} fichiers n’ont pas pu être importés. Vérifiez les fichiers et réessayez.",
       "upscalingVideo": "Agrandissement de la vidéo",
-      "upscaleProgress": "Progression de l'agrandissement"
+      "upscaleProgress": "Progression de l'agrandissement",
+      "importCopyToWorkspace": "Copier dans l’espace de travail",
+      "importLinkOriginal": "Lier les fichiers d’origine",
+      "importMoreOptions": "Options d’importation"
     },
     "missingMedia": {
       "title": "Médias manquants",
@@ -280,7 +293,6 @@
       "parakeetAutoDetects": "Détecte automatiquement {{count}} langues européennes.",
       "parakeetChooseWhisper": "Pour le chinois, le japonais, le coréen et les autres langues, choisissez un modèle Whisper.",
       "progressAria": "Progression de la transcription",
-      "quantization": "Quantification",
       "refreshTitle": "Actualiser la transcription",
       "searchLanguages": "Rechercher une langue",
       "start": "Démarrer",
@@ -291,7 +303,7 @@
       "audio": "Audio",
       "image": "Image",
       "lottie": "Lottie",
-      "video": "Video"
+      "video": "Vidéo"
     },
     "unsupportedCodec": {
       "bodyMultiple": "{{count}} fichiers utilisent des codecs que votre navigateur ne peut pas décoder. Ils risquent de ne pas se lire correctement.",
@@ -300,6 +312,101 @@
       "importAnyway": "Importer quand même",
       "note": "Convertissez-les en MP4 (H.264/AAC) ou WebM pour une meilleure compatibilité.",
       "title": "Codec non pris en charge"
+    },
+    "viewMode": {
+      "grid": "Grille",
+      "list": "Liste"
+    },
+    "url": {
+      "title": "Vidéo par lien",
+      "description": "YouTube et les autres sites que connaît yt-dlp, ou un lien direct vers un fichier. La vidéo va dans la médiathèque du projet.",
+      "placeholder": "Collez un lien vers une vidéo",
+      "check": "Vérifier",
+      "checking": "Vérification…",
+      "cookiesPick": "Ajouter cookies.txt",
+      "cookiesTip": "Pour une vidéo qui exige un navigateur connecté (vérification de l’âge, membres de la chaîne, « confirmez que vous n’êtes pas un robot ») : exportez cookies.txt depuis un navigateur connecté au site, avec une extension cookies.txt.",
+      "cookiesClear": "Retirer cookies.txt",
+      "checkAgain": "Vérifier de nouveau avec cookies.txt",
+      "quality": "Qualité",
+      "qBest": "Meilleure",
+      "qHeight": "{{h}}p",
+      "qAudio": "Son seul",
+      "download": "Télécharger",
+      "downloads": "Téléchargements par lien",
+      "rights": "Ne téléchargez que ce que vous avez le droit d’utiliser : l’auteur de la vidéo et les règles du site en décident.",
+      "toolMissing": "Le téléchargement depuis YouTube et d’autres sites nécessite l’outil de liens : yt-dlp avec deno et ffmpeg, environ {{size}}. Il n’est téléchargé qu’une fois.",
+      "toolMissingYtdlp": "Le téléchargement depuis YouTube et d’autres sites nécessite l’outil de liens : yt-dlp avec deno, environ {{size}} (ffmpeg est déjà là). Il n’est téléchargé qu’une fois.",
+      "install": "Installer l’outil",
+      "direct": "Télécharger comme fichier",
+      "directHint": "Un lien direct vers un fichier vidéo, image ou audio est téléchargé sans l’outil",
+      "unsupported": "Les vidéos par lien se téléchargent sous Windows et Linux.",
+      "openNetwork": "Paramètres réseau",
+      "pickQuality": "Choisir une autre qualité",
+      "updateTool": "Mettre à jour yt-dlp",
+      "updating": "Mise à jour de yt-dlp…",
+      "progress": "{{done}} sur {{total}}",
+      "speed": "{{speed}}/s",
+      "eta": "{{time}} restantes",
+      "cancel": "Annuler",
+      "resume": "Reprendre",
+      "retry": "Réessayer",
+      "dismiss": "Retirer de la liste",
+      "interrupted": "Interrompu à la fermeture de VideoSOS – reprend là où il s’est arrêté",
+      "cancelled": "Téléchargement annulé",
+      "inLibrary": "Dans la médiathèque du projet",
+      "imported": "Vidéo par lien dans la médiathèque : {{title}}",
+      "importFailed": "La vidéo par lien n’est pas entrée dans la médiathèque ({{title}}) : {{reason}}",
+      "phase": {
+        "probe": "Lecture de la vidéo…",
+        "download": "Téléchargement de la vidéo…",
+        "merge": "Assemblage de l’image et du son…",
+        "extract": "Extraction du son…",
+        "done": "Téléchargée, mise dans la médiathèque…"
+      },
+      "err": {
+        "tool_missing": "L’outil de liens n’est pas installé.",
+        "unsupported_os": "Les vidéos par lien se téléchargent sous Windows et Linux.",
+        "bad_url": "Ce n’est pas un lien vers une vidéo : collez une adresse http(s) complète.",
+        "bad_quality": "Qualité inconnue.",
+        "unsupported_url": "yt-dlp ne connaît pas ce site, ou ce n’est pas une page vidéo.",
+        "playlist": "C’est une playlist ou une chaîne : collez le lien d’une seule vidéo.",
+        "live": "Un direct ou une première qui n’a pas commencé ne peut pas être téléchargé – réessayez après la fin.",
+        "geo_blocked": "Le site n’affiche pas cette vidéo dans votre pays : utilisez un proxy d’un pays où elle est disponible.",
+        "age_restricted": "La vidéo est soumise à une restriction d’âge : il faut le cookies.txt d’un navigateur connecté à un compte adulte.",
+        "login_required": "Le site exige un utilisateur connecté : il faut le cookies.txt d’un navigateur connecté au site.",
+        "private": "La vidéo est privée : seul un compte avec lequel elle est partagée la voit – il faut son cookies.txt.",
+        "members_only": "La vidéo est réservée aux membres de la chaîne : il faut le cookies.txt du navigateur d’un membre.",
+        "drm": "La vidéo est protégée par DRM : impossible de la télécharger.",
+        "unavailable": "La vidéo est supprimée ou indisponible : vérifiez le lien.",
+        "rate_limited": "Le site limite les requêtes depuis cette adresse (429) : patientez, ajoutez cookies.txt ou changez de proxy.",
+        "proxy": "Le proxy ne répond pas : vérifiez-le dans les paramètres réseau.",
+        "network": "Le site est inaccessible : vérifiez la connexion ou le proxy.",
+        "cookies_invalid": "Ce n’est pas un cookies.txt au format Netscape : exportez-le de nouveau avec une extension cookies.txt.",
+        "format_unavailable": "Aucun format de cette qualité : choisissez-en une autre.",
+        "no_audio": "La vidéo n’a pas de piste son : choisissez une qualité avec vidéo.",
+        "outdated": "Ce yt-dlp ne sait plus lire le site : mettez-le à jour et réessayez.",
+        "disk_space": "Pas assez d’espace disque pour la vidéo.",
+        "busy": "Ce lien est déjà en cours de téléchargement.",
+        "not_found": "Ce téléchargement n’existe pas.",
+        "running": "Le téléchargement est encore en cours : annulez-le d’abord.",
+        "interrupted": "Le téléchargement s’est arrêté avec VideoSOS.",
+        "update_failed": "Le nouveau yt-dlp n’a pas passé sa vérification – le précédent reste en place.",
+        "io": "Impossible d’écrire un fichier de VideoSOS : vérifiez le disque.",
+        "cancelled": "Téléchargement annulé.",
+        "ytdlp_failed": "yt-dlp n’a pas pu télécharger la vidéo.",
+        "generic": "Ça n’a pas marché."
+      },
+      "tool": {
+        "label": "Vidéos par lien",
+        "hint": "yt-dlp avec deno et ffmpeg : télécharge des vidéos depuis YouTube et d’autres sites. Un nouveau yt-dlp est cherché une fois par jour et n’est utilisé qu’après sa vérification SHA-256.",
+        "update": "Mettre à jour",
+        "installing": "Installation…",
+        "version": "yt-dlp {{version}}",
+        "pinned": "version intégrée",
+        "fromUpdate": "mise à jour",
+        "latest": "dernière : {{version}}",
+        "checked": "vérifié {{when}}"
+      }
     }
   }
 }

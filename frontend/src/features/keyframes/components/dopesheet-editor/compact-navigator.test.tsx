@@ -32,10 +32,10 @@ describe('CompactNavigator', () => {
 
     const thumb = screen.getByTestId('keyframe-navigator-thumb')
     const initialLeft = thumb.style.left
-    fireEvent.mouseDown(thumb, { clientX: 0 })
-    fireEvent.mouseMove(window, { clientX: 10 })
-    fireEvent.mouseMove(window, { clientX: 20 })
-    fireEvent.mouseMove(window, { clientX: 30 })
+    fireEvent.pointerDown(thumb, { clientX: 0 })
+    fireEvent.pointerMove(window, { clientX: 10 })
+    fireEvent.pointerMove(window, { clientX: 20 })
+    fireEvent.pointerMove(window, { clientX: 30 })
 
     expect(onViewportChange).not.toHaveBeenCalled()
     expect(onViewportPreviewStart).toHaveBeenCalledTimes(1)
@@ -45,7 +45,7 @@ describe('CompactNavigator', () => {
     expect(onViewportPreview).toHaveBeenCalledTimes(1)
     expect(onViewportPreview).not.toHaveBeenLastCalledWith(null)
     expect(thumb.style.left).not.toBe(initialLeft)
-    fireEvent.mouseUp(window)
+    fireEvent.pointerUp(window)
     expect(onViewportChange).toHaveBeenCalledTimes(1)
     expect(onViewportPreview).toHaveBeenLastCalledWith(null)
 
@@ -80,12 +80,12 @@ describe('CompactNavigator', () => {
 
     const thumb = screen.getByTestId('keyframe-navigator-thumb')
     const initialWidth = thumb.style.width
-    fireEvent.mouseDown(screen.getByTestId('keyframe-navigator-right-handle'), {
+    fireEvent.pointerDown(screen.getByTestId('keyframe-navigator-right-handle'), {
       clientX: 200,
     })
-    fireEvent.mouseMove(window, { clientX: 210 })
-    fireEvent.mouseMove(window, { clientX: 220 })
-    fireEvent.mouseMove(window, { clientX: 230 })
+    fireEvent.pointerMove(window, { clientX: 210 })
+    fireEvent.pointerMove(window, { clientX: 220 })
+    fireEvent.pointerMove(window, { clientX: 230 })
 
     expect(onViewportChange).not.toHaveBeenCalled()
     expect(frameCallbacks).toHaveLength(1)
@@ -95,7 +95,7 @@ describe('CompactNavigator', () => {
     expect(onViewportPreview).not.toHaveBeenLastCalledWith(null)
     expect(thumb.style.width).not.toBe(initialWidth)
 
-    fireEvent.mouseUp(window)
+    fireEvent.pointerUp(window)
     expect(onViewportChange).toHaveBeenCalledTimes(1)
     expect(onViewportPreview).toHaveBeenLastCalledWith(null)
 
@@ -126,15 +126,15 @@ describe('CompactNavigator', () => {
       />,
     )
 
-    fireEvent.mouseDown(screen.getByTestId('keyframe-navigator-thumb'), { clientX: 0 })
-    fireEvent.mouseMove(window, { clientX: 30 })
+    fireEvent.pointerDown(screen.getByTestId('keyframe-navigator-thumb'), { clientX: 0 })
+    fireEvent.pointerMove(window, { clientX: 30 })
 
     expect(onViewportChange).not.toHaveBeenCalled()
     expect(frameCallbacks).toHaveLength(1)
     frameCallbacks.shift()?.(performance.now())
     expect(onViewportChange).toHaveBeenCalledTimes(1)
 
-    fireEvent.mouseUp(window)
+    fireEvent.pointerUp(window)
     clientWidthSpy.mockRestore()
     animationFrameSpy.mockRestore()
   })
@@ -157,11 +157,11 @@ describe('CompactNavigator', () => {
     )
 
     const thumb = screen.getByTestId('keyframe-navigator-thumb')
-    fireEvent.mouseDown(thumb, { clientX: 0 })
-    fireEvent.mouseMove(window, { clientX: 40 })
+    fireEvent.pointerDown(thumb, { clientX: 0 })
+    fireEvent.pointerMove(window, { clientX: 40 })
     const finalPreviewLeft = thumb.style.left
 
-    fireEvent.mouseUp(window)
+    fireEvent.pointerUp(window)
 
     expect(finalPreviewLeft).not.toBe('')
     expect(thumb.style.left).toBe(finalPreviewLeft)

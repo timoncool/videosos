@@ -1,6 +1,6 @@
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Layers, Palette, Scissors } from 'lucide-react'
+import { Layers, Palette, Scissors, Workflow } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { useEditorStore } from '@/shared/state/editor'
 import { cn } from '@/shared/ui/cn'
@@ -14,6 +14,7 @@ const WORKSPACE_ITEMS: readonly {
   { id: 'edit', icon: Scissors, labelKey: 'toolbar.workspaces.edit' },
   { id: 'color', icon: Palette, labelKey: 'toolbar.workspaces.color' },
   { id: 'motion', icon: Layers, labelKey: 'toolbar.workspaces.motion' },
+  { id: 'canvas', icon: Workflow, labelKey: 'toolbar.workspaces.canvas' },
 ]
 
 /**
@@ -41,15 +42,17 @@ export const WorkspaceSwitcher = memo(function WorkspaceSwitcher() {
             role="tab"
             aria-selected={isActive}
             onClick={() => setWorkspace(id)}
+            aria-label={t(labelKey)}
+            title={t(labelKey)}
             className={cn(
-              'flex h-7 items-center gap-1.5 rounded-[5px] px-3 text-xs font-medium transition-colors',
+              'flex h-7 items-center gap-1.5 rounded-[5px] px-2 text-xs font-medium transition-colors min-[1280px]:px-3',
               isActive
                 ? 'bg-background text-foreground shadow-sm'
                 : 'text-muted-foreground hover:text-foreground',
             )}
           >
             <Icon className="h-3.5 w-3.5" />
-            {t(labelKey)}
+            <span className="hidden min-[1280px]:inline">{t(labelKey)}</span>
           </button>
         )
       })}

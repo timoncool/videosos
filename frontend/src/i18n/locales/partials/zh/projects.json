@@ -70,7 +70,8 @@
       "alsoDeleteLocalFiles": "同时删除磁盘上的本地文件",
       "removeFilesFromFolder": "从链接的文件夹中删除文件。此操作无法撤销。",
       "removeFilesFromNamedFolder": "从链接的文件夹\"{{folder}}\"中删除文件。此操作无法撤销。",
-      "openProject": "打开项目"
+      "openProject": "打开项目",
+      "actions": "项目操作"
     },
     "form": {
       "createTitle": "创建新项目",

@@ -282,7 +282,7 @@ export const FillSection = memo(function FillSection({
           <SelectContent>
             {BLEND_MODE_GROUPS.map((group) => (
               <SelectGroup key={group.label}>
-                <SelectLabel className="text-[10px] text-muted-foreground">
+                <SelectLabel className="text-[11px] text-muted-foreground">
                   {group.label}
                 </SelectLabel>
                 {group.modes.map((mode) => (

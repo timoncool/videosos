@@ -78,10 +78,7 @@ export function getExportRange(input: TimelineRangeInput): ExportRange {
 }
 
 /** The active render range for a sequence (whole timeline unless in/out set). */
-export function getQueueRange(
-  seq: ExportableSequence,
-  renderWholeProject: boolean,
-): SequenceRange {
+export function getQueueRange(seq: ExportableSequence, renderWholeProject: boolean): SequenceRange {
   const { inPoint, outPoint } = seq
   const usesInOutRange =
     !renderWholeProject && inPoint !== null && outPoint !== null && outPoint > inPoint

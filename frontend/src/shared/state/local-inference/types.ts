@@ -129,7 +129,7 @@ export function getLocalInferenceSummary(
           : null,
     primaryLabel:
       runtimes.length === 1
-        ? `${runtimes[0]?.featureLabel} ${runtimes[0]?.modelLabel ?? ''}`.trim()
+        ? runtimes[0]?.modelLabel || runtimes[0]?.featureLabel || ''
         : `${runtimes.length} Local Models`,
     unloadableCount: runtimes.filter((runtime) => runtime.unloadable).length,
   }

@@ -519,7 +519,7 @@ const SubtitleCueRow = memo(function SubtitleCueRow({
           type="button"
           title={t('editor.subtitleSection.seekToCue')}
           onClick={() => onSeek?.(startSeconds)}
-          className="rounded text-[10px] font-semibold uppercase tracking-wide tabular-nums px-1.5 py-0.5 text-muted-foreground hover:bg-secondary/60 hover:text-foreground transition-colors"
+          className="rounded text-[11px] font-semibold uppercase tracking-wide tabular-nums px-1.5 py-0.5 text-muted-foreground hover:bg-secondary/60 hover:text-foreground transition-colors"
         >
           #{index + 1}
         </button>
@@ -542,7 +542,7 @@ const SubtitleCueRow = memo(function SubtitleCueRow({
           }}
           className="h-6 w-28 text-right text-xs tabular-nums"
         />
-        <span className="text-[10px] text-muted-foreground">→</span>
+        <span className="text-[11px] text-muted-foreground">→</span>
         <Label className="sr-only" htmlFor={`cue-${cueId}-end`}>
           {t('editor.subtitleSection.end')}
         </Label>
@@ -591,7 +591,7 @@ const SubtitleCueRow = memo(function SubtitleCueRow({
         />
         {parsed.alignment && (
           <span
-            className="ml-auto text-[10px] uppercase tracking-wide text-muted-foreground"
+            className="ml-auto text-[11px] uppercase tracking-wide text-muted-foreground"
             title={t('editor.subtitleSection.cuePosition', {
               vertical: parsed.alignment.verticalAlign,
               horizontal: parsed.alignment.textAlign,

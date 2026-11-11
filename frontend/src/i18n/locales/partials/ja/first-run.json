@@ -1,11 +1,11 @@
 {
   "firstRun": {
-    "title": "Welcome to VideoSOS 2",
-    "what": "Generate images, video, music, voices and sound effects with the best models of OpenRouter, fal and Runware, and edit them on a multitrack timeline into a finished video.",
-    "keys": "Generation runs on your own accounts: open a project, the Generate tab, and paste a provider key there or in Settings, Providers and agent. You pay the provider directly; VideoSOS shows the price before each run.",
-    "agent": "An AI agent (Claude and others) can drive VideoSOS through its MCP server; the address is in Settings.",
-    "statistics": "Send anonymous statistics",
-    "statisticsHint": "How many generations ran and on which models, the version and the system. Never prompts, files or keys. You can change it in Settings.",
-    "start": "Start"
+    "title": "VideoSOS 2へようこそ",
+    "what": "OpenRouter、fal、Runwareの最高のモデルで、画像、動画、音楽、音声、効果音を生成し、マルチトラックのタイムラインで編集して完成した動画に仕上げます。",
+    "keys": "生成はご自身のアカウントで行います。プロジェクトを開いて「生成」タブを選び、そこか、設定の「プロバイダー」でプロバイダーのキーを貼り付けてください。料金はプロバイダーに直接お支払いいただきます。VideoSOSは実行前に価格を表示します。",
+    "agent": "AIエージェント(Claudeなど)は、MCPサーバー経由でVideoSOSを操作できます。アドレスは設定にあります。",
+    "statistics": "匿名の統計情報を送信",
+    "statisticsHint": "生成の回数と使ったモデル、使った機能（名前のみ）、バージョン、システム、グラフィックカードのクラス、当社プログラム共通のコンピューター番号（元に戻せないハッシュ）。プロンプト、ファイル、キーは送りません。設定で変更できます。",
+    "start": "開始"
   }
 }

@@ -21,7 +21,7 @@
     "syncOffsetEarlier": "테이크를 앞당기기",
     "syncOffsetLater": "테이크를 늦추기",
     "headphonesHint": "타임라인 오디오가 마이크에 녹음되지 않도록 헤드폰을 사용하세요.",
-    "fileNamePrefix": "voiceover",
+    "fileNamePrefix": "보이스오버",
     "errors": {
       "unsupported": "이 브라우저에서는 마이크 녹음이 지원되지 않습니다.",
       "noProject": "녹음하기 전에 프로젝트를 여세요.",

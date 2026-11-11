@@ -1,7 +1,7 @@
 {
   "desktop": {
-    "saved": "Saved: {{path}}",
-    "reveal": "Show in folder",
-    "saveFailed": "The file was not saved: {{reason}}"
+    "saved": "已保存：{{path}}",
+    "reveal": "在文件夹中显示",
+    "saveFailed": "文件未能保存：{{reason}}"
   }
 }

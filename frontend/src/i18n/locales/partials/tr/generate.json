@@ -1,94 +1,510 @@
 {
   "generate": {
-    "tabLabel": "Generate",
-    "serverError": "The VideoSOS server did not answer: {{reason}}",
+    "tabLabel": "Üret",
+    "serverError": "VideoSOS sunucusu yanıt vermedi: {{reason}}",
     "tasks": {
-      "image": "Image",
-      "image_edit": "Edit image",
+      "image": "Görsel",
+      "image_edit": "Görseli düzenle",
       "video": "Video",
-      "video_edit": "Edit video",
-      "lip_sync": "Lip sync",
-      "upscale": "Upscale",
-      "remove_background": "Remove background",
-      "music": "Music",
-      "speech": "Voice",
-      "sound": "Sound effects",
-      "transcribe": "Transcribe",
-      "text": "Text"
+      "video_edit": "Videoyu düzenle",
+      "lip_sync": "Dudak senkronu",
+      "upscale": "Yükselt",
+      "remove_background": "Arka planı kaldır",
+      "music": "Müzik",
+      "speech": "Ses",
+      "sound": "Ses efektleri",
+      "transcribe": "Yazıya dök",
+      "text": "Metin"
     },
     "media": {
-      "image": "an image",
-      "video": "a video",
-      "audio": "audio"
+      "image": "bir görsel",
+      "video": "bir video",
+      "audio": "ses"
     },
     "model": {
-      "choose": "Choose a model",
-      "loading": "Reading the models…",
-      "search": "Search models",
-      "all": "All",
-      "refresh": "Read the catalogues again",
-      "none": "No model fits this search.",
-      "new": "new",
-      "deprecated": "retiring"
+      "choose": "Bir model seçin",
+      "loading": "Modeller okunuyor…",
+      "search": "Model ara",
+      "all": "Tümü",
+      "refresh": "Katalogları yeniden oku",
+      "none": "Bu aramaya uyan model yok.",
+      "new": "yeni",
+      "deprecated": "kullanımdan kalkıyor",
+      "typicalTime": "≈ {{time}} (senin çalıştırmalarına göre)",
+      "pin": "Üste sabitle",
+      "unpin": "Sabitlemeyi kaldır"
     },
     "keys": {
-      "missing": "No key for this provider",
-      "needed": "Add your {{provider}} key to run this model.",
-      "placeholder": "Paste the API key",
-      "save": "Save",
-      "ok": "The key works.",
-      "okBalance": "The key works. Balance: {{balance}}",
-      "failed": "The provider did not accept the key.",
-      "getOne": "Get a {{provider}} key"
+      "missing": "Bu sağlayıcı için anahtar yok",
+      "needed": "Bu modeli çalıştırmak için {{provider}} anahtarınızı ekleyin.",
+      "placeholder": "API anahtarını yapıştırın",
+      "save": "Kaydet",
+      "ok": "Anahtar çalışıyor.",
+      "okBalance": "Anahtar çalışıyor. Bakiye: {{balance}}",
+      "failed": "Sağlayıcı anahtarı kabul etmedi.",
+      "getOne": "{{provider}} anahtarı al",
+      "spent": "Bu anahtarla harcanan: {{spent}}.",
+      "balanceAdminOnly": "fal bakiyeyi yalnızca yönetici anahtarına gösterir."
     },
     "form": {
-      "loading": "Reading the model's settings…",
-      "more": "More settings ({{count}})",
-      "default": "Model default",
-      "dropHere": "Drop {{kind}} from the library or a result here",
-      "pick": "Pick from the library",
-      "remove": "Remove",
-      "noMedia": "The library has no {{kind}} yet.",
-      "tooMany": "At most {{max}} files here.",
-      "wrongKind": "This slot takes {{kind}}.",
-      "missing": "Fill in: {{fields}}"
+      "loading": "Modelin ayarları okunuyor…",
+      "more": "Diğer ayarlar ({{count}})",
+      "default": "Model varsayılanı",
+      "dropHere": "Kitaplıktan veya bir sonuçtan {{kind}} buraya bırakın",
+      "pick": "Kitaplıktan seç",
+      "remove": "Kaldır",
+      "noMedia": "Kitaplıkta henüz {{kind}} yok.",
+      "tooMany": "Burada en fazla {{max}} dosya olabilir.",
+      "wrongKind": "Bu yuva {{kind}} kabul eder.",
+      "missing": "Doldurun: {{fields}}",
+      "length": "{{count}} / {{max}}",
+      "tooLong": "{{count}} / {{max}} – modelin kabul ettiğinden uzun",
+      "shorten": "“{{field}}” alanını kısalt: {{count}} karakter, model en fazla {{max}} kabul eder",
+      "atSecond": "{{n}}. karenin saniyesi",
+      "atFrame": "{{n}}. karenin numarası",
+      "atAuto": "otomatik",
+      "atSecondHint": "Her karenin altında: durduğu saniye, en fazla {{max}}. Boş — kareleri model kendisi yerleştirir.",
+      "atFrameHint": "Her karenin altında: videodaki kare numarası (-1 sonuncusu). Boş — kareleri model kendisi yerleştirir.",
+      "searchOptions": "Ara…",
+      "noOptions": "Hiçbir şey bulunamadı"
     },
-    "placeOnTimeline": "Put on the timeline",
-    "repeat": "Runs",
-    "repeatHint": "How many times to run it; each run is a separate result and is paid separately",
-    "submit": "Generate",
+    "placeOnTimeline": "Zaman çizelgesine yerleştir",
+    "repeat": "Çalıştırma sayısı",
+    "repeatHint": "Kaç kez çalıştırılacağı; her çalıştırma ayrı bir sonuçtur ve ayrı ücretlendirilir",
+    "submit": "Üret",
     "cost": {
-      "unknown": "price after the run",
-      "estimated": "Worked out before the run",
-      "billed": "As the provider billed it",
-      "failed": "Price unknown: {{reason}}"
+      "unknown": "fiyat çalıştırmadan sonra belli olur",
+      "estimated": "Çalıştırmadan önce hesaplandı",
+      "billed": "Sağlayıcının faturaladığı gibi",
+      "failed": "Fiyat bilinmiyor: {{reason}}"
     },
-    "history": "Generations ({{count}})",
+    "history": "Üretimler ({{count}})",
     "status": {
-      "queued": "waiting",
-      "sending": "sending",
-      "running": "working",
-      "done": "done",
-      "failed": "failed",
-      "cancelled": "cancelled"
+      "queued": "bekliyor",
+      "sending": "gönderiliyor",
+      "running": "çalışıyor",
+      "done": "bitti",
+      "failed": "başarısız",
+      "cancelled": "iptal edildi"
     },
     "actions": {
-      "cancel": "Cancel",
-      "place": "To timeline",
-      "placeHint": "Put the result at the playhead",
-      "copy": "Copy",
-      "placeText": "As text",
-      "reuse": "Edit",
-      "reuseHint": "Load this run's model and settings into the form",
-      "again": "Again",
-      "forgetHint": "Remove from the list and delete its files (media already in the library stays)"
+      "cancel": "İptal",
+      "place": "Zaman çizelgesine",
+      "placeHint": "Sonucu oynatma kafasına yerleştir",
+      "copy": "Kopyala",
+      "placeText": "Metin olarak",
+      "reuse": "Düzenle",
+      "reuseHint": "Bu çalıştırmanın modelini ve ayarlarını forma yükle",
+      "again": "Yeniden",
+      "forgetHint": "Listeden kaldır ve dosyalarını sil (kitaplıkta zaten bulunan medya kalır)",
+      "like": "Bu sonucu beğen: en iyi çekim, geçmiş böyle sıralanınca önce gösterilir",
+      "unlike": "Beğeniyi kaldır"
     },
-    "importFailed": "The result arrived but was not added to the library: {{reason}}",
+    "importFailed": "Sonuç geldi ancak kitaplığa eklenemedi: {{reason}}",
     "improve": {
-      "button": "Improve prompt",
-      "hint": "Rewrite the prompt for this model with an OpenRouter LLM (a fraction of a cent)",
-      "needsKey": "Needs an OpenRouter key",
-      "undo": "Back to mine"
-    }
+      "button": "İstemi iyileştir",
+      "hint": {
+        "openrouter": "İstemi bu model için bir OpenRouter LLM ile yeniden yaz (bir kuruşun çok altında)",
+        "agent": "İstemi bu model için yeniden yaz: bağlı ajan yazar, ücretsiz"
+      },
+      "needsKey": "OpenRouter anahtarı gerekli",
+      "undo": "Kendi istemime dön",
+      "noAgent": "Ajan bağlı değil: VideoSOS'un MCP'siyle başlatın (Ayarlar, Ajanlar) ya da orada OpenRouter'ı seçin"
+    },
+    "use": {
+      "button": "Şu olarak kullan…",
+      "videoFromFrame": "Bu kareden video",
+      "edit": "Görseli düzenle",
+      "upscale": "Yükselt",
+      "removeBackground": "Arka planı kaldır",
+      "lipSync": "Bu yüzü dudak senkronla",
+      "continue": "Son kareden devam et",
+      "editVideo": "Videoyu düzenle",
+      "sound": "Bu video için ses",
+      "lipSyncVoice": "Bu sesle dudak senkronla",
+      "transcribe": "Yazıya dök",
+      "needsProject": "Önce bir proje açın: kare, projenin medya kitaplığına eklenir.",
+      "noSlot": "{{model}} bu türde dosya kabul etmiyor: bu görev için başka bir model seçin.",
+      "noPrompt": "{{model}} için metin alanı yok: bu görevin başka bir modelini seçin.",
+      "placed": "\"{{field}}\" alanına yerleştirildi",
+      "lastFrameName": "{{title}}, son kare"
+    },
+    "compare": {
+      "pick": "Karşılaştır",
+      "button": "Karşılaştır ({{count}})",
+      "title": "Yan yana",
+      "play": "Birlikte oynat",
+      "pause": "Duraklat"
+    },
+    "stats": {
+      "button": "Proje harcaması",
+      "title": "Bu projede harcananlar",
+      "total": "Toplam {{total}}, bugün {{today}}",
+      "empty": "Bu proje için henüz hiçbir şey üretilmedi.",
+      "byTask": "Göreve göre",
+      "byProvider": "Sağlayıcıya göre",
+      "byModel": "Modele göre",
+      "other": "Diğer",
+      "files": "Projedeki dosyalar: {{count}} — {{generated}} üretilen, {{added}} eklenen"
+    },
+    "filter": {
+      "search": "Kelimeye veya modele göre bul",
+      "task": "Görev",
+      "status": "Durum",
+      "allTasks": "Tüm görevler",
+      "allStates": "Herhangi bir durum",
+      "nothing": "Eşleşen üretim yok."
+    },
+    "zoom": {
+      "title": "Görsel",
+      "open": "Tam boyutta aç",
+      "in": "Yakınlaştır",
+      "out": "Uzaklaştır",
+      "fit": "Pencereye sığdır",
+      "close": "Kapat"
+    },
+    "sort": {
+      "label": "Sıralama: {{order}}",
+      "title": "Sıralama",
+      "newest": "Önce yeni",
+      "oldest": "Önce eski",
+      "costliest": "Önce pahalı",
+      "cheapest": "Önce ucuz",
+      "liked": "Beğenilenler önce"
+    },
+    "fields": {
+      "prompt": "İstem",
+      "positive_prompt": "İstem",
+      "negative_prompt": "Negatif istem",
+      "aspect_ratio": "En-boy oranı",
+      "resolution": "Çözünürlük",
+      "input_references": "Referans görseller",
+      "seed": "Tohum",
+      "output_format": "Çıktı biçimi",
+      "output_quality": "Çıktı kalitesi",
+      "duration": "Süre, sn",
+      "number_results": "Sonuç sayısı",
+      "num_images": "Görsel sayısı",
+      "size": "Boyut",
+      "image_size": "Görsel boyutu",
+      "num_inference_steps": "Adım",
+      "steps": "Adım",
+      "guidance_scale": "İsteme bağlılık (CFG)",
+      "cfg_scale": "İsteme bağlılık (CFG)",
+      "strength": "Güç",
+      "acceleration": "Hızlandırma",
+      "system": "Talimatlar",
+      "temperature": "Sıcaklık",
+      "frame_first": "İlk kare",
+      "frame_last": "Son kare",
+      "background": "Arka plan",
+      "input_audio": "Ses",
+      "language": "Dil",
+      "input": "Metin",
+      "text": "Metin",
+      "voice": "Ses tonu",
+      "instructions": "Okuma biçimi",
+      "speed": "Hız",
+      "image": "Görsel",
+      "frame_images": "Kareler",
+      "seed_image": "Kaynak görsel",
+      "mask_image": "Maske",
+      "generate_audio": "Ses üret",
+      "enable_audio": "Ses üret"
+    },
+    "historyTitle": "Üretimler",
+    "details": {
+      "title": "Ayrıntılar",
+      "model": "Model",
+      "took": "Süre",
+      "seconds": "{{count}} sn",
+      "job": "İş",
+      "media": "projenin medyası",
+      "result": "önceki bir sonuç"
+    },
+    "providerWords": {
+      "billed_by_video_tokens_the_price_is_known_after_the_run": "video token'larına göre faturalandırılır; fiyat çalıştırmadan sonra belli olur",
+      "billed_by_tokens_the_price_is_known_after_the_run": "token'lara göre faturalandırılır; fiyat çalıştırmadan sonra belli olur",
+      "billed_by_the_length_of_the_recording": "kaydın uzunluğuna göre faturalandırılır",
+      "how_the_model_should_answer": "Modelin nasıl yanıt vermesi gerektiği",
+      "iso_code_for_example_ru_or_en_empty_to_detect": "ISO kodu, örneğin ru veya en; algılamak için boş bırakın",
+      "tone_pace_and_emotion_in_words": "Ton, tempo ve duygu, sözcüklerle."
+    },
+    "jobError": {
+      "no_key": "{{provider}} anahtarı yok",
+      "catalog": "Sağlayıcının modeli okunamadı",
+      "invalid": "Formdaki değerler modele uymuyor",
+      "refused": "Sağlayıcı isteği reddetti",
+      "busy": "Sağlayıcı meşgul - iş gönderilmedi, yeniden gönderin",
+      "network": "Sağlayıcıyla bağlantı yok",
+      "provider_failed": "Sağlayıcı işi yapamadı",
+      "lost_contact": "Sağlayıcıyla bağlantı kesildi",
+      "too_long": "İş çok uzun sürdü",
+      "download_failed": "Sonuç indirilemedi",
+      "storage": "Sonuç diske yazılamadı",
+      "interrupted": "İş gönderilirken VideoSOS kapandı",
+      "details": "Hata metni",
+      "openKeys": "Anahtarları aç"
+    },
+    "placeholder": "Üretiliyor, {{model}}: {{state}}",
+    "rate": {
+      "second": "saniye başına {{price}}",
+      "characters": "1000 karakter başına {{price}}",
+      "tokens": "bir milyon token başına {{input}} / {{output}}"
+    },
+    "describe": {
+      "button": "Görselden istem",
+      "hint": {
+        "openrouter": "Bir model formdaki ilk görsele bakar ve onu üretecek istemi yazar. Ücreti OpenRouter anahtarı öder.",
+        "agent": "Bağlı ajan formdaki ilk resme bakar ve onu oluşturacak istemi yazar; ücretsiz"
+      }
+    },
+    "presets": {
+      "button": "Ön ayarlar",
+      "hint": "Kaydedilmiş istemler: birini alana koy ya da mevcut olanı kaydet",
+      "empty": "Henüz kaydedilmiş istem yok. Mevcut olana bir ad ver ve kaydet.",
+      "name": "Ön ayar adı",
+      "keep": "Kaydet",
+      "keepHint": "Alanın metnini bu adla kaydet",
+      "remove": "“{{name}}” ön ayarını kaldır"
+    },
+    "elements": {
+      "button": "Öğeler",
+      "hint": "Görselleriyle birlikte karakterler, nesneler ve yerler: istemdeki “@ad” görselleri modele gönderir",
+      "empty": "Bir karakteri, nesneyi ya da yeri kaydet: görsellerini formun görsel alanlarına koy ve bir ad ver. İstemde @ad olarak an.",
+      "use": "@{{name}} öğesini isteme ekle",
+      "pictures_one": "{{count}} görsel",
+      "pictures_other": "{{count}} görsel",
+      "remove": "@{{name}} öğesini kaldır",
+      "name": "Ad, tek sözcük",
+      "keep": "Kaydet",
+      "keepHint": "Formdaki görseller: {{count}}; bu adla kaydedilir",
+      "noPictures": "Önce görsellerini forma koy",
+      "badName": "Tek sözcük: harf, rakam, _ ve -",
+      "left": "{{names}}: bu modelde görselleri için yer yok, sözcük olarak gider"
+    },
+    "variables": {
+      "title": "İstem değişkenleri",
+      "missing": "Değişkenleri doldur: {{names}}"
+    },
+    "batch": {
+      "add": "Başka bir modelle karşılaştır",
+      "remove": "Modeli gruptan kaldır",
+      "lacks": "eksik: {{fields}}",
+      "noKey": "{{provider}} anahtarı yok"
+    },
+    "segment": {
+      "cutting": "Klibin {{from}}–{{to}} sn aralığı kesiliyor…",
+      "ready": "Bölüm kaynak olarak “Videoyu düzenle” içinde: neyin değişeceğini söyle",
+      "failed": "Bölüm kesilemedi: {{reason}}",
+      "noFile": "{{name}} dosyası medya kitaplığında yok",
+      "name": "{{title}}, {{from}}–{{to}} sn"
+    },
+    "storyboard": {
+      "tabLabel": "Storyboard",
+      "noProject": "Bir proje aç: storyboard onunla birlikte saklanır.",
+      "script": "Senaryo veya fikir",
+      "scriptHint": "Ne oluyor, sahne sahne ya da tek cümleyle. @öğe adları görsellerini getirir.",
+      "count": "Çekim",
+      "split": "Çekimlere böl",
+      "splitHint": {
+        "openrouter": "Çekimleri OpenRouter’ın bir dil modeli yazar; “İstemi iyileştir” gibi ücretlidir",
+        "agent": "Çekimleri bağlı ajan yazar; ücretsiz"
+      },
+      "frameModel": "Kareler şuradan",
+      "clipModel": "Klipler şuradan",
+      "shots": "Çekimler",
+      "shot": "Çekim {{number}}",
+      "seconds": "sn",
+      "remove": "{{number}}. çekimi kaldır",
+      "frame": "Kare",
+      "frameAgain": "Kareyi yeniden üret",
+      "clip": "Klip",
+      "clipNeedsFrame": "Bu model klibi bir kareden başlatır: önce kareyi üret",
+      "frameDone": "kare hazır",
+      "clipDone": "klip zaman çizelgesinde",
+      "frameFailed": "Kare başarısız oldu: {{reason}}",
+      "clipFailed": "Klip başarısız oldu: {{reason}}",
+      "add": "Çekim ekle",
+      "allFrames_one": "{{count}} çekim için kare",
+      "allFrames_other": "{{count}} çekim için kareler",
+      "allClips_one": "{{count}} çekim için klip zaman çizelgesine",
+      "allClips_other": "{{count}} çekim için klipler zaman çizelgesine",
+      "allClipsHint": "Klipler oynatma başlığından itibaren peş peşe yerleşir"
+    },
+    "canvas": {
+      "prompt": "Metin",
+      "media": "Görsel veya video",
+      "generate": "Üretim",
+      "promptHint": "Ne yapılacağı; bağlı olduğu üretimlerin prompt'una girer.",
+      "mediaHint": "Medya kitaplığından bir dosyayı veya bir sonucu buraya bırak.",
+      "remove": "Düğümü kaldır",
+      "task": "Görev",
+      "run": "Çalıştır",
+      "runAgain": "Tekrar çalıştır",
+      "waiting_one": "Öncesindeki {{count}} düğüm bekleniyor",
+      "waiting_other": "Öncesindeki {{count}} düğüm bekleniyor",
+      "noRoom_one": "{{count}} dosyanın bu modelde yeri yok",
+      "noRoom_other": "{{count}} dosyanın bu modelde yeri yok",
+      "empty": "Bir metin, bir görsel ve bir üretim ekle ve birbirine bağla: metin prompt'a, dosyalar modelin yuvalarına. Dosyaları medya kitaplığından tuvale sürükle.",
+      "input": {
+        "prompt": "prompt",
+        "media": "dosyalar"
+      },
+      "workflow": {
+        "templates": "Şablonlar",
+        "save": "Workflow'u kaydet",
+        "open": "Workflow aç",
+        "failed": "Workflow açılamadı: {{reason}}",
+        "template": {
+          "frameToVideo": {
+            "name": "Kareden videoya",
+            "about": "Bir prompt görsel oluşturur, görsel kendi hareket prompt'uyla bir videoyu başlatır.",
+            "prompts": {
+              "idea": "Alacakaranlıkta bir uçurumun üstünde deniz feneri, aşağıda kırılan dalgalar, penceredeki sıcak ışık",
+              "motion": "Yavaş yaklaşma, deniz fenerinin ışık demeti denizi tarıyor"
+            }
+          },
+          "compareImages": {
+            "name": "Görsel modellerini karşılaştır",
+            "about": "Tek bir prompt, yan yana üç görsel modeline; panelin modeli ve karşılaştırılacak modeller ayarlı.",
+            "prompts": {
+              "idea": "Sarı yağmurluklu yaşlı bir balıkçının portresi, bulutlu havanın yumuşak ışığı, 85 mm"
+            }
+          },
+          "promptWriter": {
+            "name": "Prompt yazarı",
+            "about": "Bir dil modeli fikirden prompt yazar, bir görsel modeli onu çizer.",
+            "prompts": {
+              "idea": "Bir görsel modeli için canlı bir prompt yaz: yağmurlu bir gecede Tokyo'da sıcak bir ramen dükkânı. Yalnızca prompt ile yanıt ver."
+            }
+          },
+          "productShot": {
+            "name": "Ürün çekimi",
+            "about": "Bir ürün fotoğrafı: arka plan kaldırılır, bir düzenleme modeli yeni bir sahneye yerleştirir, sonra büyütülür.",
+            "prompts": {
+              "scene": "Ürünü sabah güneşinde mermer bir masaya yerleştir, yumuşak gölgeler, sığ alan derinliği"
+            }
+          },
+          "talkingHead": {
+            "name": "Konuşan kafa",
+            "about": "Bir sesin okuduğu metin ve kitaplıktaki bir yüzün onu söylemesi.",
+            "prompts": {
+              "words": "Merhaba! Bugün sana videoyu daha hızlı kurgulamanın üç püf noktasını göstereceğim."
+            }
+          },
+          "soundtrack": {
+            "name": "Müzik ve ses",
+            "about": "İki prompt'tan bir müzik parçası ve bir ses efekti.",
+            "prompts": {
+              "mood": "Yumuşak yaylılarla sakin ambient piyano, yavaş tempo, umut dolu",
+              "effect": "Çakıllı bir plajda dalgalar, uzaklarda martılar"
+            }
+          }
+        }
+      }
+    },
+    "motion": {
+      "tabLabel": "HTML grafikleri",
+      "hint": "HTML ve CSS ile yazılmış başlıklar, alt bantlar, sayaçlar ve rozetler: animasyon kendiliğinden çalışır, klip alttaki videonun üzerinde şeffaflığını korur.",
+      "templates": {
+        "title": "Başlık",
+        "lowerThird": "Alt bant",
+        "counter": "Sayaç",
+        "badge": "Rozet"
+      },
+      "preview": "Önizleme",
+      "code": "HTML ve CSS",
+      "seconds": "Saniye",
+      "make": "Oynatma başlığında klip oluştur",
+      "rendering": "Kareler çiziliyor… %{{percent}}",
+      "done": "\"{{name}}\" kitaplıkta ve oynatma başlığında",
+      "failed": "Klip oluşturulamadı: {{reason}}",
+      "made": "Oluşturuldu",
+      "edit": "Kodunu aç",
+      "defaultName": "HTML grafikleri"
+    },
+    "previs": {
+      "tabLabel": "3D blocking",
+      "hint": {
+        "openrouter": "Çekimi parasını ödemeden önce 3D olarak blocking yap: yeri, kimin nereye hareket ettiğini ve kameranın nasıl gittiğini anlat; prompt modeli yer tutucu şekiller ve bir kamera yolu oluşturur (yaklaşık iki sent). Kameradan, yukarıdan veya etrafından bak, sonra karesini bir video veya görsel modeline ver ya da kameranın hareketini kaydet.",
+        "agent": "Bir üretime para ödemeden önce sahneyi 3B'de kurun: yeri, kimin nereye gittiğini ve kameranın nasıl hareket ettiğini anlatın; bağlı ajan yer tutucuları ve kamera yolunu ücretsiz kurar. Kameradan, yukarıdan ya da çevresinden bakın, sonra kareyi bir video ya da görsel modeline verin veya kamera hareketini kaydedin."
+      },
+      "description": "Çekim",
+      "placeholder": "Bir kadın dar bir koridorda bir kapıya doğru yürüyor; kamera arkasından onu takip ediyor, o durunca dönüp karşısına geçiyor. 6 saniye, 35 mm, sonda 50 mm.",
+      "build": "Blocking oluştur",
+      "change": "Mevcut olanı yazıya göre değiştir",
+      "building": "Blocking oluşturuluyor…",
+      "example": "Bir örnekle başla",
+      "failed": "Olmadı: {{reason}}",
+      "views": "Görünüm",
+      "view": {
+        "camera": "Kamera",
+        "top": "Yukarıdan",
+        "orbit": "Etrafında"
+      },
+      "play": "Oynat",
+      "pause": "Duraklat",
+      "time": "Çekimin anı",
+      "toVideo": "Kare → videonun ilk karesi",
+      "toPicture": "Kare → görselin referansı",
+      "video": "Kameranın hareketini kaydet",
+      "recording": "Kaydediliyor… %{{percent}}",
+      "videoDone": "\"{{name}}\" medya kitaplığında.",
+      "frameName": "{{title}}, blocking karesi",
+      "videoName": "{{title}}, blocking",
+      "json": "JSON olarak sahne",
+      "apply": "Uygula",
+      "badJson": "Metin JSON değil: {{reason}}",
+      "noView": "3D görünüm başlamadı: bu pencere ekran kartından WebGL alamadı."
+    },
+    "forever": {
+      "slide": "Durmadan üretmek için kaydırın",
+      "hint": "Çalışan ikiden az olduğu sürece aynı çalıştırmaları yeni tohumlarla yeniden gönderir; siz durdurana ya da biri başarısız olana kadar. Her çalıştırma ücretlidir.",
+      "stop": "Durdur",
+      "counter_other": " · {{count}} çalıştırma · {{spent}}"
+    },
+    "local": {
+      "intro": "Bu modeller stable-diffusion.cpp ile bu bilgisayarda çalışır: anahtar ve ücret yok. Her model bir kez indirilir; dosyaları bir sürüme sabitlenir ve SHA-256 ile denetlenir.",
+      "device": "Aygıt",
+      "devices": {
+        "auto": "Otomatik",
+        "cuda": "CUDA (NVIDIA)",
+        "vulkan": "Vulkan",
+        "cpu": "İşlemci"
+      },
+      "inUse": "Kullanımda: {{device}} · {{gpu}}",
+      "noEngine": "Motor indirilmedi — {{device}} gerekli",
+      "engine": "{{device}} motoru · {{size}}",
+      "unload": "{{model}} modelini bellekten boşalt",
+      "task": {
+        "image": "görseller",
+        "video": "sesli video"
+      },
+      "installed": "indirildi",
+      "notInstalled": "indirilmedi",
+      "accelerators": "Hızlandırıcılar: {{list}}",
+      "studios": "Bu bilgisayardaki stüdyolar",
+      "studiosHint": "Açık YuE2, MiniMax Music3 ve ACE-Step Studio buradan Müzik modelleri olarak şarkı yapar; Speech Studio metinleri her motoru için bir Ses modeli olarak seslendirir. İş stüdyoda kalır, buraya bir kopyası gelir.",
+      "studioRunning": "açık — Müzik'te",
+      "studioOff": "çalışmıyor",
+      "download": "İndir · {{size}}",
+      "downloadNamed": "{{model}} indir · {{size}}",
+      "removeNamed": "{{model}} kaldır",
+      "remove": "Kaldır",
+      "downloading": "{{done}} / {{total}} · {{file}}",
+      "takenFrom": "{{app}} uygulamasından alındı",
+      "notDownloaded": "{{model}} henüz indirilmedi: {{size}}.",
+      "engineToo": "Ekran kartınız için motor da birlikte iner.",
+      "unsupported": "Yerel üretim şimdilik yalnızca Windows'ta kullanılabilir."
+    },
+    "takes": {
+      "title": "Çekimler ({{count}})",
+      "take": "Çekim {{n}}",
+      "inClip": "Klipte",
+      "use": "Kullan",
+      "useHint": "Bu çekimi klibin yerine koy"
+    },
+    "speechTrimFailed": "Seslendirme olduğu gibi yerleştirildi: sessizliği okunamadı ({{reason}})"
   }
 }

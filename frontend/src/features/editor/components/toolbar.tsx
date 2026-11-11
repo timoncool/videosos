@@ -1,24 +1,20 @@
 import { memo, useEffect, useMemo, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import {
   ArrowLeft,
-  Send,
-  BookOpen,
   Bug,
   ChevronDown,
   Download,
+  FileCode,
   FolderArchive,
-  Github,
   Keyboard,
   ListVideo,
   Save,
-  Settings,
-  Sparkles,
   Video,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { DISCORD_INVITE_URL, REPOSITORY_URL } from '@/config/community'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,15 +25,10 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Separator } from '@/components/ui/separator'
 import { LocalInferenceStatusPill } from './local-inference-status-pill'
 import { ProjectDebugPanel } from './project-debug-panel'
-import { SettingsDialog } from './settings-dialog'
 import { ShortcutsDialog } from './shortcuts-dialog'
 import { UnsavedChangesDialog } from './unsaved-changes-dialog'
 import { WorkspaceSwitcher } from './workspace-switcher'
-import { WhatsNewDialog } from './whats-new-dialog'
-import { hasUnseenChangelog } from './whats-new-seen'
-import { EDITOR_LAYOUT_CSS_VALUES } from '@/config/editor-layout'
 import { cn } from '@/shared/ui/cn'
-import { LanguageSwitcher } from '@/shared/ui/language-switcher'
 import { useDebugStore } from '@/features/editor/stores/debug-store'
 import { useItemsStore, useTimelineSettingsStore } from '@/features/editor/deps/timeline-store'
 import { useMediaLibraryStore } from '@/features/editor/deps/media-library'
@@ -70,6 +61,7 @@ interface ToolbarProps {
   onSave?: () => Promise<void>
   onExport?: () => void
   onExportBundle?: () => void
+  onExportFcpxml?: () => void
   onOpenRenderQueue?: () => void
   /** Number of queued + rendering jobs, shown as a badge on the queue button. */
   renderQueueCount?: number
@@ -81,6 +73,7 @@ export const Toolbar = memo(function Toolbar({
   onSave,
   onExport,
   onExportBundle,
+  onExportFcpxml,
   onOpenRenderQueue,
   renderQueueCount = 0,
 }: ToolbarProps) {
@@ -88,9 +81,6 @@ export const Toolbar = memo(function Toolbar({
   const { t } = useTranslation()
   const [showUnsavedDialog, setShowUnsavedDialog] = useState(false)
   const [showShortcutsDialog, setShowShortcutsDialog] = useState(false)
-  const [showSettingsDialog, setShowSettingsDialog] = useState(false)
-  const [showWhatsNewDialog, setShowWhatsNewDialog] = useState(false)
-  const [hasUnseenWhatsNew, setHasUnseenWhatsNew] = useState(false)
   const [isSaveAnimating, setIsSaveAnimating] = useState(false)
   const [saveAnimationKey, setSaveAnimationKey] = useState(0)
   const saveAnimationTimeoutRef = useRef<number | undefined>(undefined)
@@ -112,21 +102,12 @@ export const Toolbar = memo(function Toolbar({
   )
 
   useEffect(() => {
-    setHasUnseenWhatsNew(hasUnseenChangelog())
-  }, [])
-
-  useEffect(() => {
     return () => {
       if (saveAnimationTimeoutRef.current !== undefined) {
         window.clearTimeout(saveAnimationTimeoutRef.current)
       }
     }
   }, [])
-
-  const openWhatsNew = () => {
-    setHasUnseenWhatsNew(false)
-    setShowWhatsNewDialog(true)
-  }
 
   const handleBackClick = () => {
     if (useTimelineSettingsStore.getState().isDirty) {
@@ -165,14 +146,27 @@ export const Toolbar = memo(function Toolbar({
     }
   }
 
+  // the editor's part of the studios' top bar: its modes beside the name, its buttons beside New
+  const [slots, setSlots] = useState<{ modes: HTMLElement; actions: HTMLElement } | null>(null)
+  useEffect(() => {
+    const modes = document.getElementById('editor-modes-slot')
+    const actions = document.getElementById('editor-actions-slot')
+    if (modes && actions) setSlots({ modes, actions })
+  }, [])
+
   return (
-    <div
-      className="panel-header flex flex-shrink-0 items-center gap-2.5 border-b border-border px-3"
-      style={{ height: EDITOR_LAYOUT_CSS_VALUES.toolbarHeight }}
-      role="toolbar"
-      aria-label={t('toolbar.ariaLabel')}
-    >
-      <div className="flex items-center gap-2.5">
+    <>
+      <UnsavedChangesDialog
+        open={showUnsavedDialog}
+        onOpenChange={setShowUnsavedDialog}
+        onSave={handleSave}
+        projectName={project?.name}
+      />
+      <ShortcutsDialog open={showShortcutsDialog} onOpenChange={setShowShortcutsDialog} />
+      {slots &&
+        createPortal(
+          <div className="flex items-center gap-2.5" role="toolbar" aria-label={t('toolbar.ariaLabel')}>
+            <Separator orientation="vertical" className="h-5" />
         <Button
           variant="ghost"
           size="icon"
@@ -185,123 +179,33 @@ export const Toolbar = memo(function Toolbar({
           <ArrowLeft className="h-4 w-4" />
         </Button>
 
-        <UnsavedChangesDialog
-          open={showUnsavedDialog}
-          onOpenChange={setShowUnsavedDialog}
-          onSave={handleSave}
-          projectName={project?.name}
-        />
-
-        <Separator orientation="vertical" className="h-5" />
-
-        <div className="flex flex-col -space-y-0.5">
-          <h1 className="text-sm font-medium leading-none">
-            {project?.name || t('common.untitledProject')}
-          </h1>
-          <span className="font-mono text-[11px] text-muted-foreground">
-            {t('toolbar.specsDetailed', {
-              width: project?.width,
-              height: project?.height,
-              fps: project?.fps,
-              duration: formatProjectDuration(projectSummary.durationSeconds),
-              clips: projectSummary.clipCount,
-              media: projectSummary.mediaCount,
-              missing: projectSummary.brokenMediaCount,
-            })}
-          </span>
-        </div>
-      </div>
-
-      <div className="flex flex-1 items-center justify-center">
-        <WorkspaceSwitcher />
-      </div>
-
-      <LocalInferenceStatusPill />
-
-      <ShortcutsDialog open={showShortcutsDialog} onOpenChange={setShowShortcutsDialog} />
-
-      <SettingsDialog open={showSettingsDialog} onOpenChange={setShowSettingsDialog} />
-
-      <WhatsNewDialog open={showWhatsNewDialog} onOpenChange={setShowWhatsNewDialog} />
-
-      <div className="flex items-center gap-1.5">
-        {import.meta.env.DEV && import.meta.env.VITE_SHOW_DEBUG_PANEL !== 'false' && (
-          <DebugPopover projectId={projectId} />
+            <h1
+              className="max-w-[96px] truncate text-[13px] font-medium sm:max-w-[140px] min-[1440px]:max-w-[220px]"
+              title={`${project?.name || t('common.untitledProject')}\n${t('toolbar.specsDetailed', {
+                width: project?.width,
+                height: project?.height,
+                fps: project?.fps,
+                duration: formatProjectDuration(projectSummary.durationSeconds),
+                clips: projectSummary.clipCount,
+                media: projectSummary.mediaCount,
+                missing: projectSummary.brokenMediaCount,
+              })}`}
+            >
+              {project?.name || t('common.untitledProject')}
+            </h1>
+            <WorkspaceSwitcher />
+          </div>,
+          slots.modes,
         )}
-
-        {/* Socials */}
-        <Button variant="outline" size="icon" className="h-7 w-7" asChild>
-          <a
-            href={REPOSITORY_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-tooltip={t('toolbar.viewOnGitHub')}
-            data-tooltip-side="bottom"
-            aria-label={t('toolbar.viewOnGitHub')}
-          >
-            <Github className="h-4 w-4" />
-          </a>
-        </Button>
-        <Button variant="outline" size="icon" className="h-7 w-7" asChild>
-          <a
-            href={DISCORD_INVITE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-tooltip={t('toolbar.joinDiscord')}
-            data-tooltip-side="bottom"
-            aria-label={t('toolbar.joinDiscord')}
-          >
-            <Send className="h-4 w-4" />
-          </a>
-        </Button>
-
-        <Separator orientation="vertical" className="h-5" />
-
-        {/* Utility */}
-        <Button variant="outline" size="icon" className="h-7 w-7" asChild>
-          <a
-            href="/docs"
-            target="_blank"
-            rel="noopener noreferrer"
-            data-tooltip="User Guide"
-            data-tooltip-side="bottom"
-            aria-label="User Guide"
-          >
-            <BookOpen className="h-4 w-4" />
-          </a>
-        </Button>
+      {slots &&
+        createPortal(
+          <div className="flex items-center gap-1.5">
+            <LocalInferenceStatusPill />
+            {import.meta.env.DEV && import.meta.env.VITE_SHOW_DEBUG_PANEL !== 'false' && <DebugPopover projectId={projectId} />}
         <Button
-          variant="outline"
+          variant="ghost"
           size="icon"
-          className="h-7 w-7 relative"
-          onClick={openWhatsNew}
-          data-tooltip={t('toolbar.whatsNew')}
-          data-tooltip-side="bottom"
-          aria-label={t('toolbar.whatsNewAria')}
-        >
-          <Sparkles className="h-4 w-4" />
-          {hasUnseenWhatsNew && (
-            <span
-              className="absolute top-1 right-1 h-1.5 w-1.5 rounded-full bg-primary"
-              aria-hidden="true"
-            />
-          )}
-        </Button>
-        <Button
-          variant="outline"
-          size="icon"
-          className="h-7 w-7"
-          onClick={() => setShowSettingsDialog(true)}
-          data-tooltip={t('toolbar.settings')}
-          data-tooltip-side="bottom"
-          aria-label={t('toolbar.settings')}
-        >
-          <Settings className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="outline"
-          size="icon"
-          className="h-7 w-7"
+          className="h-8 w-8 text-[var(--color-muted)] hover:text-[var(--color-text)] [@media(pointer:coarse)]:hidden"
           onClick={() => setShowShortcutsDialog(true)}
           data-tooltip={t('toolbar.keyboardShortcuts')}
           data-tooltip-side="bottom"
@@ -309,17 +213,13 @@ export const Toolbar = memo(function Toolbar({
         >
           <Keyboard className="h-4 w-4" />
         </Button>
-        <LanguageSwitcher size="sm" align="end" side="bottom" />
-
-        <Separator orientation="vertical" className="h-5" />
-
-        {/* Actions */}
         <Button
-          variant="outline"
+          variant="ghost"
           size="sm"
-          className="gap-1.5"
+          className="h-8 gap-1.5"
           onClick={handleSave}
           aria-label={t('toolbar.saveAria')}
+          title={t('toolbar.save')}
         >
           <div className="relative">
             {isSaveAnimating ? (
@@ -329,14 +229,14 @@ export const Toolbar = memo(function Toolbar({
             )}
             <SaveDirtyIndicator />
           </div>
-          {t('toolbar.save')}
+          <span className="hidden min-[1440px]:inline">{t('toolbar.save')}</span>
         </Button>
 
         {onOpenRenderQueue && (
           <Button
-            variant="outline"
+            variant="ghost"
             size="icon"
-            className="h-7 w-7 relative"
+            className="relative h-8 w-8 text-[var(--color-muted)] hover:text-[var(--color-text)]"
             onClick={onOpenRenderQueue}
             data-tooltip={t('toolbar.renderQueue')}
             data-tooltip-side="bottom"
@@ -344,7 +244,7 @@ export const Toolbar = memo(function Toolbar({
           >
             <ListVideo className="h-4 w-4" />
             {renderQueueCount > 0 && (
-              <span className="absolute -right-1 -top-1 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-medium leading-none text-primary-foreground">
+              <span className="absolute -right-1 -top-1 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-primary px-1 text-[11px] font-medium leading-none text-primary-foreground">
                 {renderQueueCount}
               </span>
             )}
@@ -353,9 +253,9 @@ export const Toolbar = memo(function Toolbar({
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button size="sm" className="gap-1.5 glow-primary-sm">
+            <Button size="sm" className="bg-brand gap-1.5 glow-primary-sm" aria-label={t('toolbar.export')}>
               <Download className="h-4 w-4" />
-              {t('toolbar.export')}
+              <span className="hidden sm:inline">{t('toolbar.export')}</span>
               <ChevronDown className="h-3 w-3" />
             </Button>
           </DropdownMenuTrigger>
@@ -368,10 +268,16 @@ export const Toolbar = memo(function Toolbar({
               <FolderArchive className="h-4 w-4" />
               {t('toolbar.downloadProjectZip')}
             </DropdownMenuItem>
+            <DropdownMenuItem onClick={onExportFcpxml} className="gap-2">
+              <FileCode className="h-4 w-4" />
+              {t('toolbar.exportFcpxml')}
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
-    </div>
+          </div>,
+          slots.actions,
+        )}
+    </>
   )
 })
 
@@ -426,10 +332,10 @@ function DebugPopover({ projectId }: { projectId: string }) {
     <Popover open={debugPanelOpen} onOpenChange={setDebugPanelOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="outline"
+          variant="ghost"
           size="icon"
           className={cn(
-            'h-7 w-7',
+            'h-8 w-8 text-[var(--color-muted)] hover:text-[var(--color-text)]',
             debugPanelOpen && 'bg-amber-500/20 border-amber-500/50 text-amber-400',
           )}
           data-tooltip={debugPanelOpen ? undefined : t('toolbar.debugPanel')}

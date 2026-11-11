@@ -70,7 +70,8 @@
       "alsoDeleteLocalFiles": "디스크의 로컬 파일도 삭제",
       "removeFilesFromFolder": "연결된 폴더에서 파일을 삭제합니다. 이 작업은 취소할 수 없습니다.",
       "removeFilesFromNamedFolder": "연결된 폴더 \"{{folder}}\"에서 파일을 삭제합니다. 이 작업은 취소할 수 없습니다.",
-      "openProject": "프로젝트 열기"
+      "openProject": "프로젝트 열기",
+      "actions": "프로젝트 작업"
     },
     "form": {
       "createTitle": "새 프로젝트 만들기",

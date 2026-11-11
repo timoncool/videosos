@@ -50,6 +50,11 @@ async function findSourceSegments(
   return null
 }
 
+/** The workspace-relative path of a media entry's source file, or null when it has none there. */
+export async function mediaSourcePath(mediaId: string): Promise<string[] | null> {
+  return findSourceSegments(requireWorkspaceRoot(), mediaId)
+}
+
 /**
  * Read media source bytes from the workspace folder.
  * Returns null when the source file doesn't exist yet (e.g. a media record

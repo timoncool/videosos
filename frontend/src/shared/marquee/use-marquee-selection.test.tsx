@@ -131,21 +131,21 @@ describe('useMarqueeSelection deferred commits', () => {
       },
     })
 
-    fireEvent.mouseDown(container, { button: 0, clientX: 5, clientY: 5 })
-    fireEvent.mouseMove(document, { clientX: 50, clientY: 50 })
+    fireEvent.pointerDown(container, { button: 0, clientX: 5, clientY: 5 })
+    fireEvent.pointerMove(document, { clientX: 50, clientY: 50 })
     flushAnimationFrames()
 
     expect(onPreviewSelectionChange).toHaveBeenNthCalledWith(1, [])
     expect(onPreviewSelectionChange).toHaveBeenNthCalledWith(2, ['clip-1'])
     expect(onSelectionChange).not.toHaveBeenCalled()
 
-    fireEvent.mouseMove(document, { clientX: 100, clientY: 100 })
+    fireEvent.pointerMove(document, { clientX: 100, clientY: 100 })
     flushAnimationFrames()
 
     expect(onPreviewSelectionChange).toHaveBeenNthCalledWith(3, ['clip-1', 'clip-2'])
     expect(onSelectionChange).not.toHaveBeenCalled()
 
-    fireEvent.mouseUp(document, { clientX: 100, clientY: 100 })
+    fireEvent.pointerUp(document, { clientX: 100, clientY: 100 })
 
     expect(onGestureEnd).toHaveBeenCalledTimes(1)
     expect(onGestureEnd.mock.calls[0]?.[1]).toBe(true)
@@ -171,15 +171,15 @@ describe('useMarqueeSelection deferred commits', () => {
       },
     })
 
-    fireEvent.mouseDown(container, { button: 0, clientX: 5, clientY: 5 })
-    fireEvent.mouseMove(document, { clientX: 50, clientY: 50 })
+    fireEvent.pointerDown(container, { button: 0, clientX: 5, clientY: 5 })
+    fireEvent.pointerMove(document, { clientX: 50, clientY: 50 })
     flushAnimationFrames()
-    fireEvent.mouseMove(document, { clientX: 100, clientY: 100 })
+    fireEvent.pointerMove(document, { clientX: 100, clientY: 100 })
     flushAnimationFrames()
 
     expect(onSelectionChange).not.toHaveBeenCalled()
 
-    fireEvent.mouseUp(document, { clientX: 100, clientY: 100 })
+    fireEvent.pointerUp(document, { clientX: 100, clientY: 100 })
 
     expect(onGestureEnd).toHaveBeenCalledTimes(1)
     expect(onSelectionChange).toHaveBeenCalledTimes(1)
@@ -211,10 +211,10 @@ describe('useMarqueeSelection deferred commits', () => {
       },
     })
 
-    fireEvent.mouseDown(playheadHandle, { button: 0, clientX: 5, clientY: 5 })
-    fireEvent.mouseMove(document, { clientX: 100, clientY: 100 })
+    fireEvent.pointerDown(playheadHandle, { button: 0, clientX: 5, clientY: 5 })
+    fireEvent.pointerMove(document, { clientX: 100, clientY: 100 })
     flushAnimationFrames()
-    fireEvent.mouseUp(document, { clientX: 100, clientY: 100 })
+    fireEvent.pointerUp(document, { clientX: 100, clientY: 100 })
 
     expect(onGestureEnd).not.toHaveBeenCalled()
     expect(onPreviewSelectionChange).not.toHaveBeenCalled()
@@ -247,8 +247,8 @@ describe('useMarqueeSelection deferred commits', () => {
       },
     })
 
-    fireEvent.mouseDown(container, { button: 0, clientX: 5, clientY: 5 })
-    fireEvent.mouseMove(document, { clientX: 50, clientY: 50 })
+    fireEvent.pointerDown(container, { button: 0, clientX: 5, clientY: 5 })
+    fireEvent.pointerMove(document, { clientX: 50, clientY: 50 })
     flushAnimationFrames()
 
     expect(container).toHaveAttribute('data-marquee-active', 'true')
@@ -261,10 +261,10 @@ describe('useMarqueeSelection deferred commits', () => {
     expect(onGestureEnd).not.toHaveBeenCalled()
     expect(onSelectionChange).not.toHaveBeenCalled()
 
-    fireEvent.mouseDown(getByTestId('timeline-ruler'), { button: 0, clientX: 75, clientY: 5 })
-    fireEvent.mouseMove(document, { clientX: 120, clientY: 50 })
+    fireEvent.pointerDown(getByTestId('timeline-ruler'), { button: 0, clientX: 75, clientY: 5 })
+    fireEvent.pointerMove(document, { clientX: 120, clientY: 50 })
     flushAnimationFrames()
-    fireEvent.mouseUp(document, { clientX: 120, clientY: 50 })
+    fireEvent.pointerUp(document, { clientX: 120, clientY: 50 })
 
     expect(container).toHaveAttribute('data-marquee-active', 'false')
     expect(onGestureCancel).toHaveBeenCalledTimes(1)
@@ -295,16 +295,16 @@ describe('useMarqueeSelection deferred commits', () => {
       },
     })
 
-    fireEvent.mouseDown(container, { button: 0, clientX: 5, clientY: 5 })
-    fireEvent.mouseMove(document, { clientX: 50, clientY: 50 })
+    fireEvent.pointerDown(container, { button: 0, clientX: 5, clientY: 5 })
+    fireEvent.pointerMove(document, { clientX: 50, clientY: 50 })
     flushAnimationFrames()
 
     expect(container).toHaveAttribute('data-marquee-active', 'true')
 
-    fireEvent.mouseDown(getByTestId('timeline-ruler'), { button: 0, clientX: 75, clientY: 5 })
-    fireEvent.mouseMove(document, { clientX: 120, clientY: 50 })
+    fireEvent.pointerDown(getByTestId('timeline-ruler'), { button: 0, clientX: 75, clientY: 5 })
+    fireEvent.pointerMove(document, { clientX: 120, clientY: 50 })
     flushAnimationFrames()
-    fireEvent.mouseUp(document, { clientX: 120, clientY: 50 })
+    fireEvent.pointerUp(document, { clientX: 120, clientY: 50 })
 
     expect(container).toHaveAttribute('data-marquee-active', 'false')
     expect(onGestureCancel).toHaveBeenCalledWith(true)
@@ -331,14 +331,14 @@ describe('useMarqueeSelection deferred commits', () => {
       },
     })
 
-    fireEvent.mouseDown(getByTestId('interaction-shield'), {
+    fireEvent.pointerDown(getByTestId('interaction-shield'), {
       button: 0,
       clientX: 75,
       clientY: 75,
     })
-    fireEvent.mouseMove(document, { clientX: 140, clientY: 140 })
+    fireEvent.pointerMove(document, { clientX: 140, clientY: 140 })
     flushAnimationFrames()
-    fireEvent.mouseUp(document, { clientX: 140, clientY: 140 })
+    fireEvent.pointerUp(document, { clientX: 140, clientY: 140 })
 
     expect(container).toHaveAttribute('data-marquee-active', 'false')
     expect(onGestureEnd).not.toHaveBeenCalled()
@@ -368,8 +368,8 @@ describe('useMarqueeSelection deferred commits', () => {
       },
     })
 
-    fireEvent.mouseDown(container, { button: 0, clientX: 5, clientY: 5 })
-    fireEvent.mouseMove(document, { clientX: 50, clientY: 50 })
+    fireEvent.pointerDown(container, { button: 0, clientX: 5, clientY: 5 })
+    fireEvent.pointerMove(document, { clientX: 50, clientY: 50 })
     flushAnimationFrames()
 
     expect(onSelectionChange).toHaveBeenCalledWith(['clip-1'])
@@ -401,10 +401,10 @@ describe('useMarqueeSelection deferred commits', () => {
       },
     })
 
-    fireEvent.mouseDown(container, { button: 0, clientX: 5, clientY: 5 })
-    fireEvent.mouseMove(document, { clientX: 50, clientY: 50 })
+    fireEvent.pointerDown(container, { button: 0, clientX: 5, clientY: 5 })
+    fireEvent.pointerMove(document, { clientX: 50, clientY: 50 })
     flushAnimationFrames()
-    fireEvent.mouseUp(document, { clientX: 50, clientY: 50 })
+    fireEvent.pointerUp(document, { clientX: 50, clientY: 50 })
 
     expect(onSelectionChange).toHaveBeenCalledWith(['clip-2'])
   })
@@ -418,10 +418,10 @@ describe('useMarqueeSelection deferred commits', () => {
       </MarqueeHarness>,
     )
 
-    fireEvent.mouseDown(getByTestId('density-bucket'), { button: 0, clientX: 5, clientY: 5 })
-    fireEvent.mouseMove(document, { clientX: 100, clientY: 100 })
+    fireEvent.pointerDown(getByTestId('density-bucket'), { button: 0, clientX: 5, clientY: 5 })
+    fireEvent.pointerMove(document, { clientX: 100, clientY: 100 })
     flushAnimationFrames()
-    fireEvent.mouseUp(document, { clientX: 100, clientY: 100 })
+    fireEvent.pointerUp(document, { clientX: 100, clientY: 100 })
 
     expect(onGestureEnd).not.toHaveBeenCalled()
     expect(onSelectionChange).not.toHaveBeenCalled()

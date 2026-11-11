@@ -6,7 +6,6 @@ import type {
   TranscribeRuntimeInfo,
   WhisperModel,
 } from './types'
-import type { MediaTranscriptQuantization } from '@/types/storage'
 import { localInferenceRuntimeRegistry } from '@/shared/state/local-inference'
 import { LOCAL_INFERENCE_UNLOADED_MESSAGE } from '@/shared/state/local-inference'
 import {
@@ -214,7 +213,6 @@ export class TranscribeStream implements AsyncIterable<TranscriptSegment> {
         this.file,
         this.resolved.model,
         this.options.language,
-        this.options.quantization,
         this.resolved.engine,
       )
       this.startPlaybackWatcher()
@@ -234,8 +232,6 @@ export class TranscribeStream implements AsyncIterable<TranscriptSegment> {
     this.runtimeRegistered = true
     const now = Date.now()
     const isParakeet = this.resolved.engine === 'parakeet'
-    const quantization =
-      (this.options.quantization as MediaTranscriptQuantization | undefined) ?? 'hybrid'
 
     localInferenceRuntimeRegistry.registerRuntime(
       {
@@ -244,13 +240,13 @@ export class TranscribeStream implements AsyncIterable<TranscriptSegment> {
         featureLabel: isParakeet ? 'Parakeet' : 'Whisper',
         modelKey: this.resolved.model,
         modelLabel: isParakeet
-          ? formatParakeetRuntimeModelLabel('webgpu')
-          : formatWhisperRuntimeModelLabel(this.resolved.model, quantization),
+          ? formatParakeetRuntimeModelLabel()
+          : formatWhisperRuntimeModelLabel(this.resolved.model),
         backend: 'unknown',
         state: 'loading',
         estimatedBytes: isParakeet
-          ? estimateParakeetRuntimeBytes('webgpu')
-          : estimateWhisperRuntimeBytes(this.resolved.model, quantization),
+          ? estimateParakeetRuntimeBytes()
+          : estimateWhisperRuntimeBytes(this.resolved.model),
         activeJobs: 1,
         loadedAt: now,
         lastUsedAt: now,

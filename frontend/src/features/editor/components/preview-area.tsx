@@ -590,10 +590,10 @@ export const PreviewArea = memo(function PreviewArea({
             >
               <div className="flex min-w-0 flex-1 items-center gap-3">
                 <div className="flex items-center gap-2 flex-shrink-0">
-                  <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-cyan-500">
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-500">
                     Pen Tool
                   </span>
-                  <span className="rounded-full bg-cyan-500/10 px-2 py-0.5 text-[10px] font-medium text-cyan-600">
+                  <span className="rounded-full bg-cyan-500/10 px-2 py-0.5 text-[11px] font-medium text-cyan-600">
                     {penVertexCount} {penVertexCount === 1 ? 'point' : 'points'}
                   </span>
                 </div>
@@ -636,10 +636,10 @@ export const PreviewArea = memo(function PreviewArea({
             >
               <div className="flex min-w-0 flex-1 items-center gap-3">
                 <div className="flex items-center gap-2 flex-shrink-0">
-                  <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-cyan-500">
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-500">
                     Path Edit
                   </span>
-                  <span className="rounded-full bg-cyan-500/10 px-2 py-0.5 text-[10px] font-medium text-cyan-600">
+                  <span className="rounded-full bg-cyan-500/10 px-2 py-0.5 text-[11px] font-medium text-cyan-600">
                     {displayedEditVertexCount} {displayedEditVertexCount === 1 ? 'point' : 'points'}
                   </span>
                 </div>
@@ -705,13 +705,13 @@ export const PreviewArea = memo(function PreviewArea({
                     <ProgramShuttleIndicator />
                   </div>
 
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="flex min-w-0 flex-1 items-center justify-center @[560px]:pointer-events-none @[560px]:absolute @[560px]:inset-0">
                     <div className="flex items-center gap-2.5 pointer-events-auto">
                       <PlaybackControls totalFrames={totalFrames} fps={fps} />
                     </div>
                   </div>
 
-                  <div className="ml-auto flex-shrink-0">
+                  <div className="ml-auto hidden flex-shrink-0 @[560px]:block">
                     <PreviewZoomControls />
                   </div>
                 </div>

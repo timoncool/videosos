@@ -24,6 +24,7 @@ import {
   addItems,
   updateItem,
   moveItem,
+  moveItems,
   removeItems,
   splitItem,
   trimItemStart,
@@ -39,7 +40,27 @@ import {
   addEffect,
   removeEffect,
   updateItemTransform,
+  addMarker,
+  updateMarker,
+  removeMarker,
+  asOneStep,
+  rippleDeleteItems,
+  joinItems,
+  linkItems,
+  unlinkItems,
+  duplicateItems,
 } from '@/features/timeline/stores/timeline-actions'
+import { useMarkersStore } from '@/features/timeline/stores/markers-store'
+import {
+  canLinkSelection,
+  getLinkedAndAttachedItemIds,
+} from '@/features/timeline/utils/linked-items'
+import { canJoinMultipleItems } from '@/features/timeline/utils/clip-utils'
+import {
+  canAddTransition,
+  getMaxTransitionDurationForHandles,
+} from '@/features/timeline/utils/transition-utils'
+import { useItemsStore } from '@/features/timeline/stores/items-store'
 import {
   type EditOp,
   type EditOperationName,
@@ -47,10 +68,12 @@ import {
   asString,
   assertTransitionUpdateApplied,
   buildTextItem,
+  buildShapeItem,
   getEditCanvas,
+  freeTrackAt,
   getOrCreateTrack,
   newId,
-  resolveOrCreateTrack,
+  placementTrack,
   requireItem,
   requireTrack,
   requireTransition,
@@ -87,11 +110,30 @@ function applyMoveItem(op: EditOp): unknown {
   const id = asString(op.id)
   const from = asNumber(op.from)
   if (!id || from === undefined) throw new Error('moveItem requires `id` and `from`')
-  requireItem(id)
+  const item = requireItem(id)
   const destination = asString(op.trackId)
   if (destination) requireTrack(destination)
-  moveItem(id, from, destination)
-  return { id, from }
+  // a clip's linked sound and its captions go with it, as the timeline moves them, unless asked to move it alone
+  const companions =
+    op.alone === true
+      ? []
+      : getLinkedAndAttachedItemIds(useItemsStore.getState().items, id).filter(
+          (each) => each !== id,
+        )
+  if (companions.length === 0) {
+    moveItem(id, from, destination)
+    return { id, from }
+  }
+  const shift = from - item.from
+  const { itemById } = useItemsStore.getState()
+  moveItems([
+    { id, from, ...(destination && { trackId: destination }) },
+    ...companions.map((each) => ({
+      id: each,
+      from: Math.max(0, itemById[each]!.from + shift),
+    })),
+  ])
+  return { id, from, moved: [id, ...companions] }
 }
 
 function applyRemoveItems(op: EditOp): unknown {
@@ -100,6 +142,76 @@ function applyRemoveItems(op: EditOp): unknown {
   for (const id of ids) requireItem(id, 'ids')
   removeItems(ids)
   return { removed: ids }
+}
+
+/** The `ids` of an op, each an item on the timeline. */
+function itemIds(op: EditOp, least: number): string[] {
+  const ids = Array.isArray(op.ids) ? (op.ids.filter((x) => typeof x === 'string') as string[]) : []
+  if (ids.length < least)
+    throw new Error(`${op.op} requires \`ids\` of at least ${least} item${least === 1 ? '' : 's'}`)
+  for (const id of ids) requireItem(id, 'ids')
+  return ids
+}
+
+function applyRippleDelete(op: EditOp): unknown {
+  const ids = itemIds(op, 1)
+  rippleDeleteItems(ids)
+  return { removed: ids }
+}
+
+function applyJoin(op: EditOp): unknown {
+  const ids = itemIds(op, 2)
+  if (!canJoinMultipleItems(ids.map((id) => requireItem(id, 'ids'))))
+    throw new Error('join takes pieces of one clip that touch end to end, as a split left them')
+  joinItems(ids)
+  return { joined: ids[0] }
+}
+
+function applyLink(op: EditOp): unknown {
+  const ids = itemIds(op, 2)
+  if (!canLinkSelection(useItemsStore.getState().items, ids))
+    throw new Error('link takes a video clip and sound clips of the same media, not linked yet')
+  if (!linkItems(ids)) throw new Error('these clips were not linked')
+  return { linked: ids }
+}
+
+function applyUnlink(op: EditOp): unknown {
+  const ids = itemIds(op, 1)
+  unlinkItems(ids)
+  return { unlinked: ids }
+}
+
+/**
+ * Copies of items at `from` (frames; the first item there, the others at their distance from it), each on its own
+ * track or on `trackId`, moved past what is in the way as a paste in the window is; keyframes and transitions between
+ * them come along.
+ */
+function applyDuplicate(op: EditOp): unknown {
+  const ids = itemIds(op, 1)
+  const items = ids.map((id) => requireItem(id, 'ids'))
+  const from = asNumber(op.from)
+  if (from === undefined || from < 0) throw new Error('duplicate requires `from`, a frame')
+  const trackId = asString(op.trackId)
+  const start = Math.min(...items.map((item) => item.from))
+  const placed: Array<{ from: number; trackId: string; duration: number }> = []
+  const positions = items.map((item) => {
+    const track = trackId ?? item.trackId
+    let at = from + (item.from - start)
+    const taken = [
+      ...useItemsStore.getState().items.filter((other) => other.trackId === track),
+      ...placed
+        .filter((other) => other.trackId === track)
+        .map((other) => ({ from: other.from, durationInFrames: other.duration })),
+    ]
+    for (const other of taken.toSorted((a, b) => a.from - b.from)) {
+      if (at < other.from + other.durationInFrames && at + item.durationInFrames > other.from)
+        at = other.from + other.durationInFrames
+    }
+    placed.push({ from: at, trackId: track, duration: item.durationInFrames })
+    return { from: at, trackId: track }
+  })
+  const made = duplicateItems(ids, positions)
+  return { created: made.map((item) => ({ id: item.id, from: item.from, trackId: item.trackId })) }
 }
 
 function applySplit(op: EditOp): unknown {
@@ -141,6 +253,32 @@ function applyTransitionOverrides(transitionId: string, op: EditOp): void {
   })
 }
 
+/** Why the timeline refuses a transition, with what makes it possible, as the person would be told. */
+function transitionRefusal(
+  left: string,
+  right: string,
+  duration: number | undefined,
+  alignment: number,
+): string {
+  const { itemById } = useItemsStore.getState()
+  const leftClip = itemById[left]!
+  const rightClip = itemById[right]!
+  const fps = useTimelineSettingsStore.getState().fps
+  const length = duration ?? 15
+  if (leftClip.trackId !== rightClip.trackId)
+    return 'the clips are on different tracks; move them onto one track, end to start'
+  if (leftClip.from + leftClip.durationInFrames !== rightClip.from) {
+    return `the clips do not meet: the left ends at frame ${leftClip.from + leftClip.durationInFrames}, the right starts at ${rightClip.from}; moveItem the right clip to the left's end`
+  }
+  if (getMaxTransitionDurationForHandles(leftClip, rightClip, alignment, fps) < 1) {
+    return `the clips have no spare frames beyond the cut (a generated clip is used whole); make them first: trimEnd the left clip by -${length} and trimStart the right clip by ${length} (frames), then moveItem the right clip to the left's new end, and add the transition of ${length} frames`
+  }
+  return (
+    canAddTransition(leftClip, rightClip, length, alignment, fps).reason ??
+    `the timeline did not take it for clips "${left}" and "${right}"`
+  )
+}
+
 function applyAddTransition(op: EditOp): unknown {
   const left = asString(op.leftClipId)
   const right = asString(op.rightClipId)
@@ -156,7 +294,10 @@ function applyAddTransition(op: EditOp): unknown {
     asString(op.direction) as Parameters<typeof addTransition>[5],
     asNumber(op.alignment) ?? 0.5,
   )
-  if (!added) throw new Error(`addTransition failed for clips "${left}" and "${right}"`)
+  if (!added)
+    throw new Error(
+      `addTransition: ${transitionRefusal(left, right, asNumber(op.durationInFrames), asNumber(op.alignment) ?? 0.5)}`,
+    )
   const created = useTransitionsStore
     .getState()
     .transitions.filter((t) => t.leftClipId === left && t.rightClipId === right)
@@ -174,7 +315,9 @@ function applyUpdateTransition(op: EditOp): unknown {
       ? { durationInFrames: asNumber(op.durationInFrames) }
       : {}),
     ...(op.presentation !== undefined
-      ? { presentation: asString(op.presentation) as Transition['presentation'] }
+      ? {
+          presentation: asString(op.presentation) as Transition['presentation'],
+        }
       : {}),
     ...(op.direction !== undefined
       ? { direction: asString(op.direction) as Transition['direction'] }
@@ -205,6 +348,85 @@ function applyRemoveTransition(op: EditOp): unknown {
   return { id }
 }
 
+function applyAddShape(op: EditOp): unknown {
+  const item = buildShapeItem(op)
+  addItem(item)
+  return { id: item.id }
+}
+
+/** A track's name and switches, as its header in the timeline changes them. */
+function applyUpdateTrack(op: EditOp): unknown {
+  const id = asString(op.id)
+  if (!id) throw new Error('updateTrack: id is required')
+  const all = tracks()
+  const track = all.find((each) => each.id === id)
+  if (!track) throw new Error(`updateTrack: no track "${id}"`)
+  const changes: Partial<typeof track> = {}
+  const name = asString(op.name)
+  if (name !== undefined) changes.name = name
+  for (const key of ['muted', 'solo', 'locked', 'visible', 'syncLock'] as const) {
+    if (op[key] === undefined) continue
+    if (typeof op[key] !== 'boolean') throw new Error(`updateTrack: ${key} is true or false`)
+    changes[key] = op[key]
+  }
+  const volume = asNumber(op.volume)
+  if (volume !== undefined) {
+    if (volume < -60 || volume > 12)
+      throw new Error('updateTrack: volume is in decibels, from -60 to 12')
+    changes.volume = volume
+  }
+  if (Object.keys(changes).length === 0)
+    throw new Error('updateTrack: nothing to change (name, muted, solo, locked, visible, syncLock, volume)')
+  setTracks(all.map((each) => (each.id === id ? { ...each, ...changes } : each)))
+  return { trackId: id, ...changes }
+}
+
+/** Removes an empty track; its clips are removed first with removeItems, so nothing goes unseen. */
+function applyRemoveTrack(op: EditOp): unknown {
+  const id = asString(op.id)
+  if (!id) throw new Error('removeTrack: id is required')
+  const all = tracks()
+  if (!all.some((each) => each.id === id)) throw new Error(`removeTrack: no track "${id}"`)
+  const left = useItemsStore.getState().items.filter((item) => item.trackId === id)
+  if (left.length > 0)
+    throw new Error(
+      `removeTrack: the track still holds ${left.length} clip(s); remove them with removeItems first`,
+    )
+  setTracks(all.filter((each) => each.id !== id))
+  return { removed: id }
+}
+
+function applyAddMarker(op: EditOp): unknown {
+  const frame = asNumber(op.frame)
+  if (frame === undefined || frame < 0) throw new Error('addMarker: frame is required, 0 or more')
+  const before = new Set(useMarkersStore.getState().markers.map((marker) => marker.id))
+  addMarker(Math.round(frame), asString(op.color), asString(op.label))
+  const made = useMarkersStore.getState().markers.find((marker) => !before.has(marker.id))
+  if (!made) throw new Error('addMarker: the marker was not made')
+  return { id: made.id, frame: made.frame }
+}
+
+function applyUpdateMarker(op: EditOp): unknown {
+  const id = asString(op.id)
+  if (!id || !useMarkersStore.getState().markers.some((marker) => marker.id === id))
+    throw new Error(`updateMarker: no marker "${id ?? ''}"`)
+  const frame = asNumber(op.frame)
+  updateMarker(id, {
+    ...(frame !== undefined && { frame: Math.max(0, Math.round(frame)) }),
+    ...(asString(op.label) !== undefined && { label: asString(op.label) }),
+    ...(asString(op.color) !== undefined && { color: asString(op.color) }),
+  })
+  return { id }
+}
+
+function applyRemoveMarker(op: EditOp): unknown {
+  const id = asString(op.id)
+  if (!id || !useMarkersStore.getState().markers.some((marker) => marker.id === id))
+    throw new Error(`removeMarker: no marker "${id ?? ''}"`)
+  removeMarker(id)
+  return { removed: id }
+}
+
 function applyAddTrack(op: EditOp): unknown {
   const kind = op.kind === 'audio' ? 'audio' : 'video'
   const all = tracks()
@@ -218,7 +440,7 @@ function applyAddTrack(op: EditOp): unknown {
 }
 
 /** One entry of addClip's `created` detail. */
-type CreatedClip = { id: string; type: string }
+type CreatedClip = { id: string; type: string; trackId: string }
 
 /** Everything an addClip placement needs, resolved once by applyAddClip. */
 interface ClipPlacement {
@@ -230,12 +452,13 @@ interface ClipPlacement {
 
 /** Place an `image/` clip: a still on a video track. */
 function placeImageClip(op: EditOp, { mediaId, media, from }: ClipPlacement): CreatedClip[] {
+  const durationInFrames = asNumber(op.durationInFrames, 150)!
   const item: ImageItem = {
     id: newId(),
     type: 'image',
-    trackId: resolveOrCreateTrack(op.trackId, 'video'),
+    trackId: placementTrack(op, 'video', from, durationInFrames),
     from,
-    durationInFrames: asNumber(op.durationInFrames, 150)!,
+    durationInFrames,
     label: media.fileName ?? mediaId,
     mediaId,
     src: '',
@@ -243,7 +466,7 @@ function placeImageClip(op: EditOp, { mediaId, media, from }: ClipPlacement): Cr
     ...(media.height ? { sourceHeight: media.height } : {}),
   }
   addItem(item)
-  return [{ id: item.id, type: 'image' }]
+  return [{ id: item.id, type: 'image', trackId: item.trackId }]
 }
 
 /** Place an `audio/` clip on an audio track. */
@@ -252,13 +475,14 @@ function placeAudioClip(
   { mediaId, media, from, projectFps }: ClipPlacement,
 ): CreatedClip[] {
   const sf = sourceFieldsFor(media, projectFps)
+  const durationInFrames =
+    asNumber(op.durationInFrames) ?? Math.max(1, Math.round((media.duration ?? 0) * projectFps))
   const item: AudioItem = {
     id: newId(),
     type: 'audio',
-    trackId: resolveOrCreateTrack(op.trackId, 'audio'),
+    trackId: placementTrack(op, 'audio', from, durationInFrames),
     from,
-    durationInFrames:
-      asNumber(op.durationInFrames) ?? Math.max(1, Math.round((media.duration ?? 0) * projectFps)),
+    durationInFrames,
     label: media.fileName ?? mediaId,
     mediaId,
     src: '',
@@ -266,10 +490,38 @@ function placeAudioClip(
     ...sf,
   }
   addItem(item)
-  return [{ id: item.id, type: 'audio' }]
+  return [{ id: item.id, type: 'audio', trackId: item.trackId }]
 }
 
 /** Place a `video/` clip plus the linked audio companion the app creates on import. */
+/**
+ * The track of the sound of the clip just before `from` on a video track, when it is free for the new clip's
+ * sound: a shot that goes on a sequence keeps its sound beside the sequence's.
+ */
+function soundTrackBefore(videoTrackId: string, from: number, durationInFrames: number) {
+  const items = useItemsStore.getState().items
+  const before = items
+    .filter(
+      (item) =>
+        item.trackId === videoTrackId &&
+        item.type === 'video' &&
+        item.linkedGroupId &&
+        item.from + item.durationInFrames <= from,
+    )
+    .sort((a, b) => b.from + b.durationInFrames - (a.from + a.durationInFrames))[0]
+  const sound = before
+    ? items.find((item) => item.type === 'audio' && item.linkedGroupId === before.linkedGroupId)
+    : undefined
+  if (!sound) return undefined
+  const busy = items.some(
+    (item) =>
+      item.trackId === sound.trackId &&
+      item.from < from + durationInFrames &&
+      from < item.from + item.durationInFrames,
+  )
+  return busy ? undefined : sound.trackId
+}
+
 function placeVideoClip(
   op: EditOp,
   { mediaId, media, from, projectFps }: ClipPlacement,
@@ -282,7 +534,7 @@ function placeVideoClip(
   const video: VideoItem = {
     id: newId(),
     type: 'video',
-    trackId: resolveOrCreateTrack(op.trackId, 'video'),
+    trackId: placementTrack(op, 'video', from, durationInFrames),
     from,
     durationInFrames,
     label,
@@ -294,7 +546,7 @@ function placeVideoClip(
     ...(media.height ? { sourceHeight: media.height } : {}),
     ...sf,
   }
-  const created: CreatedClip[] = [{ id: video.id, type: 'video' }]
+  const created: CreatedClip[] = [{ id: video.id, type: 'video', trackId: video.trackId }]
   // Linked audio companion (as the app creates on import) so audio renders.
   if (!media.audioCodec) {
     addItem(video)
@@ -303,7 +555,11 @@ function placeVideoClip(
   const audio: AudioItem = {
     id: newId(),
     type: 'audio',
-    trackId: getOrCreateTrack('audio'),
+    trackId:
+      op.keepFrom === true
+        ? (soundTrackBefore(video.trackId, from, durationInFrames) ??
+          freeTrackAt('audio', from, durationInFrames))
+        : getOrCreateTrack('audio'),
     from,
     durationInFrames,
     label: `${label} audio`,
@@ -314,7 +570,7 @@ function placeVideoClip(
     ...sf,
   }
   addItems([video, audio])
-  created.push({ id: audio.id, type: 'audio' })
+  created.push({ id: audio.id, type: 'audio', trackId: audio.trackId })
   return created
 }
 
@@ -335,6 +591,62 @@ function applyAddClip(op: EditOp): unknown {
   if (media.mimeType.startsWith('audio/')) return { created: placeAudioClip(op, placement) }
   if (media.mimeType.startsWith('video/')) return { created: placeVideoClip(op, placement) }
   throw new Error(`addClip: unsupported media mimeType ${media.mimeType}`)
+}
+
+/**
+ * Another media item of the library in a clip's place, as a take of the same request: the clip keeps its start, its
+ * in-point and its length as far as the new media reaches, and the clips linked to it on the same media (a video's
+ * sound) change with it.
+ */
+function applyReplaceMedia(op: EditOp): unknown {
+  const id = asString(op.id)
+  const mediaId = asString(op.mediaId)
+  if (!id || !mediaId) throw new Error('replaceMedia requires `id` and `mediaId`')
+  const clip = requireItem(id)
+  if (!clip.mediaId) throw new Error(`replaceMedia: ${id} is not a clip of a media item`)
+  const media = useMediaLibraryStore.getState().mediaById[mediaId]
+  if (!media) throw new Error(`replaceMedia: no media ${mediaId} in the library`)
+  const projectFps = useTimelineSettingsStore.getState().fps || 30
+  const { items } = useItemsStore.getState()
+  const group = clip.linkedGroupId
+    ? items.filter(
+        (item) => item.linkedGroupId === clip.linkedGroupId && item.mediaId === clip.mediaId,
+      )
+    : [clip]
+  const sf = sourceFieldsFor(media, projectFps)
+  asOneStep('REPLACE_MEDIA', () => {
+    for (const item of group) {
+      if (item.type === 'image') {
+        updateItem(item.id, {
+          mediaId,
+          label: media.fileName ?? mediaId,
+          src: '',
+          thumbnailUrl: undefined,
+        } as Partial<TimelineItem>)
+        continue
+      }
+      const speed =
+        'speed' in item && typeof item.speed === 'number' && item.speed > 0 ? item.speed : 1
+      const inPoint = Math.min(item.sourceStart ?? 0, Math.max(0, sf.sourceDuration - 1))
+      const reach = Math.floor(((sf.sourceDuration - inPoint) / sf.sourceFps / speed) * projectFps)
+      const durationInFrames = Math.max(1, Math.min(item.durationInFrames, reach))
+      updateItem(item.id, {
+        mediaId,
+        label:
+          item.type === 'audio' && clip.type === 'video'
+            ? `${media.fileName ?? mediaId} audio`
+            : (media.fileName ?? mediaId),
+        src: '',
+        sourceFps: sf.sourceFps,
+        sourceStart: inPoint,
+        sourceEnd: inPoint + Math.round((durationInFrames / projectFps) * sf.sourceFps * speed),
+        sourceDuration: sf.sourceDuration,
+        durationInFrames,
+        ...(item.type === 'audio' ? { waveformData: undefined } : { thumbnailUrl: undefined }),
+      } as Partial<TimelineItem>)
+    }
+  })
+  return { id, replaced: group.map((item) => item.id) }
 }
 
 function applyAddKeyframe(op: EditOp): unknown {
@@ -417,7 +729,11 @@ function applyAddEffect(op: EditOp): unknown {
     op.effect && typeof op.effect === 'object'
       ? op.effect
       : op.gpuEffectType
-        ? { type: 'gpu-effect', gpuEffectType: op.gpuEffectType, params: op.params ?? {} }
+        ? {
+            type: 'gpu-effect',
+            gpuEffectType: op.gpuEffectType,
+            params: op.params ?? {},
+          }
         : null
   if (!effect) throw new Error('addEffect requires `effect` or `gpuEffectType`')
   const gpuEffectType = (effect as { gpuEffectType?: unknown }).gpuEffectType
@@ -451,6 +767,11 @@ function applySetTransform(op: EditOp): unknown {
 }
 
 const OP_HANDLERS: Record<EditOperationName, (op: EditOp) => unknown> = {
+  rippleDelete: applyRippleDelete,
+  join: applyJoin,
+  link: applyLink,
+  unlink: applyUnlink,
+  duplicate: applyDuplicate,
   addText: applyAddText,
   addItem: applyAddItem,
   updateItem: applyUpdateItem,
@@ -464,12 +785,19 @@ const OP_HANDLERS: Record<EditOperationName, (op: EditOp) => unknown> = {
   removeTransition: applyRemoveTransition,
   addTrack: applyAddTrack,
   addClip: applyAddClip,
+  replaceMedia: applyReplaceMedia,
   addKeyframe: applyAddKeyframe,
   setTransformParent: applySetTransformParent,
   removeKeyframes: applyRemoveKeyframes,
   addEffect: applyAddEffect,
   removeEffect: applyRemoveEffect,
   setTransform: applySetTransform,
+  addShape: applyAddShape,
+  updateTrack: applyUpdateTrack,
+  removeTrack: applyRemoveTrack,
+  addMarker: applyAddMarker,
+  updateMarker: applyUpdateMarker,
+  removeMarker: applyRemoveMarker,
 }
 
 /** Apply a single op by driving the real timeline action modules. Throws on bad input. */

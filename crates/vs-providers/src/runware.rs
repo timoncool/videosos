@@ -73,6 +73,7 @@ pub async fn catalog(http: &Http) -> Result<Vec<ModelEntry>, ProviderError> {
             created: None,
             status,
             price: None,
+            rates: Vec::new(),
             thumbnail: Some(format!("https://assets.runware.ai/covers/{slug}.jpg")),
             source: json!({ "schema": model["schema"], "slug": slug, "capabilities": capabilities }),
         });
@@ -385,7 +386,14 @@ async fn post(http: &Http, key: &str, tasks: Value) -> Result<Value, ProviderErr
     }
     if !status.is_success() && body.get("data").is_none() {
         let message = format!("Runware answered {status}");
-        return Err(if status.as_u16() == 429 || status.is_server_error() { ProviderError::Busy(message) } else { ProviderError::Refused(message) });
+        // a gateway error may come after Runware took the task: its outcome is unknown, not a refusal
+        return Err(if status.as_u16() == 429 {
+            ProviderError::Busy(message)
+        } else if status.is_server_error() {
+            ProviderError::Network(message)
+        } else {
+            ProviderError::Refused(message)
+        });
     }
     Ok(body)
 }
@@ -426,7 +434,9 @@ pub async fn poll(http: &Http, key: &str, handle: &Value) -> Result<Polled, Prov
         return Ok(Polled::Failed { message });
     }
     let done: Vec<&&Value> = items.iter().filter(|item| item["status"] == "success" || (item.get("status").is_none() && !outputs_of(item).is_empty())).collect();
-    if done.len() == items.len() {
+    // getResponse lists the results finished so far: a task of several waits for all of them
+    let expected = handle["results"].as_u64().unwrap_or(1).max(1) as usize;
+    if done.len() == items.len() && done.len() >= expected {
         let cost: f64 = items.iter().filter_map(|item| item["cost"].as_f64()).sum();
         let outputs: Vec<Output> = items.iter().flat_map(|item| outputs_of(item)).collect();
         return Ok(Polled::Done { outputs, cost: (cost > 0.0).then_some(cost) });
@@ -520,6 +530,36 @@ mod tests {
         let refusal = pick_valid(&schema, task, default_size(&form).as_deref()).expect_err("a size the model refuses with frames is reported, not dropped").to_string();
         assert!(refusal.contains("size cannot be set together"), "{refusal}");
         assert!(!refusal.contains("base64") && refusal.len() < 400, "the refusal names settings, not their values: {refusal}");
+    }
+
+    #[test]
+    fn keyframes_pinned_at_seconds_pass_the_models_schema() {
+        let schema = fixture("rw-schema-bfl-flux-3-video.json");
+        let form = form("bfl:flux@3-video", &schema).unwrap();
+        let frames = form.fields.iter().find(|field| field.key == "inputs.frameImages").unwrap();
+        assert!(matches!(frames.kind, FieldKind::Media { max: 10, at: Some(crate::model::FrameAt::Second { max }), .. } if max == 20.0), "{frames:?}");
+        let kind = |key: &str| form.fields.iter().find(|field| field.key == key).map(|field| field.kind.clone());
+        assert!(matches!(kind("inputs.video"), Some(FieldKind::Media { media: crate::model::MediaKind::Video, .. })));
+        assert!(matches!(kind("inputs.draftCache"), Some(FieldKind::Text { .. } | FieldKind::Textarea { .. })), "a draft's cache is no picture: {:?}", kind("inputs.draftCache"));
+        let duration = form.fields.iter().find(|field| field.key == "duration").unwrap();
+        let durations: Vec<Value> = choices_of(duration).into_iter().map(|choice| choice.value).collect();
+        assert!(durations.contains(&json!("auto")) && durations.contains(&json!(5)) && durations.contains(&json!(20)), "{durations:?}");
+
+        let mut values = Map::new();
+        values.insert("positivePrompt".into(), json!("a paper boat drifts down a rainy street"));
+        values.insert("duration".into(), json!(5));
+        values.insert("inputs.frameImages".into(), json!([
+            { "image": "https://example.com/a.png", "timestamp": 0.0 },
+            "https://example.com/b.png",
+            { "image": "https://example.com/c.png", "timestamp": 4.5 },
+        ]));
+        let task = build_task(&form.id, &form, &values, "3f0c2a7e-0000-4000-8000-000000000005");
+        let chosen = pick_valid(&schema, task, default_size(&form).as_deref()).unwrap();
+        assert_eq!(chosen["inputs"]["frameImages"][2]["timestamp"], 4.5);
+
+        values.insert("inputs.frameImages".into(), json!([{ "image": "https://example.com/a.png", "timestamp": 25.0 }]));
+        let task = build_task(&form.id, &form, &values, "3f0c2a7e-0000-4000-8000-000000000006");
+        assert!(pick_valid(&schema, task, default_size(&form).as_deref()).is_err(), "a second past the video is refused before sending");
     }
 
     #[test]

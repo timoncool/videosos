@@ -399,7 +399,7 @@ export function ProjectDebugPanel({ projectId }: ProjectDebugPanelProps) {
           <div className="px-2 pb-2 space-y-3">
             {/* Overlays Section */}
             <div>
-              <div className="px-1 py-1 text-[10px] uppercase tracking-wider text-zinc-500 font-medium">
+              <div className="px-1 py-1 text-[11px] uppercase tracking-wider text-zinc-500 font-medium">
                 Overlays
               </div>
               <div className="space-y-0.5">
@@ -416,7 +416,7 @@ export function ProjectDebugPanel({ projectId }: ProjectDebugPanelProps) {
                   <Eye className="h-3.5 w-3.5" />
                   Video Debug Overlay
                   {showVideoDebugOverlay && (
-                    <span className="ml-auto text-[10px] bg-amber-500/30 px-1.5 py-0.5 rounded">
+                    <span className="ml-auto text-[11px] bg-amber-500/30 px-1.5 py-0.5 rounded">
                       ON
                     </span>
                   )}
@@ -434,7 +434,7 @@ export function ProjectDebugPanel({ projectId }: ProjectDebugPanelProps) {
                   <Eye className="h-3.5 w-3.5" />
                   Preview Perf Panel
                   {showPreviewPerfPanel && (
-                    <span className="ml-auto text-[10px] bg-amber-500/30 px-1.5 py-0.5 rounded">
+                    <span className="ml-auto text-[11px] bg-amber-500/30 px-1.5 py-0.5 rounded">
                       ON
                     </span>
                   )}
@@ -444,7 +444,7 @@ export function ProjectDebugPanel({ projectId }: ProjectDebugPanelProps) {
 
             {/* Export Section */}
             <div>
-              <div className="px-1 py-1 text-[10px] uppercase tracking-wider text-zinc-500 font-medium">
+              <div className="px-1 py-1 text-[11px] uppercase tracking-wider text-zinc-500 font-medium">
                 Export
               </div>
               <div className="space-y-0.5">
@@ -456,7 +456,7 @@ export function ProjectDebugPanel({ projectId }: ProjectDebugPanelProps) {
 
             {/* Import Section */}
             <div>
-              <div className="px-1 py-1 text-[10px] uppercase tracking-wider text-zinc-500 font-medium">
+              <div className="px-1 py-1 text-[11px] uppercase tracking-wider text-zinc-500 font-medium">
                 Import
               </div>
               <div className="space-y-0.5">
@@ -468,7 +468,7 @@ export function ProjectDebugPanel({ projectId }: ProjectDebugPanelProps) {
 
             {/* Inspect Section */}
             <div>
-              <div className="px-1 py-1 text-[10px] uppercase tracking-wider text-zinc-500 font-medium">
+              <div className="px-1 py-1 text-[11px] uppercase tracking-wider text-zinc-500 font-medium">
                 Inspect Live State
               </div>
               <div className="space-y-0.5">
@@ -480,7 +480,7 @@ export function ProjectDebugPanel({ projectId }: ProjectDebugPanelProps) {
 
             {/* Storage Section */}
             <div>
-              <div className="px-1 py-1 text-[10px] uppercase tracking-wider text-zinc-500 font-medium">
+              <div className="px-1 py-1 text-[11px] uppercase tracking-wider text-zinc-500 font-medium">
                 Storage
               </div>
               <div className="space-y-0.5">
@@ -492,7 +492,7 @@ export function ProjectDebugPanel({ projectId }: ProjectDebugPanelProps) {
 
             {/* Fixtures Section */}
             <div>
-              <div className="px-1 py-1 text-[10px] uppercase tracking-wider text-zinc-500 font-medium flex items-center gap-1">
+              <div className="px-1 py-1 text-[11px] uppercase tracking-wider text-zinc-500 font-medium flex items-center gap-1">
                 <FlaskConical className="h-3 w-3" />
                 Synthetic Fixtures
               </div>
@@ -509,7 +509,7 @@ export function ProjectDebugPanel({ projectId }: ProjectDebugPanelProps) {
                       <SelectItem key={fixture.type} value={fixture.type} className="text-xs">
                         <div className="flex flex-col">
                           <span>{fixture.name}</span>
-                          <span className="text-[10px] text-zinc-500">{fixture.description}</span>
+                          <span className="text-[11px] text-zinc-500">{fixture.description}</span>
                         </div>
                       </SelectItem>
                     ))}
@@ -554,7 +554,7 @@ export function ProjectDebugPanel({ projectId }: ProjectDebugPanelProps) {
 
             {/* Console Hint */}
             <div className="px-1 pt-2 border-t border-zinc-800">
-              <p className="text-[10px] text-zinc-500">
+              <p className="text-[11px] text-zinc-500">
                 Also available via{' '}
                 <code className="bg-zinc-800 px-1 rounded">window.__DEBUG__</code>
               </p>

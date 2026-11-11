@@ -28,7 +28,7 @@ export const MotionPresetSection = memo(function MotionPresetSection({
   return (
     <section className="flex flex-col gap-1.5">
       {showHeading ? (
-        <h3 className="text-[10px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
+        <h3 className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
           {t(`editor.motionPresets.categories.${category}`)}
         </h3>
       ) : null}
@@ -48,7 +48,7 @@ export const MotionPresetSection = memo(function MotionPresetSection({
                     if (!disabled) onApply(preset)
                   }}
                   className={cn(
-                    'group flex min-h-16 w-full flex-col items-center gap-1 rounded-md border border-border/60 p-1.5 text-[10px] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
+                    'group flex min-h-16 w-full flex-col items-center gap-1 rounded-md border border-border/60 p-1.5 text-[11px] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
                     disabled
                       ? 'cursor-not-allowed text-muted-foreground/50'
                       : 'text-muted-foreground hover:border-border hover:bg-secondary/40 hover:text-foreground',

@@ -97,7 +97,7 @@ export function SlopeButtons({
           key={slope}
           type="button"
           className={cn(
-            'flex-1 border-r border-border/70 py-1 text-[10px] font-medium transition-colors last:border-r-0',
+            'flex-1 border-r border-border/70 py-1 text-[11px] font-medium transition-colors last:border-r-0',
             value === slope
               ? 'bg-primary text-primary-foreground'
               : 'bg-secondary/30 text-muted-foreground hover:bg-secondary/50 hover:text-foreground',
@@ -125,7 +125,7 @@ export function RangeButtons({
           key={range.id}
           type="button"
           className={cn(
-            'flex-1 border-r border-border/70 py-1 text-[10px] font-medium transition-colors last:border-r-0',
+            'flex-1 border-r border-border/70 py-1 text-[11px] font-medium transition-colors last:border-r-0',
             value === range.id
               ? 'bg-primary text-primary-foreground'
               : 'bg-secondary/30 text-muted-foreground hover:bg-secondary/50 hover:text-foreground',
@@ -184,7 +184,7 @@ export function EqOutputGainControl({
         disabled && 'opacity-50',
       )}
     >
-      <div className="text-[10px] uppercase tracking-[0.16em] text-zinc-500 text-center">Gain</div>
+      <div className="text-[11px] uppercase tracking-[0.16em] text-zinc-500 text-center">Gain</div>
       <div
         className={cn(
           'relative mt-1 min-h-0 flex-1 w-full touch-none select-none',
@@ -236,7 +236,7 @@ export function EqOutputGainControl({
                 style={{ top: `${tickPercent}%` }}
               >
                 <div className="absolute left-2 right-7 h-px -translate-y-1/2 bg-[#34363d]" />
-                <span className="absolute right-1 -translate-y-1/2 text-[9px] font-mono text-zinc-500 text-right">
+                <span className="absolute right-1 -translate-y-1/2 text-[11px] font-mono text-zinc-500 text-right">
                   {tick > 0 ? `+${tick}` : tick}
                 </span>
               </div>
@@ -297,7 +297,7 @@ function BandTitlePill({
         type="button"
         onClick={onToggle}
         className={cn(
-          'inline-flex h-5 shrink-0 items-center justify-center whitespace-nowrap rounded-full py-0.5 text-[9px] font-semibold leading-none transition-colors',
+          'inline-flex h-5 shrink-0 items-center justify-center whitespace-nowrap rounded-full py-0.5 text-[11px] font-semibold leading-none transition-colors',
           chrome.titleMinWidth,
           active
             ? 'bg-primary text-primary-foreground'
@@ -311,7 +311,7 @@ function BandTitlePill({
   return (
     <span
       className={cn(
-        'inline-flex h-5 shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-primary py-0.5 text-[9px] font-semibold leading-none text-primary-foreground',
+        'inline-flex h-5 shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-primary py-0.5 text-[11px] font-semibold leading-none text-primary-foreground',
         chrome.titleMinWidth,
       )}
     >

@@ -13,6 +13,8 @@ serde_json = { workspace = true, features = ["preserve_order"] }
 tokio = { workspace = true }
 tracing = { workspace = true }
 reqwest = { workspace = true }
+hyper-util = { workspace = true }
+http = { workspace = true }
 futures-util = { workspace = true }
 uuid = { workspace = true }
 base64 = { workspace = true }

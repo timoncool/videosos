@@ -39,7 +39,6 @@ const page = {
             ['Shapes', 'Generated shape items'],
             ['Effects', 'GPU effects for the selected clip'],
             ['Transitions', 'Transitions to drag onto cuts'],
-            ['AI', 'Local text to speech and music generation'],
           ],
         },
       ],

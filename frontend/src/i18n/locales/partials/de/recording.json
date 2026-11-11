@@ -21,7 +21,7 @@
     "syncOffsetEarlier": "Aufnahme früher verschieben",
     "syncOffsetLater": "Aufnahme später verschieben",
     "headphonesHint": "Verwende Kopfhörer, damit der Ton der Zeitleiste nicht vom Mikrofon aufgenommen wird.",
-    "fileNamePrefix": "voiceover",
+    "fileNamePrefix": "Sprachaufnahme",
     "errors": {
       "unsupported": "Die Mikrofonaufnahme wird von diesem Browser nicht unterstützt.",
       "noProject": "Öffne ein Projekt, bevor du aufnimmst.",

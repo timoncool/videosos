@@ -6,10 +6,7 @@ import { createLogger } from '@/shared/logging/logger'
 
 const logger = createLogger('ProjectsIndex')
 import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
-import { Plus, Upload, FolderOpen, File, Github, BookOpen, Send } from 'lucide-react'
-import { FreeCutLogo } from '@/components/brand/freecut-logo'
-import { DISCORD_INVITE_URL, REPOSITORY_URL } from '@/config/community'
+import { ArrowRight, Bot, Clapperboard, File, FolderOpen, KeyRound, Plus, Sparkles, Upload, Film } from 'lucide-react'
 import { ProjectList } from '@/features/projects/components/project-list'
 import { EditProjectForm } from '@/features/projects/components/project-form'
 import {
@@ -35,7 +32,14 @@ import { LegacyMigrationBanner } from '@/features/projects/components/legacy-mig
 import { LegacyMigrationErrors } from '@/features/projects/components/legacy-migration-errors'
 import { TrashSection } from '@/features/projects/components/trash-section'
 import { WorkspaceIndicator } from '@/features/workspace-gate'
-import { LanguageSwitcher } from '@/shared/ui/language-switcher'
+
+/** What VideoSOS does, as Dub Studio's start screen lists its modes. */
+const START_FEATURES = [
+  { key: 'generate', icon: Sparkles },
+  { key: 'edit', icon: Film },
+  { key: 'agent', icon: Bot },
+  { key: 'yours', icon: KeyRound },
+] as const
 
 export const Route = createLazyFileRoute('/projects/')({
   component: ProjectsIndex,
@@ -250,80 +254,59 @@ function ProjectsIndex() {
 
   return (
     <>
-      <div className="min-h-screen bg-background">
-        {/* Header */}
-        <div className="panel-header border-b border-border" data-no-marquee>
-          <div className="max-w-[1920px] mx-auto px-6 py-5 flex items-center justify-between">
-            <Link to="/">
-              <FreeCutLogo
-                variant="full"
-                size="md"
-                className="hover:opacity-80 transition-opacity"
-              />
-            </Link>
-            <div className="flex items-center gap-3">
-              <LanguageSwitcher size="md" align="end" side="bottom" />
-
-              <Separator orientation="vertical" className="h-6" />
-
-              <Button variant="outline" size="lg" className="gap-2 px-4" asChild>
-                <Link to="/docs">
-                  <BookOpen className="w-4 h-4" />
-                  Docs
+      <div className="min-h-full bg-background">
+        {/* The studios' start screen (Dub Studio): what the program does on the left, the action on the right */}
+        <section className="mx-auto grid max-w-[1200px] grid-cols-1 items-center gap-10 px-8 pb-4 pt-12 lg:grid-cols-[1.15fr_1fr]">
+          <div>
+            <div className="mono mb-4 flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-[var(--color-muted)]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-accent)]" />
+              {t('start.eyebrow')}
+            </div>
+            <h1 className="text-[34px] font-bold leading-[1.1] tracking-tight">{t('start.title')}</h1>
+            <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-[var(--color-muted)]">{t('start.lead')}</p>
+            <div className="mt-7 space-y-4">
+              {START_FEATURES.map(({ icon: Icon, key }) => (
+                <div key={key} className="flex items-start gap-3.5">
+                  <div className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-2)] text-[var(--color-accent)]">
+                    <Icon size={18} strokeWidth={2} />
+                  </div>
+                  <div>
+                    <div className="text-[15px] font-semibold leading-tight">{t(`start.features.${key}.title`)}</div>
+                    <div className="mt-0.5 text-sm text-[var(--color-muted)]">{t(`start.features.${key}.text`)}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="relative rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-8 text-center">
+            <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-2)] text-[var(--color-accent)]">
+              <Clapperboard size={26} />
+            </div>
+            <h2 className="text-[18px] font-semibold">{t('start.cardTitle')}</h2>
+            <p className="mx-auto mt-1.5 max-w-sm text-sm text-[var(--color-muted)]">{t('start.cardText')}</p>
+            <div className="mt-6 flex flex-col gap-2.5">
+              <Button asChild size="lg" className="bg-brand h-11 gap-2 text-[15px] font-semibold">
+                <Link to="/projects/new">
+                  <Plus className="h-4 w-4" />
+                  {t('projects.newProject')}
+                  <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
-              <Button variant="outline" size="lg" className="gap-2 px-4" asChild>
-                <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer">
-                  <Send className="w-4 h-4" />
-                  Telegram
-                </a>
-              </Button>
-              <Button variant="outline" size="lg" className="gap-2 px-4" asChild>
-                <a
-                  href={REPOSITORY_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={t('projects.viewOnGitHub')}
-                >
-                  <Github className="w-4 h-4" />
-                  GitHub
-                </a>
-              </Button>
-
-              <Separator orientation="vertical" className="h-6" />
-
-              <WorkspaceIndicator />
-              <Button
-                variant="outline"
-                size="lg"
-                className="gap-2 px-4"
-                onClick={handleImportClick}
-              >
-                <Upload className="w-4 h-4" />
+              <Button variant="outline" size="lg" className="h-11 gap-2" onClick={handleImportClick}>
+                <Upload className="h-4 w-4" />
                 {t('projects.importProject')}
               </Button>
-              <Link to="/projects/new">
-                <Button size="lg" className="gap-2 px-4">
-                  <Plus className="w-4 h-4" />
-                  {t('projects.newProject')}
-                </Button>
-              </Link>
             </div>
-
-            {/* Hidden file input for import */}
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept=".zip"
-              onChange={handleFileSelect}
-              className="hidden"
-            />
+            <div className="mt-5 flex justify-center">
+              <WorkspaceIndicator />
+            </div>
+            <input ref={fileInputRef} type="file" accept=".zip" onChange={handleFileSelect} className="hidden" />
           </div>
-        </div>
+        </section>
 
         {/* Error state */}
         {error && (
-          <div className="max-w-[1920px] mx-auto px-6 py-4">
+          <div className="mx-auto max-w-[1200px] px-8 py-4">
             <div className="panel-bg border border-destructive/50 rounded-lg p-4 text-destructive">
               <p className="font-medium">{t('projects.errorLoading')}</p>
               <p className="text-sm mt-1">{error}</p>
@@ -332,7 +315,7 @@ function ProjectsIndex() {
         )}
 
         {/* Legacy IDB migration banner — appears only when old data is present and unmigrated */}
-        <div className="max-w-[1920px] mx-auto px-6 pt-6 space-y-3">
+        <div className="mx-auto max-w-[1200px] space-y-3 px-8 pt-6">
           <LegacyMigrationBanner onMigrated={loadProjects} />
           {/* Retry banner — appears only when a previous migration left failed items behind */}
           <LegacyMigrationErrors onRetried={loadProjects} />
@@ -340,7 +323,7 @@ function ProjectsIndex() {
 
         {/* Loading state */}
         {showInitialLoadingSpinner ? (
-          <div className="max-w-[1920px] mx-auto px-6 py-16 flex items-center justify-center">
+          <div className="mx-auto flex max-w-[1200px] items-center justify-center px-8 py-16">
             <div className="text-center">
               <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin mx-auto mb-4" />
               <p className="text-muted-foreground">{t('projects.loadingProjects')}</p>
@@ -348,7 +331,8 @@ function ProjectsIndex() {
           </div>
         ) : (
           /* Projects List */
-          <div className="max-w-[1920px] mx-auto px-6 py-8">
+          <div className="mx-auto max-w-[1200px] px-8 py-8">
+            <h2 className="mb-3 text-[11px] uppercase tracking-[0.14em] text-[var(--color-muted)]">{t('start.projects')}</h2>
             <ProjectList onEditProject={handleEditProject} onImportProject={handleImportClick} />
             <TrashSection />
           </div>

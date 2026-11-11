@@ -40,8 +40,8 @@ interface TimelineItemShellProps {
   onHoverChange?: (itemId: string, hovered: boolean) => void
   onClick: TimelineItemPointerHandlers['handleClick']
   onDoubleClick: TimelineItemPointerHandlers['handleDoubleClick']
-  onMouseDown: TimelineItemPointerHandlers['handleMouseDown']
-  onMouseMove: SmartTrimHoverHandle['handleMouseMove']
+  onPointerDown: TimelineItemPointerHandlers['handleMouseDown']
+  onPointerMove: SmartTrimHoverHandle['handleMouseMove']
   onMouseLeave: SmartTrimHoverHandle['handleMouseLeave']
   onContextMenu: ContextMenuState['handleContextMenu']
   onDragEnter: DragEventHandler<HTMLDivElement>
@@ -85,8 +85,8 @@ export const TimelineItemShell = memo(function TimelineItemShell({
   onHoverChange,
   onClick,
   onDoubleClick,
-  onMouseDown,
-  onMouseMove,
+  onPointerDown,
+  onPointerMove,
   onMouseLeave,
   onContextMenu,
   onDragEnter,
@@ -108,7 +108,7 @@ export const TimelineItemShell = memo(function TimelineItemShell({
       data-selected={isSelected ? 'true' : undefined}
       data-compact-clip={isCompactShell ? 'true' : undefined}
       className={cn(
-        'timeline-item @container absolute inset-y-px rounded overflow-visible group/timeline-item',
+        'timeline-item @container absolute inset-y-px rounded overflow-visible touch-none group/timeline-item',
         itemColorClasses,
         cursorClass,
         !isBeingDragged && !isStretching && !trackLocked && 'hover:brightness-110',
@@ -139,9 +139,9 @@ export const TimelineItemShell = memo(function TimelineItemShell({
       }
       onClick={onClick}
       onDoubleClick={onDoubleClick}
-      onMouseDown={onMouseDown}
+      onPointerDown={onPointerDown}
       onMouseEnter={() => onHoverChange?.(itemId, true)}
-      onMouseMove={onMouseMove}
+      onPointerMove={onPointerMove}
       onMouseLeave={() => {
         onMouseLeave()
         onHoverChange?.(itemId, false)

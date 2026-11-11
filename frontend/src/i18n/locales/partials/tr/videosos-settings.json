@@ -1,27 +1,67 @@
 {
   "settings": {
     "sections": {
-      "providers": "Providers and agent"
+      "providers": "Sağlayıcılar",
+      "agents": "Ajanlar",
+      "network": "Ağ",
+      "privacy": "Gizlilik",
+      "about": "Hakkında",
+      "providersHint": "OpenRouter, fal ve Runware anahtarları ve harcama",
+      "agentsHint": "MCP adresi ve ajanların günlük sınırı",
+      "generalHint": "Dil, otomatik kayıt, geri alma, sesler",
+      "timelineHint": "Yapıştırma, dalga biçimleri, kare şeritleri",
+      "aiHint": "Sahne açıklamaları ve yerel modeller",
+      "storageHint": "Proxy ve önbellek dosyaları",
+      "networkHint": "Proxy ve diğer bilgisayarlardan erişim",
+      "privacyHint": "Anonim istatistikler ve haberler",
+      "aboutHint": "Sürüm, bağlantılar, klasörler, destek",
+      "local": "Yerel modeller",
+      "localHint": "Bu bilgisayarda ücretsiz üretim"
     },
     "providers": {
-      "intro": "VideoSOS generates through your own accounts: add a key of OpenRouter, fal or Runware. Keys stay on this computer and are never shown to agents.",
-      "fromEnv": "from the {{variable}} variable",
-      "stored": "key saved",
-      "none": "no key",
-      "replace": "Paste a new key to replace it",
-      "check": "Check",
-      "remove": "Remove",
-      "spend": "Spent on generations",
-      "spendLine": "Today {{today}}, in total {{total}}",
-      "jobs_one": "{{count}} run",
-      "jobs_other": "{{count}} runs",
-      "agent": "Agent (MCP)",
-      "agentHint": "Connect Claude or another agent: it sees this window, generates and edits the timeline while you watch. In Claude Code run:",
-      "budget": "Daily limit for agents, $",
-      "noLimit": "no limit",
-      "badBudget": "The limit is a number of dollars.",
-      "statistics": "Anonymous statistics",
-      "statisticsHint": "How many generations ran and which models; never prompts, files or keys."
+      "intro": "VideoSOS kendi hesaplarınızla üretim yapar: OpenRouter, fal veya Runware anahtarı ekleyin. Anahtarlar bu bilgisayarda kalır ve ajanlara asla gösterilmez.",
+      "fromEnv": "{{variable}} değişkeninden",
+      "stored": "anahtar kaydedildi",
+      "none": "anahtar yok",
+      "replace": "Değiştirmek için yeni bir anahtar yapıştırın",
+      "check": "Denetle",
+      "remove": "Kaldır",
+      "spend": "Üretimlere harcanan",
+      "spendLine": "Bugün {{today}}, toplam {{total}}",
+      "jobs_one": "{{count}} çalıştırma",
+      "jobs_other": "{{count}} çalıştırma",
+      "agentHint": "Bu sınır aşıldığında VideoSOS, günün geri kalanında ajanın üretimlerini reddeder. Boş bırakılırsa sınır yoktur.",
+      "budget": "Ajanlar için günlük sınır, $",
+      "noLimit": "sınır yok",
+      "badBudget": "Sınır, dolar cinsinden bir sayıdır.",
+      "confirmEdits": "Ajanın zaman çizelgesi düzenlemeleri onayımı beklesin",
+      "confirmEditsHint": "Ajanın düzenlemesi nelerin değişeceğini gösterir; sen kabul edene kadar hiçbir şey değişmez.",
+      "agentAbsent": "Şu anda bağlı bir ajan yok: aşağıdan birini bağlayın ve VideoSOS'un sorularını dinlemesini isteyin.",
+      "agentConnected": "Bir ajan bağlı: {{seconds}} sn önce yanıt verdi.",
+      "assistant": "Pencerenin asistanı",
+      "assistantEngine": {
+        "agent": "Ajan (MCP)",
+        "openrouter": "OpenRouter"
+      },
+      "assistantHint": {
+        "agent": "“İstemi iyileştir”, “Görselden istem”, storyboard bölme, “3D blocking” ve “Sohbet” sekmesi, VideoSOS'a bağlı ajana sorar: kendisi bir dil modeli olduğundan ek ücret ödenmez. Dinlediği sürece yanıt verir (assistant_requests_wait).",
+        "openrouter": "“İstemi iyileştir”, “Görselden istem”, storyboard bölme, “3D blocking” ve “Sohbet” sekmesi, anahtarınızla ödenen bir OpenRouter modeline sorar."
+      }
+    },
+    "general": {
+      "language": "Arayüz dili",
+      "languageHint": "Programın penceresi ve iletileri.",
+      "autoSaveHint": "Açık projeyi birkaç dakikada bir kendisi kaydeder",
+      "undoHistoryDepthHint": "Geri alma kaç adım geriye gidebilir",
+      "uiSoundsHint": "Tıklama, sonuç ve hatalar için kısa sesler",
+      "audioOutput": "Ses çıkışı",
+      "audioOutputHint": "Önizlemenin çalacağı yer: sistem aygıtı ya da seçilen bir aygıt. Liste, mikrofona izin verildikten sonra görünür – tarayıcı aygıtları o zaman adlandırır.",
+      "audioOutputDefault": "Sistem varsayılanı"
+    },
+    "done": "Bitti",
+    "timeline": {
+      "showWaveformsHint": "Zaman çizelgesinde ses kliplerinin sesini çizer",
+      "showFilmstripsHint": "Video klipleri boyunca kareleri gösterir"
     }
   }
 }

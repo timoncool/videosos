@@ -134,12 +134,14 @@ export function useTrackPush(
         handleMouseUp()
       }
 
-      window.addEventListener('mousemove', queueMouseMove)
-      window.addEventListener('mouseup', handleCoalescedMouseUp)
+      window.addEventListener('pointermove', queueMouseMove)
+      window.addEventListener('pointerup', handleCoalescedMouseUp)
+      window.addEventListener('pointercancel', handleCoalescedMouseUp)
       return () => {
         coalescedMouseMove.cancel()
-        window.removeEventListener('mousemove', queueMouseMove)
-        window.removeEventListener('mouseup', handleCoalescedMouseUp)
+        window.removeEventListener('pointermove', queueMouseMove)
+        window.removeEventListener('pointerup', handleCoalescedMouseUp)
+        window.removeEventListener('pointercancel', handleCoalescedMouseUp)
         useTrackPushPreviewStore.getState().clearPreview()
         magneticSnapTargetsRef.current = []
         setActiveSnapTarget(null)

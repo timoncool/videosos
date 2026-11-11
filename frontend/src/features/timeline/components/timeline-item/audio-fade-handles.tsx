@@ -108,7 +108,7 @@ export const AudioFadeHandles = memo(function AudioFadeHandles({
         type="button"
         className={getHandleClassName()}
         style={{ left: `${fadeInLeft}%`, top: handleTop }}
-        onMouseDown={(e) => {
+        onPointerDown={(e) => {
           setHoveredHandle('in')
           onFadeHandleMouseDown(e, 'in')
         }}
@@ -128,7 +128,7 @@ export const AudioFadeHandles = memo(function AudioFadeHandles({
         type="button"
         className={getHandleClassName()}
         style={{ left: `${fadeOutLeft}%`, top: handleTop }}
-        onMouseDown={(e) => {
+        onPointerDown={(e) => {
           setHoveredHandle('out')
           onFadeHandleMouseDown(e, 'out')
         }}
@@ -149,7 +149,7 @@ export const AudioFadeHandles = memo(function AudioFadeHandles({
           type="button"
           className={getCurveDotClassName('in')}
           style={{ left: `${fadeInCurveDot.xPercent}%`, top: `${fadeInCurveDot.yPercent}%` }}
-          onMouseDown={(e) => onFadeCurveDotMouseDown(e, 'in')}
+          onPointerDown={(e) => onFadeCurveDotMouseDown(e, 'in')}
           onDoubleClick={(e) => {
             e.preventDefault()
             e.stopPropagation()
@@ -165,7 +165,7 @@ export const AudioFadeHandles = memo(function AudioFadeHandles({
           type="button"
           className={getCurveDotClassName('out')}
           style={{ left: `${fadeOutCurveDot.xPercent}%`, top: `${fadeOutCurveDot.yPercent}%` }}
-          onMouseDown={(e) => onFadeCurveDotMouseDown(e, 'out')}
+          onPointerDown={(e) => onFadeCurveDotMouseDown(e, 'out')}
           onDoubleClick={(e) => {
             e.preventDefault()
             e.stopPropagation()

@@ -159,7 +159,7 @@ function ChangelogPage() {
   const { t } = useTranslation()
 
   return (
-    <div className="min-h-screen bg-background text-foreground select-text">
+    <div className="min-h-full bg-background text-foreground select-text">
       <div className="pointer-events-none fixed inset-x-0 top-0 h-96 bg-[radial-gradient(circle_at_50%_0%,color-mix(in_oklab,var(--primary)_12%,transparent),transparent_68%)]" />
 
       <header className="relative border-b border-border/70 px-6 py-5">

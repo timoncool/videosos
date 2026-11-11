@@ -9,11 +9,24 @@ import type { EditOp } from '@/headless/edit-op-support'
 import { setEditCanvas } from '@/headless/edit-op-support'
 import { useEditorStore } from '@/shared/state/editor'
 import { usePlaybackStore } from '@/shared/state/playback'
+import { timelineCaptionCues } from '@/shared/timeline/caption-cues'
+import { serializeSrt, serializeVtt, type SubtitleCue } from '@/shared/utils/subtitles'
+import { saveToDisk } from '@/infrastructure/desktop'
+import type { TimelineItem } from '@/types/timeline'
 import type { EditorSidebarTab } from '@/config/editor-workspaces'
 import type { ExtendedExportSettings, VideoContainer } from '@/types/export'
 import {
+  agentBlocking,
   buildRenderJob,
+  captureSnapshot,
+  importPrevisFrame,
+  importPrevisVideo,
+  keepCheckpoint,
+  makeMotionClip,
+  motionName,
   mediaLibraryService,
+  restoreCheckpoint,
+  restoreSnapshot,
   saveTimeline,
   useRenderQueueStore,
   useItemsStore,
@@ -21,10 +34,26 @@ import {
   useProjectStore,
   useTimelineCommandStore,
   useTransitionsStore,
+  useMarkersStore,
+  withPrevisRenderer,
 } from '../deps/editor'
 import { bridgeError, failed, numberArg, registerBridgeCommand, takeArgs, textArg } from './bridge'
+import { describeOps, useProposalStore } from './proposals'
 
-const TABS: EditorSidebarTab[] = ['generate', 'media', 'text', 'shapes', 'effects', 'transitions', 'lottie', 'transcript', 'ai']
+const TABS: EditorSidebarTab[] = [
+  'generate',
+  'media',
+  'text',
+  'shapes',
+  'effects',
+  'transitions',
+  'lottie',
+  'transcript',
+  'chat',
+  'storyboard',
+  'graphics',
+  'blocking',
+]
 
 function openProject() {
   const project = useProjectStore.getState().currentProject
@@ -47,6 +76,79 @@ async function save(projectId: string): Promise<void> {
   }
 }
 
+/** Runs the ops on the live stores and puts everything, history included, back in the same tick. */
+function rehearse(ops: EditOp[]) {
+  const before = captureSnapshot()
+  const { undoStack, redoStack } = useTimelineCommandStore.getState()
+  try {
+    const outcome = applyEditOpsLive(ops)
+    return {
+      wouldApply: outcome.results.filter((result) => result.ok).length,
+      error: outcome.error ?? null,
+      results: outcome.results,
+      timeline: timeline(),
+    }
+  } finally {
+    restoreSnapshot(before)
+    useTimelineCommandStore.setState({
+      undoStack,
+      redoStack,
+      canUndo: undoStack.length > 0,
+      canRedo: redoStack.length > 0,
+    })
+  }
+}
+
+/** Whether the person asked to accept agents' edits, read anew each time so the switch takes effect at once. */
+async function confirmsEdits(): Promise<boolean> {
+  const response = await fetch('/api/settings', { cache: 'no-store' })
+  if (!response.ok) throw failed('timeline_edit', `the settings did not come: ${response.status}`)
+  return ((await response.json()) as { agent_confirm_edits?: boolean }).agent_confirm_edits === true
+}
+
+/** The captions a clip shows, in the timeline's seconds; none when it has none. */
+function captionsOf(item: TimelineItem, fps: number) {
+  const cues = timelineCaptionCues(item, fps)
+  return cues.length > 0
+    ? cues.map((cue) => ({
+        text: cue.text,
+        start_s: round(cue.from / fps),
+        end_s: round(cue.to / fps),
+      }))
+    : undefined
+}
+
+/** Every caption and subtitle the timeline shows, in its seconds and in time order, as the video export reads them. */
+function subtitleCues(fps: number): SubtitleCue[] {
+  const { items, tracks } = useItemsStore.getState()
+  const hidden = new Set(tracks.filter((track) => track.visible === false).map((track) => track.id))
+  const cues: SubtitleCue[] = []
+  for (const item of items) {
+    if (hidden.has(item.trackId)) continue
+    if (item.type === 'subtitle') {
+      const start = item.from / fps
+      const end = (item.from + item.durationInFrames) / fps
+      for (const cue of item.cues) {
+        const endSeconds = Math.min(end, start + cue.endSeconds)
+        const startSeconds = Math.max(0, start + cue.startSeconds)
+        if (endSeconds > startSeconds && cue.text.trim()) {
+          cues.push({ id: cue.id, startSeconds, endSeconds, text: cue.text.trim() })
+        }
+      }
+      continue
+    }
+    for (const cue of timelineCaptionCues(item, fps)) {
+      cues.push({
+        id: `${item.id}-${cue.from}`,
+        startSeconds: cue.from / fps,
+        endSeconds: cue.to / fps,
+        text: cue.text,
+      })
+    }
+  }
+  return cues.sort((a, b) => a.startSeconds - b.startSeconds || a.endSeconds - b.endSeconds)
+}
+
 function timeline() {
   const project = openProject()
   const fps = fpsOf(project)
@@ -54,7 +156,18 @@ function timeline() {
   const media = useMediaLibraryStore.getState().mediaById
   return {
     project: { id: project.id, name: project.name, ...project.metadata },
-    tracks: tracks.map((track) => ({ id: track.id, name: track.name, kind: track.kind, order: track.order, muted: track.muted, visible: track.visible, locked: track.locked })),
+    tracks: tracks.map((track) => ({
+      id: track.id,
+      name: track.name,
+      kind: track.kind,
+      order: track.order,
+      muted: track.muted,
+      visible: track.visible,
+      locked: track.locked,
+      solo: track.solo,
+      volume: track.volume,
+      syncLock: track.syncLock !== false,
+    })),
     items: items.map((item) => ({
       id: item.id,
       type: item.type,
@@ -66,9 +179,59 @@ function timeline() {
       mediaId: 'mediaId' in item ? item.mediaId : undefined,
       media: 'mediaId' in item && item.mediaId ? media[item.mediaId]?.fileName : undefined,
       text: 'text' in item ? item.text : undefined,
+      shape: item.type === 'shape' ? item.shapeType : undefined,
       label: item.label,
+      linked: item.linkedGroupId,
+      captions: captionsOf(item, fps),
     })),
     transitions: useTransitionsStore.getState().transitions,
+    markers: useMarkersStore
+      .getState()
+      .markers.map((marker) => ({ ...marker, at_s: round(marker.frame / fps) })),
+  }
+}
+
+const TOUCHING = new Set([
+  'id',
+  'ids',
+  'itemId',
+  'trackId',
+  'moved',
+  'created',
+  'leftClipId',
+  'rightClipId',
+])
+
+/** What an edit touched in the timeline after it, with a summary of the rest: the answer an agent reads. */
+function touched(ops: unknown, results: unknown, whole: ReturnType<typeof timeline>) {
+  const ids = new Set<string>()
+  const take = (value: unknown): void => {
+    if (typeof value === 'string') ids.add(value)
+    else if (Array.isArray(value)) value.forEach(take)
+    else if (value && typeof value === 'object')
+      for (const [key, inner] of Object.entries(value)) {
+        if (TOUCHING.has(key) || typeof inner === 'object') take(inner)
+      }
+  }
+  take(ops)
+  take(results)
+  const end = Math.max(0, ...whole.items.map((item) => item.from + item.durationInFrames))
+  return {
+    items: whole.items.filter((item) => ids.has(item.id)),
+    tracks: whole.tracks.filter((track) => ids.has(track.id)),
+    transitions: whole.transitions.filter(
+      (transition) =>
+        ids.has(transition.id) || ids.has(transition.leftClipId) || ids.has(transition.rightClipId),
+    ),
+    markers: whole.markers.filter((marker) => ids.has(marker.id)),
+    summary: {
+      clips: whole.items.length,
+      tracks: whole.tracks.length,
+      transitions: whole.transitions.length,
+      markers: whole.markers.length,
+      end_s: round(end / (whole.project.fps ?? 30)),
+    },
+    note: 'what this edit touched; timeline_get or response_format detailed gives the whole timeline',
   }
 }
 
@@ -86,7 +249,9 @@ export function registerEditorCommands(showProject: ShowProject): void {
     return {
       screen: window.location.pathname,
       project: open ? { id: project.id, name: project.name, ...project.metadata } : null,
-      playhead: open ? { frame: playback.currentFrame, seconds: round(playback.currentFrame / fpsOf(project)) } : null,
+      playhead: open
+        ? { frame: playback.currentFrame, seconds: round(playback.currentFrame / fpsOf(project)) }
+        : null,
       playing: playback.isPlaying,
       sidebar_tab: useEditorStore.getState().activeTab,
       clips: open ? useItemsStore.getState().items.length : null,
@@ -106,10 +271,38 @@ export function registerEditorCommands(showProject: ShowProject): void {
   })
 
   registerBridgeCommand('timeline_edit', async (args) => {
-    takeArgs('timeline_edit', args, ['ops'])
-    if (!Array.isArray(args.ops) || args.ops.length === 0) throw bridgeError('missing', { command: 'timeline_edit', field: 'ops' })
+    takeArgs('timeline_edit', args, ['ops', 'dry_run', 'response_format'])
+    const detailed = args.response_format === 'detailed'
+    if (!Array.isArray(args.ops) || args.ops.length === 0)
+      throw bridgeError('missing', { command: 'timeline_edit', field: 'ops' })
     const project = openProject()
-    setEditCanvas({ width: project.metadata?.width ?? 1920, height: project.metadata?.height ?? 1080, fps: fpsOf(project) })
+    setEditCanvas({
+      width: project.metadata?.width ?? 1920,
+      height: project.metadata?.height ?? 1080,
+      fps: fpsOf(project),
+    })
+    if (args.dry_run === true) {
+      const rehearsal = rehearse(args.ops as EditOp[])
+      return {
+        dry_run: true,
+        would_apply: rehearsal.wouldApply,
+        error: rehearsal.error,
+        results: rehearsal.results,
+        timeline: detailed
+          ? rehearsal.timeline
+          : touched(args.ops, rehearsal.results, rehearsal.timeline),
+      }
+    }
+    if (await confirmsEdits()) {
+      const rehearsal = rehearse(args.ops as EditOp[])
+      const accepted = await useProposalStore.getState().ask({
+        lines: describeOps(args.ops as EditOp[], fpsOf(project)),
+        wouldApply: rehearsal.wouldApply,
+        problem: rehearsal.error,
+      })
+      if (!accepted) throw bridgeError('declined')
+    }
+    await keepCheckpoint(project.id, 'agent', { edits: args.ops.length })
     let outcome
     try {
       outcome = applyEditOpsLive(args.ops as EditOp[])
@@ -124,7 +317,95 @@ export function registerEditorCommands(showProject: ShowProject): void {
         `${outcome.error}. The ${applied.length} op(s) before it were applied and saved: ${JSON.stringify(applied)}`,
       )
     }
-    return { applied: applied.length, results: outcome.results, timeline: timeline() }
+    const now = timeline()
+    return {
+      applied: applied.length,
+      results: outcome.results,
+      timeline: detailed ? now : touched(args.ops, outcome.results, now),
+    }
+  })
+
+  registerBridgeCommand('motion_render', async (args) => {
+    takeArgs('motion_render', args, ['html', 'seconds', 'name'])
+    openProject()
+    const html = textArg('motion_render', args, 'html')
+    if (!html) throw bridgeError('missing', { command: 'motion_render', field: 'html' })
+    const seconds = numberArg('motion_render', args, 'seconds') ?? 4
+    if (seconds < 0.5 || seconds > 30)
+      throw bridgeError('bad_value', {
+        command: 'motion_render',
+        field: 'seconds',
+        expected: 'from 0.5 to 30',
+      })
+    const name = textArg('motion_render', args, 'name') ?? motionName(html, 'HTML graphics')
+    let mediaId
+    try {
+      mediaId = await makeMotionClip(html, seconds, name)
+    } catch (problem) {
+      throw failed('motion_render', problem)
+    }
+    await save(openProject().id)
+    return { media_id: mediaId, name, timeline: timeline() }
+  })
+
+  registerBridgeCommand('previs_render', async (args) => {
+    takeArgs('previs_render', args, ['scene', 'output', 'time_seconds', 'name'])
+    openProject()
+    // the agent is the language model: it writes the scene itself, no other model is paid to build one
+    const given = args.scene
+    if (given === undefined)
+      throw bridgeError('missing', { command: 'previs_render', field: 'scene' })
+    const output = textArg('previs_render', args, 'output') ?? 'frame'
+    if (output !== 'frame' && output !== 'video' && output !== 'scene')
+      throw bridgeError('bad_value', {
+        command: 'previs_render',
+        field: 'output',
+        expected: 'frame, video or scene',
+      })
+    const time = numberArg('previs_render', args, 'time_seconds') ?? 0
+    try {
+      const scene = await agentBlocking({
+        scene: given,
+        accept: (built) => {
+          if (time < 0 || time > built.seconds)
+            throw new Error(`time_seconds must be from 0 to ${built.seconds}`)
+        },
+      })
+      useEditorStore.getState().setActiveTab('blocking')
+      if (output === 'scene') return { scene }
+      const name =
+        textArg('previs_render', args, 'name') ??
+        `${scene.title} (${output === 'frame' ? 'blocking frame' : 'blocking'})`
+      const mediaId = await withPrevisRenderer(scene, (renderer) =>
+        output === 'frame'
+          ? importPrevisFrame(renderer, time, name)
+          : importPrevisVideo(renderer, name),
+      )
+      return { media_id: mediaId, name, scene }
+    } catch (problem) {
+      throw failed('previs_render', problem)
+    }
+  })
+
+  registerBridgeCommand('checkpoint_create', async (args) => {
+    takeArgs('checkpoint_create', args, ['label'])
+    const project = openProject()
+    return keepCheckpoint(project.id, 'asked', {
+      label: textArg('checkpoint_create', args, 'label'),
+    })
+  })
+
+  registerBridgeCommand('checkpoint_restore', async (args) => {
+    takeArgs('checkpoint_restore', args, ['id'])
+    openProject()
+    const id = textArg('checkpoint_restore', args, 'id')
+    if (!id) throw bridgeError('missing', { command: 'checkpoint_restore', field: 'id' })
+    try {
+      await restoreCheckpoint(id)
+    } catch (problem) {
+      throw failed('checkpoint_restore', problem)
+    }
+    return { restored: id, timeline: timeline() }
   })
 
   registerBridgeCommand('timeline_undo', async (args) => {
@@ -170,9 +451,18 @@ export function registerEditorCommands(showProject: ShowProject): void {
     if (!url) throw bridgeError('missing', { command: 'media_import', field: 'url' })
     const project = openProject()
     try {
-      const media = await mediaLibraryService.importMediaFromUrl(url, project.id)
+      // a file of this computer arrives as the service's own address, relative to this page
+      const media = await mediaLibraryService.importMediaFromUrl(
+        new URL(url, window.location.origin).href,
+        project.id,
+      )
       await useMediaLibraryStore.getState().loadMediaItems()
-      return { media_id: media.id, file_name: media.fileName, mime: media.mimeType, duration_s: round(media.duration) }
+      return {
+        media_id: media.id,
+        file_name: media.fileName,
+        mime: media.mimeType,
+        duration_s: round(media.duration),
+      }
     } catch (problem) {
       throw failed('media_import', problem)
     }
@@ -181,7 +471,9 @@ export function registerEditorCommands(showProject: ShowProject): void {
   registerBridgeCommand('playhead_seek', (args) => {
     takeArgs('playhead_seek', args, ['seconds', 'frame'])
     const project = openProject()
-    const frame = numberArg('playhead_seek', args, 'frame') ?? Math.round((numberArg('playhead_seek', args, 'seconds') ?? 0) * fpsOf(project))
+    const frame =
+      numberArg('playhead_seek', args, 'frame') ??
+      Math.round((numberArg('playhead_seek', args, 'seconds') ?? 0) * fpsOf(project))
     usePlaybackStore.getState().setCurrentFrame(Math.max(0, Math.round(frame)))
     return { frame: usePlaybackStore.getState().currentFrame }
   })
@@ -192,31 +484,66 @@ export function registerEditorCommands(showProject: ShowProject): void {
     const action = textArg('playback', args, 'action')
     if (action === 'play') usePlaybackStore.getState().play()
     else if (action === 'pause') usePlaybackStore.getState().pause()
-    else throw bridgeError('bad_value', { command: 'playback', field: 'action', expected: 'play or pause' })
+    else
+      throw bridgeError('bad_value', {
+        command: 'playback',
+        field: 'action',
+        expected: 'play or pause',
+      })
     return { playing: usePlaybackStore.getState().isPlaying }
   })
 
   registerBridgeCommand('editor_tab', (args) => {
     takeArgs('editor_tab', args, ['tab'])
     const tab = textArg('editor_tab', args, 'tab') as EditorSidebarTab | undefined
-    if (!tab || !TABS.includes(tab)) throw bridgeError('bad_value', { command: 'editor_tab', field: 'tab', expected: TABS.join(', ') })
+    if (!tab || !TABS.includes(tab))
+      throw bridgeError('bad_value', {
+        command: 'editor_tab',
+        field: 'tab',
+        expected: TABS.join(', '),
+      })
     openProject()
     useEditorStore.getState().setActiveTab(tab)
     return { tab }
   })
 
   registerBridgeCommand('export_video', async (args) => {
-    takeArgs('export_video', args, ['format', 'quality', 'width', 'height', 'file_name'])
+    takeArgs('export_video', args, [
+      'format',
+      'quality',
+      'width',
+      'height',
+      'file_name',
+      'loudness_lufs',
+    ])
     const project = openProject()
     const format = (textArg('export_video', args, 'format') ?? 'mp4') as VideoContainer
     if (!['mp4', 'webm', 'mov', 'mkv'].includes(format)) {
-      throw bridgeError('bad_value', { command: 'export_video', field: 'format', expected: 'mp4, webm, mov or mkv' })
+      throw bridgeError('bad_value', {
+        command: 'export_video',
+        field: 'format',
+        expected: 'mp4, webm, mov or mkv',
+      })
     }
-    const quality = (textArg('export_video', args, 'quality') ?? 'high') as ExtendedExportSettings['quality']
+    const quality = (textArg('export_video', args, 'quality') ??
+      'high') as ExtendedExportSettings['quality']
     if (!['low', 'medium', 'high', 'ultra'].includes(quality)) {
-      throw bridgeError('bad_value', { command: 'export_video', field: 'quality', expected: 'low, medium, high or ultra' })
+      throw bridgeError('bad_value', {
+        command: 'export_video',
+        field: 'quality',
+        expected: 'low, medium, high or ultra',
+      })
     }
-    if (useItemsStore.getState().items.length === 0) throw failed('export_video', 'the timeline is empty')
+    const loudnessLufs = numberArg('export_video', args, 'loudness_lufs')
+    if (loudnessLufs !== undefined && !(loudnessLufs >= -40 && loudnessLufs <= -5)) {
+      throw bridgeError('bad_value', {
+        command: 'export_video',
+        field: 'loudness_lufs',
+        expected: 'LUFS from -40 to -5',
+      })
+    }
+    if (useItemsStore.getState().items.length === 0)
+      throw failed('export_video', 'the timeline is empty')
     await save(project.id)
     const settings: ExtendedExportSettings = {
       mode: 'video',
@@ -229,8 +556,11 @@ export function registerEditorCommands(showProject: ShowProject): void {
       videoContainer: format,
       renderWholeProject: true,
       subtitleMode: 'burn',
+      loudnessLufs,
     }
-    const fileName = textArg('export_video', args, 'file_name')?.replace(/[<>:"/\\|?*]+/g, '_').trim()
+    const fileName = textArg('export_video', args, 'file_name')
+      ?.replace(/[<>:"/\\|?*]+/g, '_')
+      .trim()
     let job
     try {
       job = await buildRenderJob({ settings, name: fileName || project.name })
@@ -241,13 +571,64 @@ export function registerEditorCommands(showProject: ShowProject): void {
     useRenderQueueStore.getState().enqueueJobs([job])
     const deadline = Date.now() + 3_500_000
     for (;;) {
-      if (Date.now() > deadline) throw failed('export_video', 'the render did not finish within an hour')
+      if (Date.now() > deadline)
+        throw failed('export_video', 'the render did not finish within an hour')
       await new Promise((resolve) => setTimeout(resolve, 500))
       const current = useRenderQueueStore.getState().jobs.find((each) => each.id === job.id)
       if (!current) throw failed('export_video', 'the render job left the queue')
-      if (current.status === 'completed') return { saved: current.savedPath, size: current.fileSize }
-      if (current.status === 'failed') throw failed('export_video', current.error ?? 'the render failed')
+      if (current.status === 'completed')
+        return { saved: current.savedPath, size: current.fileSize }
+      if (current.status === 'failed')
+        throw failed('export_video', current.error ?? 'the render failed')
       if (current.status === 'cancelled') throw failed('export_video', 'the render was cancelled')
+    }
+  })
+
+  registerBridgeCommand('subtitles_export', async (args) => {
+    takeArgs('subtitles_export', args, ['format', 'file_name'])
+    const project = openProject()
+    const format = textArg('subtitles_export', args, 'format') ?? 'srt'
+    if (!['srt', 'vtt', 'txt', 'json'].includes(format)) {
+      throw bridgeError('bad_value', {
+        command: 'subtitles_export',
+        field: 'format',
+        expected: 'srt, vtt, txt or json',
+      })
+    }
+    const cues = subtitleCues(fpsOf(project))
+    if (cues.length === 0)
+      throw failed('subtitles_export', 'the timeline shows no captions or subtitles')
+    const content =
+      format === 'srt'
+        ? serializeSrt(cues)
+        : format === 'vtt'
+          ? serializeVtt(cues)
+          : format === 'txt'
+            ? `${cues.map((cue) => cue.text).join('\n')}\n`
+            : `${JSON.stringify(
+                {
+                  cues: cues.map((cue) => ({
+                    start_s: Math.round(cue.startSeconds * 1000) / 1000,
+                    end_s: Math.round(cue.endSeconds * 1000) / 1000,
+                    text: cue.text,
+                  })),
+                },
+                null,
+                2,
+              )}\n`
+    const fileName = textArg('subtitles_export', args, 'file_name')
+      ?.replace(/[<>:"/\\|?*]+/g, '_')
+      .trim()
+    try {
+      const saved = await saveToDisk(
+        new Blob([content], { type: format === 'json' ? 'application/json' : 'text/plain' }),
+        `${fileName || project.name}.${format}`,
+        { dialog: false },
+      )
+      if (!saved.path) throw new Error('the file was not saved')
+      return { path: saved.path, cues: cues.length }
+    } catch (problem) {
+      throw failed('subtitles_export', problem)
     }
   })
 
@@ -259,10 +640,15 @@ export function registerEditorCommands(showProject: ShowProject): void {
     } catch (problem) {
       throw failed('project_open', problem)
     }
-    for (let wait = 0; wait < 40 && id && useProjectStore.getState().currentProject?.id !== id; wait += 1) {
+    for (
+      let wait = 0;
+      wait < 40 && id && useProjectStore.getState().currentProject?.id !== id;
+      wait += 1
+    ) {
       await new Promise((resolve) => setTimeout(resolve, 250))
     }
-    if (id && useProjectStore.getState().currentProject?.id !== id) throw failed('project_open', `the editor did not open ${id}`)
+    if (id && useProjectStore.getState().currentProject?.id !== id)
+      throw failed('project_open', `the editor did not open ${id}`)
     return { screen: window.location.pathname }
   })
 }

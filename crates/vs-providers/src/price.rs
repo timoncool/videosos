@@ -44,10 +44,13 @@ fn pick<'a>(rates: &[&'a Rate], wanted: &[String]) -> (Option<&'a Rate>, bool) {
     if rates.len() == 1 {
         return (Some(rates[0]), true);
     }
+    let audio_wanted = wanted.iter().any(|word| word == "audio");
     let scored = rates.iter().map(|rate| {
         let label = rate.label.clone().unwrap_or_default().to_ascii_lowercase();
-        let score = wanted.iter().filter(|word| !word.is_empty() && label.contains(word.as_str())).count();
-        (score, *rate)
+        let matched = wanted.iter().filter(|word| !word.is_empty() && label.contains(word.as_str())).count() as i64;
+        // a variant with sound is a different price, not a closer match, when no sound was asked for
+        let unwanted = i64::from(!audio_wanted && label.contains("audio"));
+        (matched - unwanted, *rate)
     });
     let best = scored.max_by_key(|(score, _)| *score);
     match best {
@@ -132,9 +135,9 @@ mod tests {
             provider: Provider::Runware,
             id: "v".into(),
             fields: vec![
-                Field { key: "resolution".into(), label: "R".into(), description: None, kind: FieldKind::Text, required: false, default: Some(json!("480p")), advanced: false, role: Some(Role::Resolution) },
+                Field { key: "resolution".into(), label: "R".into(), description: None, kind: FieldKind::Text { max_length: None }, required: false, default: Some(json!("480p")), advanced: false, role: Some(Role::Resolution) },
                 Field { key: "duration".into(), label: "D".into(), description: None, kind: FieldKind::Integer { min: None, max: None }, required: false, default: Some(json!(6)), advanced: false, role: Some(Role::Duration) },
-                Field { key: "inputs.frameImages".into(), label: "F".into(), description: None, kind: FieldKind::Media { media: crate::model::MediaKind::Image, min: 0, max: 1, list: true }, required: false, default: None, advanced: false, role: Some(Role::FirstFrame) },
+                Field { key: "inputs.frameImages".into(), label: "F".into(), description: None, kind: FieldKind::Media { media: crate::model::MediaKind::Image, min: 0, max: 1, list: true, at: None }, required: false, default: None, advanced: false, role: Some(Role::FirstFrame) },
             ],
             price: PriceRule {
                 rates: vec![
@@ -164,5 +167,20 @@ mod tests {
     fn defaults_count_when_the_person_left_them() {
         let form = video_form();
         assert_eq!(estimate(&form, &Map::new()), Some(Estimate { usd: 0.12, exact: true }));
+    }
+
+    #[test]
+    fn the_rate_with_sound_is_taken_only_when_sound_is_asked_for() {
+        let mut form = video_form();
+        form.price.rates = vec![
+            Rate { amount: 0.03, unit: "second".into(), label: Some("720p".into()) },
+            Rate { amount: 0.05, unit: "second".into(), label: Some("720p audio".into()) },
+        ];
+        let mut values = Map::new();
+        values.insert("resolution".into(), json!("720p"));
+        values.insert("duration".into(), json!(4));
+        assert_eq!(estimate(&form, &values), Some(Estimate { usd: 0.12, exact: true }));
+        values.insert("generate_audio".into(), json!(true));
+        assert_eq!(estimate(&form, &values), Some(Estimate { usd: 0.2, exact: true }));
     }
 }
